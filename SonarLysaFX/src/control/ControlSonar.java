@@ -65,6 +65,7 @@ public class ControlSonar
 
     /**
      * Permet de créer les vues maintenance depuis un fichier Excel d'extraction de la Pic
+     * 
      * @param file
      * @throws InvalidFormatException
      * @throws IOException
@@ -72,7 +73,9 @@ public class ControlSonar
     public void creerVueCDM(File file) throws InvalidFormatException, IOException
     {
         // Suprression des vues existantes possibles
-        suppressionVueCDM();
+        List<String> liste = new ArrayList<>();
+        liste.add("2018");
+        suppressionVuesMaintenance(true, liste);
 
         // récupération des informations du fichier Excel
         ControlPic control = new ControlPic(file);
@@ -86,20 +89,35 @@ public class ControlSonar
             api.ajouterSousVues(entry.getValue(), vue);
         }
     }
+
+    /**
+     * Permet de créer les vues maintenance CDM depuis Sonar avec le fichier XML
+     * 
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
+    public void creerVueCDM()
+    {
+        List<String> liste = new ArrayList<>();
+        liste.add("2018");
+        suppressionVuesMaintenance(true, liste);
+
+        creerVueMaintenance(true);
+    }
     
     /**
-     * Permet de créer les vues maintenance directement depuis la Pic avec les informations des versions enregistrées
-     * @throws IOException 
-     * @throws InvalidFormatException 
+     * Permet de créer les vues CHC depuis Sonar avec le fichier XML
+     * 
+     * @throws IOException
+     * @throws InvalidFormatException
      */
-    public void creerVueCDM() throws InvalidFormatException, IOException
+    public void creerVueCHC()
     {
-        // Suprression des vues existantes possibles
-        suppressionVueCDM();
+        List<String> liste = new ArrayList<>();
+        liste.add("2018");
+        suppressionVuesMaintenance(false, liste);
 
-        Map<String, String> mapCDM = fichiersXML.getMapCDM();
-        ControlVersion control = new ControlVersion(new File("d:\\Codification des Editions.xls"));
-        
+        creerVueMaintenance(false);
     }
 
     /**
@@ -671,7 +689,7 @@ public class ControlSonar
         // Suppresison de la vue précedente
         if (suppression)
         {
-            api.supprimerVue(vue);
+            api.supprimerProjet(vue, false);
         }
 
         // Appel de l'API Sonar
@@ -811,15 +829,72 @@ public class ControlSonar
         }
         return retour;
     }
-    
-    private void suppressionVueCDM()
+
+    private void suppressionVuesMaintenance(boolean cdm, List<String> annees)
     {
-        // Suprression des vues existantes possibles
-        for (int i = 1; i < 53; i++)
+        String base;
+        // On itère sur chacune des annèes
+        for (String annee : annees)
         {
-            Vue vue = new Vue();
-            vue.setKey("CHC_CDM2018-S" + String.format("%02d", i));
-            api.supprimerVue(vue);
+            // préparation de la base de la clef
+            if (cdm)
+                base = "CHC_CDM" + annee;
+            else
+                base = "CHC" + annee;
+            
+            // Suprression des vues existantes possibles
+            for (int i = 1; i < 53; i++)
+            {
+                api.supprimerProjet(new StringBuilder(base).append("-S").append(String.format("%02d", i)).append("Key").toString(), false);
+            }
+        }
+    }
+    
+    /**
+     * Crée les vues CHC ou CDM depuis Sonar et le fichier XML. {@code true} pour les vues CDM et {@code false} pour les vues CHC
+     * @param cdm
+     */
+    private void creerVueMaintenance(boolean cdm)
+    {
+        // Récupération du fichier XML des editions
+        Map<String, String> mapEditions;
+        if (cdm)
+            mapEditions = fichiersXML.getMapCDM();
+        else
+            mapEditions = fichiersXML.getMapCHC();
+
+        Map<String, Set<String>> mapVuesACreer = new HashMap<>();
+
+        Map<String, Projet> mapProjets = recupererComposantsSonar();
+
+        for (Projet projet : mapProjets.values())
+        {
+            // Récupération de l'édition du composant sou forme numérique xx.yy.zz.tt et du numéro de lot
+            Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { "edition", "lot" });
+
+            // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
+            Map<String, String> metriques = composant.getMapMetriques();
+            String lot = metriques.get("lot");
+            String edition = metriques.get("edition");
+
+            // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
+            if (lot != null && !lot.isEmpty() && edition != null && mapEditions.keySet().contains(edition))
+            {
+                String keyCHC = mapEditions.get(edition);
+                if (!mapVuesACreer.keySet().contains(keyCHC))
+                    mapVuesACreer.put(keyCHC, new HashSet<>());
+                mapVuesACreer.get(keyCHC).add(lot);
+            }
+        }
+        
+        for (Map.Entry<String, Set<String>> entry : mapVuesACreer.entrySet())
+        {
+            Vue parent = new Vue(entry.getKey() + "Key", entry.getKey());
+            api.creerVue(parent);
+            for (String lot : entry.getValue())
+            {
+                api.ajouterSousVue(new Vue("view_lot_" + lot, "Lot " + lot), parent);
+            }
         }
     }
 

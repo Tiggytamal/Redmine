@@ -30,6 +30,7 @@ public class FichiersXML implements XML
 	private Map<String, RespService> mapRespService;
 	private Map<TypeFichier, String> dateMaj;
 	private Map<String, String> mapCDM;
+	private Map<String, String> mapCHC;
 	
 	public static final String NOMFICHIER = "\\fichiers.xml";
 
@@ -44,6 +45,7 @@ public class FichiersXML implements XML
 	    mapRespService = new HashMap<>();
 	    dateMaj = new EnumMap<>(TypeFichier.class);
 	    mapCDM = new HashMap<>();
+	    mapCHC = new HashMap<>();
 	}
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -67,9 +69,7 @@ public class FichiersXML implements XML
             manquant = true;
         }
         else
-        {
             builder.append("Lots Pics chargés. Dernière Maj : ").append(dateMaj.get(TypeFichier.LOTSPICS)).append(Statics.NL);
-        }
 
         // Contrôle liste application
         if (listeApplications.isEmpty())
@@ -78,9 +78,7 @@ public class FichiersXML implements XML
             manquant = true;
         }
         else
-        {
             builder.append("Liste des apllications chargée. Dernière Maj : ").append(dateMaj.get(TypeFichier.APPS)).append(Statics.NL);
-        }
 
         // Contrôle Referentiel Clarity
         if (mapClarity.isEmpty())
@@ -89,9 +87,7 @@ public class FichiersXML implements XML
             manquant = true;
         }
         else
-        {
             builder.append("Referentiel Clarity chargé. Dernière Maj : ").append(dateMaj.get(TypeFichier.CLARITY)).append(Statics.NL);
-        }
         
         // Contrôle Referentiel Clarity
         if (mapRespService.isEmpty())
@@ -100,9 +96,16 @@ public class FichiersXML implements XML
             manquant = true;
         }
         else
+            builder.append("Responsables de services chargés. Dernière Maj : ").append(dateMaj.get(TypeFichier.RESPSERVICE)).append(Statics.NL);
+        
+        // Contrôle Editions CDM
+        if (mapCDM.isEmpty())
         {
-            builder.append("Responsables de services chargé. Dernière Maj : ").append(dateMaj.get(TypeFichier.RESPSERVICE)).append(Statics.NL);
+            builder.append("Informations Editions CDM manquantes.").append(Statics.NL);
+            manquant = true;
         }
+        else
+            builder.append("Editions CDM chargées. Dernière Maj : ").append(dateMaj.get(TypeFichier.EDITION)).append(Statics.NL);
 
         if (manquant)
             builder.append("Merci de recharger le(s) fichier(s) de paramétrage.").append(Statics.NL);
@@ -152,6 +155,13 @@ public class FichiersXML implements XML
     public Map<String, String> getMapCDM()
     {
         return mapCDM;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapCHC", required = false)
+    public Map<String, String> getMapCHC()
+    {
+        return mapCHC;
     }
 	
 	/**

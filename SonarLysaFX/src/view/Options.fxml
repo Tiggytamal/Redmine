@@ -53,7 +53,7 @@
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
 					<Button text="Charger Chef de Service" fx:id="chefService" onAction="#chargerChefService" alignment="CENTER" />
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
-					<Button text="Charger Version CDM" fx:id="chefService" onAction="#chargerChefService" alignment="CENTER" />
+					<Button text="Charger Edition CDM" fx:id="editionCDM" onAction="#chargerEditionCDM" alignment="CENTER" />
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
 				</VBox>
 

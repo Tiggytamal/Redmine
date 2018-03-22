@@ -53,6 +53,8 @@ public class OptionViewControl
     @FXML
     private Button chefService;
     @FXML
+    private Button editionCDM;
+    @FXML
     private VBox chargementPane;
     @FXML
     private VBox optionsPane;
@@ -201,6 +203,19 @@ public class OptionViewControl
         ControlXML control = new ControlXML();
         control.recupChefServiceDepuisExcel(file);
         alert.setContentText("Chargement Chef de Service effectué");
+    }
+    
+    /**
+     * @throws InvalidFormatException
+     * @throws IOException
+     * @throws JAXBException
+     */
+    public void chargerEditionCDM() throws InvalidFormatException, IOException, JAXBException
+    {
+        File file = getFileFromFileChooser("Charger Editions CDM");
+        ControlXML control = new ControlXML();
+        control.recupEditionDepuisExcel(file);
+        alert.setContentText("Chargement Editions CDM effectué");
     }
 
     /**

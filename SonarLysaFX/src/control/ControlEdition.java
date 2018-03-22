@@ -3,6 +3,7 @@ package control;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -13,7 +14,7 @@ import control.parent.ControlExcel;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
-public class ControlVersion extends ControlExcel
+public class ControlEdition extends ControlExcel
 {
     /*---------- ATTRIBUTS ----------*/
     private int colVersion;
@@ -22,18 +23,17 @@ public class ControlVersion extends ControlExcel
     private static final String LIBELLE = "Libellé";
     private static final String VERSION = "Numero de version";
     private static final int NBRECOLONNE = 2;
-    private static final String CHC2018 = "CHC2018";
+    private static final String CHC = "CHC";
+    private static final String CDM = "CDM";
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlVersion(File file) throws InvalidFormatException, IOException
+    public ControlEdition(File file) throws InvalidFormatException, IOException
     {
         super(file);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-    /*---------- METHODES PRIVEES ----------*/
-    /*---------- ACCESSEURS ----------*/
 
     @Override
     protected void calculIndiceColonnes()
@@ -73,17 +73,54 @@ public class ControlVersion extends ControlExcel
      * 
      * @return
      */
-    public Map<String, String> recupVersionDepuisExcel()
+    public Map<String,Map<String, String>> recupEditionDepuisExcel(List<String> annees)
     {
-        Map<String, String> retour = new HashMap<>();
+        //Initialisation map
+        Map<String,Map<String, String>> retour = new HashMap<>();
+        Map<String, String> chc = new HashMap<>();
+        Map<String, String> cdm = new HashMap<>();
+        retour.put("CHC", chc);
+        retour.put("CDM", cdm);
+        
+        
         Sheet sheet = wb.getSheetAt(0);
         for (int i =1; i < sheet.getLastRowNum() + 1; i++)
         {
             Row row = sheet.getRow(i);
-            if (getCellStringValue(row, colLib).contains(CHC2018))
-                retour.put(getCellFormulaValue(row, colVersion), getCellStringValue(row, colLib).split("/")[0].trim());
+            for (String annee : annees)
+            {
+                if (getCellStringValue(row, colLib).contains(CDM + annee))
+                {
+                    cdm.put(getCellFormulaValue(row, colVersion), prepareLibelle(getCellStringValue(row, colLib), true));
+                }
+                else if (getCellStringValue(row, colLib).contains(CHC + annee))
+                {
+                    chc.put(getCellFormulaValue(row, colVersion), prepareLibelle(getCellStringValue(row, colLib), false));
+                }
+            }
         }
         return retour;
     }
-
+    
+    /*---------- METHODES PRIVEES ----------*/
+    
+    private String prepareLibelle(String libelle, boolean cdm)
+    {
+        String[] split = libelle.split("/");
+        if (cdm && split.length == 2)
+        {
+            String retour = split[1].trim();
+            if (retour.matches("^CDM20[12][0-9]\\-S[0-5][0-9]$"))
+                return "CHC_" + retour;
+        }
+        else
+        {
+            String retour = split[0].trim();
+            if (retour.matches("^CHC20[12][0-9]\\-S[0-5][0-9]$"))
+                return retour;
+        }
+        throw new FunctionalException(Severity.SEVERITY_ERROR, "Mauvais format d'une edition du fichier Excel - libelle " + libelle);
+    }
+    
+    /*---------- ACCESSEURS ----------*/
 }

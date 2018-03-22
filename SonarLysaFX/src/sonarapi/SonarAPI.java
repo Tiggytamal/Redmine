@@ -52,7 +52,7 @@ public class SonarAPI
     private final String codeUser;
     private static final String AUTHORIZATION = "Authorization";
     private static final String HTTP = ": HTTP ";
-    
+
     /*---------- CONSTRUCTEURS ----------*/
 
     /**
@@ -310,6 +310,7 @@ public class SonarAPI
 
     /**
      * Permet de remonter la liste des QualityGate présentes dans SonarQube.
+     * 
      * @return
      */
     public List<QualityGate> getListQualitygate()
@@ -326,7 +327,7 @@ public class SonarAPI
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Impossible de remonter les QualityGate de Sonar - API : api/qualitygates/list");
         }
     }
-    
+
     /**
      * retourne si une vue existe ou non dans SonarQube. Pour cela, essaie de remonter les informations de la vue.<br>
      * Si HTTP 200 => retourne vrai.<br>
@@ -342,12 +343,12 @@ public class SonarAPI
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.testVueExiste a son argument nul");
 
         Response response = appelWebserviceGET("api/views/show", new Parametre("key", vueKey));
-        if( response.getStatus() == Status.OK.getStatusCode())
+        if (response.getStatus() == Status.OK.getStatusCode())
             return true;
         if (response.getStatus() == Status.NOT_FOUND.getStatusCode())
             return false;
         logger.error(erreurAPI("views/show") + vueKey);
-        return false;       
+        return false;
     }
 
     /*---------- METHODES PUBLIQUES POST ----------*/
@@ -380,48 +381,35 @@ public class SonarAPI
     }
 
     /**
-     * Supprime une vue dans SonarQube
+     * Supprime un projet dans SonarQube, avec ou non gestion des erreurs
      * 
      * @param vue
      * @return
      */
-    public void supprimerVue(Vue vue)
+    public void supprimerProjet(Vue vue, boolean erreur)
     {
         if (vue == null)
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerVue a son argument nul");
 
-        supprimerVue(vue.getKey());
+        supprimerProjet(vue.getKey(), erreur);
     }
-    
+
     /**
-     * Supprime une vue dans SonarQube depuis la clef, et vérifie que celle-ci n'existe plus pendant 2s.
+     * Supprime un projet dans SonarQube depuis la clef avec ou non gestion des erreur, et vérifie que celle-ci n'existe plus pendant 2s.
      * 
      * @param vueKey
-     *          clef de la vue à supprimer
+     *            clef de la vue à supprimer
      * @return
      */
-    public void supprimerVue(String vueKey)
+    public void supprimerProjet(String vueKey, boolean erreur)
     {
         if (vueKey == null || vueKey.isEmpty())
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerVue a son argument nul");
 
-        Response response = appelWebservicePOST("api/views/delete", new Clef(vueKey));
-        logger.info("retour supprimer vue " + vueKey + " : " + response.getStatus() + " " + response.getStatusInfo());
-        gestionErreur(response);
-        int nbreTest = 0;
-        
-        while (testVueExiste(vueKey) && nbreTest < 5)
-        {
-            try
-            {
-                Thread.sleep(500);
-                logger.info("Attente suppression");
-            } catch (InterruptedException e)
-            {
-                Thread.currentThread().interrupt();
-            }
-            nbreTest++;
-        }       
+        Response response = appelWebservicePOST("api/projects/delete", new Clef(vueKey));
+        logger.info("retour supprimer projet " + vueKey + " : " + response.getStatus() + " " + response.getStatusInfo());
+        if (erreur)
+            gestionErreur(response);
     }
 
     /**
@@ -491,9 +479,10 @@ public class SonarAPI
         Response response = appelWebservicePOST("api/views/run", null);
         gestionErreur(response);
     }
-    
+
     /**
      * Permet d'associer un QualityGate à un composant donné.
+     * 
      * @param projet
      * @param qg
      */
@@ -627,7 +616,7 @@ public class SonarAPI
         }
         return retour;
     }
-    
+
     private String erreurAPI(String api)
     {
         return "Erreur API : api/" + api + " - Composant : ";

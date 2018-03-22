@@ -5,6 +5,8 @@ import static utilities.Statics.proprietesXML;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -139,6 +141,7 @@ public class ControlXML
         ControlClarity control = new ControlClarity(file);
         Map<String, InfoClarity> clarity = control.recupInfosClarityExcel();
         control.close();
+        fichiersXML.getMapClarity().clear();
         fichiersXML.getMapClarity().putAll(clarity);
         fichiersXML.setDateFichier(TypeFichier.CLARITY);
         saveParam(fichiersXML);
@@ -149,6 +152,7 @@ public class ControlXML
         ControlPic control = new ControlPic(file);
         Map<String, LotSuiviPic> lotsPic = control.recupLotsDepuisPic();
         control.close();
+        fichiersXML.getLotsPic().clear();
         fichiersXML.getLotsPic().putAll(lotsPic);
         fichiersXML.setDateFichier(TypeFichier.LOTSPICS);
         saveParam(fichiersXML);
@@ -159,18 +163,24 @@ public class ControlXML
         ControlChefService control = new ControlChefService(file);
         Map<String, RespService> respService = control.recupRespDepuisExcel();
         control.close();
+        fichiersXML.getMapRespService().clear();
         fichiersXML.getMapRespService().putAll(respService);
         fichiersXML.setDateFichier(TypeFichier.RESPSERVICE);
         saveParam(fichiersXML);
     }
     
-    public void recupVersionDepuisExcel(File file) throws InvalidFormatException, IOException, JAXBException
+    public void recupEditionDepuisExcel(File file) throws InvalidFormatException, IOException, JAXBException
     {
-        ControlVersion control = new ControlVersion(file);
-        Map<String, String> versionCDM = control.recupVersionDepuisExcel();
+        ControlEdition control = new ControlEdition(file);
+        List<String> liste = new ArrayList<>();
+        liste.add("2018");
+        Map<String, Map<String, String>> editions = control.recupEditionDepuisExcel(liste);
         control.close();
-        fichiersXML.getMapCDM().putAll(versionCDM);
-        fichiersXML.setDateFichier(TypeFichier.VERSION);
+        fichiersXML.getMapCDM().clear();
+        fichiersXML.getMapCDM().putAll(editions.get("CDM"));
+        fichiersXML.getMapCHC().clear();
+        fichiersXML.getMapCHC().putAll(editions.get("CHC"));
+        fichiersXML.setDateFichier(TypeFichier.EDITION);
         saveParam(fichiersXML);
     }
 

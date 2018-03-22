@@ -28,7 +28,7 @@ public class ControlSonarTest
     {
         // handler = new ControlSonar();
         handler = new ControlSonar("ETP8137", "28H02m89,;:!");
-        deser = false;
+        deser = true;
     }
 
     @Test
@@ -110,9 +110,14 @@ public class ControlSonarTest
     }
     
     @Test
-    public void creerVurCDM() throws InvalidFormatException, IOException
+    public void creerVueCDM() throws InvalidFormatException, IOException
     {
-        File file = new File("d:\\chccdm.xlsx");
-        handler.creerVueCDM(file);
+        handler.creerVueCDM();
+    }
+    
+    @Test
+    public void creerVueCHC()
+    {
+        handler.creerVueCHC();
     }
 }

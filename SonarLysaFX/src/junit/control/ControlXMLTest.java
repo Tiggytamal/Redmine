@@ -77,4 +77,10 @@ public class ControlXMLTest
 	    builder.append("Referentiel Clarity chargé. Dernière Maj : ").append(param.getDateMaj().get(TypeFichier.CLARITY)).append(Statics.NL);
 	    Assert.assertEquals(builder.toString(), TestUtils.callPrivate("controleDonneesParam", handler, String.class, param));	
 	}
+	
+	@Test
+	public void recupEditionDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+	{
+	    handler.recupEditionDepuisExcel(new File("d:\\Codification des Editions.xls"));	
+	}
 }
