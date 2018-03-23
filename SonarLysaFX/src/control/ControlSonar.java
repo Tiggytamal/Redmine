@@ -363,7 +363,7 @@ public class ControlSonar
             projets = api.getComposants();
             Utilities.serialisation("d:\\composants.ser", projets);
         }
-
+               
         // Triage ascendant de la liste par nom de projet
         projets.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
 
@@ -391,7 +391,7 @@ public class ControlSonar
      *
      * @return
      */
-    private Map<String, List<Projet>> recupererComposantsSonarVersion(boolean datastage)
+    private Map<String, List<Projet>> recupererComposantsSonarVersion(Boolean datastage)
     {
         // Récupération des versions en paramètre
         String[] versions = proprietesXML.getMapParams().get(TypeParam.VERSIONS).split("-");
@@ -415,9 +415,9 @@ public class ControlSonar
                 // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans version E32
                 if (projet.getNom().endsWith(Utilities.transcoEdition(version)))
                 {
-                    // Selon que l'on regarde les composants datastage ou non, on remplie la liste en conséquence en utilisant le filtre en paramètre
+                    // Selon que l'on regarde les composants datastage ou non, on remplie la liste en conséquence en utilisant le filtre en paramètre. Si le Boolean est nul, on prend tous les composants
                     String filtre = proprietesXML.getMapParams().get(TypeParam.FILTREDATASTAGE);
-                    if (datastage && projet.getNom().startsWith(filtre) || !datastage && !projet.getNom().startsWith(filtre))
+                    if (datastage == null || datastage && projet.getNom().startsWith(filtre) || !datastage && !projet.getNom().startsWith(filtre))
                         retour.get(version).add(projet);
                 }
             }
@@ -829,7 +829,12 @@ public class ControlSonar
         }
         return retour;
     }
-
+    
+    /**
+     * 
+     * @param cdm
+     * @param annees
+     */
     private void suppressionVuesMaintenance(boolean cdm, List<String> annees)
     {
         String base;
@@ -865,9 +870,16 @@ public class ControlSonar
 
         Map<String, Set<String>> mapVuesACreer = new HashMap<>();
 
-        Map<String, Projet> mapProjets = recupererComposantsSonar();
-
-        for (Projet projet : mapProjets.values())
+        Map<String, List<Projet>> mapProjets = recupererComposantsSonarVersion(null);
+        
+        // Transfert de la map en une liste avec tous ls projets
+        List<Projet> tousLesProjets = new ArrayList<>();
+        for (List<Projet> projets : mapProjets.values())
+        {
+            tousLesProjets.addAll(projets);
+        }
+        
+        for (Projet projet : tousLesProjets)
         {
             // Récupération de l'édition du composant sou forme numérique xx.yy.zz.tt et du numéro de lot
             Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { "edition", "lot" });

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<proprietesXML>
+    <mapColonnes>
+        <entry>
+            <key>DIRECTION</key>
+            <value>Direction</value>
+        </entry>
+        <entry>
+            <key>DEPARTEMENT</key>
+            <value>Département</value>
+        </entry>
+        <entry>
+            <key>SERVICE</key>
+            <value>Service</value>
+        </entry>
+        <entry>
+            <key>RESPSERVICE</key>
+            <value>Responsable Service</value>
+        </entry>
+        <entry>
+            <key>CLARITY</key>
+            <value>Projet Clarity</value>
+        </entry>
+        <entry>
+            <key>LIBELLE</key>
+            <value>Libelle projet</value>
+        </entry>
+        <entry>
+            <key>CPI</key>
+            <value>CPI du lot</value>
+        </entry>
+        <entry>
+            <key>EDITION</key>
+            <value>Edition</value>
+        </entry>
+        <entry>
+            <key>LOT</key>
+            <value>Lot projet RTC</value>
+        </entry>
+        <entry>
+            <key>ENV</key>
+            <value>Etat du lot</value>
+        </entry>
+        <entry>
+            <key>ANOMALIE</key>
+            <value>Anomalie</value>
+        </entry>
+        <entry>
+            <key>ETAT</key>
+            <value>Etat de l'anomalie</value>
+        </entry>
+        <entry>
+            <key>SECURITE</key>
+            <value>Sécurité</value>
+        </entry>
+        <entry>
+            <key>REMARQUE</key>
+            <value>Remarque</value>
+        </entry>
+        <entry>
+            <key>VERSION</key>
+            <value>Version</value>
+        </entry>
+        <entry>
+            <key>DATECREATION</key>
+            <value>Date création</value>
+        </entry>
+        <entry>
+            <key>DATERELANCE</key>
+            <value>Date relance</value>
+        </entry>
+        <entry>
+        	<key>TRAITE</key>
+        	<value>Traitée</value>
+        </entry>
+        <entry>
+        	<key>FILIERE</key>
+        	<value>Filière</value>
+        </entry>
+        <entry>
+        	<key>MANAGER</key>
+        	<value>Manager</value>
+        </entry>
+        <entry>
+        	<key>MATIERE</key>
+        	<value>Matière</value>
+        </entry>
+    </mapColonnes>
+    <mapParams>
+        <entry>
+            <key>VERSIONS</key>
+            <value>E32-E31-E30</value>
+        </entry>
+        <entry>
+            <key>FILTREDATASTAGE</key>
+            <value>Composant DS_</value>
+        </entry>
+        <entry>
+            <key>ABSOLUTEPATH</key>
+            <value>S:\\SER_ASSURANCE_QUALITE\\COMMUN\\Qualimétrie\\Suivi des anomalies qualimétriques\\</value>
+        </entry>
+        <entry>
+            <key>NOMFICHIER</key>
+            <value>Suivi_Quality_Gate.xlsx</value>
+        </entry>
+        <entry>
+            <key>NOMFICHIERDATASTAGE</key>
+            <value>Suivi_Quality_Gate - DataStage.xlsx</value>
+        </entry>
+        <entry>
+            <key>ABSOLUTEPATHHISTO</key>
+            <value>S:\\SER_ASSURANCE_QUALITE\\COMMUN\\Qualimétrie\\Suivi des anomalies qualimétriques\\Historique SUIVI\\</value>
+        </entry>
+        <entry>
+            <key>LIENSLOTS</key>
+            <value>http://ttp10-snar.ca-technologies.fr/governance?id=view_lot_</value>
+        </entry>
+        <entry>
+            <key>LIENSANOS</key>
+            <value>https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/Support%20NICE#action=com.ibm.team.workitem.viewWorkItem</value>
+        </entry>
+        <entry>
+        	<key>NOMQGDATASTAGE</key>
+        	<value>QG DataStage</value>
+        </entry>
+        <entry>
+        	<key>URLSONAR</key>
+        	<value>http://ttp10-snar.ca-technologies.fr</value>
+        </entry>
+        <entry>
+        	<key>URLSONARTEST</key>
+        	<value>http://ttt10-snar.ca-technologies.fr</value>
+        </entry>
+    </mapParams>
+</proprietesXML>

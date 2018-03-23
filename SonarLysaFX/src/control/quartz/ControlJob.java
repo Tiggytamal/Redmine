@@ -32,7 +32,7 @@ public class ControlJob
         JobDetail jobAnomalies = newJob(JobAnomaliesSonar.class).withIdentity("jobAnomaliesSonar", "group").build();
 
         // Création d'un trigger qui démarre le soir à 23h et se répete tous les jours sauf le week-end.
-        Trigger trigger = newTrigger().withIdentity("trigger", "group").startNow().withSchedule(atHourAndMinuteOnGivenDaysOfWeek(10, 56, DateBuilder.MONDAY,
+        Trigger trigger = newTrigger().withIdentity("trigger", "group").startNow().withSchedule(atHourAndMinuteOnGivenDaysOfWeek(23, 00, DateBuilder.MONDAY,
                 DateBuilder.TUESDAY, DateBuilder.WEDNESDAY, DateBuilder.THURSDAY, DateBuilder.FRIDAY)).build();
 
         // Mise en place du job.

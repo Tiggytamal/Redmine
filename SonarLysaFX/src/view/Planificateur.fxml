@@ -18,28 +18,45 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Separator?>
 
-<GridPane fx:id="backgroundPane" fx:controller="control.view.PlanificateurViewControl" xmlns:fx="http://javafx.com/fxml" alignment="center"
-	hgap="10" vgap="10" prefHeight="500" prefWidth="500">
+<GridPane fx:id="backgroundPane" fx:controller="control.view.PlanificateurViewControl" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10"
+	vgap="10" prefHeight="500" prefWidth="500">
 	<padding>
 		<Insets top="25" right="25" bottom="10" left="25" />
 	</padding>
 	<children>
 		<HBox>
-			<Label text="Lundi : " />
-			<CheckBox fx:id="lundiBox" />
-			<Label text="Mardi : " />
-			<CheckBox fx:id="mardiBox" />
-			<Label text="Mercredi : " />
-			<CheckBox fx:id="mercrediBox" />
-			<Label text="Jeudi : " />
-			<CheckBox fx:id="jeudiBox" />
-			<Label text="Vendredi : " />
-			<CheckBox fx:id="vendrediBox" />
+			<children>
+				<!-- RadioBoutons -->
+				<fx:define>
+					<ToggleGroup fx:id="toggleGroup" />
+				</fx:define>
+
+				<VBox minHeight="200" minWidth="100" alignment="CENTER">
+					<RadioButton fx:id="radioSuivi" text="Suivi Qualité" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherSuivi" />
+					<RadioButton fx:id="radioChc" text="Vues Chc/CDM" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherChc" />
+				</VBox>
+				<VBox>
+					<HBox>
+						<Label text="Lundi : " />
+						<CheckBox fx:id="lundiBox" />
+						<Label text="Mardi : " />
+						<CheckBox fx:id="mardiBox" />
+						<Label text="Mercredi : " />
+						<CheckBox fx:id="mercrediBox" />
+						<Label text="Jeudi : " />
+						<CheckBox fx:id="jeudiBox" />
+						<Label text="Vendredi : " />
+						<CheckBox fx:id="vendrediBox" />
+					</HBox>
+					<HBox GridPane.rowIndex="1">
+						<DatePicker />
+					</HBox>
+				</VBox>
+			</children>
 		</HBox>
-		<HBox GridPane.rowIndex="1">
-			<DatePicker />
-		</HBox>
+		<Separator />
 		<HBox GridPane.rowIndex="2">
 			<!-- Bouton pour lancer le planificateur -->
 			<Button text="Démarrer tâches planifiées" fx:id="demarrer" onAction="#demarrer" alignment="CENTER" />

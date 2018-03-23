@@ -6,6 +6,8 @@ import control.quartz.ControlJob;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import view.TrayIconView;
 
@@ -29,6 +31,12 @@ public class PlanificateurViewControl
     private CheckBox jeudiBox;
     @FXML
     private CheckBox vendrediBox;
+    @FXML
+    private ToggleGroup toggleGroup;
+    @FXML
+    private RadioButton radioSuivi;
+    @FXML
+    private RadioButton radioChc;
     
     private ControlJob control;
 
@@ -53,6 +61,18 @@ public class PlanificateurViewControl
     {
         MainScreen.changeImageTray(TrayIconView.imageBase);
         control.fermeturePlanificateur();
+    }
+    
+    @FXML
+    public void afficherSuivi()
+    {
+        
+    }
+    
+    @FXML
+    public void afficherChc()
+    {
+        
     }
     
     /*---------- METHODES PRIVEES ----------*/
