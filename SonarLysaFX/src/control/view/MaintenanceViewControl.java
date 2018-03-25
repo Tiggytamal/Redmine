@@ -74,7 +74,7 @@ public class MaintenanceViewControl
     }
     
     @FXML
-    public void creerVues() throws InvalidFormatException, IOException
+    public void creerVues()
     {
         handler.creerVueCDM();
     }

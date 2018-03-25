@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.SpinnerValueFactory.LocalTimeSpinnerValueFactory?>
+<?import javafx.scene.layout.Region?>
+<?import java.time.LocalTime?>
+
+<VBox x:controller="control.view.PlanificateurViewControl" xmlns:fx="http://javafx.com/fxml">
+	<HBox>
+		<Label text="Lundi : " />
+		<CheckBox fx:id="lundiBox" />
+		<Label text="Mardi : " />
+		<CheckBox fx:id="mardiBox" />
+		<Label text="Mercredi : " />
+		<CheckBox fx:id="mercrediBox" />
+		<Label text="Jeudi : " />
+		<CheckBox fx:id="jeudiBox" />
+		<Label text="Vendredi : " />
+		<CheckBox fx:id="vendrediBox" />
+	</HBox>
+	<Region prefHeight="20" />
+	<HBox>
+		<Label text="Heure : " />
+		<Spinner fx:id="heureSpin" prefWidth="60">
+
+		</Spinner>
+	</HBox>
+</VBox>

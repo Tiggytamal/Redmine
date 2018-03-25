@@ -36,7 +36,7 @@ import utilities.TechnicalException;
 /**
  * Classe de gestion des paramètres de XML de l'application
  * 
- * @author ETP137 - Grégoire Mathon
+ * @author ETP8137 - Grégoire Mathon
  *
  */
 public class ControlXML

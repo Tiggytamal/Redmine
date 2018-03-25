@@ -19,23 +19,27 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
 
-<GridPane fx:id="backgroundPane" fx:controller="control.view.PlanificateurViewControl" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10"
-	vgap="10" prefHeight="500" prefWidth="500">
+<GridPane fx:id="backgroundPane" fx:controller="control.view.PlanificateurViewControl" xmlns:fx="http://javafx.com/fxml" alignment="center"
+	hgap="10" vgap="10" prefHeight="500" prefWidth="500">
 	<padding>
 		<Insets top="25" right="25" bottom="10" left="25" />
 	</padding>
 	<children>
-		<HBox>
+		<HBox fx:id="hboxPane">
 			<children>
 				<!-- RadioBoutons -->
 				<fx:define>
 					<ToggleGroup fx:id="toggleGroup" />
 				</fx:define>
 
-				<VBox minHeight="200" minWidth="100" alignment="CENTER">
-					<RadioButton fx:id="radioSuivi" text="Suivi Qualité" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherSuivi" />
-					<RadioButton fx:id="radioChc" text="Vues Chc/CDM" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherChc" />
+				<VBox minWidth="200">
+					<RadioButton fx:id="radioSuivi" text="Suivi Qualité" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherPlanificateur"
+						selected="true" />
+					<RadioButton fx:id="radioChc" text="Vues CHC" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherPlanificateur" />
+					<RadioButton fx:id="radioCdm" text="Vues CDM" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherPlanificateur" />
 				</VBox>
 				<VBox>
 					<HBox>
@@ -50,14 +54,21 @@
 						<Label text="Vendredi : " />
 						<CheckBox fx:id="vendrediBox" />
 					</HBox>
-					<HBox GridPane.rowIndex="1">
-						<DatePicker />
+					<Region prefHeight="20" />
+					<HBox>
+						<Label text="Heure : " />
+						<Spinner fx:id="heureSpin" prefWidth="60">
+							<valueFactory>
+								<SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="24" initialValue="12"/>
+							</valueFactory>
+						</Spinner>
 					</HBox>
 				</VBox>
 			</children>
 		</HBox>
-		<Separator />
+		<Separator GridPane.rowIndex="1" />
 		<HBox GridPane.rowIndex="2">
+			<Region prefWidth="20" HBox.hgrow="ALWAYS" />
 			<!-- Bouton pour lancer le planificateur -->
 			<Button text="Démarrer tâches planifiées" fx:id="demarrer" onAction="#demarrer" alignment="CENTER" />
 			<Region prefWidth="20" />

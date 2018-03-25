@@ -2,7 +2,7 @@
 <Configuration status="WARN">
 
 	<Properties>
-	    <Property name="log-path">S:/SER_ASSURANCE_QUALITE/COMMUN/Qualimétrie/Suivi des anomalies qualimétriques/logs</Property>
+	    <Property name="log-path">d:/logs</Property>
 	</Properties>
 	
 	<Appenders>
@@ -13,7 +13,7 @@
 	    </Console>
 	
 	    <!-- file appender Sans applications -->
-	    <RollingFile name="sansapp-log" fileName="${log-path}/sansapp.log" filePattern="${log-path}/commons-%d{yyyy-MM-dd}.log">
+	    <RollingFile name="sansapp-log" fileName="${log-path}/sansapp.log" filePattern="${log-path}/sansapp-%d{yyyy-MM-dd}.log">
 	        <!-- log pattern -->
 	        <PatternLayout>
 	            <pattern>%d{yyyy-MM-dd} - %msg%n</pattern>
@@ -26,7 +26,7 @@
 	    </RollingFile>
 	    
    	    <!-- file appender applications INCONNUE -->
-	    <RollingFile name="inconnue-log" fileName="${log-path}/inconnue.log" filePattern="${log-path}/analytics-%d{yyyy-MM-dd}.log">
+	    <RollingFile name="inconnue-log" fileName="${log-path}/inconnue.log" filePattern="${log-path}/inconnue-%d{yyyy-MM-dd}.log">
 	        <PatternLayout>
 	            <pattern>%d{yyyy-MM-dd} - %msg%n</pattern>
 	        </PatternLayout>
@@ -36,7 +36,7 @@
 	    </RollingFile>
 	    
 	    <!-- file appender applications non listée -->
-	    <RollingFile name="nonlistee-log" fileName="${log-path}/nonliste.log" filePattern="${log-path}/commons-%d{yyyy-MM-dd}.log">
+	    <RollingFile name="nonlistee-log" fileName="${log-path}/nonliste.log" filePattern="${log-path}/nonlistee-%d{yyyy-MM-dd}.log">
 	        <!-- log pattern -->
 	        <PatternLayout>
 	            <pattern>%d{yyyy-MM-dd} - %msg%n</pattern>
@@ -49,7 +49,7 @@
 	    </RollingFile>
 	    
 	    <!-- file appender logs complets -->	
-	    <RollingFile name="complet-log" fileName="${log-path}/complet.log" filePattern="${log-path}/commons-%d{yyyy-MM-dd}.log">
+	    <RollingFile name="complet-log" fileName="${log-path}/complet.log" filePattern="${log-path}/complet-%d{yyyy-MM-dd}.log">
 	        <!-- log pattern -->
 	        <PatternLayout>
 	            <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss} %c{1} - %msg%n</pattern>
