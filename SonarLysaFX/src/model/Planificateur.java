@@ -2,11 +2,17 @@ package model;
 
 import java.time.LocalTime;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 /**
  * représente la configuration d'un planificateur
  * 
  * @author ETP8137 - Grégoire Mathon
  */
+@XmlRootElement
 public class Planificateur
 {
     /*---------- ATTRIBUTS ----------*/
@@ -27,6 +33,7 @@ public class Planificateur
     /**
      * @return the lundi
      */
+    @XmlAttribute (name = "lundi")
     public boolean isLundi()
     {
         return lundi;
@@ -44,6 +51,7 @@ public class Planificateur
     /**
      * @return the mardi
      */
+    @XmlAttribute (name = "mardi")
     public boolean isMardi()
     {
         return mardi;
@@ -61,6 +69,7 @@ public class Planificateur
     /**
      * @return the mercredi
      */
+    @XmlAttribute (name = "mercredi")
     public boolean isMercredi()
     {
         return mercredi;
@@ -78,6 +87,7 @@ public class Planificateur
     /**
      * @return the jeudi
      */
+    @XmlAttribute (name = "jeudi")
     public boolean isJeudi()
     {
         return jeudi;
@@ -95,6 +105,7 @@ public class Planificateur
     /**
      * @return the vendredi
      */
+    @XmlAttribute (name = "vendredi")
     public boolean isVendredi()
     {
         return vendredi;
@@ -112,6 +123,8 @@ public class Planificateur
     /**
      * @return the heure
      */
+    @XmlAttribute (name = "heure")
+    @XmlJavaTypeAdapter(value = LocalTimeAdapter.class)
     public LocalTime getHeure()
     {
         return heure;
@@ -129,6 +142,7 @@ public class Planificateur
     /**
      * @return the active
      */
+    @XmlAttribute (name = "active")
     public boolean isActive()
     {
         return active;
@@ -141,5 +155,22 @@ public class Planificateur
     public void setActive(boolean active)
     {
         this.active = active;
+    }
+    
+    private static class LocalTimeAdapter extends XmlAdapter<String, LocalTime>
+    {
+        public LocalTime unmarshal(String v) throws Exception
+        {
+            if (v != null)
+                return LocalTime.parse(v);
+            return null;
+        }
+
+        public String marshal(LocalTime v) throws Exception
+        {
+            if (v != null)
+                return v.toString();
+            return null;
+        }
     }
 }

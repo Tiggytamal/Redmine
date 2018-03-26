@@ -2,27 +2,31 @@ package control.view;
 
 import static utilities.Statics.proprietesXML;
 
-import java.io.IOException;
-import java.time.LocalTime;
+import javax.xml.bind.JAXBException;
 
 import org.quartz.SchedulerException;
 
+import control.ControlXML;
 import control.quartz.ControlJob;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import model.Planificateur;
 import model.enums.TypePlan;
+import view.TimeSpinner;
 import view.TrayIconView;
 
+/**
+ * Controleur de la vue des planificateurs
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ *
+ */
 public class PlanificateurViewControl
 {
     /*---------- ATTRIBUTS ----------*/
@@ -31,8 +35,6 @@ public class PlanificateurViewControl
     private Button demarrer;
     @FXML
     private Button arreter;
-    @FXML
-    private GridPane backgroundPane;
     @FXML
     private CheckBox lundiBox;
     @FXML
@@ -44,6 +46,8 @@ public class PlanificateurViewControl
     @FXML
     private CheckBox vendrediBox;
     @FXML
+    private CheckBox activeBox;
+    @FXML
     private ToggleGroup toggleGroup;
     @FXML
     private RadioButton radioSuivi;
@@ -52,11 +56,10 @@ public class PlanificateurViewControl
     @FXML
     private RadioButton radioCdm;
     @FXML
-    private Spinner<LocalTime> heureSpin;
-    @FXML
     private HBox hboxPane;
     
     private ControlJob control;
+    private TimeSpinner spinner;
     private Planificateur planificateur;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -67,16 +70,10 @@ public class PlanificateurViewControl
     }
 
     @FXML
-    public void initialize() throws IOException
+    public void initialize()
     {
         planificateur = proprietesXML.getMapPlans().get(TypePlan.SUIVIHEBDO);
-//        FXMLLoader loader = new FXMLLoader();
-//        planificateur = new Planificateur();
-//        planificateur.setHeure(LocalTime.now());
-//        loader.getNamespace().put("init", planificateur.getHeure());
-//        loader.setLocation(getClass().getResource("/view/PlanInfos.fxml"));
-//        hboxPane.getChildren().add(loader.load());
-//        setInfos(planificateur);
+        setInfos(planificateur);
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -94,31 +91,46 @@ public class PlanificateurViewControl
         MainScreen.changeImageTray(TrayIconView.imageBase);
         control.fermeturePlanificateur();
     }
-
+    
     @FXML
-    public void afficherSuivi()
+    public void sauvegarder() throws JAXBException
     {
-
-    }
-
-    @FXML
-    public void afficherChc()
-    {
-
-    }
-
-    @FXML
-    public void afficherCdm()
-    {
-
+        planificateur.setHeure(spinner.getValue());
+        planificateur.setLundi(lundiBox.isSelected());
+        planificateur.setMardi(mardiBox.isSelected());
+        planificateur.setMercredi(mercrediBox.isSelected());
+        planificateur.setJeudi(jeudiBox.isSelected());
+        planificateur.setVendredi(vendrediBox.isSelected());
+        planificateur.setActive(activeBox.isSelected());
+        planificateur.setHeure(spinner.getValue());
+        new ControlXML().saveParam(proprietesXML);
     }
 
     @FXML
     public void afficherPlanificateur(ActionEvent event)
     {
+        String id = "";
         Object source = event.getSource();
+        if (source instanceof Node)
+            id = ((Node)source).getId();
 
+        switch (id)
+        {
+            case "radioSuivi":
+                planificateur = proprietesXML.getMapPlans().get(TypePlan.SUIVIHEBDO);
+                break;
+            case "radioChc":
+                planificateur = proprietesXML.getMapPlans().get(TypePlan.VUECHC);
+                break;
+            case "radioCdm":
+                planificateur = proprietesXML.getMapPlans().get(TypePlan.VUECDM);
+                break;
+            default:
+                break;
+        }        
+        setInfos(planificateur);
     }
+    
     /*---------- METHODES PRIVEES ----------*/
 
     private void setInfos(Planificateur planificateur)
@@ -130,6 +142,10 @@ public class PlanificateurViewControl
         mercrediBox.setSelected(planificateur.isMercredi());
         jeudiBox.setSelected(planificateur.isJeudi());
         vendrediBox.setSelected(planificateur.isVendredi());
+        activeBox.setSelected(planificateur.isActive());
+        hboxPane.getChildren().remove(spinner);
+        spinner = new TimeSpinner(planificateur.getHeure());
+        hboxPane.getChildren().add(spinner);
     }
 
     /*---------- ACCESSEURS ----------*/

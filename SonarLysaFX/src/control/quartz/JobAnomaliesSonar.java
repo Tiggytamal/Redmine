@@ -13,7 +13,6 @@ import utilities.TechnicalException;
 
 public class JobAnomaliesSonar implements Job
 {
-
 	@Override
 	public void execute(JobExecutionContext context)
 	{
@@ -25,8 +24,6 @@ public class JobAnomaliesSonar implements Job
 		} catch (InvalidFormatException | IOException e)
 		{
 			throw new TechnicalException("Erreur sur le job d'excetion", e);
-		}
-		
+		}		
 	}
-
 }
