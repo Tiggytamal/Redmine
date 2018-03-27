@@ -1,6 +1,7 @@
 package control;
 
 import static utilities.Statics.fichiersXML;
+import static utilities.Statics.info;
 import static utilities.Statics.logSansApp;
 import static utilities.Statics.logger;
 import static utilities.Statics.loginconnue;
@@ -67,6 +68,19 @@ public class ControlSonar
         if (name == null || name.isEmpty() || password == null)
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
         api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), name, password);
+    }
+    
+    /**
+     * Constructeur depuis les données de l'utilisateur
+     *
+     * @param name
+     * @param password
+     */
+    public ControlSonar()
+    {
+        if (!info.controle())
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
+        api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), info.getPseudo(), info.getMotDePasse());
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -159,7 +173,6 @@ public class ControlSonar
                     updateProgress(i, size);
                     updateMessage(projet.getNom());
                 }
-
                 return true;
             }
         };
@@ -168,7 +181,7 @@ public class ControlSonar
     /**
      * Crée les vues par application des composants dans SonarQube
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings ("unchecked")
     public void creerVueParApplication()
     {
         // Création de la liste des composants par application
@@ -230,7 +243,8 @@ public class ControlSonar
     }
 
     /**
-     * Méthode de traitement pour mettre à jour les fichiers de suivi d'anomalies ainsi que la création de vue dans SonarQube. <br>
+     * Méthode de traitement pour mettre à jour les fichiers de suivi d'anomalies ainsi que la création de vue dans
+     * SonarQube. <br>
      * Retourne une liste de toutes les anomalies traitées depuis Sonar
      *
      * @param composants
@@ -239,7 +253,7 @@ public class ControlSonar
      * @throws InvalidFormatException
      * @throws IOException
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings ("unchecked")
     public List<String> traitementFichierSuivi(Map<String, List<Projet>> composants, String fichier, Matiere matiere) throws InvalidFormatException, IOException
     {
         // 1. Récupération des données depuis les fichiers Excel.
@@ -276,7 +290,8 @@ public class ControlSonar
         {
             // Création de la vue et envoie vers SonarQube
             String nom = testNom(fichier);
-            Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nom + " - Edition " + entry.getKey(), "Vue regroupant tous les lots avec des composants en erreur", true);
+            Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nom + " - Edition " + entry.getKey(),
+                    "Vue regroupant tous les lots avec des composants en erreur", true);
 
             for (String lot : entry.getValue())
             {
@@ -342,7 +357,8 @@ public class ControlSonar
 
         // Mise à jour des fichiers Excel
         ControlAno controlAnoJava = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIER)));
-        ControlAno controlAnoDataStage = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE)));
+        ControlAno controlAnoDataStage = new ControlAno(
+                new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE)));
         controlAnoJava.majMultiMatiere(anoMultiple);
         controlAnoDataStage.majMultiMatiere(anoMultiple);
     }
@@ -396,7 +412,7 @@ public class ControlSonar
      *
      * @return
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings ("unchecked")
     private Map<String, Projet> recupererComposantsSonar()
     {
         // Appel du webservice pour remonter tous les composants
@@ -420,7 +436,8 @@ public class ControlSonar
 
         // Création de la map de retour et parcours de la liste des projets pour remplir celle-ci. On utilise la chaine
         // de caractères créées par la regex comme clef dans la map.
-        // Les compossant étant triès par ordre alphabétique, on va écraser tous les composants qui ont un numéro de version obsolète.
+        // Les compossant étant triès par ordre alphabétique, on va écraser tous les composants qui ont un numéro de
+        // version obsolète.
         Map<String, Projet> retour = new HashMap<>();
 
         for (Projet projet : projets)
@@ -460,10 +477,12 @@ public class ControlSonar
         {
             for (String version : versions)
             {
-                // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans version E32
+                // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans
+                // version E32
                 if (projet.getNom().endsWith(Utilities.transcoEdition(version)))
                 {
-                    // Selon que l'on regarde les composants datastage ou non, on remplie la liste en conséquence en utilisant le filtre en paramètre. Si le Boolean est nul, on
+                    // Selon que l'on regarde les composants datastage ou non, on remplie la liste en conséquence en
+                    // utilisant le filtre en paramètre. Si le Boolean est nul, on
                     // prend tous les composants
                     String filtre = proprietesXML.getMapParams().get(TypeParam.FILTREDATASTAGE);
                     if (datastage == null || datastage && projet.getNom().startsWith(filtre) || !datastage && !projet.getNom().startsWith(filtre))
@@ -578,7 +597,8 @@ public class ControlSonar
                     continue;
                 }
 
-                // Mise à jour de la map de retour avec en clef, le code application et en valeur : la liste des projets liés.
+                // Mise à jour de la map de retour avec en clef, le code application et en valeur : la liste des projets
+                // liés.
                 if (mapApplications.keySet().contains(application))
                 {
                     mapApplications.get(application).add(projet);
@@ -770,7 +790,8 @@ public class ControlSonar
     }
 
     /**
-     * Permet de mettre à jour le fichier des anomalies Sonar, en allant chercher les nouvelles dans Sonar et en vérifiant celles qui ne sont plus d'actualité.
+     * Permet de mettre à jour le fichier des anomalies Sonar, en allant chercher les nouvelles dans Sonar et en
+     * vérifiant celles qui ne sont plus d'actualité.
      *
      * @param mapLotsPIC
      *            Fichier excel d'extraction de la PIC de tous les lots.
@@ -782,8 +803,8 @@ public class ControlSonar
      * @throws InvalidFormatException
      * @throws IOException
      */
-    private void majFichierAnomalies(Map<String, LotSuiviPic> mapLotsPIC, Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere)
-            throws InvalidFormatException, IOException
+    private void majFichierAnomalies(Map<String, LotSuiviPic> mapLotsPIC, Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier,
+            Matiere matiere) throws InvalidFormatException, IOException
     {
         // Controleur
         ControlAno controlAno = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + fichier));
@@ -814,7 +835,8 @@ public class ControlSonar
             for (String numeroLot : entry.getValue())
             {
 
-                // On va chercher les informations de ce lot dans le fichier des lots de la PIC. Si on ne les trouve pas, il faudra mettre à jour ce fichier
+                // On va chercher les informations de ce lot dans le fichier des lots de la PIC. Si on ne les trouve
+                // pas, il faudra mettre à jour ce fichier
                 LotSuiviPic lot = mapLotsPIC.get(numeroLot);
                 if (lot == null)
                 {
@@ -846,7 +868,8 @@ public class ControlSonar
     }
 
     /**
-     * Permet de créer la liste des numéros de lots déjà en anomalie et met à jour les {@code Anomalie} depuis les infos de la Pic
+     * Permet de créer la liste des numéros de lots déjà en anomalie et met à jour les {@code Anomalie} depuis les infos
+     * de la Pic
      *
      * @param listeLotenAno
      *            liste des {@code Anomalie} déjà connues
@@ -880,7 +903,6 @@ public class ControlSonar
     }
 
     /**
-     * 
      * @param cdm
      * @param annees
      */
@@ -905,7 +927,8 @@ public class ControlSonar
     }
 
     /**
-     * Crée les vues CHC ou CDM depuis Sonar et le fichier XML. {@code true} pour les vues CDM et {@code false} pour les vues CHC
+     * Crée les vues CHC ou CDM depuis Sonar et le fichier XML. {@code true} pour les vues CDM et {@code false} pour les
+     * vues CHC
      * 
      * @param cdm
      */
@@ -939,7 +962,8 @@ public class ControlSonar
             String lot = metriques.get("lot");
             String edition = metriques.get("edition");
 
-            // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
+            // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est
+            // présente
             if (lot != null && !lot.isEmpty() && edition != null && mapEditions.keySet().contains(edition))
             {
                 String keyCHC = mapEditions.get(edition);

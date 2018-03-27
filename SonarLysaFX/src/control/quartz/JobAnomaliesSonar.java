@@ -18,7 +18,7 @@ public class JobAnomaliesSonar implements Job
 	{
 		try
 		{
-			ControlSonar handler = new ControlSonar(info.getPseudo(), info.getMotDePasse());
+			ControlSonar handler = new ControlSonar();
 			handler.majFichierSuiviExcel();
 			handler.majFichierSuiviExcelDataStage();
 		} catch (InvalidFormatException | IOException e)

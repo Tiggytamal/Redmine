@@ -65,7 +65,7 @@ public class MensuelViewControl
     @FXML
     public void initialize()
     {        
-        handler = new ControlSonar(Statics.info.getPseudo(), Statics.info.getMotDePasse());
+        handler = new ControlSonar();
         selectPane.getChildren().clear();
         backgroundPane.getChildren().remove(creer);       
     }

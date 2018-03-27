@@ -22,7 +22,7 @@ public class ApplicationsViewControl
     @FXML
     public void initialize()
     {
-        handler = new ControlSonar(Statics.info.getPseudo(), Statics.info.getMotDePasse());
+        handler = new ControlSonar();
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

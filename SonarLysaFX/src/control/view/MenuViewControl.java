@@ -54,6 +54,7 @@ public class MenuViewControl extends ViewControl
         options.setDisable(false);
         planificateur.setDisable(false);
         maintenance.setDisable(false);
+        patrimoine.setDisable(false);
     }
     
     @FXML

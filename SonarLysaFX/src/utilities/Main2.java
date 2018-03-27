@@ -1,8 +1,6 @@
 package utilities;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.Group;

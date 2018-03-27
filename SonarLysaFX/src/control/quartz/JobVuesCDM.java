@@ -13,7 +13,7 @@ public class JobVuesCDM implements Job
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException
     {
-        ControlSonar control = new ControlSonar(info.getPseudo(), info.getMotDePasse());
+        ControlSonar control = new ControlSonar();
         control.creerVueCHC();         
     }
 }

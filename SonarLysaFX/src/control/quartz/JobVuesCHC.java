@@ -12,7 +12,7 @@ public class JobVuesCHC implements Job
     @Override
     public void execute(JobExecutionContext context)
     {
-        ControlSonar control = new ControlSonar(info.getPseudo(), info.getMotDePasse());
+        ControlSonar control = new ControlSonar();
         control.creerVueCHC();       
     }
 }

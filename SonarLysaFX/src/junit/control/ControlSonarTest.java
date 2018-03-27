@@ -11,24 +11,27 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.reflect.Whitebox;
 
 import control.ControlSonar;
+import control.CreerVuePatrimoineTask;
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.javafx.test.TestInJfxThread;
+import javafx.concurrent.Task;
 import junit.TestUtils;
 
-@RunWith(JfxRunner.class)
+@RunWith (JfxRunner.class)
 public class ControlSonarTest
 {
     private ControlSonar handler;
     public static boolean deser;
-    
+
     @Before
     public void init() throws InvalidFormatException, JAXBException, IOException, InterruptedException
     {
         // handler = new ControlSonar();
         handler = new ControlSonar("ETP8137", "28H02m89,;:!");
-        deser = false;
+        deser = true;
     }
 
     @Test
@@ -53,7 +56,7 @@ public class ControlSonarTest
     public void testAppli()
     {
     }
-    
+
     @Test
     public void creationHeader() throws InvalidFormatException, IOException
     {
@@ -95,7 +98,7 @@ public class ControlSonarTest
     {
         handler.majFichierSuiviExcelDataStage();
     }
-    
+
     @Test
     @TestInJfxThread
     public void traitementSuiviExcelToutFichiers() throws InvalidFormatException, IOException
@@ -108,28 +111,32 @@ public class ControlSonarTest
     {
         handler.creerVuesDatastage();
     }
-    
+
     @Test
     public void creerVueCDM() throws InvalidFormatException, IOException
     {
         handler.creerVueCDM();
     }
-    
+
     @Test
     public void creerVueCHC()
     {
         handler.creerVueCHC();
     }
-    
+
     @Test
     public void controlerSonarQube()
     {
         handler.controlerSonarQube();
     }
-    
+
     @Test
-    public void creerVuePatrimoine()
+    @TestInJfxThread
+    public void creerVuePatrimoine() throws Exception
     {
-       handler.creerVuePatrimoine(); 
+        Task<Object> task = handler.creerVuePatrimoine();
+        task.run();
+        CreerVuePatrimoineTask task2 = new CreerVuePatrimoineTask();
+        Whitebox.invokeMethod(task2, "methode");
     }
 }

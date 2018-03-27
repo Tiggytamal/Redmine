@@ -20,16 +20,16 @@ public class PatrimoineViewControl
     @FXML
     public void initialize()
     {
-        handler = new ControlSonar(Statics.info.getPseudo(), Statics.info.getMotDePasse());
+        handler = new ControlSonar();
     }
 
     @FXML
     public void creerVue()
     {
         Task<Object> task = handler.creerVuePatrimoine();
-
         ProgressDialog dialog = new ProgressDialog(task, "Vue patrimoine");
         dialog.show();
         dialog.start();
+
     }
 }
