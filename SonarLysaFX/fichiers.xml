@@ -11,7 +11,7 @@
         </entry>
         <entry>
             <key>LOTSPICS</key>
-            <value>23/03/2018</value>
+            <value>27/03/2018</value>
         </entry>
         <entry>
             <key>RESPSERVICE</key>
@@ -1876,6 +1876,10 @@
             <value cpiProjet="MALIALIN Audrea" edition="E31" libelle="SRVE_SituationParticulierePersonne_Correction_assemblage_war_du_client" lot="315053" nbreComposants="0" nbrePaquets="0" projetClarity="FE000014"/>
         </entry>
         <entry>
+            <key>316381</key>
+            <value build="2018-03-22" cpiProjet="PILLON Pierre-Francois" edition="CHC_CDM2018-S27" libelle="Lot_BF073002 (NAF - API)" lot="316381" nbreComposants="10" nbrePaquets="0" projetClarity="BF073002" vmoa="2018-03-22"/>
+        </entry>
+        <entry>
             <key>263766</key>
             <value build="2017-06-29" cpiProjet="BAUR Aurelie" edition="CHC_CDM2017-S34" libelle="Lot_FE000015_CDM_MIB0_INC000003833209 : Tests sur les Codes associés aux numéros de téléphone" lot="263766" nbreComposants="1" nbrePaquets="0" projetClarity="FE000015"/>
         </entry>
@@ -2204,6 +2208,10 @@
             <value build="2017-08-03" cpiProjet="BELLEMIN-NOEL Isabelle" edition="E30" libelle="Lot_BE0426_01 Fiabilisation SimulCA - Tracabilite Optin" livraison="2017-09-08" lot="270078" nbreComposants="0" nbrePaquets="7" projetClarity="BE0426" vmoa="2017-08-04" vmoe="2017-08-03"/>
         </entry>
         <entry>
+            <key>316326</key>
+            <value build="2018-03-23" cpiProjet="PASSEMARD Christine" edition="CHC2018-S16" libelle="Ajout nouveau code domaine Conformité PP" lot="316326" nbreComposants="0" nbrePaquets="1" projetClarity="P0104301" vmoa="2018-03-23" vmoe="2018-03-23"/>
+        </entry>
+        <entry>
             <key>293153</key>
             <value build="2017-12-06" cpiProjet="FORMELA Marie-Helene" edition="CHC2018-S02" libelle="Lot_FE000013_PKE35982" livraison="2018-01-05" lot="293153" nbreComposants="0" nbrePaquets="1" projetClarity="FE00013" vmoa="2017-12-06" vmoe="2017-12-06"/>
         </entry>
@@ -2469,7 +2477,7 @@
         </entry>
         <entry>
             <key>304335</key>
-            <value build="2018-03-23" cpiProjet="SAVEAN Yves" edition="E31_Fil_De_Leau" libelle="Lot Projet Test" lot="304335" nbreComposants="1" nbrePaquets="0" projetClarity="BE0141"/>
+            <value build="2018-03-23" cpiProjet="SAVEAN Yves" edition="E31_Fil_De_Leau" libelle="Lot Projet Test" lot="304335" nbreComposants="2" nbrePaquets="0" projetClarity="BE0141"/>
         </entry>
         <entry>
             <key>262030</key>
@@ -2753,7 +2761,7 @@
         </entry>
         <entry>
             <key>315871</key>
-            <value build="2018-03-21" cpiProjet="LE GUYADER Thomas" devtu="2018-03-21" edition="E30.1_Fil_De_Leau FDL/CC 24.07" libelle="Version corrective MaCarte 4.1" lot="315871" nbreComposants="1" nbrePaquets="0" projetClarity="BFMKRT04" vmoa="2018-03-23" vmoe="2018-03-21"/>
+            <value build="2018-03-21" cpiProjet="LE GUYADER Thomas" devtu="2018-03-21" edition="E30.1_Fil_De_Leau FDL/CC 24.07" libelle="Version corrective MaCarte 4.1" livraison="2018-03-26" lot="315871" nbreComposants="1" nbrePaquets="0" projetClarity="BFMKRT04" vmoa="2018-03-23" vmoe="2018-03-21"/>
         </entry>
         <entry>
             <key>296266</key>
@@ -2782,6 +2790,10 @@
         <entry>
             <key>275363</key>
             <value build="2017-09-13" cpiProjet="CUOQ Bruno" edition="CHC2017-S39" libelle="INC000003416158 EZKA01M" livraison="2017-09-26" lot="275363" nbreComposants="0" nbrePaquets="1" projetClarity="INC000003416158" vmoa="2017-09-14" vmoe="2017-09-13"/>
+        </entry>
+        <entry>
+            <key>316712</key>
+            <value build="2018-03-23" cpiProjet="BEN SAID Mustapha" edition="CHC2018-S15" libelle="FE000014_LOT_MSYE30_V2" livraison="2018-03-27" lot="316712" nbreComposants="0" nbrePaquets="1" projetClarity="FE000014" vmoa="2018-03-26" vmoe="2018-03-23"/>
         </entry>
         <entry>
             <key>309197</key>
@@ -2818,6 +2830,10 @@
         <entry>
             <key>288657</key>
             <value build="2017-12-21" cpiProjet="BASLER Sylvie" edition="E31" libelle="Lot_BF0232_04_Matière_host" lot="288657" nbreComposants="0" nbrePaquets="2" projetClarity="BF023204" vmoa="2017-12-21" vmoe="2018-03-20"/>
+        </entry>
+        <entry>
+            <key>316733</key>
+            <value build="2018-03-23" cpiProjet="EA Linda" devtu="2018-03-23" edition="CHC_CDM2018-S22" libelle="LOT_RE0134_ERA_E31_CDM_S22" lot="316733" nbreComposants="1" nbrePaquets="0" projetClarity="RE013401"/>
         </entry>
         <entry>
             <key>311044</key>
@@ -2921,7 +2937,7 @@
         </entry>
         <entry>
             <key>288289</key>
-            <value build="2017-11-08" cpiProjet="RAULINE Jerome" devtu="2017-11-08" edition="E30_Fil_De_Leau" libelle="Lot_UsageBulleNAF_B0010" lot="288289" nbreComposants="0" nbrePaquets="0" projetClarity="0" vmoa="2017-11-21"/>
+            <value build="2017-11-08" cpiProjet="RAULINE Jerome" devtu="2017-11-08" edition="E30_Fil_De_Leau" libelle="Lot_UsageBulleNAF_B0010" lot="288289" nbreComposants="0" nbrePaquets="0" projetClarity="" vmoa="2017-11-21"/>
         </entry>
         <entry>
             <key>295814</key>
@@ -2965,7 +2981,7 @@
         </entry>
         <entry>
             <key>243349</key>
-            <value build="2017-03-20" cpiProjet="GIBERT Jonathan" edition="E30_Cycle_Court" libelle="build image servitude" lot="243349" nbreComposants="1" nbrePaquets="0" projetClarity="123"/>
+            <value build="2017-03-20" cpiProjet="GIBERT Jonathan" edition="E30_Cycle_Court" libelle="build image servitude" lot="243349" nbreComposants="1" nbrePaquets="0" projetClarity=""/>
         </entry>
         <entry>
             <key>303976</key>
@@ -3005,7 +3021,7 @@
         </entry>
         <entry>
             <key>279752</key>
-            <value build="2017-10-03" cpiProjet="REYNIER Cyril" devtu="2017-10-03" edition="E31" libelle="Lot_BFMKRT_06_OPEN" lot="279752" nbreComposants="64" nbrePaquets="0" projetClarity="BFMKRT06" vmoe="2017-12-04"/>
+            <value build="2017-10-03" cpiProjet="REYNIER Cyril" devtu="2017-10-03" edition="E31" libelle="Lot_BFMKRT_06_OPEN" lot="279752" nbreComposants="66" nbrePaquets="0" projetClarity="BFMKRT06" vmoe="2017-12-04"/>
         </entry>
         <entry>
             <key>220251</key>
@@ -3229,7 +3245,7 @@
         </entry>
         <entry>
             <key>313731</key>
-            <value build="2018-03-13" cpiProjet="FORMELA Marie-Helene" edition="CHC2018-S14" libelle="Lot_FE0013_WO533502" lot="313731" nbreComposants="0" nbrePaquets="2" projetClarity="FE0013" vmoa="2018-03-13" vmoe="2018-03-13"/>
+            <value build="2018-03-13" cpiProjet="FORMELA Marie-Helene" edition="CHC2018-S14" libelle="Lot_FE0013_WO533502" livraison="2018-03-26" lot="313731" nbreComposants="0" nbrePaquets="2" projetClarity="FE0013" vmoa="2018-03-13" vmoe="2018-03-13"/>
         </entry>
         <entry>
             <key>260709</key>
@@ -4253,7 +4269,7 @@
         </entry>
         <entry>
             <key>315572</key>
-            <value build="2018-03-21" cpiProjet="PROVOST Dominique" devtu="2018-03-21" edition="E31_Fil_De_Leau FDL/CC 28.05" libelle="LIvraison NPC GM7 /GM8" lot="315572" nbreComposants="0" nbrePaquets="0" projetClarity="BFP100"/>
+            <value build="2018-03-21" cpiProjet="PROVOST Dominique" devtu="2018-03-21" edition="E31_Fil_De_Leau FDL/CC 28.05" libelle="LIvraison NPC GM7 /GM8" lot="315572" nbreComposants="1" nbrePaquets="0" projetClarity="BFP100"/>
         </entry>
         <entry>
             <key>298100</key>
@@ -4325,7 +4341,7 @@
         </entry>
         <entry>
             <key>315589</key>
-            <value build="2018-03-23" cpiProjet="PILLON Pierre-Francois" edition="E31_Fil_De_Leau FDL/CC 51.01" libelle="Installation - API Risques E31_FDL [RSQ9 v1 - 14.00.51.01] *BULLE*" lot="315589" nbreComposants="1" nbrePaquets="0" projetClarity="BF073002"/>
+            <value build="2018-03-23" cpiProjet="PILLON Pierre-Francois" edition="E31_Fil_De_Leau FDL/CC 51.01" libelle="Installation - API Risques E31_FDL [RSQ9 v1 - 14.00.51.01] *BULLE*" lot="315589" nbreComposants="5" nbrePaquets="0" projetClarity="BF073002"/>
         </entry>
         <entry>
             <key>314258</key>
@@ -4421,7 +4437,7 @@
         </entry>
         <entry>
             <key>315567</key>
-            <value build="2018-03-21" cpiProjet="TEIR Isma" edition="CHC2018-S14" libelle="Lot_RE0004_E30_CHCS14" lot="315567" nbreComposants="0" nbrePaquets="1" projetClarity="RE0004" vmoa="2018-03-21" vmoe="2018-03-21"/>
+            <value build="2018-03-21" cpiProjet="TEIR Isma" edition="CHC2018-S15" libelle="Lot_RE0004_E30_CHCS15" livraison="2018-03-26" lot="315567" nbreComposants="0" nbrePaquets="1" projetClarity="RE0004" vmoa="2018-03-21" vmoe="2018-03-21"/>
         </entry>
         <entry>
             <key>313389</key>
@@ -4721,7 +4737,7 @@
         </entry>
         <entry>
             <key>312008</key>
-            <value build="2018-03-07" cpiProjet="GODET Sylvie" edition="E30.1_Cycle_Court" libelle="Lot_FE000037_01" lot="312008" nbreComposants="0" nbrePaquets="1" projetClarity="BE029201" vmoa="2018-03-07" vmoe="2018-03-07"/>
+            <value build="2018-03-07" cpiProjet="GODET Sylvie" edition="E30.1_Cycle_Court" libelle="Lot_FE000037_01" livraison="2018-03-26" lot="312008" nbreComposants="0" nbrePaquets="1" projetClarity="BE029201" vmoa="2018-03-07" vmoe="2018-03-07"/>
         </entry>
         <entry>
             <key>302212</key>
@@ -4881,7 +4897,7 @@
         </entry>
         <entry>
             <key>308068</key>
-            <value build="2018-02-15" cpiProjet="HAMZA Zakari" edition="CHC2018-S08" libelle="INTEGRATION CORRECTIF LMB0101" lot="308068" nbreComposants="0" nbrePaquets="1" projetClarity="FE00015" vmoa="2018-02-15" vmoe="2018-02-15"/>
+            <value build="2018-02-15" cpiProjet="HAMZA Zakari" edition="CHC2018-S08" libelle="INTEGRATION CORRECTIF LMB0101" livraison="2018-03-26" lot="308068" nbreComposants="0" nbrePaquets="1" projetClarity="FE00015" vmoa="2018-02-15" vmoe="2018-02-15"/>
         </entry>
         <entry>
             <key>309396</key>
@@ -5025,7 +5041,7 @@
         </entry>
         <entry>
             <key>288352</key>
-            <value build="2017-11-29" cpiProjet="BELVERGE Didier" devtu="2018-01-18" edition="E31" libelle="Lot_BF0595_01" livraison="2018-02-01" lot="288352" nbreComposants="2" nbrePaquets="4" projetClarity="BF059501" vmoa="2017-12-13" vmoe="2017-11-29"/>
+            <value build="2017-11-29" cpiProjet="BELVERGE Didier" devtu="2018-01-18" edition="E31" libelle="Lot_BF0595_01" livraison="2018-02-01" lot="288352" nbreComposants="2" nbrePaquets="5" projetClarity="BF059501" vmoa="2017-12-13" vmoe="2017-11-29"/>
         </entry>
         <entry>
             <key>245225</key>
@@ -5133,7 +5149,7 @@
         </entry>
         <entry>
             <key>279444</key>
-            <value build="2017-12-05" cpiProjet="PASQUEREAU Fabien" edition="E30.1_Fil_De_Leau" libelle="Lot_BF0550_01" livraison="2018-02-01" lot="279444" nbreComposants="0" nbrePaquets="4" projetClarity="BF055001" vmoa="2017-12-07" vmoe="2017-12-05"/>
+            <value build="2017-12-05" cpiProjet="PASQUEREAU Fabien" edition="E30.1_Fil_De_Leau" libelle="Lot_BF0550_01" livraison="2018-02-01" lot="279444" nbreComposants="0" nbrePaquets="5" projetClarity="BF055001" vmoa="2017-12-07" vmoe="2017-12-05"/>
         </entry>
         <entry>
             <key>225631</key>
@@ -5533,7 +5549,7 @@
         </entry>
         <entry>
             <key>310750</key>
-            <value build="2018-03-21" cpiProjet="THENOT Jean-Michel" edition="E31_Fil_De_Leau" libelle="CA_Bill lot 2 - Phase A _ Compléments" lot="310750" nbreComposants="0" nbrePaquets="1" projetClarity="P0061812" vmoe="2018-03-21"/>
+            <value build="2018-03-21" cpiProjet="THENOT Jean-Michel" edition="E31_Fil_De_Leau" libelle="CA_Bill lot 2 - Phase A _ Compléments" lot="310750" nbreComposants="0" nbrePaquets="3" projetClarity="P0061812" vmoa="2018-03-26" vmoe="2018-03-21"/>
         </entry>
         <entry>
             <key>227875</key>
@@ -5541,7 +5557,7 @@
         </entry>
         <entry>
             <key>310755</key>
-            <value build="2018-03-12" cpiProjet="PEREZ Laurent" edition="CHC2018-S23" libelle="Lot_FE000044_CHC2018-S23" lot="310755" nbreComposants="0" nbrePaquets="3" projetClarity="FE000044" vmoa="2018-03-12" vmoe="2018-03-12"/>
+            <value build="2018-03-12" cpiProjet="PEREZ Laurent" edition="CHC2018-S23" libelle="Lot_FE000044_CHC2018-S23" lot="310755" nbreComposants="0" nbrePaquets="5" projetClarity="FE000044" vmoa="2018-03-12" vmoe="2018-03-12"/>
         </entry>
         <entry>
             <key>275943</key>
@@ -5562,6 +5578,10 @@
         <entry>
             <key>293306</key>
             <value build="2017-12-06" cpiProjet="ROBERT Elsa" edition="CHC2018-S04" libelle="Lot_BF0262_02" livraison="2018-01-15" lot="293306" nbreComposants="0" nbrePaquets="2" projetClarity="BF026201" vmoa="2018-01-09" vmoe="2017-12-06"/>
+        </entry>
+        <entry>
+            <key>316070</key>
+            <value build="2018-03-21" cpiProjet="COLLIN Vincent" devtu="2018-03-21" edition="E31_Fil_De_Leau" libelle="Lot_BF0437_Correctif_PMV_Lot2" lot="316070" nbreComposants="2" nbrePaquets="0" projetClarity="BF043702"/>
         </entry>
         <entry>
             <key>234153</key>
@@ -5720,6 +5740,10 @@
             <value build="2017-09-07" cpiProjet="CASTAING Matthias" edition="CHC_CDM2017-S37" libelle="Augmentation du nombre de partitions des tables TBA01 et TBP01" lot="275989" nbreComposants="0" nbrePaquets="2" projetClarity="FE00017" vmoa="2017-09-07" vmoe="2017-09-07"/>
         </entry>
         <entry>
+            <key>309853</key>
+            <value build="2018-03-26" cpiProjet="DEREGNAUCOURT Bernard" edition="E31_Fil_De_Leau" libelle="Lot_P01152_02" lot="309853" nbreComposants="0" nbrePaquets="4" projetClarity="P0115203" vmoa="2018-03-26" vmoe="2018-03-26"/>
+        </entry>
+        <entry>
             <key>283121</key>
             <value build="2017-10-11" cpiProjet="RIGOLETTI Frederic" edition="CHC2017-S50" libelle="Lot_BFP030_Encoudif" livraison="2017-11-06" lot="283121" nbreComposants="0" nbrePaquets="3" projetClarity="BFP030" vmoa="2017-10-11" vmoe="2017-10-11"/>
         </entry>
@@ -5770,6 +5794,10 @@
         <entry>
             <key>310846</key>
             <value build="2018-02-28" cpiProjet="BRAQUET Michel" devtu="2018-02-28" edition="E32" libelle="Lot_PASR004_E32" lot="310846" nbreComposants="1" nbrePaquets="0" projetClarity="PASR004" vmoa="2018-02-28" vmoe="2018-02-28"/>
+        </entry>
+        <entry>
+            <key>315276</key>
+            <value build="2018-03-26" cpiProjet="BOUHOURD Eric" edition="E30_Fil_De_Leau" libelle="Lot_BFS814_01" livraison="2018-03-26" lot="315276" nbreComposants="0" nbrePaquets="2" projetClarity="BFS81401"/>
         </entry>
         <entry>
             <key>229629</key>
@@ -6093,7 +6121,7 @@
         </entry>
         <entry>
             <key>288816</key>
-            <value build="2018-02-06" cpiProjet="PRAS Fabien" edition="E31_Fil_De_Leau" libelle="Lot Projet EDI 7.6" lot="288816" nbreComposants="0" nbrePaquets="6" projetClarity="BF047001" vmoa="2018-02-14" vmoe="2018-02-06"/>
+            <value build="2018-02-06" cpiProjet="PRAS Fabien" edition="E31_Fil_De_Leau" libelle="Lot Projet EDI 7.6" lot="288816" nbreComposants="0" nbrePaquets="7" projetClarity="BF047001" vmoa="2018-02-14" vmoe="2018-02-06"/>
         </entry>
         <entry>
             <key>294256</key>
@@ -6597,7 +6625,7 @@
         </entry>
         <entry>
             <key>315635</key>
-            <value build="2018-03-20" cpiProjet="KONECKI Caroline" devtu="2018-03-20" edition="E31_Fil_De_Leau" libelle="BF0419_AnoE31" lot="315635" nbreComposants="1" nbrePaquets="0" projetClarity="BF0419"/>
+            <value build="2018-03-20" cpiProjet="KONECKI Caroline" devtu="2018-03-20" edition="E31_Fil_De_Leau" libelle="BF0419_AnoE31" lot="315635" nbreComposants="3" nbrePaquets="0" projetClarity="BF0419"/>
         </entry>
         <entry>
             <key>275117</key>
@@ -6701,7 +6729,7 @@
         </entry>
         <entry>
             <key>312232</key>
-            <value build="2018-03-08" cpiProjet="MIGLINO Daniel" devtu="2018-03-08" edition="E32" libelle="Lot_FE000062_Coclico_SOA_E32" lot="312232" nbreComposants="23" nbrePaquets="0" projetClarity="FE000062"/>
+            <value build="2018-03-08" cpiProjet="MIGLINO Daniel" devtu="2018-03-08" edition="E32" libelle="Lot_FE000062_Coclico_SOA_E32" lot="312232" nbreComposants="24" nbrePaquets="0" projetClarity="FE000062"/>
         </entry>
         <entry>
             <key>239086</key>
@@ -7161,7 +7189,7 @@
         </entry>
         <entry>
             <key>268014</key>
-            <value build="2017-11-09" cpiProjet="DUHOUX Odile" edition="E31" libelle="Lot_BF0027_02" livraison="2018-02-26" lot="268014" nbreComposants="0" nbrePaquets="4" projetClarity="BF002702" vmoa="2018-01-08" vmoe="2017-11-09"/>
+            <value build="2017-11-09" cpiProjet="DUHOUX Odile" edition="E31" libelle="Lot_BF0027_02" livraison="2018-02-26" lot="268014" nbreComposants="0" nbrePaquets="5" projetClarity="BF002702" vmoa="2018-01-08" vmoe="2017-11-09"/>
         </entry>
         <entry>
             <key>269344</key>
@@ -8044,6 +8072,10 @@
             <value build="2017-07-12" cpiProjet="CLENET Denis" devtu="2017-07-31" edition="CHC_CDM2017-S49" libelle="Lot_P00849_E30" livraison="2017-11-24" lot="266726" nbreComposants="2" nbrePaquets="0" projetClarity="P00849" vmoa="2017-08-02" vmoe="2017-07-31"/>
         </entry>
         <entry>
+            <key>316655</key>
+            <value build="2018-03-26" cpiProjet="CAZENAVE Brigitte" devtu="2018-03-26" edition="CHC_CDM2018-S22" libelle="Lot_FE000036_E31_CDM_S22_CDV" lot="316655" nbreComposants="1" nbrePaquets="0" projetClarity="FE000036"/>
+        </entry>
+        <entry>
             <key>312299</key>
             <value build="2018-03-09" cpiProjet="MIGLINO Daniel" devtu="2018-03-09" edition="E32" libelle="FE000063_Lot1_E32" lot="312299" nbreComposants="4" nbrePaquets="0" projetClarity="FE000063"/>
         </entry>
@@ -8237,7 +8269,7 @@
         </entry>
         <entry>
             <key>297474</key>
-            <value build="2018-01-25" cpiProjet="GICQUEL Gwendal" edition="E31" libelle="Lot_BE0215_01" livraison="2018-02-21" lot="297474" nbreComposants="0" nbrePaquets="26" projetClarity="BE021501" vmoa="2018-01-25" vmoe="2018-01-25"/>
+            <value build="2018-01-25" cpiProjet="GICQUEL Gwendal" edition="E31" libelle="Lot_BE0215_01" livraison="2018-02-21" lot="297474" nbreComposants="0" nbrePaquets="27" projetClarity="BE021501" vmoa="2018-01-25" vmoe="2018-01-25"/>
         </entry>
         <entry>
             <key>221425</key>
@@ -8473,7 +8505,7 @@
         </entry>
         <entry>
             <key>309183</key>
-            <value build="2018-02-20" cpiProjet="ROYER Emmanuel" devtu="2018-02-22" edition="CHC_CDM2018-S22" libelle="Wilot_BF0315_Lot2_CDMS22" lot="309183" nbreComposants="8" nbrePaquets="0" projetClarity="BF0315"/>
+            <value build="2018-02-20" cpiProjet="ROYER Emmanuel" devtu="2018-02-22" edition="CHC_CDM2018-S22" libelle="Wilot_BF0315_Lot2_CDMS22" lot="309183" nbreComposants="9" nbrePaquets="0" projetClarity="BF0315"/>
         </entry>
         <entry>
             <key>303885</key>
@@ -8761,7 +8793,7 @@
         </entry>
         <entry>
             <key>310126</key>
-            <value build="2018-03-01" cpiProjet="LAUER Franck" edition="CHC2018-S13" libelle="Lot Vérification Clé TARGET" lot="310126" nbreComposants="0" nbrePaquets="1" projetClarity="FE00014" vmoa="2018-03-01" vmoe="2018-03-01"/>
+            <value build="2018-03-01" cpiProjet="LAUER Franck" edition="CHC2018-S15" libelle="Lot Vérification Clé TARGET" livraison="2018-03-26" lot="310126" nbreComposants="0" nbrePaquets="2" projetClarity="FE00014" vmoa="2018-03-01" vmoe="2018-03-01"/>
         </entry>
         <entry>
             <key>313634</key>
@@ -9149,11 +9181,11 @@
         </entry>
         <entry>
             <key>251741</key>
-            <value build="2017-05-15" cpiProjet="STEIS Nathalie" edition="E30.1_Fil_De_Leau" libelle="PTEC258 Edition E30.1 FDL" livraison="2017-05-15" lot="251741" nbreComposants="0" nbrePaquets="394" projetClarity="PTEC258 Edition E29 "/>
+            <value build="2017-05-15" cpiProjet="STEIS Nathalie" edition="E30.1_Fil_De_Leau" libelle="PTEC258 Edition E30.1 FDL" livraison="2017-05-15" lot="251741" nbreComposants="0" nbrePaquets="395" projetClarity="PTEC258 Edition E29 "/>
         </entry>
         <entry>
             <key>308211</key>
-            <value build="2018-02-26" cpiProjet="MUSIAL Jonathan" edition="E31_Fil_De_Leau" libelle="Lot_BFXPAY_01-Assemblage RESS pour DEVTU, VMOE ET VMOA" lot="308211" nbreComposants="4" nbrePaquets="0" projetClarity="BFXPAY001"/>
+            <value build="2018-02-26" cpiProjet="MUSIAL Jonathan" devtu="2018-03-26" edition="E31_Fil_De_Leau" libelle="Lot_BFXPAY_01-Assemblage RESS pour DEVTU, VMOE ET VMOA" lot="308211" nbreComposants="4" nbrePaquets="0" projetClarity="BFXPAY001"/>
         </entry>
         <entry>
             <key>312702</key>
@@ -9181,7 +9213,7 @@
         </entry>
         <entry>
             <key>306035</key>
-            <value build="2018-02-08" cpiProjet="HAMZA Zakari" edition="CHC2018-S11" libelle="Intégration correctif Ci-TRAITE pour LMT0181 et LMT0356 LMT0630" lot="306035" nbreComposants="0" nbrePaquets="1" projetClarity="FE00015" vmoa="2018-02-08"/>
+            <value build="2018-02-08" cpiProjet="HAMZA Zakari" edition="CHC2018-S11" libelle="Intégration correctif Ci-TRAITE pour LMT0181 et LMT0356 LMT0630" livraison="2018-03-26" lot="306035" nbreComposants="0" nbrePaquets="1" projetClarity="FE00015" vmoa="2018-02-08"/>
         </entry>
         <entry>
             <key>283790</key>
@@ -9277,7 +9309,7 @@
         </entry>
         <entry>
             <key>308678</key>
-            <value build="2018-02-21" cpiProjet="GIRIER Michel" devtu="2018-02-23" edition="E31_Fil_De_Leau FDL/CC 38.01" libelle="BEC31002 AUO9-MOD3" lot="308678" nbreComposants="7" nbrePaquets="0" projetClarity="BEC31002"/>
+            <value build="2018-02-21" cpiProjet="GIRIER Michel" devtu="2018-02-23" edition="E31_Fil_De_Leau FDL/CC 38.01" libelle="BEC31002 AUO9-MOD3" lot="308678" nbreComposants="11" nbrePaquets="0" projetClarity="BEC31002"/>
         </entry>
         <entry>
             <key>310509</key>
