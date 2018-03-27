@@ -1,5 +1,11 @@
-package utilities;
+package model;
 
+/**
+ * Classe permettant d'enregistrer le mot de passe et le pseudo de l'utilisateur
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ *
+ */
 public class Info
 {
     /*---------- ATTRIBUTS ----------*/
@@ -9,6 +15,12 @@ public class Info
     
     /*---------- CONSTRUCTEURS ----------*/
     /*---------- METHODES PUBLIQUES ----------*/
+    
+    public boolean controle()
+    {
+        return pseudo != null && !pseudo.isEmpty() && motDePasse != null && !motDePasse.isEmpty();
+    }
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
     

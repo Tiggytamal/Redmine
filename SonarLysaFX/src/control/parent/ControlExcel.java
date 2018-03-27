@@ -93,7 +93,6 @@ public abstract class ControlExcel
     public void close() throws IOException
     {
         wb.close();
-
     }
 
     /**

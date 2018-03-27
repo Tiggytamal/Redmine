@@ -336,6 +336,7 @@ public class ControlAno extends ControlExcel
 
         autosizeColumns(sheet);
         autosizeColumns(sheetClose);
+        wb.setActiveSheet(wb.getSheetIndex(sheet));
         write();
     }
 

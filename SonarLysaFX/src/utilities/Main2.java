@@ -50,7 +50,7 @@ public class Main2 extends Application
         hb2.setAlignment(Pos.CENTER);
         hb2.getChildren().addAll(startButton, cancelButton);
         mainPane.setBottom(hb2);
-        startButton.setOnAction((event) ->
+        startButton.setOnAction(event ->
             {
                 startButton.setDisable(true);
                 progressBar.setProgress(0);
@@ -58,16 +58,11 @@ public class Main2 extends Application
                 copyWorker = createWorker();
                 progressBar.progressProperty().unbind();
                 progressBar.progressProperty().bind(copyWorker.progressProperty());
-                copyWorker.messageProperty().addListener(new ChangeListener<String>() {
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-                    {
-                        System.out.println(newValue);
-                    }
-                });
+                copyWorker.messageProperty().addListener((observable, oldValue, newValue) -> System.out.println(newValue));
                 new Thread(copyWorker).start();
             }
         );
-        cancelButton.setOnAction((event) ->
+        cancelButton.setOnAction(event ->
             {
                 startButton.setDisable(false);
                 cancelButton.setDisable(true);

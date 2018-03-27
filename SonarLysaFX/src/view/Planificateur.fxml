@@ -61,6 +61,7 @@
 						<children>
 							<Label text="Activé : " />
 							<CheckBox fx:id="activeBox" />
+							<Region prefWidth="20" />
 							<Label text="Heure : " />
 						</children>
 					</HBox>

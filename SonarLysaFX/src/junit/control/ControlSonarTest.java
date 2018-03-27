@@ -126,4 +126,10 @@ public class ControlSonarTest
     {
         handler.controlerSonarQube();
     }
+    
+    @Test
+    public void creerVuePatrimoine()
+    {
+       handler.creerVuePatrimoine(); 
+    }
 }

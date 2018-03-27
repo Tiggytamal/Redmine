@@ -37,10 +37,10 @@ public class MaintenanceViewControl
     private ControlSonar handler;
     
     /*---------- CONSTRUCTEURS ----------*/
-    
+   
     @FXML
     public void initialize()
-    {
+    {  
         handler = new ControlSonar(Statics.info.getPseudo(), Statics.info.getMotDePasse());
         selectPane.getChildren().clear();
     }

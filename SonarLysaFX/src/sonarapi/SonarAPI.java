@@ -52,6 +52,18 @@ public class SonarAPI
     private final String codeUser;
     private static final String AUTHORIZATION = "Authorization";
     private static final String HTTP = ": HTTP ";
+    
+    //Liste des api utilisées
+    private static final String VIEWSLIST = "api/views/list";
+    private static final String PROJECTSINDEX = "api/projects/index";
+    private static final String QGLIST = "api/qualitygates/list";
+    private static final String ISSUESSEARCH = "api/issues/search";
+    private static final String MEASURESCOMPONENT = "api/measures/component";
+    private static final String EVENTS = "api/events";
+    private static final String VIEWSSHOW = "api/views/show";
+    private static final String VIEWSCREATE = "api/views/create";
+    private static final String QGSELECT = "api/qualitygates/select";
+    private static final String AUTHVALID = "api/authentication/validate";
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -102,7 +114,7 @@ public class SonarAPI
      */
     public List<Vue> getVues()
     {
-        final Response response = appelWebserviceGET("api/views/list");
+        Response response = appelWebserviceGET(VIEWSLIST);
 
         if (response.getStatus() == Status.OK.getStatusCode())
         {
@@ -110,9 +122,28 @@ public class SonarAPI
             return response.readEntity(Retour.class).getListeVues();
         }
         else
+            logger.error("Impossible de retourner les vues depuis Sonar = " + VIEWSLIST);
+
+        return new ArrayList<>();
+    }
+    
+    public List<Projet> getVuesParNom(String nom)
+    {
+        //Paramètres
+        Parametre paramSearch = new Parametre("search", nom);
+        Parametre paramViews = new Parametre("views", "true");
+        
+        //Appel webService
+        Response response = appelWebserviceGET(PROJECTSINDEX, paramSearch, paramViews);
+        
+        //Contrôle de la réponse
+        if (response.getStatus() == Status.OK.getStatusCode())
         {
-            logger.error("Impossible de retourner les vues depuis Sonar = " + "api/views/list");
+            logger.info("Liste des Vues triées retournées depuis Sonar");
+            return response.readEntity(new GenericType<List<Projet>>() {});
         }
+        else
+            logger.error("Impossible de retourner les vues depuis Sonar = " + PROJECTSINDEX);
 
         return new ArrayList<>();
     }
@@ -124,7 +155,7 @@ public class SonarAPI
      */
     public boolean verificationUtilisateur()
     {
-        final Response response = appelWebserviceGET("api/authentication/validate");
+        Response response = appelWebserviceGET(AUTHVALID);
 
         if (response.getStatus() == Status.OK.getStatusCode())
         {
@@ -132,9 +163,7 @@ public class SonarAPI
             return response.readEntity(Validation.class).isValid();
         }
         else
-        {
             logger.info("Utilisateur KO");
-        }
 
         return false;
     }
@@ -162,29 +191,25 @@ public class SonarAPI
         {
             valeur.append(metricKeys[i]);
             if (i + 1 < metricKeys.length)
-            {
                 valeur.append(",");
-            }
         }
         paramMetrics.setValeur(valeur.toString());
 
         // 2. appel du webservices
-        final Response response = appelWebserviceGET("api/measures/component", paramComposant, paramMetrics);
+        Response response = appelWebserviceGET(MEASURESCOMPONENT, paramComposant, paramMetrics);
 
         // 3. Test du retour et renvoie du composant si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
-        {
             return response.readEntity(Retour.class).getComponent();
-        }
         else
         {
-            logger.error(erreurAPI("measures/component") + paramComposant.getValeur());
+            logger.error(erreurAPI(MEASURESCOMPONENT) + paramComposant.getValeur());
             return new Composant();
         }
     }
 
     /**
-     * Donne le nombre de problèmed de sécurité en cours et à prendre en compte d'un composant.
+     * Donne le nombre de problèmes de sécurité en cours et à prendre en compte d'un composant.
      * 
      * @param componentKey
      * @return
@@ -199,22 +224,20 @@ public class SonarAPI
         Parametre paramResolved = new Parametre("resolved", "false");
 
         // 2. appel du webservices
-        final Response response = appelWebserviceGET("/api/issues/search", paramComposant, paramSeverities, paramSinceLeakPeriod, paramTypes, paramResolved);
+        Response response = appelWebserviceGET(ISSUESSEARCH, paramComposant, paramSeverities, paramSinceLeakPeriod, paramTypes, paramResolved);
 
         // 3. Test du retour et renvoie du composant si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
-        {
             return response.readEntity(IssuesSimple.class).getTotal();
-        }
         else
         {
-            logger.error(erreurAPI("issues/search") + paramComposant.getValeur());
+            logger.error(erreurAPI(ISSUESSEARCH) + paramComposant.getValeur());
             return 0;
         }
     }
 
     /**
-     * Donne le nombre de problèmed de sécurité en cours et à prendre en compte d'un composant.
+     * Donne le nombre de problèmes de sécurité en cours et à prendre en compte d'un composant.
      * 
      * @param componentKey
      * @return
@@ -228,20 +251,23 @@ public class SonarAPI
         Parametre paramResolved = new Parametre("resolved", "false");
 
         // 2. appel du webservices
-        final Response response = appelWebserviceGET("/api/issues/search", paramComposant, paramSeverities, paramSinceLeakPeriod, paramResolved);
+        Response response = appelWebserviceGET(ISSUESSEARCH, paramComposant, paramSeverities, paramSinceLeakPeriod, paramResolved);
 
         // 3. Test du retour et renvoie du composant si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
-        {
             return response.readEntity(Issues.class).getListIssues();
-        }
         else
         {
-            logger.error(erreurAPI("issues/search") + paramComposant.getValeur());
+            logger.error(erreurAPI(ISSUESSEARCH) + paramComposant.getValeur());
             return new ArrayList<>();
         }
     }
 
+    /**
+     * 
+     * @param resource
+     * @return
+     */
     public String getVersionComposant(String resource)
     {
         // 1. Création des paramètres de la requête
@@ -249,22 +275,18 @@ public class SonarAPI
         Parametre paramCategorie = new Parametre("categories", "Version");
 
         // 2. appel du webservices
-        final Response response = appelWebserviceGET("/api/events", paramResource, paramCategorie);
+        Response response = appelWebserviceGET(EVENTS, paramResource, paramCategorie);
 
         // 3. Test du retour et renvoie de la dernière version si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
         {
-            List<Event> liste = response.readEntity(new GenericType<List<Event>>() {
-            });
+            List<Event> liste = response.readEntity(new GenericType<List<Event>>() {});
             if (liste != null && !liste.isEmpty())
-            {
                 return controleVersion(liste);
-            }
         }
         else
-        {
-            logger.error(erreurAPI("events") + paramResource.getValeur());
-        }
+            logger.error(erreurAPI(EVENTS) + paramResource.getValeur());
+        
         return "";
     }
 
@@ -276,18 +298,17 @@ public class SonarAPI
     public List<Projet> getComposants()
     {
         Parametre param = new Parametre("search", "composant ");
-        final Response response = appelWebserviceGET("api/projects/index", param);
+        Response response = appelWebserviceGET(PROJECTSINDEX, param);
 
         if (response.getStatus() == Status.OK.getStatusCode())
         {
             logger.info("Récupération de la liste des composants OK");
-            return response.readEntity(new GenericType<List<Projet>>() {
-            });
+            return response.readEntity(new GenericType<List<Projet>>() {});
         }
         else
         {
-            logger.error("Impossible de remonter tous les composants de Sonar - API : api/projects/index/search=composant ");
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Impossible de remonter tous les composants de Sonar - API : api/projects/index/search=composant ");
+            logger.error("Impossible de remonter tous les composants de Sonar - API : " + PROJECTSINDEX + "/search=composant ");
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Impossible de remonter tous les composants de Sonar - API : " + PROJECTSINDEX + "/search=composant ");
         }
     }
 
@@ -315,16 +336,14 @@ public class SonarAPI
      */
     public List<QualityGate> getListQualitygate()
     {
-        Response response = appelWebserviceGET("api/qualitygates/list");
+        Response response = appelWebserviceGET(QGLIST);
 
         if (response.getStatus() == Status.OK.getStatusCode())
-        {
             return response.readEntity(Retour.class).getQualityGates();
-        }
         else
         {
-            logger.error("Impossible de remonter les QualityGate de Sonar - API : api/qualitygates/list");
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Impossible de remonter les QualityGate de Sonar - API : api/qualitygates/list");
+            logger.error("Impossible de remonter les QualityGate de Sonar - API : " + QGLIST);
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Impossible de remonter les QualityGate de Sonar - API : " + QGLIST);
         }
     }
 
@@ -342,12 +361,12 @@ public class SonarAPI
         if (vueKey == null || vueKey.isEmpty())
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.testVueExiste a son argument nul");
 
-        Response response = appelWebserviceGET("api/views/show", new Parametre("key", vueKey));
+        Response response = appelWebserviceGET(VIEWSSHOW, new Parametre("key", vueKey));
         if (response.getStatus() == Status.OK.getStatusCode())
             return true;
         if (response.getStatus() == Status.NOT_FOUND.getStatusCode())
             return false;
-        logger.error(erreurAPI("views/show") + vueKey);
+        logger.error(erreurAPI(VIEWSSHOW) + vueKey);
         return false;
     }
 
@@ -364,7 +383,7 @@ public class SonarAPI
         if (vue == null)
             return;
 
-        Response response = appelWebservicePOST("api/views/create", vue);
+        Response response = appelWebservicePOST(VIEWSCREATE, vue);
         logger.info("Creation vue : " + vue.getKey() + " - nom : " + vue.getName() + HTTP + response.getStatus());
         gestionErreur(response);
     }
@@ -377,7 +396,7 @@ public class SonarAPI
      */
     public Future<Response> creerVueAsync(Vue vue)
     {
-        return appelWebserviceAsyncPOST("api/views/create", vue);
+        return appelWebserviceAsyncPOST(VIEWSCREATE, vue);
     }
 
     /**
@@ -489,7 +508,7 @@ public class SonarAPI
     public void associerQualitygate(Projet projet, QualityGate qg)
     {
         AssocierQG assQG = new AssocierQG(qg.getId(), projet.getId());
-        Response response = appelWebservicePOST("api/qualitygates/select", assQG);
+        Response response = appelWebservicePOST(QGSELECT, assQG);
         logger.info("projet " + projet.getNom() + " association " + qg.getName() + HTTP + response.getStatus());
         gestionErreur(response);
     }
@@ -510,9 +529,7 @@ public class SonarAPI
         WebTarget requete = webTarget.path(url);
 
         if (params == null)
-        {
             return requete.request(MediaType.APPLICATION_JSON).header(AUTHORIZATION, codeUser).get();
-        }
 
         for (Parametre parametre : params)
         {
@@ -539,9 +556,8 @@ public class SonarAPI
         Invocation.Builder builder = requete.request(MediaType.APPLICATION_JSON).header(AUTHORIZATION, codeUser);
 
         if (entite == null)
-        {
             return builder.post(Entity.text(""));
-        }
+        
         return builder.post(Entity.entity(entite, MediaType.APPLICATION_JSON));
     }
 
@@ -562,9 +578,8 @@ public class SonarAPI
         Invocation.Builder builder = requete.request(MediaType.APPLICATION_JSON).header(AUTHORIZATION, codeUser);
 
         if (entite == null)
-        {
             return builder.async().post(Entity.text(""));
-        }
+
         return builder.async().post(Entity.entity(entite, MediaType.APPLICATION_JSON));
     }
 
@@ -619,6 +634,6 @@ public class SonarAPI
 
     private String erreurAPI(String api)
     {
-        return "Erreur API : api/" + api + " - Composant : ";
+        return "Erreur API : " + api + " - Composant : ";
     }
 }

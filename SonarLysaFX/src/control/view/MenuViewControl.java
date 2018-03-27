@@ -35,6 +35,8 @@ public class MenuViewControl extends ViewControl
     @FXML
     private MenuItem maintenance;
     @FXML
+    private MenuItem patrimoine;
+    @FXML
     private Button connexion;
     @FXML
     private Button deConnexion;
@@ -73,41 +75,47 @@ public class MenuViewControl extends ViewControl
         options.setDisable(true);
         planificateur.setDisable(true);
         maintenance.setDisable(true);
+        patrimoine.setDisable(true);
         Statics.info.setPseudo(null);
         Statics.info.setMotDePasse(null);
         box.getChildren().remove(deConnexion);
         box.getChildren().add(connexion);
         border.setCenter(null);       
     }
-
+   
     @FXML
-    public void switchToMensuel(ActionEvent event) throws IOException
+    public void menuSwitch(ActionEvent event) throws IOException
     {
-        load("/view/Mensuel.fxml");
-    }
-
-    @FXML
-    public void switchToApplications(ActionEvent event) throws IOException
-    {
-        load("/view/Applications.fxml");
-    }
-
-    @FXML
-    public void switchToOptions(ActionEvent event) throws IOException
-    {
-        load("/view/Options.fxml");
-    }
-
-    @FXML
-    public void switchToPlanificateur(ActionEvent event) throws IOException
-    {
-        load("/view/Planificateur.fxml");
-    }
-
-    @FXML
-    public void switchToMaintenance(ActionEvent event) throws IOException
-    {
-        load("/view/Maintenance.fxml");
+        if (!Statics.info.controle())
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
+        String id = "";
+        Object source = event.getSource();
+        if (source instanceof MenuItem)
+            id = ((MenuItem)source).getId();
+        
+        switch (id)
+        {
+            case "mensuel":
+                load("/view/Mensuel.fxml");
+                break;
+            case "applications":
+                load("/view/Applications.fxml");
+                break;
+            case "options":
+                load("/view/Options.fxml");
+                break;
+            case "planificateur":
+                load("/view/Planificateur.fxml");
+                break;
+            case "maintenance":
+                load("/view/Maintenance.fxml");
+                break;
+            case "patrimoine":
+                load("/view/Patrimoine.fxml");
+                break;
+            default:
+                break;
+        }
     }
 
     /* ---------- METHODES PRIVEES ---------- */
@@ -125,12 +133,12 @@ public class MenuViewControl extends ViewControl
             options.setDisable(false);
             planificateur.setDisable(false);
             maintenance.setDisable(false);
+            patrimoine.setDisable(false);
             box.getChildren().remove(connexion);
             box.getChildren().add(deConnexion);
         }
         else
             throw new FunctionalException(Severity.SEVERITY_INFO, "Utilisateur incorrect");
-
     }
     /* ---------- ACCESSEURS ---------- */
 

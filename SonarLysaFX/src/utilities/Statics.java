@@ -9,6 +9,7 @@ import application.Main;
 import control.ControlXML;
 import javafx.stage.FileChooser;
 import model.FichiersXML;
+import model.Info;
 import model.ProprietesXML;
 
 /**

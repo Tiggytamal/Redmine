@@ -41,20 +41,23 @@ public class ControlJob
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public void creationJobsSonar() throws SchedulerException
+    public Scheduler creationJobsSonar() throws SchedulerException
     {
         Map<TypePlan, Planificateur> mapPlans = proprietesXML.getMapPlans();
         
         // Création et mise ne place des jobs
         for (Map.Entry<TypePlan, Planificateur> entry : mapPlans.entrySet())
         {
+            if (!entry.getValue().isActive())
+                continue;
             JobDetail job = creerJob(entry.getKey());
             scheduler.deleteJob(job.getKey());
-            scheduler.scheduleJob(job, creerTrigger(entry));            
+            scheduler.scheduleJob(job, creerTrigger(entry)); 
         }
 
         // Démarrage du planificateur
         scheduler.start();
+        return scheduler;
     }
 
     public void fermeturePlanificateur() throws SchedulerException

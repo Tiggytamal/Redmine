@@ -24,6 +24,7 @@ public class TimeSpinner extends Spinner<LocalTime>
     public TimeSpinner(LocalTime time)
     {
         setEditable(true);
+        setPrefWidth(80);
         // Convertisseur entre les String et LocalTime
         LocalTimeConverter localTimeConverter = new LocalTimeConverter();
 

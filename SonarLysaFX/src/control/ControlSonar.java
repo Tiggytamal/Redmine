@@ -10,11 +10,14 @@ import static utilities.Statics.proprietesXML;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -26,6 +29,7 @@ import java.util.regex.Pattern;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import javafx.concurrent.Task;
 import junit.control.ControlSonarTest;
 import model.Anomalie;
 import model.LotSuiviPic;
@@ -38,8 +42,10 @@ import sonarapi.model.QualityGate;
 import sonarapi.model.Status;
 import sonarapi.model.Vue;
 import utilities.DateConvert;
+import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.Utilities;
+import utilities.enums.Severity;
 
 public class ControlSonar
 {
@@ -58,6 +64,8 @@ public class ControlSonar
      */
     public ControlSonar(String name, String password)
     {
+        if (name == null || name.isEmpty() || password == null)
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
         api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), name, password);
     }
 
@@ -104,7 +112,7 @@ public class ControlSonar
 
         creerVueMaintenance(true);
     }
-    
+
     /**
      * Permet de créer les vues CHC depuis Sonar avec le fichier XML
      * 
@@ -121,6 +129,43 @@ public class ControlSonar
     }
 
     /**
+     * Permet de créer une vue du patrimoine sur une semaine donnée
+     */
+    public Task<Object> creerVuePatrimoine()
+    {
+        return new Task<Object>() {
+
+            @Override
+            protected Object call() throws Exception
+            {
+                // Récupération des composants
+                List<Projet> composants = new ArrayList<>(recupererComposantsSonar().values());
+
+                // Date pour récupérer l'annèe et la semaine
+                LocalDate date = LocalDate.now();
+                TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+
+                String nom = "Vue patrimoine " + date.getYear() + " S" + date.get(woy);
+                updateMessage("Création " + nom);
+                // Création de la vue
+                Vue vue = creerVue("vue_patrimoine_" + date.getYear() + "_S" + date.get(woy), nom, null, true);
+
+                // Ajout des composants
+                int size = composants.size();
+                for (int i = 0; i < size; i++)
+                {
+                    Projet projet = composants.get(i);
+                    api.ajouterProjet(projet, vue);
+                    updateProgress(i, size);
+                    updateMessage(projet.getNom());
+                }
+
+                return true;
+            }
+        };
+    }
+
+    /**
      * Crée les vues par application des composants dans SonarQube
      */
     @SuppressWarnings("unchecked")
@@ -128,14 +173,20 @@ public class ControlSonar
     {
         // Création de la liste des composants par application
         Map<String, List<Projet>> mapApplication;
+
         if (ControlSonarTest.deser)
-        {
             mapApplication = Utilities.deserialisation("d:\\mapApplis.ser", HashMap.class);
-        }
         else
         {
             mapApplication = controlerSonarQube();
             Utilities.serialisation("d:\\mapApplis.ser", mapApplication);
+        }
+
+        // Suppression des vues existantes
+        List<Projet> listeVuesExistantes = api.getVuesParNom("APPLI MASTER ");
+        for (Projet projet : listeVuesExistantes)
+        {
+            api.supprimerProjet(projet.getKey(), true);
         }
 
         // Parcours de la liste pour créer chaque vue applicative avec ses composants
@@ -171,14 +222,11 @@ public class ControlSonar
         ControlPic excel = new ControlPic(file);
         Map<LocalDate, List<Vue>> mapLot = excel.recupLotsExcelPourMEP(recupererLotsSonarQube());
         excel.close();
+
         if (mapLot.size() == 1)
-        {
             creerVueMensuelle(mapLot);
-        }
         else if (mapLot.size() == 3)
-        {
             creerVueTrimestrielle(mapLot);
-        }
     }
 
     /**
@@ -363,7 +411,7 @@ public class ControlSonar
             projets = api.getComposants();
             Utilities.serialisation("d:\\composants.ser", projets);
         }
-               
+
         // Triage ascendant de la liste par nom de projet
         projets.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
 
@@ -415,7 +463,8 @@ public class ControlSonar
                 // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans version E32
                 if (projet.getNom().endsWith(Utilities.transcoEdition(version)))
                 {
-                    // Selon que l'on regarde les composants datastage ou non, on remplie la liste en conséquence en utilisant le filtre en paramètre. Si le Boolean est nul, on prend tous les composants
+                    // Selon que l'on regarde les composants datastage ou non, on remplie la liste en conséquence en utilisant le filtre en paramètre. Si le Boolean est nul, on
+                    // prend tous les composants
                     String filtre = proprietesXML.getMapParams().get(TypeParam.FILTREDATASTAGE);
                     if (datastage == null || datastage && projet.getNom().startsWith(filtre) || !datastage && !projet.getNom().startsWith(filtre))
                         retour.get(version).add(projet);
@@ -829,7 +878,7 @@ public class ControlSonar
         }
         return retour;
     }
-    
+
     /**
      * 
      * @param cdm
@@ -846,7 +895,7 @@ public class ControlSonar
                 base = "CHC_CDM" + annee;
             else
                 base = "CHC" + annee;
-            
+
             // Suprression des vues existantes possibles
             for (int i = 1; i < 53; i++)
             {
@@ -854,9 +903,10 @@ public class ControlSonar
             }
         }
     }
-    
+
     /**
      * Crée les vues CHC ou CDM depuis Sonar et le fichier XML. {@code true} pour les vues CDM et {@code false} pour les vues CHC
+     * 
      * @param cdm
      */
     private void creerVueMaintenance(boolean cdm)
@@ -871,14 +921,14 @@ public class ControlSonar
         Map<String, Set<String>> mapVuesACreer = new HashMap<>();
 
         Map<String, List<Projet>> mapProjets = recupererComposantsSonarVersion(null);
-        
+
         // Transfert de la map en une liste avec tous ls projets
         List<Projet> tousLesProjets = new ArrayList<>();
         for (List<Projet> projets : mapProjets.values())
         {
             tousLesProjets.addAll(projets);
         }
-        
+
         for (Projet projet : tousLesProjets)
         {
             // Récupération de l'édition du composant sou forme numérique xx.yy.zz.tt et du numéro de lot
@@ -898,7 +948,7 @@ public class ControlSonar
                 mapVuesACreer.get(keyCHC).add(lot);
             }
         }
-        
+
         for (Map.Entry<String, Set<String>> entry : mapVuesACreer.entrySet())
         {
             Vue parent = new Vue(entry.getKey() + "Key", entry.getKey());

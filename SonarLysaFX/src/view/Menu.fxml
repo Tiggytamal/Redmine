@@ -15,15 +15,16 @@
 			<menus>
 				<Menu text="Fonctions">
 					<items>
-						<MenuItem fx:id="mensuel" text="Création Vue MEP/TEP" onAction="#switchToMensuel" disable="true" />
-						<MenuItem fx:id="applications" text="Création Vue par application" onAction="#switchToApplications" disable="true" />
-						<MenuItem fx:id="maintenance" text="Création Vues maintenance" onAction="#switchToMaintenance" disable="true" />
+						<MenuItem fx:id="mensuel" text="Création Vue MEP/TEP" onAction="#menuSwitch" disable="true" />
+						<MenuItem fx:id="applications" text="Création Vue par application" onAction="#menuSwitch" disable="true" />
+						<MenuItem fx:id="maintenance" text="Création Vues maintenance" onAction="#menuSwitch" disable="true" />
+						<MenuItem fx:id="patrimoine" text="Création Vue patrimoine" onAction="#menuSwitch" disable="true" />
 					</items>
 				</Menu>
 				<Menu text="Outils">
 					<items>
-						<MenuItem fx:id="options" text="Options" onAction="#switchToOptions" disable="true" />
-						<MenuItem fx:id="planificateur" text="Planificateur" onAction="#switchToPlanificateur" disable="true" />
+						<MenuItem fx:id="options" text="Options" onAction="#menuSwitch" disable="true" />
+						<MenuItem fx:id="planificateur" text="Planificateur" onAction="#menuSwitch" disable="true" />
 					</items>
 				</Menu>
 			</menus>

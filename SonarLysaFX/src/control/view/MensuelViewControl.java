@@ -61,10 +61,10 @@ public class MensuelViewControl
     private VBox selectPane;
     
     /* ---------- CONSTRUCTEURS ---------- */
-    
+        
     @FXML
     public void initialize()
-    {
+    {        
         handler = new ControlSonar(Statics.info.getPseudo(), Statics.info.getMotDePasse());
         selectPane.getChildren().clear();
         backgroundPane.getChildren().remove(creer);       
