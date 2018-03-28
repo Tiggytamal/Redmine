@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import control.parent.SonarTask;
 import sonarapi.model.Projet;
 import sonarapi.model.Vue;
 import utilities.Statics;
@@ -36,8 +37,7 @@ public class CreerVuePatrimoineTask extends SonarTask
     @Override
     protected Boolean call() throws Exception
     {
-        creerVuePatrimoine();
-        return true;
+        return creerVuePatrimoine();
     }
     
     

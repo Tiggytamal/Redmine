@@ -1,8 +1,9 @@
-package control;
+package control.parent;
 
 import static utilities.Statics.info;
 import static utilities.Statics.proprietesXML;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +98,48 @@ public abstract class SonarTask extends Task<Boolean>
             if (matcher.find())
             {
                 retour.put(matcher.group(0), projet);
+            }
+        }
+        return retour;
+    }
+    
+    /**
+     * Permet de récupérer les composants de Sonar triés par version avec sépration des composants datastage
+     *
+     * @return
+     */
+    protected Map<String, List<Projet>> recupererComposantsSonarVersion(Boolean datastage)
+    {
+        // Récupération des versions en paramètre
+        String[] versions = proprietesXML.getMapParams().get(TypeParam.VERSIONS).split("-");
+
+        // Appel du webservice pour remonter tous les composants
+        List<Projet> projets = api.getComposants();
+
+        // Création de la map de retour en utilisant les versions données
+        Map<String, List<Projet>> retour = new HashMap<>();
+
+        for (String version : versions)
+        {
+            retour.put(version, new ArrayList<>());
+        }
+
+        // Itération sur les projets pour remplir la liste de retour
+        for (Projet projet : projets)
+        {
+            for (String version : versions)
+            {
+                // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans
+                // version E32
+                if (projet.getNom().endsWith(Utilities.transcoEdition(version)))
+                {
+                    // Selon que l'on regarde les composants datastage ou non, on remplie la liste en conséquence en
+                    // utilisant le filtre en paramètre. Si le Boolean est nul, on
+                    // prend tous les composants
+                    String filtre = proprietesXML.getMapParams().get(TypeParam.FILTREDATASTAGE);
+                    if (datastage == null || datastage && projet.getNom().startsWith(filtre) || !datastage && !projet.getNom().startsWith(filtre))
+                        retour.get(version).add(projet);
+                }
             }
         }
         return retour;

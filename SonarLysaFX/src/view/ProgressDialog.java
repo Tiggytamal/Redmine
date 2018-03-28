@@ -2,7 +2,7 @@ package view;
 
 import java.io.IOException;
 
-import control.SonarTask;
+import control.parent.SonarTask;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;

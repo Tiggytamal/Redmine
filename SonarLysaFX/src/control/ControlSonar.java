@@ -11,14 +11,11 @@ import static utilities.Statics.proprietesXML;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -30,7 +27,6 @@ import java.util.regex.Pattern;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import javafx.concurrent.Task;
 import junit.control.ControlSonarTest;
 import model.Anomalie;
 import model.LotSuiviPic;
@@ -140,42 +136,6 @@ public class ControlSonar
         suppressionVuesMaintenance(false, liste);
 
         creerVueMaintenance(false);
-    }
-
-    /**
-     * Permet de créer une vue du patrimoine sur une semaine donnée
-     */
-    public Task<Object> creerVuePatrimoine()
-    {
-        return new Task<Object>() {
-
-            @Override
-            protected Object call() throws Exception
-            {
-                // Récupération des composants
-                List<Projet> composants = new ArrayList<>(recupererComposantsSonar().values());
-
-                // Date pour récupérer l'annèe et la semaine
-                LocalDate date = LocalDate.now();
-                TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
-
-                String nom = "Vue patrimoine " + date.getYear() + " S" + date.get(woy);
-                updateMessage("Création " + nom);
-                // Création de la vue
-                Vue vue = creerVue("vue_patrimoine_" + date.getYear() + "_S" + date.get(woy), nom, null, true);
-
-                // Ajout des composants
-                int size = composants.size();
-                for (int i = 0; i < size; i++)
-                {
-                    Projet projet = composants.get(i);
-                    api.ajouterProjet(projet, vue);
-                    updateProgress(i, size);
-                    updateMessage(projet.getNom());
-                }
-                return true;
-            }
-        };
     }
 
     /**
