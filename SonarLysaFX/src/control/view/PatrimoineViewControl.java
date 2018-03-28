@@ -1,11 +1,11 @@
 package control.view;
 
-import control.ControlSonar;
-import javafx.concurrent.Task;
+import java.io.IOException;
+
+import control.CreerVuePatrimoineTask;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-import utilities.Statics;
 import view.ProgressDialog;
 
 public class PatrimoineViewControl
@@ -15,21 +15,12 @@ public class PatrimoineViewControl
     @FXML
     private Button creer;
 
-    private ControlSonar handler;
-
     @FXML
-    public void initialize()
+    public void creerVue() throws IOException
     {
-        handler = new ControlSonar();
-    }
-
-    @FXML
-    public void creerVue()
-    {
-        Task<Object> task = handler.creerVuePatrimoine();
+        CreerVuePatrimoineTask task = new CreerVuePatrimoineTask();
         ProgressDialog dialog = new ProgressDialog(task, "Vue patrimoine");
         dialog.show();
-        dialog.start();
-
+        dialog.startTask();
     }
 }

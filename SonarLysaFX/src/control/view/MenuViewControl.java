@@ -49,14 +49,8 @@ public class MenuViewControl extends ViewControl
     public void initialize()
     {
         box.getChildren().remove(deConnexion);
-        mensuel.setDisable(false);
-        applications.setDisable(false);
-        options.setDisable(false);
-        planificateur.setDisable(false);
-        maintenance.setDisable(false);
-        patrimoine.setDisable(false);
     }
-    
+
     @FXML
     public void openPopup()
     {
@@ -67,7 +61,7 @@ public class MenuViewControl extends ViewControl
         // Contrôle dans Sonar de la validitée
         result.ifPresent(pair -> testMdP(pair.getKey(), pair.getValue()));
     }
-    
+
     @FXML
     public void deco()
     {
@@ -81,9 +75,9 @@ public class MenuViewControl extends ViewControl
         Statics.info.setMotDePasse(null);
         box.getChildren().remove(deConnexion);
         box.getChildren().add(connexion);
-        border.setCenter(null);       
+        border.setCenter(null);
     }
-   
+
     @FXML
     public void menuSwitch(ActionEvent event) throws IOException
     {
@@ -92,8 +86,8 @@ public class MenuViewControl extends ViewControl
         String id = "";
         Object source = event.getSource();
         if (source instanceof MenuItem)
-            id = ((MenuItem)source).getId();
-        
+            id = ((MenuItem) source).getId();
+
         switch (id)
         {
             case "mensuel":
@@ -141,6 +135,6 @@ public class MenuViewControl extends ViewControl
         else
             throw new FunctionalException(Severity.SEVERITY_INFO, "Utilisateur incorrect");
     }
-    /* ---------- ACCESSEURS ---------- */
 
+    /* ---------- ACCESSEURS ---------- */
 }

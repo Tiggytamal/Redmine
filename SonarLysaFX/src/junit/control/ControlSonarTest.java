@@ -17,7 +17,6 @@ import control.ControlSonar;
 import control.CreerVuePatrimoineTask;
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.javafx.test.TestInJfxThread;
-import javafx.concurrent.Task;
 import junit.TestUtils;
 
 @RunWith (JfxRunner.class)
@@ -31,7 +30,7 @@ public class ControlSonarTest
     {
         // handler = new ControlSonar();
         handler = new ControlSonar("ETP8137", "28H02m89,;:!");
-        deser = true;
+        deser = false;
     }
 
     @Test
@@ -134,9 +133,7 @@ public class ControlSonarTest
     @TestInJfxThread
     public void creerVuePatrimoine() throws Exception
     {
-        Task<Object> task = handler.creerVuePatrimoine();
-        task.run();
-        CreerVuePatrimoineTask task2 = new CreerVuePatrimoineTask();
-        Whitebox.invokeMethod(task2, "methode");
+        CreerVuePatrimoineTask task2 = new CreerVuePatrimoineTask("ETP8137", "28H02m89,;:!");
+        Whitebox.invokeMethod(task2, "creerVuePatrimoine");
     }
 }

@@ -275,7 +275,7 @@ public class ControlAno extends ControlExcel
         Map<String, Anomalie> anoClose = new HashMap<>();
         Sheet sheetClose = saveAnomaliesCloses(anoClose);
         
-        Map<String, RespService> mapRespService = fichiersXML.getMapRespService();
+
 
         // Mise à jour anomalies déjà créées
         for (Anomalie ano : lotsEnAno)
@@ -297,7 +297,7 @@ public class ControlAno extends ControlExcel
                 continue;
             }
             
-            controleChefDeService(ano, mapRespService);
+            controleChefDeService(ano);
 
             // Mise en vert des anomalies avec un Quality Gate bon
             if (!lotsEnErreurSonar.contains(anoLot))
@@ -566,6 +566,9 @@ public class ControlAno extends ControlExcel
         
         // Contrôle Clarity et mise à jour données
         controleClarity(ano);
+        
+        // Contrôle chef de service et mise à jour des données
+        controleChefDeService(ano);
 
         // Direction
         valoriserCellule(row, colDir, normal, ano.getDirection(), ano.getDirectionComment());
@@ -846,8 +849,10 @@ public class ControlAno extends ControlExcel
      * @param ano
      * @param mapRespService
      */
-    private void controleChefDeService(Anomalie ano, Map<String, RespService> mapRespService)
+    private void controleChefDeService(Anomalie ano)
     {
+        Map<String, RespService> mapRespService = fichiersXML.getMapRespService();
+        
         String anoServ = ano.getService();
         if (anoServ == null || anoServ.isEmpty())
             return;
