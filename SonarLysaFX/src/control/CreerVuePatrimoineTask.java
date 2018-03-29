@@ -53,8 +53,8 @@ public class CreerVuePatrimoineTask extends SonarTask
      * Création de la vue patrimoine pour la semaine en cours.
      * 
      * @return
-     *         {@code true} si la vue a bien été créée.<br>
-     *         {@code false} Si la task a été intérompue ou s'il y a ue une erreur.
+     *         {@code true} Si la vue a bien été créée.<br>
+     *         {@code false} Si la task a été intérompue ou s'il y a eu une erreur.
      */
     private boolean creerVuePatrimoine()
     {

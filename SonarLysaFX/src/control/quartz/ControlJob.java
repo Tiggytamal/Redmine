@@ -51,6 +51,7 @@ public class ControlJob
             if (!entry.getValue().isActive())
                 continue;
             JobDetail job = creerJob(entry.getKey());
+            job.getJobDataMap().put("annees", entry.getValue().getAnnees());
             scheduler.deleteJob(job.getKey());
             scheduler.scheduleJob(job, creerTrigger(entry)); 
         }

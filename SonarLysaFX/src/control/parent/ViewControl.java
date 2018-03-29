@@ -2,35 +2,28 @@ package control.parent;
 
 import java.io.IOException;
 
-import control.view.MainScreen;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
+import javafx.fxml.FXML;
+import javafx.scene.layout.GridPane;
+import view.ProgressDialog;
 
 public abstract class ViewControl
 {
     /*---------- ATTRIBUTS ----------*/
     
-    protected BorderPane border;
+    @FXML
+    protected GridPane backgroundPane;
     
     /*---------- CONSTRUCTEURS ----------*/
     
-    protected ViewControl()
-    {
-        border = MainScreen.getRoot();
-    }
     /*---------- METHODES PUBLIQUES ----------*/
     
-    /**
-     * Chargement de la nouvelle page en utilisant la ressource en paramètre
-     * @param ressource
-     * @throws IOException
-     */
-    protected void load(String ressource) throws IOException
+    protected void startTask(SonarTask task, String titre) throws IOException
     {
-        Node pane = FXMLLoader.load( getClass().getResource(ressource));
-        border.setCenter(pane);       
+        ProgressDialog dialog = new ProgressDialog(task, titre);
+        dialog.show();
+        dialog.startTask();
     }
+
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 

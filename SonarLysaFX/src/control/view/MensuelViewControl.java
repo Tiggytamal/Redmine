@@ -7,12 +7,12 @@ import java.time.LocalDate;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import control.ControlSonar;
+import control.parent.ViewControl;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -20,7 +20,7 @@ import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
 
-public class MensuelViewControl
+public class MensuelViewControl extends ViewControl
 {
     /* ---------- ATTIBUTS ---------- */
        
@@ -47,8 +47,6 @@ public class MensuelViewControl
     private Button charger;
     @FXML
     private Button creer;
-    @FXML
-    private GridPane backgroundPane;
     @FXML
     private RadioButton radioMois;
     @FXML

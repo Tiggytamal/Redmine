@@ -1,11 +1,15 @@
 package model;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import utilities.Statics;
 
 /**
  * représente la configuration d'un planificateur
@@ -24,8 +28,10 @@ public class Planificateur
     private boolean vendredi;
     private boolean active;
     private LocalTime heure;
+    private List<String> annees;
 
     /*---------- CONSTRUCTEURS ----------*/
+    
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
@@ -155,6 +161,16 @@ public class Planificateur
     public void setActive(boolean active)
     {
         this.active = active;
+    }
+    
+    @XmlAttribute (name = "annees", required = false)
+    public List<String> getAnnees()
+    {
+        if (annees == null)
+            annees = new ArrayList<>();
+        if (!annees.contains(String.valueOf(Statics.TODAY.getYear())))
+            annees.add(String.valueOf(Statics.TODAY.getYear()));
+        return annees;
     }
     
     private static class LocalTimeAdapter extends XmlAdapter<String, LocalTime>

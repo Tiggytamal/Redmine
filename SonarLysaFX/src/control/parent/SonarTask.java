@@ -110,6 +110,7 @@ public abstract class SonarTask extends Task<Boolean>
      */
     protected Map<String, List<Projet>> recupererComposantsSonarVersion(Boolean datastage)
     {
+        updateMessage("Récupération des composants Sonar");
         // Récupération des versions en paramètre
         String[] versions = proprietesXML.getMapParams().get(TypeParam.VERSIONS).split("-");
 

@@ -31,7 +31,7 @@ public class ProgressDialog extends Dialog<Boolean>
 
     public ProgressDialog(SonarTask task, String titre) throws IOException
     {
-        backgroundPane = FXMLLoader.load(getClass().getResource("/view/tesPane.fxml"));
+        backgroundPane = FXMLLoader.load(getClass().getResource("/view/ProgressDialog.fxml"));
         backgroundPane.setPrefWidth(500);
         // Initialisation
         this.task = task;  

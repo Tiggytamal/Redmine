@@ -378,14 +378,15 @@ public class SonarAPI
      * @param vue
      * @return
      */
-    public void creerVue(Vue vue)
+    public Status creerVue(Vue vue)
     {
         if (vue == null)
-            return;
+            return null;
 
         Response response = appelWebservicePOST(VIEWSCREATE, vue);
         logger.info("Creation vue : " + vue.getKey() + " - nom : " + vue.getName() + HTTP + response.getStatus());
         gestionErreur(response);
+        return response.getStatusInfo().toEnum();
     }
 
     /**
@@ -420,15 +421,16 @@ public class SonarAPI
      *            clef de la vue à supprimer
      * @return
      */
-    public void supprimerProjet(String vueKey, boolean erreur)
+    public Status supprimerProjet(String vueKey, boolean erreur)
     {
         if (vueKey == null || vueKey.isEmpty())
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerVue a son argument nul");
 
         Response response = appelWebservicePOST("api/projects/delete", new Clef(vueKey));
-        logger.info("retour supprimer projet " + vueKey + " : " + response.getStatus() + " " + response.getStatusInfo());
+        logger.info("retour supprimer projet " + vueKey + " : " + HTTP + response.getStatus());
         if (erreur)
             gestionErreur(response);
+        return response.getStatusInfo().toEnum();
     }
 
     /**

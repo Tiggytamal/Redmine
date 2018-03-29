@@ -5,11 +5,13 @@ import static utilities.Statics.proprietesXML;
 import java.io.IOException;
 import java.util.Optional;
 
-import control.parent.ViewControl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Pair;
 import model.enums.TypeParam;
@@ -19,7 +21,7 @@ import utilities.Statics;
 import utilities.enums.Severity;
 import view.ConnexionDialog;
 
-public class MenuViewControl extends ViewControl
+public class MenuViewControl
 {
     /* ---------- ATTIBUTS ---------- */
 
@@ -42,15 +44,24 @@ public class MenuViewControl extends ViewControl
     private Button deConnexion;
     @FXML
     private HBox box;
+    
+    private BorderPane border;
 
-    /* ---------- METHODES PUBLIQUES ---------- */
+    /*---------- CONSTRUCTEURS ----------*/
 
+    public MenuViewControl()
+    {
+        border = MainScreen.getRoot();
+    }
+    
     @FXML
     public void initialize()
     {
         box.getChildren().remove(deConnexion);
     }
 
+    /* ---------- METHODES PUBLIQUES ---------- */
+    
     @FXML
     public void openPopup()
     {
@@ -134,6 +145,17 @@ public class MenuViewControl extends ViewControl
         }
         else
             throw new FunctionalException(Severity.SEVERITY_INFO, "Utilisateur incorrect");
+    }
+    
+    /**
+     * Chargement de la nouvelle page en utilisant la ressource en paramètre
+     * @param ressource
+     * @throws IOException
+     */
+    private void load(String ressource) throws IOException
+    {
+        Node pane = FXMLLoader.load(getClass().getResource(ressource));
+        border.setCenter(pane);       
     }
 
     /* ---------- ACCESSEURS ---------- */

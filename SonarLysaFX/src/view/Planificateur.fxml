@@ -38,35 +38,54 @@
 				</fx:define>
 
 				<VBox minWidth="200">
+					<Region VBox.vgrow="ALWAYS" />
 					<RadioButton fx:id="radioSuivi" text="Suivi Qualité" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherPlanificateur"
 						selected="true" />
 					<RadioButton fx:id="radioChc" text="Vues CHC" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherPlanificateur" />
 					<RadioButton fx:id="radioCdm" text="Vues CDM" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherPlanificateur" />
+					<Region VBox.vgrow="ALWAYS" />
 				</VBox>
-				<VBox>
-					<HBox>
-						<Label text="Lundi : " />
-						<CheckBox fx:id="lundiBox" />
-						<Label text="Mardi : " />
-						<CheckBox fx:id="mardiBox" />
-						<Label text="Mercredi : " />
-						<CheckBox fx:id="mercrediBox" />
-						<Label text="Jeudi : " />
-						<CheckBox fx:id="jeudiBox" />
-						<Label text="Vendredi : " />
-						<CheckBox fx:id="vendrediBox" />
-					</HBox>
-					<Region prefHeight="20" />
-					<HBox fx:id="hboxPane">
-						<children>
-							<Label text="Activé : " />
-							<CheckBox fx:id="activeBox" />
-							<Region prefWidth="20" />
-							<Label text="Heure : " />
-						</children>
-					</HBox>
-					<Region prefHeight="20" />
-					<Button text="Sauvegarder" onAction="#sauvegarder" alignment="CENTER" />
+				<VBox fx:id="vboxPane">
+					<children>
+						<Region VBox.vgrow="ALWAYS" />
+						<HBox>
+							<Label text="Lundi : " />
+							<CheckBox fx:id="lundiBox" />
+							<Region prefWidth="10" />
+							<Label text="Mardi : " />
+							<CheckBox fx:id="mardiBox" />
+							<Region prefWidth="10" />
+							<Label text="Mercredi : " />
+							<CheckBox fx:id="mercrediBox" />
+							<Region prefWidth="10" />
+							<Label text="Jeudi : " />
+							<CheckBox fx:id="jeudiBox" />
+							<Region prefWidth="10" />
+							<Label text="Vendredi : " />
+							<CheckBox fx:id="vendrediBox" />
+						</HBox>
+						<VBox fx:id="anneePane">
+							<Region prefHeight="20" />
+							<HBox>
+								<Label text="Annèe précédente : " />
+								<CheckBox fx:id="precedenteBox" selected="false" />
+								<Region prefWidth="20" />
+								<Label text="Annèe Suivante : " />
+								<CheckBox fx:id="suivanteBox" selected="false" />
+							</HBox>
+						</VBox>
+						<Region prefHeight="20" />
+						<HBox fx:id="hboxPane">
+							<children>
+								<Label text="Activé : " />
+								<CheckBox fx:id="activeBox" />
+								<Region prefWidth="10" />
+								<Label text="Heure : " />
+							</children>
+						</HBox>
+						<Region prefHeight="20" />
+						<Button text="Sauvegarder" onAction="#sauvegarder" alignment="CENTER" />
+					</children>
 				</VBox>
 			</children>
 		</HBox>

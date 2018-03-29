@@ -1,5 +1,6 @@
 package control;
 
+import static utilities.Statics.NL;
 import static utilities.Statics.fichiersXML;
 
 import java.io.File;
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,18 +32,15 @@ public class CreerVueCHCCDMTask extends SonarTask
 
     /*---------- CONSTRUCTEURS ----------*/
     
-    public CreerVueCHCCDMTask(List<String> annees, File file)
+    public CreerVueCHCCDMTask(File file)
     {
         super();
-        initAnnees(annees);
         initFile(file);
-
     }
     
-    public CreerVueCHCCDMTask(String pseudo, String mdp, List<String> annees, File file)
+    public CreerVueCHCCDMTask(String pseudo, String mdp, File file)
     {
         super(pseudo, mdp);
-        initAnnees(annees);
         initFile(file);
     }
     
@@ -64,7 +63,10 @@ public class CreerVueCHCCDMTask extends SonarTask
     @Override
     public void annuler()
     {
-        // TODO Auto-generated method stub
+        if (file == null)
+            suppressionVuesMaintenance(cdm, annees);
+        else
+            suppressionVuesMaintenance(true, annees);
 
     }
 
@@ -96,7 +98,7 @@ public class CreerVueCHCCDMTask extends SonarTask
         {
             // Traitement depuis le fichier XML
             suppressionVuesMaintenance(cdm, annees);
-            creerVueMaintenance(cdm);
+            creerVueMaintenance(recupererEditions(cdm, annees));
         }
         else
         {
@@ -114,8 +116,6 @@ public class CreerVueCHCCDMTask extends SonarTask
                 api.ajouterSousVues(entry.getValue(), vue);
             }
         }
-
-
         return true;
     }
     
@@ -125,7 +125,8 @@ public class CreerVueCHCCDMTask extends SonarTask
      */
     private void suppressionVuesMaintenance(boolean cdm, List<String> annees)
     {
-        String base;
+        String base;        
+        String baseMessage = "Suppression des vues existantes :" + NL;
         
         // On itère sur chacune des annèes
         for (String annee : annees)
@@ -142,49 +143,51 @@ public class CreerVueCHCCDMTask extends SonarTask
             // Suprression des vues existantes possibles
             for (int i = 1; i < 53; i++)
             {
-                api.supprimerProjet(new StringBuilder(base).append("-S").append(String.format("%02d", i)).append("Key").toString(), false);
+                if (isCancelled())
+                    break;
+                StringBuilder builder = new StringBuilder(base).append("-S").append(String.format("%02d", i));
+                String message = builder.toString();
+                api.supprimerProjet(builder.append("Key").toString(), false);
+                updateMessage(baseMessage + message);
+                updateProgress(i, 52);
             }
         }
     }
     
     /**
-     * Crée les vues CHC ou CDM depuis Sonar et le fichier XML. {@code true} pour les vues CDM et {@code false} pour les
-     * vues CHC
+     * Crée les vues CHC ou CDM depuis Sonar et le fichier XML. {@code true} pour les vues CDM et {@code false} pour les vues CHC
      * 
      * @param cdm
      */
-    private void creerVueMaintenance(boolean cdm)
+    private void creerVueMaintenance(Map<String, String> mapEditions)
     {
-        // Récupération du fichier XML des editions
-        Map<String, String> mapEditions;
-        if (cdm)
-            mapEditions = fichiersXML.getMapCDM();
-        else
-            mapEditions = fichiersXML.getMapCHC();
-
         Map<String, Set<String>> mapVuesACreer = new HashMap<>();
 
         Map<String, List<Projet>> mapProjets = recupererComposantsSonarVersion(null);
 
-        // Transfert de la map en une liste avec tous ls projets
+        // Transfert de la map en une liste avec tous les projets
         List<Projet> tousLesProjets = new ArrayList<>();
         for (List<Projet> projets : mapProjets.values())
         {
             tousLesProjets.addAll(projets);
         }
 
-        for (Projet projet : tousLesProjets)
+        for (int i = 0; i < tousLesProjets.size(); i++)
         {
-            // Récupération de l'édition du composant sou forme numérique xx.yy.zz.tt et du numéro de lot
+            Projet projet = tousLesProjets.get(i);
+            // Récupération de l'édition du composant sous forme numérique xx.yy.zz.tt et du numéro de lot
             Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { "edition", "lot" });
 
+            //MAJ progression
+            updateMessage("Traitement des composants :" + NL + composant.getNom());
+            updateProgress(i, tousLesProjets.size());
+            
             // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
             Map<String, String> metriques = composant.getMapMetriques();
             String lot = metriques.get("lot");
             String edition = metriques.get("edition");
 
-            // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est
-            // présente
+            // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
             if (lot != null && !lot.isEmpty() && edition != null && mapEditions.keySet().contains(edition))
             {
                 String keyCHC = mapEditions.get(edition);
@@ -194,17 +197,64 @@ public class CreerVueCHCCDMTask extends SonarTask
             }
         }
 
+        String base = "Création des vues :" + NL;
+        
+        // Calcul du nombere total d'objets dans la map
+        int sizeComplete = 0;
+        for (Set<String> lots : mapVuesACreer.values())
+        {
+            sizeComplete+= lots.size();
+        }
+        
+        int i = 0;
         for (Map.Entry<String, Set<String>> entry : mapVuesACreer.entrySet())
         {
             Vue parent = new Vue(entry.getKey() + "Key", entry.getKey());
             api.creerVue(parent);
+            String baseVue = base + entry.getKey();
+            updateMessage(baseVue);
             for (String lot : entry.getValue())
             {
                 api.ajouterSousVue(new Vue("view_lot_" + lot, "Lot " + lot), parent);
+                i++;
+                
+                //MAJ progression
+                updateMessage(baseVue + NL + "ajout lot " + lot);
+                updateProgress(i, sizeComplete);
             }
         }
     }
     
-    /*---------- ACCESSEURS ----------*/
+    /**
+     * Récupération des éditions CDM et CHC depuis les fichiers Excel, selon le type de vue et les annèes
+     * 
+     * @param cdm
+     * @param annees
+     * @return
+     */
+    private Map<String, String> recupererEditions(boolean cdm, List<String> annees)
+    {
+        Map<String, String> retour;
+        
+        if (cdm)
+            retour = fichiersXML.getMapCDM();
+        else
+            retour = fichiersXML.getMapCHC();
+        
+        // On itère sur la HashMap pour retirer tous les éléments qui ne sont pas des annèes selectionnées
+        for (Iterator<Map.Entry<String, String>>  iter = retour.entrySet().iterator(); iter.hasNext();)
+        {
+            boolean ok = false;
+            for (String annee : annees)
+            {
+                if (iter.next().getValue().contains(annee))
+                    ok = true;
+            }
+            if (!ok)
+                iter.remove();
+        }
+        return retour;
+    }
     
+    /*---------- ACCESSEURS ----------*/    
 }

@@ -1,5 +1,6 @@
 package control.view;
 
+import static utilities.Statics.TODAY;
 import static utilities.Statics.proprietesXML;
 
 import javax.xml.bind.JAXBException;
@@ -16,6 +17,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import model.Planificateur;
 import model.enums.TypePlan;
 import view.TimeSpinner;
@@ -36,6 +38,8 @@ public class PlanificateurViewControl
     @FXML
     private Button arreter;
     @FXML
+    private VBox vboxPane;
+    @FXML
     private CheckBox lundiBox;
     @FXML
     private CheckBox mardiBox;
@@ -48,6 +52,12 @@ public class PlanificateurViewControl
     @FXML
     private CheckBox activeBox;
     @FXML
+    private CheckBox suivanteBox;
+    @FXML
+    private VBox anneePane;
+    @FXML
+    private CheckBox precedenteBox;
+    @FXML
     private ToggleGroup toggleGroup;
     @FXML
     private RadioButton radioSuivi;
@@ -57,7 +67,7 @@ public class PlanificateurViewControl
     private RadioButton radioCdm;
     @FXML
     private HBox hboxPane;
-    
+
     private ControlJob control;
     private TimeSpinner spinner;
     private Planificateur planificateur;
@@ -73,15 +83,17 @@ public class PlanificateurViewControl
     public void initialize()
     {
         planificateur = proprietesXML.getMapPlans().get(TypePlan.SUIVIHEBDO);
+        vboxPane.getChildren().remove(anneePane);
         setInfos(planificateur);
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
 
     @FXML
-    public void demarrer() throws SchedulerException
+    public void demarrer() throws SchedulerException, JAXBException
     {
         MainScreen.changeImageTray(TrayIconView.imageRed);
+        sauvegarder();
         control.creationJobsSonar();
     }
 
@@ -91,7 +103,7 @@ public class PlanificateurViewControl
         MainScreen.changeImageTray(TrayIconView.imageBase);
         control.fermeturePlanificateur();
     }
-    
+
     @FXML
     public void sauvegarder() throws JAXBException
     {
@@ -103,6 +115,20 @@ public class PlanificateurViewControl
         planificateur.setVendredi(vendrediBox.isSelected());
         planificateur.setActive(activeBox.isSelected());
         planificateur.setHeure(spinner.getValue());
+        
+        if (suivanteBox.isVisible() && suivanteBox.isSelected())
+        {
+            String annee = String.valueOf(TODAY.getYear() + 1);
+            if (!planificateur.getAnnees().contains(annee))
+                planificateur.getAnnees().add(annee);
+        }
+        
+        if (precedenteBox.isVisible() && precedenteBox.isSelected())
+        {
+            String annee = String.valueOf(TODAY.getYear() - 1);
+            if (!planificateur.getAnnees().contains(annee))
+                planificateur.getAnnees().add(annee);
+        }
         new ControlXML().saveParam(proprietesXML);
     }
 
@@ -112,7 +138,8 @@ public class PlanificateurViewControl
         String id = "";
         Object source = event.getSource();
         if (source instanceof Node)
-            id = ((Node)source).getId();
+            id = ((Node) source).getId();
+        vboxPane.getChildren().remove(anneePane);
 
         switch (id)
         {
@@ -121,16 +148,18 @@ public class PlanificateurViewControl
                 break;
             case "radioChc":
                 planificateur = proprietesXML.getMapPlans().get(TypePlan.VUECHC);
+                vboxPane.getChildren().add(2, anneePane);
                 break;
             case "radioCdm":
                 planificateur = proprietesXML.getMapPlans().get(TypePlan.VUECDM);
+                vboxPane.getChildren().add(2, anneePane);
                 break;
             default:
                 break;
-        }        
+        }
         setInfos(planificateur);
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
 
     private void setInfos(Planificateur planificateur)

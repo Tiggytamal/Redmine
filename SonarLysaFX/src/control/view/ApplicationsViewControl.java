@@ -4,7 +4,6 @@ import control.ControlSonar;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-import utilities.Statics;
 
 public class ApplicationsViewControl
 {

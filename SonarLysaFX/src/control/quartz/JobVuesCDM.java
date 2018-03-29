@@ -1,7 +1,5 @@
 package control.quartz;
 
-import static utilities.Statics.info;
-
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

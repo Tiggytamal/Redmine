@@ -2,6 +2,7 @@ package control;
 
 import static utilities.Statics.fichiersXML;
 import static utilities.Statics.proprietesXML;
+import static utilities.Statics.TODAY;
 
 import java.io.File;
 import java.io.IOException;
@@ -169,11 +170,21 @@ public class ControlXML
         saveParam(fichiersXML);
     }
     
+    /**
+     * Récupère depuis le fichier Excel toutes les édition CHC/CDM, aver leurs numéros de version, pour l'annèe en cours, la précedente et la suivante.
+     * 
+     * @param file
+     * @throws InvalidFormatException
+     * @throws IOException
+     * @throws JAXBException
+     */
     public void recupEditionDepuisExcel(File file) throws InvalidFormatException, IOException, JAXBException
     {
         ControlEdition control = new ControlEdition(file);
         List<String> liste = new ArrayList<>();
-        liste.add("2018");
+        liste.add(String.valueOf(TODAY.getYear()));
+        liste.add(String.valueOf(TODAY.getYear()+1));
+        liste.add(String.valueOf(TODAY.getYear()-1));
         Map<String, Map<String, String>> editions = control.recupEditionDepuisExcel(liste);
         control.close();
         fichiersXML.getMapCDM().clear();
