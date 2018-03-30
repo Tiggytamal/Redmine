@@ -114,7 +114,6 @@ public class PlanificateurViewControl
         planificateur.setJeudi(jeudiBox.isSelected());
         planificateur.setVendredi(vendrediBox.isSelected());
         planificateur.setActive(activeBox.isSelected());
-        planificateur.setHeure(spinner.getValue());
         
         if (suivanteBox.isVisible() && suivanteBox.isSelected())
         {

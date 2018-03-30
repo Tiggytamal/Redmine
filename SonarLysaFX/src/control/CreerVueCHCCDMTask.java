@@ -149,7 +149,7 @@ public class CreerVueCHCCDMTask extends SonarTask
                 String message = builder.toString();
                 api.supprimerProjet(builder.append("Key").toString(), false);
                 updateMessage(baseMessage + message);
-                updateProgress(i, 52);
+                updateProgress(i, 52l*annees.size());
             }
         }
     }
@@ -175,6 +175,7 @@ public class CreerVueCHCCDMTask extends SonarTask
         for (int i = 0; i < tousLesProjets.size(); i++)
         {
             Projet projet = tousLesProjets.get(i);
+            
             // Récupération de l'édition du composant sous forme numérique xx.yy.zz.tt et du numéro de lot
             Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { "edition", "lot" });
 

@@ -1,10 +1,6 @@
 package view;
 
-import java.io.IOException;
-
 import control.parent.SonarTask;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -13,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 
 public class ProgressDialog extends Dialog<Boolean>
 {
@@ -24,20 +21,16 @@ public class ProgressDialog extends Dialog<Boolean>
     private Label label;
     private SonarTask task;
     
-    @FXML
-    private GridPane backgroundPane;
-    
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ProgressDialog(SonarTask task, String titre) throws IOException
+    public ProgressDialog(SonarTask task, String titre)
     {
-        backgroundPane = FXMLLoader.load(getClass().getResource("/view/ProgressDialog.fxml"));
-        backgroundPane.setPrefWidth(500);
         // Initialisation
         this.task = task;  
         setTitle(titre);
         setHeaderText(null);
         setResizable(true);
+        initModality(Modality.NONE);
         
         // Gridpane
         GridPane grid = new GridPane();
