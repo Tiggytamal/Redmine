@@ -1,17 +1,22 @@
 package control.quartz;
 
-import org.quartz.Job;
+import java.util.List;
+
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
-import control.ControlSonar;
+import control.CreerVueCHCCDMTask;
+import control.parent.JobForTask;
+import javafx.application.Platform;
 
-public class JobVuesCDM implements Job
+public class JobVuesCDM extends JobForTask
 {
+    @SuppressWarnings("unchecked")
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException
+    public void execute(JobExecutionContext context)
     {
-        ControlSonar control = new ControlSonar();
-        control.creerVueCHC();         
+        Platform.runLater(() -> {
+            List<String> liste = getObjectFromJobMap(List.class, CLEFANNEES, context);  
+            startTask(new CreerVueCHCCDMTask(liste, true), context.getJobDetail().getKey().getName());
+        });
     }
 }

@@ -63,11 +63,7 @@ public class CreerVueCHCCDMTask extends SonarTask
     @Override
     public void annuler()
     {
-        if (file == null)
-            suppressionVuesMaintenance(cdm, annees);
-        else
-            suppressionVuesMaintenance(true, annees);
-
+        // Pas de traitement pour l'annulation
     }
 
     @Override
@@ -127,7 +123,7 @@ public class CreerVueCHCCDMTask extends SonarTask
     {
         String base;        
         String baseMessage = "Suppression des vues existantes :" + NL;
-        
+        int j = 1;
         // On itère sur chacune des annèes
         for (String annee : annees)
         {
@@ -149,9 +145,10 @@ public class CreerVueCHCCDMTask extends SonarTask
                 String message = builder.toString();
                 api.supprimerProjet(builder.append("Key").toString(), false);
                 updateMessage(baseMessage + message);
-                updateProgress(i, 52l*annees.size());
+                updateProgress(j++, 52l*annees.size());
             }
         }
+
     }
     
     /**
@@ -243,12 +240,13 @@ public class CreerVueCHCCDMTask extends SonarTask
             retour = fichiersXML.getMapCHC();
         
         // On itère sur la HashMap pour retirer tous les éléments qui ne sont pas des annèes selectionnées
-        for (Iterator<Map.Entry<String, String>>  iter = retour.entrySet().iterator(); iter.hasNext();)
+        for (Iterator<String>  iter = retour.values().iterator(); iter.hasNext();)
         {
             boolean ok = false;
+            String value = iter.next();
             for (String annee : annees)
             {
-                if (iter.next().getValue().contains(annee))
+                if (value.contains(annee))
                     ok = true;
             }
             if (!ok)

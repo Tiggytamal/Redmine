@@ -1,31 +1,22 @@
 package control.quartz;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
 import control.CreerVueCHCCDMTask;
+import control.parent.JobForTask;
 import javafx.application.Platform;
-import view.ProgressDialog;
 
-public class JobVuesCHC implements Job
+public class JobVuesCHC extends JobForTask
 {
     @SuppressWarnings("unchecked")
     @Override
     public void execute(JobExecutionContext context)
     {
-        Platform.runLater(() ->{
-                Object objet = context.getJobDetail().getJobDataMap().get("annees");
-                List<String> liste = new ArrayList<>();
-                if (objet instanceof List)
-                    liste = (List<String>) objet;
-                CreerVueCHCCDMTask task = new CreerVueCHCCDMTask(liste, false);
-                ProgressDialog dialog = new ProgressDialog(task, "Vues CHC");
-                dialog.show();
-                dialog.startTask();
-            }
-        );
+        Platform.runLater(() -> {
+            List<String> liste = getObjectFromJobMap(List.class, CLEFANNEES, context);
+            startTask(new CreerVueCHCCDMTask(liste, false), context.getJobDetail().getKey().getName());
+        });
     }
 }

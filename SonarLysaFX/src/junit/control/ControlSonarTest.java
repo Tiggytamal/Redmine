@@ -112,18 +112,6 @@ public class ControlSonarTest
     }
 
     @Test
-    public void creerVueCDM() throws InvalidFormatException, IOException
-    {
-        handler.creerVueCDM();
-    }
-
-    @Test
-    public void creerVueCHC()
-    {
-        handler.creerVueCHC();
-    }
-
-    @Test
     public void controlerSonarQube()
     {
         handler.controlerSonarQube();

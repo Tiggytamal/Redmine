@@ -17,6 +17,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
+import control.parent.JobForTask;
 import model.Planificateur;
 import model.enums.TypePlan;
 
@@ -51,7 +52,7 @@ public class ControlJob
             if (!entry.getValue().isActive())
                 continue;
             JobDetail job = creerJob(entry.getKey());
-            job.getJobDataMap().put("annees", entry.getValue().getAnnees());
+            job.getJobDataMap().put(JobForTask.CLEFANNEES, entry.getValue().getAnnees());
             scheduler.deleteJob(job.getKey());
             scheduler.scheduleJob(job, creerTrigger(entry)); 
         }

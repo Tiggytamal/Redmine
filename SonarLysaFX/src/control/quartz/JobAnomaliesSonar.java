@@ -1,7 +1,5 @@
 package control.quartz;
 
-import static utilities.Statics.info;
-
 import java.io.IOException;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;

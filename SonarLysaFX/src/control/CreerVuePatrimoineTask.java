@@ -66,9 +66,7 @@ public class CreerVuePatrimoineTask extends SonarTask
         String nom = "Vue patrimoine " + TODAY.getYear() + " S" + TODAY.get(woy);
         
         // Récupération des composants
-        updateMessage("Récupération des composants...");
         List<Projet> composants = new ArrayList<>(recupererComposantsSonar().values());
-        updateMessage("Récupération des composants...OK");
        
         if (isCancelled())
             return false;

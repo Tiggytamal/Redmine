@@ -1,35 +1,26 @@
 package control.view;
 
-import control.ControlSonar;
+import java.io.IOException;
+
+import control.CreerVueParAppsTask;
+import control.parent.ViewControl;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
 
-public class ApplicationsViewControl
+public class ApplicationsViewControl extends ViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 
     @FXML
-    private GridPane backgroundPane;
-    @FXML
     private Button creer;
     
-    private ControlSonar handler;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-
-    @FXML
-    public void initialize()
-    {
-        handler = new ControlSonar();
-    }
-    
+    /*---------- CONSTRUCTEURS ----------*/   
     /*---------- METHODES PUBLIQUES ----------*/
 
     @FXML
-    public void creerVue()
+    public void creerVue() throws IOException
     {
-        handler.creerVueParApplication();
+        startTask(new CreerVueParAppsTask(), "Vues par applications");
     }
     
     /*---------- METHODES PRIVEES ----------*/

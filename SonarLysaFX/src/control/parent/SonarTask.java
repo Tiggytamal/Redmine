@@ -67,6 +67,7 @@ public abstract class SonarTask extends Task<Boolean>
     @SuppressWarnings ("unchecked")
     protected Map<String, Projet> recupererComposantsSonar()
     {
+        updateMessage("Récupération des composants");
         // Appel du webservice pour remonter tous les composants
         List<Projet> projets;
 
@@ -100,6 +101,7 @@ public abstract class SonarTask extends Task<Boolean>
                 retour.put(matcher.group(0), projet);
             }
         }
+        updateMessage("Récupération des composants OK");
         return retour;
     }
     

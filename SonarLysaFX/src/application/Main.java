@@ -44,7 +44,7 @@ public class Main extends Application
      * 
      * @param e
      */
-    private void gestionException(Throwable e)
+    public static void gestionException(Throwable e)
     {
         if (e.getCause() instanceof InvocationTargetException)
         {

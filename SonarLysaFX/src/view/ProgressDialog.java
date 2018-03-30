@@ -96,7 +96,8 @@ public class ProgressDialog extends Dialog<Boolean>
     
     public void startTask()
     {
-        new Thread(task).start();
+        Thread thread = new Thread(task);
+        thread.start();
     }
     
     /*---------- METHODES PRIVEES ----------*/

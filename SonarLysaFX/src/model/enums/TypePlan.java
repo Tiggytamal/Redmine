@@ -8,7 +8,7 @@ import control.quartz.JobAnomaliesSonar;
 import control.quartz.JobVuesCDM;
 import control.quartz.JobVuesCHC;
 
-public enum TypePlan implements Serializable, TypeKey
+public enum TypePlan implements Serializable, TypeKey 
 {
     SUIVIHEBDO("Suivi Hebdo", JobAnomaliesSonar.class), VUECHC("Vues CHC", JobVuesCHC.class), VUECDM("Vues CHC_CDM", JobVuesCDM.class);
 
@@ -26,7 +26,7 @@ public enum TypePlan implements Serializable, TypeKey
     {
         return string;
     }
-    
+
     public Class<? extends Job> getClazz()
     {
         return clazz;
