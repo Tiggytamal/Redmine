@@ -5,11 +5,16 @@ import static utilities.Statics.proprietesXML;
 import java.io.IOException;
 import java.util.Optional;
 
+import control.parent.ViewControl;
+import control.task.MajVuesTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -21,7 +26,7 @@ import utilities.Statics;
 import utilities.enums.Severity;
 import view.ConnexionDialog;
 
-public class MenuViewControl
+public class MenuViewControl extends ViewControl
 {
     /* ---------- ATTIBUTS ---------- */
 
@@ -29,15 +34,15 @@ public class MenuViewControl
     @FXML
     private MenuItem mensuel;
     @FXML
-    private MenuItem applications;
-    @FXML
     private MenuItem options;
     @FXML
     private MenuItem planificateur;
     @FXML
-    private MenuItem maintenance;
+    private MenuItem autres;
     @FXML
-    private MenuItem patrimoine;
+    private MenuItem majvues;
+    @FXML
+    private MenuItem suivi;
     @FXML
     private Button connexion;
     @FXML
@@ -58,6 +63,12 @@ public class MenuViewControl
     public void initialize()
     {
         box.getChildren().remove(deConnexion);
+        mensuel.setDisable(false);
+        options.setDisable(false);
+        planificateur.setDisable(false);
+        autres.setDisable(false);
+        suivi.setDisable(false);
+        majvues.setDisable(false);
     }
 
     /* ---------- METHODES PUBLIQUES ---------- */
@@ -67,8 +78,10 @@ public class MenuViewControl
     {
         // Création de la popup de connexion
         ConnexionDialog dialog = new ConnexionDialog();
+        
         // Récupération du pseudo et du mdp
         Optional<Pair<String, String>> result = dialog.showAndWait();
+        
         // Contrôle dans Sonar de la validitée
         result.ifPresent(pair -> testMdP(pair.getKey(), pair.getValue()));
     }
@@ -77,11 +90,9 @@ public class MenuViewControl
     public void deco()
     {
         mensuel.setDisable(true);
-        applications.setDisable(true);
         options.setDisable(true);
         planificateur.setDisable(true);
-        maintenance.setDisable(true);
-        patrimoine.setDisable(true);
+        autres.setDisable(true);
         Statics.info.setPseudo(null);
         Statics.info.setMotDePasse(null);
         box.getChildren().remove(deConnexion);
@@ -89,11 +100,11 @@ public class MenuViewControl
         border.setCenter(null);
     }
 
-    @FXML
-    public void menuSwitch(ActionEvent event) throws IOException
+    @Override
+    public void afficher(ActionEvent event) throws IOException
     {
-        if (!Statics.info.controle())
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
+//        if (!Statics.info.controle())
+//            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
         String id = "";
         Object source = event.getSource();
         if (source instanceof MenuItem)
@@ -104,24 +115,34 @@ public class MenuViewControl
             case "mensuel":
                 load("/view/Mensuel.fxml");
                 break;
-            case "applications":
-                load("/view/Applications.fxml");
-                break;
             case "options":
                 load("/view/Options.fxml");
                 break;
             case "planificateur":
                 load("/view/Planificateur.fxml");
                 break;
-            case "maintenance":
-                load("/view/Maintenance.fxml");
+            case "autres":
+                load("/view/AutresVues.fxml");
                 break;
-            case "patrimoine":
-                load("/view/Patrimoine.fxml");
+            case "suivi":
+                load("/view/Suivi.fxml");
                 break;
             default:
                 break;
         }
+    }
+    
+    @FXML
+    public void majVues()
+    {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle(MajVuesTask.TITRE);
+        alert.setHeaderText(null);
+        alert.setContentText("Cela lancera la mise à jour de toutes les vues Sonar."+ Statics.NL + "Etes-vous sur?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() &&  result.get() == ButtonType.OK)
+            startTask(new MajVuesTask(), null);
     }
 
     /* ---------- METHODES PRIVEES ---------- */
@@ -135,11 +156,9 @@ public class MenuViewControl
         if (api.verificationUtilisateur())
         {
             mensuel.setDisable(false);
-            applications.setDisable(false);
             options.setDisable(false);
             planificateur.setDisable(false);
-            maintenance.setDisable(false);
-            patrimoine.setDisable(false);
+            autres.setDisable(false);
             box.getChildren().remove(connexion);
             box.getChildren().add(deConnexion);
         }

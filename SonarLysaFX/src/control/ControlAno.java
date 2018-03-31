@@ -68,6 +68,7 @@ public class ControlAno extends ControlExcel
     private int colRemarque;
     private int colVer;
     private int colDateCrea;
+    private int colDateDetec;
     private int colDateRel;
     private int colMatiere;
 
@@ -89,6 +90,7 @@ public class ControlAno extends ControlExcel
     private String traite;
     private String version;
     private String dateCreation;
+    private String dateDetection;
     private String dateRelance;
     private String matiere;
 
@@ -100,7 +102,7 @@ public class ControlAno extends ControlExcel
     private static final String SECURITEKO = "X";
     private static final String SNAPSHOT = "SNAPSHOT";
     private static final String RELEASE = "RELEASE";
-    private static final int NOMBRECOL = 18;
+    private static final int NOMBRECOL = 19;
     private static final String AVERIFIER = "A vérifier";
     private String lienslots;
     private String liensAnos;
@@ -275,15 +277,13 @@ public class ControlAno extends ControlExcel
         Map<String, Anomalie> anoClose = new HashMap<>();
         Sheet sheetClose = saveAnomaliesCloses(anoClose);
         
-
-
         // Mise à jour anomalies déjà créées
         for (Anomalie ano : lotsEnAno)
         {
             Row row;
             ano.getMatieres().add(matiere);
             String anoLot = ano.getLot().substring(4);
-            IndexedColors couleur;
+
 
             // Contrôle si le lot a une erreur de sécurité pour mettre à jour la donnée.
             if (lotsSecurite.contains(anoLot))
@@ -297,35 +297,12 @@ public class ControlAno extends ControlExcel
                 continue;
             }
             
+            // Mise à jour du chef de service
             controleChefDeService(ano);
-
-            // Mise en vert des anomalies avec un Quality Gate bon
-            if (!lotsEnErreurSonar.contains(anoLot))
-            {
-                couleur = IndexedColors.LIGHT_GREEN;
-            }
-            else
-            {
-                // Les lots release sont en jaune
-                if (lotsRelease.contains(anoLot))
-                {
-                    ano.setVersion(RELEASE);
-                    couleur = IndexedColors.LIGHT_YELLOW;
-                }
-                else
-                {
-                    ano.setVersion(SNAPSHOT);
-                    couleur = IndexedColors.WHITE;
-                }
-            }
-            
-            if (AVERIFIER.equals(ano.getEtat()))
-                couleur = IndexedColors.GREY_25_PERCENT;
-            
-            // Remise de la couleur à orange si le lot n'a pas encore été traité
-            if(!ano.isTraitee())
-                couleur = IndexedColors.LIGHT_ORANGE;
-            
+                
+            // Calcul de la couleur de la ligne dans le fichier Excel
+            IndexedColors couleur = calculCouleurLigne(ano, lotsEnErreurSonar, anoLot, lotsRelease);
+           
             // Création de la ligne
             row = sheet.createRow(sheet.getLastRowNum() + 1);
             creerLigneSQ(row, ano, couleur);
@@ -354,10 +331,12 @@ public class ControlAno extends ControlExcel
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
             if (anoMultiple.contains(sheet.getRow(i).getCell(colLot).getStringCellValue()))
-                sheet.getRow(i).getCell(colMatiere).setCellValue(Matiere.JAVA.toString() + " - " + Matiere.DATASTAGE);
+                sheet.getRow(i).getCell(colMatiere).setCellValue(Matiere.JAVA.toString() + " - " + Matiere.DATASTAGE.toString());
         }
         
     }
+
+    /*---------- METHODES PRIVEES ----------*/
 
     @Override
     protected void initColonnes()
@@ -380,6 +359,7 @@ public class ControlAno extends ControlExcel
         remarque = nomColonnes.get(TypeCol.REMARQUE);
         version = nomColonnes.get(TypeCol.VERSION);
         dateCreation = nomColonnes.get(TypeCol.DATECREATION);
+        dateDetection = nomColonnes.get(TypeCol.DATEDETECTION);
         dateRelance = nomColonnes.get(TypeCol.DATERELANCE);
         traite = nomColonnes.get(TypeCol.TRAITE);
         matiere = nomColonnes.get(TypeCol.MATIERE);
@@ -503,6 +483,12 @@ public class ControlAno extends ControlExcel
                 testMax(colDateCrea);
                 nbreCol++;
             }
+            else if (cell.getStringCellValue().equals(dateDetection))
+            {
+                colDateDetec = cell.getColumnIndex();
+                testMax(colDateDetec);
+                nbreCol++;
+            }
             else if (cell.getStringCellValue().equals(dateRelance))
             {
                 colDateRel = cell.getColumnIndex();
@@ -522,10 +508,56 @@ public class ControlAno extends ControlExcel
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré, vérifier les colonnes de celui-ci");
         }
     }
-
-    /*---------- METHODES PRIVEES ----------*/
-
+    
     /**
+     * Permet de calculer la couleur d'une ligne du fichier Excel : <br>
+     * - orange = nouvelle aomalie non traitée<br>
+     * - jaune = anomalie avec au moisn un composant en version figée<br>
+     * - gris = anomalie déjà traitée une première fois avec un QG redevenu rouge<br>
+     * - vert = lot dont le QG est devenu vert<br>
+     * 
+     * @param ano
+     * @param lotsEnErreurSonar
+     * @param anoLot
+     * @param lotsRelease
+     * @return
+     */
+    private IndexedColors calculCouleurLigne(Anomalie ano, Set<String> lotsEnErreurSonar, String anoLot, Set<String> lotsRelease)
+    {
+        IndexedColors couleur;
+        // Mise en vert des anomalies avec un Quality Gate bon
+        if (!lotsEnErreurSonar.contains(anoLot))
+        {
+            couleur = IndexedColors.LIGHT_GREEN;
+        }
+        else
+        {
+            // Les lots release sont en jaune
+            if (lotsRelease.contains(anoLot))
+            {
+                ano.setVersion(RELEASE);
+                couleur = IndexedColors.LIGHT_YELLOW;
+            }
+            else
+            {
+                ano.setVersion(SNAPSHOT);
+                couleur = IndexedColors.WHITE;
+            }
+        }
+        
+        // Les lots déjà traité une première fois sont en gris
+        if (AVERIFIER.equals(ano.getEtat()))
+            couleur = IndexedColors.GREY_25_PERCENT;
+        
+        // Remise de la couleur à orange si le lot n'a pas encore été traité
+        if(!ano.isTraitee())
+            couleur = IndexedColors.LIGHT_ORANGE;
+        
+        return couleur;
+    }
+    
+    /**
+     * Ajoute les anomalies closes à la feuille correspondante
      * 
      * @param sheetClose
      * @param anoClose
@@ -541,6 +573,7 @@ public class ControlAno extends ControlExcel
     }
     
     /**
+     * Crée une ligne correspondante à une anomalie dans le fichier Excel
      * 
      * @param row
      * @param ano
@@ -626,15 +659,19 @@ public class ControlAno extends ControlExcel
 
         // Date création
         valoriserCellule(row, colDateCrea, date, ano.getDateCreation(), ano.getDateCreationComment());
+        
+        // Date création
+        valoriserCellule(row, colDateDetec, date, ano.getDateCreation(), ano.getDateCreationComment());
 
         // Date relance
-        valoriserCellule(row, colDateRel, date, ano.getDateRelance(), ano.getDateRelanceComment());
+        valoriserCellule(row, colDateRel, date, ano.getDateDetection(), ano.getDateDetectionComment());
         
         // Matiere
         valoriserCellule(row, colMatiere, centre, ano.getMatieresString(), ano.getMatieresComment());
     }
 
     /**
+     * CRée une ligne pour une anomalie dans les feuilles de version
      * 
      * @param row
      * @param ano
@@ -652,6 +689,7 @@ public class ControlAno extends ControlExcel
     }
 
     /**
+     * Crée la ligne de titres de la feuille principale
      * 
      * @param sheet
      */
@@ -706,6 +744,7 @@ public class ControlAno extends ControlExcel
     }
 
     /**
+     * Ajoute un liens à une cellule, soit vers Sonar soit vers RTC
      * 
      * @param cell
      * @param baseAdresse
@@ -728,6 +767,7 @@ public class ControlAno extends ControlExcel
     }
 
     /**
+     * AJout les nouvelles anomalies au fichier Excel
      * 
      * @param sheet
      * @param anoAajouter
@@ -754,8 +794,8 @@ public class ControlAno extends ControlExcel
             else
                 ano.setVersion(SNAPSHOT);
 
-            // Ajout de la date de création à la date du jour
-            ano.setDateCreation(LocalDate.now());
+            // Ajout de la date de détection à la date du jour
+            ano.setDateDetection(LocalDate.now());
 
             // Création de la ligne
             if (mapAnoCloses.keySet().contains(ano.getLot()))
@@ -864,6 +904,7 @@ public class ControlAno extends ControlExcel
     }
 
     /**
+     * Crée une anomalie depuis les informatiosn du fichier Excel
      * 
      * @param row
      * @return
@@ -903,6 +944,8 @@ public class ControlAno extends ControlExcel
         retour.setVersionComment(getCellComment(row, colVer));
         retour.setDateCreation(getCellDateValue(row, colDateCrea));
         retour.setDateCreationComment(getCellComment(row, colDateCrea));
+        retour.setDateDetection(getCellDateValue(row, colDateDetec));
+        retour.setDateDetectionComment(getCellComment(row, colDateDetec));
         retour.setDateRelance(getCellDateValue(row, colDateRel));
         retour.setDateRelanceComment(getCellComment(row, colDateRel));
         retour.setMatieresString(getCellStringValue(row, colMatiere));
@@ -916,6 +959,7 @@ public class ControlAno extends ControlExcel
     {
         // Controle si la clef n'a pas les indices de numéro de lot
         String smallkey = key.length() > 5 && key.matches(".*0[0-9E]$") ? key.substring(0, 6) : key; 
+        
         // Contrôle si la clef est de type T*.
         String newKey = key.length() == 9 && key.startsWith("T") ? key.substring(0, 8) : smallkey;     
         return anoClarity.equalsIgnoreCase(newKey);

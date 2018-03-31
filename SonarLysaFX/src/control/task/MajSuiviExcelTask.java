@@ -1,7 +1,6 @@
-package control;
+package control.task;
 
 import static utilities.Statics.fichiersXML;
-import static utilities.Statics.info;
 import static utilities.Statics.logger;
 import static utilities.Statics.lognonlistee;
 import static utilities.Statics.proprietesXML;
@@ -9,68 +8,149 @@ import static utilities.Statics.proprietesXML;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import control.ControlAno;
+import control.parent.SonarTask;
 import junit.control.ControlSonarTest;
 import model.Anomalie;
 import model.LotSuiviPic;
 import model.enums.Matiere;
 import model.enums.TypeParam;
-import sonarapi.SonarAPI;
 import sonarapi.model.Composant;
 import sonarapi.model.Projet;
 import sonarapi.model.QualityGate;
 import sonarapi.model.Status;
 import sonarapi.model.Vue;
-import utilities.FunctionalException;
+import utilities.Statics;
 import utilities.Utilities;
-import utilities.enums.Severity;
 
-public class ControlSonar
+public class MajSuiviExcelTask extends SonarTask
 {
-
     /*---------- ATTRIBUTS ----------*/
 
-    private final SonarAPI api;
+    private TypeMaj typeMaj;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    /**
-     * Constructeur de base pour l'api Sonar, avec le mot de passe et le l'identifiant
-     *
-     * @param name
-     * @param password
-     */
-    public ControlSonar(String name, String password)
+    public MajSuiviExcelTask(TypeMaj typeMaj)
     {
-        if (name == null || name.isEmpty() || password == null)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
-        api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), name, password);
+        super();
+        this.typeMaj = typeMaj;
     }
-    
-    /**
-     * Constructeur depuis les données de l'utilisateur
-     *
-     * @param name
-     * @param password
-     */
-    public ControlSonar()
+    /*---------- METHODES PUBLIQUES ----------*/
+
+    @Override
+    public void annuler()
     {
-        if (!info.controle())
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
-        api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), info.getPseudo(), info.getMotDePasse());
+        switch (typeMaj)
+        {
+            case SUIVI :
+
+                break;
+
+            case DATASTAGE :
+
+                break;
+
+            case DOUBLE :
+
+                break;
+        }
     }
 
-    /*---------- METHODES PUBLIQUES ----------*/
+    @Override
+    protected Boolean call() throws Exception
+    {
+        return majSuiviExcel();
+    }
+
+    /*---------- METHODES PRIVEES ----------*/
+
+    private boolean majSuiviExcel() throws InvalidFormatException, IOException
+    {
+        switch (typeMaj)
+        {
+            case SUIVI :
+                majFichierSuiviExcel();
+                break;
+
+            case DATASTAGE :
+                majFichierSuiviExcelDataStage();
+                break;
+
+            case DOUBLE :
+                traitementSuiviExcelToutFichiers();
+                break;
+        }
+        return true;
+    }
+
+    private void traitementSuiviExcelToutFichiers() throws InvalidFormatException, IOException
+    {
+        // Récupération anomalies Datastage
+        List<String> anoDatastage = majFichierSuiviExcelDataStage();
+        
+        // Récupération anomalies Java
+        List<String> anoJava = majFichierSuiviExcel();
+        
+        // Liste des anomalies sur plusieures matières
+        List<String> anoMultiple = new ArrayList<>();
+        for (String string : anoJava)
+        {
+            if (anoDatastage.contains(string))
+                anoMultiple.add(string);
+        }
+
+        // Mise à jour des fichiers Excel
+        ControlAno controlAnoJava = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIER)));
+        ControlAno controlAnoDataStage = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE)));
+        controlAnoJava.majMultiMatiere(anoMultiple);
+        controlAnoDataStage.majMultiMatiere(anoMultiple);
+    }
+
+    /**
+     * Mise à jour du fichier Excel des suivis d'anomalies pour les composants Datastage
+     *
+     * @throws InvalidFormatException
+     * @throws IOException
+     */
+    private List<String> majFichierSuiviExcelDataStage() throws InvalidFormatException, IOException
+    {
+        // Appel de la récupération des composants datastage avec les vesions en paramètre
+        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(true);
+
+        // Mise à jour des liens des composants datastage avec le bon QG
+        liensQG(composants.values(), proprietesXML.getMapParams().get(TypeParam.NOMQGDATASTAGE));
+
+        // Traitement du fichier datastage de suivi
+        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE), Matiere.DATASTAGE);
+    }
+
+    /**
+     * Mise à jour du fichier Excel des suivis d'anomalies pour tous les composants non Datastage
+     *
+     * @throws InvalidFormatException
+     * @throws IOException
+     */
+    private List<String> majFichierSuiviExcel() throws InvalidFormatException, IOException
+    {
+        // Appel de la récupération des composants non datastage avec les vesions en paramètre
+        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(false);
+
+        // Traitement du fichier de suivi
+        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(TypeParam.NOMFICHIER), Matiere.JAVA);
+    }
 
     /**
      * Méthode de traitement pour mettre à jour les fichiers de suivi d'anomalies ainsi que la création de vue dans
@@ -133,110 +213,6 @@ public class ControlSonar
         return retour;
     }
 
-    private String prepareNom(String fichier)
-    {
-        return fichier.replace("_", " ").split("\\.")[0];
-    }
-
-    /**
-     * Mise à jour du fichier Excel des suivis d'anomalies pour les composants Datastage
-     *
-     * @throws InvalidFormatException
-     * @throws IOException
-     */
-    public List<String> majFichierSuiviExcelDataStage() throws InvalidFormatException, IOException
-    {
-        // Appel de la récupération des composants datastage avec les vesions en paramètre
-        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(true);
-
-        // Mise à jour des liens des compoasnts datastage avec le bon QG
-        liensQG(composants, proprietesXML.getMapParams().get(TypeParam.NOMQGDATASTAGE));
-
-        // Traitement du fichier datastage de suivi
-        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE), Matiere.DATASTAGE);
-    }
-
-    /**
-     * Mise à jour du fichier Excel des suivis d'anomalies pour tous les composants non Datastage
-     *
-     * @throws InvalidFormatException
-     * @throws IOException
-     */
-    public List<String> majFichierSuiviExcel() throws InvalidFormatException, IOException
-    {
-        // Appel de la récupération des composants non datastage avec les vesions en paramètre
-        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(false);
-
-        // Traitement du fichier dtastage de suivi
-        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(TypeParam.NOMFICHIER), Matiere.JAVA);
-    }
-
-    public void traitementSuiviExcelToutFichiers() throws InvalidFormatException, IOException
-    {
-        // Récupération anomalies Datastage
-        List<String> anoDatastage = majFichierSuiviExcelDataStage();
-        // Récupération anomalies Java
-        List<String> anoJava = majFichierSuiviExcel();
-        // Liste des anomalies sur plusieures matières
-        List<String> anoMultiple = new ArrayList<>();
-        for (String string : anoJava)
-        {
-            if (anoDatastage.contains(string))
-                anoMultiple.add(string);
-        }
-
-        // Mise à jour des fichiers Excel
-        ControlAno controlAnoJava = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIER)));
-        ControlAno controlAnoDataStage = new ControlAno(
-                new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE)));
-        controlAnoJava.majMultiMatiere(anoMultiple);
-        controlAnoDataStage.majMultiMatiere(anoMultiple);
-    }
-
-    /*---------- METHODES PRIVEES ----------*/
-
-    /**
-     * Permet de récupérer les composants de Sonar triés par version avec sépration des composants datastage
-     *
-     * @return
-     */
-    private Map<String, List<Projet>> recupererComposantsSonarVersion(Boolean datastage)
-    {
-        // Récupération des versions en paramètre
-        String[] versions = proprietesXML.getMapParams().get(TypeParam.VERSIONS).split("-");
-
-        // Appel du webservice pour remonter tous les composants
-        List<Projet> projets = api.getComposants();
-
-        // Création de la map de retour en utilisant les versions données
-        Map<String, List<Projet>> retour = new HashMap<>();
-
-        for (String version : versions)
-        {
-            retour.put(version, new ArrayList<>());
-        }
-
-        // Itération sur les projets pour remplir la liste de retour
-        for (Projet projet : projets)
-        {
-            for (String version : versions)
-            {
-                // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans
-                // version E32
-                if (projet.getNom().endsWith(Utilities.transcoEdition(version)))
-                {
-                    // Selon que l'on regarde les composants datastage ou non, on remplie la liste en conséquence en
-                    // utilisant le filtre en paramètre. Si le Boolean est nul, on
-                    // prend tous les composants
-                    String filtre = proprietesXML.getMapParams().get(TypeParam.FILTREDATASTAGE);
-                    if (datastage == null || datastage && projet.getNom().startsWith(filtre) || !datastage && !projet.getNom().startsWith(filtre))
-                        retour.get(version).add(projet);
-                }
-            }
-        }
-        return retour;
-    }
-
     /**
      * Récupère tous les composants Sonar des versions choisies avec une qualityGate en erreur.<br>
      * la clef de la map correspond à la version, et la valeur, à la liste des lots en erreur de cette version.
@@ -262,116 +238,6 @@ public class ControlSonar
             }
         }
         return retour;
-    }
-
-    /**
-     * Traitement Sonar d'un projet
-     *
-     * @param projet
-     * @param retour
-     * @param entryKey
-     * @param lotSecurite
-     * @param lotRelease
-     */
-    private void traitementProjet(Projet projet, HashMap<String, Set<String>> retour, String entryKey, Set<String> lotSecurite, Set<String> lotRelease)
-    {
-        String key = projet.getKey();
-        // Récupération du composant
-        Composant composant = api.getMetriquesComposant(key, new String[] { "lot", "alert_status" });
-
-        // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
-        Map<String, String> metriques = composant.getMapMetriques();
-        String lot = metriques.get("lot");
-        String alert = metriques.get("alert_status");
-
-        // Si le lot a un Quality Gate en Erreur, on le rajoute à la liste et on contrôle aussi les erreurs de sécurité.
-        // S'il y en a on le rajoute aussi à la liste des lots avec des problèmesde sécurité.
-        if (alert != null && Status.getStatus(alert) == Status.ERROR && lot != null && !lot.isEmpty())
-        {
-            // Ajout du lot à la liste de retour
-            retour.get(entryKey).add(lot);
-
-            // Contrôle pour vérifier si le composant à une erreur de sécurité, ce qui ajout le lot à la listeSecurite
-            if (api.getSecuriteComposant(key) > 0)
-                lotSecurite.add(lot);
-
-            // Contrôle du composant pour voir s'il a une version release ou SNAPSHOT
-            if (release(key))
-                lotRelease.add(lot);
-        }
-    }
-
-    /**
-     * Test si un composant a une version release ou snapshot.
-     *
-     * @param key
-     * @return
-     */
-    private boolean release(String key)
-    {
-        String version = api.getVersionComposant(key);
-        return !version.contains("SNAPSHOT");
-    }
-
-    /**
-     * Crée une vue dans Sonar avec suppression ou non de la vue précédente.
-     *
-     * @param key
-     * @param name
-     * @param description
-     * @param suppression
-     * @return
-     */
-    private Vue creerVue(String key, String name, String description, boolean suppression)
-    {
-        // Contrôle
-        if (key == null || key.isEmpty() || name == null || name.isEmpty())
-        {
-            throw new IllegalArgumentException("Le nom et la clef de la vue sont obligatoires");
-        }
-
-        // Création de la vue
-        Vue vue = new Vue();
-        vue.setKey(key);
-        vue.setName(name);
-
-        // Ajout de la description si elle est valorisée
-        if (description != null)
-        {
-            vue.setDescription(description);
-        }
-
-        // Suppresison de la vue précedente
-        if (suppression)
-        {
-            api.supprimerProjet(vue, false);
-        }
-
-        // Appel de l'API Sonar
-        api.creerVue(vue);
-
-        return vue;
-    }
-
-    /**
-     * Permet de lier tous les composants sonar à une QG particulière
-     *
-     * @param composants
-     * @param nomQG
-     */
-    private void liensQG(Map<String, List<Projet>> composants, String nomQG)
-    {
-        // Récupération de l'Id de la QualityGate
-        QualityGate qg = api.getQualityGate(nomQG);
-
-        // Iteration sur tous les composants pour les associer au QualityGate
-        for (Map.Entry<String, List<Projet>> entry : composants.entrySet())
-        {
-            for (Projet projet : entry.getValue())
-            {
-                api.associerQualitygate(projet, qg);
-            }
-        }
     }
 
     /**
@@ -452,6 +318,48 @@ public class ControlSonar
         controlAno.close();
     }
 
+    private String prepareNom(String fichier)
+    {
+        return fichier.replace("_", " ").split("\\.")[0];
+    }
+
+    /**
+     * Traitement Sonar d'un projet
+     *
+     * @param projet
+     * @param retour
+     * @param entryKey
+     * @param lotSecurite
+     * @param lotRelease
+     */
+    private void traitementProjet(Projet projet, HashMap<String, Set<String>> retour, String entryKey, Set<String> lotSecurite, Set<String> lotRelease)
+    {
+        String key = projet.getKey();
+        // Récupération du composant
+        Composant composant = api.getMetriquesComposant(key, new String[] { "lot", "alert_status" });
+
+        // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
+        Map<String, String> metriques = composant.getMapMetriques();
+        String lot = metriques.get("lot");
+        String alert = metriques.get("alert_status");
+
+        // Si le lot a un Quality Gate en Erreur, on le rajoute à la liste et on contrôle aussi les erreurs de sécurité.
+        // S'il y en a on le rajoute aussi à la liste des lots avec des problèmesde sécurité.
+        if (alert != null && Status.getStatus(alert) == Status.ERROR && lot != null && !lot.isEmpty())
+        {
+            // Ajout du lot à la liste de retour
+            retour.get(entryKey).add(lot);
+
+            // Contrôle pour vérifier si le composant à une erreur de sécurité, ce qui ajout le lot à la listeSecurite
+            if (api.getSecuriteComposant(key) > 0)
+                lotSecurite.add(lot);
+
+            // Contrôle du composant pour voir s'il a une version release ou SNAPSHOT
+            if (release(key))
+                lotRelease.add(lot);
+        }
+    }
+
     /**
      * Permet de créer la liste des numéros de lots déjà en anomalie et met à jour les {@code Anomalie} depuis les infos
      * de la Pic
@@ -487,5 +395,71 @@ public class ControlSonar
         return retour;
     }
 
+    /**
+     * Test si un composant a une version release ou snapshot.
+     *
+     * @param key
+     * @return
+     */
+    private boolean release(String key)
+    {
+        String version = api.getVersionComposant(key);
+        return !version.contains("SNAPSHOT");
+    }
+
+    /**
+     * Permet de lier tous les composants sonar à une QG particulière
+     *
+     * @param composants
+     * @param nomQG
+     */
+    private void liensQG(Collection<List<Projet>> composants, String nomQG)
+    {
+        // Récupération de l'Id de la QualityGate
+        QualityGate qg = api.getQualityGate(nomQG);
+
+        // Préparation message
+        String base = "Association avec le QG DataStage :" + Statics.NL;
+        int i = 0;
+        int size = 0;
+        for (List<Projet> liste : composants)
+        {
+            size += liste.size();
+        }
+        
+        // Iteration sur tous les composants pour les associer au QualityGate
+        for (List<Projet> liste : composants)
+        {
+            for (Projet projet : liste)
+            {
+                // Message
+                updateMessage(base + projet.getNom()); 
+                updateProgress(++i, size);
+                
+                api.associerQualitygate(projet, qg);
+            }
+        }
+    }
+
     /*---------- ACCESSEURS ----------*/
+
+    public enum TypeMaj
+    {
+        SUIVI ("Maj Fichier de Suivi"), 
+        DATASTAGE ("Maj Fichier de Suivi DataStage"), 
+        DOUBLE ("Maj FIchiers de Suivi");
+        
+        private String string;
+        
+        private TypeMaj(String string)
+        {
+            this.string = string;
+        }
+        
+        @Override
+        public String toString()
+        {
+            return string;
+        }
+    }
 }

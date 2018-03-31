@@ -8,6 +8,7 @@ import javax.xml.bind.JAXBException;
 import org.quartz.SchedulerException;
 
 import control.ControlXML;
+import control.parent.ViewControl;
 import control.quartz.ControlJob;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,7 +30,7 @@ import view.TrayIconView;
  * @author ETP8137 - Grégoire Mathon
  *
  */
-public class PlanificateurViewControl
+public class PlanificateurViewControl extends ViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -131,8 +132,8 @@ public class PlanificateurViewControl
         new ControlXML().saveParam(proprietesXML);
     }
 
-    @FXML
-    public void afficherPlanificateur(ActionEvent event)
+    @Override
+    public void afficher(ActionEvent event)
     {
         String id = "";
         Object source = event.getSource();
@@ -145,14 +146,17 @@ public class PlanificateurViewControl
             case "radioSuivi":
                 planificateur = proprietesXML.getMapPlans().get(TypePlan.SUIVIHEBDO);
                 break;
+                
             case "radioChc":
                 planificateur = proprietesXML.getMapPlans().get(TypePlan.VUECHC);
                 vboxPane.getChildren().add(2, anneePane);
                 break;
+                
             case "radioCdm":
                 planificateur = proprietesXML.getMapPlans().get(TypePlan.VUECDM);
                 vboxPane.getChildren().add(2, anneePane);
                 break;
+                
             default:
                 break;
         }

@@ -8,27 +8,45 @@ import control.quartz.JobAnomaliesSonar;
 import control.quartz.JobVuesCDM;
 import control.quartz.JobVuesCHC;
 
+/**
+ * Enumération des types de planificateurs. Chaque Enumération contient le nom et la classe du Job traitée par le planificateur
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public enum TypePlan implements Serializable, TypeKey 
 {
-    SUIVIHEBDO("Suivi Hebdo", JobAnomaliesSonar.class), VUECHC("Vues CHC", JobVuesCHC.class), VUECDM("Vues CHC_CDM", JobVuesCDM.class);
+    /*---------- ATTRIBUTS ----------*/
+
+    SUIVIHEBDO("Suivi Hebdo", JobAnomaliesSonar.class), 
+    VUECHC("Vues CHC", JobVuesCHC.class), 
+    VUECDM("Vues CHC_CDM", JobVuesCDM.class);
 
     private String string;
-    private Class<? extends Job> clazz;
+    private Class<? extends Job> classJob;
 
-    private TypePlan(String string, Class<? extends Job> clazz)
+    /*---------- CONSTRUCTEURS ----------*/
+    
+    private TypePlan(String string, Class<? extends Job> classJob)
     {
         this.string = string;
-        this.clazz = clazz;
+        this.classJob = classJob;
     }
 
+    /*---------- METHODES PUBLIQUES ----------*/
+    
     @Override
     public String toString()
     {
         return string;
     }
 
-    public Class<? extends Job> getClazz()
+    public Class<? extends Job> getClassJob()
     {
-        return clazz;
+        return classJob;
     }
+    
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
 }

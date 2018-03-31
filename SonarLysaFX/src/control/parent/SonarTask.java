@@ -17,6 +17,7 @@ import sonarapi.SonarAPI;
 import sonarapi.model.Projet;
 import sonarapi.model.Vue;
 import utilities.FunctionalException;
+import utilities.Statics;
 import utilities.Utilities;
 import utilities.enums.Severity;
 
@@ -25,6 +26,8 @@ public abstract class SonarTask extends Task<Boolean>
     /*---------- ATTRIBUTS ----------*/
 
     protected SonarAPI api;
+    protected static final String RECUPCOMPOSANTS = "Récupération des composants Sonar";
+    public static final String TITRE = "Tâche Sonar";
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -67,7 +70,7 @@ public abstract class SonarTask extends Task<Boolean>
     @SuppressWarnings ("unchecked")
     protected Map<String, Projet> recupererComposantsSonar()
     {
-        updateMessage("Récupération des composants");
+        updateMessage(RECUPCOMPOSANTS);
         // Appel du webservice pour remonter tous les composants
         List<Projet> projets;
 
@@ -101,7 +104,7 @@ public abstract class SonarTask extends Task<Boolean>
                 retour.put(matcher.group(0), projet);
             }
         }
-        updateMessage("Récupération des composants OK");
+        updateMessage(RECUPCOMPOSANTS + " OK");
         return retour;
     }
     
@@ -112,7 +115,7 @@ public abstract class SonarTask extends Task<Boolean>
      */
     protected Map<String, List<Projet>> recupererComposantsSonarVersion(Boolean datastage)
     {
-        updateMessage("Récupération des composants Sonar");
+        updateMessage(RECUPCOMPOSANTS);
         // Récupération des versions en paramètre
         String[] versions = proprietesXML.getMapParams().get(TypeParam.VERSIONS).split("-");
 
@@ -145,6 +148,7 @@ public abstract class SonarTask extends Task<Boolean>
                 }
             }
         }
+        updateMessage(RECUPCOMPOSANTS + "OK");
         return retour;
     }
 
@@ -161,9 +165,7 @@ public abstract class SonarTask extends Task<Boolean>
     {
         // Contrôle
         if (key == null || key.isEmpty() || name == null || name.isEmpty())
-        {
             throw new IllegalArgumentException("Le nom et la clef de la vue sont obligatoires");
-        }
 
         // Création de la vue
         Vue vue = new Vue();
@@ -172,15 +174,11 @@ public abstract class SonarTask extends Task<Boolean>
 
         // Ajout de la description si elle est valorisée
         if (description != null)
-        {
             vue.setDescription(description);
-        }
 
         // Suppresison de la vue précedente
         if (suppression)
-        {
             api.supprimerProjet(vue, false);
-        }
 
         // Appel de l'API Sonar
         api.creerVue(vue);
@@ -188,5 +186,10 @@ public abstract class SonarTask extends Task<Boolean>
         return vue;
     }
    
+    protected void updateMessage(String message, int etape, int nbreEtapes)
+    {
+        StringBuilder base = new StringBuilder("Etape ").append(etape).append("/").append(nbreEtapes).append(Statics.NL);
+        updateMessage(base.append(message).toString());
+    }
     /*---------- ACCESSEURS ----------*/  
 }

@@ -1,13 +1,11 @@
 package control.view;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
-import control.ControlSonar;
 import control.parent.ViewControl;
+import control.task.CreerVueProductionTask;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -15,24 +13,15 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import utilities.FunctionalException;
-import utilities.Statics;
 import utilities.enums.Severity;
 
 public class MensuelViewControl extends ViewControl
 {
     /* ---------- ATTIBUTS ---------- */
-       
-    private ControlSonar handler;
-    
-    @SuppressWarnings("unused")
-    private LocalDate dateDebut;
-    @SuppressWarnings("unused")
-    private LocalDate dateFin;
-    
+
     /* Attributs FXML */
-    
+
     @FXML
     private HBox listeMoisHBox;
     @FXML
@@ -48,72 +37,80 @@ public class MensuelViewControl extends ViewControl
     @FXML
     private Button creer;
     @FXML
-    private RadioButton radioMois;
+    private RadioButton radioExcel;
     @FXML
     private RadioButton radioDate;
-    @FXML
-    private RadioButton radioActuel;
     @FXML
     private ToggleGroup toggleGroup;
     @FXML
     private VBox selectPane;
-    
+
     /* ---------- CONSTRUCTEURS ---------- */
-        
-    @FXML
-    public void initialize()
-    {        
-        handler = new ControlSonar();
-        selectPane.getChildren().clear();
-        backgroundPane.getChildren().remove(creer);       
-    }
-    
-    /* ---------- METHODES PUBLIQUES ---------- */
-    
-    @FXML
-    public void saveDebut()
-    {
-        dateDebut = dateDebutPicker.getValue();
-    }
 
     @FXML
-    public void saveFin()
+    public void initialize()
     {
-        dateFin = dateFinPicker.getValue();
+        selectPane.getChildren().clear();
+        backgroundPane.getChildren().remove(creer);
     }
-    
+
+    /* ---------- METHODES PUBLIQUES ---------- */
+
+    /**
+     * Création de la vue depuis un fichier Excel
+     */
     @FXML
-    public void chargerExcel() throws InvalidFormatException, IOException
+    public void chargerExcel()
     {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("FichierExcel");
-        fileChooser.getExtensionFilters().add(Statics.FILTEREXCEL);
-        File file = fileChooser.showOpenDialog(backgroundPane.getScene().getWindow());
-        if (file != null)
+        File file = getFileFromFileChooser(TITRE);
+        CreerVueProductionTask task = new CreerVueProductionTask(file);
+        startTask(task, null);
+    }
+
+    /**
+     * Switch entre les radioButtons
+     * 
+     * @param event
+     */
+    @Override
+    public void afficher(ActionEvent event)
+    {
+        String id = "";
+        Object source = event.getSource();
+        if (source instanceof RadioButton)
+            id = ((RadioButton) source).getId();
+
+        switch (id)
         {
-            handler.creerVueProduction(file);
-        }      
+            case "radioExcel" :
+                selectPane.getChildren().clear();
+                selectPane.getChildren().add(charger);
+                break;
+
+            case "radioDate" :
+                selectPane.getChildren().clear();
+                selectPane.getChildren().add(dateDebutHBox);
+                selectPane.getChildren().add(dateFinHBox);
+                selectPane.getChildren().add(creer);
+                break;
+            default :
+                break;
+        }
     }
-    
-    @FXML
-    public void afficherParMois()
-    {
-        selectPane.getChildren().clear();
-        selectPane.getChildren().add(charger);
-    }
-    
-    @FXML
-    public void afficherParDate()
-    {
-        selectPane.getChildren().clear();
-        selectPane.getChildren().add(dateDebutHBox);
-        selectPane.getChildren().add(dateFinHBox);
-        selectPane.getChildren().add(creer);
-    }
-    
+
+    /**
+     * Création de la vue depuis Sonar
+     */
     @FXML
     public void creerVue()
     {
-        throw new FunctionalException(Severity.SEVERITY_INFO, "Pas encore implémenté");
+        // Contrôle sur les dates
+        LocalDate dateDebut = dateDebutPicker.getValue();
+        LocalDate dateFin = dateFinPicker.getValue();
+        if (dateDebut == null || dateFin == null || dateFin.isBefore(dateDebut))
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Les dates sont mal renseignées");
+
+        // Traitement
+        startTask(new CreerVueProductionTask(dateDebut, dateFin), null);
     }
 }

@@ -1,4 +1,4 @@
-package control;
+package control.task;
 
 import static utilities.Statics.NL;
 import static utilities.Statics.fichiersXML;
@@ -22,6 +22,9 @@ import utilities.Utilities;
 public class CreerVueParAppsTask extends SonarTask
 {
     /*---------- ATTRIBUTS ----------*/
+    
+    public static final String TITRE = "Vues par Application";
+    
     /*---------- CONSTRUCTEURS ----------*/
     /*---------- METHODES PUBLIQUES ----------*/
 

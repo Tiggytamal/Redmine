@@ -11,9 +11,11 @@ import javax.xml.bind.JAXBException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import control.ControlXML;
+import control.parent.ViewControl;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -24,20 +26,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.StageStyle;
 import model.enums.TypeCol;
 import model.enums.TypeKey;
 import model.enums.TypeParam;
 import utilities.FunctionalException;
-import utilities.Statics;
 import utilities.enums.Severity;
 
-public class OptionViewControl
+public class OptionViewControl extends ViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 
     // Attributs FXML
+    
     @FXML
     private SplitPane splitPane;
     @FXML
@@ -126,7 +127,6 @@ public class OptionViewControl
     private TextField urlSonarField;
 
     // Attributs de classe
-    private FileChooser fc;
     private Alert alert;
     private static final int ROW_HEIGHT = 24;
     private Map<TypeParam, String> mapParam;
@@ -326,25 +326,6 @@ public class OptionViewControl
     /*---------- METHODES PRIVEES ----------*/
 
     /**
-     * Initialise la fenêtre de l'explorateur de fichier, et retourne le fichier selectionné.
-     * 
-     * @param titre
-     *            Titre de la fenêtre de l'explorateur
-     * @return
-     */
-    private File getFileFromFileChooser(String titre)
-    {
-        fc = new FileChooser();
-        fc.setTitle(titre);
-        fc.getExtensionFilters().add(Statics.FILTEREXCEL);
-        File file = fc.showOpenDialog(splitPane.getScene().getWindow());
-        if (file == null)
-            throw new FunctionalException(Severity.SEVERITY_INFO, "Impossible de récupérer le fichier.");
-        alert.show();
-        return file;
-    }
-
-    /**
      * @param mapParam
      */
     private void initParametres(Map<TypeParam, String> mapParam)
@@ -441,6 +422,12 @@ public class OptionViewControl
         String text = textField.getText();
         if (text != null && !text.isEmpty())
             map.put(clef, text);
+    }
+
+    @Override
+    protected void afficher(ActionEvent event)
+    {
+        // Pas de gestion de l'afficheg sur ce controleur
     }
 
     /*---------- ACCESSEURS ----------*/

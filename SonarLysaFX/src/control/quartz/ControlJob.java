@@ -25,6 +25,7 @@ import model.enums.TypePlan;
  * Permet de gérer le planificateur des tâches.
  * 
  * @author ETP137 - Grégoire Mathon
+ * @since 1.0
  */
 public class ControlJob
 {
@@ -41,18 +42,30 @@ public class ControlJob
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-
+    
+    /**
+     * Création des jobs. Mise à jour de la map des données et démarrage du planificateur
+     * 
+     * @return
+     * @throws SchedulerException
+     */
     public Scheduler creationJobsSonar() throws SchedulerException
     {
+        // Récupération de tous les planifictauers depuis les paramètres XML
         Map<TypePlan, Planificateur> mapPlans = proprietesXML.getMapPlans();
         
-        // Création et mise ne place des jobs
+        // Création et mise en place des jobs
         for (Map.Entry<TypePlan, Planificateur> entry : mapPlans.entrySet())
         {
+            // ON saut les planificateurs non activés
             if (!entry.getValue().isActive())
                 continue;
             JobDetail job = creerJob(entry.getKey());
+            
+            //Rajout dans la DataMap de la liste des annèes
             job.getJobDataMap().put(JobForTask.CLEFANNEES, entry.getValue().getAnnees());
+            
+            // Enregistrement des jobs
             scheduler.deleteJob(job.getKey());
             scheduler.scheduleJob(job, creerTrigger(entry)); 
         }
@@ -71,6 +84,7 @@ public class ControlJob
 
     /**
      * Permet de créer un trigger à partir d'une entry de la map
+     * 
      * @param entry
      * @return
      */
@@ -100,12 +114,13 @@ public class ControlJob
     
     /**
      * Permet de créer un job à partir de l'énumération du type de planificateur
+     * 
      * @param typePlan
      * @return
      */
     private JobDetail creerJob(TypePlan typePlan)
     {
-        return newJob(typePlan.getClazz()).withIdentity(typePlan.toString(), GROUP).build();
+        return newJob(typePlan.getClassJob()).withIdentity(typePlan.toString(), GROUP).build();
     }
     
     /*---------- ACCESSEURS ----------*/

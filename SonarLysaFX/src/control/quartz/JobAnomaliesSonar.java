@@ -1,27 +1,17 @@
 package control.quartz;
 
-import java.io.IOException;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
-import control.ControlSonar;
-import utilities.TechnicalException;
+import control.parent.JobForTask;
+import control.task.MajSuiviExcelTask;
+import control.task.MajSuiviExcelTask.TypeMaj;
+import javafx.application.Platform;
 
-public class JobAnomaliesSonar implements Job
+public class JobAnomaliesSonar extends JobForTask
 {
 	@Override
 	public void execute(JobExecutionContext context)
-	{
-		try
-		{
-			ControlSonar handler = new ControlSonar();
-			handler.majFichierSuiviExcel();
-			handler.majFichierSuiviExcelDataStage();
-		} catch (InvalidFormatException | IOException e)
-		{
-			throw new TechnicalException("Erreur sur le job d'excetion", e);
-		}		
+	{	
+		 Platform.runLater(() -> startTask(new MajSuiviExcelTask(TypeMaj.DOUBLE), context.getJobDetail().getKey().getName()));
 	}
 }

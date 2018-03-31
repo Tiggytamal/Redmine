@@ -73,7 +73,7 @@ public class ControlPic extends ControlExcel
      * Permet de retourner une map avec comme clef les editions CHCCDM, et comme la valeur, la liste des lots de chaque édition.
      * @return
      */
-    protected Map<String, List<Vue>> recupLotsCHCCDM()
+    public Map<String, List<Vue>> recupLotsCHCCDM()
     {
         Map<String, List<Vue>> retour = new HashMap<>();
         
@@ -115,7 +115,7 @@ public class ControlPic extends ControlExcel
      * @throws InvalidFormatException
      * @throws IOException
      */
-    protected Map<LocalDate, List<Vue>> recupLotsExcelPourMEP(Map<String, Vue> mapQube) throws IOException
+    public Map<LocalDate, List<Vue>> recupLotsExcelPourMEP(Map<String, Vue> mapQube) throws IOException
     {
         // Récupération de la première feuille
         Sheet sheet = wb.getSheetAt(0);
@@ -134,7 +134,7 @@ public class ControlPic extends ControlExcel
      * 
      * @return
      */
-    protected Map<String, LotSuiviPic> recupLotsDepuisPic()
+    public Map<String, LotSuiviPic> recupLotsDepuisPic()
     {
         // Map de retour
         Map<String, LotSuiviPic> retour = new HashMap<>();
@@ -258,7 +258,7 @@ public class ControlPic extends ControlExcel
         for (int i = 1; i < sheet.getLastRowNum(); i++)
         {
             Row row = sheet.getRow(i);
-            traitementLigne(row, colLot, colLiv, retour, mapQube);
+            traitementLigne(row, retour, mapQube);
         }
         return retour;
     }
@@ -279,10 +279,10 @@ public class ControlPic extends ControlExcel
      * @param wb
      *            Workbook
      */
-    private void traitementLigne(Row row, int colLot, int colDate, Map<LocalDate, List<Vue>> retour, Map<String, Vue> mapQube)
+    private void traitementLigne(Row row, Map<LocalDate, List<Vue>> retour, Map<String, Vue> mapQube)
     {
         Cell cellLot = row.getCell(colLot);
-        Cell cellDate = row.getCell(colDate);
+        Cell cellDate = row.getCell(colLiv);
 
         if (cellLot.getCellTypeEnum() != CellType.NUMERIC && cellDate.getCellTypeEnum() != CellType.NUMERIC)
             return;
@@ -294,6 +294,7 @@ public class ControlPic extends ControlExcel
         {
             // Récupération de la date depuis le fichier Excel en format JDK 1.8.
             LocalDate date = DateConvert.localDate(cellDate.getDateCellValue());
+            
             // Création d'une nouvelle date au 1er du mois qui servira du clef à la map.
             LocalDate clef = LocalDate.of(date.getYear(), date.getMonth(), 1);
 

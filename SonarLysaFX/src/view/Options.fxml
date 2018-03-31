@@ -21,10 +21,9 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.control.TreeItem?>
 
-<SplitPane fx:id="splitPane" fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" prefWidth="600.0"
-	xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
+<SplitPane fx:id="splitPane" fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
 	<items>
-		<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+		<AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="140.0" maxWidth="160">
 			<children>
 				<ListView fx:id="options">
 					<items>
@@ -37,7 +36,10 @@
 				</ListView>
 			</children>
 		</AnchorPane>
-		<GridPane fx:id="rightSide" prefWidth="300.0" prefHeight="400.0">
+		<GridPane fx:id="rightSide">
+			<padding>
+				<Insets top="10" right="10" bottom="10" left="25" />
+			</padding>
 			<children>
 
 				<!-- Boutons de chargement des fichiers Excel de paramétrage -->
@@ -161,7 +163,6 @@
 						<Label text="Adresse URL serveur Sonar : " />
 						<TextField fx:id="urlSonarField" prefWidth="250" />
 					</HBox>
-
 
 					<!-- Bouton de sauvegarde -->
 					<Region prefHeight="20" />
@@ -287,6 +288,7 @@
 						<Label text="Version : " />
 						<TextField fx:id="versionField" prefWidth="150" />
 					</HBox>
+					
 					<!-- Bouton de sauvegarde -->
 					<Region prefHeight="20" />
 					<Button text="Sauvegarder" fx:id="sauvegarder" onAction="#saveCols" alignment="CENTER" />

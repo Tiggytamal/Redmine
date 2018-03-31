@@ -23,6 +23,16 @@ public class ProgressDialog extends Dialog<Boolean>
     
     /*---------- CONSTRUCTEURS ----------*/
 
+    /**
+     * Constructeur utilisant la variable TITRE de la SonarTask
+     * 
+     * @param task
+     */
+    public <T extends SonarTask> ProgressDialog(T task)
+    {
+        this(task, T.TITRE);
+    }
+    
     public ProgressDialog(SonarTask task, String titre)
     {
         // Initialisation

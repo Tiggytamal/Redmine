@@ -1,4 +1,4 @@
-package control;
+package control.task;
 
 import static utilities.Statics.TODAY;
 
@@ -19,6 +19,7 @@ public class CreerVuePatrimoineTask extends SonarTask
     /*---------- ATTRIBUTS ----------*/
     
     private String key;
+    public static final String TITRE = "Vue Patrimoine";
     
     /*---------- CONSTRUCTEURS ----------*/
     

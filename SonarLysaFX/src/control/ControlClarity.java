@@ -67,6 +67,8 @@ public class ControlClarity extends ControlExcel
         return retour;
     }
 
+    /*---------- METHODES PRIVEES ----------*/
+
     @Override
     protected void initColonnes()
     {
@@ -125,11 +127,8 @@ public class ControlClarity extends ControlExcel
                 }
             }
         }
-
     }
-
-    /*---------- METHODES PRIVEES ----------*/
-
+    
     /**
      * Traitement d'une ligne pour créer un objet InfoClarity
      * 

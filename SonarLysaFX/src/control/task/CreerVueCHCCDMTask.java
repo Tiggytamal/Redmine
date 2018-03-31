@@ -1,4 +1,4 @@
-package control;
+package control.task;
 
 import static utilities.Statics.NL;
 import static utilities.Statics.fichiersXML;
@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
+import control.ControlPic;
 import control.parent.SonarTask;
 import sonarapi.model.Composant;
 import sonarapi.model.Projet;

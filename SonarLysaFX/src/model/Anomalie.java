@@ -58,6 +58,8 @@ public class Anomalie
     private Comment versionComment;
     private LocalDate dateCreation;
     private Comment dateCreationComment;
+    private LocalDate dateDetection;
+    private Comment dateDetectionComment;
     private LocalDate dateRelance;
     private Comment dateRelanceComment;
     private boolean traitee;
@@ -346,6 +348,16 @@ public class Anomalie
         return dateCreation;
     }
     
+    public void setDateDetection(LocalDate dateDetection)
+    {
+        this.dateDetection = dateDetection;
+    }
+    
+    public LocalDate getDateDetection()
+    {
+        return dateDetection;
+    }
+    
     public void setDateRelance(LocalDate dateRelance)
     {
         this.dateRelance = dateRelance;
@@ -548,6 +560,16 @@ public class Anomalie
         this.dateCreationComment = dateCreationComment;
     }
 
+    public Comment getDateDetectionComment()
+    {
+        return dateDetectionComment;
+    }
+
+    public void setDateDetectionComment(Comment dateDetectionComment)
+    {
+        this.dateDetectionComment = dateDetectionComment;
+    }
+    
     public Comment getDateRelanceComment()
     {
         return dateRelanceComment;

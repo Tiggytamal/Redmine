@@ -34,41 +34,7 @@ public class ControlEdition extends ControlExcel
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-
-    @Override
-    protected void calculIndiceColonnes()
-    {
-        Sheet sheet = wb.getSheetAt(0);
-        Row row = sheet.getRow(0);
-        int nbre = 0;
-
-        for (int i = 0; i < row.getLastCellNum() + 1; i++)
-        {
-            if (LIBELLE.equals(getCellStringValue(row, i)))
-            {
-                colLib = i;
-                nbre++;
-            }
-            else if (getCellStringValue(row, i).contains(VERSION))
-            {
-                colVersion = i;
-                nbre++;
-            }
-            if (nbre == 2)
-                break;
-        }
-        
-        if (nbre != NBRECOLONNE)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré (" + file.getName() + " , vérifier les colonnes de celui-ci");
-
-    }
-
-    @Override
-    protected void initColonnes()
-    {
-        // Pas besoin d'initialiser les colonnes
-    }
-
+    
     /**
      * 
      * @return
@@ -103,6 +69,40 @@ public class ControlEdition extends ControlExcel
     }
     
     /*---------- METHODES PRIVEES ----------*/
+    
+    @Override
+    protected void calculIndiceColonnes()
+    {
+        Sheet sheet = wb.getSheetAt(0);
+        Row row = sheet.getRow(0);
+        int nbre = 0;
+
+        for (int i = 0; i < row.getLastCellNum() + 1; i++)
+        {
+            if (LIBELLE.equals(getCellStringValue(row, i)))
+            {
+                colLib = i;
+                nbre++;
+            }
+            else if (getCellStringValue(row, i).contains(VERSION))
+            {
+                colVersion = i;
+                nbre++;
+            }
+            if (nbre == 2)
+                break;
+        }
+        
+        if (nbre != NBRECOLONNE)
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré (" + file.getName() + " , vérifier les colonnes de celui-ci");
+
+    }
+
+    @Override
+    protected void initColonnes()
+    {
+        // Pas besoin d'initialiser les colonnes
+    }
     
     private String prepareLibelle(String libelle, boolean cdm)
     {

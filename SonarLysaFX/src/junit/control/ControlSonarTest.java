@@ -1,6 +1,5 @@
 package junit.control;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Base64;
@@ -14,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.powermock.reflect.Whitebox;
 
 import control.ControlSonar;
-import control.CreerVuePatrimoineTask;
+import control.task.CreerVuePatrimoineTask;
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.javafx.test.TestInJfxThread;
 import junit.TestUtils;
@@ -37,18 +36,6 @@ public class ControlSonarTest
     public void recupererLotsSonarQube() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
     {
         TestUtils.callPrivate("recupererLotsSonarQube", handler, null);
-    }
-
-    @Test
-    public void creerVueProduction() throws InvalidFormatException, IOException
-    {
-        handler.creerVueProduction(new File("d:\\Classeur1.xlsx"));
-    }
-
-    @Test
-    public void majVues() throws InvalidFormatException, IOException
-    {
-        handler.majVues();
     }
 
     @Test
@@ -79,12 +66,6 @@ public class ControlSonarTest
     }
 
     @Test
-    public void creerVueParApplication()
-    {
-        handler.creerVueParApplication();
-    }
-
-    @Test
     @TestInJfxThread
     public void majFichierSuiviExcel() throws InvalidFormatException, IOException, JAXBException
     {
@@ -103,18 +84,6 @@ public class ControlSonarTest
     public void traitementSuiviExcelToutFichiers() throws InvalidFormatException, IOException
     {
         handler.traitementSuiviExcelToutFichiers();
-    }
-
-    @Test
-    public void creerVuesDatastage()
-    {
-        handler.creerVuesDatastage();
-    }
-
-    @Test
-    public void controlerSonarQube()
-    {
-        handler.controlerSonarQube();
     }
 
     @Test

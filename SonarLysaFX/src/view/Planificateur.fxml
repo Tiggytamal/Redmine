@@ -24,8 +24,8 @@
 <?import view.TimeSpinner?>
 <?import javafx.scene.control.Button?>
 
-<GridPane fx:controller="control.view.PlanificateurViewControl" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10" prefHeight="500"
-	prefWidth="500">
+<GridPane fx:controller="control.view.PlanificateurViewControl" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
+	prefHeight="500" prefWidth="500">
 	<padding>
 		<Insets top="25" right="25" bottom="10" left="25" />
 	</padding>
@@ -39,10 +39,10 @@
 
 				<VBox minWidth="200">
 					<Region VBox.vgrow="ALWAYS" />
-					<RadioButton fx:id="radioSuivi" text="Suivi Qualité" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherPlanificateur"
+					<RadioButton fx:id="radioSuivi" text="Suivi Qualité" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher"
 						selected="true" />
-					<RadioButton fx:id="radioChc" text="Vues CHC" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherPlanificateur" />
-					<RadioButton fx:id="radioCdm" text="Vues CDM" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficherPlanificateur" />
+					<RadioButton fx:id="radioChc" text="Vues CHC" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+					<RadioButton fx:id="radioCdm" text="Vues CDM" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 					<Region VBox.vgrow="ALWAYS" />
 				</VBox>
 				<VBox fx:id="vboxPane">

@@ -1,12 +1,11 @@
 package control.view;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import control.CreerVueCHCCDMTask;
 import control.parent.ViewControl;
+import control.task.CreerVueCHCCDMTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,7 +14,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import utilities.Statics;
 
 public class MaintenanceViewControl extends ViewControl
@@ -58,20 +56,14 @@ public class MaintenanceViewControl extends ViewControl
     /*---------- METHODES PUBLIQUES ----------*/
 
     @FXML
-    public void chargerExcel() throws IOException
+    public void chargerExcel()
     {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("FichierExcel");
-        fileChooser.getExtensionFilters().add(Statics.FILTEREXCEL);
-        File file = fileChooser.showOpenDialog(backgroundPane.getScene().getWindow());
-        if (file != null)
-        {
-            task = new CreerVueCHCCDMTask(file);
-            startTask(task, "Vue CHC/CDM par Excel");
-        }
+        File file = getFileFromFileChooser(TITRE);
+        task = new CreerVueCHCCDMTask(file);
+        startTask(task, titreTask);
     }
 
-    @FXML
+    @Override
     public void afficher(ActionEvent event)
     {
         Object source = event.getSource();
@@ -84,29 +76,30 @@ public class MaintenanceViewControl extends ViewControl
 
             switch (id)
             {
-                case "radioExcel":
+                case "radioExcel" :
                     selectPane.getChildren().add(charger);
+                    titreTask = "Vue CHC/CDM par Excel";
                     break;
-                case "radioCHC":
+                case "radioCHC" :
                     selectPane.getChildren().add(checkBoxPane);
                     selectPane.getChildren().add(creer);
                     cdm = false;
                     titreTask = "Vues CHC";
                     break;
-                case "radioCHCCDM":
+                case "radioCHCCDM" :
                     selectPane.getChildren().add(checkBoxPane);
                     selectPane.getChildren().add(creer);
                     cdm = true;
                     titreTask = "Vues CHC_CDM";
                     break;
-                default:
+                default :
                     break;
             }
         }
     }
 
     @FXML
-    public void creerVues() throws IOException
+    public void creerVues()
     {
         // Création de la liste des annèes
         List<String> annees = new ArrayList<>();
@@ -115,7 +108,7 @@ public class MaintenanceViewControl extends ViewControl
             annees.add(String.valueOf(Statics.TODAY.getYear() + 1));
         if (precedente.isSelected())
             annees.add(String.valueOf(Statics.TODAY.getYear() - 1));
-        
+
         // Lancement de la task
         task = new CreerVueCHCCDMTask(annees, cdm);
         startTask(task, titreTask);
