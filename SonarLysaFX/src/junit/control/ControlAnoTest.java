@@ -31,12 +31,25 @@ public class ControlAnoTest
     }
     
     @Test
-    public void conttroleKey() throws Exception
+    public void controleKey() throws Exception
     {
         Assert.assertTrue(TestUtils.callPrivate("controleKey", handler, Boolean.class, "a", "a"));
         Assert.assertTrue(TestUtils.callPrivate("controleKey", handler, Boolean.class, "A", "a"));
         Assert.assertFalse(TestUtils.callPrivate("controleKey", handler, Boolean.class, "A", "b"));
         Assert.assertTrue(TestUtils.callPrivate("controleKey", handler, Boolean.class, "BEF000", "BEF0009"));
         Assert.assertTrue(TestUtils.callPrivate("controleKey", handler, Boolean.class, "T7004360", "T7004360E"));       
+    }
+    
+    @Test
+    public void sauvegardeFichier()
+    {
+        
+    }
+    
+    
+    public void creerAnodepuisExcel()
+    {
+
+        
     }
 }

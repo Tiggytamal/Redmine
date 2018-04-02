@@ -34,6 +34,7 @@ public class Main extends Application
     {
         // Permet de controler toutes les erreurs remontées par l'application
         Thread.currentThread().setUncaughtExceptionHandler((t, e) -> gestionException(e));
+        
         // Création fenêtre principale		
         MainScreen main = new MainScreen();
         main.start(stage);
@@ -83,7 +84,6 @@ public class Main extends Application
      */
     public static void createAlert(Severity severity, Throwable ex, String detail)
     {
-        // instance de l'alerte
         Alert alert;
 
         // Switch sur les sévérités pour récupérer le type d'alerte
@@ -114,13 +114,11 @@ public class Main extends Application
             textArea.setEditable(false);
             textArea.setWrapText(true);
 
-            textArea.setMaxWidth(Double.MAX_VALUE);
-            textArea.setMaxHeight(Double.MAX_VALUE);
+
             GridPane.setVgrow(textArea, Priority.ALWAYS);
             GridPane.setHgrow(textArea, Priority.ALWAYS);
 
             GridPane expContent = new GridPane();
-            expContent.setMaxWidth(Double.MAX_VALUE);
             expContent.add(label, 0, 0);
             expContent.add(textArea, 0, 1);
 

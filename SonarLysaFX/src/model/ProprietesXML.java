@@ -2,6 +2,7 @@ package model;
 
 import java.io.File;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -9,6 +10,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import model.enums.TypeCol;
+import model.enums.TypeColSuivi;
 import model.enums.TypeParam;
 import model.enums.TypePlan;
 import utilities.Statics;
@@ -20,7 +22,7 @@ public class ProprietesXML implements XML
 
     private Map<TypeParam, String> mapParams;
 
-    private Map<TypeCol, String> mapColonnes;
+    private Map<TypeColSuivi, String> mapColonnesSuivi;
 
     private Map<TypePlan, Planificateur> mapPlans;
 
@@ -31,7 +33,7 @@ public class ProprietesXML implements XML
     public ProprietesXML()
     {
         mapParams = new EnumMap<>(TypeParam.class);
-        mapColonnes = new EnumMap<>(TypeCol.class);
+        mapColonnesSuivi = new EnumMap<>(TypeColSuivi.class);
         mapPlans = new EnumMap<>(TypePlan.class);
     }
 
@@ -59,10 +61,24 @@ public class ProprietesXML implements XML
     }
 
     @XmlElementWrapper
-    @XmlElement (name = "mapColonnes", required = false)
-    public Map<TypeCol, String> getMapColonnes()
+    @XmlElement (name = "mapColonnesSuivi", required = false)
+    public Map<TypeColSuivi, String> getMapColonnesSuivi()
     {
-        return mapColonnes;
+        return mapColonnesSuivi;
+    }    
+
+    @SuppressWarnings ("unchecked")
+    public <T extends Enum<T> & TypeCol> Map<T, String> getMapColonnes(Class<T> typeColClass)
+    {
+        switch (typeColClass.getName())
+        {
+            case "model.enums.TypeColSuivi" :
+                return (Map<T, String>) mapColonnesSuivi;
+
+            default :
+                return new HashMap<>();
+        }
+        
     }
 
     @XmlElementWrapper
@@ -70,6 +86,20 @@ public class ProprietesXML implements XML
     public Map<TypePlan, Planificateur> getMapPlans()
     {
         return mapPlans;
+    }
+    
+    /**
+     * Retourne la liste des colonnes avec clefs et valeurs inversées
+     * @return
+     */
+    public <T extends Enum<T> & TypeCol> Map<String, T> getMapColonnesInvert(Class<T> typeColClass)
+    {
+        Map<String, T> retour = new HashMap<>();
+        for (Map.Entry<T, String> entry : getMapColonnes(typeColClass).entrySet())
+        {
+            retour.put(entry.getValue(), entry.getKey());
+        }
+        return retour;
     }
 
     @Override
@@ -84,9 +114,9 @@ public class ProprietesXML implements XML
     {
         // Parcours de tous les types de colonnes
         StringBuilder builderErreurs = new StringBuilder();
-        for (TypeCol typeCol : TypeCol.values())
+        for (TypeColSuivi typeCol : TypeColSuivi.values())
         {
-            if (mapColonnes.get(typeCol) == null || mapColonnes.get(typeCol).isEmpty())
+            if (mapColonnesSuivi.get(typeCol) == null || mapColonnesSuivi.get(typeCol).isEmpty())
                 builderErreurs.append(typeCol.toString()).append(Statics.NL);
         }
 

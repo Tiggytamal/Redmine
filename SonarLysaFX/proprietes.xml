@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <proprietesXML>
-    <mapColonnes>
+    <mapColonnesSuivi>
         <entry>
             <key>DIRECTION</key>
             <value>Direction</value>
@@ -66,6 +66,10 @@
             <value>Date création</value>
         </entry>
         <entry>
+            <key>DATEDETECTION</key>
+            <value>Date détection</value>
+        </entry>
+        <entry>
             <key>DATERELANCE</key>
             <value>Date relance</value>
         </entry>
@@ -85,7 +89,7 @@
             <key>MATIERE</key>
             <value>Matière</value>
         </entry>
-    </mapColonnes>
+    </mapColonnesSuivi>
     <mapParams>
         <entry>
             <key>VERSIONS</key>
@@ -135,15 +139,15 @@
     <mapPlans>
         <entry>
             <key>SUIVIHEBDO</key>
-            <value active="true" heure="10:18" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
+            <value active="true" annees="2018" heure="10:18" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
         </entry>
         <entry>
             <key>VUECHC</key>
-            <value active="false" heure="13:00" jeudi="false" lundi="true" mardi="true" mercredi="false" vendredi="false"/>
+            <value active="false" annees="2018" heure="13:00" jeudi="false" lundi="true" mardi="true" mercredi="false" vendredi="false"/>
         </entry>
         <entry>
             <key>VUECDM</key>
-            <value active="true" heure="23:00" jeudi="false" lundi="false" mardi="false" mercredi="true" vendredi="true"/>
+            <value active="true" annees="2018" heure="23:00" jeudi="false" lundi="false" mardi="false" mercredi="true" vendredi="true"/>
         </entry>
     </mapPlans>
 </proprietesXML>

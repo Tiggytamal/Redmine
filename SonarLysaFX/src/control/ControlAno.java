@@ -7,6 +7,7 @@ import static utilities.Statics.proprietesXML;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,10 +35,11 @@ import model.InfoClarity;
 import model.RespService;
 import model.enums.Environnement;
 import model.enums.Matiere;
-import model.enums.TypeCol;
+import model.enums.TypeColSuivi;
 import model.enums.TypeParam;
 import utilities.CellHelper;
 import utilities.FunctionalException;
+import utilities.TechnicalException;
 import utilities.enums.Bordure;
 import utilities.enums.Severity;
 
@@ -52,6 +54,7 @@ public class ControlAno extends ControlExcel
     /*---------- ATTRIBUTS ----------*/
 
     // Liste des indices des colonnes
+    // Les noms des champs doivent correspondre aux valeurs dans l'énumération TypeCol
     private int colDir;
     private int colDepart;
     private int colService;
@@ -73,26 +76,10 @@ public class ControlAno extends ControlExcel
     private int colMatiere;
 
     // Liste des noms de colonnes
-    private String direction;
-    private String departement;
-    private String service;
-    private String respService;
-    private String clarity;
-    private String libelle;
-    private String cpi;
     private String edition;
     private String lot;
     private String env;
-    private String anomalie;
-    private String etat;
-    private String securite;
-    private String remarque;
     private String traite;
-    private String version;
-    private String dateCreation;
-    private String dateDetection;
-    private String dateRelance;
-    private String matiere;
 
     // Nom de la feuillle avec les naomalies en cours
     private static final String SQ = "SUIVI Qualité";
@@ -342,27 +329,12 @@ public class ControlAno extends ControlExcel
     protected void initColonnes()
     {
         // Intialisation noms des colonnes
-        Map<TypeCol, String> nomColonnes = proprietesXML.getMapColonnes();
-        direction = nomColonnes.get(TypeCol.DIRECTION);
-        departement = nomColonnes.get(TypeCol.DEPARTEMENT);
-        service = nomColonnes.get(TypeCol.SERVICE);
-        respService = nomColonnes.get(TypeCol.RESPSERVICE);
-        clarity = nomColonnes.get(TypeCol.CLARITY);
-        libelle = nomColonnes.get(TypeCol.LIBELLE);
-        cpi = nomColonnes.get(TypeCol.CPI);
-        edition = nomColonnes.get(TypeCol.EDITION);
-        lot = nomColonnes.get(TypeCol.LOT);
-        env = nomColonnes.get(TypeCol.ENV);
-        anomalie = nomColonnes.get(TypeCol.ANOMALIE);
-        etat = nomColonnes.get(TypeCol.ETAT);
-        securite = nomColonnes.get(TypeCol.SECURITE);
-        remarque = nomColonnes.get(TypeCol.REMARQUE);
-        version = nomColonnes.get(TypeCol.VERSION);
-        dateCreation = nomColonnes.get(TypeCol.DATECREATION);
-        dateDetection = nomColonnes.get(TypeCol.DATEDETECTION);
-        dateRelance = nomColonnes.get(TypeCol.DATERELANCE);
-        traite = nomColonnes.get(TypeCol.TRAITE);
-        matiere = nomColonnes.get(TypeCol.MATIERE);
+        Map<TypeColSuivi, String> nomColonnes = proprietesXML.getMapColonnes(TypeColSuivi.class);
+        
+        edition = nomColonnes.get(TypeColSuivi.EDITION);
+        lot = nomColonnes.get(TypeColSuivi.LOT);
+        env = nomColonnes.get(TypeColSuivi.ENV);
+        traite = nomColonnes.get(TypeColSuivi.TRAITE);
 
         // Initialisation des parties constantes des liens
         Map<TypeParam, String> proprietes = proprietesXML.getMapParams();
@@ -381,128 +353,28 @@ public class ControlAno extends ControlExcel
         titres = sheet.getRow(0);
         int nbreCol = 0;
 
-        // Récupération des indices de colonnes
         for (Cell cell : titres)
         {
             if (cell.getCellTypeEnum() != CellType.STRING)
                 continue;
-
-            if (cell.getStringCellValue().equals(direction))
+            
+            Map<String, TypeColSuivi> mapColonnesInvert = proprietesXML.getMapColonnesInvert(TypeColSuivi.class);
+            
+            // Initialisation du champ, calcul de l'indice max des colonnes, incrémentation du nombre de colonnes et passage à l'élément suivant. 
+            Field field;
+            try
             {
-                colDir = cell.getColumnIndex();
-                testMax(colDir);
-                nbreCol++;
+                field = getClass().getDeclaredField(mapColonnesInvert.get(cell.getStringCellValue()).getNomCol());
+                field.set(this, cell.getColumnIndex());
+                testMax((int)field.get(this));
+                nbreCol++; 
             }
-            else if (cell.getStringCellValue().equals(departement))
+            catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
             {
-                colDepart = cell.getColumnIndex();
-                testMax(colDepart);
-                nbreCol++;
+                throw new TechnicalException("Erreur à l'affectation d'une variable lors de l'initialisation d'une colonne : " + cell.getStringCellValue(), e);
             }
-            else if (cell.getStringCellValue().equals(service))
-            {
-                colService = cell.getColumnIndex();
-                testMax(colService);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(respService))
-            {
-                colResp = cell.getColumnIndex();
-                testMax(colResp);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(clarity))
-            {
-                colClarity = cell.getColumnIndex();
-                testMax(colClarity);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(libelle))
-            {
-                colLib = cell.getColumnIndex();
-                testMax(colLib);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(cpi))
-            {
-                colCpi = cell.getColumnIndex();
-                testMax(colCpi);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(edition))
-            {
-                colEdition = cell.getColumnIndex();
-                testMax(colEdition);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(lot))
-            {
-                colLot = cell.getColumnIndex();
-                testMax(colLot);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(env))
-            {
-                colEnv = cell.getColumnIndex();
-                testMax(colEnv);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(anomalie))
-            {
-                colAno = cell.getColumnIndex();
-                testMax(colAno);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(etat))
-            {
-                colEtat = cell.getColumnIndex();
-                testMax(colEtat);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(securite))
-            {
-                colSec = cell.getColumnIndex();
-                testMax(colSec);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(remarque))
-            {
-                colRemarque = cell.getColumnIndex();
-                testMax(colRemarque);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(version))
-            {
-                colVer = cell.getColumnIndex();
-                testMax(colVer);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(dateCreation))
-            {
-                colDateCrea = cell.getColumnIndex();
-                testMax(colDateCrea);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(dateDetection))
-            {
-                colDateDetec = cell.getColumnIndex();
-                testMax(colDateDetec);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(dateRelance))
-            {
-                colDateRel = cell.getColumnIndex();
-                testMax(colDateRel);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(matiere))
-            {
-                colMatiere = cell.getColumnIndex();
-                testMax(colMatiere);
-                nbreCol++;
-            }
-
         }
+
         if (nbreCol != NOMBRECOL)
         {
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré, vérifier les colonnes de celui-ci");

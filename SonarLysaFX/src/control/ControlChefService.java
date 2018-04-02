@@ -4,6 +4,7 @@ import static utilities.Statics.proprietesXML;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,20 +16,14 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 import control.parent.ControlExcel;
 import model.RespService;
-import model.enums.TypeCol;
+import model.enums.TypeColClarity;
 import utilities.FunctionalException;
+import utilities.TechnicalException;
 import utilities.enums.Severity;
 
 public class ControlChefService extends ControlExcel
 {
     /*---------- ATTRIBUTS ----------*/
-
-    // Noms des colonnes
-    private String filiere;
-    private String direction;
-    private String departement;
-    private String service;
-    private String manager;
 
     // Indices des colonnes
     private int colFil;
@@ -89,42 +84,26 @@ public class ControlChefService extends ControlExcel
 
         titres = sheet.getRow(0);
         int nbreCol = 0;
-
-        // Récupération des indices de colonnes
+        
         for (Cell cell : titres)
         {
             if (cell.getCellTypeEnum() != CellType.STRING)
                 continue;
-
-            if (cell.getStringCellValue().equals(direction))
+            
+            Map<String, TypeColClarity> mapColonnesInvert = proprietesXML.getMapColonnesInvert(TypeColClarity.class);
+            
+            // Initialisation du champ, calcul de l'indice max des colonnes, incrémentation du nombre de colonnes et passage à l'élément suivant. 
+            Field field;
+            try
             {
-                colDir = cell.getColumnIndex();
-                testMax(colDir);
-                nbreCol++;
+                field = getClass().getDeclaredField(mapColonnesInvert.get(cell.getStringCellValue()).getNomCol());
+                field.set(this, cell.getColumnIndex());
+                testMax((int)field.get(this));
+                nbreCol++; 
             }
-            else if (cell.getStringCellValue().equals(departement))
+            catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
             {
-                colDepart = cell.getColumnIndex();
-                testMax(colDepart);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(service))
-            {
-                colService = cell.getColumnIndex();
-                testMax(colService);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(manager))
-            {
-                colManager = cell.getColumnIndex();
-                testMax(colManager);
-                nbreCol++;
-            }
-            else if (cell.getStringCellValue().equals(filiere))
-            {
-                colFil = cell.getColumnIndex();
-                testMax(colFil);
-                nbreCol++;
+                throw new TechnicalException("Erreur à l'affectation d'une variable lors de l'initialisation d'une colonne : " + cell.getStringCellValue(), e);
             }
         }
         if (nbreCol != NOMBRECOL)
@@ -134,12 +113,7 @@ public class ControlChefService extends ControlExcel
     @Override
     protected void initColonnes()
     {
-        Map<TypeCol, String> nomColonnes = proprietesXML.getMapColonnes();
-        direction = nomColonnes.get(TypeCol.DIRECTION);
-        departement = nomColonnes.get(TypeCol.DEPARTEMENT);
-        service = nomColonnes.get(TypeCol.SERVICE);
-        manager = nomColonnes.get(TypeCol.MANAGER);
-        filiere = nomColonnes.get(TypeCol.FILIERE);
+        // Plus necessaire
     }
     
     /*---------- ACCESSEURS ----------*/

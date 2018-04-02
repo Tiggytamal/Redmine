@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Button?>
+
+<GridPane fx:id="grid" xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10"
+	prefWidth="350">
+	<padding>
+		<Insets top="10" right="10" bottom="10" left="10" />
+	</padding>
+	<children>
+		<ProgressBar fx:id="bar" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="250"/>
+		<ProgressIndicator fx:id="indicator" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+		<Label fx:id="label" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2" />
+		<Button fx:id="cancel" GridPane.columnIndex="1" GridPane.rowIndex="2" text="Annuler" onAction="#annuler"/>
+		<Button fx:id="ok" GridPane.columnIndex="0" GridPane.rowIndex="2" text="Annuler" onAction="#fermer" GridPane.halignment="RIGHT" disable="true"/>
+	</children>
+</GridPane>

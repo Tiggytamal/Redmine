@@ -17,44 +17,36 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import model.enums.TypeCol;
+import model.enums.TypeColSuivi;
 import model.enums.TypeKey;
 import model.enums.TypeParam;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
+import view.ColonneView;
 
 public class OptionViewControl extends ViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 
     // Attributs FXML
-    
-    @FXML
-    private SplitPane splitPane;
-    @FXML
-    private ListView<String> options;
+
     @FXML
     private GridPane rightSide;
-    @FXML
-    private Button lotsPic;
-    @FXML
-    private Button applis;
-    @FXML
-    private Button clarity;
-    @FXML
-    private Button chefService;
-    @FXML
-    private Button editionCDM;
     @FXML
     private VBox chargementPane;
     @FXML
@@ -64,11 +56,7 @@ public class OptionViewControl extends ViewControl
     @FXML
     private ListView<String> versionsField;
     @FXML
-    private Button supprimer;
-    @FXML
     private TextField newVersionField;
-    @FXML
-    private Button ajouter;
     @FXML
     private TextField pathField;
     @FXML
@@ -80,43 +68,7 @@ public class OptionViewControl extends ViewControl
     @FXML
     private TextField filtreField;
     @FXML
-    private Button sauvegarder;
-    @FXML
-    private VBox colonnesPane;
-    @FXML
-    private TextField directionField;
-    @FXML
-    private TextField departementField;
-    @FXML
-    private TextField serviceField;
-    @FXML
-    private TextField respServiceField;
-    @FXML
-    private TextField clarityField;
-    @FXML
-    private TextField libelleField;
-    @FXML
-    private TextField cpiField;
-    @FXML
-    private TextField editionField;
-    @FXML
-    private TextField lotField;
-    @FXML
-    private TextField etatLotField;
-    @FXML
-    private TextField anomalieField;
-    @FXML
-    private TextField dateCreaField;
-    @FXML
-    private TextField etatAnoField;
-    @FXML
-    private TextField dateRelField;
-    @FXML
-    private TextField remarqueField;
-    @FXML
-    private TextField securiteField;
-    @FXML
-    private TextField versionField;
+    private ScrollPane colonnesPane;
     @FXML
     private TextField liensLotsField;
     @FXML
@@ -125,6 +77,10 @@ public class OptionViewControl extends ViewControl
     private TextField nomQGDatagstageField;
     @FXML
     private TextField urlSonarField;
+    @FXML
+    private TreeView<String> options;
+    @FXML
+    private VBox colonnesBox;
 
     // Attributs de classe
     private Alert alert;
@@ -147,11 +103,43 @@ public class OptionViewControl extends ViewControl
         alert.setHeaderText(null);
 
         initParametres(proprietesXML.getMapParams());
-
-        initColonnes(proprietesXML.getMapColonnes());
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
+
+    private void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
+    {
+        ObservableList<Node> liste = rightSide.getChildren();
+        if (ov.getValue().getValue().equals("Chargement fichiers"))
+        {
+            liste.clear();
+            liste.add(chargementPane);
+        }
+        if (ov.getValue().getValue().equals("Paramètres"))
+        {
+            liste.clear();
+            liste.add(optionsPane);
+        }
+        if (ov.getValue().getValue().equals("SuiviQualité"))
+        {
+            liste.clear();
+            colonnesBox.getChildren().clear();
+            initColonnes(TypeColSuivi.class);
+            liste.add(colonnesPane);
+        }
+        if (ov.getValue().getValue().equals("Clarity"))
+        {
+            liste.clear();
+            colonnesBox.getChildren().clear();
+            liste.add(colonnesPane);
+        }
+        if (ov.getValue().getValue().equals("Chef de Service"))
+        {
+            liste.clear();
+            colonnesBox.getChildren().clear();
+            liste.add(colonnesPane);
+        }
+    }
 
     /**
      * @throws InvalidFormatException
@@ -204,7 +192,7 @@ public class OptionViewControl extends ViewControl
         control.recupChefServiceDepuisExcel(file);
         alert.setContentText("Chargement Chef de Service effectué");
     }
-    
+
     /**
      * @throws InvalidFormatException
      * @throws IOException
@@ -299,26 +287,18 @@ public class OptionViewControl extends ViewControl
     /**
      * @throws JAXBException
      */
-    public void saveCols() throws JAXBException
+    @SuppressWarnings ("unchecked")
+    public <T extends Enum<T> & TypeCol> void saveCols() throws JAXBException
     {
-        Map<TypeCol, String> mapCols = proprietesXML.getMapColonnes();
-        saveText(directionField, mapCols, TypeCol.DIRECTION);
-        saveText(serviceField, mapCols, TypeCol.SERVICE);
-        saveText(departementField, mapCols, TypeCol.DEPARTEMENT);
-        saveText(respServiceField, mapCols, TypeCol.RESPSERVICE);
-        saveText(clarityField, mapCols, TypeCol.CLARITY);
-        saveText(libelleField, mapCols, TypeCol.LIBELLE);
-        saveText(cpiField, mapCols, TypeCol.CPI);
-        saveText(editionField, mapCols, TypeCol.EDITION);
-        saveText(lotField, mapCols, TypeCol.LOT);
-        saveText(etatLotField, mapCols, TypeCol.ENV);
-        saveText(anomalieField, mapCols, TypeCol.ANOMALIE);
-        saveText(dateCreaField, mapCols, TypeCol.DATECREATION);
-        saveText(dateRelField, mapCols, TypeCol.DATERELANCE);
-        saveText(etatAnoField, mapCols, TypeCol.ETAT);
-        saveText(remarqueField, mapCols, TypeCol.REMARQUE);
-        saveText(securiteField, mapCols, TypeCol.SECURITE);
-        saveText(versionField, mapCols, TypeCol.VERSION);
+        for (Node node : colonnesBox.getChildren())
+        {
+            if (node instanceof ColonneView)
+            {
+                ColonneView<T> view = (ColonneView<T>) node;
+                Map<T, String> mapCols = proprietesXML.getMapColonnes(view.getTypeCol().getDeclaringClass());
+                saveText(view.getField(), mapCols, view.getTypeCol());
+            }
+        }
 
         new ControlXML().saveParam(proprietesXML);
     }
@@ -342,8 +322,7 @@ public class OptionViewControl extends ViewControl
         // Mise à jour automatique de la liste des versions
         versionsField.getSelectionModel().selectFirst();
         versionsField.setPrefHeight((double) versionsField.getItems().size() * ROW_HEIGHT + 2);
-        versionsField.getItems()
-                .addListener((ListChangeListener.Change<? extends String> c) -> versionsField.setPrefHeight((double) versionsField.getItems().size() * ROW_HEIGHT + 2));
+        versionsField.getItems().addListener((ListChangeListener.Change<? extends String> c) -> versionsField.setPrefHeight((double) versionsField.getItems().size() * ROW_HEIGHT + 2));
 
         // Intialisation des TextField depuis le fichier de paramètre
         if (mapParam.get(TypeParam.ABSOLUTEPATH) != null)
@@ -362,48 +341,12 @@ public class OptionViewControl extends ViewControl
     /**
      * @param mapColonnes
      */
-    private void initColonnes(Map<TypeCol, String> mapColonnes)
+    private <T extends Enum<T> & TypeCol> void initColonnes(Class<T> typeColClass)
     {
-        directionField.setText(mapColonnes.get(TypeCol.DIRECTION));
-        departementField.setText(mapColonnes.get(TypeCol.DEPARTEMENT));
-        serviceField.setText(mapColonnes.get(TypeCol.SERVICE));
-        respServiceField.setText(mapColonnes.get(TypeCol.RESPSERVICE));
-        clarityField.setText(mapColonnes.get(TypeCol.CLARITY));
-        libelleField.setText(mapColonnes.get(TypeCol.LIBELLE));
-        cpiField.setText(mapColonnes.get(TypeCol.CPI));
-        editionField.setText(mapColonnes.get(TypeCol.EDITION));
-        lotField.setText(mapColonnes.get(TypeCol.LOT));
-        etatLotField.setText(mapColonnes.get(TypeCol.ENV));
-        anomalieField.setText(mapColonnes.get(TypeCol.ANOMALIE));
-        dateCreaField.setText(mapColonnes.get(TypeCol.DATECREATION));
-        dateRelField.setText(mapColonnes.get(TypeCol.DATERELANCE));
-        etatAnoField.setText(mapColonnes.get(TypeCol.ETAT));
-        remarqueField.setText(mapColonnes.get(TypeCol.REMARQUE));
-        securiteField.setText(mapColonnes.get(TypeCol.SECURITE));
-        versionField.setText(mapColonnes.get(TypeCol.VERSION));
-    }
-
-    /**
-     * Chargement des panels d'options
-     * 
-     * @param ov
-     */
-    private void switchPanel(ObservableValue<? extends String> ov)
-    {
-        if (ov.getValue().equals("Chargement fichiers"))
+        for (Map.Entry<T, String> entry : proprietesXML.getMapColonnes(typeColClass).entrySet())
         {
-            rightSide.getChildren().clear();
-            rightSide.getChildren().add(chargementPane);
-        }
-        if (ov.getValue().equals("Paramètres"))
-        {
-            rightSide.getChildren().clear();
-            rightSide.getChildren().add(optionsPane);
-        }
-        if (ov.getValue().equals("Nom Colonnes"))
-        {
-            rightSide.getChildren().clear();
-            rightSide.getChildren().add(colonnesPane);
+            ColonneView<T> test = new ColonneView<>(entry.getKey(), entry.getValue());
+            colonnesBox.getChildren().add(test);
         }
     }
 

@@ -11,7 +11,6 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
@@ -20,47 +19,60 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.control.TreeItem?>
+<?import javafx.scene.control.ScrollPane?>
 
-<SplitPane fx:id="splitPane" fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
+<SplitPane fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/8.0.141">
 	<items>
-		<AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="140.0" maxWidth="160">
+		<GridPane minWidth="160" prefWidth="160" maxWidth="160">
 			<children>
-				<ListView fx:id="options">
-					<items>
-						<FXCollections fx:factory="observableArrayList">
-							<String fx:value="Chargement fichiers" />
-							<String fx:value="Paramètres" />
-							<String fx:value="Nom Colonnes" />
-						</FXCollections>
-					</items>
-				</ListView>
+				<TreeView showRoot="false" fx:id="options" GridPane.vgrow="ALWAYS">
+					<root>
+						<TreeItem>
+							<children>
+								<TreeItem value="Chargement fichiers" />
+								<TreeItem value="Paramètres" />
+								<TreeItem value="Nom Colonnes" expanded="true">
+									<children>
+										<TreeItem value="SuiviQualité" />
+										<TreeItem value="Clarity" />
+										<TreeItem value="Chef de Service" />
+									</children>
+								</TreeItem>
+							</children>
+						</TreeItem>
+					</root>
+				</TreeView>
 			</children>
-		</AnchorPane>
+		</GridPane>
 		<GridPane fx:id="rightSide">
-			<padding>
-				<Insets top="10" right="10" bottom="10" left="25" />
-			</padding>
 			<children>
 
 				<!-- Boutons de chargement des fichiers Excel de paramétrage -->
 				<VBox fx:id="chargementPane" alignment="center">
+					<padding>
+						<Insets top="10" right="10" bottom="10" left="25" />
+					</padding>
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
 					<HBox alignment="CENTER">
-						<Button text="Charger Lots Pic" fx:id="lotsPic" onAction="#chargerLotsPic" alignment="CENTER" />
+						<Button text="Charger Lots Pic" onAction="#chargerLotsPic" alignment="CENTER" />
 					</HBox>
 					<Region prefHeight="20" />
-					<Button text="Charger Applications" fx:id="applis" onAction="#chargerApplis" alignment="CENTER" />
+					<Button text="Charger Applications" onAction="#chargerApplis" alignment="CENTER" />
 					<Region prefHeight="20" />
-					<Button text="Charger Referentiel Clarity" fx:id="clarity" onAction="#chargerClarity" alignment="CENTER" />
+					<Button text="Charger Referentiel Clarity" onAction="#chargerClarity" alignment="CENTER" />
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
-					<Button text="Charger Chef de Service" fx:id="chefService" onAction="#chargerChefService" alignment="CENTER" />
+					<Button text="Charger Chef de Service" onAction="#chargerChefService" alignment="CENTER" />
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
-					<Button text="Charger Edition CDM" fx:id="editionCDM" onAction="#chargerEditionCDM" alignment="CENTER" />
+					<Button text="Charger Edition CDM" onAction="#chargerEditionCDM" alignment="CENTER" />
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
 				</VBox>
 
 				<!-- Paramètre des fichiers -->
 				<VBox fx:id="optionsPane" alignment="center">
+					<padding>
+						<Insets top="10" right="10" bottom="10" left="25" />
+					</padding>
 					<HBox fx:id="versionsPane">
 						<padding>
 							<Insets top="10" right="10" bottom="10" left="10" />
@@ -74,13 +86,13 @@
 							</items>
 						</ListView>
 						<Region prefWidth="10" />
-						<Button fx:id="supprimer" text="Supprimer" onAction="#suppVersion" />
+						<Button text="Supprimer" onAction="#suppVersion" />
 					</HBox>
 					<Region prefHeight="10" />
 					<HBox>
 						<TextField fx:id="newVersionField" prefWidth="80" promptText="Version" />
 						<Region prefWidth="10" />
-						<Button fx:id="ajouter" text="ajouter" onAction="#ajouterVersion" />
+						<Button text="ajouter" onAction="#ajouterVersion" />
 					</HBox>
 					<Region prefHeight="10" />
 					<Separator />
@@ -166,133 +178,25 @@
 
 					<!-- Bouton de sauvegarde -->
 					<Region prefHeight="20" />
-					<Button text="Sauvegarder" fx:id="sauvegarder" onAction="#sauvegarder" alignment="CENTER" />
+					<Button text="Sauvegarder" onAction="#sauvegarder" alignment="CENTER" />
 				</VBox>
 
 				<!-- Nom des colonnes -->
-				<VBox fx:id="colonnesPane" alignment="center">
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Direction : " />
-						<TextField fx:id="directionField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Departement : " />
-						<TextField fx:id="departementField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Service : " />
-						<TextField fx:id="serviceField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Resp. Service : " />
-						<TextField fx:id="respServiceField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Projet Clarity : " />
-						<TextField fx:id="clarityField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Libelle : " />
-						<TextField fx:id="libelleField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="CPI : " />
-						<TextField fx:id="cpiField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Edition : " />
-						<TextField fx:id="editionField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Lot : " />
-						<TextField fx:id="lotField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Environement : " />
-						<TextField fx:id="etatLotField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Anomalie : " />
-						<TextField fx:id="anomalieField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Date de création : " />
-						<TextField fx:id="dateCreaField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Date de relance : " />
-						<TextField fx:id="dateRelField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Etat anomalie : " />
-						<TextField fx:id="etatAnoField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Remarque : " />
-						<TextField fx:id="remarqueField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Sécurité : " />
-						<TextField fx:id="securiteField" prefWidth="150" />
-					</HBox>
-					<Region prefHeight="5" />
-					<Separator />
-					<Region prefHeight="5" />
-					<HBox>
-						<Label text="Version : " />
-						<TextField fx:id="versionField" prefWidth="150" />
-					</HBox>
-					
-					<!-- Bouton de sauvegarde -->
-					<Region prefHeight="20" />
-					<Button text="Sauvegarder" fx:id="sauvegarder" onAction="#saveCols" alignment="CENTER" />
-				</VBox>
+				<ScrollPane fx:id="colonnesPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
+					<VBox alignment="center">
+						<padding>
+							<Insets top="10" right="10" bottom="10" left="25" />
+						</padding>
+						<VBox fx:id="colonnesBox" prefWidth="400">
+							<children>
+							</children>
+						</VBox>
+
+						<!-- Bouton de sauvegarde -->
+						<Region prefHeight="20" />
+						<Button text="Sauvegarder" onAction="#saveCols" alignment="CENTER" />
+					</VBox>
+				</ScrollPane>
 			</children>
 		</GridPane>
 	</items>

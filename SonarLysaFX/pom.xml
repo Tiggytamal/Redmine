@@ -106,23 +106,23 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/de.saxsys/jfx-testrunner -->
 		<dependency>
-		    <groupId>de.saxsys</groupId>
-		    <artifactId>jfx-testrunner</artifactId>
-		    <version>1.2</version>
+			<groupId>de.saxsys</groupId>
+			<artifactId>jfx-testrunner</artifactId>
+			<version>1.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito -->
 		<dependency>
-		    <groupId>org.powermock</groupId>
-		    <artifactId>powermock-api-mockito</artifactId>
-		    <version>1.7.3</version>
-		    <scope>test</scope>
-		</dependency>	
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.7.3</version>
+			<scope>test</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4 -->
 		<dependency>
-		    <groupId>org.powermock</groupId>
-		    <artifactId>powermock-module-junit4</artifactId>
-		    <version>2.0.0-beta.5</version>
-		    <scope>test</scope>
-		</dependency>	
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>2.0.0-beta.5</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
