@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import model.enums.TypeCol;
+import model.enums.TypeColClarity;
 import model.enums.TypeColSuivi;
 import model.enums.TypeParam;
 import model.enums.TypePlan;
@@ -23,6 +24,8 @@ public class ProprietesXML implements XML
     private Map<TypeParam, String> mapParams;
 
     private Map<TypeColSuivi, String> mapColonnesSuivi;
+    
+    private Map<TypeColClarity, String> mapColonnesClarity;
 
     private Map<TypePlan, Planificateur> mapPlans;
 
@@ -34,6 +37,7 @@ public class ProprietesXML implements XML
     {
         mapParams = new EnumMap<>(TypeParam.class);
         mapColonnesSuivi = new EnumMap<>(TypeColSuivi.class);
+        mapColonnesClarity = new EnumMap<>(TypeColClarity.class);
         mapPlans = new EnumMap<>(TypePlan.class);
     }
 
@@ -51,6 +55,38 @@ public class ProprietesXML implements XML
         return builder.toString();
     }
 
+
+    @SuppressWarnings ("unchecked")
+    public <T extends Enum<T> & TypeCol> Map<T, String> getMapColonnes(Class<T> typeColClass)
+    {
+        switch (typeColClass.getName())
+        {
+            case "model.enums.TypeColSuivi" :
+                return (Map<T, String>) mapColonnesSuivi;
+            
+            case "model.enums.TypeColClarity" :
+                return (Map<T,String>) mapColonnesClarity;
+
+            default :
+                return new HashMap<>();
+        }
+        
+    }
+    
+    /**
+     * Retourne la liste des colonnes avec clefs et valeurs inversées
+     * @return
+     */
+    public <T extends Enum<T> & TypeCol> Map<String, T> getMapColonnesInvert(Class<T> typeColClass)
+    {
+        Map<String, T> retour = new HashMap<>();
+        for (Map.Entry<T, String> entry : getMapColonnes(typeColClass).entrySet())
+        {
+            retour.put(entry.getValue(), entry.getKey());
+        }
+        return retour;
+    }
+    
     /*---------- ACCESSEURS ----------*/
 
     @XmlElementWrapper
@@ -67,20 +103,6 @@ public class ProprietesXML implements XML
         return mapColonnesSuivi;
     }    
 
-    @SuppressWarnings ("unchecked")
-    public <T extends Enum<T> & TypeCol> Map<T, String> getMapColonnes(Class<T> typeColClass)
-    {
-        switch (typeColClass.getName())
-        {
-            case "model.enums.TypeColSuivi" :
-                return (Map<T, String>) mapColonnesSuivi;
-
-            default :
-                return new HashMap<>();
-        }
-        
-    }
-
     @XmlElementWrapper
     @XmlElement (name = "mapPlans", required = false)
     public Map<TypePlan, Planificateur> getMapPlans()
@@ -88,18 +110,11 @@ public class ProprietesXML implements XML
         return mapPlans;
     }
     
-    /**
-     * Retourne la liste des colonnes avec clefs et valeurs inversées
-     * @return
-     */
-    public <T extends Enum<T> & TypeCol> Map<String, T> getMapColonnesInvert(Class<T> typeColClass)
+    @XmlElementWrapper
+    @XmlElement (name = "mapColonnesClarity", required = false)
+    public Map<TypeColClarity, String> getMapColonnesClarity()
     {
-        Map<String, T> retour = new HashMap<>();
-        for (Map.Entry<T, String> entry : getMapColonnes(typeColClass).entrySet())
-        {
-            retour.put(entry.getValue(), entry.getKey());
-        }
-        return retour;
+        return mapColonnesClarity;
     }
 
     @Override
@@ -116,7 +131,14 @@ public class ProprietesXML implements XML
         StringBuilder builderErreurs = new StringBuilder();
         for (TypeColSuivi typeCol : TypeColSuivi.values())
         {
+            
             if (mapColonnesSuivi.get(typeCol) == null || mapColonnesSuivi.get(typeCol).isEmpty())
+                builderErreurs.append(typeCol.toString()).append(Statics.NL);
+        }
+        
+        for (TypeColClarity typeCol : TypeColClarity.values())
+        {
+            if (mapColonnesClarity.get(typeCol) == null || mapColonnesClarity.get(typeCol).isEmpty())
                 builderErreurs.append(typeCol.toString()).append(Statics.NL);
         }
 

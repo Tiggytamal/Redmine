@@ -20,10 +20,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -32,6 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import model.enums.TypeCol;
+import model.enums.TypeColClarity;
 import model.enums.TypeColSuivi;
 import model.enums.TypeKey;
 import model.enums.TypeParam;
@@ -131,6 +130,7 @@ public class OptionViewControl extends ViewControl
         {
             liste.clear();
             colonnesBox.getChildren().clear();
+            initColonnes(TypeColClarity.class);
             liste.add(colonnesPane);
         }
         if (ov.getValue().getValue().equals("Chef de Service"))
