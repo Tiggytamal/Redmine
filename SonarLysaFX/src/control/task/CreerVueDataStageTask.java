@@ -1,5 +1,6 @@
 package control.task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import control.parent.SonarTask;
@@ -55,18 +56,21 @@ public class CreerVueDataStageTask extends SonarTask
         vue = creerVue("DSDataStageListeKey", nom, "Vue regroupant tous les composants Datastage", true);
         String baseMessage =  builder.append(" OK.").append(Statics.NL).append("Ajout : ").toString();
         
-        // Itération sur les projets pour ajouter tous les composants DataStage avec maj message et progression
-        int i = 0;
-        int size = projets.size();
+        // Itération sur les projets pour ajouter tous les composants DataStage, puis itération sur la nouvelle liste pour traitement et affichage progression
+        List<Projet> listeDS = new ArrayList<>();
         for (Projet projet : projets)
         {
-            i++;
             if (projet.getNom().startsWith("Composant DS_"))
-            {
-                api.ajouterProjet(projet, vue);
-                updateProgress(i, size);
-                updateMessage(baseMessage + projet.getNom());
-            }
+                listeDS.add(projet);
+        }
+        
+        int i = 0;
+        int size = listeDS.size();
+        for (Projet projet : listeDS)
+        {
+            api.ajouterProjet(projet, vue);
+            updateProgress(++i, size);
+            updateMessage(baseMessage + projet.getNom());
         }
         return true;
     }

@@ -1,5 +1,12 @@
 package view;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import application.Main;
 import control.parent.SonarTask;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -10,6 +17,9 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
+import utilities.Statics;
+import utilities.TechnicalException;
+import utilities.enums.Severity;
 
 public class ProgressDialog extends Dialog<Boolean>
 {
@@ -106,6 +116,18 @@ public class ProgressDialog extends Dialog<Boolean>
     
     public void startTask()
     {
+//        ExecutorService executor = Executors.newCachedThreadPool();
+//        Future<?> future = executor.submit(task);
+//
+//        try {
+//           future.get();
+//        }  catch (InterruptedException | ExecutionException e)
+//        {
+//            Statics.logger.error(e.getCause());
+//            throw new TechnicalException("Erreur thread", e.getCause()); 
+//        }
+        // https://stackoverflow.com/questions/17467481/how-to-re-throw-an-exception-to-catch-block-in-another-thread?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+        // https://blogs.oracle.com/corejavatechtips/using-callable-to-return-results-from-runnables
         Thread thread = new Thread(task);
         thread.start();
     }

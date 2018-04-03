@@ -20,13 +20,14 @@ import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 
 import control.parent.ControlExcel;
 import model.LotSuiviPic;
+import model.enums.TypeColPic;
 
 import org.apache.poi.ss.usermodel.Sheet;
 
 import sonarapi.model.Vue;
 import utilities.DateConvert;
 
-public class ControlPic extends ControlExcel
+public class ControlPic extends ControlExcel<TypeColPic>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -44,21 +45,6 @@ public class ControlPic extends ControlExcel
     private int colVmoe;
     private int colVmoa;
     private int colLiv;
-
-    // Liste des noms de colonnes
-    private static final String LOT = "Lot";
-    private static final String LIBELLE = "Libellé";
-    private static final String CLARITY = "Clarity";
-    private static final String CPI = "CPI";
-    private static final String EDITION = "Edition";
-    private static final String NBCOMPOS = "Nb Composants";
-    private static final String NBPAQUETS = "Nb Paquets";
-    private static final String BUILD = "1er build";
-    private static final String DEVTU = "DEVTU";
-    private static final String TFON = "TFON";
-    private static final String VMOE = "VMOE";
-    private static final String VMOA = "VMOA";
-    private static final String LIV = "Livraison édition";
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -123,7 +109,6 @@ public class ControlPic extends ControlExcel
         // Traitement Excel et contrôle avec SonarQube
         Map<LocalDate, List<Vue>> retour = creerMapVuesParMois(sheet, mapQube);
 
-        // Ecriture du fichier Excel
         write();
 
         return retour;
@@ -169,75 +154,6 @@ public class ControlPic extends ControlExcel
             }
         }
         return retour;
-    }
-
-    @Override
-    protected void initColonnes()
-    {
-        // pas implémenté encore       
-    }
-
-    /**
-     * initialise les numéro des colonnes du fichier Excelvenant de la PIC.
-     */
-    @Override
-    protected void calculIndiceColonnes()
-    {
-        // Récupération de la première feuille
-        Sheet sheet = wb.getSheetAt(0);
-
-        // Récupération des indices de colonnes
-        for (Cell cell : sheet.getRow(0))
-        {
-            if (cell.getCellTypeEnum() == CellType.STRING)
-            {
-                switch (cell.getStringCellValue())
-                {
-                    case LOT:
-                        colLot = cell.getColumnIndex();
-                        break;
-                    case LIBELLE:
-                        colLibelle = cell.getColumnIndex();
-                        break;
-                    case CLARITY:
-                        colClarity = cell.getColumnIndex();
-                        break;
-                    case CPI:
-                        colCpi = cell.getColumnIndex();
-                        break;
-                    case EDITION:
-                        colEdition = cell.getColumnIndex();
-                        break;
-                    case NBCOMPOS:
-                        colNbCompos = cell.getColumnIndex();
-                        break;
-                    case NBPAQUETS:
-                        colNbpaquets = cell.getColumnIndex();
-                        break;
-                    case BUILD:
-                        colBuild = cell.getColumnIndex();
-                        break;
-                    case DEVTU:
-                        colDevtu = cell.getColumnIndex();
-                        break;
-                    case TFON:
-                        colTfon = cell.getColumnIndex();
-                        break;
-                    case VMOE:
-                        colVmoe = cell.getColumnIndex();
-                        break;
-                    case VMOA:
-                        colVmoa = cell.getColumnIndex();
-                        break;
-                    case LIV:
-                        colLiv = cell.getColumnIndex();
-                        break;
-                    default:
-                        // Colonne sans nom reconnu
-                        break;
-                }
-            }
-        }
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -313,4 +229,16 @@ public class ControlPic extends ControlExcel
         }
     }
     /*---------- ACCESSEURS ----------*/
+
+    @Override
+    protected void initEnum()
+    {
+        enumeration = TypeColPic.class;     
+    }
+
+    @Override
+    protected Sheet initSheet()
+    {
+        return wb.getSheetAt(0);
+    }
 }

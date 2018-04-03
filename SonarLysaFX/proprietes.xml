@@ -1,5 +1,126 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <proprietesXML>
+    <mapColonnesChefServ>
+        <entry>
+            <key>DIRECTION</key>
+            <value>Direction</value>
+        </entry>
+        <entry>
+            <key>DEPARTEMENT</key>
+            <value>Département</value>
+        </entry>
+        <entry>
+            <key>SERVICE</key>
+            <value>Service</value>
+        </entry>
+        <entry>
+            <key>FILIERE</key>
+            <value>Filière</value>
+        </entry>
+        <entry>
+            <key>MANAGER</key>
+            <value>Manager</value>
+        </entry>
+    </mapColonnesChefServ>
+    <mapColonnesClarity>
+        <entry>
+            <key>ACTIF</key>
+            <value>Actif</value>
+        </entry>
+        <entry>
+            <key>CLARITY</key>
+            <value>Code projet</value>
+        </entry>
+        <entry>
+            <key>LIBELLE</key>
+            <value>Libellé projet</value>
+        </entry>
+        <entry>
+            <key>CPI</key>
+            <value>Chef de projet</value>
+        </entry>
+        <entry>
+            <key>EDITION</key>
+            <value>Edition</value>
+        </entry>
+        <entry>
+            <key>DIRECTION</key>
+            <value>Direction</value>
+        </entry>
+        <entry>
+            <key>DEPARTEMENT</key>
+            <value>Département</value>
+        </entry>
+        <entry>
+            <key>SERVICE</key>
+            <value>Service</value>
+        </entry>
+    </mapColonnesClarity>
+    <mapColonnesEdition>
+        <entry>
+            <key>LIBELLE</key>
+            <value>Libellé</value>
+        </entry>
+        <entry>
+            <key>VERSION</key>
+            <value>Numero de version
+NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
+        </entry>
+    </mapColonnesEdition>
+    <mapColonnesPic>
+        <entry>
+            <key>LOT</key>
+            <value>Lot</value>
+        </entry>
+        <entry>
+            <key>LIBELLE</key>
+            <value>Libellé</value>
+        </entry>
+        <entry>
+            <key>CLARITY</key>
+            <value>Clarity</value>
+        </entry>
+        <entry>
+            <key>CPI</key>
+            <value>CPI</value>
+        </entry>
+        <entry>
+            <key>EDITION</key>
+            <value>Edition</value>
+        </entry>
+        <entry>
+            <key>NBCOMPOS</key>
+            <value>Nb Composants</value>
+        </entry>
+        <entry>
+            <key>NBPAQUETS</key>
+            <value>Nb Paquets</value>
+        </entry>
+        <entry>
+            <key>BUILD</key>
+            <value>1er build</value>
+        </entry>
+        <entry>
+            <key>DEVTU</key>
+            <value>DEVTU</value>
+        </entry>
+        <entry>
+            <key>TFON</key>
+            <value>TFON</value>
+        </entry>
+        <entry>
+            <key>VMOE</key>
+            <value>VMOE</value>
+        </entry>
+        <entry>
+            <key>VMOA</key>
+            <value>VMOA</value>
+        </entry>
+        <entry>
+            <key>LIV</key>
+            <value>Livraison édition</value>
+        </entry>
+    </mapColonnesPic>
     <mapColonnesSuivi>
         <entry>
             <key>DIRECTION</key>
@@ -74,18 +195,6 @@
             <value>Date relance</value>
         </entry>
         <entry>
-            <key>TRAITE</key>
-            <value>Traitée</value>
-        </entry>
-        <entry>
-            <key>FILIERE</key>
-            <value>Filière</value>
-        </entry>
-        <entry>
-            <key>MANAGER</key>
-            <value>Manager</value>
-        </entry>
-        <entry>
             <key>MATIERE</key>
             <value>Matière</value>
         </entry>
@@ -105,11 +214,11 @@
         </entry>
         <entry>
             <key>NOMFICHIER</key>
-            <value>Suivi_Quality_Gate.xlsx</value>
+            <value>Suivi_Quality_Gate - 1.xlsx</value>
         </entry>
         <entry>
             <key>NOMFICHIERDATASTAGE</key>
-            <value>Suivi_Quality_Gate - DataStage.xlsx</value>
+            <value>Suivi_Quality_Gate - DataStage - 1.xlsx</value>
         </entry>
         <entry>
             <key>ABSOLUTEPATHHISTO</key>
@@ -139,7 +248,7 @@
     <mapPlans>
         <entry>
             <key>SUIVIHEBDO</key>
-            <value active="true" annees="2018" heure="10:18" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
+            <value active="true" annees="2018" heure="23:00" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
         </entry>
         <entry>
             <key>VUECHC</key>

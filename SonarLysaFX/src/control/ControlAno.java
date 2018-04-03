@@ -7,7 +7,6 @@ import static utilities.Statics.proprietesXML;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +38,6 @@ import model.enums.TypeColSuivi;
 import model.enums.TypeParam;
 import utilities.CellHelper;
 import utilities.FunctionalException;
-import utilities.TechnicalException;
 import utilities.enums.Bordure;
 import utilities.enums.Severity;
 
@@ -49,7 +47,7 @@ import utilities.enums.Severity;
  * @author ETP137 - Grégoire Mathon
  *
  */
-public class ControlAno extends ControlExcel
+public class ControlAno extends ControlExcel<TypeColSuivi>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -75,12 +73,6 @@ public class ControlAno extends ControlExcel
     private int colDateRel;
     private int colMatiere;
 
-    // Liste des noms de colonnes
-    private String edition;
-    private String lot;
-    private String env;
-    private String traite;
-
     // Nom de la feuillle avec les naomalies en cours
     private static final String SQ = "SUIVI Qualité";
     private static final String AC = "Anomalies closes";
@@ -89,7 +81,6 @@ public class ControlAno extends ControlExcel
     private static final String SECURITEKO = "X";
     private static final String SNAPSHOT = "SNAPSHOT";
     private static final String RELEASE = "RELEASE";
-    private static final int NOMBRECOL = 19;
     private static final String AVERIFIER = "A vérifier";
     private String lienslots;
     private String liensAnos;
@@ -99,6 +90,11 @@ public class ControlAno extends ControlExcel
     public ControlAno(File file) throws InvalidFormatException, IOException
     {
         super(file);
+        
+        // Initialisation des parties constantes des liens
+        Map<TypeParam, String> proprietes = proprietesXML.getMapParams();
+        lienslots = proprietes.get(TypeParam.LIENSLOTS);
+        liensAnos = proprietes.get(TypeParam.LIENSANOS);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -180,16 +176,16 @@ public class ControlAno extends ControlExcel
             switch (index)
             {
                 case LOTI:
-                    cell.setCellValue(lot);
+                    cell.setCellValue(Index.LOTI.toString());
                     break;
                 case EDITIONI:
-                    cell.setCellValue(edition);
+                    cell.setCellValue(Index.EDITIONI.toString());
                     break;
                 case ENVI:
-                    cell.setCellValue(env);
+                    cell.setCellValue(Index.ENVI.toString());
                     break;
                 case TRAITEI:
-                    cell.setCellValue(traite);
+                    cell.setCellValue(Index.TRAITEI.toString());
                     break;
             }
         }
@@ -220,6 +216,7 @@ public class ControlAno extends ControlExcel
         sheet.autoSizeColumn(Index.LOTI.ordinal());
         sheet.autoSizeColumn(Index.EDITIONI.ordinal());
         sheet.autoSizeColumn(Index.ENVI.ordinal());
+        sheet.autoSizeColumn(Index.TRAITEI.ordinal());
         return retour;
     }
 
@@ -313,7 +310,7 @@ public class ControlAno extends ControlExcel
     {
         Sheet sheet = wb.getSheet(SQ);
         if (sheet == null)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Problème récupération feuillle excel principale");
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Problème récupération feuille Excel principale");
         
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
@@ -324,62 +321,6 @@ public class ControlAno extends ControlExcel
     }
 
     /*---------- METHODES PRIVEES ----------*/
-
-    @Override
-    protected void initColonnes()
-    {
-        // Intialisation noms des colonnes
-        Map<TypeColSuivi, String> nomColonnes = proprietesXML.getMapColonnes(TypeColSuivi.class);
-        
-        edition = nomColonnes.get(TypeColSuivi.EDITION);
-        lot = nomColonnes.get(TypeColSuivi.LOT);
-        env = nomColonnes.get(TypeColSuivi.ENV);
-        traite = nomColonnes.get(TypeColSuivi.TRAITE);
-
-        // Initialisation des parties constantes des liens
-        Map<TypeParam, String> proprietes = proprietesXML.getMapParams();
-        lienslots = proprietes.get(TypeParam.LIENSLOTS);
-        liensAnos = proprietes.get(TypeParam.LIENSANOS);
-    }
-
-    @Override
-    protected void calculIndiceColonnes()
-    {
-        // Récupération de la première feuille
-        Sheet sheet = wb.getSheet(SQ);
-        if (sheet == null)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier n'a pas de page Suivi Qualité");
-
-        titres = sheet.getRow(0);
-        int nbreCol = 0;
-
-        for (Cell cell : titres)
-        {
-            if (cell.getCellTypeEnum() != CellType.STRING)
-                continue;
-            
-            Map<String, TypeColSuivi> mapColonnesInvert = proprietesXML.getMapColonnesInvert(TypeColSuivi.class);
-            
-            // Initialisation du champ, calcul de l'indice max des colonnes, incrémentation du nombre de colonnes et passage à l'élément suivant. 
-            Field field;
-            try
-            {
-                field = getClass().getDeclaredField(mapColonnesInvert.get(cell.getStringCellValue()).getNomCol());
-                field.set(this, cell.getColumnIndex());
-                testMax((int)field.get(this));
-                nbreCol++; 
-            }
-            catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
-            {
-                throw new TechnicalException("Erreur à l'affectation d'une variable lors de l'initialisation d'une colonne : " + cell.getStringCellValue(), e);
-            }
-        }
-
-        if (nbreCol != NOMBRECOL)
-        {
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré, vérifier les colonnes de celui-ci");
-        }
-    }
     
     /**
      * Permet de calculer la couleur d'une ligne du fichier Excel : <br>
@@ -429,7 +370,7 @@ public class ControlAno extends ControlExcel
     }
     
     /**
-     * Ajoute les anomalies closes à la feuille correspondante
+     * Ajoute les anomalies closes à la feuille correspondante. On ne sauvegarde pas les ligne squi n'ont asp données suite à une anomalie Sonar.
      * 
      * @param sheetClose
      * @param anoClose
@@ -439,6 +380,9 @@ public class ControlAno extends ControlExcel
         Row row;
         for (Anomalie ano : anoClose.values())
         {
+            if (ano.getNumeroAnomalie() == 0 )
+                continue;
+            
             row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
             creerLigneSQ(row, ano, IndexedColors.WHITE);
         }
@@ -845,7 +789,41 @@ public class ControlAno extends ControlExcel
      * @author ETP8137 - Grégoire mathon
      *
      */
-    private enum Index {
-        LOTI, EDITIONI, ENVI, TRAITEI;
+    private enum Index 
+    {
+        LOTI ("Lot projet RTC"), 
+        EDITIONI ("Edition"), 
+        ENVI ("Etat du lot"), 
+        TRAITEI ("Traitée");
+        
+        private String string;
+        
+        private Index(String string)
+        {
+            this.string = string;
+        }
+        
+        @Override
+        public String toString()
+        {
+            return string;
+        }
+    }
+
+    @Override
+    protected void initEnum()
+    {
+        enumeration = TypeColSuivi.class;
+        
+    }
+
+    @Override
+    protected Sheet initSheet()
+    {
+        // Récupération de la feuille principale
+        Sheet sheet = wb.getSheet(SQ);
+        if (sheet == null)
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier n'a pas de page Suivi Qualité");
+        return sheet;
     }
 }

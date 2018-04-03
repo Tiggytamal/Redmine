@@ -10,7 +10,10 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import model.enums.TypeCol;
+import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
+import model.enums.TypeColEdition;
+import model.enums.TypeColPic;
 import model.enums.TypeColSuivi;
 import model.enums.TypeParam;
 import model.enums.TypePlan;
@@ -22,11 +25,11 @@ public class ProprietesXML implements XML
     /*---------- ATTRIBUTS ----------*/
 
     private Map<TypeParam, String> mapParams;
-
-    private Map<TypeColSuivi, String> mapColonnesSuivi;
-    
-    private Map<TypeColClarity, String> mapColonnesClarity;
-
+    private Map<TypeColSuivi, String> mapColonnesSuivi;    
+    private Map<TypeColClarity, String> mapColonnesClarity;   
+    private Map<TypeColChefServ, String> mapColonnesChefServ;
+    private Map<TypeColPic, String> mapColonnesPic;
+    private Map<TypeColEdition, String> mapColonnesEdition;   
     private Map<TypePlan, Planificateur> mapPlans;
 
     private static final String NOMFICHIER = "\\proprietes.xml";
@@ -38,6 +41,9 @@ public class ProprietesXML implements XML
         mapParams = new EnumMap<>(TypeParam.class);
         mapColonnesSuivi = new EnumMap<>(TypeColSuivi.class);
         mapColonnesClarity = new EnumMap<>(TypeColClarity.class);
+        mapColonnesChefServ = new EnumMap<>(TypeColChefServ.class);
+        mapColonnesPic = new EnumMap<>(TypeColPic.class);
+        mapColonnesEdition = new EnumMap<>(TypeColEdition.class);
         mapPlans = new EnumMap<>(TypePlan.class);
     }
 
@@ -66,7 +72,16 @@ public class ProprietesXML implements XML
             
             case "model.enums.TypeColClarity" :
                 return (Map<T,String>) mapColonnesClarity;
-
+                
+            case "model.enums.TypeColChefServ" :
+                return (Map<T,String>) mapColonnesChefServ;
+            
+            case "model.enums.TypeColPic" :
+                return (Map<T,String>) mapColonnesPic;
+                
+            case "model.enums.TypeColEdition" :
+                return (Map<T,String>) mapColonnesEdition;
+                
             default :
                 return new HashMap<>();
         }
@@ -97,13 +112,6 @@ public class ProprietesXML implements XML
     }
 
     @XmlElementWrapper
-    @XmlElement (name = "mapColonnesSuivi", required = false)
-    public Map<TypeColSuivi, String> getMapColonnesSuivi()
-    {
-        return mapColonnesSuivi;
-    }    
-
-    @XmlElementWrapper
     @XmlElement (name = "mapPlans", required = false)
     public Map<TypePlan, Planificateur> getMapPlans()
     {
@@ -111,10 +119,38 @@ public class ProprietesXML implements XML
     }
     
     @XmlElementWrapper
+    @XmlElement (name = "mapColonnesSuivi", required = false)
+    public Map<TypeColSuivi, String> getMapColonnesSuivi()
+    {
+        return mapColonnesSuivi;
+    }    
+    
+    @XmlElementWrapper
     @XmlElement (name = "mapColonnesClarity", required = false)
     public Map<TypeColClarity, String> getMapColonnesClarity()
     {
         return mapColonnesClarity;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement (name = "mapColonnesChefServ", required = false)
+    public Map<TypeColChefServ, String> getMapColonnesChefServ()
+    {
+        return mapColonnesChefServ;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement (name = "mapColonnesPic", required = false)
+    public Map<TypeColPic, String> getMapColonnesPic()
+    {
+        return mapColonnesPic;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement (name = "mapColonnesEdition", required = false)
+    public Map<TypeColEdition, String> getMapColonnesEdition()
+    {
+        return mapColonnesEdition;
     }
 
     @Override
@@ -129,18 +165,13 @@ public class ProprietesXML implements XML
     {
         // Parcours de tous les types de colonnes
         StringBuilder builderErreurs = new StringBuilder();
-        for (TypeColSuivi typeCol : TypeColSuivi.values())
-        {
-            
-            if (mapColonnesSuivi.get(typeCol) == null || mapColonnesSuivi.get(typeCol).isEmpty())
-                builderErreurs.append(typeCol.toString()).append(Statics.NL);
-        }
-        
-        for (TypeColClarity typeCol : TypeColClarity.values())
-        {
-            if (mapColonnesClarity.get(typeCol) == null || mapColonnesClarity.get(typeCol).isEmpty())
-                builderErreurs.append(typeCol.toString()).append(Statics.NL);
-        }
+
+        controleMap(builderErreurs, TypeColSuivi.class, mapColonnesSuivi);
+        controleMap(builderErreurs, TypeColClarity.class, mapColonnesClarity);
+        controleMap(builderErreurs, TypeColChefServ.class, mapColonnesChefServ);
+        controleMap(builderErreurs, TypeColPic.class, mapColonnesPic);
+        controleMap(builderErreurs, TypeColEdition.class, mapColonnesEdition);
+
 
         // Renvoi du booleen
         if (builderErreurs.length() == 0)
@@ -152,6 +183,21 @@ public class ProprietesXML implements XML
         {
             builder.append("Certaines colonnes sont mal renseignées :").append(Statics.NL).append(builderErreurs.toString());
             return false;
+        }
+    }
+    
+    /**
+     * Méthodes générique pour controler les valeur d'une map
+     * @param builderErreurs
+     * @param typeCol
+     * @param mapColonnes
+     */
+    private <T extends Enum<T> & TypeCol> void controleMap(StringBuilder builderErreurs, Class<T> typeCol, Map<T, String> mapColonnes)
+    {
+        for (T type : typeCol.getEnumConstants())
+        {            
+            if (mapColonnes.get(type) == null || mapColonnes.get(type).isEmpty())
+                builderErreurs.append(type.toString()).append(Statics.NL);
         }
     }
 

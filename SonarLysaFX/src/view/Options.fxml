@@ -21,8 +21,7 @@
 <?import javafx.scene.control.TreeItem?>
 <?import javafx.scene.control.ScrollPane?>
 
-<SplitPane fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/8.0.141">
+<SplitPane fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
 	<items>
 		<GridPane minWidth="160" prefWidth="160" maxWidth="160">
 			<children>
@@ -37,6 +36,8 @@
 										<TreeItem value="SuiviQualité" />
 										<TreeItem value="Clarity" />
 										<TreeItem value="Chef de Service" />
+										<TreeItem value="Lots Pic" />
+										<TreeItem value="Codification Editions" />
 									</children>
 								</TreeItem>
 							</children>

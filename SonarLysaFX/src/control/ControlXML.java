@@ -77,9 +77,7 @@ public class ControlXML
             context = JAXBContext.newInstance(typeXML);
             // Récupération du paramétrage depuis le fichier externe
             if (file.exists())
-            {
                 retour = (XML) context.createUnmarshaller().unmarshal(file);
-            }
             
         } catch (JAXBException e)
         {

@@ -39,11 +39,6 @@ public class ControlSonarTest
     }
 
     @Test
-    public void testAppli()
-    {
-    }
-
-    @Test
     public void creationHeader() throws InvalidFormatException, IOException
     {
         String codeUser;

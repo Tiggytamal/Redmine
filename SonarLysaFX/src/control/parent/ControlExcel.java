@@ -1,9 +1,13 @@
 package control.parent;
 
+import static utilities.Statics.proprietesXML;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.Map;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -22,8 +26,12 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import model.enums.Environnement;
+import model.enums.TypeCol;
 import utilities.CellHelper;
 import utilities.DateConvert;
+import utilities.FunctionalException;
+import utilities.TechnicalException;
+import utilities.enums.Severity;
 
 /**
  * Classe mère des contrôleurs pour les fichiers Excel
@@ -31,7 +39,7 @@ import utilities.DateConvert;
  * @author ETP137 - Grégoire Mathon
  *
  */
-public abstract class ControlExcel
+public abstract class ControlExcel<T extends Enum<T> & TypeCol>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -49,6 +57,8 @@ public abstract class ControlExcel
     protected CreationHelper createHelper;
     /** Ancre pour les commentaire */
     protected ClientAnchor ca;
+    /** Classe de l'énumération des classes filles */
+    protected Class<T> enumeration;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -64,12 +74,58 @@ public abstract class ControlExcel
     {
         this.file = file;
         createWb();
-        initColonnes();
-        calculIndiceColonnes();
+        initEnum();
+        calculIndiceColonnes(initSheet());
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
+    
+    /**
+     * Initialise la classe de l'énumération
+     */
+    protected abstract void initEnum();
+    
+    /**
+     * Récupération de la feuille Excel pour le traitement
+     */
+    protected abstract Sheet initSheet();
+    /**
+     * Initialise les numéro des colonnes du fichier Excel venant de la PIC.
+     */
+    protected void calculIndiceColonnes(Sheet sheet)
+    {
 
+        titres = sheet.getRow(0);
+        int nbreCol = 0;
+        
+        for (Cell cell : titres)
+        {
+            // Récupération de l'énumération depuis les paramètres XML
+            Map<String, T> mapColonnesInvert = proprietesXML.getMapColonnesInvert(enumeration);
+            T typeCol = mapColonnesInvert.get(cell.getStringCellValue());
+            
+            if (cell.getCellTypeEnum() != CellType.STRING || typeCol == null)
+                continue;
+            
+            // Initialisation du champ, calcul de l'indice max des colonnes, incrémentation du nombre de colonnes et passage à l'élément suivant. 
+            Field field;
+            try
+            {
+                field = getClass().getDeclaredField(typeCol.getNomCol());
+                field.setAccessible(true);
+                field.set(this, cell.getColumnIndex());
+                testMax((int)field.get(this));              
+                nbreCol++; 
+            }
+            catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
+            {
+                throw new TechnicalException("Erreur à l'affectation d'une variable lors de l'initialisation d'une colonne : " + cell.getStringCellValue(), e);
+            }
+        }
+        if (nbreCol != enumeration.getEnumConstants().length)
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci" + nbreCol + " " + enumeration.getEnumConstants().length + " " + enumeration.getSimpleName());
+    }
+    
     /**
      * Permet de recréer un wokbook ainsi que les gestionnaires si celui-ci a été fermé.
      * 
@@ -136,16 +192,6 @@ public abstract class ControlExcel
             sheet.autoSizeColumn(i);
         }
     }
-
-    /**
-     * Initialise les numéro des colonnes du fichier Excel venant de la PIC.
-     */
-    protected abstract void calculIndiceColonnes();
-
-    /**
-     * Initialise les noms des colonnes
-     */
-    protected abstract void initColonnes();
 
     /**
      * Met à jour l'indice max des colonnes

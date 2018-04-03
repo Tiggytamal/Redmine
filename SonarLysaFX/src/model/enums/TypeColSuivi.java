@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public enum TypeColSuivi implements Serializable, TypeCol
 {
+    /*---------- ATTRIBUTS ----------*/
+
     DIRECTION("Direction", "colDir"), 
     DEPARTEMENT("Département", "colDepart"), 
     SERVICE("Service", "colService"), 
@@ -22,13 +24,12 @@ public enum TypeColSuivi implements Serializable, TypeCol
     DATECREATION("Date de création", "colDateCrea"), 
     DATEDETECTION("Date de détection", "colDateDetec"),
     DATERELANCE("Date de relance", "colDateRel"), 
-    TRAITE("Traité", "colTraite"), 
-    FILIERE("Filière", "colFil"), 
-    MANAGER("Manager", "colManager"), 
     MATIERE("Matière", "colMatiere");
 
     private String string;
     private String nomCol;
+
+    /*---------- CONSTRUCTEURS ----------*/
 
     private TypeColSuivi(String string, String nomCol)
     {
@@ -36,6 +37,10 @@ public enum TypeColSuivi implements Serializable, TypeCol
         this.nomCol = nomCol;
     }
 
+    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
+    
     @Override
     public String toString()
     {

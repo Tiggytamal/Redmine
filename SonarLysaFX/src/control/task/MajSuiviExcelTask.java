@@ -188,10 +188,21 @@ public class MajSuiviExcelTask extends SonarTask
         {
             mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotRelease);
             Utilities.serialisation("d:\\lotsSecurite.ser", lotsSecurite);
+            Set<String> lotsSecurite2 = Utilities.deserialisation("d:\\lotsSecurite.ser", HashSet.class);
             Utilities.serialisation("d:\\lotsSonar.ser", mapLotsSonar);
+            Map<String, Set<String>> mapLotsSonar2 = Utilities.deserialisation("d:\\lotsSonar.ser", HashMap.class);
             Utilities.serialisation("d:\\lotsRelease.ser", lotRelease);
+            Set<String> lotRelease2 = Utilities.deserialisation("d:\\lotsRelease.ser", HashSet.class);
+            System.out.println("lot securite : " + lotsSecurite.size());
+            System.out.println("lot securite2 : " + lotsSecurite2.size());
+            System.out.println("mapLotsSonar : " + mapLotsSonar.size());
+            System.out.println("mapLotsSonar2 : " + mapLotsSonar2.size());
+            System.out.println("lotRelease : " + lotRelease.size());
+            System.out.println("lotRelease2 : " + lotRelease2.size());
         }
 
+        updateMessage("Mise à jour du fichier Excel...");
+        
         // 3. Supression des lots déjà créés et création des feuille Excel avec les nouvelles erreurs
         majFichierAnomalies(lotsPIC, mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);
 
@@ -203,11 +214,22 @@ public class MajSuiviExcelTask extends SonarTask
             Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nom + " - Edition " + entry.getKey(),
                     "Vue regroupant tous les lots avec des composants en erreur", true);
 
+            // Message
+            String base = "Création Vue " + vueParent.getName() + Statics.NL;
+            updateMessage(base);
+            int i = 0;
+            int size = entry.getValue().size();
+            
             for (String lot : entry.getValue())
             {
                 // Ajout des sous-vue
-                api.ajouterSousVue(new Vue("view_lot_" + lot, "Lot " + lot), vueParent);
-                retour.add("Lot " + lot);
+                String nomLot = "Lot " + lot;
+                api.ajouterSousVue(new Vue("view_lot_" + lot, nomLot), vueParent);
+                retour.add(nomLot);
+                
+                // Message
+                updateMessage(base + "Ajout : " + nomLot);
+                updateProgress(i, size);
             }
         }
         return retour;
@@ -230,11 +252,17 @@ public class MajSuiviExcelTask extends SonarTask
         {
             String entryKey = entry.getKey();
             retour.put(entryKey, new TreeSet<>());
-
+            
+            String base = "Traitement Version : " + entryKey + Statics.NL;
+            updateMessage(base); 
+            int i = 0;
+            int size = entry.getValue().size();
+            
             // Iteration sur la liste des projets
             for (Projet projet : entry.getValue())
             {
-                traitementProjet(projet, retour, entryKey, lotSecurite, lotRelease);
+                traitementProjet(projet, retour, entryKey, lotSecurite, lotRelease, base);
+                updateProgress(++i, size);
             }
         }
         return retour;
@@ -258,7 +286,8 @@ public class MajSuiviExcelTask extends SonarTask
             Matiere matiere) throws InvalidFormatException, IOException
     {
         // Controleur
-        ControlAno controlAno = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + fichier));
+        String name = proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + fichier;
+        ControlAno controlAno = new ControlAno(new File(name));
 
         // Lecture du fichier pour remonter les anomalies en cours.
         List<Anomalie> listeLotenAno = controlAno.listAnomaliesSurLotsCrees();
@@ -331,10 +360,13 @@ public class MajSuiviExcelTask extends SonarTask
      * @param entryKey
      * @param lotSecurite
      * @param lotRelease
+     * @param base 
      */
-    private void traitementProjet(Projet projet, HashMap<String, Set<String>> retour, String entryKey, Set<String> lotSecurite, Set<String> lotRelease)
+    private void traitementProjet(Projet projet, HashMap<String, Set<String>> retour, String entryKey, Set<String> lotSecurite, Set<String> lotRelease, String base)
     {
         String key = projet.getKey();
+        
+        updateMessage(base + projet.getNom());
         // Récupération du composant
         Composant composant = api.getMetriquesComposant(key, new String[] { "lot", "alert_status" });
 
@@ -447,7 +479,7 @@ public class MajSuiviExcelTask extends SonarTask
     {
         SUIVI ("Maj Fichier de Suivi"), 
         DATASTAGE ("Maj Fichier de Suivi DataStage"), 
-        DOUBLE ("Maj FIchiers de Suivi");
+        DOUBLE ("Maj Fichiers de Suivi");
         
         private String string;
         

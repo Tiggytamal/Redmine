@@ -30,7 +30,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import model.enums.TypeCol;
+import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
+import model.enums.TypeColEdition;
+import model.enums.TypeColPic;
 import model.enums.TypeColSuivi;
 import model.enums.TypeKey;
 import model.enums.TypeParam;
@@ -109,36 +112,42 @@ public class OptionViewControl extends ViewControl
     private void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
     {
         ObservableList<Node> liste = rightSide.getChildren();
-        if (ov.getValue().getValue().equals("Chargement fichiers"))
+        
+        switch (ov.getValue().getValue())
         {
-            liste.clear();
-            liste.add(chargementPane);
-        }
-        if (ov.getValue().getValue().equals("Paramètres"))
-        {
-            liste.clear();
-            liste.add(optionsPane);
-        }
-        if (ov.getValue().getValue().equals("SuiviQualité"))
-        {
-            liste.clear();
-            colonnesBox.getChildren().clear();
-            initColonnes(TypeColSuivi.class);
-            liste.add(colonnesPane);
-        }
-        if (ov.getValue().getValue().equals("Clarity"))
-        {
-            liste.clear();
-            colonnesBox.getChildren().clear();
-            initColonnes(TypeColClarity.class);
-            liste.add(colonnesPane);
-        }
-        if (ov.getValue().getValue().equals("Chef de Service"))
-        {
-            liste.clear();
-            colonnesBox.getChildren().clear();
-            liste.add(colonnesPane);
-        }
+            case "Chargement fichiers" :
+                liste.clear();
+                liste.add(chargementPane);
+                break;
+                
+            case "Paramètres" :
+                liste.clear();
+                liste.add(optionsPane);
+                break;
+                
+            case "SuiviQualité" :
+                afficherColonnes(TypeColSuivi.class, liste);
+                break;
+                
+            case "Clarity" :
+                afficherColonnes(TypeColClarity.class, liste);
+                break;
+                
+            case "Chef de Service" :
+                afficherColonnes(TypeColChefServ.class, liste);
+                break;
+                
+            case "Lots Pic" :
+                afficherColonnes(TypeColPic.class, liste);
+                break;
+                
+            case "Codification Editions" :
+                afficherColonnes(TypeColEdition.class, liste);
+                break;
+                
+            default:
+                break;
+        }      
     }
 
     /**
@@ -287,13 +296,13 @@ public class OptionViewControl extends ViewControl
     /**
      * @throws JAXBException
      */
-    @SuppressWarnings ("unchecked")
     public <T extends Enum<T> & TypeCol> void saveCols() throws JAXBException
     {
         for (Node node : colonnesBox.getChildren())
         {
             if (node instanceof ColonneView)
             {
+                @SuppressWarnings("unchecked")
                 ColonneView<T> view = (ColonneView<T>) node;
                 Map<T, String> mapCols = proprietesXML.getMapColonnes(view.getTypeCol().getDeclaringClass());
                 saveText(view.getField(), mapCols, view.getTypeCol());
@@ -339,6 +348,8 @@ public class OptionViewControl extends ViewControl
     }
 
     /**
+     * 
+     * 
      * @param mapColonnes
      */
     private <T extends Enum<T> & TypeCol> void initColonnes(Class<T> typeColClass)
@@ -348,6 +359,20 @@ public class OptionViewControl extends ViewControl
             ColonneView<T> test = new ColonneView<>(entry.getKey(), entry.getValue());
             colonnesBox.getChildren().add(test);
         }
+    }
+    
+    /**
+     * Affichge les colonnes du fichier choisi dans les options
+     * 
+     * @param typeCol
+     * @param liste
+     */
+    private <T extends Enum<T> & TypeCol> void afficherColonnes(Class<T> typeCol, ObservableList<Node> liste)
+    {
+        liste.clear();
+        colonnesBox.getChildren().clear();
+        initColonnes(typeCol);
+        liste.add(colonnesPane);
     }
 
     /**
