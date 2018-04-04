@@ -44,6 +44,7 @@ public class CreerVueParAppsTask extends SonarTask
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
     
+    @SuppressWarnings ("unchecked")
     private boolean creerVueParApplication()
     {
         // 1 .Création de la liste des composants par application
@@ -55,8 +56,6 @@ public class CreerVueParAppsTask extends SonarTask
         {
             mapApplication = controlerSonarQube();
             Utilities.serialisation("d:\\mapApplis.ser", mapApplication);
-            Map<String, List<Projet>> mapApplication2 = Utilities.deserialisation("d:\\mapApplis.ser", HashMap.class);
-            System.out.println(mapApplication.size() - mapApplication2.size());
         }
 
         // 2. Suppression des vues existantes

@@ -1,12 +1,9 @@
 package view;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import application.Main;
 import control.parent.SonarTask;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -17,9 +14,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
-import utilities.Statics;
-import utilities.TechnicalException;
-import utilities.enums.Severity;
 
 public class ProgressDialog extends Dialog<Boolean>
 {
@@ -29,6 +23,7 @@ public class ProgressDialog extends Dialog<Boolean>
     private ProgressBar bar;
     private ProgressIndicator indicator;
     private Label label;
+    private Label stage;
     private SonarTask task;
     
     /*---------- CONSTRUCTEURS ----------*/
@@ -78,20 +73,26 @@ public class ProgressDialog extends Dialog<Boolean>
         indicator.progressProperty().unbind();
         indicator.progressProperty().bind(task.progressProperty());
         
-        //label
+        // Stage
+        stage = new Label();
+        stage.setPrefWidth(grid.getPrefWidth());
+        grid.add(label, 0, 1, GridPane.REMAINING, 1);
+        stage.textProperty().bind(task.etapeProperty());
+        
+        // label
         label = new Label();
         label.setPrefWidth(grid.getPrefWidth());
-        grid.add(label, 0, 1, GridPane.REMAINING, 1);
+        grid.add(label, 0, 2, GridPane.REMAINING, 1);
         label.textProperty().bind(task.messageProperty());
         
         // Cancel
         Button cancel = new Button("Annuler");
-        grid.add(cancel, 1, 2);
+        grid.add(cancel, 1, 3);
         cancel.setOnAction(event -> annuler());  
         
         // Bouton OK actif lorsque le traitement est fini.
         Button ok = new Button("OK");
-        grid.add(ok, 0, 2);
+        grid.add(ok, 0, 3);
         ok.setOnAction(event -> fermer());
         GridPane.setHalignment(ok, HPos.RIGHT);
         ok.setDisable(true);
@@ -114,22 +115,12 @@ public class ProgressDialog extends Dialog<Boolean>
     
     /*---------- METHODES PUBLIQUES ----------*/
     
-    public void startTask()
+    public Future<?> startTask()
     {
-//        ExecutorService executor = Executors.newCachedThreadPool();
-//        Future<?> future = executor.submit(task);
-//
-//        try {
-//           future.get();
-//        }  catch (InterruptedException | ExecutionException e)
-//        {
-//            Statics.logger.error(e.getCause());
-//            throw new TechnicalException("Erreur thread", e.getCause()); 
-//        }
-        // https://stackoverflow.com/questions/17467481/how-to-re-throw-an-exception-to-catch-block-in-another-thread?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
-        // https://blogs.oracle.com/corejavatechtips/using-callable-to-return-results-from-runnables
-        Thread thread = new Thread(task);
-        thread.start();
+        ExecutorService executor = Executors.newCachedThreadPool();
+        return executor.submit(task);
+//        Thread thread = new Thread(task);
+//        thread.start();
     }
     
     /*---------- METHODES PRIVEES ----------*/

@@ -2,7 +2,7 @@ package model.enums;
 
 import java.io.Serializable;
 
-public enum TypeColSuivi implements Serializable, TypeCol
+public enum TypeColSuivi  implements Serializable, TypeCol
 {
     /*---------- ATTRIBUTS ----------*/
 

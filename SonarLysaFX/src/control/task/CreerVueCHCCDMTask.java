@@ -21,6 +21,7 @@ import sonarapi.model.Composant;
 import sonarapi.model.Projet;
 import sonarapi.model.Vue;
 import utilities.FunctionalException;
+import utilities.Statics;
 import utilities.enums.Severity;
 
 public class CreerVueCHCCDMTask extends SonarTask
@@ -30,6 +31,7 @@ public class CreerVueCHCCDMTask extends SonarTask
     private List<String> annees;
     private boolean cdm;
     private File file;
+    protected static final int FIN = 3;
 
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -75,42 +77,49 @@ public class CreerVueCHCCDMTask extends SonarTask
 
     /*---------- METHODES PRIVEES ----------*/
     
-    private void initAnnees(List<String> annees)
-    {
-        if (annees == null || annees.isEmpty())
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Création task CreerVueCHCCDMTask sans liste d'années");
-        this.annees = annees;
-    }
-    
-    private void initFile(File file)
-    {
-        if (file == null)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Création task CreerVueCHCCDMTask sans fichier de réference");
-        this.file = file;
-    }
-    
     private boolean creerVueCHCouCDM() throws InvalidFormatException, IOException
     {
         if (file == null)
         {
             // Traitement depuis le fichier XML
             suppressionVuesMaintenance(cdm, annees);
+            
             creerVueMaintenance(recupererEditions(cdm, annees));
         }
         else
         {
             suppressionVuesMaintenance(true, annees);
             
+            if (isCancelled())
+                return false;
+            
+            // Message
+            etapePlus();
+            updateMessage("Récupération lots depuis fichier Excel...");
+            
             // récupération des informations du fichier Excel
             ControlPic control = new ControlPic(file);
             Map<String, List<Vue>> map = control.recupLotsCHCCDM();
 
+            etapePlus();
+            
             // Création des nouvelles vues
             for (Map.Entry<String, List<Vue>> entry : map.entrySet())
             {
+                if (isCancelled())
+                    return false;
+                
+                etapePlus();
                 String key = entry.getKey();
-                Vue vue = creerVue(key, key, "Vue de l'edition " + key, true);
-                api.ajouterSousVues(entry.getValue(), vue);
+                Vue vueParent = creerVue(key, key, "Vue de l'edition " + key, true);
+                int i = 0;
+                int size = entry.getValue().size();
+                for (Vue vue : entry.getValue())
+                {
+                    updateMessage("Création vue : " + vue.getName() + Statics.NL + "Ajout " + vue.getName());
+                    updateProgress(++i, size);
+                    api.ajouterSousVue(vue, vueParent);
+                }
             }
         }
         return true;
@@ -149,7 +158,6 @@ public class CreerVueCHCCDMTask extends SonarTask
                 updateProgress(j++, 52l*annees.size());
             }
         }
-
     }
     
     /**
@@ -170,8 +178,13 @@ public class CreerVueCHCCDMTask extends SonarTask
             tousLesProjets.addAll(projets);
         }
 
+        etapePlus();
+        
         for (int i = 0; i < tousLesProjets.size(); i++)
-        {
+        {           
+            if (isCancelled())
+                return;
+            
             Projet projet = tousLesProjets.get(i);
             
             // Récupération de l'édition du composant sous forme numérique xx.yy.zz.tt et du numéro de lot
@@ -196,7 +209,13 @@ public class CreerVueCHCCDMTask extends SonarTask
             }
         }
 
+        creerVues(mapVuesACreer);
+    }
+    
+    private void creerVues(Map<String, Set<String>> mapVuesACreer)
+    {
         String base = "Création des vues :" + NL;
+        etapePlus();
         
         // Calcul du nombere total d'objets dans la map
         int sizeComplete = 0;
@@ -207,13 +226,20 @@ public class CreerVueCHCCDMTask extends SonarTask
         
         int i = 0;
         for (Map.Entry<String, Set<String>> entry : mapVuesACreer.entrySet())
-        {
+        {         
+            if (isCancelled())
+                return;
+            
             Vue parent = new Vue(entry.getKey() + "Key", entry.getKey());
             api.creerVue(parent);
             String baseVue = base + entry.getKey();
             updateMessage(baseVue);
+            
             for (String lot : entry.getValue())
-            {
+            {               
+                if (isCancelled())
+                    return;
+                
                 api.ajouterSousVue(new Vue("view_lot_" + lot, "Lot " + lot), parent);
                 i++;
                 
@@ -254,6 +280,20 @@ public class CreerVueCHCCDMTask extends SonarTask
                 iter.remove();
         }
         return retour;
+    }
+    
+    private void initAnnees(List<String> annees)
+    {
+        if (annees == null || annees.isEmpty())
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Création task CreerVueCHCCDMTask sans liste d'années");
+        this.annees = annees;
+    }
+    
+    private void initFile(File file)
+    {
+        if (file == null)
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Création task CreerVueCHCCDMTask sans fichier de réference");
+        this.file = file;
     }
     
     /*---------- ACCESSEURS ----------*/    

@@ -12,6 +12,7 @@ public class CreerVueDataStageTask extends SonarTask
 {
     /*---------- ATTRIBUTS ----------*/
     public static final String TITRE = "Vue Datastage";
+    protected static final int FIN  = 2;
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -66,6 +67,7 @@ public class CreerVueDataStageTask extends SonarTask
         
         int i = 0;
         int size = listeDS.size();
+        etapePlus();
         for (Projet projet : listeDS)
         {
             api.ajouterProjet(projet, vue);

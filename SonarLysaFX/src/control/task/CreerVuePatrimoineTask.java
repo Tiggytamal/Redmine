@@ -20,6 +20,7 @@ public class CreerVuePatrimoineTask extends SonarTask
     
     private String key;
     public static final String TITRE = "Vue Patrimoine";
+    protected static final int FIN = 3;
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -74,12 +75,14 @@ public class CreerVuePatrimoineTask extends SonarTask
         
         // Création de la vue
         StringBuilder builder = new StringBuilder("Création vue ");
+        etapePlus();
         updateMessage(builder.append(nom).toString());
         Vue vue = creerVue(key, nom, null, true);
         String baseMessage =  builder.append(" OK.").append(Statics.NL).append("Ajout : ").toString();
 
         // Ajout des composants
         int size = composants.size();
+        etapePlus();
         for (int i = 0; i < size; i++)
         {
             if (isCancelled())

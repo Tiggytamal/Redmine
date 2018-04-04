@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import junit.control.ControlSonarTest;
 import model.enums.TypeParam;
@@ -28,6 +30,9 @@ public abstract class SonarTask extends Task<Boolean>
     protected SonarAPI api;
     protected static final String RECUPCOMPOSANTS = "Récupération des composants Sonar";
     public static final String TITRE = "Tâche Sonar";
+    private StringProperty etape = new SimpleStringProperty(this, "etape", "");
+    protected int debut;
+    protected static final int FIN = 1;
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -39,6 +44,7 @@ public abstract class SonarTask extends Task<Boolean>
         if (!info.controle())
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
         api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), info.getPseudo(), info.getMotDePasse());
+        initEtape();
     }
     
     /**
@@ -52,6 +58,7 @@ public abstract class SonarTask extends Task<Boolean>
         if (pseudo == null || pseudo.isEmpty() || mdp == null)
             throw new FunctionalException(Severity.SEVERITY_ERROR, "pseudo et/ou mdp vides");
         api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), pseudo, mdp);
+        initEtape();
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -191,5 +198,32 @@ public abstract class SonarTask extends Task<Boolean>
         StringBuilder base = new StringBuilder("Etape ").append(etape).append("/").append(nbreEtapes).append(Statics.NL);
         updateMessage(base.append(message).toString());
     }
+    
+    private void initEtape()
+    {
+        debut = 1;
+        setEtape(debut, FIN);
+    }
+    
+    protected void etapePlus()
+    {
+        setEtape(++debut, FIN);
+    }
+    
     /*---------- ACCESSEURS ----------*/  
+    
+    public String getEtape()
+    {
+        return etape.get();
+    }
+    
+    public void setEtape(int debut, int fin)
+    {
+        etape.set("Etape " + debut + " / " + fin);
+    }
+    
+    public StringProperty etapeProperty()
+    {
+        return etape;
+    }
 }

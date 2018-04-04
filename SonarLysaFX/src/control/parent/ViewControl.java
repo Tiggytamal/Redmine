@@ -2,7 +2,10 @@ package control.parent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
+import application.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
@@ -33,7 +36,16 @@ public abstract class ViewControl
         else
             dialog = new ProgressDialog(task);
         dialog.show();
-        dialog.startTask();
+        Future<?> future = dialog.startTask();
+        
+        try {
+            future.get();
+         }  catch (InterruptedException | ExecutionException e)
+         {
+             dialog.hide();
+             Statics.logger.error(e.getCause());
+             Main.gestionException(e.getCause());
+         }
     }
     
     /**
