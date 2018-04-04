@@ -22,14 +22,14 @@ import junit.TestUtils;
 public class ControlSonarTest
 {
     private ControlSonar handler;
-    public static boolean deser;
+    public static boolean deser = false;
 
     @Before
     public void init() throws InvalidFormatException, JAXBException, IOException, InterruptedException
     {
         // handler = new ControlSonar();
         handler = new ControlSonar("ETP8137", "28H02m89,;:!");
-        deser = false;
+        deser = true;
     }
 
     @Test

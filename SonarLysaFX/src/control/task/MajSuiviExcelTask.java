@@ -45,7 +45,7 @@ public class MajSuiviExcelTask extends SonarTask
 
     public MajSuiviExcelTask(TypeMaj typeMaj)
     {
-        super();
+        super(5);
         this.typeMaj = typeMaj;
     }
     /*---------- METHODES PUBLIQUES ----------*/
@@ -55,15 +55,15 @@ public class MajSuiviExcelTask extends SonarTask
     {
         switch (typeMaj)
         {
-            case SUIVI :
+            case SUIVI:
 
                 break;
 
-            case DATASTAGE :
+            case DATASTAGE:
 
                 break;
 
-            case DOUBLE :
+            case DOUBLE:
 
                 break;
         }
@@ -81,15 +81,15 @@ public class MajSuiviExcelTask extends SonarTask
     {
         switch (typeMaj)
         {
-            case SUIVI :
+            case SUIVI:
                 majFichierSuiviExcel();
                 break;
 
-            case DATASTAGE :
+            case DATASTAGE:
                 majFichierSuiviExcelDataStage();
                 break;
 
-            case DOUBLE :
+            case DOUBLE:
                 traitementSuiviExcelToutFichiers();
                 break;
         }
@@ -100,15 +100,16 @@ public class MajSuiviExcelTask extends SonarTask
     {
         // Récupération anomalies Datastage
         List<String> anoDatastage = majFichierSuiviExcelDataStage();
-        
+
         // Récupération anomalies Java
+        initEtape(5);
         List<String> anoJava = majFichierSuiviExcel();
-        
+
         // Liste des anomalies sur plusieures matières
         List<String> anoMultiple = new ArrayList<>();
-        for (String string : anoJava)
+        for (String string : anoDatastage)
         {
-            if (anoDatastage.contains(string))
+            if (anoJava.contains(string))
                 anoMultiple.add(string);
         }
 
@@ -117,6 +118,8 @@ public class MajSuiviExcelTask extends SonarTask
         ControlAno controlAnoDataStage = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE)));
         controlAnoJava.majMultiMatiere(anoMultiple);
         controlAnoDataStage.majMultiMatiere(anoMultiple);
+        controlAnoJava.close();
+        controlAnoDataStage.close();
     }
 
     /**
@@ -131,6 +134,7 @@ public class MajSuiviExcelTask extends SonarTask
         Map<String, List<Projet>> composants = recupererComposantsSonarVersion(true);
 
         // Mise à jour des liens des composants datastage avec le bon QG
+        etapePlus();
         liensQG(composants.values(), proprietesXML.getMapParams().get(TypeParam.NOMQGDATASTAGE));
 
         // Traitement du fichier datastage de suivi
@@ -147,15 +151,15 @@ public class MajSuiviExcelTask extends SonarTask
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
         Map<String, List<Projet>> composants = recupererComposantsSonarVersion(false);
-
+        etapePlus();
+        
         // Traitement du fichier de suivi
         return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(TypeParam.NOMFICHIER), Matiere.JAVA);
     }
 
     /**
-     * Méthode de traitement pour mettre à jour les fichiers de suivi d'anomalies ainsi que la création de vue dans
-     * SonarQube. <br>
-     * Retourne une liste de toutes les anomalies traitées depuis Sonar
+     * Méthode de traitement pour mettre à jour les fichiers de suivi d'anomalies ainsi que la création de vue dans SonarQube. <br>
+     * Retourne une liste de tous les lots Sonar en erreur.
      *
      * @param composants
      * @param java
@@ -163,7 +167,8 @@ public class MajSuiviExcelTask extends SonarTask
      * @throws InvalidFormatException
      * @throws IOException
      */
-    @SuppressWarnings ("unchecked")
+
+    @SuppressWarnings("unchecked")
     private List<String> traitementFichierSuivi(Map<String, List<Projet>> composants, String fichier, Matiere matiere) throws InvalidFormatException, IOException
     {
         // 1. Récupération des données depuis les fichiers Excel.
@@ -176,61 +181,59 @@ public class MajSuiviExcelTask extends SonarTask
 
         Set<String> lotsSecurite = new HashSet<>();
         Set<String> lotRelease = new HashSet<>();
-        List<String> retour = new ArrayList<>();
 
+        etapePlus();
         if (ControlSonarTest.deser)
         {
-            mapLotsSonar = Utilities.deserialisation("d:\\lotsSonar.ser", HashMap.class);
-            lotsSecurite = Utilities.deserialisation("d:\\lotsSecurite.ser", HashSet.class);
-            lotRelease = Utilities.deserialisation("d:\\lotsRelease.ser", HashSet.class);
+            mapLotsSonar = Utilities.deserialisation("d:\\lotsSonar" + matiere.toString() + ".ser", HashMap.class);
+            lotsSecurite = Utilities.deserialisation("d:\\lotsSecurite" + matiere.toString() + ".ser", HashSet.class);
+            lotRelease = Utilities.deserialisation("d:\\lotsRelease" + matiere.toString() + ".ser", HashSet.class);
         }
         else
         {
             mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotRelease);
-            Utilities.serialisation("d:\\lotsSecurite.ser", lotsSecurite);
-            Set<String> lotsSecurite2 = Utilities.deserialisation("d:\\lotsSecurite.ser", HashSet.class);
-            Utilities.serialisation("d:\\lotsSonar.ser", mapLotsSonar);
-            Map<String, Set<String>> mapLotsSonar2 = Utilities.deserialisation("d:\\lotsSonar.ser", HashMap.class);
-            Utilities.serialisation("d:\\lotsRelease.ser", lotRelease);
-            Set<String> lotRelease2 = Utilities.deserialisation("d:\\lotsRelease.ser", HashSet.class);
-            System.out.println("lot securite : " + lotsSecurite.size());
-            System.out.println("lot securite2 : " + lotsSecurite2.size());
-            System.out.println("mapLotsSonar : " + mapLotsSonar.size());
-            System.out.println("mapLotsSonar2 : " + mapLotsSonar2.size());
-            System.out.println("lotRelease : " + lotRelease.size());
-            System.out.println("lotRelease2 : " + lotRelease2.size());
+            Utilities.serialisation("d:\\lotsSecurite" + matiere.toString() + ".ser", lotsSecurite);
+            Utilities.serialisation("d:\\lotsSonar" + matiere.toString() + ".ser", mapLotsSonar);
+            Utilities.serialisation("d:\\lotsRelease" + matiere.toString() + ".ser", lotRelease);
         }
 
+        etapePlus();
         updateMessage("Mise à jour du fichier Excel...");
-        
+        updateProgress(-1, 1);
         // 3. Supression des lots déjà créés et création des feuille Excel avec les nouvelles erreurs
         majFichierAnomalies(lotsPIC, mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);
 
+        etapePlus();
         // 4. Création des vues
         for (Map.Entry<String, Set<String>> entry : mapLotsSonar.entrySet())
         {
-            // Création de la vue et envoie vers SonarQube
-            String nom = prepareNom(fichier);
-            Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nom + " - Edition " + entry.getKey(),
-                    "Vue regroupant tous les lots avec des composants en erreur", true);
 
-            // Message
-            String base = "Création Vue " + vueParent.getName() + Statics.NL;
-            updateMessage(base);
+            
+            // Création de la vue et gestion du message
+            String nom = prepareNom(fichier);
+            String nomVue = nom + " - Edition " + entry.getKey();
+            String base = "Création Vue " + nomVue + Statics.NL;
+            updateMessage(base);            
+            Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nomVue, "Vue regroupant tous les lots avec des composants en erreur", true);
+ 
+            // Ajout des sous-vue
             int i = 0;
             int size = entry.getValue().size();
-            
             for (String lot : entry.getValue())
             {
-                // Ajout des sous-vue
+                // Traitement + message
                 String nomLot = "Lot " + lot;
-                api.ajouterSousVue(new Vue("view_lot_" + lot, nomLot), vueParent);
-                retour.add(nomLot);
-                
-                // Message
                 updateMessage(base + "Ajout : " + nomLot);
-                updateProgress(i, size);
+                updateProgress(++i, size);
+                api.ajouterSousVue(new Vue("view_lot_" + lot, nomLot), vueParent);
             }
+        }
+        
+        // Traitement liste de retour
+        List<String> retour = new ArrayList<>();
+        for (Set<String> liste : mapLotsSonar.values())
+        {
+            retour.addAll(liste);
         }
         return retour;
     }
@@ -252,12 +255,12 @@ public class MajSuiviExcelTask extends SonarTask
         {
             String entryKey = entry.getKey();
             retour.put(entryKey, new TreeSet<>());
-            
+
             String base = "Traitement Version : " + entryKey + Statics.NL;
-            updateMessage(base); 
+            updateMessage(base);
             int i = 0;
             int size = entry.getValue().size();
-            
+
             // Iteration sur la liste des projets
             for (Projet projet : entry.getValue())
             {
@@ -269,8 +272,7 @@ public class MajSuiviExcelTask extends SonarTask
     }
 
     /**
-     * Permet de mettre à jour le fichier des anomalies Sonar, en allant chercher les nouvelles dans Sonar et en
-     * vérifiant celles qui ne sont plus d'actualité.
+     * Permet de mettre à jour le fichier des anomalies Sonar, en allant chercher les nouvelles dans Sonar et en vérifiant celles qui ne sont plus d'actualité.
      *
      * @param mapLotsPIC
      *            Fichier excel d'extraction de la PIC de tous les lots.
@@ -282,8 +284,8 @@ public class MajSuiviExcelTask extends SonarTask
      * @throws InvalidFormatException
      * @throws IOException
      */
-    private void majFichierAnomalies(Map<String, LotSuiviPic> mapLotsPIC, Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier,
-            Matiere matiere) throws InvalidFormatException, IOException
+    private void majFichierAnomalies(Map<String, LotSuiviPic> mapLotsPIC, Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere)
+            throws InvalidFormatException, IOException
     {
         // Controleur
         String name = proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + fichier;
@@ -360,12 +362,12 @@ public class MajSuiviExcelTask extends SonarTask
      * @param entryKey
      * @param lotSecurite
      * @param lotRelease
-     * @param base 
+     * @param base
      */
     private void traitementProjet(Projet projet, HashMap<String, Set<String>> retour, String entryKey, Set<String> lotSecurite, Set<String> lotRelease, String base)
     {
         String key = projet.getKey();
-        
+
         updateMessage(base + projet.getNom());
         // Récupération du composant
         Composant composant = api.getMetriquesComposant(key, new String[] { "lot", "alert_status" });
@@ -393,8 +395,7 @@ public class MajSuiviExcelTask extends SonarTask
     }
 
     /**
-     * Permet de créer la liste des numéros de lots déjà en anomalie et met à jour les {@code Anomalie} depuis les infos
-     * de la Pic
+     * Permet de créer la liste des numéros de lots déjà en anomalie et met à jour les {@code Anomalie} depuis les infos de la Pic
      *
      * @param listeLotenAno
      *            liste des {@code Anomalie} déjà connues
@@ -458,16 +459,16 @@ public class MajSuiviExcelTask extends SonarTask
         {
             size += liste.size();
         }
-        
+
         // Iteration sur tous les composants pour les associer au QualityGate
         for (List<Projet> liste : composants)
         {
             for (Projet projet : liste)
             {
                 // Message
-                updateMessage(base + projet.getNom()); 
+                updateMessage(base + projet.getNom());
                 updateProgress(++i, size);
-                
+
                 api.associerQualitygate(projet, qg);
             }
         }
@@ -475,19 +476,16 @@ public class MajSuiviExcelTask extends SonarTask
 
     /*---------- ACCESSEURS ----------*/
 
-    public enum TypeMaj
-    {
-        SUIVI ("Maj Fichier de Suivi"), 
-        DATASTAGE ("Maj Fichier de Suivi DataStage"), 
-        DOUBLE ("Maj Fichiers de Suivi");
-        
+    public enum TypeMaj {
+        SUIVI("Maj Fichier de Suivi"), DATASTAGE("Maj Fichier de Suivi DataStage"), DOUBLE("Maj Fichiers de Suivi");
+
         private String string;
-        
+
         private TypeMaj(String string)
         {
             this.string = string;
         }
-        
+
         @Override
         public String toString()
         {

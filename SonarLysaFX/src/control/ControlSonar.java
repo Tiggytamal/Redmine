@@ -206,7 +206,8 @@ public class ControlSonar
         String[] versions = proprietesXML.getMapParams().get(TypeParam.VERSIONS).split("-");
 
         // Appel du webservice pour remonter tous les composants
-        List<Projet> projets = api.getComposants();
+        @SuppressWarnings("unchecked")
+        List<Projet> projets = Utilities.recuperation(ControlSonarTest.deser, List.class, "d:\\composants.ser", () -> api.getComposants());
 
         // Création de la map de retour en utilisant les versions données
         Map<String, List<Projet>> retour = new HashMap<>();

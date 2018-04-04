@@ -1,9 +1,5 @@
 package view;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 import control.parent.SonarTask;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -17,7 +13,7 @@ import javafx.stage.Modality;
 
 public class ProgressDialog extends Dialog<Boolean>
 {
-    
+
     /*---------- ATTRIBUTS ----------*/
 
     private ProgressBar bar;
@@ -25,7 +21,7 @@ public class ProgressDialog extends Dialog<Boolean>
     private Label label;
     private Label stage;
     private SonarTask task;
-    
+
     /*---------- CONSTRUCTEURS ----------*/
 
     /**
@@ -37,94 +33,82 @@ public class ProgressDialog extends Dialog<Boolean>
     {
         this(task, T.TITRE);
     }
-    
+
     public ProgressDialog(SonarTask task, String titre)
     {
         // Initialisation
-        this.task = task;  
+        this.task = task;
         setTitle(titre);
         setHeaderText(null);
         setResizable(true);
         initModality(Modality.NONE);
-        
+
         // Gridpane
         GridPane grid = new GridPane();
         grid.setPrefWidth(350);
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(10, 10, 10, 10));  
-        grid.widthProperty().addListener((observable,  oldValue, newValue) ->
-            {
-                label.setPrefWidth(newValue.doubleValue());
-                bar.setPrefWidth(newValue.doubleValue()-100);
-            });
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.widthProperty().addListener((observable, oldValue, newValue) -> {
+            label.setPrefWidth(newValue.doubleValue());
+            bar.setPrefWidth(newValue.doubleValue() - 100);
+        });
         getDialogPane().setContent(grid);
-        
-        // ProgressBar
-        bar = new ProgressBar(0);
-        bar.setPrefWidth(grid.getPrefWidth()-100);
-        grid.add(bar, 0, 0);
-        bar.progressProperty().unbind();
-        bar.progressProperty().bind(task.progressProperty()); 
-        
-        // Progress Indicator
-        indicator = new ProgressIndicator(0);
-        grid.add(indicator, 1, 0);
-        indicator.progressProperty().unbind();
-        indicator.progressProperty().bind(task.progressProperty());
-        
+
         // Stage
         stage = new Label();
         stage.setPrefWidth(grid.getPrefWidth());
-        grid.add(label, 0, 1, GridPane.REMAINING, 1);
+        grid.add(stage, 0, 0, GridPane.REMAINING, 1);
         stage.textProperty().bind(task.etapeProperty());
         
+        // ProgressBar
+        bar = new ProgressBar(0);
+        bar.setPrefWidth(grid.getPrefWidth() - 100);
+        grid.add(bar, 0, 1);
+        bar.progressProperty().unbind();
+        bar.progressProperty().bind(task.progressProperty());
+
+        // Progress Indicator
+        indicator = new ProgressIndicator(0);
+        grid.add(indicator, 1, 1);
+        indicator.progressProperty().unbind();
+        indicator.progressProperty().bind(task.progressProperty());
+
         // label
         label = new Label();
         label.setPrefWidth(grid.getPrefWidth());
         grid.add(label, 0, 2, GridPane.REMAINING, 1);
         label.textProperty().bind(task.messageProperty());
-        
+
         // Cancel
         Button cancel = new Button("Annuler");
         grid.add(cancel, 1, 3);
-        cancel.setOnAction(event -> annuler());  
-        
+        cancel.setOnAction(event -> annuler());
+
         // Bouton OK actif lorsque le traitement est fini.
         Button ok = new Button("OK");
         grid.add(ok, 0, 3);
         ok.setOnAction(event -> fermer());
         GridPane.setHalignment(ok, HPos.RIGHT);
         ok.setDisable(true);
-        task.setOnSucceeded(t -> 
-        {
+        task.setOnSucceeded(t -> {
             ok.setDisable(false);
             cancel.setDisable(true);
         });
-        
+
         // Annulation en cas de clic sur la croix
-        getDialogPane().getScene().getWindow().setOnCloseRequest(event -> 
-        {
+        getDialogPane().getScene().getWindow().setOnCloseRequest(event -> {
             if (task.isCancelled())
                 annuler();
             else
                 fermer();
         });
+    }
 
-    }
-    
     /*---------- METHODES PUBLIQUES ----------*/
-    
-    public Future<?> startTask()
-    {
-        ExecutorService executor = Executors.newCachedThreadPool();
-        return executor.submit(task);
-//        Thread thread = new Thread(task);
-//        thread.start();
-    }
-    
+
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Annule un traitmeent, retire les liens, appele la méthode fermer de la task et ferme la denêtre
      */
@@ -137,7 +121,7 @@ public class ProgressDialog extends Dialog<Boolean>
         task.annuler();
         fermer();
     }
-    
+
     /**
      * Permet de fermer la fenêtre
      */
@@ -145,7 +129,7 @@ public class ProgressDialog extends Dialog<Boolean>
     {
         getDialogPane().getScene().getWindow().hide();
     }
-    
+
     /*---------- ACCESSEURS ----------*/
-    
+
 }

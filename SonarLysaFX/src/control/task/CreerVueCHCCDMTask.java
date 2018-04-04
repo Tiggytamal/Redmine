@@ -31,32 +31,31 @@ public class CreerVueCHCCDMTask extends SonarTask
     private List<String> annees;
     private boolean cdm;
     private File file;
-    protected static final int FIN = 3;
 
     /*---------- CONSTRUCTEURS ----------*/
     
     public CreerVueCHCCDMTask(File file)
     {
-        super();
+        super(3);
         initFile(file);
     }
     
     public CreerVueCHCCDMTask(String pseudo, String mdp, File file)
     {
-        super(pseudo, mdp);
+        super(pseudo, mdp, 3);
         initFile(file);
     }
     
     public CreerVueCHCCDMTask(List<String> annees, boolean cdm)
     {
-        super();
+        super(3);
         initAnnees(annees);
         this.cdm = cdm;
     }
     
     public CreerVueCHCCDMTask(String pseudo, String mdp, List<String> annees, boolean cdm)
     {
-        super(pseudo, mdp);
+        super(pseudo, mdp, 3);
         initAnnees(annees);
         this.cdm = cdm;
     }

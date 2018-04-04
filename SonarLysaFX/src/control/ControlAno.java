@@ -305,19 +305,23 @@ public class ControlAno extends ControlExcel<TypeColSuivi>
      * Mise à jour des fichiers pour les anomalies comprenant plusieures type de matière
      * 
      * @param anoMultiple
+     * @throws IOException 
      */
-    public void majMultiMatiere(List<String> anoMultiple)
+    public void majMultiMatiere(List<String> anoMultiple) throws IOException
     {
         Sheet sheet = wb.getSheet(SQ);
+        
         if (sheet == null)
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Problème récupération feuille Excel principale");
         
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
-            if (anoMultiple.contains(sheet.getRow(i).getCell(colLot).getStringCellValue()))
-                sheet.getRow(i).getCell(colMatiere).setCellValue(Matiere.JAVA.toString() + " - " + Matiere.DATASTAGE.toString());
+            Row row = sheet.getRow(i);
+            String lot = getCellStringValue(row, colLot);
+            if (anoMultiple.contains(lot.length() < 4 ? lot : lot.substring(4)))
+                row.getCell(colMatiere).setCellValue(Matiere.JAVA.toString() + " - " + Matiere.DATASTAGE.toString());
         }
-        
+        write();
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -477,10 +481,10 @@ public class ControlAno extends ControlExcel<TypeColSuivi>
         valoriserCellule(row, colDateCrea, date, ano.getDateCreation(), ano.getDateCreationComment());
         
         // Date création
-        valoriserCellule(row, colDateDetec, date, ano.getDateCreation(), ano.getDateCreationComment());
+        valoriserCellule(row, colDateDetec, date, ano.getDateDetection(), ano.getDateDetectionComment());
 
         // Date relance
-        valoriserCellule(row, colDateRel, date, ano.getDateDetection(), ano.getDateDetectionComment());
+        valoriserCellule(row, colDateRel, date, ano.getDateRelance(), ano.getDateRelanceComment());
         
         // Matiere
         valoriserCellule(row, colMatiere, centre, ano.getMatieresString(), ano.getMatieresComment());

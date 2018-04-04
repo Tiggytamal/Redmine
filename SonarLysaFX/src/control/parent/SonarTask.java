@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
@@ -32,33 +33,33 @@ public abstract class SonarTask extends Task<Boolean>
     public static final String TITRE = "Tâche Sonar";
     private StringProperty etape = new SimpleStringProperty(this, "etape", "");
     protected int debut;
-    protected static final int FIN = 1;
+    protected int fin;
     
     /*---------- CONSTRUCTEURS ----------*/
     
     /**
-     * Constructeur utilisant les données de l'utilisateur
+     * Constructeur utilisant les données de l'utilisateur. Initialisation des étapes de traitement
      */
-    protected SonarTask()
+    protected SonarTask(int fin)
     {
         if (!info.controle())
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
         api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), info.getPseudo(), info.getMotDePasse());
-        initEtape();
+        initEtape(fin);
     }
     
     /**
-     * Constructeur acceptant des valeurs externes pour le pseudo et le mot de passe
+     * Constructeur acceptant des valeurs externes pour le pseudo et le mot de passe. Initialisation des étapes de traitement
      * 
      * @param pseudo
      * @param mdp
      */
-    protected SonarTask(String pseudo, String mdp)
+    protected SonarTask(String pseudo, String mdp, int fin)
     {
         if (pseudo == null || pseudo.isEmpty() || mdp == null)
             throw new FunctionalException(Severity.SEVERITY_ERROR, "pseudo et/ou mdp vides");
         api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), pseudo, mdp);
-        initEtape();
+        initEtape(fin);
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -74,22 +75,13 @@ public abstract class SonarTask extends Task<Boolean>
      *
      * @return
      */
-    @SuppressWarnings ("unchecked")
     protected Map<String, Projet> recupererComposantsSonar()
     {
         updateMessage(RECUPCOMPOSANTS);
         // Appel du webservice pour remonter tous les composants
-        List<Projet> projets;
-
-        if (ControlSonarTest.deser)
-        {
-            projets = Utilities.deserialisation("d:\\composants.ser", List.class);
-        }
-        else
-        {
-            projets = api.getComposants();
-            Utilities.serialisation("d:\\composants.ser", projets);
-        }
+        
+        @SuppressWarnings("unchecked")
+        List<Projet> projets = Utilities.recuperation(ControlSonarTest.deser, List.class, "d:\\composants.ser", () -> api.getComposants());
 
         // Triage ascendant de la liste par nom de projet
         projets.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
@@ -127,7 +119,8 @@ public abstract class SonarTask extends Task<Boolean>
         String[] versions = proprietesXML.getMapParams().get(TypeParam.VERSIONS).split("-");
 
         // Appel du webservice pour remonter tous les composants
-        List<Projet> projets = api.getComposants();
+        @SuppressWarnings("unchecked")
+        List<Projet> projets = Utilities.recuperation(ControlSonarTest.deser, List.class, "d:\\composants.ser", () -> api.getComposants());
 
         // Création de la map de retour en utilisant les versions données
         Map<String, List<Projet>> retour = new HashMap<>();
@@ -199,15 +192,16 @@ public abstract class SonarTask extends Task<Boolean>
         updateMessage(base.append(message).toString());
     }
     
-    private void initEtape()
+    protected void initEtape(int fin)
     {
         debut = 1;
-        setEtape(debut, FIN);
+        this.fin = fin;
+        setEtape(debut, fin);
     }
     
     protected void etapePlus()
     {
-        setEtape(++debut, FIN);
+        setEtape(++debut, fin);
     }
     
     /*---------- ACCESSEURS ----------*/  
@@ -219,7 +213,7 @@ public abstract class SonarTask extends Task<Boolean>
     
     public void setEtape(int debut, int fin)
     {
-        etape.set("Etape " + debut + " / " + fin);
+        Platform.runLater(() ->etape.set("Etape " + debut + " / " + fin));
     }
     
     public StringProperty etapeProperty()

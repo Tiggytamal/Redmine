@@ -26,6 +26,11 @@ public class CreerVueParAppsTask extends SonarTask
     public static final String TITRE = "Vues par Application";
     
     /*---------- CONSTRUCTEURS ----------*/
+    
+    public CreerVueParAppsTask()
+    {
+        super(2);
+    }
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override

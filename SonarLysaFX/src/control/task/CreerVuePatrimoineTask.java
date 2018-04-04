@@ -20,18 +20,17 @@ public class CreerVuePatrimoineTask extends SonarTask
     
     private String key;
     public static final String TITRE = "Vue Patrimoine";
-    protected static final int FIN = 3;
     
     /*---------- CONSTRUCTEURS ----------*/
     
     public CreerVuePatrimoineTask()
     {
-        super();
+        super(3);
     }
     
     public CreerVuePatrimoineTask(String pseudo, String mdp)
     {
-        super(pseudo, mdp);
+        super(pseudo, mdp, 3);
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

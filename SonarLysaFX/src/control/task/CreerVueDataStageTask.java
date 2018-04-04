@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import control.parent.SonarTask;
+import junit.control.ControlSonarTest;
 import sonarapi.model.Projet;
 import sonarapi.model.Vue;
 import utilities.Statics;
+import utilities.Utilities;
 
 public class CreerVueDataStageTask extends SonarTask
 {
     /*---------- ATTRIBUTS ----------*/
     public static final String TITRE = "Vue Datastage";
-    protected static final int FIN  = 2;
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -20,7 +21,7 @@ public class CreerVueDataStageTask extends SonarTask
 
     public CreerVueDataStageTask()
     {
-        super();
+        super(2);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -48,9 +49,15 @@ public class CreerVueDataStageTask extends SonarTask
     {
         // Appel du webservice pour remonter tous les composants
         updateMessage(RECUPCOMPOSANTS);
-        List<Projet> projets = api.getComposants();
+        
+        @SuppressWarnings("unchecked")
+        List<Projet> projets = Utilities.recuperation(ControlSonarTest.deser, List.class, "d:\\composants.ser", () -> api.getComposants());
+        
+        if (isCancelled())
+            return false;
         
         // Création de la vue avec maj du message
+        etapePlus();
         String nom = "Composants Datastage";
         StringBuilder builder = new StringBuilder("Création vue ");
         updateMessage(builder.append(nom).toString());
@@ -67,9 +74,12 @@ public class CreerVueDataStageTask extends SonarTask
         
         int i = 0;
         int size = listeDS.size();
-        etapePlus();
+
         for (Projet projet : listeDS)
         {
+            if (isCancelled())
+                return false;
+            
             api.ajouterProjet(projet, vue);
             updateProgress(++i, size);
             updateMessage(baseMessage + projet.getNom());

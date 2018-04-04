@@ -36,13 +36,13 @@ public class CreerVueProductionTask extends SonarTask
 
     public CreerVueProductionTask(File file)
     {
-        super();
+        super(4);
         this.file = file;
     }
 
     public CreerVueProductionTask(LocalDate dateDebut, LocalDate dateFin)
     {
-        super();
+        super(4);
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
     }

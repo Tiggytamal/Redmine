@@ -16,6 +16,11 @@ public class MajVuesTask extends SonarTask
     public static final String TITRE = "Mise à jour des vues Sonar";
     
     /*---------- CONSTRUCTEURS ----------*/
+    
+    public MajVuesTask()
+    {
+        super(1);
+    }
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Override
