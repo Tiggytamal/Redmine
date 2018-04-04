@@ -2,6 +2,11 @@ package model;
 
 import java.io.File;
 
+/**
+ * Interface de base pour les fichiers Excel
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public interface XML
 {
     /**
@@ -11,7 +16,7 @@ public interface XML
     public File getFile();
     
     /**
-     * Conbtrole les données du fichier et renvoie une chaine de caractère pour afficher les infos de controle.
+     * Controle les données du fichier et renvoie une chaine de caractère pour afficher les infos de controle.
      * @return
      */
     public String controleDonnees();

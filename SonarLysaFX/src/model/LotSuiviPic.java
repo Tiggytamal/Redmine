@@ -7,6 +7,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+/**
+ * Classe représentant les informations du fichier Excel d'extraction de la Pic
+ * @author ETP8137 - Grégoire Mathon 
+ * @since 1.0
+ */
 @XmlRootElement
 public class LotSuiviPic
 {

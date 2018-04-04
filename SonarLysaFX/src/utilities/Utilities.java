@@ -222,12 +222,12 @@ public class Utilities
         return classeObjet.cast(objet);
     }
 
-    public static <T> T recuperation(boolean deserialisation, Class<T> classretour, String nomSer, Supplier<T> fonction)
+    public static <T> T recuperation(boolean deserialisation, Class<T> classRetour, String nomSer, Supplier<T> fonction)
     {
         T retour;
         if (deserialisation)
         {
-            retour = Utilities.deserialisation(nomSer, classretour);
+            retour = Utilities.deserialisation(nomSer, classRetour);
         }
         else
         {

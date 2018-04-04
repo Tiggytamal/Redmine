@@ -19,6 +19,12 @@ import model.enums.TypeParam;
 import model.enums.TypePlan;
 import utilities.Statics;
 
+/**
+ * Fichier regroupant les paramètres XML du programme
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 @XmlRootElement
 public class ProprietesXML implements XML
 {
@@ -197,7 +203,7 @@ public class ProprietesXML implements XML
         for (T type : typeCol.getEnumConstants())
         {            
             if (mapColonnes.get(type) == null || mapColonnes.get(type).isEmpty())
-                builderErreurs.append(type.toString()).append(Statics.NL);
+                builderErreurs.append(type.getValeur()).append(Statics.NL);
         }
     }
 

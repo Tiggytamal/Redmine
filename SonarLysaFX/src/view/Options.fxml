@@ -21,8 +21,11 @@
 <?import javafx.scene.control.TreeItem?>
 <?import javafx.scene.control.ScrollPane?>
 
-<SplitPane fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
+<SplitPane fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/8.0.141">
 	<items>
+
+		<!-- Menu de selection des options -->
 		<GridPane minWidth="160" prefWidth="160" maxWidth="160">
 			<children>
 				<TreeView showRoot="false" fx:id="options" GridPane.vgrow="ALWAYS">
@@ -46,141 +49,73 @@
 				</TreeView>
 			</children>
 		</GridPane>
+
+		<!-- Affichage des options choisies -->
 		<GridPane fx:id="rightSide">
 			<children>
 
-				<!-- Boutons de chargement des fichiers Excel de paramétrage -->
+				<!-- Boutons de chargement des fichiers Excel -->
 				<VBox fx:id="chargementPane" alignment="center">
 					<padding>
 						<Insets top="10" right="10" bottom="10" left="25" />
 					</padding>
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
-					<HBox alignment="CENTER">
-						<Button text="Charger Lots Pic" onAction="#chargerLotsPic" alignment="CENTER" />
-					</HBox>
+					<Button fx:id="lotsPic" text="Charger Lots Pic" onAction="#chargerFichier" alignment="CENTER" />
 					<Region prefHeight="20" />
-					<Button text="Charger Applications" onAction="#chargerApplis" alignment="CENTER" />
+					<Button fx:id="apps" text="Charger Applications" onAction="#chargerFichier" alignment="CENTER" />
 					<Region prefHeight="20" />
-					<Button text="Charger Referentiel Clarity" onAction="#chargerClarity" alignment="CENTER" />
-					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
-					<Button text="Charger Chef de Service" onAction="#chargerChefService" alignment="CENTER" />
-					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
-					<Button text="Charger Edition CDM" onAction="#chargerEditionCDM" alignment="CENTER" />
+					<Button fx:id="clarity" text="Charger Referentiel Clarity" onAction="#chargerFichier" alignment="CENTER" />
+					<Region prefHeight="20" />
+					<Button fx:id="chefSrev" text="Charger Chef de Service" onAction="#chargerFichier" alignment="CENTER" />
+					<Region prefHeight="20" />
+					<Button fx:id="edition" text="Charger Edition CDM" onAction="#chargerFichier" alignment="CENTER" />
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
 				</VBox>
 
-				<!-- Paramètre des fichiers -->
-				<VBox fx:id="optionsPane" alignment="center">
-					<padding>
-						<Insets top="10" right="10" bottom="10" left="25" />
-					</padding>
-					<HBox fx:id="versionsPane">
+				<!-- Paramètre -->
+				<ScrollPane fx:id="optionsPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
+					<VBox alignment="center">
 						<padding>
-							<Insets top="10" right="10" bottom="10" left="10" />
+							<Insets top="10" right="10" bottom="10" left="25" />
 						</padding>
-						<Label text="Versions : " />
-						<Region prefWidth="10" />
-						<ListView fx:id="versionsField" prefWidth="50">
-							<items>
-								<FXCollections fx:factory="observableArrayList">
-								</FXCollections>
-							</items>
-						</ListView>
-						<Region prefWidth="10" />
-						<Button text="Supprimer" onAction="#suppVersion" />
-					</HBox>
-					<Region prefHeight="10" />
-					<HBox>
-						<TextField fx:id="newVersionField" prefWidth="80" promptText="Version" />
-						<Region prefWidth="10" />
-						<Button text="ajouter" onAction="#ajouterVersion" />
-					</HBox>
-					<Region prefHeight="10" />
-					<Separator />
-					<Region prefHeight="10" />
+						
+						<!-- Gestion des versions des éditions -->
+						<HBox>
+							<padding>
+								<Insets top="10" right="10" bottom="10" left="10" />
+							</padding>
+							<Label text="Versions : " />
+							<Region prefWidth="10" />
+							<ListView fx:id="versionsField" prefWidth="50">
+								<items>
+									<FXCollections fx:factory="observableArrayList">
+									</FXCollections>
+								</items>
+							</ListView>
+							<Region prefWidth="10" />
+							<Button text="Supprimer" onAction="#suppVersion" />
+						</HBox>
+						<Region prefHeight="10" />
+						<HBox>
+							<TextField fx:id="newVersionField" prefWidth="80" promptText="Version" />
+							<Region prefWidth="10" />
+							<Button text="ajouter" onAction="#ajouterVersion" />
+						</HBox>
+						<Region prefHeight="10" />
+						<Separator />
+						<Region prefHeight="10" />
 
-					<!-- Chemin vers les fichiers de suivi -->
-					<HBox>
-						<Label text="Chemin vers les fichiers de suivi : " />
-						<TextField fx:id="pathField" prefWidth="400" />
-					</HBox>
-					<Region prefHeight="10" />
-					<Separator />
-					<Region prefHeight="10" />
-
-					<!-- Chemin vers l'historique de suivi -->
-					<HBox>
-						<Label text="Chemin vers l'historique de suivi : " />
-						<TextField fx:id="pathHistoField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="10" />
-					<Separator />
-					<Region prefHeight="10" />
-
-					<!-- Nom du fichier de suivi -->
-					<HBox>
-						<Label text="Nom du fichier de suivi : " />
-						<TextField fx:id="suiviField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="10" />
-					<Separator />
-					<Region prefHeight="10" />
-
-					<!-- Nom du fichier de suivi Datastage -->
-					<HBox>
-						<Label text="Nom du fichier du suivi Datastage : " />
-						<TextField fx:id="datastageField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="10" />
-					<Separator />
-					<Region prefHeight="10" />
-
-					<!-- Valeur du filtre pour les composants Datastage -->
-					<HBox>
-						<Label text="Filter Datastage : " />
-						<TextField fx:id="filtreField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="10" />
-					<Separator />
-					<Region prefHeight="10" />
-
-					<!-- Liens générique vers les lots Dans SonarQube -->
-					<HBox>
-						<Label text="Liens vers lots Sonar : " />
-						<TextField fx:id="liensLotsField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="10" />
-					<Separator />
-					<Region prefHeight="10" />
-
-					<!-- Liens générique vers les anomalies RTC -->
-					<HBox>
-						<Label text="Liens vers anomalies RTC : " />
-						<TextField fx:id="liensAnoField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="10" />
-					<Separator />
-					<Region prefHeight="10" />
-
-					<!-- Nom du QualityGate DataStage -->
-					<HBox>
-						<Label text="Nom GualityGate DataStage : " />
-						<TextField fx:id="nomQGDatagstageField" prefWidth="250" />
-					</HBox>
-					<Region prefHeight="10" />
-					<Separator />
-					<Region prefHeight="10" />
-
-					<!-- url du serveur Sonar -->
-					<HBox>
-						<Label text="Adresse URL serveur Sonar : " />
-						<TextField fx:id="urlSonarField" prefWidth="250" />
-					</HBox>
-
-					<!-- Bouton de sauvegarde -->
-					<Region prefHeight="20" />
-					<Button text="Sauvegarder" onAction="#sauvegarder" alignment="CENTER" />
-				</VBox>
+						<!-- Autres paramètres chargés depuis le JAVA -->
+						<VBox fx:id="paramsBox" prefWidth="500">
+							<children>
+							</children>
+						</VBox>
+						
+						<!-- Bouton de sauvegarde -->
+						<Region prefHeight="20" />
+						<Button text="Sauvegarder" onAction="#sauvegarder" alignment="CENTER" />
+					</VBox>
+				</ScrollPane>
 
 				<!-- Nom des colonnes -->
 				<ScrollPane fx:id="colonnesPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
@@ -188,12 +123,14 @@
 						<padding>
 							<Insets top="10" right="10" bottom="10" left="25" />
 						</padding>
-						<VBox fx:id="colonnesBox" prefWidth="400">
+						
+						<!-- Liste des colonnes chargèes depuis le JAVA -->
+						<VBox fx:id="colonnesBox" prefWidth="500">
 							<children>
 							</children>
 						</VBox>
-
-						<!-- Bouton de sauvegarde -->
+						
+						<!-- Bouton de sauvegarde -->					
 						<Region prefHeight="20" />
 						<Button text="Sauvegarder" onAction="#saveCols" alignment="CENTER" />
 					</VBox>

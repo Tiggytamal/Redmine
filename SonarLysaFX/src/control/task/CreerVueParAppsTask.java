@@ -49,19 +49,12 @@ public class CreerVueParAppsTask extends SonarTask
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
     
-    @SuppressWarnings ("unchecked")
+
     private boolean creerVueParApplication()
     {
         // 1 .Création de la liste des composants par application
-        Map<String, List<Projet>> mapApplication;
-
-        if (ControlSonarTest.deser)
-            mapApplication = Utilities.deserialisation("d:\\mapApplis.ser", HashMap.class);
-        else
-        {
-            mapApplication = controlerSonarQube();
-            Utilities.serialisation("d:\\mapApplis.ser", mapApplication);
-        }
+        @SuppressWarnings ("unchecked")
+        Map<String, List<Projet>> mapApplication = Utilities.recuperation(ControlSonarTest.deser, Map.class, "d:\\mapApplis.ser", this::controlerSonarQube);
 
         // 2. Suppression des vues existantes
         
@@ -131,13 +124,13 @@ public class CreerVueParAppsTask extends SonarTask
         // Itération sur la liste des projets
         for (Projet projet : mapProjets.values())
         {            
+            // Message
+            updateMessage(base + projet.getNom());
+            updateProgress(++i, mapProjets.size());
+            
             // Récupération du code application
             Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { "application" });
             
-            // Message
-            updateMessage(base + composant.getNom());
-            updateProgress(i++, mapProjets.size());
-
             // Test si la liste est vide, cela veut dire que le projet n'a pas de code application.
             if (!composant.getMetriques().isEmpty())
             {

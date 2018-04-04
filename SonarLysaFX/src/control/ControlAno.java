@@ -374,7 +374,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi>
     }
     
     /**
-     * Ajoute les anomalies closes à la feuille correspondante. On ne sauvegarde pas les ligne squi n'ont asp données suite à une anomalie Sonar.
+     * Ajoute les anomalies closes à la feuille correspondante. On ne sauvegarde pas les lignes qui n'ont pas données suite à une anomalie Sonar.
      * 
      * @param sheetClose
      * @param anoClose

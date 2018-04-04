@@ -26,14 +26,14 @@ public enum TypeColSuivi  implements Serializable, TypeCol
     DATERELANCE("Date de relance", "colDateRel"), 
     MATIERE("Matière", "colMatiere");
 
-    private String string;
+    private String valeur;
     private String nomCol;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private TypeColSuivi(String string, String nomCol)
+    private TypeColSuivi(String valeur, String nomCol)
     {
-        this.string = string;
+        this.valeur = valeur;
         this.nomCol = nomCol;
     }
 
@@ -42,9 +42,9 @@ public enum TypeColSuivi  implements Serializable, TypeCol
     /*---------- ACCESSEURS ----------*/
     
     @Override
-    public String toString()
+    public String getValeur()
     {
-        return string;
+        return valeur;
     }
     
     @Override

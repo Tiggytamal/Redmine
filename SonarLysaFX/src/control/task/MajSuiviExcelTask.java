@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -40,6 +40,7 @@ public class MajSuiviExcelTask extends SonarTask
     /*---------- ATTRIBUTS ----------*/
 
     private TypeMaj typeMaj;
+    private List<Vue> vueCrees;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -47,26 +48,17 @@ public class MajSuiviExcelTask extends SonarTask
     {
         super(5);
         this.typeMaj = typeMaj;
+        vueCrees = new ArrayList<>();
     }
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
     public void annuler()
     {
-        switch (typeMaj)
-        {
-            case SUIVI:
-
-                break;
-
-            case DATASTAGE:
-
-                break;
-
-            case DOUBLE:
-
-                break;
-        }
+        initEtape(1);
+        updateMessage(new StringBuilder("Suppression des vues créées.").append(Statics.NL).append("Au besoin merci d'utiliser les fichiers de sauvegarde.").toString());
+        supprimerVuesCrees();
+        updateProgress(1, 1);
     }
 
     @Override
@@ -96,6 +88,12 @@ public class MajSuiviExcelTask extends SonarTask
         return true;
     }
 
+    /**
+     * Traitement des deux fichiers Excel de Suivi.
+     * 
+     * @throws InvalidFormatException
+     * @throws IOException
+     */
     private void traitementSuiviExcelToutFichiers() throws InvalidFormatException, IOException
     {
         // Récupération anomalies Datastage
@@ -209,13 +207,14 @@ public class MajSuiviExcelTask extends SonarTask
         {
 
             
-            // Création de la vue et gestion du message
+            // Création de la vue, gestion du message et ajout à la liste de vues créées en cas d'annulation
             String nom = prepareNom(fichier);
             String nomVue = nom + " - Edition " + entry.getKey();
             String base = "Création Vue " + nomVue + Statics.NL;
             updateMessage(base);            
             Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nomVue, "Vue regroupant tous les lots avec des composants en erreur", true);
- 
+            vueCrees.add(vueParent);
+            
             // Ajout des sous-vue
             int i = 0;
             int size = entry.getValue().size();
@@ -471,6 +470,16 @@ public class MajSuiviExcelTask extends SonarTask
 
                 api.associerQualitygate(projet, qg);
             }
+        }
+    }
+    
+    private void supprimerVuesCrees()
+    {
+        int i = 0;
+        for (Vue vue : vueCrees)
+        {
+            updateProgress(++i, vueCrees.size());
+            api.supprimerProjet(vue, false);
         }
     }
 

@@ -15,14 +15,14 @@ public enum TypeColClarity implements Serializable, TypeCol
     DEPARTEMENT("Département","colDepart"),
     SERVICE("Service","colService");
         
-    private String string;
+    private String valeur;
     private String nomCol;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private TypeColClarity(String string, String nomCol)
+    private TypeColClarity(String valeur, String nomCol)
     {
-        this.string = string;
+        this.valeur = valeur;
         this.nomCol = nomCol;
     }
     
@@ -37,8 +37,8 @@ public enum TypeColClarity implements Serializable, TypeCol
     }
     
     @Override
-    public String toString()
+    public String getValeur()
     {
-        return string;
+        return valeur;
     }
 }

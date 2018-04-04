@@ -78,7 +78,12 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol>
         calculIndiceColonnes(initSheet());
     }
 
-    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES ABSTRAITES ----------*/
+    
+    public <R> R recupInfosDepuisExcel()
+    {
+        return null;
+    }
     
     /**
      * Initialise la classe de l'énumération
@@ -89,6 +94,9 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol>
      * Récupération de la feuille Excel pour le traitement
      */
     protected abstract Sheet initSheet();
+    
+    /*---------- METHODES PRIVEES ----------*/
+    
     /**
      * Initialise les numéro des colonnes du fichier Excel venant de la PIC.
      */
@@ -123,7 +131,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol>
             }
         }
         if (nbreCol != enumeration.getEnumConstants().length)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci" + nbreCol + " " + enumeration.getEnumConstants().length + " " + enumeration.getSimpleName());
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci.");
     }
     
     /**
@@ -249,6 +257,13 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol>
         return 0;
     }
     
+    /**
+     * Retourne la valeur d'une cellule contenant une formule
+     * 
+     * @param row
+     * @param cellIndex
+     * @return
+     */
     protected String getCellFormulaValue(Row row, int cellIndex)
     {
         Cell cell = row.getCell(cellIndex, MissingCellPolicy.CREATE_NULL_AS_BLANK);
@@ -300,38 +315,6 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol>
     }
 
     /**
-     * Crée un commentaire dans une cellule depuis un texte donné
-     * 
-     * @param commentaire
-     * @param cell
-     */
-    protected Comment creerComment(String commentaire, String autheur, Cell cell, int largeur, int hauteur)
-    {
-        if (cell == null || commentaire == null || commentaire.isEmpty() || largeur == 0 || hauteur == 0)
-            throw new IllegalArgumentException("Mauvais arguments pour méthode control.parent.ControlExcel.creerComment : cell = " + cell + " - commentaire = " + commentaire
-                    + " - largeur = " + largeur + " - hauteur = " + hauteur);
-
-        // Drawing de base pour le commentaire
-        Drawing<?> drawing = cell.getSheet().getDrawingPatriarch();
-        if (drawing == null)
-        drawing = cell.getSheet().createDrawingPatriarch();
-        
-        // On utilise la position relative du commentaire précedent pour créer le nouveau
-        ca.setRow1(cell.getRowIndex());
-        ca.setRow2(cell.getRowIndex() + hauteur);
-        ca.setCol1(cell.getColumnIndex());
-        ca.setCol2(cell.getColumnIndex() + largeur);
-
-        // Création et valorisation des données du commentaire
-        Comment retour = drawing.createCellComment(ca);
-        retour.setString(createHelper.createRichTextString(commentaire));
-        if (autheur != null)
-            retour.setAuthor(autheur);
-
-        return retour;
-    }
-
-    /**
      * Permet de créer et de valoriser une cellule. Seul le style, le texte et le commentaire peuvent être nuls. Le texte peut-être de type {@link String},
      * {@linkplain model.enum.Environnement}, {@link LocalDate}.
      * 
@@ -374,6 +357,5 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol>
         return cell;
     }
 
-    /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

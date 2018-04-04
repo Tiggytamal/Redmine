@@ -3,6 +3,7 @@ package control.parent;
 import java.io.File;
 import java.io.IOException;
 
+import control.view.MainScreen;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
@@ -44,7 +45,7 @@ public abstract class ViewControl extends LaunchTask
         FileChooser fc = new FileChooser();
         fc.setTitle(titre);
         fc.getExtensionFilters().add(Statics.FILTEREXCEL);
-        File file = fc.showOpenDialog(backgroundPane.getScene().getWindow());
+        File file = fc.showOpenDialog(MainScreen.getRoot().getScene().getWindow());
         if (file == null)
             throw new FunctionalException(Severity.SEVERITY_INFO, "Impossible de récupérer le fichier.");
         return file;

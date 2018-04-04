@@ -9,45 +9,45 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import model.enums.TypeCol;
+import model.enums.TypeParam;
 
-public class ColonneView<T extends Enum<T> & TypeCol> extends VBox
+public class ParamView extends VBox
 {
-    private T typeCol;
+    private TypeParam typeParam;
     private TextField field;
     private static final String POINT = " : ";
 
-    public ColonneView(T typeCol, String texte)
+    public ParamView(TypeParam typeParam, String texte)
     {
-        this.typeCol = typeCol;
-        ObservableList<Node> children = getChildren();
+        this.typeParam = typeParam;
+        ObservableList<Node> rootChildren = getChildren();
 
         HBox box = new HBox();
 
         // Label
-        Label label = new Label(typeCol.getValeur() + POINT);
-        label.setPrefWidth(150);
+        Label label = new Label(typeParam.toString() + POINT);
+        label.setPrefWidth(200);
         box.getChildren().add(label);
 
         // TextField
-        field = new TextField(texte == null ? "" : texte);
+        field = new TextField(texte == null ? "" : texte.replace("\\\\", "\\"));
         HBox.setHgrow(field, Priority.ALWAYS);
         box.getChildren().add(field);
 
-        children.add(box);
+        rootChildren.add(box);
 
         // Séparateur
         Separator separ = new Separator();
         separ.setPadding(new Insets(5, 5, 5, 5));
-        children.add(separ);
+        rootChildren.add(separ);
     }
 
     /**
      * @return the typeCol
      */
-    public T getTypeCol()
+    public TypeParam getTypeParam()
     {
-        return typeCol;
+        return typeParam;
     }
 
     /**

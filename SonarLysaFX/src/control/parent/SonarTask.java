@@ -78,6 +78,7 @@ public abstract class SonarTask extends Task<Boolean>
     protected Map<String, Projet> recupererComposantsSonar()
     {
         updateMessage(RECUPCOMPOSANTS);
+        updateProgress(-1, 1);
         // Appel du webservice pour remonter tous les composants
         
         @SuppressWarnings("unchecked")

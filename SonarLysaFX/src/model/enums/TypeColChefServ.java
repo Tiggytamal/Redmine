@@ -12,14 +12,14 @@ public enum TypeColChefServ implements Serializable, TypeCol
     FILIERE("Filière", "colFil"), 
     MANAGER("Manager", "colManager");
 
-    private String string;
+    private String valeur;
     private String nomCol;
     
     /*---------- CONSTRUCTEURS ----------*/
 
-    private TypeColChefServ(String string, String nomCol)
+    private TypeColChefServ(String valeur, String nomCol)
     {
-        this.string = string;
+        this.valeur = valeur;
         this.nomCol = nomCol;
     }
 
@@ -28,9 +28,9 @@ public enum TypeColChefServ implements Serializable, TypeCol
     /*---------- ACCESSEURS ----------*/
     
     @Override
-    public String toString()
+    public String getValeur()
     {
-        return string;
+        return valeur;
     }
     
     @Override

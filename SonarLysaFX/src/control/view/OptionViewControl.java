@@ -3,12 +3,10 @@ package control.view;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.xml.bind.JAXBException;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import control.ControlXML;
 import control.parent.ViewControl;
@@ -26,7 +24,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import model.enums.TypeCol;
@@ -40,6 +37,7 @@ import model.enums.TypeParam;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 import view.ColonneView;
+import view.ParamView;
 
 public class OptionViewControl extends ViewControl
 {
@@ -52,42 +50,26 @@ public class OptionViewControl extends ViewControl
     @FXML
     private VBox chargementPane;
     @FXML
-    private VBox optionsPane;
-    @FXML
-    private HBox versionsPane;
+    private ScrollPane optionsPane;
     @FXML
     private ListView<String> versionsField;
     @FXML
     private TextField newVersionField;
     @FXML
-    private TextField pathField;
-    @FXML
-    private TextField pathHistoField;
-    @FXML
-    private TextField suiviField;
-    @FXML
-    private TextField datastageField;
-    @FXML
-    private TextField filtreField;
-    @FXML
     private ScrollPane colonnesPane;
-    @FXML
-    private TextField liensLotsField;
-    @FXML
-    private TextField liensAnoField;
-    @FXML
-    private TextField nomQGDatagstageField;
-    @FXML
-    private TextField urlSonarField;
     @FXML
     private TreeView<String> options;
     @FXML
     private VBox colonnesBox;
+    @FXML
+    private VBox paramsBox;
 
     // Attributs de classe
+    
     private Alert alert;
     private static final int ROW_HEIGHT = 24;
     private Map<TypeParam, String> mapParam;
+    private ControlXML control;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -98,121 +80,92 @@ public class OptionViewControl extends ViewControl
         options.getSelectionModel().selectedItemProperty().addListener((ov, old, newval) -> switchPanel(ov));
         rightSide.getChildren().clear();
 
-        // Initialisation aletre
+        // Initialisation alerte
         alert = new Alert(AlertType.INFORMATION);
         alert.initStyle(StageStyle.UTILITY);
         alert.setContentText("Chargement");
         alert.setHeaderText(null);
-
-        initParametres(proprietesXML.getMapParams());
+        mapParam = proprietesXML.getMapParams();
+        control = new ControlXML();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
     private void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
     {
-        ObservableList<Node> liste = rightSide.getChildren();
+        ObservableList<Node> root = rightSide.getChildren();
         
         switch (ov.getValue().getValue())
         {
             case "Chargement fichiers" :
-                liste.clear();
-                liste.add(chargementPane);
+                root.clear();
+                root.add(chargementPane);
                 break;
                 
             case "Paramètres" :
-                liste.clear();
-                liste.add(optionsPane);
+                root.clear();
+                afficherParams();
+                root.add(optionsPane);
                 break;
                 
             case "SuiviQualité" :
-                afficherColonnes(TypeColSuivi.class, liste);
+                afficherColonnes(TypeColSuivi.class, root);
                 break;
                 
             case "Clarity" :
-                afficherColonnes(TypeColClarity.class, liste);
+                afficherColonnes(TypeColClarity.class, root);
                 break;
                 
             case "Chef de Service" :
-                afficherColonnes(TypeColChefServ.class, liste);
+                afficherColonnes(TypeColChefServ.class, root);
                 break;
                 
             case "Lots Pic" :
-                afficherColonnes(TypeColPic.class, liste);
+                afficherColonnes(TypeColPic.class, root);
                 break;
                 
             case "Codification Editions" :
-                afficherColonnes(TypeColEdition.class, liste);
+                afficherColonnes(TypeColEdition.class, root);
                 break;
                 
             default:
                 break;
         }      
     }
-
-    /**
-     * @throws InvalidFormatException
-     * @throws IOException
-     * @throws JAXBException
-     */
-    public void chargerLotsPic() throws InvalidFormatException, IOException, JAXBException
+  
+    @FXML
+    public void chargerFichier(ActionEvent event)
     {
-        File file = getFileFromFileChooser("Charger Lots Pic");
-        ControlXML control = new ControlXML();
-        control.recupLotsPicDepuisExcel(file);
-        alert.setContentText("Chargement lots Pic effectué");
-    }
+        String id = "";
+        Object source = event.getSource();
+        if (source instanceof Node)
+            id = ((Node) source).getId();
 
-    /**
-     * @throws InvalidFormatException
-     * @throws IOException
-     * @throws JAXBException
-     */
-    public void chargerApplis() throws InvalidFormatException, IOException, JAXBException
-    {
-        File file = getFileFromFileChooser("Charger Applications");
-        ControlXML control = new ControlXML();
-        control.recupListeAppsDepuisExcel(file);
-        alert.setContentText("Chargement Applications effectué");
-    }
-
-    /**
-     * @throws InvalidFormatException
-     * @throws IOException
-     * @throws JAXBException
-     */
-    public void chargerClarity() throws InvalidFormatException, IOException, JAXBException
-    {
-        File file = getFileFromFileChooser("Charger Referentiel Clarity");
-        ControlXML control = new ControlXML();
-        control.recupInfosClarityDepuisExcel(file);
-        alert.setContentText("Chargement Clarity effectué");
-    }
-
-    /**
-     * @throws InvalidFormatException
-     * @throws IOException
-     * @throws JAXBException
-     */
-    public void chargerChefService() throws InvalidFormatException, IOException, JAXBException
-    {
-        File file = getFileFromFileChooser("Charger Chefs de Service");
-        ControlXML control = new ControlXML();
-        control.recupChefServiceDepuisExcel(file);
-        alert.setContentText("Chargement Chef de Service effectué");
-    }
-
-    /**
-     * @throws InvalidFormatException
-     * @throws IOException
-     * @throws JAXBException
-     */
-    public void chargerEditionCDM() throws InvalidFormatException, IOException, JAXBException
-    {
-        File file = getFileFromFileChooser("Charger Editions CDM");
-        ControlXML control = new ControlXML();
-        control.recupEditionDepuisExcel(file);
-        alert.setContentText("Chargement Editions CDM effectué");
+        switch (id)
+        {
+            case "lotsPic":
+                charger("Lots Pic", file -> control.recupLotsPicDepuisExcel(file));
+                break;
+                
+            case "apps":
+                charger("Applications", file -> control.recupListeAppsDepuisExcel(file));
+                break;
+                
+            case "clarity":
+                charger("Referentiel Clarity", file -> control.recupInfosClarityDepuisExcel(file));
+                break;
+                
+            case "chefSrev":
+                charger("Chefs de Service", file -> control.recupChefServiceDepuisExcel(file));
+                break;
+                
+            case "edition":
+                charger("Editions CDM", file -> control.recupEditionDepuisExcel(file));
+                break;
+                
+            default:
+                break;
+        }
     }
 
     /**
@@ -270,24 +223,16 @@ public class OptionViewControl extends ViewControl
                 builder.append("-");
         }
         mapParam.put(TypeParam.VERSIONS, builder.toString());
-
+        
         // Sauvegarde des autres paramètres
-        String path = pathField.getText();
-        if (path != null && !path.isEmpty())
-            mapParam.put(TypeParam.ABSOLUTEPATH, path.replace("\\", "\\\\"));
-
-        saveText(suiviField, mapParam, TypeParam.NOMFICHIER);
-        saveText(datastageField, mapParam, TypeParam.NOMFICHIERDATASTAGE);
-        saveText(filtreField, mapParam, TypeParam.FILTREDATASTAGE);
-
-        String pathHisto = pathHistoField.getText();
-        if (pathHisto != null && !pathHisto.isEmpty())
-            mapParam.put(TypeParam.ABSOLUTEPATHHISTO, pathHisto.replace("\\", "\\\\"));
-
-        saveText(liensLotsField, mapParam, TypeParam.LIENSLOTS);
-        saveText(liensAnoField, mapParam, TypeParam.LIENSANOS);
-        saveText(nomQGDatagstageField, mapParam, TypeParam.NOMQGDATASTAGE);
-        saveText(urlSonarField, mapParam, TypeParam.URLSONAR);
+        for (Node node : paramsBox.getChildren())
+        {
+            if (node instanceof ParamView)
+            {
+                ParamView view = (ParamView) node;
+                saveText(view.getField(), mapParam, view.getTypeParam());
+            }
+        }
 
         // Enregistrement paramètres
         new ControlXML().saveParam(proprietesXML);
@@ -313,66 +258,61 @@ public class OptionViewControl extends ViewControl
     }
 
     /*---------- METHODES PRIVEES ----------*/
-
+    
     /**
-     * @param mapParam
+     * Affichge les colonnes du fichier choisi dans les options
+     * 
+     * @param typeCol
+     * @param root
      */
-    private void initParametres(Map<TypeParam, String> mapParam)
+    private <T extends Enum<T> & TypeCol> void afficherColonnes(Class<T> typeCol, ObservableList<Node> root)
     {
+        // Nettoyage de l'affichage
+        root.clear();
+        colonnesBox.getChildren().clear();
+        
+        // Récupération de la map correspondante au type de fichier et affichage des colonnes
+        for (Map.Entry<T, String> entry : proprietesXML.getMapColonnes(typeCol).entrySet())
+        {
+            ColonneView<T> cv = new ColonneView<>(entry.getKey(), entry.getValue());
+            colonnesBox.getChildren().add(cv);
+        }       
+        root.add(colonnesPane);
+    }
+    
+    /**
+     * Affichage des paramètres
+     */
+    private void afficherParams()
+    {
+        paramsBox.getChildren().clear();
+        
         // Initialition liste des versions affichée
         String versionsParam = mapParam.get(TypeParam.VERSIONS);
 
         if (versionsParam != null && !versionsParam.isEmpty())
         {
+            versionsField.getItems().clear();
             versionsField.getItems().addAll(versionsParam.split("-"));
             versionsField.getItems().sort((o1, o2) -> o1.compareTo(o2));
         }
 
         // Mise à jour automatique de la liste des versions
         versionsField.getSelectionModel().selectFirst();
-        versionsField.setPrefHeight((double) versionsField.getItems().size() * ROW_HEIGHT + 2);
-        versionsField.getItems().addListener((ListChangeListener.Change<? extends String> c) -> versionsField.setPrefHeight((double) versionsField.getItems().size() * ROW_HEIGHT + 2));
+        double taille = (double) versionsField.getItems().size() * ROW_HEIGHT + 2;
+        versionsField.setPrefHeight(taille);
+        versionsField.getItems().addListener((ListChangeListener.Change<? extends String> c) -> versionsField.setPrefHeight(taille));
 
-        // Intialisation des TextField depuis le fichier de paramètre
-        if (mapParam.get(TypeParam.ABSOLUTEPATH) != null)
-            pathField.setText(mapParam.get(TypeParam.ABSOLUTEPATH).replace("\\\\", "\\"));
-        suiviField.setText(mapParam.get(TypeParam.NOMFICHIER));
-        datastageField.setText(mapParam.get(TypeParam.NOMFICHIERDATASTAGE));
-        filtreField.setText(mapParam.get(TypeParam.FILTREDATASTAGE));
-        if (mapParam.get(TypeParam.ABSOLUTEPATHHISTO) != null)
-            pathHistoField.setText(mapParam.get(TypeParam.ABSOLUTEPATHHISTO).replace("\\\\", "\\"));
-        liensLotsField.setText(mapParam.get(TypeParam.LIENSLOTS));
-        liensAnoField.setText(mapParam.get(TypeParam.LIENSANOS));
-        nomQGDatagstageField.setText(mapParam.get(TypeParam.NOMQGDATASTAGE));
-        urlSonarField.setText(mapParam.get(TypeParam.URLSONAR));
-    }
-
-    /**
-     * 
-     * 
-     * @param mapColonnes
-     */
-    private <T extends Enum<T> & TypeCol> void initColonnes(Class<T> typeColClass)
-    {
-        for (Map.Entry<T, String> entry : proprietesXML.getMapColonnes(typeColClass).entrySet())
+        
+        // Récupération de la map correspondante au type de fichier et affichage des colonnes. On saute juste les versions qui sont gérées différement
+        for (Map.Entry<TypeParam, String> entry : mapParam.entrySet())
         {
-            ColonneView<T> test = new ColonneView<>(entry.getKey(), entry.getValue());
-            colonnesBox.getChildren().add(test);
-        }
-    }
-    
-    /**
-     * Affichge les colonnes du fichier choisi dans les options
-     * 
-     * @param typeCol
-     * @param liste
-     */
-    private <T extends Enum<T> & TypeCol> void afficherColonnes(Class<T> typeCol, ObservableList<Node> liste)
-    {
-        liste.clear();
-        colonnesBox.getChildren().clear();
-        initColonnes(typeCol);
-        liste.add(colonnesPane);
+            if (entry.getKey() == TypeParam.VERSIONS)
+                continue;
+            
+            ParamView pv = new ParamView(entry.getKey(), entry.getValue());
+            paramsBox.getChildren().add(pv);
+        }               
     }
 
     /**
@@ -389,13 +329,26 @@ public class OptionViewControl extends ViewControl
     {
         String text = textField.getText();
         if (text != null && !text.isEmpty())
-            map.put(clef, text);
+            map.put(clef, text.replace("\\", "\\\\"));
+    }
+    
+    /**
+     * Chargement d'un fichier Excel. Paramétrage en fonction de la méthode à utiliser pour chaque type de fichier.
+     * 
+     * @param texte
+     * @param fonction
+     */
+    private void charger(String texte, Consumer<File> fonction)
+    {
+        File file = getFileFromFileChooser("Charger " + texte);
+        fonction.accept(file);
+        alert.setContentText("Chargement " + texte + " effectué");
     }
 
     @Override
     protected void afficher(ActionEvent event)
     {
-        // Pas de gestion de l'afficheg sur ce controleur
+        // Gestion de l'affichage délégué ç une autre méthode à cause de l'utilisation de la ViewList
     }
 
     /*---------- ACCESSEURS ----------*/

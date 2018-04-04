@@ -19,14 +19,14 @@ public enum TypeColPic implements Serializable, TypeCol
     VMOA ("Livraison VMOA", "colVmoa"),
     LIV ("Livraison édition", "colLiv");
     
-    private String string;
+    private String valeur;
     private String nomCol;
     
     /*---------- CONSTRUCTEURS ----------*/
 
-    private TypeColPic(String string, String nomCol)
+    private TypeColPic(String valeur, String nomCol)
     {
-        this.string = string;
+        this.valeur = valeur;
         this.nomCol = nomCol;
     }
 
@@ -35,9 +35,9 @@ public enum TypeColPic implements Serializable, TypeCol
     /*---------- ACCESSEURS ----------*/
     
     @Override
-    public String toString()
+    public String getValeur()
     {
-        return string;
+        return valeur;
     }
     
     @Override

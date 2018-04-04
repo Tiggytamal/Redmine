@@ -11,12 +11,12 @@ public enum TypeParam implements Serializable, TypeKey
     ABSOLUTEPATH("Chemin des fichiers"), 
     NOMFICHIER("Nom fichier de suivi"), 
     NOMFICHIERDATASTAGE("Nom fichier de suivi datastage"), 
-    ABSOLUTEPATHHISTO("chemin vers fichier d'historique"), 
-    LIENSLOTS("hyperliens vers lots Sonar"), 
-    LIENSANOS("hyperliens vers anomalie RTC"), 
-    NOMQGDATASTAGE("nom QualityGate Datastage"), 
-    URLSONAR("url serveur Sonar"), 
-    URLSONARTEST("url Serveur Sonar de test");
+    ABSOLUTEPATHHISTO("Chemin vers fichier d'historique"), 
+    LIENSLOTS("Hyperliens vers lots Sonar"), 
+    LIENSANOS("Hyperliens vers anomalie RTC"), 
+    NOMQGDATASTAGE("Nom QualityGate Datastage"), 
+    URLSONAR("Url serveur Sonar"), 
+    URLSONARTEST("Url Serveur Sonar de test");
 
     private String string;
 

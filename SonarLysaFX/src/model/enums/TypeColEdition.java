@@ -7,14 +7,14 @@ public enum TypeColEdition implements Serializable, TypeCol
     LIBELLE ("Libellé", "colLib"),
     VERSION ("Numero de version", "colVersion");
 
-    private String string;
+    private String valeur;
     private String nomCol;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private TypeColEdition(String string, String nomCol)
+    private TypeColEdition(String valeur, String nomCol)
     {
-        this.string = string;
+        this.valeur = valeur;
         this.nomCol = nomCol;
     }
     
@@ -29,8 +29,8 @@ public enum TypeColEdition implements Serializable, TypeCol
     }
     
     @Override
-    public String toString()
+    public String getValeur()
     {
-        return string;
+        return valeur;
     }
 }
