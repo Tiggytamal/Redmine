@@ -1,12 +1,12 @@
 package control;
 
+import static utilities.Statics.TODAY;
 import static utilities.Statics.fichiersXML;
 import static utilities.Statics.proprietesXML;
-import static utilities.Statics.TODAY;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -15,22 +15,19 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import control.factory.ExcelFactory;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
-import model.Application;
-import model.InfoClarity;
-import model.LotSuiviPic;
-import model.RespService;
 import model.XML;
+import model.enums.TypeCol;
+import model.enums.TypeColApps;
+import model.enums.TypeColChefServ;
+import model.enums.TypeColClarity;
+import model.enums.TypeColEdition;
+import model.enums.TypeColPic;
 import model.enums.TypeFichier;
 import utilities.TechnicalException;
 
@@ -42,7 +39,7 @@ import utilities.TechnicalException;
 public class ControlXML
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     private static final String ERREUR = "Erreur au moment de sauvegarder le fichier Excel";
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -66,8 +63,7 @@ public class ControlXML
         try
         {
             retour = typeXML.newInstance();
-        }
-        catch (InstantiationException | IllegalAccessException e)
+        } catch (InstantiationException | IllegalAccessException e)
         {
             throw new TechnicalException("Impossible d'instancier le fichier de paramètre", e);
         }
@@ -81,8 +77,7 @@ public class ControlXML
             if (file.exists())
                 retour = (XML) context.createUnmarshaller().unmarshal(file);
 
-        }
-        catch (JAXBException e)
+        } catch (JAXBException e)
         {
             throw new TechnicalException("Impossible de récupérer le fichier de paramètre, erreur JAXB", e);
         }
@@ -114,35 +109,7 @@ public class ControlXML
      */
     public void recupListeAppsDepuisExcel(File file)
     {
-        try (Workbook wb = WorkbookFactory.create(file))
-        {
-            Sheet sheet = wb.getSheetAt(0);
-
-            for (Row row : sheet)
-            {
-                Application app = new Application();
-                Cell cell = row.getCell(0);
-
-                if (cell.getCellTypeEnum() == CellType.STRING)
-                    app.setNom(row.getCell(0).getStringCellValue());
-                else
-                    app.setNom(String.valueOf((int) row.getCell(0).getNumericCellValue()));
-
-                String actif = row.getCell(1).getStringCellValue();
-                if ("Actif".equals(actif))
-                    app.setActif(true);
-                else
-                    app.setActif(false);
-
-                fichiersXML.getListeApplications().add(app);
-            }
-            fichiersXML.setDateFichier(TypeFichier.APPS);
-            saveParam(fichiersXML);
-        }
-        catch (InvalidFormatException | IOException | JAXBException e)
-        {
-            throw new TechnicalException(ERREUR, e);
-        }
+        saveInfos(TypeFichier.APPS, TypeColApps.class, file);
     }
 
     /**
@@ -152,20 +119,7 @@ public class ControlXML
      */
     public void recupInfosClarityDepuisExcel(File file)
     {
-        try
-        {
-            ControlClarity control = new ControlClarity(file);
-            Map<String, InfoClarity> clarity = control.recupInfosClarityExcel();
-            control.close();
-            fichiersXML.getMapClarity().clear();
-            fichiersXML.getMapClarity().putAll(clarity);
-            fichiersXML.setDateFichier(TypeFichier.CLARITY);
-            saveParam(fichiersXML);
-        }
-        catch (InvalidFormatException | IOException | JAXBException e)
-        {
-            throw new TechnicalException(ERREUR, e);
-        }
+        saveInfos(TypeFichier.CLARITY, TypeColClarity.class, file);
     }
 
     /**
@@ -175,20 +129,7 @@ public class ControlXML
      */
     public void recupLotsPicDepuisExcel(File file)
     {
-        try
-        {
-            ControlPic control = new ControlPic(file);
-            Map<String, LotSuiviPic> lotsPic = control.recupLotsDepuisPic();
-            control.close();
-            fichiersXML.getLotsPic().clear();
-            fichiersXML.getLotsPic().putAll(lotsPic);
-            fichiersXML.setDateFichier(TypeFichier.LOTSPICS);
-            saveParam(fichiersXML);
-        }
-        catch (InvalidFormatException | IOException | JAXBException e)
-        {
-            throw new TechnicalException(ERREUR, e);
-        }
+        saveInfos(TypeFichier.LOTSPICS, TypeColPic.class, file);
     }
 
     /**
@@ -198,25 +139,11 @@ public class ControlXML
      */
     public void recupChefServiceDepuisExcel(File file)
     {
-        try
-        {
-            ControlChefService control = new ControlChefService(file);
-            Map<String, RespService> respService = control.recupRespDepuisExcel();
-            control.close();
-            fichiersXML.getMapRespService().clear();
-            fichiersXML.getMapRespService().putAll(respService);
-            fichiersXML.setDateFichier(TypeFichier.RESPSERVICE);
-            saveParam(fichiersXML);
-        }
-        catch (InvalidFormatException | IOException | JAXBException e)
-        {
-            throw new TechnicalException(ERREUR, e);
-        }
+        saveInfos(TypeFichier.RESPSERVICE, TypeColChefServ.class, file);
     }
 
     /**
-     * Récupère depuis le fichier Excel toutes les édition CHC/CDM, aver leurs numéros de version, pour l'annèe en
-     * cours, la précedente et la suivante.
+     * Récupère depuis le fichier Excel toutes les édition CHC/CDM, aver leurs numéros de version, pour l'annèe en cours, la précedente et la suivante.
      * 
      * @param file
      * @throws InvalidFormatException
@@ -227,12 +154,12 @@ public class ControlXML
     {
         try
         {
-            ControlEdition control = new ControlEdition(file);
-            List<String> liste = new ArrayList<>();
-            liste.add(String.valueOf(TODAY.getYear()));
-            liste.add(String.valueOf(TODAY.getYear() + 1));
-            liste.add(String.valueOf(TODAY.getYear() - 1));
-            Map<String, Map<String, String>> editions = control.recupEditionDepuisExcel(liste);
+            ControlEdition control = ExcelFactory.getControlleur(TypeColEdition.class, file);
+
+            int year = TODAY.getYear();
+            List<String> liste = Arrays.asList(String.valueOf(year), String.valueOf(year + 1), String.valueOf(year - 1));
+            control.setAnnees(liste);
+            Map<String, Map<String, String>> editions = control.recupDonneesDepuisExcel();
             control.close();
             fichiersXML.getMapCDM().clear();
             fichiersXML.getMapCDM().putAll(editions.get("CDM"));
@@ -240,8 +167,21 @@ public class ControlXML
             fichiersXML.getMapCHC().putAll(editions.get("CHC"));
             fichiersXML.setDateFichier(TypeFichier.EDITION);
             saveParam(fichiersXML);
+        } catch (InvalidFormatException | IOException | JAXBException e)
+        {
+            throw new TechnicalException(ERREUR, e);
         }
-        catch (InvalidFormatException | IOException | JAXBException e)
+    }
+
+    @SuppressWarnings("rawtypes")
+    private <T extends Enum<T> & TypeCol> void saveInfos(TypeFichier typeFichier, Class<T> typeCol, File file)
+    {
+
+        try
+        {
+            fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getControlleur(typeCol, file).recupDonneesDepuisExcel());            
+            saveParam(fichiersXML);
+        } catch (InvalidFormatException | IOException | JAXBException e)
         {
             throw new TechnicalException(ERREUR, e);
         }

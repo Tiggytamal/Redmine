@@ -29,7 +29,8 @@ public class ControlEditionTest
     {
         List<String> liste = new ArrayList<>();
         liste.add("2018");
-        Map<String, Map<String, String>> map =  handler.recupEditionDepuisExcel(liste);
+        handler.setAnnees(liste);
+        Map<String, Map<String, String>> map =  handler.recupDonneesDepuisExcel();
         Map<String, String> chc = map.get("CHC");
         Map<String, String> cdm = map.get("CDM");
         assertTrue(!map.isEmpty());

@@ -16,11 +16,10 @@ import control.ControlXML;
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.javafx.test.TestInJfxThread;
 import junit.TestUtils;
-import model.Application;
+import model.FichiersXML;
 import model.InfoClarity;
 import model.LotSuiviPic;
 import model.ProprietesXML;
-import model.FichiersXML;
 import model.enums.TypeFichier;
 import utilities.Statics;
 
@@ -65,7 +64,7 @@ public class ControlXMLTest
 	    
 	    // 2. Test maps remplies
 	    param = new FichiersXML();
-	    param.getListeApplications().add(new Application());
+	    param.getMapApplis().put("A", true);
 	    param.getMapClarity().put("key", new InfoClarity());
 	    param.getLotsPic().put("key", new LotSuiviPic());	    
 	    param.setDateFichier(TypeFichier.APPS);

@@ -36,7 +36,7 @@ public class CreerVueProductionTask extends SonarTask
 
     public CreerVueProductionTask(File file)
     {
-        super(4);
+        super(3);
         this.file = file;
     }
 
@@ -80,7 +80,11 @@ public class CreerVueProductionTask extends SonarTask
         {
             // Traitement données fichier Excel
             ControlPic excel = new ControlPic(file);
-            mapLot = excel.recupLotsExcelPourMEP(recupererLotsSonarQube());
+            Map<String, Vue> mapSonar = recupererLotsSonarQube();
+            etapePlus();
+            updateMessage("Traitement Fichier Excel...");
+            mapLot = excel.recupLotsExcelPourMEP(mapSonar);
+            updateMessage("Traitement Fichier Excel OK");
             excel.close();
         }
         else
@@ -110,15 +114,17 @@ public class CreerVueProductionTask extends SonarTask
      */
     private Map<String, Vue> recupererLotsSonarQube()
     {
-        updateMessage("Récupérations des lots sans Sonar");
+        updateMessage("Récupérations des lots dans Sonar...");
         Map<String, Vue> map = new HashMap<>();
         List<Vue> views = api.getVues();
         for (Vue view : views)
         {
             if (view.getName().startsWith("Lot "))
                 map.put(view.getName().substring(4), view);
+            updateMessage("Récupérations des lots dans Sonar OK");
         }
         return map;
+
     }
 
     /**
@@ -133,13 +139,24 @@ public class CreerVueProductionTask extends SonarTask
         Entry<LocalDate, List<Vue>> entry = iter.next();
 
         // Création de la vue principale
+
         String nomVue = new StringBuilder("MEP ").append(DateConvert.dateFrancais(entry.getKey(), "yyyy.MM - MMMM")).toString();
         vueKey = new StringBuilder("MEPMEP").append(DateConvert.dateFrancais(entry.getKey(), "MMyyyy")).append("Key").toString();
-        Vue vue = creerVue(vueKey, nomVue,
-                new StringBuilder("Vue des lots mis en production pendant le mois de ").append(DateConvert.dateFrancais(entry.getKey(), "MMMM yyyy")).toString(), true);
+        etapePlus();
+        String base = "Vue " + nomVue + Statics.NL;
+        updateMessage(base);
+        Vue vueParent = creerVue(vueKey, nomVue, new StringBuilder("Vue des lots mis en production pendant le mois de ").append(DateConvert.dateFrancais(entry.getKey(), "MMMM yyyy")).toString(),
+                true);
 
         // Ajout des sous-vue
-        api.ajouterSousVues(entry.getValue(), vue);
+        int i = 0;
+        int size = entry.getValue().size();
+        for (Vue vue : entry.getValue())
+        {
+            updateMessage(base + "ajout : " + vue.getName());
+            updateProgress(++i, size);
+            api.ajouterSousVue(vue, vueParent);
+        }
     }
 
     /**
@@ -189,10 +206,21 @@ public class CreerVueProductionTask extends SonarTask
 
         // Création de la vue et envoie vers SonarQube
         vueKey = new StringBuilder("MEPMEP").append(date).append(nom).toString();
-        Vue vue = creerVue(vueKey, new StringBuilder("TEP ").append(date).append(Statics.SPACE).append(nom).toString(),
+        String nomVue = new StringBuilder("TEP ").append(date).append(Statics.SPACE).append(nom).toString();
+        etapePlus();
+        String base = "Vue " + nomVue + Statics.NL;
+        updateMessage(base);
+        Vue vueParent = creerVue(vueKey, nomVue,
                 new StringBuilder("Vue des lots mis en production pendant les mois de ").append(nom).append(Statics.SPACE).append(date).toString(), true);
 
         // Ajout des sous-vue
-        api.ajouterSousVues(lotsTotal, vue);
+        int i =0;
+        int size = lotsTotal.size();
+        for (Vue vue : lotsTotal)
+        {
+            updateMessage(base + "ajout : " + vue.getName());
+            updateProgress(++i, size);
+            api.ajouterSousVue(vue, vueParent);
+        }
     }
 }

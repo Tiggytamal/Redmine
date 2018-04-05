@@ -1,13 +1,10 @@
 package model;
 
-import java.beans.Transient;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -17,45 +14,90 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import model.enums.TypeFichier;
 import utilities.Statics;
+import utilities.TechnicalException;
 
 @XmlRootElement
 public class FichiersXML implements XML
 {
-	/*---------- ATTRIBUTS ----------*/
+    /*---------- ATTRIBUTS ----------*/
 
-	private List<Application> listeApplications;
-	private Map<String, InfoClarity> mapClarity; 
-	private Map<String, LotSuiviPic> lotsPic;
-	private Map<String, Boolean> mapApplis;
-	private Map<String, RespService> mapRespService;
-	private Map<TypeFichier, String> dateMaj;
-	private Map<String, String> mapCDM;
-	private Map<String, String> mapCHC;
-	
-	public static final String NOMFICHIER = "\\fichiers.xml";
+    private Map<String, InfoClarity> mapClarity;
+    private Map<String, LotSuiviPic> lotsPic;
+    private Map<String, Boolean> mapApplis;
+    private Map<String, RespService> mapRespService;
+    private Map<TypeFichier, String> dateMaj;
+    private Map<String, String> mapCDM;
+    private Map<String, String> mapCHC;
 
-	/*---------- CONSTRUCTEURS ----------*/
-	
+    public static final String NOMFICHIER = "\\fichiers.xml";
+
+    /*---------- CONSTRUCTEURS ----------*/
+
     public FichiersXML()
-	{
-	    listeApplications = new ArrayList<>();
-	    mapClarity = new HashMap<>();
-	    lotsPic = new HashMap<>();
-	    mapApplis = new HashMap<>();
-	    mapRespService = new HashMap<>();
-	    dateMaj = new EnumMap<>(TypeFichier.class);
-	    mapCDM = new HashMap<>();
-	    mapCHC = new HashMap<>();
-	}
-    
+    {
+        mapClarity = new HashMap<>();
+        lotsPic = new HashMap<>();
+        mapApplis = new HashMap<>();
+        mapRespService = new HashMap<>();
+        dateMaj = new EnumMap<>(TypeFichier.class);
+        mapCDM = new HashMap<>();
+        mapCHC = new HashMap<>();
+    }
+
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     @Override
     public File getFile()
     {
-        return new File (Statics.JARPATH + NOMFICHIER);
+        return new File(Statics.JARPATH + NOMFICHIER);
     }
     
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void majMapDonnees(TypeFichier typeFichier, Map map)
+    {
+        switch (typeFichier)
+        {
+            case APPS:
+                mapApplis.clear();
+                mapApplis.putAll(map);
+                setDateFichier(typeFichier);
+                break;
+                
+            case CLARITY:
+                mapClarity.clear();
+                mapClarity.putAll(map);
+                setDateFichier(typeFichier);
+                break;
+                
+            case EDITION:
+                break;
+                
+            case LOTSPICS:
+                lotsPic.clear();
+                lotsPic.putAll(map);
+                setDateFichier(typeFichier);
+                break;
+                
+            case RESPSERVICE:
+                mapRespService.clear();
+                mapRespService.putAll(map);
+                setDateFichier(typeFichier);
+                break;
+                
+            default :
+                throw new TechnicalException("FichiersXML.majMapDonnees - Type de fichier non géré :" + typeFichier.toString(), null);
+        }
+    }
+    
+    /**
+     * @param clef
+     */
+    public void setDateFichier(TypeFichier fichier)
+    {
+        dateMaj.put(fichier, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRANCE)));
+    }
+
     @Override
     public String controleDonnees()
     {
@@ -72,13 +114,13 @@ public class FichiersXML implements XML
             builder.append("Lots Pics chargés. Dernière Maj : ").append(dateMaj.get(TypeFichier.LOTSPICS)).append(Statics.NL);
 
         // Contrôle liste application
-        if (listeApplications.isEmpty())
+        if (mapApplis.isEmpty())
         {
-            builder.append("Liste des apllications manquante.").append(Statics.NL);
+            builder.append("Liste des applications manquante.").append(Statics.NL);
             manquant = true;
         }
         else
-            builder.append("Liste des apllications chargée. Dernière Maj : ").append(dateMaj.get(TypeFichier.APPS)).append(Statics.NL);
+            builder.append("Liste des applications chargée. Dernière Maj : ").append(dateMaj.get(TypeFichier.APPS)).append(Statics.NL);
 
         // Contrôle Referentiel Clarity
         if (mapClarity.isEmpty())
@@ -88,7 +130,7 @@ public class FichiersXML implements XML
         }
         else
             builder.append("Referentiel Clarity chargé. Dernière Maj : ").append(dateMaj.get(TypeFichier.CLARITY)).append(Statics.NL);
-        
+
         // Contrôle Referentiel Clarity
         if (mapRespService.isEmpty())
         {
@@ -97,7 +139,7 @@ public class FichiersXML implements XML
         }
         else
             builder.append("Responsables de services chargés. Dernière Maj : ").append(dateMaj.get(TypeFichier.RESPSERVICE)).append(Statics.NL);
-        
+
         // Contrôle Editions CDM
         if (mapCDM.isEmpty())
         {
@@ -112,80 +154,55 @@ public class FichiersXML implements XML
 
         return builder.append(Statics.NL).toString();
     }
-	
-	/*---------- ACCESSEURS ----------*/
 
-	@XmlElementWrapper
-	@XmlElement(name = "listeApps", required = false)
-	public List<Application> getListeApplications()
-	{
-		return listeApplications;
-	}
+    /*---------- ACCESSEURS ----------*/
     
+    @XmlElementWrapper
+    @XmlElement(name = "mapApplis", required = false)
+    public Map<String, Boolean> getMapApplis()
+    {
+        return mapApplis;
+    }
+
     @XmlElementWrapper
     @XmlElement(name = "mapClarity", required = false)
     public Map<String, InfoClarity> getMapClarity()
-	{
-		return mapClarity;
-	}
-	
+    {
+        return mapClarity;
+    }
+
     @XmlElementWrapper
     @XmlElement(name = "maplotsPic", required = false)
-	public Map<String, LotSuiviPic> getLotsPic()
-	{
-		return lotsPic;
-	}
-	
+    public Map<String, LotSuiviPic> getLotsPic()
+    {
+        return lotsPic;
+    }
+
     @XmlElementWrapper
     @XmlElement(name = "dateMaj", required = false)
     public Map<TypeFichier, String> getDateMaj()
     {
         return dateMaj;
     }
-    
+
     @XmlElementWrapper
     @XmlElement(name = "mapRespService", required = false)
     public Map<String, RespService> getMapRespService()
     {
         return mapRespService;
     }
-    
+
     @XmlElementWrapper
     @XmlElement(name = "mapCDM", required = false)
     public Map<String, String> getMapCDM()
     {
         return mapCDM;
     }
-    
+
     @XmlElementWrapper
     @XmlElement(name = "mapCHC", required = false)
     public Map<String, String> getMapCHC()
     {
         return mapCHC;
     }
-	
-	/**
-	 * Permet de remonter la liste des applications sous forme d'une map (clef = nom application / valeur = etat)
-	 * @return
-	 */
-	@Transient
-	public Map<String, Boolean> getMapApplis()
-	{
-	    if (mapApplis.isEmpty())
-	    {   
-            for (Application app : listeApplications)
-            {
-                mapApplis.put(app.getNom(), app.isActif());
-            }
-	    }	    
-        return mapApplis;
-	}
-	
-	/**
-	 * @param clef
-	 */
-	public void setDateFichier(TypeFichier fichier)
-	{
-		dateMaj.put(fichier, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy",Locale.FRANCE)));
-	}
 }

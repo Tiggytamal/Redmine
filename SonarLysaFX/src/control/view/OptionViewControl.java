@@ -249,7 +249,7 @@ public class OptionViewControl extends ViewControl
             {
                 @SuppressWarnings("unchecked")
                 ColonneView<T> view = (ColonneView<T>) node;
-                Map<T, String> mapCols = proprietesXML.getMapColonnes(view.getTypeCol().getDeclaringClass());
+                Map<T, String> mapCols = proprietesXML.getMapCols(view.getTypeCol().getDeclaringClass());
                 saveText(view.getField(), mapCols, view.getTypeCol());
             }
         }
@@ -272,7 +272,7 @@ public class OptionViewControl extends ViewControl
         colonnesBox.getChildren().clear();
         
         // Récupération de la map correspondante au type de fichier et affichage des colonnes
-        for (Map.Entry<T, String> entry : proprietesXML.getMapColonnes(typeCol).entrySet())
+        for (Map.Entry<T, String> entry : proprietesXML.getMapCols(typeCol).entrySet())
         {
             ColonneView<T> cv = new ColonneView<>(entry.getKey(), entry.getValue());
             colonnesBox.getChildren().add(cv);
@@ -340,6 +340,7 @@ public class OptionViewControl extends ViewControl
      */
     private void charger(String texte, Consumer<File> fonction)
     {
+        alert.show();
         File file = getFileFromFileChooser("Charger " + texte);
         fonction.accept(file);
         alert.setContentText("Chargement " + texte + " effectué");

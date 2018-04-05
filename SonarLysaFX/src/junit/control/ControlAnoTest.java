@@ -26,7 +26,7 @@ public class ControlAnoTest
     @Test
     public void listAnomaliesSurLotsCrees()
     {
-        List<Anomalie> liste = handler.listAnomaliesSurLotsCrees();
+        List<Anomalie> liste = handler.recupDonneesDepuisExcel();
         Assert.assertTrue(liste.size() == 80);
     }
     

@@ -396,7 +396,7 @@ public class ControlSonar
         ControlAno controlAno = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + fichier));
 
         // Lecture du fichier pour remonter les anomalies en cours.
-        List<Anomalie> listeLotenAno = controlAno.listAnomaliesSurLotsCrees();
+        List<Anomalie> listeLotenAno = controlAno.recupDonneesDepuisExcel();
 
         // Création de la liste des lots déjà dans le fichier
         List<String> lotsDejaDansFichier = creationNumerosLots(listeLotenAno, mapLotsPIC);

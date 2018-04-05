@@ -129,5 +129,11 @@
 			<artifactId>simple-java-mail</artifactId>
 			<version>5.0.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.microsoft.ews-java-api/ews-java-api -->
+		<dependency>
+			<groupId>com.microsoft.ews-java-api</groupId>
+			<artifactId>ews-java-api</artifactId>
+			<version>2.0</version>
+		</dependency>
 	</dependencies>
 </project>

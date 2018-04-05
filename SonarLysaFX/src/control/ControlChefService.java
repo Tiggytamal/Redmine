@@ -15,7 +15,7 @@ import model.enums.TypeColChefServ;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
-public class ControlChefService extends ControlExcel<TypeColChefServ>
+public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String, RespService>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -38,7 +38,7 @@ public class ControlChefService extends ControlExcel<TypeColChefServ>
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public Map<String, RespService> recupRespDepuisExcel()
+    public Map<String, RespService> recupDonneesDepuisExcel()
     {
         // Liste de retour
         Map<String, RespService> retour = new HashMap<>();

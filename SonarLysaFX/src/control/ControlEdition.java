@@ -15,12 +15,13 @@ import model.enums.TypeColEdition;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
-public class ControlEdition extends ControlExcel<TypeColEdition>
+public class ControlEdition extends ControlExcel<TypeColEdition, Map<String,Map<String, String>>>
 {
     /*---------- ATTRIBUTS ----------*/
     
     private int colVersion;
     private int colLib;
+    private List<String> annees;
 
     private static final String CHC = "CHC";
     private static final String CDM = "CDM";
@@ -38,7 +39,7 @@ public class ControlEdition extends ControlExcel<TypeColEdition>
      * 
      * @return
      */
-    public Map<String,Map<String, String>> recupEditionDepuisExcel(List<String> annees)
+    public Map<String,Map<String, String>> recupDonneesDepuisExcel()
     {
         //Initialisation map
         Map<String,Map<String, String>> retour = new HashMap<>();
@@ -99,4 +100,10 @@ public class ControlEdition extends ControlExcel<TypeColEdition>
     }
     
     /*---------- ACCESSEURS ----------*/
+    
+    
+    public void setAnnees(List<String> annees)
+    {
+        this.annees = annees;
+    }
 }

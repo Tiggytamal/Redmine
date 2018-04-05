@@ -23,6 +23,6 @@ public class ControlClarityTest
     @Test
     public void tesTrecupInfosClarityExcel()
     {
-        handler.recupInfosClarityExcel();
+        handler.recupDonneesDepuisExcel();
     }
 }

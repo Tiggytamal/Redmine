@@ -27,7 +27,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import sonarapi.model.Vue;
 import utilities.DateConvert;
 
-public class ControlPic extends ControlExcel<TypeColPic>
+public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -57,6 +57,7 @@ public class ControlPic extends ControlExcel<TypeColPic>
 
     /**
      * Permet de retourner une map avec comme clef les editions CHCCDM, et comme la valeur, la liste des lots de chaque édition.
+     * 
      * @return
      */
     public Map<String, List<Vue>> recupLotsCHCCDM()
@@ -119,7 +120,7 @@ public class ControlPic extends ControlExcel<TypeColPic>
      * 
      * @return
      */
-    public Map<String, LotSuiviPic> recupLotsDepuisPic()
+    public Map<String, LotSuiviPic> recupDonneesDepuisExcel()
     {
         // Map de retour
         Map<String, LotSuiviPic> retour = new HashMap<>();

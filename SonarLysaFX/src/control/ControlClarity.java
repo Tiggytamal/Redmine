@@ -15,7 +15,7 @@ import model.enums.TypeColClarity;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
-public class ControlClarity extends ControlExcel<TypeColClarity>
+public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, InfoClarity>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -39,7 +39,7 @@ public class ControlClarity extends ControlExcel<TypeColClarity>
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public Map<String, InfoClarity> recupInfosClarityExcel()
+    public Map<String, InfoClarity> recupDonneesDepuisExcel()
     {
         // Récupération de la première feuille
         Sheet sheet = wb.getSheetAt(0);

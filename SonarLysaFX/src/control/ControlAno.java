@@ -47,7 +47,7 @@ import utilities.enums.Severity;
  * @author ETP137 - Grégoire Mathon
  *
  */
-public class ControlAno extends ControlExcel<TypeColSuivi>
+public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -103,7 +103,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi>
      * 
      * @return
      */
-    public List<Anomalie> listAnomaliesSurLotsCrees()
+    public List<Anomalie> recupDonneesDepuisExcel()
     {
         // Récupération de la première feuille
         Sheet sheet = wb.getSheet(SQ);

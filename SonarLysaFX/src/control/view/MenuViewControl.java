@@ -142,7 +142,7 @@ public class MenuViewControl extends ViewControl
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() &&  result.get() == ButtonType.OK)
-            startTask(new MajVuesTask(), null);
+            new Thread(new MajVuesTask()).start();
     }
 
     /* ---------- METHODES PRIVEES ---------- */

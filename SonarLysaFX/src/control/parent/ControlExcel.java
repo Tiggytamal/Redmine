@@ -39,7 +39,7 @@ import utilities.enums.Severity;
  * @author ETP137 - Grégoire Mathon
  *
  */
-public abstract class ControlExcel<T extends Enum<T> & TypeCol>
+public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -80,10 +80,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol>
 
     /*---------- METHODES ABSTRAITES ----------*/
     
-    public <R> R recupInfosDepuisExcel()
-    {
-        return null;
-    }
+    public abstract R recupDonneesDepuisExcel();
     
     /**
      * Initialise la classe de l'énumération
@@ -109,7 +106,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol>
         for (Cell cell : titres)
         {
             // Récupération de l'énumération depuis les paramètres XML
-            Map<String, T> mapColonnesInvert = proprietesXML.getMapColonnesInvert(enumeration);
+            Map<String, T> mapColonnesInvert = proprietesXML.getMapColsInvert(enumeration);
             T typeCol = mapColonnesInvert.get(cell.getStringCellValue());
             
             if (cell.getCellTypeEnum() != CellType.STRING || typeCol == null)
