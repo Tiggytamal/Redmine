@@ -4,10 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import control.parent.ViewControl;
 import control.task.CreerVueCHCCDMTask;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
@@ -15,6 +16,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utilities.Statics;
+import utilities.TechnicalException;
 
 public class MaintenanceViewControl extends ViewControl
 {
@@ -70,30 +72,34 @@ public class MaintenanceViewControl extends ViewControl
         String id = "";
         if (source instanceof RadioButton)
         {
-            selectPane.getChildren().clear();
+            ObservableList<Node> children = selectPane.getChildren();
+            children.clear();
 
             id = ((RadioButton) source).getId();
 
             switch (id)
             {
                 case "radioExcel" :
-                    selectPane.getChildren().add(charger);
+                    children.add(charger);
                     titreTask = "Vue CHC/CDM par Excel";
                     break;
+                    
                 case "radioCHC" :
-                    selectPane.getChildren().add(checkBoxPane);
-                    selectPane.getChildren().add(creer);
+                    children.add(checkBoxPane);
+                    children.add(creer);
                     cdm = false;
                     titreTask = "Vues CHC";
                     break;
+                    
                 case "radioCHCCDM" :
-                    selectPane.getChildren().add(checkBoxPane);
-                    selectPane.getChildren().add(creer);
+                    children.add(checkBoxPane);
+                    children.add(creer);
                     cdm = true;
                     titreTask = "Vues CHC_CDM";
                     break;
+                    
                 default :
-                    break;
+                    throw new TechnicalException("RadioButton pas géré" + id, null);
             }
         }
     }

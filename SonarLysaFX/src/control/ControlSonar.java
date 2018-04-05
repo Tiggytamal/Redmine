@@ -20,6 +20,7 @@ import java.util.TreeSet;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import control.excel.ControlAno;
 import junit.control.ControlSonarTest;
 import model.Anomalie;
 import model.LotSuiviPic;
@@ -207,7 +208,7 @@ public class ControlSonar
 
         // Appel du webservice pour remonter tous les composants
         @SuppressWarnings("unchecked")
-        List<Projet> projets = Utilities.recuperation(ControlSonarTest.deser, List.class, "d:\\composants.ser", () -> api.getComposants());
+        List<Projet> projets = Utilities.recuperation(ControlSonarTest.deser, List.class, "d:\\composants.ser", api::getComposants);
 
         // Création de la map de retour en utilisant les versions données
         Map<String, List<Projet>> retour = new HashMap<>();
@@ -338,15 +339,11 @@ public class ControlSonar
 
         // Ajout de la description si elle est valorisée
         if (description != null)
-        {
             vue.setDescription(description);
-        }
 
         // Suppresison de la vue précedente
         if (suppression)
-        {
             api.supprimerProjet(vue, false);
-        }
 
         // Appel de l'API Sonar
         api.creerVue(vue);

@@ -22,7 +22,7 @@ import utilities.enums.Bordure;
  * Classe de getion des styles de cellule Excel.
  * 
  * @author ETP137 - Grégoire Mathon
- *
+ * @since 1.0
  */
 public class CellHelper
 {
@@ -39,28 +39,6 @@ public class CellHelper
     }
 
     /* ---------- METHODS ---------- */
-
-    /**
-     * Retourne le style de cellule voulu selon la couleur, la bordure désirée et l'alignement du texte
-     * 
-     * @param IndexedColors
-     *            {@link org.apache.poi.ss.usermodel.IndexedColors}
-     * @param bordure
-     *            {@link utilities.enums.Bordure}
-     * @param alignement
-     *            {@link org.apache.poi.ss.usermodel.HorizontalAlignment}
-     * @return
-     */
-    public CellStyle getStyle(IndexedColors couleur, Bordure bordure, HorizontalAlignment alignement)
-    {
-        if (couleur == null || bordure == null || alignement == null)
-            throw new IllegalArgumentException("La couleur ou la bordure ne peuvent être nulles");
-
-        CellStyle style = getStyle(couleur, bordure);
-        // Ajout de l'alignement horizontal
-        style.setAlignment(alignement);
-        return style;
-    }
 
     /**
      * Retourne une map avec tous les styles possible d'une couleur. les Elements à true ont un style centré horizontalement.
@@ -165,6 +143,28 @@ public class CellHelper
     }
 
     /**
+     * Retourne le style de cellule voulu selon la couleur, la bordure désirée et l'alignement du texte
+     * 
+     * @param IndexedColors
+     *            {@link org.apache.poi.ss.usermodel.IndexedColors}
+     * @param bordure
+     *            {@link utilities.enums.Bordure}
+     * @param alignement
+     *            {@link org.apache.poi.ss.usermodel.HorizontalAlignment}
+     * @return
+     */
+    public CellStyle getStyle(IndexedColors couleur, Bordure bordure, HorizontalAlignment alignement)
+    {
+        if (couleur == null || bordure == null || alignement == null)
+            throw new IllegalArgumentException("La couleur ou la bordure ne peuvent être nulles");
+
+        CellStyle style = getStyle(couleur, bordure);
+        // Ajout de l'alignement horizontal
+        style.setAlignment(alignement);
+        return style;
+    }
+    
+    /**
      * Retourne le style de cellule voulu selon la couleur, la bordure désirée et l'alignement du texte est celui par défault.
      * 
      * @param couleur
@@ -235,7 +235,7 @@ public class CellHelper
     }
 
     /**
-     * Retourne le style de cellule voulu selon la couleur, sans bordure spécifique et avec un texte centré)
+     * Retourne le style de cellule voulu selon la couleur, sans bordure spécifique
      * 
      * @param couleur
      * @return
@@ -245,6 +245,12 @@ public class CellHelper
         return getStyle(couleur, Bordure.VIDE);
     }
 
+    /**
+     * Rajoute un lien hypertexte à la cellule donnée
+     * @param adresse
+     * @param cell
+     * @return
+     */
     public Cell createHyperLink(String adresse, Cell cell)
     {
         // Création de l'hyperlink

@@ -1,7 +1,10 @@
-package control;
+package control.excel;
+
+import static utilities.Statics.TODAY;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,18 +13,16 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import control.parent.ControlExcel;
 import model.enums.TypeColEdition;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
-public class ControlEdition extends ControlExcel<TypeColEdition, Map<String,Map<String, String>>>
+public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, String>>
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     private int colVersion;
     private int colLib;
-    private List<String> annees;
 
     private static final String CHC = "CHC";
     private static final String CDM = "CDM";
@@ -34,63 +35,61 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String,Map<
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     /**
-     * 
      * @return
      */
-    public Map<String,Map<String, String>> recupDonneesDepuisExcel()
+    public Map<String, String> recupDonneesDepuisExcel()
     {
-        //Initialisation map
-        Map<String,Map<String, String>> retour = new HashMap<>();
-        Map<String, String> chc = new HashMap<>();
-        Map<String, String> cdm = new HashMap<>();
-        retour.put("CHC", chc);
-        retour.put("CDM", cdm);
-                
+        // Initialisation map
+        Map<String, String> retour = new HashMap<>();
+
         Sheet sheet = wb.getSheetAt(0);
-        for (int i =1; i < sheet.getLastRowNum() + 1; i++)
+        
+        int year = TODAY.getYear();
+        List<String> annees = Arrays.asList(String.valueOf(year), String.valueOf(year + 1), String.valueOf(year - 1));
+
+        // Itération sur toutes les lignes sauf la première. ON enregistre l'édition si le libelle correspond à une CHC
+        // ou à une CHC_CDM
+        for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
             Row row = sheet.getRow(i);
             for (String annee : annees)
             {
-                if (getCellStringValue(row, colLib).contains(CDM + annee))
-                {
-                    cdm.put(getCellFormulaValue(row, colVersion), prepareLibelle(getCellStringValue(row, colLib), true));
-                }
-                else if (getCellStringValue(row, colLib).contains(CHC + annee))
-                {
-                    chc.put(getCellFormulaValue(row, colVersion), prepareLibelle(getCellStringValue(row, colLib), false));
-                }
+                String libelle = getCellStringValue(row, colLib);
+                if (libelle.contains(CDM + annee) || libelle.contains(CHC + annee))
+                    retour.put(getCellFormulaValue(row, colVersion), prepareLibelle(getCellStringValue(row, colLib)));
             }
         }
         return retour;
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
-    
-    private String prepareLibelle(String libelle, boolean cdm)
+
+    private String prepareLibelle(String libelle)
     {
+        // On découpe les libéllés avec /. Ensuite, on teste le format pour bien ne renvoyer que des CHC ou CDM.
+        // Une teste d'abord pour les CDM puis les CHC en potition 1.
         String[] split = libelle.split("/");
-        if (cdm && split.length == 2)
+
+        for (String string : split)
         {
-            String retour = split[1].trim();
+            String retour = string.trim();
             if (retour.matches("^CDM20[12][0-9]\\-S[0-5][0-9]$"))
                 return "CHC_" + retour;
         }
-        else
-        {
-            String retour = split[0].trim();
-            if (retour.matches("^CHC20[12][0-9]\\-S[0-5][0-9]$"))
-                return retour;
-        }
+
+        String retour = split[0].trim();
+        if (retour.matches("^CHC20[12][0-9]\\-S[0-5][0-9]$"))
+            return retour;
+
         throw new FunctionalException(Severity.SEVERITY_ERROR, "Mauvais format d'une edition du fichier Excel - libelle " + libelle);
     }
 
     @Override
     protected void initEnum()
     {
-        enumeration = TypeColEdition.class;        
+        enumeration = TypeColEdition.class;
     }
 
     @Override
@@ -98,12 +97,6 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String,Map<
     {
         return wb.getSheetAt(0);
     }
-    
+
     /*---------- ACCESSEURS ----------*/
-    
-    
-    public void setAnnees(List<String> annees)
-    {
-        this.annees = annees;
-    }
 }

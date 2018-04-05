@@ -1,7 +1,5 @@
 package control.task;
 
-import control.parent.SonarTask;
-
 /**
  * Tâche permettant la mise à jour des vues dans Sonar
  * 

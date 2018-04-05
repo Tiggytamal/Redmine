@@ -20,8 +20,7 @@ import java.util.TreeSet;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import control.ControlAno;
-import control.parent.SonarTask;
+import control.excel.ControlAno;
 import junit.control.ControlSonarTest;
 import model.Anomalie;
 import model.LotSuiviPic;

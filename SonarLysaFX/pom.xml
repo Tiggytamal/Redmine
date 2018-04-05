@@ -110,11 +110,11 @@
 			<artifactId>jfx-testrunner</artifactId>
 			<version>1.2</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito -->
+		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2 -->
 		<dependency>
 			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
-			<version>1.7.3</version>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>2.0.0-beta.5</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4 -->

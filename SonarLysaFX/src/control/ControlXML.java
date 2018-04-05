@@ -1,13 +1,10 @@
 package control;
 
-import static utilities.Statics.TODAY;
 import static utilities.Statics.fichiersXML;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -16,7 +13,7 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import control.factory.ExcelFactory;
+import control.excel.ExcelFactory;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
@@ -146,37 +143,15 @@ public class ControlXML
      * Récupère depuis le fichier Excel toutes les édition CHC/CDM, aver leurs numéros de version, pour l'annèe en cours, la précedente et la suivante.
      * 
      * @param file
-     * @throws InvalidFormatException
-     * @throws IOException
-     * @throws JAXBException
      */
     public void recupEditionDepuisExcel(File file)
     {
-        try
-        {
-            ControlEdition control = ExcelFactory.getControlleur(TypeColEdition.class, file);
-
-            int year = TODAY.getYear();
-            List<String> liste = Arrays.asList(String.valueOf(year), String.valueOf(year + 1), String.valueOf(year - 1));
-            control.setAnnees(liste);
-            Map<String, Map<String, String>> editions = control.recupDonneesDepuisExcel();
-            control.close();
-            fichiersXML.getMapCDM().clear();
-            fichiersXML.getMapCDM().putAll(editions.get("CDM"));
-            fichiersXML.getMapCHC().clear();
-            fichiersXML.getMapCHC().putAll(editions.get("CHC"));
-            fichiersXML.setDateFichier(TypeFichier.EDITION);
-            saveParam(fichiersXML);
-        } catch (InvalidFormatException | IOException | JAXBException e)
-        {
-            throw new TechnicalException(ERREUR, e);
-        }
+        saveInfos(TypeFichier.EDITION, TypeColEdition.class, file);
     }
 
     @SuppressWarnings("rawtypes")
     private <T extends Enum<T> & TypeCol> void saveInfos(TypeFichier typeFichier, Class<T> typeCol, File file)
     {
-
         try
         {
             fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getControlleur(typeCol, file).recupDonneesDepuisExcel());            

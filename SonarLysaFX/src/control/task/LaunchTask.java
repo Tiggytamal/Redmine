@@ -1,4 +1,4 @@
-package control.parent;
+package control.task;
 
 import java.util.concurrent.ExecutionException;
 
@@ -6,7 +6,7 @@ import application.Main;
 import javafx.application.Platform;
 import view.ProgressDialog;
 
-abstract class LaunchTask
+public abstract class LaunchTask
 {
     protected void startTask(SonarTask task, String titre)
     {
@@ -24,6 +24,7 @@ abstract class LaunchTask
                 task.get();
             } catch (InterruptedException | ExecutionException e)
             {
+                dialog.hide();
                 Platform.runLater(() -> Main.gestionException(e));
             }
         }).start();

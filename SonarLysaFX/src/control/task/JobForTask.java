@@ -1,4 +1,4 @@
-package control.parent;
+package control.task;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

@@ -1,6 +1,5 @@
 package control.view;
 
-import control.parent.ViewControl;
 import control.task.MajSuiviExcelTask;
 import control.task.MajSuiviExcelTask.TypeMaj;
 import javafx.event.ActionEvent;

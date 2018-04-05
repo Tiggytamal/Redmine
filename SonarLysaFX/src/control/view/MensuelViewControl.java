@@ -3,7 +3,6 @@ package control.view;
 import java.io.File;
 import java.time.LocalDate;
 
-import control.parent.ViewControl;
 import control.task.CreerVueProductionTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +13,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utilities.FunctionalException;
+import utilities.TechnicalException;
 import utilities.enums.Severity;
 
 public class MensuelViewControl extends ViewControl
@@ -93,8 +93,9 @@ public class MensuelViewControl extends ViewControl
                 selectPane.getChildren().add(dateFinHBox);
                 selectPane.getChildren().add(creer);
                 break;
+                
             default :
-                break;
+                throw new TechnicalException("RadioButton pas géré" + id, null);
         }
     }
 

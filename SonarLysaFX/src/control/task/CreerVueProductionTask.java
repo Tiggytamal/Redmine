@@ -14,8 +14,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.util.Map.Entry;
 
-import control.ControlPic;
-import control.parent.SonarTask;
+import control.excel.ControlPic;
 import sonarapi.model.Vue;
 import utilities.DateConvert;
 import utilities.FunctionalException;

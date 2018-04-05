@@ -3,7 +3,6 @@ package control.task;
 import java.util.ArrayList;
 import java.util.List;
 
-import control.parent.SonarTask;
 import junit.control.ControlSonarTest;
 import sonarapi.model.Projet;
 import sonarapi.model.Vue;

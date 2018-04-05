@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class RespService implements Serializable
+public class RespService extends Modele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -25,7 +25,7 @@ public class RespService implements Serializable
 
     public String getFiliere()
     {
-        return filiere;
+        return getString(filiere);
     }
 
     public void setFiliere(String filiere)
@@ -35,7 +35,7 @@ public class RespService implements Serializable
 
     public String getDirection()
     {
-        return direction;
+        return getString(direction);
     }
 
     public void setDirection(String direction)
@@ -45,7 +45,7 @@ public class RespService implements Serializable
 
     public String getService()
     {
-        return service;
+        return getString(service);
     }
 
     public void setService(String service)
@@ -55,7 +55,7 @@ public class RespService implements Serializable
 
     public String getDepartement()
     {
-        return departement;
+        return getString(departement);
     }
 
     public void setDepartement(String departement)
@@ -65,7 +65,7 @@ public class RespService implements Serializable
 
     public String getNom()
     {
-        return nom;
+        return getString(nom);
     }
 
     public void setNom(String nom)

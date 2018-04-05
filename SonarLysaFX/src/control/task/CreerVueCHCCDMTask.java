@@ -15,8 +15,7 @@ import java.util.Set;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import control.ControlPic;
-import control.parent.SonarTask;
+import control.excel.ControlPic;
 import sonarapi.model.Composant;
 import sonarapi.model.Projet;
 import sonarapi.model.Vue;
@@ -83,7 +82,7 @@ public class CreerVueCHCCDMTask extends SonarTask
             // Traitement depuis le fichier XML
             suppressionVuesMaintenance(cdm, annees);
             
-            creerVueMaintenance(recupererEditions(cdm, annees));
+            creerVueMaintenance(recupererEditions(annees));
         }
         else
         {
@@ -202,6 +201,12 @@ public class CreerVueCHCCDMTask extends SonarTask
             if (lot != null && !lot.isEmpty() && edition != null && mapEditions.keySet().contains(edition))
             {
                 String keyCHC = mapEditions.get(edition);
+                
+                // Contrôle pour ne prendre que les CHC ou CDM selon le booléen
+                if (controle(cdm, keyCHC))
+                    continue;
+                
+                // AJout à la map et création de la clef au besoin
                 if (!mapVuesACreer.keySet().contains(keyCHC))
                     mapVuesACreer.put(keyCHC, new HashSet<>());
                 mapVuesACreer.get(keyCHC).add(lot);
@@ -209,6 +214,11 @@ public class CreerVueCHCCDMTask extends SonarTask
         }
 
         creerVues(mapVuesACreer);
+    }
+    
+    private boolean controle(boolean cdm, String keyCHC)
+    {
+        return !cdm && keyCHC.contains("CDM") || cdm && !keyCHC.contains("CDM");
     }
     
     private void creerVues(Map<String, Set<String>> mapVuesACreer)
@@ -256,14 +266,9 @@ public class CreerVueCHCCDMTask extends SonarTask
      * @param annees
      * @return
      */
-    private Map<String, String> recupererEditions(boolean cdm, List<String> annees)
+    private Map<String, String> recupererEditions(List<String> annees)
     {
-        Map<String, String> retour;
-        
-        if (cdm)
-            retour = fichiersXML.getMapCDM();
-        else
-            retour = fichiersXML.getMapCHC();
+        Map<String, String> retour= fichiersXML.getMapEditions();
         
         // On itère sur la HashMap pour retirer tous les éléments qui ne sont pas des annèes selectionnées
         for (Iterator<String>  iter = retour.values().iterator(); iter.hasNext();)

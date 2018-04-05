@@ -8,7 +8,6 @@ import javax.xml.bind.JAXBException;
 import org.quartz.SchedulerException;
 
 import control.ControlXML;
-import control.parent.ViewControl;
 import control.quartz.ControlJob;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Planificateur;
 import model.enums.TypePlan;
+import utilities.TechnicalException;
 import view.TimeSpinner;
 import view.TrayIconView;
 
@@ -158,7 +158,7 @@ public class PlanificateurViewControl extends ViewControl
                 break;
                 
             default:
-                break;
+                throw new TechnicalException("RadioButton pas géré" + id, null);
         }
         setInfos(planificateur);
     }

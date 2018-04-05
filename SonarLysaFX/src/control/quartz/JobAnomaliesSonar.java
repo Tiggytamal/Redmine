@@ -2,7 +2,7 @@ package control.quartz;
 
 import org.quartz.JobExecutionContext;
 
-import control.parent.JobForTask;
+import control.task.JobForTask;
 import control.task.MajSuiviExcelTask;
 import control.task.MajSuiviExcelTask.TypeMaj;
 import javafx.application.Platform;

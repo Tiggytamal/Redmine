@@ -6,7 +6,7 @@ package model;
  * @author ETP8137 - Grégoire Mathon
  *
  */
-public class Info
+public class Info extends Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -26,7 +26,7 @@ public class Info
     
     public String getPseudo()
     {
-        return pseudo;
+        return getString(pseudo);
     }
     public void setPseudo(String pseudo)
     {
@@ -34,7 +34,7 @@ public class Info
     }
     public String getMotDePasse()
     {
-        return motDePasse;
+        return getString(motDePasse);
     }
     public void setMotDePasse(String motDePasse)
     {

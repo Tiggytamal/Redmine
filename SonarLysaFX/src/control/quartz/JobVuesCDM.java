@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.quartz.JobExecutionContext;
 
-import control.parent.JobForTask;
 import control.task.CreerVueCHCCDMTask;
+import control.task.JobForTask;
 import javafx.application.Platform;
 
 public class JobVuesCDM extends JobForTask

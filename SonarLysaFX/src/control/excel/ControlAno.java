@@ -1,4 +1,4 @@
-package control;
+package control.excel;
 
 import static utilities.Statics.fichiersXML;
 import static utilities.Statics.loginconnue;
@@ -28,7 +28,6 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import control.parent.ControlExcel;
 import model.Anomalie;
 import model.InfoClarity;
 import model.RespService;
@@ -197,7 +196,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
             creerLigneVersion(row, ano, IndexedColors.WHITE, "O");
         }
         
-        // 5. Itération sur les anomalies à créer. Si elles sont déjà dans les anomalies abadonnées, on créée une ligne à l'état abandon, sinon on crée une ligne à
+        // 5. Itération sur les anomalies à créer. Si elles sont déjà dans les anomalies abandonnées, on créée une ligne à l'état abandon, sinon on crée une ligne à
         // l'état non traité et on ajoute celle-ci aux anomalies à créer.
         for (Anomalie ano : anoAcreer)
         {
@@ -676,27 +675,24 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
         // Vérification si le code Clarity de l'anomalie est bien dans la map
         if (keyset.contains(anoClarity))
-        {
-            InfoClarity info = map.get(anoClarity);
-            ano.setDepartement(info.getDepartement());
-            ano.setDirection(info.getDirection());
-            ano.setService(info.getService());
-            return ano;
-        }
-
+            return ano.majDepuisClarity(map.get(anoClarity));
+        
+        String temp = "";
+        
         // Sinon on itère sur les clefs en supprimant les indices de lot, et on prend la première clef correspondante
         for (String key : keyset)
         {
+            // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
+            if (anoClarity.startsWith("T") && anoClarity.length() == 7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
+                temp = key;
+                
             // On retire les deux dernières lettres pour les clefs de plus de 6 caractères finissants par 0[1-9]
             if (controleKey(anoClarity, key))
-            {
-                InfoClarity info = map.get(key);
-                ano.setDepartement(info.getDepartement());
-                ano.setDirection(info.getDirection());
-                ano.setService(info.getService());
-                return ano;
-            }
+                return ano.majDepuisClarity(map.get(key));
         }
+        
+        if (!temp.isEmpty())
+            return ano.majDepuisClarity(map.get(temp));
 
         // Si on ne trouve pas, on renvoie juste l'anomalie avec le log d'erreur
         loginconnue.warn("Code Clarity inconnu : " + anoClarity + " - Lot : " + ano.getLot());
@@ -787,6 +783,23 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /*---------- ACCESSEURS ----------*/
 
+    @Override
+    protected void initEnum()
+    {
+        enumeration = TypeColSuivi.class;
+        
+    }
+
+    @Override
+    protected Sheet initSheet()
+    {
+        // Récupération de la feuille principale
+        Sheet sheet = wb.getSheet(SQ);
+        if (sheet == null)
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier n'a pas de page Suivi Qualité");
+        return sheet;
+    }
+    
     /**
      * Liste des numéros de colonnes des feuilles d'environnement
      * 
@@ -812,22 +825,5 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         {
             return string;
         }
-    }
-
-    @Override
-    protected void initEnum()
-    {
-        enumeration = TypeColSuivi.class;
-        
-    }
-
-    @Override
-    protected Sheet initSheet()
-    {
-        // Récupération de la feuille principale
-        Sheet sheet = wb.getSheet(SQ);
-        if (sheet == null)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier n'a pas de page Suivi Qualité");
-        return sheet;
     }
 }

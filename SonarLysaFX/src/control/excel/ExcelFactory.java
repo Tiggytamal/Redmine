@@ -1,16 +1,10 @@
-package control.factory;
+package control.excel;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import control.ControlApps;
-import control.ControlChefService;
-import control.ControlClarity;
-import control.ControlEdition;
-import control.ControlPic;
-import control.parent.ControlExcel;
 import model.enums.TypeCol;
 import utilities.TechnicalException;
 

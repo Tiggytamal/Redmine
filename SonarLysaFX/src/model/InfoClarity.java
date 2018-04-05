@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class InfoClarity
+public class InfoClarity extends Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -36,7 +36,7 @@ public class InfoClarity
     @XmlAttribute (name = "codeClarity", required = false)
     public String getCodeClarity()
     {
-        return codeClarity;
+        return getString(codeClarity);
     }
 
     public void setCodeClarity(String codeClarity)
@@ -47,7 +47,7 @@ public class InfoClarity
     @XmlAttribute (name = "libelleProjet", required = false)
     public String getLibelleProjet()
     {
-        return libelleProjet;
+        return getString(libelleProjet);
     }
 
     public void setLibelleProjet(String libelleProjet)
@@ -58,7 +58,7 @@ public class InfoClarity
     @XmlAttribute (name = "chefProjet", required = false)
     public String getChefProjet()
     {
-        return chefProjet;
+        return getString(chefProjet);
     }
 
     public void setChefProjet(String chefProjet)
@@ -69,7 +69,7 @@ public class InfoClarity
     @XmlAttribute (name = "edition", required = false)
     public String getEdition()
     {
-        return edition;
+        return getString(edition);
     }
 
     public void setEdition(String edition)
@@ -82,7 +82,7 @@ public class InfoClarity
     @XmlAttribute (name = "direction", required = false)
     public String getDirection()
     {
-        return direction;
+        return getString(direction);
     }
 
     public void setDirection(String direction)
@@ -93,7 +93,7 @@ public class InfoClarity
     @XmlAttribute (name = "departement", required = false)
     public String getDepartement()
     {
-        return departement;
+        return getString(departement);
     }
 
     public void setDepartement(String departement)
@@ -104,7 +104,7 @@ public class InfoClarity
     @XmlAttribute (name = "service", required = false)
     public String getService()
     {
-        return service;
+        return getString(service);
     }
 
     public void setService(String service)

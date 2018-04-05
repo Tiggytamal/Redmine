@@ -1,4 +1,4 @@
-package control.parent;
+package control.task;
 
 import static utilities.Statics.info;
 import static utilities.Statics.proprietesXML;

@@ -1,6 +1,6 @@
 package view;
 
-import control.parent.SonarTask;
+import control.task.SonarTask;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;

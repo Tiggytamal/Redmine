@@ -1,5 +1,7 @@
 package model;
 
+import static utilities.Statics.NL;
+
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,10 +28,11 @@ public class FichiersXML implements XML
     private Map<String, Boolean> mapApplis;
     private Map<String, RespService> mapRespService;
     private Map<TypeFichier, String> dateMaj;
-    private Map<String, String> mapCDM;
-    private Map<String, String> mapCHC;
+    private Map<String, String> mapEditions;
+    private boolean controleOK;
 
     public static final String NOMFICHIER = "\\fichiers.xml";
+
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -40,8 +43,8 @@ public class FichiersXML implements XML
         mapApplis = new HashMap<>();
         mapRespService = new HashMap<>();
         dateMaj = new EnumMap<>(TypeFichier.class);
-        mapCDM = new HashMap<>();
-        mapCHC = new HashMap<>();
+        mapEditions = new HashMap<>();
+        controleOK = true;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -51,45 +54,47 @@ public class FichiersXML implements XML
     {
         return new File(Statics.JARPATH + NOMFICHIER);
     }
-    
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     public void majMapDonnees(TypeFichier typeFichier, Map map)
     {
         switch (typeFichier)
         {
-            case APPS:
+            case APPS :
                 mapApplis.clear();
                 mapApplis.putAll(map);
                 setDateFichier(typeFichier);
                 break;
-                
-            case CLARITY:
+
+            case CLARITY :
                 mapClarity.clear();
                 mapClarity.putAll(map);
                 setDateFichier(typeFichier);
                 break;
-                
-            case EDITION:
+
+            case EDITION :
+                mapEditions.clear();
+                mapEditions.putAll(map);
+                setDateFichier(typeFichier);
                 break;
-                
-            case LOTSPICS:
+
+            case LOTSPICS :
                 lotsPic.clear();
                 lotsPic.putAll(map);
                 setDateFichier(typeFichier);
                 break;
-                
-            case RESPSERVICE:
+
+            case RESPSERVICE :
                 mapRespService.clear();
                 mapRespService.putAll(map);
                 setDateFichier(typeFichier);
                 break;
-                
+
             default :
                 throw new TechnicalException("FichiersXML.majMapDonnees - Type de fichier non géré :" + typeFichier.toString(), null);
         }
     }
-    
+
     /**
      * @param clef
      */
@@ -101,108 +106,89 @@ public class FichiersXML implements XML
     @Override
     public String controleDonnees()
     {
-        StringBuilder builder = new StringBuilder("Chargement fichiers Excel :").append(Statics.NL);
-        boolean manquant = false;
+        StringBuilder builder = new StringBuilder("Chargement fichiers Excel :").append(NL);
 
         // Contrôle lots Pic
-        if (lotsPic.isEmpty())
-        {
-            builder.append("Données des lots Pic manquantes.").append(Statics.NL);
-            manquant = true;
-        }
-        else
-            builder.append("Lots Pics chargés. Dernière Maj : ").append(dateMaj.get(TypeFichier.LOTSPICS)).append(Statics.NL);
+        controleMap(lotsPic, builder, "Lots Pic", TypeFichier.LOTSPICS);
 
         // Contrôle liste application
-        if (mapApplis.isEmpty())
-        {
-            builder.append("Liste des applications manquante.").append(Statics.NL);
-            manquant = true;
-        }
-        else
-            builder.append("Liste des applications chargée. Dernière Maj : ").append(dateMaj.get(TypeFichier.APPS)).append(Statics.NL);
+        controleMap(mapApplis, builder, "Liste des applications", TypeFichier.APPS);
 
         // Contrôle Referentiel Clarity
-        if (mapClarity.isEmpty())
-        {
-            builder.append("Informations referentiel Clarity manquantes.").append(Statics.NL);
-            manquant = true;
-        }
-        else
-            builder.append("Referentiel Clarity chargé. Dernière Maj : ").append(dateMaj.get(TypeFichier.CLARITY)).append(Statics.NL);
+        controleMap(mapClarity, builder, "Referentiel Clarity", TypeFichier.CLARITY);
 
         // Contrôle Referentiel Clarity
-        if (mapRespService.isEmpty())
+        controleMap(mapRespService, builder, "Responsables de services", TypeFichier.RESPSERVICE);
+
+        // Contrôle Editions
+        controleMap(mapEditions, builder, "Editions Pic", TypeFichier.EDITION);
+
+        if (!controleOK)
+            builder.append("Merci de recharger le(s) fichier(s) de paramétrage.").append(NL);
+
+        return builder.append(NL).toString();
+    }
+
+    /**
+     * Permet de controler si une map est vide ou non, et met à jour le message.
+     * 
+     * @param map
+     * @param builder
+     * @param texte
+     * @param typeFichier
+     */
+    private void controleMap(@SuppressWarnings ("rawtypes") Map map, StringBuilder builder, String texte, TypeFichier typeFichier)
+    {
+        if (map.isEmpty())
         {
-            builder.append("Informations Responsables de services manquantes.").append(Statics.NL);
-            manquant = true;
+            builder.append(texte).append(" non chargé(e)s.").append(NL);
+            controleOK = false;
         }
         else
-            builder.append("Responsables de services chargés. Dernière Maj : ").append(dateMaj.get(TypeFichier.RESPSERVICE)).append(Statics.NL);
-
-        // Contrôle Editions CDM
-        if (mapCDM.isEmpty())
-        {
-            builder.append("Informations Editions CDM manquantes.").append(Statics.NL);
-            manquant = true;
-        }
-        else
-            builder.append("Editions CDM chargées. Dernière Maj : ").append(dateMaj.get(TypeFichier.EDITION)).append(Statics.NL);
-
-        if (manquant)
-            builder.append("Merci de recharger le(s) fichier(s) de paramétrage.").append(Statics.NL);
-
-        return builder.append(Statics.NL).toString();
+            builder.append(texte).append(" chargé(e)s. Dernière Maj : ").append(dateMaj.get(typeFichier)).append(NL);
     }
 
     /*---------- ACCESSEURS ----------*/
-    
+
     @XmlElementWrapper
-    @XmlElement(name = "mapApplis", required = false)
+    @XmlElement (name = "mapApplis", required = false)
     public Map<String, Boolean> getMapApplis()
     {
         return mapApplis;
     }
 
     @XmlElementWrapper
-    @XmlElement(name = "mapClarity", required = false)
+    @XmlElement (name = "mapClarity", required = false)
     public Map<String, InfoClarity> getMapClarity()
     {
         return mapClarity;
     }
 
     @XmlElementWrapper
-    @XmlElement(name = "maplotsPic", required = false)
+    @XmlElement (name = "maplotsPic", required = false)
     public Map<String, LotSuiviPic> getLotsPic()
     {
         return lotsPic;
     }
 
     @XmlElementWrapper
-    @XmlElement(name = "dateMaj", required = false)
+    @XmlElement (name = "dateMaj", required = false)
     public Map<TypeFichier, String> getDateMaj()
     {
         return dateMaj;
     }
 
     @XmlElementWrapper
-    @XmlElement(name = "mapRespService", required = false)
+    @XmlElement (name = "mapRespService", required = false)
     public Map<String, RespService> getMapRespService()
     {
         return mapRespService;
     }
 
     @XmlElementWrapper
-    @XmlElement(name = "mapCDM", required = false)
-    public Map<String, String> getMapCDM()
+    @XmlElement (name = "mapEditions", required = false)
+    public Map<String, String> getMapEditions()
     {
-        return mapCDM;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapCHC", required = false)
-    public Map<String, String> getMapCHC()
-    {
-        return mapCHC;
+        return mapEditions;
     }
 }

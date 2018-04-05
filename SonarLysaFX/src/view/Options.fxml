@@ -41,6 +41,7 @@
 										<TreeItem value="Chef de Service" />
 										<TreeItem value="Lots Pic" />
 										<TreeItem value="Codification Editions" />
+										<TreeItem value="Applications" />
 									</children>
 								</TreeItem>
 							</children>
@@ -68,7 +69,7 @@
 					<Region prefHeight="20" />
 					<Button fx:id="chefSrev" text="Charger Chef de Service" onAction="#chargerFichier" alignment="CENTER" />
 					<Region prefHeight="20" />
-					<Button fx:id="edition" text="Charger Edition CDM" onAction="#chargerFichier" alignment="CENTER" />
+					<Button fx:id="edition" text="Charger Edition" onAction="#chargerFichier" alignment="CENTER" />
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
 				</VBox>
 

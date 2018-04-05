@@ -5,7 +5,6 @@ import static utilities.Statics.proprietesXML;
 import java.io.IOException;
 import java.util.Optional;
 
-import control.parent.ViewControl;
 import control.task.MajVuesTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,6 +22,7 @@ import model.enums.TypeParam;
 import sonarapi.SonarAPI;
 import utilities.FunctionalException;
 import utilities.Statics;
+import utilities.TechnicalException;
 import utilities.enums.Severity;
 import view.ConnexionDialog;
 
@@ -115,20 +115,25 @@ public class MenuViewControl extends ViewControl
             case "mensuel":
                 load("/view/Mensuel.fxml");
                 break;
+                
             case "options":
                 load("/view/Options.fxml");
                 break;
+                
             case "planificateur":
                 load("/view/Planificateur.fxml");
                 break;
+                
             case "autres":
                 load("/view/AutresVues.fxml");
                 break;
+                
             case "suivi":
                 load("/view/Suivi.fxml");
                 break;
+                
             default:
-                break;
+                throw new TechnicalException("MenuItem pas géré" + id, null);
         }
     }
     

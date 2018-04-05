@@ -7,7 +7,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Before;
 import org.junit.Test;
 
-import control.ControlClarity;
+import control.excel.ControlClarity;
 
 public class ControlClarityTest
 {

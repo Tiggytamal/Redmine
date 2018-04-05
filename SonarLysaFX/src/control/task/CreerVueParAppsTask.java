@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import control.parent.SonarTask;
 import junit.control.ControlSonarTest;
 import sonarapi.model.Composant;
 import sonarapi.model.Projet;

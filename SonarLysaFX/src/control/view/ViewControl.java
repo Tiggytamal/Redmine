@@ -1,9 +1,9 @@
-package control.parent;
+package control.view;
 
 import java.io.File;
 import java.io.IOException;
 
-import control.view.MainScreen;
+import control.task.LaunchTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;

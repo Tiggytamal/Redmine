@@ -1,6 +1,5 @@
 package control.view;
 
-import control.parent.ViewControl;
 import control.task.CreerVueDataStageTask;
 import control.task.CreerVueParAppsTask;
 import control.task.CreerVuePatrimoineTask;
@@ -10,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
+import utilities.TechnicalException;
 
 public class AutresVuesViewControl extends ViewControl
 {
@@ -85,7 +85,7 @@ public class AutresVuesViewControl extends ViewControl
                     break;
                     
                 default :
-                    break;
+                    throw new TechnicalException("RadioButton pas géré" + id, null);
             }
         }
         

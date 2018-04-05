@@ -16,7 +16,7 @@ import model.enums.Matiere;
  * @author ETP8137 - Grégoire mathon
  * @since 1.0
  */
-public class Anomalie
+public class Anomalie extends Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -91,6 +91,14 @@ public class Anomalie
         setEnvironnement(calculerEnvironnement(lot));
     }
     
+    public Anomalie majDepuisClarity(InfoClarity info)
+    {
+        setDepartement(info.getDepartement());
+        setDirection(info.getDirection());
+        setService(info.getService());
+        return this;
+    }
+    
     /**
      * Permet de vérifier si une anomalie a été traitée ou non. C'est-à-dire si il y a un numéro d'anomalie ou un commentaire.
      * @return
@@ -160,7 +168,7 @@ public class Anomalie
 
     public String getDirection()
     {
-        return direction;
+        return getString(direction);
     }
 
     public void setDirection(String direction)
@@ -170,7 +178,7 @@ public class Anomalie
 
     public String getDepartement()
     {
-        return departement;
+        return getString(departement);
     }
 
     public void setDepartement(String departement)
@@ -180,7 +188,7 @@ public class Anomalie
 
     public String getService()
     {
-        return service;
+        return getString(service);
     }
 
     public void setService(String service)
@@ -190,7 +198,7 @@ public class Anomalie
 
     public String getResponsableService()
     {
-        return responsableService;
+        return getString(responsableService);
     }
 
     public void setResponsableService(String responsableService)
@@ -200,7 +208,7 @@ public class Anomalie
 
     public String getProjetClarity()
     {
-        return projetClarity;
+        return getString(projetClarity);
     }
 
     public void setProjetClarity(String projetClarity)
@@ -210,7 +218,7 @@ public class Anomalie
 
     public String getLibelleProjet()
     {
-        return libelleProjet;
+        return getString(libelleProjet);
     }
 
     public void setLibelleProjet(String libelleProjet)
@@ -220,7 +228,7 @@ public class Anomalie
 
     public String getCpiProjet()
     {
-        return cpiProjet;
+        return getString(cpiProjet);
     }
 
     public void setCpiProjet(String cpiProjet)
@@ -230,7 +238,7 @@ public class Anomalie
     
     public String getEdition()
     {
-        return edition;
+        return getString(edition);
     }
 
     public void setEdition(String edition)
@@ -240,7 +248,7 @@ public class Anomalie
     
     public String getLot()
     {
-        return lot;
+        return getString(lot);
     }
 
     public void setLot(String lot)
@@ -270,7 +278,7 @@ public class Anomalie
 
     public String getEtat()
     {
-        return etat;
+        return getString(etat);
     }
 
     public void setEtat(String etat)
@@ -280,7 +288,7 @@ public class Anomalie
 
     public String getSecurite()
     {
-        return securite;
+        return getString(securite);
     }
 
     public void setSecurite(String securite)
@@ -290,7 +298,7 @@ public class Anomalie
 
     public String getRemarque()
     {
-        return remarque;
+        return getString(remarque);
     }
 
     public void setRemarque(String remarque)
@@ -300,7 +308,7 @@ public class Anomalie
 
     public String getLiensLot()
     {
-        return liensLot;
+        return getString(liensLot);
     }
 
     public void setLiensLot(String liensLot)
@@ -310,7 +318,7 @@ public class Anomalie
 
     public String getLiensAno()
     {
-        return liensAno;
+        return getString(liensAno);
     }
 
     public void setLiensAno(String liensAno)
@@ -320,7 +328,7 @@ public class Anomalie
 
     public String getTypeAssemblage()
     {
-        return typeAssemblage;
+        return getString(typeAssemblage);
     }
 
     public void setTypeAssemblage(String typeAssemblage)
@@ -330,7 +338,7 @@ public class Anomalie
 
     public String getVersion()
     {
-        return version;
+        return getString(version);
     }
 
     public void setVersion(String version)

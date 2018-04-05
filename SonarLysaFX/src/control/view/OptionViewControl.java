@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import javax.xml.bind.JAXBException;
 
 import control.ControlXML;
-import control.parent.ViewControl;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -27,6 +27,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import model.enums.TypeCol;
+import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
@@ -35,6 +36,7 @@ import model.enums.TypeColSuivi;
 import model.enums.TypeKey;
 import model.enums.TypeParam;
 import utilities.FunctionalException;
+import utilities.TechnicalException;
 import utilities.enums.Severity;
 import view.ColonneView;
 import view.ParamView;
@@ -65,7 +67,7 @@ public class OptionViewControl extends ViewControl
     private VBox paramsBox;
 
     // Attributs de classe
-    
+
     private Alert alert;
     private static final int ROW_HEIGHT = 24;
     private Map<TypeParam, String> mapParam;
@@ -83,7 +85,6 @@ public class OptionViewControl extends ViewControl
         // Initialisation alerte
         alert = new Alert(AlertType.INFORMATION);
         alert.initStyle(StageStyle.UTILITY);
-        alert.setContentText("Chargement");
         alert.setHeaderText(null);
         mapParam = proprietesXML.getMapParams();
         control = new ControlXML();
@@ -94,45 +95,49 @@ public class OptionViewControl extends ViewControl
     private void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
     {
         ObservableList<Node> root = rightSide.getChildren();
-        
+
         switch (ov.getValue().getValue())
         {
             case "Chargement fichiers" :
                 root.clear();
                 root.add(chargementPane);
                 break;
-                
+
             case "Paramètres" :
                 root.clear();
                 afficherParams();
                 root.add(optionsPane);
                 break;
-                
+
             case "SuiviQualité" :
                 afficherColonnes(TypeColSuivi.class, root);
                 break;
-                
+
             case "Clarity" :
                 afficherColonnes(TypeColClarity.class, root);
                 break;
-                
+
             case "Chef de Service" :
                 afficherColonnes(TypeColChefServ.class, root);
                 break;
-                
+
             case "Lots Pic" :
                 afficherColonnes(TypeColPic.class, root);
                 break;
-                
+
             case "Codification Editions" :
                 afficherColonnes(TypeColEdition.class, root);
                 break;
                 
-            default:
+            case "Applications" :
+                afficherColonnes(TypeColApps.class, root);
                 break;
-        }      
+
+            default :
+                throw new TechnicalException("TreeItem pas géré" + ov.getValue().getValue(), null);
+        }
     }
-  
+
     @FXML
     public void chargerFichier(ActionEvent event)
     {
@@ -143,27 +148,27 @@ public class OptionViewControl extends ViewControl
 
         switch (id)
         {
-            case "lotsPic":
+            case "lotsPic" :
                 charger("Lots Pic", file -> control.recupLotsPicDepuisExcel(file));
                 break;
-                
-            case "apps":
+
+            case "apps" :
                 charger("Applications", file -> control.recupListeAppsDepuisExcel(file));
                 break;
-                
-            case "clarity":
+
+            case "clarity" :
                 charger("Referentiel Clarity", file -> control.recupInfosClarityDepuisExcel(file));
                 break;
-                
-            case "chefSrev":
+
+            case "chefSrev" :
                 charger("Chefs de Service", file -> control.recupChefServiceDepuisExcel(file));
                 break;
-                
-            case "edition":
+
+            case "edition" :
                 charger("Editions CDM", file -> control.recupEditionDepuisExcel(file));
                 break;
-                
-            default:
+
+            default :
                 break;
         }
     }
@@ -223,7 +228,7 @@ public class OptionViewControl extends ViewControl
                 builder.append("-");
         }
         mapParam.put(TypeParam.VERSIONS, builder.toString());
-        
+
         // Sauvegarde des autres paramètres
         for (Node node : paramsBox.getChildren())
         {
@@ -247,7 +252,7 @@ public class OptionViewControl extends ViewControl
         {
             if (node instanceof ColonneView)
             {
-                @SuppressWarnings("unchecked")
+                @SuppressWarnings ("unchecked")
                 ColonneView<T> view = (ColonneView<T>) node;
                 Map<T, String> mapCols = proprietesXML.getMapCols(view.getTypeCol().getDeclaringClass());
                 saveText(view.getField(), mapCols, view.getTypeCol());
@@ -258,7 +263,7 @@ public class OptionViewControl extends ViewControl
     }
 
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Affichge les colonnes du fichier choisi dans les options
      * 
@@ -270,23 +275,23 @@ public class OptionViewControl extends ViewControl
         // Nettoyage de l'affichage
         root.clear();
         colonnesBox.getChildren().clear();
-        
+
         // Récupération de la map correspondante au type de fichier et affichage des colonnes
         for (Map.Entry<T, String> entry : proprietesXML.getMapCols(typeCol).entrySet())
         {
             ColonneView<T> cv = new ColonneView<>(entry.getKey(), entry.getValue());
             colonnesBox.getChildren().add(cv);
-        }       
+        }
         root.add(colonnesPane);
     }
-    
+
     /**
      * Affichage des paramètres
      */
     private void afficherParams()
     {
         paramsBox.getChildren().clear();
-        
+
         // Initialition liste des versions affichée
         String versionsParam = mapParam.get(TypeParam.VERSIONS);
 
@@ -303,16 +308,16 @@ public class OptionViewControl extends ViewControl
         versionsField.setPrefHeight(taille);
         versionsField.getItems().addListener((ListChangeListener.Change<? extends String> c) -> versionsField.setPrefHeight(taille));
 
-        
-        // Récupération de la map correspondante au type de fichier et affichage des colonnes. On saute juste les versions qui sont gérées différement
+        // Récupération de la map correspondante au type de fichier et affichage des colonnes. On saute juste les
+        // versions qui sont gérées différement
         for (Map.Entry<TypeParam, String> entry : mapParam.entrySet())
         {
             if (entry.getKey() == TypeParam.VERSIONS)
                 continue;
-            
+
             ParamView pv = new ParamView(entry.getKey(), entry.getValue());
             paramsBox.getChildren().add(pv);
-        }               
+        }
     }
 
     /**
@@ -331,7 +336,7 @@ public class OptionViewControl extends ViewControl
         if (text != null && !text.isEmpty())
             map.put(clef, text.replace("\\", "\\\\"));
     }
-    
+
     /**
      * Chargement d'un fichier Excel. Paramétrage en fonction de la méthode à utiliser pour chaque type de fichier.
      * 
@@ -340,10 +345,13 @@ public class OptionViewControl extends ViewControl
      */
     private void charger(String texte, Consumer<File> fonction)
     {
-        alert.show();
         File file = getFileFromFileChooser("Charger " + texte);
-        fonction.accept(file);
-        alert.setContentText("Chargement " + texte + " effectué");
+        Platform.runLater(() -> {
+            fonction.accept(file);
+            alert.setContentText("Chargement " + texte + " effectué");
+            alert.show();
+        });
+
     }
 
     @Override

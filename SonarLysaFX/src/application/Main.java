@@ -70,9 +70,7 @@ public class Main extends Application
             }
         }
         else
-        {
             createAlert(Severity.SEVERITY_ERROR, e, e.getMessage());
-        }
     }
 
     /**

@@ -1,4 +1,4 @@
-package control;
+package control.excel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +18,6 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 
-import control.parent.ControlExcel;
 import model.LotSuiviPic;
 import model.enums.TypeColPic;
 
@@ -201,6 +200,7 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
         Cell cellLot = row.getCell(colLot);
         Cell cellDate = row.getCell(colLiv);
 
+        // Sortie si le numéro de lot ou la date de livraison ne sont pas remplis.
         if (cellLot.getCellTypeEnum() != CellType.NUMERIC && cellDate.getCellTypeEnum() != CellType.NUMERIC)
             return;
 
@@ -216,18 +216,15 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
             LocalDate clef = LocalDate.of(date.getYear(), date.getMonth(), 1);
 
             majCouleurLigne(row, IndexedColors.LIGHT_GREEN);
-
-            if (retour.keySet().contains(clef))
-            {
-                retour.get(clef).add(mapQube.get(lot));
-            }
-            else
-            {
-                List<Vue> liste = new ArrayList<>();
-                liste.add(mapQube.get(lot));
-                retour.put(clef, liste);
-            }
+            
+            // Mise à jour de la map
+            if(!retour.keySet().contains(clef))
+                retour.put(clef, new ArrayList<>());
+            
+            retour.get(clef).add(mapQube.get(lot));
         }
+        else if (getCellNumericValue(row, colNbCompos) > 0)
+            majCouleurLigne(row, IndexedColors.LIGHT_YELLOW);
     }
     /*---------- ACCESSEURS ----------*/
 
