@@ -21,6 +21,7 @@ public class CreerVueDataStageTask extends SonarTask
     public CreerVueDataStageTask()
     {
         super(2);
+        annulable = true;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -35,7 +36,7 @@ public class CreerVueDataStageTask extends SonarTask
     @Override
     protected Boolean call() throws Exception
     {
-        return creerVuesDatastage();
+        return creerVueDatastage();
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -44,7 +45,7 @@ public class CreerVueDataStageTask extends SonarTask
     /**
      * Crée une vue avec tous les composants Datastage
      */
-    private boolean creerVuesDatastage()
+    private boolean creerVueDatastage()
     {
         // Appel du webservice pour remonter tous les composants
         updateMessage(RECUPCOMPOSANTS);

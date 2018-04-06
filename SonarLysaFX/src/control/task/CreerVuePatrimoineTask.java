@@ -25,11 +25,13 @@ public class CreerVuePatrimoineTask extends SonarTask
     public CreerVuePatrimoineTask()
     {
         super(3);
+        annulable = true;
     }
     
     public CreerVuePatrimoineTask(String pseudo, String mdp)
     {
         super(pseudo, mdp, 3);
+        annulable = true;
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -44,6 +46,7 @@ public class CreerVuePatrimoineTask extends SonarTask
     @Override
     public void annuler()
     {
+        if (key != null && !key.isEmpty())
         api.supprimerProjet(key, true);   
     }
     

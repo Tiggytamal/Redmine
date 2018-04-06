@@ -36,18 +36,21 @@ public class CreerVueCHCCDMTask extends SonarTask
     public CreerVueCHCCDMTask(File file)
     {
         super(3);
+        annulable = false;
         initFile(file);
     }
     
     public CreerVueCHCCDMTask(String pseudo, String mdp, File file)
     {
         super(pseudo, mdp, 3);
+        annulable = false;
         initFile(file);
     }
     
     public CreerVueCHCCDMTask(List<String> annees, boolean cdm)
     {
         super(3);
+        annulable = false;
         initAnnees(annees);
         this.cdm = cdm;
     }
@@ -55,17 +58,12 @@ public class CreerVueCHCCDMTask extends SonarTask
     public CreerVueCHCCDMTask(String pseudo, String mdp, List<String> annees, boolean cdm)
     {
         super(pseudo, mdp, 3);
+        annulable = false;
         initAnnees(annees);
         this.cdm = cdm;
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
-
-    @Override
-    public void annuler()
-    {
-        // Pas de traitement pour l'annulation
-    }
 
     @Override
     protected Boolean call() throws Exception
@@ -88,9 +86,6 @@ public class CreerVueCHCCDMTask extends SonarTask
         {
             suppressionVuesMaintenance(true, annees);
             
-            if (isCancelled())
-                return false;
-            
             // Message
             etapePlus();
             updateMessage("Récupération lots depuis fichier Excel...");
@@ -103,10 +98,7 @@ public class CreerVueCHCCDMTask extends SonarTask
             
             // Création des nouvelles vues
             for (Map.Entry<String, List<Vue>> entry : map.entrySet())
-            {
-                if (isCancelled())
-                    return false;
-                
+            {                
                 etapePlus();
                 String key = entry.getKey();
                 Vue vueParent = creerVue(key, key, "Vue de l'edition " + key, true);
@@ -134,10 +126,7 @@ public class CreerVueCHCCDMTask extends SonarTask
         int j = 1;
         // On itère sur chacune des annèes
         for (String annee : annees)
-        {
-            if (isCancelled())
-                break;
-            
+        {            
             // préparation de la base de la clef
             if (cdm)
                 base = "CHC_CDM" + annee;
@@ -147,8 +136,6 @@ public class CreerVueCHCCDMTask extends SonarTask
             // Suprression des vues existantes possibles
             for (int i = 1; i < 53; i++)
             {
-                if (isCancelled())
-                    break;
                 StringBuilder builder = new StringBuilder(base).append("-S").append(String.format("%02d", i));
                 String message = builder.toString();
                 api.supprimerProjet(builder.append("Key").toString(), false);
@@ -179,10 +166,7 @@ public class CreerVueCHCCDMTask extends SonarTask
         etapePlus();
         
         for (int i = 0; i < tousLesProjets.size(); i++)
-        {           
-            if (isCancelled())
-                return;
-            
+        {                      
             Projet projet = tousLesProjets.get(i);
             
             // Récupération de l'édition du composant sous forme numérique xx.yy.zz.tt et du numéro de lot
@@ -236,9 +220,6 @@ public class CreerVueCHCCDMTask extends SonarTask
         int i = 0;
         for (Map.Entry<String, Set<String>> entry : mapVuesACreer.entrySet())
         {         
-            if (isCancelled())
-                return;
-            
             Vue parent = new Vue(entry.getKey() + "Key", entry.getKey());
             api.creerVue(parent);
             String baseVue = base + entry.getKey();
@@ -246,9 +227,6 @@ public class CreerVueCHCCDMTask extends SonarTask
             
             for (String lot : entry.getValue())
             {               
-                if (isCancelled())
-                    return;
-                
                 api.ajouterSousVue(new Vue("view_lot_" + lot, "Lot " + lot), parent);
                 i++;
                 

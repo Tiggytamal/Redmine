@@ -29,15 +29,9 @@ public class CreerVueParAppsTask extends SonarTask
     public CreerVueParAppsTask()
     {
         super(2);
+        annulable = false;
     }
     /*---------- METHODES PUBLIQUES ----------*/
-
-    @Override
-    public void annuler()
-    {
-        // Pas de traitement pour cette tâche
-
-    }
 
     @Override
     protected Boolean call() throws Exception
@@ -57,14 +51,16 @@ public class CreerVueParAppsTask extends SonarTask
 
         // 2. Suppression des vues existantes
         
-        // Message
+        // Message        
         String base = "Suppression des vues existantes :" + NL;
+        etapePlus();
         updateMessage(base);
+        updateProgress(0, 1);
         
         // Traitement
         List<Projet> listeVuesExistantes = api.getVuesParNom("APPLI MASTER ");
         for (int i = 0; i < listeVuesExistantes.size(); i++)
-        {
+        {           
             Projet projet = listeVuesExistantes.get(i);
             api.supprimerProjet(projet.getKey(), true);
             
@@ -75,19 +71,29 @@ public class CreerVueParAppsTask extends SonarTask
 
         // 3. Creation des nouvelles vues
         
+        // Message
         base = "Creation des nouvelles vues :" + NL;
         int i = 0;
+        int size = mapApplication.entrySet().size();
+        etapePlus();
+        updateMessage(base);
+        updateProgress(0, size);
         
         // Parcours de la liste pour créer chaque vue applicative avec ses composants
         for (Map.Entry<String, List<Projet>> entry : mapApplication.entrySet())
-        {
+        {            
             // Création de la vue principale
             Vue vue = creerVue("APPMASTERAPP" + entry.getKey(), "APPLI MASTER " + entry.getKey(), "Liste des composants de l'application " + entry.getKey(), false);
             
             // Message
-            updateMessage(base + "traitement : " + vue.getName() + NL);
-            updateProgress(++i, mapApplication.entrySet().size());
-            api.ajouterSousProjets(entry.getValue(), vue);
+            String baseVue = base + "traitement : " + vue.getName() + NL;
+            updateMessage(baseVue);
+            updateProgress(++i, size);
+            for (Projet projet : entry.getValue())
+            {
+                updateMessage(baseVue + "Ajout : " + projet.getNom());
+                api.ajouterProjet(projet, vue);
+            }
         }
         return true;
     }
@@ -113,7 +119,7 @@ public class CreerVueParAppsTask extends SonarTask
     private HashMap<String, List<Projet>> creerMapApplication(Map<String, Projet> mapProjets)
     {
         // Initialisation de la map
-        HashMap<String, List<Projet>> mapApplications = new HashMap<>();
+        HashMap<String, List<Projet>> retour  = new HashMap<>();
         
         // Message
         String base = "Traitements des composants :" + NL;
@@ -141,19 +147,19 @@ public class CreerVueParAppsTask extends SonarTask
 
                 // Mise à jour de la map de retour avec en clef, le code application et en valeur : la liste des projets
                 // liés.
-                if (mapApplications.keySet().contains(application))
-                    mapApplications.get(application).add(projet);
+                if (retour.keySet().contains(application))
+                    retour.get(application).add(projet);
                 else
                 {
                     List<Projet> liste = new ArrayList<>();
                     liste.add(projet);
-                    mapApplications.put(application, liste);
+                    retour.put(application, liste);
                 }
             }
             else
                 logSansApp.warn("Application non renseignée - Composant : " + projet.getNom());
         }
-        return mapApplications;
+        return retour;
     }
     
     /**

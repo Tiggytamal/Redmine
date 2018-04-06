@@ -10,12 +10,9 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.reflect.Whitebox;
 
 import control.ControlSonar;
-import control.task.CreerVuePatrimoineTask;
 import de.saxsys.javafx.test.JfxRunner;
-import de.saxsys.javafx.test.TestInJfxThread;
 import junit.TestUtils;
 
 @RunWith (JfxRunner.class)
@@ -60,32 +57,32 @@ public class ControlSonarTest
         TestUtils.callPrivate("recupererComposantsSonar", handler, null);
     }
 
-    @Test
-    @TestInJfxThread
-    public void majFichierSuiviExcel() throws InvalidFormatException, IOException, JAXBException
-    {
-        handler.majFichierSuiviExcel();
-    }
-
-    @Test
-    @TestInJfxThread
-    public void majFichierSuiviExcelDataStage() throws InvalidFormatException, IOException, JAXBException
-    {
-        handler.majFichierSuiviExcelDataStage();
-    }
-
-    @Test
-    @TestInJfxThread
-    public void traitementSuiviExcelToutFichiers() throws InvalidFormatException, IOException
-    {
-        handler.traitementSuiviExcelToutFichiers();
-    }
-
-    @Test
-    @TestInJfxThread
-    public void creerVuePatrimoine() throws Exception
-    {
-        CreerVuePatrimoineTask task2 = new CreerVuePatrimoineTask("ETP8137", "28H02m89,;:!");
-        Whitebox.invokeMethod(task2, "creerVuePatrimoine");
-    }
+//    @Test
+//    @TestInJfxThread
+//    public void majFichierSuiviExcel() throws InvalidFormatException, IOException, JAXBException
+//    {
+//        handler.majFichierSuiviExcel();
+//    }
+//
+//    @Test
+//    @TestInJfxThread
+//    public void majFichierSuiviExcelDataStage() throws InvalidFormatException, IOException, JAXBException
+//    {
+//        handler.majFichierSuiviExcelDataStage();
+//    }
+//
+//    @Test
+//    @TestInJfxThread
+//    public void traitementSuiviExcelToutFichiers() throws InvalidFormatException, IOException
+//    {
+//        handler.traitementSuiviExcelToutFichiers();
+//    }
+//
+//    @Test
+//    @TestInJfxThread
+//    public void creerVuePatrimoine() throws Exception
+//    {
+//        CreerVuePatrimoineTask task2 = new CreerVuePatrimoineTask("ETP8137", "28H02m89,;:!");
+//        Whitebox.invokeMethod(task2, "creerVuePatrimoine");
+//    }
 }

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <proprietesXML>
-    <mapColonnesChefServ>
+    <mapColsApps>
+        <entry>
+            <key>CODEAPPS</key>
+            <value>Code Application</value>
+        </entry>
+        <entry>
+            <key>ACTIF</key>
+            <value>Actif</value>
+        </entry>
+    </mapColsApps>
+    <mapColsChefServ>
         <entry>
             <key>DIRECTION</key>
             <value>Direction</value>
@@ -21,8 +31,8 @@
             <key>MANAGER</key>
             <value>Manager</value>
         </entry>
-    </mapColonnesChefServ>
-    <mapColonnesClarity>
+    </mapColsChefServ>
+    <mapColsClarity>
         <entry>
             <key>ACTIF</key>
             <value>Actif</value>
@@ -55,8 +65,8 @@
             <key>SERVICE</key>
             <value>Service</value>
         </entry>
-    </mapColonnesClarity>
-    <mapColonnesEdition>
+    </mapColsClarity>
+    <mapColsEdition>
         <entry>
             <key>LIBELLE</key>
             <value>Libellé</value>
@@ -66,8 +76,8 @@
             <value>Numero de version
 NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
         </entry>
-    </mapColonnesEdition>
-    <mapColonnesPic>
+    </mapColsEdition>
+    <mapColsPic>
         <entry>
             <key>LOT</key>
             <value>Lot</value>
@@ -120,8 +130,8 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>LIV</key>
             <value>Livraison édition</value>
         </entry>
-    </mapColonnesPic>
-    <mapColonnesSuivi>
+    </mapColsPic>
+    <mapColsSuivi>
         <entry>
             <key>DIRECTION</key>
             <value>Direction</value>
@@ -198,7 +208,7 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>MATIERE</key>
             <value>Matière</value>
         </entry>
-    </mapColonnesSuivi>
+    </mapColsSuivi>
     <mapParams>
         <entry>
             <key>VERSIONS</key>
@@ -214,11 +224,11 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
         </entry>
         <entry>
             <key>NOMFICHIER</key>
-            <value>Suivi_Quality_Gate - 1.xlsx</value>
+            <value>Suivi_Quality_Gate.xlsx</value>
         </entry>
         <entry>
             <key>NOMFICHIERDATASTAGE</key>
-            <value>Suivi_Quality_Gate - DataStage - 1.xlsx</value>
+            <value>Suivi_Quality_Gate - DataStage.xlsx</value>
         </entry>
         <entry>
             <key>ABSOLUTEPATHHISTO</key>
@@ -248,7 +258,7 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
     <mapPlans>
         <entry>
             <key>SUIVIHEBDO</key>
-            <value active="true" annees="2018" heure="23:00" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
+            <value active="true" annees="2018" heure="09:42" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
         </entry>
         <entry>
             <key>VUECHC</key>

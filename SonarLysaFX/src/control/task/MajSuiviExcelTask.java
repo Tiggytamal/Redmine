@@ -39,7 +39,6 @@ public class MajSuiviExcelTask extends SonarTask
     /*---------- ATTRIBUTS ----------*/
 
     private TypeMaj typeMaj;
-    private List<Vue> vueCrees;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -47,18 +46,9 @@ public class MajSuiviExcelTask extends SonarTask
     {
         super(5);
         this.typeMaj = typeMaj;
-        vueCrees = new ArrayList<>();
+        annulable = false;
     }
     /*---------- METHODES PUBLIQUES ----------*/
-
-    @Override
-    public void annuler()
-    {
-        initEtape(1);
-        updateMessage(new StringBuilder("Suppression des vues créées.").append(Statics.NL).append("Au besoin merci d'utiliser les fichiers de sauvegarde.").toString());
-        supprimerVuesCrees();
-        updateProgress(1, 1);
-    }
 
     @Override
     protected Boolean call() throws Exception
@@ -97,11 +87,11 @@ public class MajSuiviExcelTask extends SonarTask
     {
         // Récupération anomalies Datastage
         List<String> anoDatastage = majFichierSuiviExcelDataStage();
-
+        
         // Récupération anomalies Java
         initEtape(5);
         List<String> anoJava = majFichierSuiviExcel();
-
+        
         // Liste des anomalies sur plusieures matières
         List<String> anoMultiple = new ArrayList<>();
         for (String string : anoDatastage)
@@ -203,16 +193,13 @@ public class MajSuiviExcelTask extends SonarTask
         etapePlus();
         // 4. Création des vues
         for (Map.Entry<String, Set<String>> entry : mapLotsSonar.entrySet())
-        {
-
-            
+        {            
             // Création de la vue, gestion du message et ajout à la liste de vues créées en cas d'annulation
             String nom = prepareNom(fichier);
             String nomVue = nom + " - Edition " + entry.getKey();
             String base = "Création Vue " + nomVue + Statics.NL;
             updateMessage(base);            
             Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nomVue, "Vue regroupant tous les lots avec des composants en erreur", true);
-            vueCrees.add(vueParent);
             
             // Ajout des sous-vue
             int i = 0;
@@ -314,7 +301,6 @@ public class MajSuiviExcelTask extends SonarTask
             // Iteration sur toutes les anomalies venant de Sonar pour chaque version
             for (String numeroLot : entry.getValue())
             {
-
                 // On va chercher les informations de ce lot dans le fichier des lots de la PIC. Si on ne les trouve
                 // pas, il faudra mettre à jour ce fichier
                 LotSuiviPic lot = mapLotsPIC.get(numeroLot);
@@ -471,21 +457,14 @@ public class MajSuiviExcelTask extends SonarTask
             }
         }
     }
-    
-    private void supprimerVuesCrees()
-    {
-        int i = 0;
-        for (Vue vue : vueCrees)
-        {
-            updateProgress(++i, vueCrees.size());
-            api.supprimerProjet(vue, false);
-        }
-    }
 
     /*---------- ACCESSEURS ----------*/
 
-    public enum TypeMaj {
-        SUIVI("Maj Fichier de Suivi"), DATASTAGE("Maj Fichier de Suivi DataStage"), DOUBLE("Maj Fichiers de Suivi");
+    public enum TypeMaj 
+    {
+        SUIVI("Maj Fichier de Suivi"), 
+        DATASTAGE("Maj Fichier de Suivi DataStage"), 
+        DOUBLE("Maj Fichiers de Suivi");
 
         private String string;
 

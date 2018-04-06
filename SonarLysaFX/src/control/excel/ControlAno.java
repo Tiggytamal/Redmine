@@ -89,7 +89,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
     public ControlAno(File file) throws InvalidFormatException, IOException
     {
         super(file);
-        
+
         // Initialisation des parties constantes des liens
         Map<TypeParam, String> proprietes = proprietesXML.getMapParams();
         lienslots = proprietes.get(TypeParam.LIENSLOTS);
@@ -126,14 +126,14 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * 
      * @param nomSheet
      * @param anoAcreer
-     * @param anoDejacrees 
+     * @param anoDejacrees
      * @return
      * @throws IOException
      */
     public List<Anomalie> createSheetError(String nomSheet, List<Anomalie> anoAcreer, List<Anomalie> anoDejacrees)
     {
         // 1. Variables
-        
+
         // Création de la feuille de calcul
         Sheet sheet = wb.getSheet(nomSheet);
 
@@ -157,7 +157,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         }
 
         // 3. Génération de la nouvelle feuille
-        
+
         // Recréation de la feuille
         sheet = wb.createSheet(nomSheet);
         Cell cell;
@@ -188,14 +188,14 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
                     break;
             }
         }
-        
+
         // 4. Ajout anomalies déjà créées
         for (Anomalie ano : anoDejacrees)
         {
             row = sheet.createRow(sheet.getLastRowNum() + 1);
             creerLigneVersion(row, ano, IndexedColors.WHITE, "O");
         }
-        
+
         // 5. Itération sur les anomalies à créer. Si elles sont déjà dans les anomalies abandonnées, on créée une ligne à l'état abandon, sinon on crée une ligne à
         // l'état non traité et on ajoute celle-ci aux anomalies à créer.
         for (Anomalie ano : anoAcreer)
@@ -247,19 +247,20 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * 
      * @param anoAajouter
      * @param lotsSecurite
-     * @param matiere2 
+     * @param matiere2
      * @param anoAajouter2
      * @param lotsEnErreur
      * @throws IOException
      * @throws InvalidFormatException
      * @throws EncryptedDocumentException
      */
-    public void majFeuillePrincipale(List<Anomalie> lotsEnAno, List<Anomalie> anoAajouter, Set<String> lotsEnErreurSonar, Set<String> lotsSecurite, Set<String> lotsRelease, Sheet sheet, Matiere matiere) throws IOException
+    public void majFeuillePrincipale(List<Anomalie> lotsEnAno, List<Anomalie> anoAajouter, Set<String> lotsEnErreurSonar, Set<String> lotsSecurite, Set<String> lotsRelease, Sheet sheet,
+            Matiere matiere) throws IOException
     {
         // Récupération feuille et liste des anomalies closes
         Map<String, Anomalie> anoClose = new HashMap<>();
         Sheet sheetClose = saveAnomaliesCloses(anoClose);
-        
+
         // Mise à jour anomalies déjà créées
         for (Anomalie ano : lotsEnAno)
         {
@@ -267,11 +268,10 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
             ano.getMatieres().add(matiere);
             String anoLot = ano.getLot().substring(4);
 
-
             // Contrôle si le lot a une erreur de sécurité pour mettre à jour la donnée.
             if (lotsSecurite.contains(anoLot))
                 ano.setSecurite(SECURITEKO);
-            
+
             // Si une anomalie est close dans RTC, on la transfert sur l'autre feuille.
             if (CLOSE.equalsIgnoreCase(ano.getEtat()) || ABANDONNEE.equals(ano.getEtat()))
             {
@@ -279,13 +279,13 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 creerLigneSQ(row, ano, IndexedColors.WHITE);
                 continue;
             }
-            
+
             // Mise à jour du chef de service
             controleChefDeService(ano);
-                
+
             // Calcul de la couleur de la ligne dans le fichier Excel
             IndexedColors couleur = calculCouleurLigne(ano, lotsEnErreurSonar, anoLot, lotsRelease);
-           
+
             // Création de la ligne
             row = sheet.createRow(sheet.getLastRowNum() + 1);
             creerLigneSQ(row, ano, couleur);
@@ -304,15 +304,15 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * Mise à jour des fichiers pour les anomalies comprenant plusieures type de matière
      * 
      * @param anoMultiple
-     * @throws IOException 
+     * @throws IOException
      */
     public void majMultiMatiere(List<String> anoMultiple) throws IOException
     {
         Sheet sheet = wb.getSheet(SQ);
-        
+
         if (sheet == null)
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Problème récupération feuille Excel principale");
-        
+
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
             Row row = sheet.getRow(i);
@@ -324,7 +324,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
     }
 
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Permet de calculer la couleur d'une ligne du fichier Excel : <br>
      * - orange = nouvelle aomalie non traitée<br>
@@ -333,9 +333,13 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * - vert = lot dont le QG est devenu vert<br>
      * 
      * @param ano
+     *            anomalie
      * @param lotsEnErreurSonar
+     *            Liste des lots en erreur
      * @param anoLot
+     *            numéro du lot
      * @param lotsRelease
+     *            Liste des lots en version Release
      * @return
      */
     private IndexedColors calculCouleurLigne(Anomalie ano, Set<String> lotsEnErreurSonar, String anoLot, Set<String> lotsRelease)
@@ -360,18 +364,18 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 couleur = IndexedColors.WHITE;
             }
         }
-        
+
         // Les lots déjà traité une première fois sont en gris
         if (AVERIFIER.equals(ano.getEtat()))
             couleur = IndexedColors.GREY_25_PERCENT;
-        
+
         // Remise de la couleur à orange si le lot n'a pas encore été traité
-        if(!ano.isTraitee())
+        if (!ano.isTraitee())
             couleur = IndexedColors.LIGHT_ORANGE;
-        
+
         return couleur;
     }
-    
+
     /**
      * Ajoute les anomalies closes à la feuille correspondante. On ne sauvegarde pas les lignes qui n'ont pas données suite à une anomalie Sonar.
      * 
@@ -383,14 +387,14 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         Row row;
         for (Anomalie ano : anoClose.values())
         {
-            if (ano.getNumeroAnomalie() == 0 )
+            if (ano.getNumeroAnomalie() == 0)
                 continue;
-            
+
             row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
             creerLigneSQ(row, ano, IndexedColors.WHITE);
         }
     }
-    
+
     /**
      * Crée une ligne correspondante à une anomalie dans le fichier Excel
      * 
@@ -415,37 +419,37 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         date.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
 
         // 4. Valorisation des cellules avec les données de l'anomalie
-        
+
         // Contrôle Clarity et mise à jour données
         controleClarity(ano);
-        
+
         // Contrôle chef de service et mise à jour des données
         controleChefDeService(ano);
 
         // Direction
         valoriserCellule(row, colDir, normal, ano.getDirection(), ano.getDirectionComment());
-        
+
         // Département
         valoriserCellule(row, colDepart, normal, ano.getDepartement(), ano.getDepartementComment());
-        
+
         // Service
         valoriserCellule(row, colService, normal, ano.getService(), ano.getServiceComment());
-        
+
         // Responsable service
         valoriserCellule(row, colResp, normal, ano.getResponsableService(), ano.getResponsableServiceComment());
-        
+
         // code projet Clarity
         valoriserCellule(row, colClarity, normal, ano.getProjetClarity(), ano.getProjetClarityComment());
-        
+
         // libelle projet
         valoriserCellule(row, colLib, normal, ano.getLibelleProjet(), ano.getLibelleProjetComment());
-        
+
         // Cpi du lot
         valoriserCellule(row, colCpi, normal, ano.getCpiProjet(), ano.getCpiProjetComment());
-        
+
         // Edition
         valoriserCellule(row, colEdition, centre, ano.getEdition(), ano.getEditionComment());
-        
+
         // Numéro du lot
         Cell cell = valoriserCellule(row, colLot, centre, ano.getLot(), ano.getLotComment());
         ajouterLiens(cell, lienslots, ano.getLot().substring(4));
@@ -460,31 +464,32 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         if (numeroAno != 0)
         {
             cell.setCellValue(numeroAno);
+
             // Rajout de "&id=", car cela fait planter la désérialisation du fichier de paramètres
             ajouterLiens(cell, liensAnos + "&id=", String.valueOf(numeroAno));
         }
-        
+
         // Etat anomalie
         valoriserCellule(row, colEtat, normal, ano.getEtat(), ano.getEtatComment());
-        
+
         // Anomalie de sécurite
         valoriserCellule(row, colSec, centre, ano.getSecurite(), ano.getSecuriteComment());
-        
+
         // Remarques
         valoriserCellule(row, colRemarque, normal, ano.getRemarque(), ano.getRemarqueComment());
-        
+
         // Version composants
         valoriserCellule(row, colVer, centre, ano.getVersion(), ano.getVersionComment());
 
         // Date création
         valoriserCellule(row, colDateCrea, date, ano.getDateCreation(), ano.getDateCreationComment());
-        
+
         // Date création
         valoriserCellule(row, colDateDetec, date, ano.getDateDetection(), ano.getDateDetectionComment());
 
         // Date relance
         valoriserCellule(row, colDateRel, date, ano.getDateRelance(), ano.getDateRelanceComment());
-        
+
         // Matiere
         valoriserCellule(row, colMatiere, centre, ano.getMatieresString(), ano.getMatieresComment());
     }
@@ -525,9 +530,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
             // On continue si la cellule du titre est nulle
             if (oldCell == null)
-            {
                 continue;
-            }
 
             // Copie du style des cellules
             CellStyle newCellStyle = wb.createCellStyle();
@@ -541,21 +544,27 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 case BLANK:
                     newCell.setCellValue(oldCell.getStringCellValue());
                     break;
+
                 case BOOLEAN:
                     newCell.setCellValue(oldCell.getBooleanCellValue());
                     break;
+
                 case ERROR:
                     newCell.setCellErrorValue(oldCell.getErrorCellValue());
                     break;
+
                 case FORMULA:
                     newCell.setCellFormula(oldCell.getCellFormula());
                     break;
+
                 case NUMERIC:
                     newCell.setCellValue(oldCell.getNumericCellValue());
                     break;
+
                 case STRING:
                     newCell.setCellValue(oldCell.getRichStringCellValue());
                     break;
+
                 case _NONE:
                     break;
             }
@@ -573,6 +582,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
     {
         if (cell == null || baseAdresse == null || baseAdresse.isEmpty())
             throw new IllegalArgumentException("La cellule ou l'adresse ne peuvent être nulles");
+
         Hyperlink link = createHelper.createHyperlink(HyperlinkType.URL);
         Font font = wb.createFont();
         font.setUnderline(Font.U_SINGLE);
@@ -592,7 +602,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @param anoAajouter
      * @param lotsSecurite
      * @param lotsRelease
-     * @param matiere 
+     * @param matiere
      */
     private void ajouterNouvellesAnos(Sheet sheet, List<Anomalie> anoAajouter, Map<String, Anomalie> mapAnoCloses, Set<String> lotsSecurite, Set<String> lotsRelease, Matiere matiere)
     {
@@ -641,7 +651,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
      */
     private Sheet saveAnomaliesCloses(Map<String, Anomalie> anoClose)
     {
-        // Récupération de la feuille des ano closes.
+        // Récupération de la feuille des anos closes.
         Sheet retour = wb.getSheet(AC);
         if (retour != null)
         {
@@ -651,6 +661,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 Row row = iter.next();
                 if (row.getRowNum() == 0)
                     continue;
+
                 Anomalie ano = creerAnodepuisExcel(row);
                 anoClose.put(ano.getLot(), ano);
             }
@@ -676,21 +687,21 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         // Vérification si le code Clarity de l'anomalie est bien dans la map
         if (keyset.contains(anoClarity))
             return ano.majDepuisClarity(map.get(anoClarity));
-        
+
         String temp = "";
-        
+
         // Sinon on itère sur les clefs en supprimant les indices de lot, et on prend la première clef correspondante
         for (String key : keyset)
         {
             // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
             if (anoClarity.startsWith("T") && anoClarity.length() == 7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
                 temp = key;
-                
+
             // On retire les deux dernières lettres pour les clefs de plus de 6 caractères finissants par 0[1-9]
             if (controleKey(anoClarity, key))
                 return ano.majDepuisClarity(map.get(key));
         }
-        
+
         if (!temp.isEmpty())
             return ano.majDepuisClarity(map.get(temp));
 
@@ -698,21 +709,22 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         loginconnue.warn("Code Clarity inconnu : " + anoClarity + " - Lot : " + ano.getLot());
         return ano;
     }
-    
+
     /**
      * Met à jour le responsable de service depuis les informations du fichier XML, si le service est renseigné.<br>
      * Remonte un warning si le service n'est pas connu
+     * 
      * @param ano
      * @param mapRespService
      */
     private void controleChefDeService(Anomalie ano)
     {
         Map<String, RespService> mapRespService = fichiersXML.getMapRespService();
-        
+
         String anoServ = ano.getService();
         if (anoServ == null || anoServ.isEmpty())
             return;
-        
+
         if (mapRespService.keySet().contains(anoServ))
             ano.setResponsableService(mapRespService.get(anoServ).getNom());
         else
@@ -769,15 +781,14 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         retour.calculTraitee();
         return retour;
     }
-    
-    
+
     private boolean controleKey(String anoClarity, String key)
     {
         // Controle si la clef n'a pas les indices de numéro de lot
-        String smallkey = key.length() > 5 && key.matches(".*0[0-9E]$") ? key.substring(0, 6) : key; 
-        
+        String smallkey = key.length() > 5 && key.matches(".*0[0-9E]$") ? key.substring(0, 6) : key;
+
         // Contrôle si la clef est de type T*.
-        String newKey = key.length() == 9 && key.startsWith("T") ? key.substring(0, 8) : smallkey;     
+        String newKey = key.length() == 9 && key.startsWith("T") ? key.substring(0, 8) : smallkey;
         return anoClarity.equalsIgnoreCase(newKey);
     }
 
@@ -787,7 +798,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
     protected void initEnum()
     {
         enumeration = TypeColSuivi.class;
-        
+
     }
 
     @Override
@@ -799,27 +810,23 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier n'a pas de page Suivi Qualité");
         return sheet;
     }
-    
+
     /**
      * Liste des numéros de colonnes des feuilles d'environnement
      * 
      * @author ETP8137 - Grégoire mathon
      *
      */
-    private enum Index 
-    {
-        LOTI ("Lot projet RTC"), 
-        EDITIONI ("Edition"), 
-        ENVI ("Etat du lot"), 
-        TRAITEI ("Traitée");
-        
+    private enum Index {
+        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
+
         private String string;
-        
+
         private Index(String string)
         {
             this.string = string;
         }
-        
+
         @Override
         public String toString()
         {

@@ -99,14 +99,13 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
      */
     protected void calculIndiceColonnes(Sheet sheet)
     {
-
         titres = sheet.getRow(0);
         int nbreCol = 0;
+        // Récupération de l'énumération depuis les paramètres XML
+        Map<String, T> mapColonnesInvert = proprietesXML.getMapColsInvert(enumeration);
         
         for (Cell cell : titres)
-        {
-            // Récupération de l'énumération depuis les paramètres XML
-            Map<String, T> mapColonnesInvert = proprietesXML.getMapColsInvert(enumeration);
+        {           
             T typeCol = mapColonnesInvert.get(cell.getStringCellValue());
             
             if (cell.getCellTypeEnum() != CellType.STRING || typeCol == null)

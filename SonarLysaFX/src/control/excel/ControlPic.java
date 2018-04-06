@@ -171,7 +171,7 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
         Map<LocalDate, List<Vue>> retour = new HashMap<>();
 
         // parcours de la feuille Excel pour récupérer tous les lots et leurs dates de mise en production avec mise à jour du fichier Excel
-        for (int i = 1; i < sheet.getLastRowNum(); i++)
+        for (int i = 1; i < sheet.getLastRowNum() +1; i++)
         {
             Row row = sheet.getRow(i);
             traitementLigne(row, retour, mapQube);

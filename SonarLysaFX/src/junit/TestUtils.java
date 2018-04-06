@@ -28,7 +28,7 @@ public class TestUtils
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    public static <T> T callPrivate(String nomMethode, Object instance, Class<T> retour, Object... params) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+    public static <T> T callPrivate(String nomMethode, Object instance, Class<T> retour, Object... params)
     {
         if (nomMethode == null || instance == null)
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Les paramètres de la méthodes ne peuvent pas être nuls - TestUtils.callPrivate() - " 
@@ -40,12 +40,18 @@ public class TestUtils
             classParams[i] = params[i].getClass();
         }
 
-        Method call = instance.getClass().getDeclaredMethod(nomMethode, classParams);
+        Method call;
+        try
+        {
+            call = instance.getClass().getDeclaredMethod(nomMethode, classParams);
+            call.setAccessible(true);
 
-        call.setAccessible(true);
-
-        if (retour != null)
-            return retour.cast(call.invoke(instance, params));
+            if (retour != null)
+                return retour.cast(call.invoke(instance, params));
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+        {
+            throw new IllegalArgumentException("Erreur à l'invocation de la méthode", e);
+        }
 
         return null;
     }

@@ -8,6 +8,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 
@@ -58,32 +59,37 @@ public class ProgressDialog extends Dialog<Boolean>
         // Stage
         stage = new Label();
         stage.setPrefWidth(grid.getPrefWidth());
-        grid.add(stage, 0, 0, GridPane.REMAINING, 1);
         stage.textProperty().bind(task.etapeProperty());
+        grid.add(stage, 0, 0, GridPane.REMAINING, 1);
         
         // ProgressBar
         bar = new ProgressBar(0);
         bar.setPrefWidth(grid.getPrefWidth() - 100);
-        grid.add(bar, 0, 1);
         bar.progressProperty().unbind();
         bar.progressProperty().bind(task.progressProperty());
+        grid.add(bar, 0, 1);
 
         // Progress Indicator
         indicator = new ProgressIndicator(0);
-        grid.add(indicator, 1, 1);
         indicator.progressProperty().unbind();
         indicator.progressProperty().bind(task.progressProperty());
+        grid.add(indicator, 1, 1);
 
         // label
         label = new Label();
         label.setPrefWidth(grid.getPrefWidth());
-        grid.add(label, 0, 2, GridPane.REMAINING, 1);
         label.textProperty().bind(task.messageProperty());
+        grid.add(label, 0, 2, GridPane.REMAINING, 1);
 
         // Cancel
         Button cancel = new Button("Annuler");
-        grid.add(cancel, 1, 3);
         cancel.setOnAction(event -> annuler());
+        grid.add(cancel, 1, 3);
+        if (task.isAnnulable())
+        {
+            cancel.setDisable(true);
+            cancel.setTooltip(new Tooltip("Cette tâche ne peut pas être annulée"));
+        }
 
         // Bouton OK actif lorsque le traitement est fini.
         Button ok = new Button("OK");
@@ -114,11 +120,16 @@ public class ProgressDialog extends Dialog<Boolean>
      */
     private void annuler()
     {
-        task.cancel(true);
+
         bar.progressProperty().unbind();
         label.textProperty().unbind();
         indicator.progressProperty().unbind();
-        task.annuler();
+        if (task.isRunning())
+        {
+            task.cancel(true);
+            task.annuler();
+        }
+
         fermer();
     }
 

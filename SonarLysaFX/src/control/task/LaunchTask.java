@@ -16,17 +16,15 @@ public abstract class LaunchTask
         else
             dialog = new ProgressDialog(task);
         dialog.show();
-        new Thread(task).start();
-
         new Thread(() -> {
             try
             {
                 task.get();
             } catch (InterruptedException | ExecutionException e)
             {
-                dialog.hide();
                 Platform.runLater(() -> Main.gestionException(e));
             }
         }).start();
+        new Thread(task).start();
     }
 }

@@ -37,6 +37,7 @@ public class CreerVueProductionTask extends SonarTask
     {
         super(3);
         this.file = file;
+        annulable = true;
     }
 
     public CreerVueProductionTask(LocalDate dateDebut, LocalDate dateFin)
@@ -44,6 +45,7 @@ public class CreerVueProductionTask extends SonarTask
         super(4);
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
+        annulable = true;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -53,7 +55,6 @@ public class CreerVueProductionTask extends SonarTask
     {
         if (vueKey != null && !vueKey.isEmpty())
             api.supprimerProjet(vueKey, true);
-
     }
 
     @Override
@@ -80,6 +81,11 @@ public class CreerVueProductionTask extends SonarTask
             // Traitement données fichier Excel
             ControlPic excel = new ControlPic(file);
             Map<String, Vue> mapSonar = recupererLotsSonarQube();
+            
+            // Message
+            if (isCancelled())
+                return false;
+            
             etapePlus();
             updateMessage("Traitement Fichier Excel...");
             mapLot = excel.recupLotsExcelPourMEP(mapSonar);
@@ -87,9 +93,7 @@ public class CreerVueProductionTask extends SonarTask
             excel.close();
         }
         else
-        {
             mapLot = recupLotSonarPourMEP(dateDebut, dateFin);
-        }
 
         // Création des vues menseulles ou trimestrielles
         if (mapLot.size() == 1)
@@ -133,6 +137,9 @@ public class CreerVueProductionTask extends SonarTask
      */
     private void creerVueMensuelle(final Map<LocalDate, List<Vue>> mapLot)
     {
+        if (isCancelled())
+            return;
+        
         // Iteration pour récupérer le premier élément de la map
         Iterator<Entry<LocalDate, List<Vue>>> iter = mapLot.entrySet().iterator();
         Entry<LocalDate, List<Vue>> entry = iter.next();
@@ -152,6 +159,9 @@ public class CreerVueProductionTask extends SonarTask
         int size = entry.getValue().size();
         for (Vue vue : entry.getValue())
         {
+            if (isCancelled())
+                return;
+            
             updateMessage(base + "ajout : " + vue.getName());
             updateProgress(++i, size);
             api.ajouterSousVue(vue, vueParent);
@@ -165,6 +175,9 @@ public class CreerVueProductionTask extends SonarTask
      */
     private void creerVueTrimestrielle(Map<LocalDate, List<Vue>> mapLot)
     {
+        if (isCancelled())
+            return;
+        
         // Création des variables. Transfert de la HashMap dans une TreeMap pour trier les dates.
         List<Vue> lotsTotal = new ArrayList<>();
         Map<LocalDate, List<Vue>> treeLot = new TreeMap<>(mapLot);
@@ -217,6 +230,9 @@ public class CreerVueProductionTask extends SonarTask
         int size = lotsTotal.size();
         for (Vue vue : lotsTotal)
         {
+            if (isCancelled())
+                return;
+            
             updateMessage(base + "ajout : " + vue.getName());
             updateProgress(++i, size);
             api.ajouterSousVue(vue, vueParent);

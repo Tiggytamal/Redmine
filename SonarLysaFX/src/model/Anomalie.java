@@ -137,7 +137,7 @@ public class Anomalie extends Modele
         matieres.clear();
         for (String matiere : matieresString.split("-"))
         {
-            matieres.add(Matiere.getMatiere(matiere));
+            matieres.add(Matiere.getMatiere(matiere.trim()));
         }
     }
     

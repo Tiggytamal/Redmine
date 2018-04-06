@@ -18,14 +18,10 @@ public class MajVuesTask extends SonarTask
     public MajVuesTask()
     {
         super(1);
+        annulable = false;
     }
-    /*---------- METHODES PUBLIQUES ----------*/
     
-    @Override
-    public void annuler()
-    {
-        // Pas d'action possible à l'annulation
-    }
+    /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
     protected Boolean call() throws Exception

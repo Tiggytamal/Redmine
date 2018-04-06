@@ -34,6 +34,7 @@ public abstract class SonarTask extends Task<Boolean>
     private StringProperty etape = new SimpleStringProperty(this, "etape", "");
     protected int debut;
     protected int fin;
+    protected boolean annulable;
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -68,7 +69,11 @@ public abstract class SonarTask extends Task<Boolean>
     /**
      * Utilisée pour permettre le retour arrière si possible du traitement
      */
-    public abstract void annuler();
+    public void annuler()
+    {
+        // Pas de traitement par default
+    }
+
     
     /**
      * Permet de récupérer la dernière version de chaque composants créés dans Sonar
@@ -220,5 +225,10 @@ public abstract class SonarTask extends Task<Boolean>
     public StringProperty etapeProperty()
     {
         return etape;
+    }
+    
+    public boolean isAnnulable()
+    {
+        return annulable;
     }
 }
