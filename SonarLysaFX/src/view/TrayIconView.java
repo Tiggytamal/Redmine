@@ -14,6 +14,12 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import utilities.Statics;
 
+/**
+ * Gestion de l'affichage de l'icône dans la barre de notification
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class TrayIconView
 {
 	

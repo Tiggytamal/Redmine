@@ -20,10 +20,11 @@ import java.util.TreeSet;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import application.Main;
 import control.excel.ControlAno;
-import junit.control.ControlSonarTest;
 import model.Anomalie;
 import model.LotSuiviPic;
+import model.ModelFactory;
 import model.enums.Matiere;
 import model.enums.TypeParam;
 import sonarapi.model.Composant;
@@ -170,7 +171,7 @@ public class MajSuiviExcelTask extends SonarTask
         Set<String> lotRelease = new HashSet<>();
 
         etapePlus();
-        if (ControlSonarTest.deser)
+        if (Main.DESER)
         {
             mapLotsSonar = Utilities.deserialisation("d:\\lotsSonar" + matiere.toString() + ".ser", HashMap.class);
             lotsSecurite = Utilities.deserialisation("d:\\lotsSecurite" + matiere.toString() + ".ser", HashSet.class);
@@ -309,7 +310,7 @@ public class MajSuiviExcelTask extends SonarTask
                     lognonlistee.warn("Mettre à jour le fichier Pic - Lots : " + numeroLot + " non listé");
                     continue;
                 }
-                Anomalie ano = new Anomalie(lot);
+                Anomalie ano = ModelFactory.getModelWithParams(Anomalie.class, lot);
 
                 // On ajoute le lot soit, dans la liste des anos déjà créées soit, dans celle des anos à créer.
                 if (lotsDejaDansFichier.contains(numeroLot))

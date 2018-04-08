@@ -258,7 +258,7 @@ public class Anomalie extends Modele
 
     public Environnement getEnvironnement()
     {
-        return environnement;
+        return environnement != null ? environnement : Environnement.INCONNU;
     }
 
     public void setEnvironnement(Environnement environnement)

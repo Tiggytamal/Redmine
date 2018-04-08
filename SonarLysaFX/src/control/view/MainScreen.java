@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
-import control.ControlXML;
+import control.xml.ControlXML;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;

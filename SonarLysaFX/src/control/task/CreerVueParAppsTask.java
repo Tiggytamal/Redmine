@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.control.ControlSonarTest;
+import application.Main;
 import sonarapi.model.Composant;
 import sonarapi.model.Projet;
 import sonarapi.model.Vue;
@@ -47,7 +47,7 @@ public class CreerVueParAppsTask extends SonarTask
     {
         // 1 .Création de la liste des composants par application
         @SuppressWarnings ("unchecked")
-        Map<String, List<Projet>> mapApplication = Utilities.recuperation(ControlSonarTest.deser, Map.class, "d:\\mapApplis.ser", this::controlerSonarQube);
+        Map<String, List<Projet>> mapApplication = Utilities.recuperation(Main.DESER, Map.class, "d:\\mapApplis.ser", this::controlerSonarQube);
 
         // 2. Suppression des vues existantes
         

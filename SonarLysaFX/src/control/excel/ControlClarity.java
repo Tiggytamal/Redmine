@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import model.InfoClarity;
+import model.ModelFactory;
 import model.enums.TypeColClarity;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
@@ -67,7 +68,7 @@ public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, Inf
      */
     private InfoClarity creerInfoClarityDepuisExcel(Row row)
     {
-        InfoClarity retour = new InfoClarity();
+        InfoClarity retour = ModelFactory.getModel(InfoClarity.class);
         retour.setChefProjet(getCellStringValue(row, colCpi));
         retour.setCodeClarity(getCellStringValue(row, colClarity));
         retour.setDepartement(getCellStringValue(row, colDepart));

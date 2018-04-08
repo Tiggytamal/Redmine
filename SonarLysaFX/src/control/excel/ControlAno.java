@@ -30,6 +30,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 import model.Anomalie;
 import model.InfoClarity;
+import model.ModelFactory;
 import model.RespService;
 import model.enums.Environnement;
 import model.enums.Matiere;
@@ -37,6 +38,7 @@ import model.enums.TypeColSuivi;
 import model.enums.TypeParam;
 import utilities.CellHelper;
 import utilities.FunctionalException;
+import utilities.TechnicalException;
 import utilities.enums.Bordure;
 import utilities.enums.Severity;
 
@@ -44,7 +46,6 @@ import utilities.enums.Severity;
  * Classe de getion du fichier Excel des anomalies SonarQube
  * 
  * @author ETP137 - Grégoire Mathon
- *
  */
 public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
 {
@@ -99,7 +100,6 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
     /*---------- METHODES PUBLIQUES ----------*/
 
     /**
-     * 
      * @return
      */
     public List<Anomalie> recupDonneesDepuisExcel()
@@ -140,7 +140,8 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         // Liste retour des anomalies à créer
         List<Anomalie> retour = new ArrayList<>();
 
-        // 2. Sauvegarde données existantes. On itère pour récupérer tous les numéros de lot déjà abandonés, puis suppression de la feuille
+        // 2. Sauvegarde données existantes. On itère pour récupérer tous les numéros de lot déjà abandonés, puis
+        // suppression de la feuille
         List<String> lotsAbandon = new ArrayList<>();
         if (sheet != null)
         {
@@ -174,18 +175,24 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
             cell.setCellStyle(styleTitre);
             switch (index)
             {
-                case LOTI:
+                case LOTI :
                     cell.setCellValue(Index.LOTI.toString());
                     break;
-                case EDITIONI:
+                    
+                case EDITIONI :
                     cell.setCellValue(Index.EDITIONI.toString());
                     break;
-                case ENVI:
+                    
+                case ENVI :
                     cell.setCellValue(Index.ENVI.toString());
                     break;
-                case TRAITEI:
+                    
+                case TRAITEI :
                     cell.setCellValue(Index.TRAITEI.toString());
                     break;
+                    
+                default :
+                    throw new TechnicalException("Nouvel index non géré : " + index.toString(), null);
             }
         }
 
@@ -196,15 +203,14 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
             creerLigneVersion(row, ano, IndexedColors.WHITE, "O");
         }
 
-        // 5. Itération sur les anomalies à créer. Si elles sont déjà dans les anomalies abandonnées, on créée une ligne à l'état abandon, sinon on crée une ligne à
+        // 5. Itération sur les anomalies à créer. Si elles sont déjà dans les anomalies abandonnées, on créée une ligne
+        // à l'état abandon, sinon on crée une ligne à
         // l'état non traité et on ajoute celle-ci aux anomalies à créer.
         for (Anomalie ano : anoAcreer)
         {
             row = sheet.createRow(sheet.getLastRowNum() + 1);
             if (lotsAbandon.contains(ano.getLot()))
-            {
                 creerLigneVersion(row, ano, IndexedColors.WHITE, "A");
-            }
             else
             {
                 creerLigneVersion(row, ano, IndexedColors.LIGHT_YELLOW, "N");
@@ -220,7 +226,6 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
     }
 
     /**
-     * 
      * @param fichier
      * @return
      * @throws IOException
@@ -347,9 +352,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         IndexedColors couleur;
         // Mise en vert des anomalies avec un Quality Gate bon
         if (!lotsEnErreurSonar.contains(anoLot))
-        {
             couleur = IndexedColors.LIGHT_GREEN;
-        }
         else
         {
             // Les lots release sont en jaune
@@ -377,7 +380,8 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
     }
 
     /**
-     * Ajoute les anomalies closes à la feuille correspondante. On ne sauvegarde pas les lignes qui n'ont pas données suite à une anomalie Sonar.
+     * Ajoute les anomalies closes à la feuille correspondante. On ne sauvegarde pas les lignes qui n'ont pas données
+     * suite à une anomalie Sonar.
      * 
      * @param sheetClose
      * @param anoClose
@@ -541,31 +545,31 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
             newCell.setCellValue(oldCell.getStringCellValue());
             switch (oldCell.getCellTypeEnum())
             {
-                case BLANK:
+                case BLANK :
                     newCell.setCellValue(oldCell.getStringCellValue());
                     break;
 
-                case BOOLEAN:
+                case BOOLEAN :
                     newCell.setCellValue(oldCell.getBooleanCellValue());
                     break;
 
-                case ERROR:
+                case ERROR :
                     newCell.setCellErrorValue(oldCell.getErrorCellValue());
                     break;
 
-                case FORMULA:
+                case FORMULA :
                     newCell.setCellFormula(oldCell.getCellFormula());
                     break;
 
-                case NUMERIC:
+                case NUMERIC :
                     newCell.setCellValue(oldCell.getNumericCellValue());
                     break;
 
-                case STRING:
+                case STRING :
                     newCell.setCellValue(oldCell.getRichStringCellValue());
                     break;
 
-                case _NONE:
+                case _NONE :
                     break;
             }
         }
@@ -644,7 +648,8 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
     }
 
     /**
-     * Enregistre toutes les anomalies de la feuille des anomalies closes, puis retourne une feuille vide pour les traitements suivants.
+     * Enregistre toutes les anomalies de la feuille des anomalies closes, puis retourne une feuille vide pour les
+     * traitements suivants.
      * 
      * @param anoClose
      * @return
@@ -655,7 +660,8 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         Sheet retour = wb.getSheet(AC);
         if (retour != null)
         {
-            // Itération sur les lignes sauf la première qui correspond aux titres. Récupération des informations des anomalies
+            // Itération sur les lignes sauf la première qui correspond aux titres. Récupération des informations des
+            // anomalies
             for (Iterator<Row> iter = retour.rowIterator(); iter.hasNext();)
             {
                 Row row = iter.next();
@@ -673,7 +679,8 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
     }
 
     /**
-     * Contrôle si le code clarity de l'anomalie est bien dans le fichier Excel et renseigne les informations depuis celui-ci
+     * Contrôle si le code clarity de l'anomalie est bien dans le fichier Excel et renseigne les informations depuis
+     * celui-ci
      * 
      * @param ano
      */
@@ -693,7 +700,8 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         // Sinon on itère sur les clefs en supprimant les indices de lot, et on prend la première clef correspondante
         for (String key : keyset)
         {
-            // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
+            // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2
+            // caractères manquants
             if (anoClarity.startsWith("T") && anoClarity.length() == 7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
                 temp = key;
 
@@ -722,7 +730,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
         Map<String, RespService> mapRespService = fichiersXML.getMapRespService();
 
         String anoServ = ano.getService();
-        if (anoServ == null || anoServ.isEmpty())
+        if (anoServ.isEmpty())
             return;
 
         if (mapRespService.keySet().contains(anoServ))
@@ -739,7 +747,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
      */
     private Anomalie creerAnodepuisExcel(Row row)
     {
-        Anomalie retour = new Anomalie();
+        Anomalie retour = ModelFactory.getModel(Anomalie.class);
         retour.setDirection(getCellStringValue(row, colDir));
         retour.setDirectionComment(getCellComment(row, colDir));
         retour.setDepartement(getCellStringValue(row, colDepart));
@@ -815,10 +823,13 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * Liste des numéros de colonnes des feuilles d'environnement
      * 
      * @author ETP8137 - Grégoire mathon
-     *
      */
-    private enum Index {
-        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
+    private enum Index
+    {
+        LOTI("Lot projet RTC"), 
+        EDITIONI("Edition"), 
+        ENVI("Etat du lot"), 
+        TRAITEI("Traitée");
 
         private String string;
 

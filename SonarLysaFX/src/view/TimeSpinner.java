@@ -11,6 +11,13 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.input.InputEvent;
 import javafx.util.StringConverter;
 
+/**
+ * Spinner limité à l'affichage et l'enregistrement d'une heure HH:mm
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TimeSpinner extends Spinner<LocalTime>
 {
 

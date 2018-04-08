@@ -9,6 +9,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import model.ModelFactory;
 import model.RespService;
 import model.enums.TypeColChefServ;
 import utilities.FunctionalException;
@@ -51,7 +52,7 @@ public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String
             Row row = sheet.getRow(i);
 
             // Création de l'objet
-            RespService respServ = new RespService();
+            RespService respServ = ModelFactory.getModel(RespService.class);
             respServ.setDepartement(getCellStringValue(row, colDepart));
             respServ.setDirection(getCellStringValue(row, colDir));
             respServ.setService(getCellStringValue(row, colService));

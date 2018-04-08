@@ -4,7 +4,7 @@ package model.enums;
  * Enumeration permettant de classer l'état d'un lot RTC et dans quel environnement il a été poussé.
  * 
  * @author ETP8137 - Grégoire Mathon
- *
+ * @since 1.0
  */
 public enum Environnement
 {
@@ -15,7 +15,8 @@ public enum Environnement
     VMOA(Valeur.VMOA),
     EDITION(Valeur.EDITION),
     ABANDONNE(Valeur.ABANDONNE),
-    TERMINE(Valeur.TERMINE);
+    TERMINE(Valeur.TERMINE),
+    INCONNU(Valeur.INCONNU);
     
     private final String string;
     
@@ -36,24 +37,32 @@ public enum Environnement
         {
             case Valeur.NOUVEAU :
                 return NOUVEAU;
+                
             case Valeur.DEVTU :
                 return DEVTU;
+                
             case Valeur.TFON :
                 return TFON;
+                
             case Valeur.VMOE :
                 return VMOE;
+                
             case Valeur.VMOA :
                 return VMOA;
+                
             case Valeur.EDITION :
                 return EDITION;
+                
             case Valeur.ABANDONNE :
                 return ABANDONNE;
+                
             case Valeur.TERMINE :
                 return TERMINE;
+                
             default :
                 if (envString.contains(Valeur.EDITION))
                     return EDITION;
-                return null;
+                return INCONNU;
         }
         
     }
@@ -70,5 +79,6 @@ public enum Environnement
         private static final String EDITION = "EDITION";
         private static final String ABANDONNE = "ABANDONNE";
         private static final String TERMINE = "TERMINE";
+        private static final String INCONNU = "INCONNU";
     }
 }

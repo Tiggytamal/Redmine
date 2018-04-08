@@ -2,84 +2,76 @@ package junit.control;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.xml.bind.JAXBException;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.reflect.Whitebox;
 
-import control.ControlXML;
+import control.xml.ControlXML;
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.javafx.test.TestInJfxThread;
-import junit.TestUtils;
 import model.FichiersXML;
-import model.InfoClarity;
-import model.LotSuiviPic;
 import model.ProprietesXML;
+import model.enums.TypeColChefServ;
 import model.enums.TypeFichier;
-import utilities.Statics;
+import utilities.TechnicalException;
 
-@RunWith(JfxRunner.class)
+@RunWith (JfxRunner.class)
 public class ControlXMLTest
 {
-	private ControlXML handler;
-	
-	@Before
-	public void init()
-	{
-		handler = new ControlXML();
-	}
+    private ControlXML handler;
 
-	@Test
-	public void calculerListeApplisDepuisExcel() throws InvalidFormatException, IOException, JAXBException
-	{
-		handler.recupListeAppsDepuisExcel(new File("d:\\liste applis.xlsx"));
-		handler.recupInfosClarityDepuisExcel(new File("d:\\Referentiel_Projets.xlsm"));
-	}
-	
-	@Test
-	@TestInJfxThread
-	public void recuprerParamXML() throws InvalidFormatException, JAXBException, IOException
-	{
-	    handler.recupererXML(FichiersXML.class);
-	    handler.recupererXML(ProprietesXML.class);
-	}
-	
-	@Test
-	public void controleDonneesParam() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
-	{
-		FichiersXML param = new FichiersXML();
-		
-		// 1. Test parametre initialisé
-		StringBuilder builder = new StringBuilder();
-		builder.append("Données des lots Pic manquantes.").append(Statics.NL);
-		builder.append("Liste des apllications manquante.").append(Statics.NL);
-		builder.append("Informations referentiel Clarity manquantes.").append(Statics.NL);
-		builder.append("Merci de recharger le(s) fichier(s) de paramétrage");
-	    Assert.assertEquals(builder.toString(), TestUtils.callPrivate("controleDonneesParam", handler, String.class, param));	
-	    
-	    // 2. Test maps remplies
-	    param = new FichiersXML();
-	    param.getMapApplis().put("A", true);
-	    param.getMapClarity().put("key", new InfoClarity());
-	    param.getLotsPic().put("key", new LotSuiviPic());	    
-	    param.setDateFichier(TypeFichier.APPS);
-	    param.setDateFichier(TypeFichier.CLARITY);
-	    param.setDateFichier(TypeFichier.LOTSPICS);
-	    builder = new StringBuilder();
-	    builder.append("Lots Pics chargés. Dernière Maj : ").append(param.getDateMaj().get(TypeFichier.LOTSPICS)).append(Statics.NL);
-	    builder.append("Liste des apllications chargée. Dernière Maj : ").append(param.getDateMaj().get(TypeFichier.APPS)).append(Statics.NL);
-	    builder.append("Referentiel Clarity chargé. Dernière Maj : ").append(param.getDateMaj().get(TypeFichier.CLARITY)).append(Statics.NL);
-	    Assert.assertEquals(builder.toString(), TestUtils.callPrivate("controleDonneesParam", handler, String.class, param));	
-	}
-	
-	@Test
-	public void recupEditionDepuisExcel() throws InvalidFormatException, IOException, JAXBException
-	{
-	    handler.recupEditionDepuisExcel(new File("d:\\Codification des Editions.xls"));	
-	}
+    @Before
+    public void init()
+    {
+        handler = new ControlXML();
+    }
+
+    @Test
+    @TestInJfxThread
+    public void recuprerParamXML() throws InvalidFormatException, JAXBException, IOException
+    {
+        handler.recupererXML(FichiersXML.class);
+        handler.recupererXML(ProprietesXML.class);
+    }
+
+    @Test
+    public void recupListeAppsDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+    {
+        handler.recupListeAppsDepuisExcel(new File(getClass().getResource("/resources/liste_applis.xlsx").getFile()));       
+    }
+
+    @Test
+    public void recupInfosClarityDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+    {
+        handler.recupInfosClarityDepuisExcel(new File(getClass().getResource("/resources/Codification_des_Editions.xls").getFile()));
+    }
+
+    @Test
+    public void recupLotsPicDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+    {
+        handler.recupLotsPicDepuisExcel(new File(getClass().getResource("/resources/lots_Pic.xlsx").getFile()));
+    }
+
+    @Test
+    public void recupChefServiceDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+    {
+        handler.recupChefServiceDepuisExcel(new File(getClass().getResource("/resources/liste applis.xlsx").getFile()));
+    }
+
+    @Test
+    public void recupEditionDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+    {
+        handler.recupEditionDepuisExcel(new File(getClass().getResource("/resources/liste applis.xlsx").getFile()));
+    }
+    
+    @Test (expected = TechnicalException.class)
+    public void saveInfosException() throws Exception
+    {        
+        Whitebox.invokeMethod(handler, "saveInfos", TypeFichier.RESPSERVICE, TypeColChefServ.class, new File("a"));
+    }
 }

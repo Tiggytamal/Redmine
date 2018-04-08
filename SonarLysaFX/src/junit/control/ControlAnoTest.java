@@ -27,9 +27,11 @@ import org.powermock.reflect.Whitebox;
 import control.excel.ControlAno;
 import junit.TestUtils;
 import model.Anomalie;
+import model.ModelFactory;
 import model.enums.Environnement;
 import model.enums.Matiere;
 import model.enums.TypeColSuivi;
+import utilities.FunctionalException;
 
 public class ControlAnoTest
 {
@@ -39,6 +41,7 @@ public class ControlAnoTest
     private static final String SNAPSHOT = "SNAPSHOT";
     private static final String RELEASE = "RELEASE";
     private static final String LOT = "Lot 10";
+    private static final String SQ = "SUIVI Qualité";
     
     @Before
     public void init() throws InvalidFormatException, IOException, IllegalArgumentException, IllegalAccessException
@@ -72,22 +75,40 @@ public class ControlAnoTest
         List<Anomalie> anoAcreer = new ArrayList<>();
         List<Anomalie> anoDejacrees = new ArrayList<>();
         String nomSheet = "E30";
+        Sheet sheet = wb.getSheet(nomSheet);
+        int sheetindex = wb.getSheetIndex(sheet);
         
-        // Test ano déja abandonnée - Retour normalement vide
-        Anomalie ano = new Anomalie();
+        // Test 1 - ano déja abandonnée - Retour normalement vide
+        Anomalie ano = ModelFactory.getModel(Anomalie.class);
         ano.setLot("Lot 305388");
         ano.setEnvironnement(Environnement.NOUVEAU);
         anoAcreer.add(ano);
         List<Anomalie> liste = handler.createSheetError(nomSheet, anoAcreer, anoDejacrees);
         assertTrue(liste.size() == 0);
         
-        // Test nouvelle ano - Retour normalement à 1
-        ano = new Anomalie();
+        // Test  2 - nouvelle ano - Retour normalement à 1
+        ano = ModelFactory.getModel(Anomalie.class);
         ano.setLot("Lot 305128");
         ano.setEnvironnement(Environnement.NOUVEAU);
         anoAcreer.add(ano);
         liste = handler.createSheetError(nomSheet, anoAcreer, anoDejacrees);
         assertTrue(liste.size() == 1);
+        
+        // Test 3 - feuille nulle - Retour normalement à 1
+        wb.removeSheetAt(sheetindex);      
+        liste = handler.createSheetError(nomSheet, anoAcreer, anoDejacrees);
+        assertTrue(liste.size() == 1);
+        
+        // Test 4 - feuille nulle - anomalie déjà créée
+        wb.removeSheetAt(sheetindex);
+        ano = ModelFactory.getModel(Anomalie.class);
+        ano.setLot("Lot 305129");
+        ano.setEdition("E31");
+        anoDejacrees.add(ano);
+        liste = handler.createSheetError(nomSheet, anoAcreer, anoDejacrees);
+        assertTrue(wb.getSheet(nomSheet).getPhysicalNumberOfRows() == 4);
+        
+        
     }
     
     @Test(expected = IOException.class)
@@ -105,13 +126,36 @@ public class ControlAnoTest
         assertTrue(sheet.getPhysicalNumberOfRows() == 1);      
     }
     
+    @Test(expected = FunctionalException.class)
+    public void majMultiMatiereException() throws IOException
+    {
+        wb.removeSheetAt(wb.getSheetIndex(wb.getSheet(SQ)));
+        handler.majMultiMatiere(new ArrayList<>());
+    }
+    
+    @Test
+    public void majMultiMatiere() throws IOException
+    {
+        List<Anomalie> anoMultiple = new ArrayList<>();
+        Anomalie ano = ModelFactory.getModel(Anomalie.class);         
+        ano.setLot("270040");
+        anoMultiple.add(ano);
+        ano = ModelFactory.getModel(Anomalie.class);
+        ano.setLot("10");
+        anoMultiple.add(ano);
+        ano = ModelFactory.getModel(Anomalie.class);
+        ano.setLot("123456");
+        anoMultiple.add(ano);
+        handler.majMultiMatiere(new ArrayList<>());
+    }
+    
     @Test
     public void calculerCouleurLigne() throws Exception
     {
         // Vérification de al couleur de sortie de la méthode
         
         // Initialisation
-        Anomalie ano = new Anomalie();
+        Anomalie ano = ModelFactory.getModel(Anomalie.class);
         Set<String> lotsEnErreurSonar = new HashSet<>();
         String anoLot = "";
         Set<String> lotsRelease = new HashSet<>();
@@ -157,7 +201,7 @@ public class ControlAnoTest
         // Initialisation
         Sheet sheet = wb.getSheet("Anomalies closes");
         Map<String, Anomalie> anoClose = new HashMap<>();
-        Anomalie ano = new Anomalie();
+        Anomalie ano = ModelFactory.getModel(Anomalie.class);
         ano.setNumeroAnomalie(10);
         ano.setLot(LOT);
         ano.setEnvironnement(Environnement.NOUVEAU);
@@ -217,7 +261,7 @@ public class ControlAnoTest
         assertTrue(sheet.getPhysicalNumberOfRows() == 0);
         
         // Test 2. ni securite / ni release / ni close
-        Anomalie ano = new Anomalie();
+        Anomalie ano = ModelFactory.getModel(Anomalie.class);
         ano.setNumeroAnomalie(10);
         ano.setEnvironnement(Environnement.NOUVEAU);
         ano.setLot(LOT);
@@ -239,7 +283,7 @@ public class ControlAnoTest
         assertEquals(RELEASE, ano.getVersion());
         
         // Test 4. close
-        Anomalie anoClose = new Anomalie();
+        Anomalie anoClose = ModelFactory.getModel(Anomalie.class);
         anoClose.setNumeroAnomalie(20);
         anoClose.setLot(LOT);
         anoClose.setDateCreation(TODAY);
@@ -264,14 +308,78 @@ public class ControlAnoTest
         // Test
         Sheet sheet = Whitebox.invokeMethod(handler, "saveAnomaliesCloses", anoClose);
         assertTrue(sheet.getPhysicalNumberOfRows() == 1);
-        assertTrue(anoClose.size() == 49);
+        assertTrue(anoClose.size() == 50);
     }
     
     @Test
     public void controleClarity() throws Exception
     {
-        Anomalie ano = new Anomalie();
-        Whitebox.invokeMethod(handler, "controleClarity", ano);
+        // Intialisation
+        Anomalie ano = ModelFactory.getModel(Anomalie.class);
         ano.setProjetClarity("a");
+        
+        // Test 1 - aucune correspondance
+        Whitebox.invokeMethod(handler, "controleClarity", ano);
+        assertEquals("", ano.getDepartement());
+        assertEquals("", ano.getService());
+        assertEquals("", ano.getDirection());
+        
+        // Test 2 - correspondance parfaite - données tirées  du fichier excel
+        ano.setProjetClarity("BT097902");
+        Whitebox.invokeMethod(handler, "controleClarity", ano);
+        assertEquals("GESTION DES SERVICES DEVOPS", ano.getDepartement());
+        assertEquals("Gestion projets techniques Ouest", ano.getService());
+        assertEquals("DEVOPS", ano.getDirection());
+    }
+    
+    @Test
+    public void controleChefDeService() throws Exception
+    {
+        // Initialisation
+        Anomalie ano = ModelFactory.getModel(Anomalie.class);
+        
+        // Test 1 nulle
+        Whitebox.invokeMethod(handler, "controleChefDeService", ano);
+        assertTrue(ano.getSecurite() == ""); 
+        
+        // Test 2 empty
+        ano.setService("");
+        assertTrue(ano.getSecurite() == "");   
+        
+        // Test 3 ok
+        ano.setService("Projets Credits");
+        Whitebox.invokeMethod(handler, "controleChefDeService", ano);
+        assertEquals("METROP-TAINTURIER, NATHALIE", ano.getResponsableService());
+        
+        // Test 4 loggin
+        ano.setService("abc");
+        ano.setResponsableService("abc");
+        Whitebox.invokeMethod(handler, "controleChefDeService", ano);
+        assertEquals("abc", ano.getResponsableService());
+        
+        
+    }
+    
+    @Test
+    public void initEnum() throws IllegalArgumentException, IllegalAccessException
+    {
+        assertTrue(Whitebox.getField(ControlAno.class, "enumeration").get(handler).equals(TypeColSuivi.class));
+    }
+    
+    @Test
+    public void initSheet() throws Exception
+    {
+        // Test 1 - feuille ok
+        Sheet sheet = Whitebox.invokeMethod(handler, "initSheet");
+        assertTrue(sheet != null);
+        assertTrue(sheet == wb.getSheet(SQ));        
+    }
+    
+    @Test (expected = FunctionalException.class)
+    public void initSheetException() throws Exception
+    {
+        // Test 2 - feuille nulle
+        wb.removeSheetAt(wb.getSheetIndex(wb.getSheet(SQ)));
+        Whitebox.invokeMethod(handler, "initSheet");
     }
 }

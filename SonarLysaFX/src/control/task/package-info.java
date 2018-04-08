@@ -1,5 +1,5 @@
 /**
- * package contenant tous les controleurs de tâches
+ * Controleurs de tâches
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0

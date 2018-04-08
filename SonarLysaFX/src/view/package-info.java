@@ -1,7 +1,7 @@
 /**
- * Vues fxml de l'application
+ * Vues et classes concrètes d'affichage
  * 
- * @author ETP8137
- *
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
  */
 package view;

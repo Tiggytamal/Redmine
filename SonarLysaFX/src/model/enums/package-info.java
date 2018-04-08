@@ -1,7 +1,7 @@
 /**
- * Regroupe toutes les énumérations des classes de modèle
+ * Enumérations des classes de modèle
  * 
  * @author ETP8137 - Grégoire mathon
- *
+ * @since 1.0
  */
 package model.enums;

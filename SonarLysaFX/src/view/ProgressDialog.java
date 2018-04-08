@@ -12,6 +12,12 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 
+/**
+ * Permet d'afficher l'avancement d'une tâche en cours
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class ProgressDialog extends Dialog<Boolean>
 {
 

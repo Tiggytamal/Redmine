@@ -6,10 +6,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import application.Main;
-import control.ControlXML;
+import control.xml.ControlXML;
 import javafx.stage.FileChooser;
 import model.FichiersXML;
 import model.Info;
+import model.ModelFactory;
 import model.ProprietesXML;
 
 /**
@@ -22,7 +23,7 @@ public abstract class Statics
     private Statics() {}
 
     /** Wrapper des informations générales de fonctionnement de l'application*/
-    public static final Info info = new Info();
+    public static final Info info = ModelFactory.getModel(Info.class);
     /** jarPath */
     public static final String JARPATH = Utilities.urlToFile(Utilities.getLocation(Main.class)).getParentFile().getPath();
     /** logger général */

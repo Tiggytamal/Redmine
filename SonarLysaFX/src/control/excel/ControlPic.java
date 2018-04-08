@@ -17,12 +17,11 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
-
-import model.LotSuiviPic;
-import model.enums.TypeColPic;
-
 import org.apache.poi.ss.usermodel.Sheet;
 
+import model.LotSuiviPic;
+import model.ModelFactory;
+import model.enums.TypeColPic;
 import sonarapi.model.Vue;
 import utilities.DateConvert;
 
@@ -136,7 +135,7 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
                 Row row = sheet.getRow(i);
 
                 // Création de l'objet
-                LotSuiviPic lot = new LotSuiviPic();
+                LotSuiviPic lot = ModelFactory.getModel(LotSuiviPic.class);
                 lot.setLot(String.valueOf(getCellNumericValue(row, colLot)));
                 lot.setLibelle(getCellStringValue(row, colLibelle));
                 lot.setProjetClarity(getCellStringValue(row, colClarity));

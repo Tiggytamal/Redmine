@@ -11,6 +11,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import model.enums.TypeParam;
 
+/**
+ * Bloc d'affichage pour paramétrer une donnée de l'application
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class ParamView extends VBox
 {
     private TypeParam typeParam;

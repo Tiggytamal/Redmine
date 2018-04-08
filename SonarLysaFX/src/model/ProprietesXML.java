@@ -73,7 +73,7 @@ public class ProprietesXML implements XML
 
 
     @SuppressWarnings ("unchecked")
-    public <T extends Enum<T> & TypeCol> Map<T, String> getMapCols(Class<T> typeColClass)
+    public <T extends Enum<T> & TypeCol> Map<T, String> getMap(Class<T> typeColClass)
     {
         switch (typeColClass.getName())
         {
@@ -108,7 +108,7 @@ public class ProprietesXML implements XML
     public <T extends Enum<T> & TypeCol> Map<String, T> getMapColsInvert(Class<T> typeColClass)
     {
         Map<String, T> retour = new HashMap<>();
-        for (Map.Entry<T, String> entry : getMapCols(typeColClass).entrySet())
+        for (Map.Entry<T, String> entry : getMap(typeColClass).entrySet())
         {
             retour.put(entry.getValue(), entry.getKey());
         }

@@ -15,6 +15,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
+/**
+ * Dialogue permettant de tester la connexion au serveur Sonar
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class ConnexionDialog extends Dialog<Pair<String, String>>
 {
     /*---------- ATTRIBUTS ----------*/

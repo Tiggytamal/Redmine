@@ -129,6 +129,8 @@ public class FichiersXML implements XML
         return builder.append(NL).toString();
     }
 
+    /*---------- METHODES PRIVEES ----------*/
+    
     /**
      * Permet de controler si une map est vide ou non, et met à jour le message.
      * 

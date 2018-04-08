@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 import javax.xml.bind.JAXBException;
 
-import control.ControlXML;
+import control.xml.ControlXML;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -254,7 +254,7 @@ public class OptionViewControl extends ViewControl
             {
                 @SuppressWarnings ("unchecked")
                 ColonneView<T> view = (ColonneView<T>) node;
-                Map<T, String> mapCols = proprietesXML.getMapCols(view.getTypeCol().getDeclaringClass());
+                Map<T, String> mapCols = proprietesXML.getMap(view.getTypeCol().getDeclaringClass());
                 saveText(view.getField(), mapCols, view.getTypeCol());
             }
         }
@@ -277,7 +277,7 @@ public class OptionViewControl extends ViewControl
         colonnesBox.getChildren().clear();
 
         // Récupération de la map correspondante au type de fichier et affichage des colonnes
-        for (Map.Entry<T, String> entry : proprietesXML.getMapCols(typeCol).entrySet())
+        for (Map.Entry<T, String> entry : proprietesXML.getMap(typeCol).entrySet())
         {
             ColonneView<T> cv = new ColonneView<>(entry.getKey(), entry.getValue());
             colonnesBox.getChildren().add(cv);

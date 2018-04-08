@@ -17,7 +17,7 @@ import utilities.Statics;
  * @author ETP8137 - Grégoire Mathon
  */
 @XmlRootElement
-public class Planificateur
+public class Planificateur extends Modele
 {
     /*---------- ATTRIBUTS ----------*/
 

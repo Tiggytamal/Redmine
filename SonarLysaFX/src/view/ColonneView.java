@@ -11,6 +11,13 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import model.enums.TypeCol;
 
+/**
+ * Bloc d'affichage pour paramétrer le nom d'une colonne
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ *
+ * @param <T>
+ */
 public class ColonneView<T extends Enum<T> & TypeCol> extends VBox
 {
     private T typeCol;

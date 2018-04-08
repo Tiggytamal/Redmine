@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import application.Main;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
-import junit.control.ControlSonarTest;
 import model.enums.TypeParam;
 import sonarapi.SonarAPI;
 import sonarapi.model.Projet;
@@ -87,7 +87,7 @@ public abstract class SonarTask extends Task<Boolean>
         // Appel du webservice pour remonter tous les composants
         
         @SuppressWarnings("unchecked")
-        List<Projet> projets = Utilities.recuperation(ControlSonarTest.deser, List.class, "d:\\composants.ser", () -> api.getComposants());
+        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "d:\\composants.ser", () -> api.getComposants());
 
         // Triage ascendant de la liste par nom de projet
         projets.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
@@ -126,7 +126,7 @@ public abstract class SonarTask extends Task<Boolean>
 
         // Appel du webservice pour remonter tous les composants
         @SuppressWarnings("unchecked")
-        List<Projet> projets = Utilities.recuperation(ControlSonarTest.deser, List.class, "d:\\composants.ser", () -> api.getComposants());
+        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "d:\\composants.ser", () -> api.getComposants());
 
         // Création de la map de retour en utilisant les versions données
         Map<String, List<Projet>> retour = new HashMap<>();

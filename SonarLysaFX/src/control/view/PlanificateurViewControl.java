@@ -7,8 +7,8 @@ import javax.xml.bind.JAXBException;
 
 import org.quartz.SchedulerException;
 
-import control.ControlXML;
 import control.quartz.ControlJob;
+import control.xml.ControlXML;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -18,6 +18,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.ModelFactory;
 import model.Planificateur;
 import model.enums.TypePlan;
 import utilities.TechnicalException;
@@ -83,7 +84,7 @@ public class PlanificateurViewControl extends ViewControl
     @FXML
     public void initialize()
     {
-        planificateur = proprietesXML.getMapPlans().get(TypePlan.SUIVIHEBDO);
+        planificateur = initPlan(TypePlan.SUIVIHEBDO);
         vboxPane.getChildren().remove(anneePane);
         setInfos(planificateur);
     }
@@ -144,16 +145,16 @@ public class PlanificateurViewControl extends ViewControl
         switch (id)
         {
             case "radioSuivi":
-                planificateur = proprietesXML.getMapPlans().get(TypePlan.SUIVIHEBDO);
+                planificateur = initPlan(TypePlan.SUIVIHEBDO);
                 break;
                 
             case "radioChc":
-                planificateur = proprietesXML.getMapPlans().get(TypePlan.VUECHC);
+                planificateur = initPlan(TypePlan.VUECHC);
                 vboxPane.getChildren().add(2, anneePane);
                 break;
                 
             case "radioCdm":
-                planificateur = proprietesXML.getMapPlans().get(TypePlan.VUECDM);
+                planificateur = initPlan(TypePlan.VUECDM);
                 vboxPane.getChildren().add(2, anneePane);
                 break;
                 
@@ -178,6 +179,11 @@ public class PlanificateurViewControl extends ViewControl
         hboxPane.getChildren().remove(spinner);
         spinner = new TimeSpinner(planificateur.getHeure());
         hboxPane.getChildren().add(spinner);
+    }
+    
+    private Planificateur initPlan(TypePlan typePlan)
+    {
+        return proprietesXML.getMapPlans().computeIfAbsent(typePlan, k -> ModelFactory.getModel(Planificateur.class));
     }
 
     /*---------- ACCESSEURS ----------*/

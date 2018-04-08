@@ -24,6 +24,8 @@ import utilities.enums.Severity;
  */
 public class Main extends Application
 {
+    public static final boolean DESER = false;
+    
     public static void main(final String[] args)
     {
         Application.launch(args);
