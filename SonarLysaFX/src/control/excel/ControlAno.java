@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import model.Anomalie;
@@ -323,7 +324,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
             Row row = sheet.getRow(i);
             String lot = getCellStringValue(row, colLot);
             if (anoMultiple.contains(lot.length() < 4 ? lot : lot.substring(4)))
-                row.getCell(colMatiere).setCellValue(Matiere.JAVA.toString() + " - " + Matiere.DATASTAGE.toString());
+                row.getCell(colMatiere, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(Matiere.JAVA.toString() + " - " + Matiere.DATASTAGE.toString());
         }
         write();
     }
@@ -532,46 +533,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
             Cell newCell = titresNew.createCell(i);
             Cell oldCell = titres.getCell(i);
 
-            // On continue si la cellule du titre est nulle
-            if (oldCell == null)
-                continue;
-
-            // Copie du style des cellules
-            CellStyle newCellStyle = wb.createCellStyle();
-            newCellStyle.cloneStyleFrom(oldCell.getCellStyle());
-            newCell.setCellStyle(newCellStyle);
-
-            // Copie des titres
-            newCell.setCellValue(oldCell.getStringCellValue());
-            switch (oldCell.getCellTypeEnum())
-            {
-                case BLANK :
-                    newCell.setCellValue(oldCell.getStringCellValue());
-                    break;
-
-                case BOOLEAN :
-                    newCell.setCellValue(oldCell.getBooleanCellValue());
-                    break;
-
-                case ERROR :
-                    newCell.setCellErrorValue(oldCell.getErrorCellValue());
-                    break;
-
-                case FORMULA :
-                    newCell.setCellFormula(oldCell.getCellFormula());
-                    break;
-
-                case NUMERIC :
-                    newCell.setCellValue(oldCell.getNumericCellValue());
-                    break;
-
-                case STRING :
-                    newCell.setCellValue(oldCell.getRichStringCellValue());
-                    break;
-
-                case _NONE :
-                    break;
-            }
+            copierCellule(newCell, oldCell);
         }
     }
 

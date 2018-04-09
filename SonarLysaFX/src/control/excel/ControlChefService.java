@@ -76,9 +76,14 @@ public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String
     protected Sheet initSheet()
     {
         // Récupération de la première feuille
-        Sheet sheet = wb.getSheetAt(0);
-        if (sheet == null)
+        Sheet sheet;
+        try
+        {
+            sheet = wb.getSheetAt(0);
+        } catch (IllegalArgumentException e)
+        {
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier est vide");
+        }
         return sheet;
     }
     

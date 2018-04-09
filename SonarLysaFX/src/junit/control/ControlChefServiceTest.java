@@ -14,50 +14,44 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlAno;
-import control.excel.ControlEdition;
-import model.enums.TypeColEdition;
+import control.excel.ControlChefService;
+import model.RespService;
+import model.enums.TypeColChefServ;
 
-public class ControlEditionTest
+public class ControlChefServiceTest
 {
-    private ControlEdition handler;
+    /*---------- ATTRIBUTS ----------*/
+
+    private ControlChefService handler;
     private File file;
     private Workbook wb;
+    
+    /*---------- CONSTRUCTEURS ----------*/
 
     @Before
     public void init() throws InvalidFormatException, IOException, IllegalArgumentException, IllegalAccessException
     {
-        file = new File(getClass().getResource("/resources/Codification_des_Editions.xls").getFile());
-        handler = new ControlEdition(file);
-        wb = (Workbook) Whitebox.getField(ControlEdition.class, "wb").get(handler);
+        file = new File(getClass().getResource("/resources/Reorg_managers.xlsx").getFile());
+        handler = new ControlChefService(file);
+        wb = (Workbook) Whitebox.getField(ControlChefService.class, "wb").get(handler);
     }
-
-    @Test
-    public void recupVersionDepuisExcel()
-    {
-        Map<String, String> map = handler.recupDonneesDepuisExcel();
-        assertTrue(!map.isEmpty());
-
-        for (Map.Entry<String, String> entry : map.entrySet())
-        {
-            assertTrue(entry.getKey().matches("^([0-9]{2}\\.){3}[0-9]{2}$"));
-            assertTrue(entry.getValue().matches("^CHC(_CDM){0,1}20[12][0-9]\\-S[0-5][0-9]$"));
-        }
-    }
+    
+    /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
     public void recupDonneesDepuisExcel()
     {
-        Map<String, String> map = handler.recupDonneesDepuisExcel();
+        Map<String, RespService> map = handler.recupDonneesDepuisExcel();
         assertTrue(map != null);
         assertTrue(!map.isEmpty());
-        assertTrue(map.size() == 72);
+        assertTrue(map.size() == 28);
     }
     
     @Test
     public void initEnum() throws IllegalArgumentException, IllegalAccessException
     {
-        // test - énumération du bon Type
-        assertTrue(Whitebox.getField(ControlAno.class, "enumeration").get(handler).equals(TypeColEdition.class));
+        // test - énumérationud bon Type
+        assertTrue(Whitebox.getField(ControlAno.class, "enumeration").get(handler).equals(TypeColChefServ.class));
     }
     
     @Test
@@ -68,4 +62,7 @@ public class ControlEditionTest
         assertTrue(sheet != null);
         assertTrue(sheet == wb.getSheetAt(0));
     }
+    
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
 }

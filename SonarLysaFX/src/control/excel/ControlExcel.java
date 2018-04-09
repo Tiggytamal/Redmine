@@ -352,6 +352,51 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
             cell.setCellStyle(style);
         return cell;
     }
+    
+    protected void copierCellule(Cell newCell, Cell oldCell)
+    {
+        // On sort si la cellule est nulle
+        if (oldCell == null)
+            return;
+
+        // Copie du style des cellules
+        CellStyle newCellStyle = wb.createCellStyle();
+        newCellStyle.cloneStyleFrom(oldCell.getCellStyle());
+        newCell.setCellStyle(newCellStyle);
+
+        // Copie des valeurs
+        newCell.setCellValue(oldCell.getStringCellValue());
+        
+        switch (oldCell.getCellTypeEnum())
+        {
+            case BLANK :
+                newCell.setCellValue(oldCell.getStringCellValue());
+                break;
+
+            case BOOLEAN :
+                newCell.setCellValue(oldCell.getBooleanCellValue());
+                break;
+
+            case ERROR :
+                newCell.setCellErrorValue(oldCell.getErrorCellValue());
+                break;
+
+            case FORMULA :
+                newCell.setCellFormula(oldCell.getCellFormula());
+                break;
+
+            case NUMERIC :
+                newCell.setCellValue(oldCell.getNumericCellValue());
+                break;
+
+            case STRING :
+                newCell.setCellValue(oldCell.getRichStringCellValue());
+                break;
+
+            case _NONE :
+                break;
+        }
+    }
 
     /*---------- ACCESSEURS ----------*/
 }

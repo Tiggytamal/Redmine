@@ -45,7 +45,7 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
         Map<String, String> retour = new HashMap<>();
 
         Sheet sheet = wb.getSheetAt(0);
-        
+
         int year = TODAY.getYear();
         List<String> annees = Arrays.asList(String.valueOf(year), String.valueOf(year + 1), String.valueOf(year - 1));
 
@@ -95,7 +95,15 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
     @Override
     protected Sheet initSheet()
     {
-        return wb.getSheetAt(0);
+        Sheet sheet;
+        try
+        {
+            sheet = wb.getSheetAt(0);
+        } catch (IllegalArgumentException e)
+        {
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier est vide");
+        }
+        return sheet;
     }
 
     /*---------- ACCESSEURS ----------*/

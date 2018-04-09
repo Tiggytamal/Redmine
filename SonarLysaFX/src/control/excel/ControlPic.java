@@ -16,7 +16,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import model.LotSuiviPic;
@@ -24,6 +23,8 @@ import model.ModelFactory;
 import model.enums.TypeColPic;
 import sonarapi.model.Vue;
 import utilities.DateConvert;
+import utilities.FunctionalException;
+import utilities.enums.Severity;
 
 public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic>>
 {
@@ -70,8 +71,8 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
         {
             // récupération de l'édition et du numéro de lot.
             Row row = sheet.getRow(i);
-            String edition = row.getCell(colEdition).getStringCellValue();
-            String lot = String.valueOf((int) row.getCell(colLot, MissingCellPolicy.CREATE_NULL_AS_BLANK).getNumericCellValue());
+            String edition = getCellStringValue(row, colEdition);
+            String lot = String.valueOf(getCellNumericValue(row, colLot));
             
             // Création de la vue
             Vue vue = new Vue();
@@ -236,6 +237,14 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
     @Override
     protected Sheet initSheet()
     {
-        return wb.getSheetAt(0);
+        Sheet sheet;
+        try
+        {
+            sheet = wb.getSheetAt(0);
+        } catch (IllegalArgumentException e)
+        {
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier est vide");
+        }
+        return sheet;
     }
 }
