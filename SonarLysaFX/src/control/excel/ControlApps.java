@@ -13,8 +13,6 @@ import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import model.enums.TypeColApps;
-import utilities.FunctionalException;
-import utilities.enums.Severity;
 
 public class ControlApps extends ControlExcel<TypeColApps, Map<String, Boolean>>
 {
@@ -69,19 +67,5 @@ public class ControlApps extends ControlExcel<TypeColApps, Map<String, Boolean>>
     protected void initEnum()
     {
         enumeration = TypeColApps.class;
-    }
-
-    @Override
-    protected Sheet initSheet()
-    {
-        Sheet sheet;
-        try
-        {
-            sheet = wb.getSheetAt(0);
-        } catch (IllegalArgumentException e)
-        {
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier est vide");
-        }
-        return sheet;
     }
 }

@@ -1,4 +1,4 @@
-package junit.control;
+package junit.control.xml;
 
 import java.io.File;
 import java.io.IOException;

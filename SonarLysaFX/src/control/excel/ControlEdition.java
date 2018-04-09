@@ -92,19 +92,5 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
         enumeration = TypeColEdition.class;
     }
 
-    @Override
-    protected Sheet initSheet()
-    {
-        Sheet sheet;
-        try
-        {
-            sheet = wb.getSheetAt(0);
-        } catch (IllegalArgumentException e)
-        {
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier est vide");
-        }
-        return sheet;
-    }
-
     /*---------- ACCESSEURS ----------*/
 }

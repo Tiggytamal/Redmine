@@ -87,12 +87,23 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
      */
     protected abstract void initEnum();
     
-    /**
-     * Récupération de la feuille Excel pour le traitement
-     */
-    protected abstract Sheet initSheet();
-    
     /*---------- METHODES PRIVEES ----------*/
+    
+    /**
+     * Récupération de la feuille Excel pour le traitement. Remonte de base la première feuille. Surcharge possible si besoin d'un traitement différent.
+     */
+    protected Sheet initSheet()
+    {
+        Sheet sheet;
+        try
+        {
+            sheet = wb.getSheetAt(0);
+        } catch (IllegalArgumentException e)
+        {
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier est vide");
+        }
+        return sheet;
+    }
     
     /**
      * Initialise les numéro des colonnes du fichier Excel venant de la PIC.
@@ -101,6 +112,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
     {
         titres = sheet.getRow(0);
         int nbreCol = 0;
+        
         // Récupération de l'énumération depuis les paramètres XML
         Map<String, T> mapColonnesInvert = proprietesXML.getMapColsInvert(enumeration);
         
@@ -126,6 +138,8 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
                 throw new TechnicalException("Erreur à l'affectation d'une variable lors de l'initialisation d'une colonne : " + cell.getStringCellValue(), e);
             }
         }
+        
+        // Gestion des erreurs si on ne trouve aps le bon nombre de colonnes
         if (nbreCol != enumeration.getEnumConstants().length)
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci.");
     }

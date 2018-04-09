@@ -23,8 +23,6 @@ import model.ModelFactory;
 import model.enums.TypeColPic;
 import sonarapi.model.Vue;
 import utilities.DateConvert;
-import utilities.FunctionalException;
-import utilities.enums.Severity;
 
 public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic>>
 {
@@ -110,7 +108,7 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
         Map<LocalDate, List<Vue>> retour = creerMapVuesParMois(sheet, mapQube);
 
         write();
-
+        close();
         return retour;
     }
 
@@ -131,7 +129,7 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
             Sheet sheet = iter.next();
 
             // Itération sur chaque ligne pour récupérer les données
-            for (int i = 1; i < sheet.getLastRowNum(); i++)
+            for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
             {
                 Row row = sheet.getRow(i);
 
@@ -232,19 +230,5 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
     protected void initEnum()
     {
         enumeration = TypeColPic.class;     
-    }
-
-    @Override
-    protected Sheet initSheet()
-    {
-        Sheet sheet;
-        try
-        {
-            sheet = wb.getSheetAt(0);
-        } catch (IllegalArgumentException e)
-        {
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier est vide");
-        }
-        return sheet;
     }
 }

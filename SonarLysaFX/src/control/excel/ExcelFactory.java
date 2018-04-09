@@ -21,7 +21,7 @@ public class ExcelFactory
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-    public  static <T extends Enum<T> & TypeCol, R extends ControlExcel<T, Y>, Y> R getControlleur(Class<T> type, File file) throws InvalidFormatException, IOException
+    public static <T extends Enum<T> & TypeCol, R extends ControlExcel<T, Y>, Y> R getControlleur(Class<T> type, File file) throws InvalidFormatException, IOException
     {
         switch (type.getName())
         {           
@@ -39,6 +39,9 @@ public class ExcelFactory
                 
             case "model.enums.TypeColApps" :
                 return (R) new ControlApps(file);
+                
+            case "model.enums.TypeColSuivi" :
+                return (R) new ControlSuivi(file);
                 
             default:
                 throw new TechnicalException("ExcelFactory.getControlleur - type non géré : " + type.toString(), null);

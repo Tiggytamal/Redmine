@@ -12,8 +12,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import model.InfoClarity;
 import model.ModelFactory;
 import model.enums.TypeColClarity;
-import utilities.FunctionalException;
-import utilities.enums.Severity;
 
 public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, InfoClarity>>
 {
@@ -89,21 +87,6 @@ public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, Inf
     protected void initEnum()
     {
         enumeration = TypeColClarity.class;        
-    }
-
-    @Override
-    protected Sheet initSheet()
-    {
-        // Récupération de la première feuille
-        Sheet sheet;
-        try
-        {
-            sheet = wb.getSheetAt(0);
-        } catch (IllegalArgumentException e)
-        {
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier est vide");
-        }
-        return sheet;
     }
 
     /*---------- ACCESSEURS ----------*/

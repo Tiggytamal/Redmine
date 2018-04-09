@@ -48,7 +48,7 @@ import utilities.enums.Severity;
  * 
  * @author ETP137 - Grégoire Mathon
  */
-public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
+public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -88,7 +88,7 @@ public class ControlAno extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlAno(File file) throws InvalidFormatException, IOException
+    public ControlSuivi(File file) throws InvalidFormatException, IOException
     {
         super(file);
 

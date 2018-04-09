@@ -1,4 +1,4 @@
-package junit.control;
+package junit.control.excel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -26,7 +26,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
-import control.excel.ControlAno;
+import control.excel.ControlSuivi;
+import control.excel.ExcelFactory;
 import junit.TestUtils;
 import model.Anomalie;
 import model.ModelFactory;
@@ -35,11 +36,11 @@ import model.enums.Matiere;
 import model.enums.TypeColSuivi;
 import utilities.FunctionalException;
 
-public class ControlAnoTest
+public class ControlSuiviTest
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private ControlAno handler;
+    private ControlSuivi handler;
     private File file;
     private Workbook wb;
     private static final String SNAPSHOT = "SNAPSHOT";
@@ -54,8 +55,8 @@ public class ControlAnoTest
     public void init() throws InvalidFormatException, IOException, IllegalArgumentException, IllegalAccessException
     {
         file = new File(getClass().getResource("/resources/Suivi_Quality_GateTest.xlsx").getFile());
-        handler = new ControlAno(file);
-        wb = (Workbook) Whitebox.getField(ControlAno.class, "wb").get(handler);
+        handler = ExcelFactory.getControlleur(TypeColSuivi.class, file);
+        wb = (Workbook) Whitebox.getField(ControlSuivi.class, "wb").get(handler);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -64,6 +65,7 @@ public class ControlAnoTest
     public void listAnomaliesSurLotsCrees()
     {
         List<Anomalie> liste = handler.recupDonneesDepuisExcel();
+        assertTrue(liste != null);
         assertTrue(liste.size() == 80);
     }
 
@@ -228,7 +230,7 @@ public class ControlAnoTest
     @Test(expected = IllegalArgumentException.class)
     public void creerLigneSQException() throws Throwable
     {
-        Method method = Whitebox.getMethod(ControlAno.class, "creerLigneSQ", Row.class, Anomalie.class, IndexedColors.class);
+        Method method = Whitebox.getMethod(ControlSuivi.class, "creerLigneSQ", Row.class, Anomalie.class, IndexedColors.class);
         try
         {
             method.invoke(handler, null, ModelFactory.getModel(Anomalie.class), IndexedColors.AQUA);
@@ -416,7 +418,7 @@ public class ControlAnoTest
     public void initEnum() throws IllegalArgumentException, IllegalAccessException
     {
         // Test - énumération du bon type
-        assertTrue(Whitebox.getField(ControlAno.class, "enumeration").get(handler).equals(TypeColSuivi.class));
+        assertTrue(Whitebox.getField(ControlSuivi.class, "enumeration").get(handler).equals(TypeColSuivi.class));
     }
 
     @Test

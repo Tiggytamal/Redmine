@@ -1,4 +1,4 @@
-package junit.control;
+package junit.control.view;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -21,7 +21,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import application.Main;
-import control.excel.ControlAno;
+import control.excel.ControlSuivi;
 import model.Anomalie;
 import model.LotSuiviPic;
 import model.ModelFactory;
@@ -102,8 +102,8 @@ public class MajSuiviExcelTask extends SonarTask
         }
 
         // Mise à jour des fichiers Excel
-        ControlAno controlAnoJava = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIER)));
-        ControlAno controlAnoDataStage = new ControlAno(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE)));
+        ControlSuivi controlAnoJava = new ControlSuivi(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIER)));
+        ControlSuivi controlAnoDataStage = new ControlSuivi(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE)));
         controlAnoJava.majMultiMatiere(anoMultiple);
         controlAnoDataStage.majMultiMatiere(anoMultiple);
         controlAnoJava.close();
@@ -275,7 +275,7 @@ public class MajSuiviExcelTask extends SonarTask
     {
         // Controleur
         String name = proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + fichier;
-        ControlAno controlAno = new ControlAno(new File(name));
+        ControlSuivi controlAno = new ControlSuivi(new File(name));
 
         // Lecture du fichier pour remonter les anomalies en cours.
         List<Anomalie> listeLotenAno = controlAno.recupDonneesDepuisExcel();

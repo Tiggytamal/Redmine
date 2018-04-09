@@ -12,8 +12,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import model.ModelFactory;
 import model.RespService;
 import model.enums.TypeColChefServ;
-import utilities.FunctionalException;
-import utilities.enums.Severity;
 
 public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String, RespService>>
 {
@@ -70,21 +68,6 @@ public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String
     protected void initEnum()
     {
        enumeration = TypeColChefServ.class;       
-    }
-
-    @Override
-    protected Sheet initSheet()
-    {
-        // Récupération de la première feuille
-        Sheet sheet;
-        try
-        {
-            sheet = wb.getSheetAt(0);
-        } catch (IllegalArgumentException e)
-        {
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier est vide");
-        }
-        return sheet;
     }
     
     /*---------- ACCESSEURS ----------*/
