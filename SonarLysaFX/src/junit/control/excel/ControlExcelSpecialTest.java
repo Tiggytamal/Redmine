@@ -8,16 +8,17 @@ import static org.powermock.reflect.Whitebox.invokeMethod;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.junit.Test;
 
-import control.excel.ControlExcel;
+import control.excel.ControlSuivi;
 import model.Anomalie;
 import model.enums.TypeColSuivi;
 
-public class ControlExcelSpecialTest extends ControlExcelTest<TypeColSuivi, ControlExcel<TypeColSuivi, List<Anomalie>>, List<Anomalie>>
+public class ControlExcelSpecialTest extends ControlExcelTest<TypeColSuivi, ControlSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
     /*---------- CONSTRUCTEURS ----------*/
@@ -102,6 +103,33 @@ public class ControlExcelSpecialTest extends ControlExcelTest<TypeColSuivi, Cont
 
         if (!testEffectue)
             fail("Pas de commentaire à tester");
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void valoriserCelluleException1() throws Exception
+    {
+        // Appel méthode avec ligne nulle       
+        invokeMethod(handler, "valoriserCellule", new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, null, 1, null, "", null);        
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void valoriserCelluleException2() throws Exception
+    {
+        // Initialisation
+        Row row = wb.getSheetAt(0).getRow(1);
+        
+        // Appel méthode avec object texte non pris en compte
+        invokeMethod(handler, "valoriserCellule", new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, row, 1, null, 32, null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void valoriserCelluleException3() throws Exception
+    {
+        // Initialisation
+        Row row = wb.getSheetAt(0).getRow(1);
+        
+        // Appel méthode avec conIndex null
+        invokeMethod(handler, "valoriserCellule", new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, row, null, null, 32, null);
     }
 
     /*---------- METHODES PRIVEES ----------*/

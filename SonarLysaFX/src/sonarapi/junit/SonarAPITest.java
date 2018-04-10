@@ -9,16 +9,13 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import model.enums.TypeParam;
 import sonarapi.SonarAPI;
 import sonarapi.model.Composant;
 import sonarapi.model.Vue;
-import utilities.Statics;
 
 public class SonarAPITest
 {
@@ -42,7 +39,7 @@ public class SonarAPITest
 	public void getVues() throws InvalidFormatException, IOException
 	{
 		List<Vue> vues = api.getVues();
-		assertTrue(vues != null && !vues.isEmpty());		
+		assertTrue(vues != null && !vues.isEmpty());
 	}
 	
 	@Test

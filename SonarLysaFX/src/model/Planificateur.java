@@ -173,6 +173,32 @@ public class Planificateur extends Modele
         return annees;
     }
     
+    /**
+     * Ajoute l'annèe dernière à la liste des annèes
+     * @return
+     */
+    public List<String> addLastYear()
+    {
+        if (annees == null)
+            annees = new ArrayList<>();
+        if (!annees.contains(String.valueOf(Statics.TODAY.getYear() - 1)))
+            annees.add(String.valueOf(Statics.TODAY.getYear() - 1));
+        return annees;
+    }
+    
+    /**
+     * Ajoute l'annèe prochaine à la liste des annèes
+     * @return
+     */
+    public List<String> addNextYear()
+    {
+        if (annees == null)
+            annees = new ArrayList<>();
+        if (!annees.contains(String.valueOf(Statics.TODAY.getYear() + 1)))
+            annees.add(String.valueOf(Statics.TODAY.getYear() + 1));
+        return annees;
+    }
+    
     private static class LocalTimeAdapter extends XmlAdapter<String, LocalTime>
     {
         public LocalTime unmarshal(String v) throws Exception

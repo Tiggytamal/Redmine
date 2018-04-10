@@ -9,11 +9,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
-import control.excel.ControlExcel;
+import control.excel.ControlEdition;
 import model.enums.TypeColEdition;
 import utilities.FunctionalException;
 
-public class ControlEditionTest extends ControlExcelTest<TypeColEdition, ControlExcel<TypeColEdition, Map<String, String>>, Map<String, String>>
+public class ControlEditionTest extends ControlExcelTest<TypeColEdition, ControlEdition, Map<String, String>>
 {
     /*---------- ATTRIBUTS ----------*/
 

@@ -13,6 +13,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -278,7 +279,12 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
     {
         Cell cell = row.getCell(cellIndex, MissingCellPolicy.CREATE_NULL_AS_BLANK);
         if (cell.getCellTypeEnum() == CellType.FORMULA)
-            return createHelper.createFormulaEvaluator().evaluate(cell).formatAsString();
+        {
+            CellValue value = createHelper.createFormulaEvaluator().evaluate(cell);
+            if (value.getStringValue() == null)
+                return value.toString();
+            return value.getStringValue();
+        }
         return "";
     }
 
@@ -340,22 +346,14 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
      *            Commentaire de la cellule
      * @return
      */
-    protected Cell valoriserCellule(Row row, int indexCol, CellStyle style, Object texte, Comment commentaire)
+    protected Cell valoriserCellule(Row row, Integer indexCol, CellStyle style, Object texte, Comment commentaire)
     {
         // Contrôle
-        if (row == null)
-            throw new IllegalArgumentException("Row row nul pour la méthode control.parent.ControlExcel.valoriserCellule.");
+        if (row == null || indexCol == null)
+            throw new IllegalArgumentException("row null pour la méthode control.parent.ControlExcel.valoriserCellule.");
 
         // Création cellule
         Cell cell = row.createCell(indexCol);
-
-        // Conversion du texte dans le bon format
-        if (texte instanceof String)
-            cell.setCellValue((String) texte);
-        else if (texte instanceof Environnement)
-            cell.setCellValue(((Environnement) texte).toString());
-        else if (texte instanceof LocalDate)
-            cell.setCellValue(DateConvert.convertToOldDate(texte));
 
         // Commentaire
         if (commentaire != null)
@@ -364,6 +362,20 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
         // Style
         if (style != null)
             cell.setCellStyle(style);
+        
+        // Ajout du texte non null dans le bon format
+        if (texte == null)
+            return cell;
+        
+        if (texte instanceof String)
+            cell.setCellValue((String) texte);
+        else if (texte instanceof Environnement)
+            cell.setCellValue(((Environnement) texte).toString());
+        else if (texte instanceof LocalDate)
+            cell.setCellValue(DateConvert.convertToOldDate(texte));
+        else
+            throw new IllegalArgumentException("Le texte n'est pas d'un type supporté par la méthode control.parent.ControlExcel.valoriserCellule.");
+        
         return cell;
     }
     
@@ -383,10 +395,6 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
         {
             case BOOLEAN :
                 newCell.setCellValue(oldCell.getBooleanCellValue());
-                break;
-
-            case ERROR :
-                newCell.setCellErrorValue(oldCell.getErrorCellValue());
                 break;
 
             case FORMULA :

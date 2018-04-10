@@ -29,7 +29,6 @@ import view.TrayIconView;
  * Controleur de la vue des planificateurs
  * 
  * @author ETP8137 - Grégoire Mathon
- *
  */
 public class PlanificateurViewControl extends ViewControl
 {
@@ -109,6 +108,7 @@ public class PlanificateurViewControl extends ViewControl
     @FXML
     public void sauvegarder() throws JAXBException
     {
+        planificateur.getAnnees().clear();
         planificateur.setHeure(spinner.getValue());
         planificateur.setLundi(lundiBox.isSelected());
         planificateur.setMardi(mardiBox.isSelected());
@@ -116,20 +116,13 @@ public class PlanificateurViewControl extends ViewControl
         planificateur.setJeudi(jeudiBox.isSelected());
         planificateur.setVendredi(vendrediBox.isSelected());
         planificateur.setActive(activeBox.isSelected());
-        
+
         if (suivanteBox.isVisible() && suivanteBox.isSelected())
-        {
-            String annee = String.valueOf(TODAY.getYear() + 1);
-            if (!planificateur.getAnnees().contains(annee))
-                planificateur.getAnnees().add(annee);
-        }
-        
+            planificateur.addNextYear();
+
         if (precedenteBox.isVisible() && precedenteBox.isSelected())
-        {
-            String annee = String.valueOf(TODAY.getYear() - 1);
-            if (!planificateur.getAnnees().contains(annee))
-                planificateur.getAnnees().add(annee);
-        }
+            planificateur.addLastYear();
+
         new ControlXML().saveParam(proprietesXML);
     }
 
@@ -144,21 +137,21 @@ public class PlanificateurViewControl extends ViewControl
 
         switch (id)
         {
-            case "radioSuivi":
+            case "radioSuivi" :
                 planificateur = initPlan(TypePlan.SUIVIHEBDO);
                 break;
-                
-            case "radioChc":
+
+            case "radioChc" :
                 planificateur = initPlan(TypePlan.VUECHC);
                 vboxPane.getChildren().add(2, anneePane);
                 break;
-                
-            case "radioCdm":
+
+            case "radioCdm" :
                 planificateur = initPlan(TypePlan.VUECDM);
                 vboxPane.getChildren().add(2, anneePane);
                 break;
-                
-            default:
+
+            default :
                 throw new TechnicalException("RadioButton pas géré" + id, null);
         }
         setInfos(planificateur);
@@ -170,17 +163,32 @@ public class PlanificateurViewControl extends ViewControl
     {
         if (planificateur == null)
             return;
+        
         lundiBox.setSelected(planificateur.isLundi());
         mardiBox.setSelected(planificateur.isMardi());
         mercrediBox.setSelected(planificateur.isMercredi());
         jeudiBox.setSelected(planificateur.isJeudi());
         vendrediBox.setSelected(planificateur.isVendredi());
         activeBox.setSelected(planificateur.isActive());
+        
+        // Gestion de l'heure de déclenchement
         hboxPane.getChildren().remove(spinner);
         spinner = new TimeSpinner(planificateur.getHeure());
         hboxPane.getChildren().add(spinner);
+        
+        // Gestion des cases à cocher
+        if (planificateur.getAnnees().contains(String.valueOf(TODAY.getYear() + 1)))
+                suivanteBox.setSelected(true);
+        else
+            suivanteBox.setSelected(false);
+        
+        if (planificateur.getAnnees().contains(String.valueOf(TODAY.getYear() - 1)))
+                precedenteBox.setSelected(true);
+        else
+            precedenteBox.setSelected(false);
+        
     }
-    
+
     private Planificateur initPlan(TypePlan typePlan)
     {
         return proprietesXML.getMapPlans().computeIfAbsent(typePlan, k -> ModelFactory.getModel(Planificateur.class));

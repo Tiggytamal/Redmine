@@ -63,7 +63,7 @@ public class ControlJob
             JobDetail job = creerJob(entry.getKey());
             
             //Rajout dans la DataMap de la liste des annèes
-            job.getJobDataMap().put(JobForTask.CLEFANNEES, entry.getValue().getAnnees());
+            job.getJobDataMap().put(JobForTask.CLEFANNEES + entry.getKey().toString(), entry.getValue().getAnnees());
             
             // Enregistrement des jobs
             scheduler.deleteJob(job.getKey());

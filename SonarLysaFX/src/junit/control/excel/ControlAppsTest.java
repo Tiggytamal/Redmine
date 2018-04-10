@@ -4,10 +4,10 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import control.excel.ControlExcel;
+import control.excel.ControlApps;
 import model.enums.TypeColApps;
 
-public class ControlAppsTest extends ControlExcelTest<TypeColApps, ControlExcel<TypeColApps, Map<String, Boolean>>, Map<String, Boolean>>
+public class ControlAppsTest extends ControlExcelTest<TypeColApps, ControlApps, Map<String, Boolean>>
 {
     /*---------- ATTRIBUTS ----------*/
     

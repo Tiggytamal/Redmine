@@ -206,11 +206,9 @@ public abstract class ControlExcelTest<T extends Enum<T> & TypeCol, C extends Co
                     assertNotNull(invokeMethod(handler, "getCellStringValue", row, cell.getColumnIndex()));
                     assertNotNull(invokeMethod(handler, "getCellFormulaValue", row, cell.getColumnIndex()));
                     assertNotNull(invokeMethod(handler, "getCellNumericValue", row, cell.getColumnIndex()));
-                }
-                
+                }               
             }
-        }
-        
+        }        
     }
         
     @Test

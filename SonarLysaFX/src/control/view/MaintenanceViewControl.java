@@ -1,6 +1,5 @@
 package control.view;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,15 +28,11 @@ public class MaintenanceViewControl extends ViewControl
     @FXML
     private ToggleGroup toggleGroup;
     @FXML
-    private RadioButton radioExcel;
-    @FXML
     private RadioButton radioCHC;
     @FXML
     private RadioButton radioCHCCDM;
     @FXML
     private VBox selectPane;
-    @FXML
-    private Button charger;
     @FXML
     private CheckBox suivante;
     @FXML
@@ -57,14 +52,6 @@ public class MaintenanceViewControl extends ViewControl
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    @FXML
-    public void chargerExcel()
-    {
-        File file = getFileFromFileChooser(TITRE);
-        task = new CreerVueCHCCDMTask(file);
-        startTask(task, titreTask);
-    }
-
     @Override
     public void afficher(ActionEvent event)
     {
@@ -79,25 +66,20 @@ public class MaintenanceViewControl extends ViewControl
 
             switch (id)
             {
-                case "radioExcel" :
-                    children.add(charger);
-                    titreTask = "Vue CHC/CDM par Excel";
-                    break;
-                    
                 case "radioCHC" :
                     children.add(checkBoxPane);
                     children.add(creer);
                     cdm = false;
                     titreTask = "Vues CHC";
                     break;
-                    
+
                 case "radioCHCCDM" :
                     children.add(checkBoxPane);
                     children.add(creer);
                     cdm = true;
                     titreTask = "Vues CHC_CDM";
                     break;
-                    
+
                 default :
                     throw new TechnicalException("RadioButton pas géré" + id, null);
             }

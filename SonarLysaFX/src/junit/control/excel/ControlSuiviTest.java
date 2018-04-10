@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static utilities.Statics.TODAY;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,18 +15,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlSuivi;
-import control.excel.ExcelFactory;
 import junit.TestUtils;
 import model.Anomalie;
 import model.ModelFactory;
@@ -36,13 +31,10 @@ import model.enums.Matiere;
 import model.enums.TypeColSuivi;
 import utilities.FunctionalException;
 
-public class ControlSuiviTest
+public class ControlSuiviTest extends ControlExcelTest<TypeColSuivi, ControlSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private ControlSuivi handler;
-    private File file;
-    private Workbook wb;
     private static final String SNAPSHOT = "SNAPSHOT";
     private static final String RELEASE = "RELEASE";
     private static final String LOT = "Lot 10";
@@ -51,12 +43,9 @@ public class ControlSuiviTest
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    @Before
-    public void init() throws InvalidFormatException, IOException, IllegalArgumentException, IllegalAccessException
+    public ControlSuiviTest()
     {
-        file = new File(getClass().getResource("/resources/Suivi_Quality_GateTest.xlsx").getFile());
-        handler = ExcelFactory.getControlleur(TypeColSuivi.class, file);
-        wb = (Workbook) Whitebox.getField(ControlSuivi.class, "wb").get(handler);
+        super(TypeColSuivi.class, "/resources/Suivi_Quality_GateTest.xlsx");
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -120,7 +109,7 @@ public class ControlSuiviTest
     }
 
     @Test(expected = IOException.class)
-    public void sauvegardeFichierException() throws IOException
+    public void sauvegardeFichierException1() throws IOException
     {
         // Envoi d'une IOException avec un nom non compatible.
         handler.sauvegardeFichier("@|(['{");
@@ -267,6 +256,20 @@ public class ControlSuiviTest
             throw e.getCause();
         }
     }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void creerLigneSQException4() throws Throwable
+    {
+        Method method = Whitebox.getMethod(ControlSuivi.class, "creerLigneSQ", Row.class, Anomalie.class, IndexedColors.class);
+        try
+        {
+            method.invoke(handler, null, null, null);
+
+        } catch (InvocationTargetException e)
+        {
+            throw e.getCause();
+        }
+    }
 
     @Test
     public void creerLigneTitres() throws Exception
@@ -280,10 +283,28 @@ public class ControlSuiviTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void ajouterLiensException() throws Exception
+    public void ajouterLiensException1() throws Exception
     {
         Cell cell = null;
         String baseAdresse = "adresse";
+        String variable = "var";
+        Whitebox.invokeMethod(handler, "ajouterLiens", cell, baseAdresse, variable);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void ajouterLiensException2() throws Exception
+    {
+        Cell cell = wb.createSheet().createRow(0).createCell(0);
+        String baseAdresse = null;
+        String variable = "var";
+        Whitebox.invokeMethod(handler, "ajouterLiens", cell, baseAdresse, variable);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void ajouterLiensException3() throws Exception
+    {
+        Cell cell = wb.createSheet().createRow(0).createCell(0);
+        String baseAdresse = "";
         String variable = "var";
         Whitebox.invokeMethod(handler, "ajouterLiens", cell, baseAdresse, variable);
     }
@@ -291,9 +312,7 @@ public class ControlSuiviTest
     @Test
     public void ajouterLiens() throws Exception
     {
-        Sheet sheet = wb.createSheet();
-        Row row = sheet.createRow(0);
-        Cell cell = row.createCell(0);
+        Cell cell = wb.createSheet().createRow(0).createCell(0);
         String baseAdresse = "adresse";
         String variable = "var";
         Whitebox.invokeMethod(handler, "ajouterLiens", cell, baseAdresse, variable);

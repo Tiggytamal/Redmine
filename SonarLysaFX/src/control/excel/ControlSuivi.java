@@ -411,7 +411,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     {
         // 1. Contrôles
         if (couleur == null || row == null || ano == null)
-            throw new IllegalArgumentException("Les arguments ne peuvent pas être nuls");
+            throw new IllegalArgumentException("Les arguments ne peuvent pas être nuls - méthode control.excel.ControlSuivi.creerLigneSQ");
 
         // 2. Helper
         CellHelper helper = new CellHelper(wb);

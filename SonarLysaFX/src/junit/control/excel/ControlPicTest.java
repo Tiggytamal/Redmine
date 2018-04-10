@@ -5,7 +5,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
-import control.excel.ControlExcel;
+import control.excel.ControlPic;
 import model.LotSuiviPic;
 import model.enums.TypeColPic;
 import utilities.FunctionalException;
@@ -16,7 +16,7 @@ import utilities.FunctionalException;
  * @since 1.0
  *
  */
-public class ControlPicTest extends ControlExcelTest<TypeColPic, ControlExcel<TypeColPic, Map<String, LotSuiviPic>>, Map<String, LotSuiviPic>>
+public class ControlPicTest extends ControlExcelTest<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
 {
     /*---------- ATTRIBUTS ----------*/
 

@@ -335,10 +335,10 @@ public class MajSuiviExcelTask extends SonarTask
         controlAno.close();
     }
 
-    private String prepareNom(String fichier)
-    {
-        return fichier.replace("_", " ").split("\\.")[0];
-    }
+//    private String prepareNom(String fichier)
+//    {
+//        return fichier.replace("_", " ").split("\\.")[0];
+//    }
 
     /**
      * Traitement Sonar d'un projet

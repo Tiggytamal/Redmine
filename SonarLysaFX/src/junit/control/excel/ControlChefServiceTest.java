@@ -8,12 +8,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
-import control.excel.ControlExcel;
+import control.excel.ControlChefService;
 import model.RespService;
 import model.enums.TypeColChefServ;
 import utilities.FunctionalException;
 
-public class ControlChefServiceTest extends ControlExcelTest<TypeColChefServ, ControlExcel<TypeColChefServ, Map<String, RespService>>, Map<String, RespService>>
+public class ControlChefServiceTest extends ControlExcelTest<TypeColChefServ, ControlChefService, Map<String, RespService>>
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -53,7 +53,7 @@ public class ControlChefServiceTest extends ControlExcelTest<TypeColChefServ, Co
     {
         // Test 2 - feuille nulle
         wb.removeSheetAt(0);
-        Whitebox.invokeMethod(handler, "initSheet");
+        Whitebox.invokeMethod(handler, "initSheet"); 
     }
     
     /*---------- METHODES PRIVEES ----------*/

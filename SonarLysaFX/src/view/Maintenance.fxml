@@ -30,7 +30,6 @@
 		</fx:define>
 
 		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
-			<RadioButton fx:id="radioExcel" text="Par Excel" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 			<RadioButton fx:id="radioCHC" text="Vues CHC" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 			<RadioButton fx:id="radioCHCCDM" text="Vues CHCCDM" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 		</VBox>
@@ -50,9 +49,6 @@
 					<Label text="Annèe Suivante : " />
 					<CheckBox fx:id="suivante" selected="false" />
 				</HBox>
-
-				<!-- Bouton pour sélectionner le fichier Excel -->
-				<Button text="Charger un fichier excel" fx:id="charger" onAction="#chargerExcel" alignment="CENTER" />
 
 				<!-- Bouton pour créer les vue dans Sonar directement -->
 				<Button text="Créer depuis Sonar" fx:id="creer" onAction="#creerVues" alignment="CENTER" />

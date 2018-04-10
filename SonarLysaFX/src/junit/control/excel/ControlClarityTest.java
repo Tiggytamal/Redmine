@@ -4,11 +4,11 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import control.excel.ControlExcel;
+import control.excel.ControlClarity;
 import model.InfoClarity;
 import model.enums.TypeColClarity;
 
-public class ControlClarityTest extends ControlExcelTest<TypeColClarity, ControlExcel<TypeColClarity, Map<String, InfoClarity>>, Map<String, InfoClarity>>
+public class ControlClarityTest extends ControlExcelTest<TypeColClarity, ControlClarity, Map<String, InfoClarity>>
 {
     /*---------- ATTRIBUTS ----------*/
     

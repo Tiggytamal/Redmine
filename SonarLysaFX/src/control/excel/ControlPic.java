@@ -53,40 +53,6 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
     /*---------- METHODES PUBLIQUES ----------*/
 
     /**
-     * Permet de retourner une map avec comme clef les editions CHCCDM, et comme la valeur, la liste des lots de chaque édition.
-     * 
-     * @return
-     */
-    public Map<String, List<Vue>> recupLotsCHCCDM()
-    {
-        Map<String, List<Vue>> retour = new HashMap<>();
-        
-        // Récupération de la première feuille
-        Sheet sheet = wb.getSheetAt(0);
-        
-        // Iteration sur les colonnes de la feuille, en evitant la première ligne avec les titres.
-        for (int i = 1; i < sheet.getLastRowNum(); i++)
-        {
-            // récupération de l'édition et du numéro de lot.
-            Row row = sheet.getRow(i);
-            String edition = getCellStringValue(row, colEdition);
-            String lot = String.valueOf(getCellNumericValue(row, colLot));
-            
-            // Création de la vue
-            Vue vue = new Vue();
-            vue.setKey("view_lot_" + lot);
-            vue.setName(lot);
-            
-            // Remplissage de la map
-            if(!retour.keySet().contains(edition))
-                retour.put(edition, new ArrayList<>());
-            retour.get(edition).add(vue);
-        }
-        
-        return retour;
-    }
-    
-    /**
      * Permet de classer tous les lots Sonar du fichier dans une map. On enlève d'abord tout ceux qui ne sont pas présents dans SonarQube.<br>
      * Puis on les classes dans des listes, la clef de chaque liste correspond au mois et à l'année de mise en production du lot.<br>
      * Le fichier excel doit avoir un formattage spécifique, avec une colonne <b>Lot</b> (numérique) et un colonne <b>livraison édition</b> (date).<br>
@@ -101,6 +67,10 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
      */
     public Map<LocalDate, List<Vue>> recupLotsExcelPourMEP(Map<String, Vue> mapQube) throws IOException
     {
+        // controle mapSonar
+        if (mapQube == null || mapQube.isEmpty())
+            throw new IllegalArgumentException("La liste des vues venant de Sonar est nulle ou vide - méthode control.excel.ControlPic.recupLotsExcelPourMEP");
+
         // Récupération de la première feuille
         Sheet sheet = wb.getSheetAt(0);
 
@@ -155,9 +125,8 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
     }
 
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
-     * 
      * @param sheet
      * @param wb
      * @param mapQube
@@ -169,7 +138,7 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
         Map<LocalDate, List<Vue>> retour = new HashMap<>();
 
         // parcours de la feuille Excel pour récupérer tous les lots et leurs dates de mise en production avec mise à jour du fichier Excel
-        for (int i = 1; i < sheet.getLastRowNum() +1; i++)
+        for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
             Row row = sheet.getRow(i);
             traitementLigne(row, retour, mapQube);
@@ -209,16 +178,16 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
         {
             // Récupération de la date depuis le fichier Excel en format JDK 1.8.
             LocalDate date = DateConvert.localDate(cellDate.getDateCellValue());
-            
+
             // Création d'une nouvelle date au 1er du mois qui servira du clef à la map.
             LocalDate clef = LocalDate.of(date.getYear(), date.getMonth(), 1);
 
             majCouleurLigne(row, IndexedColors.LIGHT_GREEN);
-            
+
             // Mise à jour de la map
-            if(!retour.keySet().contains(clef))
+            if (!retour.keySet().contains(clef))
                 retour.put(clef, new ArrayList<>());
-            
+
             retour.get(clef).add(mapQube.get(lot));
         }
         else if (getCellNumericValue(row, colNbCompos) > 0)
@@ -229,6 +198,6 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
     @Override
     protected void initEnum()
     {
-        enumeration = TypeColPic.class;     
+        enumeration = TypeColPic.class;
     }
 }
