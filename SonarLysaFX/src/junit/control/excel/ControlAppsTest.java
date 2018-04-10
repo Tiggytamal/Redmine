@@ -21,6 +21,13 @@ public class ControlAppsTest extends ControlExcelTest<TypeColApps, ControlExcel<
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
+    public void calculIndiceColonnes() throws Exception
+    {
+        // Test initialisation colonnes. Pour ce fichier, la première colonne est utilisée.
+        calculIndiceColonnes(1);
+    }
+    
+    @Test
     public void recupDonneesDepuisExcel()
     {
         recupDonneesDepuisExcel((map) -> map.size() == 1842);

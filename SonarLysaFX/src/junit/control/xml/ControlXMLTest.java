@@ -48,7 +48,7 @@ public class ControlXMLTest
     @Test
     public void recupInfosClarityDepuisExcel() throws InvalidFormatException, IOException, JAXBException
     {
-        handler.recupInfosClarityDepuisExcel(new File(getClass().getResource("/resources/Codification_des_Editions.xls").getFile()));
+        handler.recupInfosClarityDepuisExcel(new File(getClass().getResource("/resources/Referentiel_Projets.xlsm").getFile()));
     }
 
     @Test
@@ -60,18 +60,18 @@ public class ControlXMLTest
     @Test
     public void recupChefServiceDepuisExcel() throws InvalidFormatException, IOException, JAXBException
     {
-        handler.recupChefServiceDepuisExcel(new File(getClass().getResource("/resources/liste applis.xlsx").getFile()));
+        handler.recupChefServiceDepuisExcel(new File(getClass().getResource("/resources/Reorg_managers.xlsx").getFile()));
     }
 
     @Test
     public void recupEditionDepuisExcel() throws InvalidFormatException, IOException, JAXBException
     {
-        handler.recupEditionDepuisExcel(new File(getClass().getResource("/resources/liste applis.xlsx").getFile()));
+        handler.recupEditionDepuisExcel(new File(getClass().getResource("/resources/Codification_des_Editions.xlsx").getFile()));
     }
     
     @Test (expected = TechnicalException.class)
     public void saveInfosException() throws Exception
     {        
-        Whitebox.invokeMethod(handler, "saveInfos", TypeFichier.RESPSERVICE, TypeColChefServ.class, new File("a"));
+        Whitebox.invokeMethod(handler, "saveInfos", TypeFichier.RESPSERVICE, TypeColChefServ.class, new File("аз&;:["));
     }
 }

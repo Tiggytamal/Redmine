@@ -31,7 +31,6 @@ import sonarapi.model.Composant;
 import sonarapi.model.Projet;
 import sonarapi.model.QualityGate;
 import sonarapi.model.Status;
-import sonarapi.model.Vue;
 import utilities.Statics;
 import utilities.Utilities;
 
@@ -49,6 +48,7 @@ public class MajSuiviExcelTask extends SonarTask
         this.typeMaj = typeMaj;
         annulable = false;
     }
+    
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
@@ -192,28 +192,29 @@ public class MajSuiviExcelTask extends SonarTask
         majFichierAnomalies(lotsPIC, mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);
 
         etapePlus();
+        
         // 4. Création des vues
-        for (Map.Entry<String, Set<String>> entry : mapLotsSonar.entrySet())
-        {            
-            // Création de la vue, gestion du message et ajout à la liste de vues créées en cas d'annulation
-            String nom = prepareNom(fichier);
-            String nomVue = nom + " - Edition " + entry.getKey();
-            String base = "Création Vue " + nomVue + Statics.NL;
-            updateMessage(base);            
-            Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nomVue, "Vue regroupant tous les lots avec des composants en erreur", true);
-            
-            // Ajout des sous-vue
-            int i = 0;
-            int size = entry.getValue().size();
-            for (String lot : entry.getValue())
-            {
-                // Traitement + message
-                String nomLot = "Lot " + lot;
-                updateMessage(base + "Ajout : " + nomLot);
-                updateProgress(++i, size);
-                api.ajouterSousVue(new Vue("view_lot_" + lot, nomLot), vueParent);
-            }
-        }
+//        for (Map.Entry<String, Set<String>> entry : mapLotsSonar.entrySet())
+//        {            
+//            // Création de la vue, gestion du message et ajout à la liste de vues créées en cas d'annulation
+//            String nom = prepareNom(fichier);
+//            String nomVue = nom + " - Edition " + entry.getKey();
+//            String base = "Création Vue " + nomVue + Statics.NL;
+//            updateMessage(base);            
+//            Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nomVue, "Vue regroupant tous les lots avec des composants en erreur", true);
+//            
+//            // Ajout des sous-vue
+//            int i = 0;
+//            int size = entry.getValue().size();
+//            for (String lot : entry.getValue())
+//            {
+//                // Traitement + message
+//                String nomLot = "Lot " + lot;
+//                updateMessage(base + "Ajout : " + nomLot);
+//                updateProgress(++i, size);
+//                api.ajouterSousVue(new Vue("view_lot_" + lot, nomLot), vueParent);
+//            }
+//        }
         
         // Traitement liste de retour
         List<String> retour = new ArrayList<>();

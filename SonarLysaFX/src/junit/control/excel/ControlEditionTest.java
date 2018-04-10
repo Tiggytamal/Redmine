@@ -21,10 +21,17 @@ public class ControlEditionTest extends ControlExcelTest<TypeColEdition, Control
     
     public ControlEditionTest()
     {
-        super(TypeColEdition.class, "/resources/Codification_des_Editions.xls");
+        super(TypeColEdition.class, "/resources/Codification_des_Editions.xlsx");
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
+    
+    @Test
+    public void calculIndiceColonnes() throws Exception
+    {
+        // Test initialisation colonnes. Pour ce fichier, la première colonne ne sert pas.
+        calculIndiceColonnes(0);
+    }
     
     @Test
     public void recupDonneesDepuisExcel()
@@ -35,8 +42,8 @@ public class ControlEditionTest extends ControlExcelTest<TypeColEdition, Control
         // Test sur le format des clefs/valeurs dans la map
         for (Map.Entry<String, String> entry : map.entrySet())
         {
-            assertTrue(entry.getKey().matches("^([0-9]{2}\\.){3}[0-9]{2}$"));
-            assertTrue(entry.getValue().matches("^CHC(_CDM){0,1}20[12][0-9]\\-S[0-5][0-9]$"));
+            assertTrue(entry.getKey(), entry.getKey().matches("^([0-9]{2}\\.){3}[0-9]{2}$"));
+            assertTrue(entry.getValue(), entry.getValue().matches("^CHC(_CDM){0,1}20[12][0-9]\\-S[0-5][0-9]$"));
         }
     }
     

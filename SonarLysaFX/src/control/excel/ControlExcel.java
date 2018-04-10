@@ -139,7 +139,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
             }
         }
         
-        // Gestion des erreurs si on ne trouve aps le bon nombre de colonnes
+        // Gestion des erreurs si on ne trouve pas le bon nombre de colonnes
         if (nbreCol != enumeration.getEnumConstants().length)
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci.");
     }
@@ -278,7 +278,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
     {
         Cell cell = row.getCell(cellIndex, MissingCellPolicy.CREATE_NULL_AS_BLANK);
         if (cell.getCellTypeEnum() == CellType.FORMULA)
-            return createHelper.createFormulaEvaluator().evaluate(cell).getStringValue();
+            return createHelper.createFormulaEvaluator().evaluate(cell).formatAsString();
         return "";
     }
 
@@ -370,7 +370,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
     protected void copierCellule(Cell newCell, Cell oldCell)
     {
         // On sort si la cellule est nulle
-        if (oldCell == null)
+        if (oldCell == null || newCell == null)
             return;
 
         // Copie du style des cellules
@@ -378,15 +378,9 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
         newCellStyle.cloneStyleFrom(oldCell.getCellStyle());
         newCell.setCellStyle(newCellStyle);
 
-        // Copie des valeurs
-        newCell.setCellValue(oldCell.getStringCellValue());
-        
+        // Copie des valeurs        
         switch (oldCell.getCellTypeEnum())
         {
-            case BLANK :
-                newCell.setCellValue(oldCell.getStringCellValue());
-                break;
-
             case BOOLEAN :
                 newCell.setCellValue(oldCell.getBooleanCellValue());
                 break;
@@ -407,9 +401,14 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
                 newCell.setCellValue(oldCell.getRichStringCellValue());
                 break;
 
-            case _NONE :
+            default :
                 break;
         }
+        
+        // Commentaire
+        Comment commentaire = oldCell.getCellComment();
+        if (commentaire != null)
+            copieComment(commentaire, newCell);
     }
 
     /*---------- ACCESSEURS ----------*/

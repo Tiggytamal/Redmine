@@ -65,18 +65,20 @@ public class SonarAPITest
 		api.creerVueAsync(vue);
 	}
 	
-	@SuppressWarnings("static-access")
-	@Test
-	public void getSecuriteComposant()
-	{
-	    //Mock
-		Statics mock = Mockito.mock(Statics.class);
-		//Test retour erreurs
-		int testA = api.getSecuriteComposant("fr.ca.cat.green:WEBLIV_Green_Build:14");
-		Assert.assertEquals(2, testA);
-		//Test avec nom non conforme
-		int testB = api.getSecuriteComposant("nom erreur");
-		Mockito.verify(mock, Mockito.atLeastOnce()).logger.error(Mockito.anyString());
-		Assert.assertEquals(0, testB);
-	}
+//	@SuppressWarnings("static-access")
+//	@Test
+//	public void getSecuriteComposant()
+//	{
+//	    //Mock
+//		Statics mock = Mockito.mock(Statics.class);
+//		
+//		//Test retour erreurs
+//		int testA = api.getSecuriteComposant("fr.ca.cat.green:WEBLIV_Green_Build:14");
+//		Assert.assertEquals(2, testA);
+//		
+//		//Test avec nom non conforme
+//		int testB = api.getSecuriteComposant("nom erreur");
+//		Mockito.verify(mock, Mockito.atLeastOnce()).logger.error(Mockito.anyString());
+//		Assert.assertEquals(0, testB);
+//	}
 }

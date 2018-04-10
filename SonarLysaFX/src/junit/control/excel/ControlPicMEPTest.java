@@ -15,10 +15,17 @@ public class ControlPicMEPTest extends ControlExcelTest<TypeColPic, ControlExcel
 
     public ControlPicMEPTest()
     {
-        super(TypeColPic.class, "/resources/MEP_février.xlsx");
+        super(TypeColPic.class, "/resources/MEP_fevrier.xlsx");
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
+    
+    @Test
+    public void calculIndiceColonnes() throws Exception
+    {
+        // Test initialisation colonnes. Pour ce fichier, la première colonne ne sert pas.
+        calculIndiceColonnes(0);
+    }
     
     @Test
     public void recupLotsExcelPourMEP()

@@ -2,6 +2,7 @@ package control.view;
 
 import control.task.CreerVueDataStageTask;
 import control.task.CreerVueParAppsTask;
+import control.task.CreerVueParEditionTask;
 import control.task.CreerVuePatrimoineTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,11 +23,15 @@ public class AutresVuesViewControl extends ViewControl
     @FXML
     private RadioButton radioApps;
     @FXML
+    private RadioButton radioEditions;
+    @FXML
     private Button creerApps;
     @FXML
     private Button creerPat;
     @FXML
     private Button creerDataStage;
+    @FXML
+    private Button creerEdition;
     @FXML
     private VBox selectPane;
     @FXML
@@ -58,6 +63,12 @@ public class AutresVuesViewControl extends ViewControl
     {
         startTask(new CreerVueDataStageTask(), null);
     }
+    
+    @FXML
+    public void creerEdition()
+    {
+        startTask(new CreerVueParEditionTask(), null);
+    }
 
     @Override
     protected void afficher(ActionEvent event)
@@ -82,6 +93,10 @@ public class AutresVuesViewControl extends ViewControl
                     
                 case "radioApps" :
                     selectPane.getChildren().add(creerApps);
+                    break;
+                    
+                case "radioEditions" :
+                    selectPane.getChildren().add(creerEdition);
                     break;
                     
                 default :

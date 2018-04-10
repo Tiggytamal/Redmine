@@ -154,7 +154,7 @@ public class ControlSuiviTest
         anoMultiple.add("258058");
         anoMultiple.add("10");
         anoMultiple.add("123456");
-        
+
         // test
         handler.majMultiMatiere(anoMultiple);
     }
@@ -228,18 +228,40 @@ public class ControlSuiviTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void creerLigneSQException() throws Throwable
+    public void creerLigneSQException1() throws Throwable
     {
         Method method = Whitebox.getMethod(ControlSuivi.class, "creerLigneSQ", Row.class, Anomalie.class, IndexedColors.class);
         try
         {
-            method.invoke(handler, null, ModelFactory.getModel(Anomalie.class), IndexedColors.AQUA);
             method.invoke(handler, wb.getSheetAt(0).getRow(0), null, IndexedColors.AQUA);
+
+        } catch (InvocationTargetException e)
+        {
+            throw e.getCause();
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void creerLigneSQException2() throws Throwable
+    {
+        Method method = Whitebox.getMethod(ControlSuivi.class, "creerLigneSQ", Row.class, Anomalie.class, IndexedColors.class);
+        try
+        {
+            method.invoke(handler, wb.getSheetAt(0).getRow(0), null, IndexedColors.AQUA);
+        } catch (InvocationTargetException e)
+        {
+            throw e.getCause();
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void creerLigneSQException3() throws Throwable
+    {
+        Method method = Whitebox.getMethod(ControlSuivi.class, "creerLigneSQ", Row.class, Anomalie.class, IndexedColors.class);
+        try
+        {
             method.invoke(handler, wb.getSheetAt(0).getRow(0), ModelFactory.getModel(Anomalie.class), null);
-            method.invoke(handler, null, null, null);
-            method.invoke(handler, wb.getSheetAt(0).getRow(0), null, null);
-            method.invoke(handler, null, null, IndexedColors.AQUA);
-            method.invoke(handler, null, ModelFactory.getModel(Anomalie.class), null);
+
         } catch (InvocationTargetException e)
         {
             throw e.getCause();
@@ -342,7 +364,7 @@ public class ControlSuiviTest
         Sheet sheet = Whitebox.invokeMethod(handler, "saveAnomaliesCloses", anoClose);
         assertTrue(sheet.getPhysicalNumberOfRows() == 1);
         assertTrue(anoClose.size() == 50);
-        
+
         // Test 2 - à partir d'une feuille vide
         removeSheet(AC);
         anoClose.clear();
@@ -370,7 +392,7 @@ public class ControlSuiviTest
         assertEquals("GESTION DES SERVICES DEVOPS", ano.getDepartement());
         assertEquals("Gestion projets techniques Ouest", ano.getService());
         assertEquals("DEVOPS", ano.getDirection());
-        
+
         // test 3 - correspondance trouvé avec algo de recherche du projet T le plus récent
         // On doit trouver les informations du projet T3004736E
         ano.setProjetClarity("T300473");
@@ -378,7 +400,7 @@ public class ControlSuiviTest
         assertEquals("Distribution Ouest et Marches specialises", ano.getDepartement());
         assertEquals("Distribution Ouest", ano.getService());
         assertEquals("DOMAINE DISTRIBUTION ET OUTILS SOCLES", ano.getDirection());
-        
+
         // test 4 - Correspondance avec les deux derniers caratères manquants
         ano.setProjetClarity("P00839");
         Whitebox.invokeMethod(handler, "controleClarity", ano);

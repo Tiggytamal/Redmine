@@ -47,6 +47,13 @@ public class ControlPicTest extends ControlExcelTest<TypeColPic, ControlExcel<Ty
         Whitebox.invokeMethod(handler, "initSheet");
     }
     
+    @Test
+    public void calculIndiceColonnes() throws Exception
+    {
+        // Test initialisation colonnes. Pour ce fichier, la première colonne ne sert pas.
+        calculIndiceColonnes(0);
+    }
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

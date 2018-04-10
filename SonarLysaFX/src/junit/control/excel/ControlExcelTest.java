@@ -2,12 +2,14 @@ package junit.control.excel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.powermock.reflect.Whitebox.invokeMethod;
 import static org.powermock.reflect.Whitebox.getField;
+import static org.powermock.reflect.Whitebox.invokeMethod;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.function.Function;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -19,7 +21,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlExcel;
 import control.excel.ControlSuivi;
@@ -92,7 +93,7 @@ public abstract class ControlExcelTest<T extends Enum<T> & TypeCol, C extends Co
     public void createWb() throws Exception
     {
         // Appel méthode
-        Whitebox.invokeMethod(handler, "createWb");
+        invokeMethod(handler, "createWb");
         
         // Test initialisation des données
         assertNotNull(getField(handler.getClass(), "wb").get(handler));
@@ -173,28 +174,65 @@ public abstract class ControlExcelTest<T extends Enum<T> & TypeCol, C extends Co
         
         // Test - vérifie qu'on appele bien la méthode autant de fois qu'il y a de colonnes
         invokeMethod(handler, "autosizeColumns", mock);
-        Mockito.verify(mock, Mockito.times(mock.getRow(mock.getLastRowNum()).getLastCellNum())).autoSizeColumn(Mockito.anyInt());
+        Mockito.verify(mock, Mockito.times((int) getField(handler.getClass(), "maxIndice").get(handler) +1)).autoSizeColumn(Mockito.anyInt());
     }
     
     @Test
     public void testMax() throws Exception
     {
-        // Test - Appel méthode avec différente valeur. le maxIndice doit toujours avoir la valeur maximum
+        // Test - Appel méthode avec différentes valeur. le maxIndice doit toujours avoir la valeur maximum
+        
+        // Valur initiale du nombre max = taille du nombre d'éléments de l'énumération
         int max = (int) getField(handler.getClass(), "maxIndice").get(handler);
-        invokeMethod(handler, "testMax", 2);
+        invokeMethod(handler, "testMax", max -2);
         assertEquals(max, getField(handler.getClass(), "maxIndice").get(handler));
-        invokeMethod(handler, "testMax", -1);
+        invokeMethod(handler, "testMax", 0);
         assertEquals(max, getField(handler.getClass(), "maxIndice").get(handler));
-        invokeMethod(handler, "testMax", 18);
-        assertEquals(18, getField(handler.getClass(), "maxIndice").get(handler));
-        invokeMethod(handler, "testMax", 15);
-        assertEquals(18, getField(handler.getClass(), "maxIndice").get(handler));
+        invokeMethod(handler, "testMax", max +3);
+        assertEquals(max + 3, getField(handler.getClass(), "maxIndice").get(handler));
+        invokeMethod(handler, "testMax", max -1);
+        assertEquals(max + 3, getField(handler.getClass(), "maxIndice").get(handler));
     }
     
     @Test
-    public void getCellStringValue() throws Exception
+    public void getCellValueNotNull() throws Exception
+    {        
+        for (Sheet sheet : wb)
+        {
+            for (Row row : sheet)
+            {
+                for (Cell cell : row)
+                {
+                    assertNotNull(invokeMethod(handler, "getCellStringValue", row, cell.getColumnIndex()));
+                    assertNotNull(invokeMethod(handler, "getCellFormulaValue", row, cell.getColumnIndex()));
+                    assertNotNull(invokeMethod(handler, "getCellNumericValue", row, cell.getColumnIndex()));
+                }
+                
+            }
+        }
+        
+    }
+        
+    @Test
+    public void copierCelluleVide() throws Exception
     {
-        invokeMethod(handler, "getCellStringValue", 15);
+        // Initialisation
+        Cell newCell = null;
+        Cell oldCell = null;
+        
+        // test 1 - retour avec cellules vides.
+        invokeMethod(handler, "copierCellule", newCell, oldCell);
+        assertNull(newCell);
+        assertNull(oldCell);
+        
+        newCell = wb.getSheetAt(0).getRow(0).getCell(0);
+        invokeMethod(handler, "copierCellule", newCell, oldCell);
+        assertNull(oldCell);  
+        
+        newCell = null;
+        oldCell = wb.getSheetAt(0).getRow(0).getCell(0);
+        invokeMethod(handler, "copierCellule", newCell, oldCell);
+        assertNull(newCell);  
     }
     
     /*---------- METHODES PRIVEES ----------*/
@@ -211,6 +249,29 @@ public abstract class ControlExcelTest<T extends Enum<T> & TypeCol, C extends Co
         assertTrue(map != null);
         assertTrue(tailleListe.apply(map));
         return map;
+    }
+    
+    /**
+     * Itère sur tous les indices de colonnes, et remonte le nombre toujours initialisées à zéro. <br>
+     * Controle par rapport au nombre de colonnes prévues (soit 0 ou 1).<br>
+     * Les indices des colonnes commencent toujours par col.
+     * 
+     * @param nbre
+     *          nombre de colonnes initilisées à zéro prévues
+     * @throws Exception
+     */
+    protected void calculIndiceColonnes(int nbre) throws Exception
+    {
+        Sheet sheet = wb.getSheetAt(0);
+        invokeMethod(handler, "calculIndiceColonnes", sheet);
+        int nbrecolA0 = 0;
+        for (Field field : handler.getClass().getDeclaredFields())
+        {
+            field.setAccessible(true);
+            if (field.getName().startsWith("col") && (int) field.get(handler) == 0)
+                nbrecolA0++;
+        }
+        assertEquals(nbre, nbrecolA0);
     }
 
     /*---------- ACCESSEURS ----------*/
