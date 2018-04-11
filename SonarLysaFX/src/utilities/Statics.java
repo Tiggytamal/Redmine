@@ -73,7 +73,7 @@ public abstract class Statics
     /** Controleur XML */
     private static final ControlXML controlXML = new ControlXML();
     /** Sauvegarde des fichiers Excel de paramètre */
-    public static final FichiersXML fichiersXML = (FichiersXML) controlXML.recupererXML(FichiersXML.class);
+    public static final FichiersXML fichiersXML = controlXML.recupererXML(FichiersXML.class);
     /** Sauvegarde des fichiers Excel de paramètre */
-    public static final ProprietesXML proprietesXML = (ProprietesXML) controlXML.recupererXML(ProprietesXML.class);
+    public static final ProprietesXML proprietesXML = controlXML.recupererXML(ProprietesXML.class);
 }

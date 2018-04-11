@@ -32,7 +32,7 @@ public class ControlPicTest extends ControlExcelTest<TypeColPic, ControlPic, Map
     @Test
     public void recupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel((map) -> map.size() == 1861);
+        recupDonneesDepuisExcel((map) -> map.size() == 1931);
     }
     
     @Test(expected = FunctionalException.class)

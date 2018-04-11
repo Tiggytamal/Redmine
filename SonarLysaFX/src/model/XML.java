@@ -16,6 +16,12 @@ public interface XML
     public File getFile();
     
     /**
+     * Retourne la ressource de sauvegarde de l'objet
+     * @return
+     */
+    public File getResource();
+    
+    /**
      * Controle les données du fichier et renvoie une chaine de caractère pour afficher les infos de controle.
      * @return
      */

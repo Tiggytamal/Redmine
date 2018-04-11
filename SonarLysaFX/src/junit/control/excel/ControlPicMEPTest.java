@@ -2,7 +2,6 @@ package junit.control.excel;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static utilities.Statics.proprietesXML;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -29,7 +28,7 @@ public class ControlPicMEPTest extends ControlExcelTest<TypeColPic, ControlPic, 
     public ControlPicMEPTest()
     {
         super(TypeColPic.class, "/resources/MEP_mars_2018.xlsx");
-        api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), "ETP8137", "28H02m89,;:!");
+        api = new SonarAPI(proprietes.getMapParams().get(TypeParam.URLSONAR), "ETP8137", "28H02m89,;:!");
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

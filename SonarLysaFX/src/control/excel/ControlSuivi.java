@@ -176,23 +176,23 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             cell.setCellStyle(styleTitre);
             switch (index)
             {
-                case LOTI :
+                case LOTI:
                     cell.setCellValue(Index.LOTI.toString());
                     break;
-                    
-                case EDITIONI :
+
+                case EDITIONI:
                     cell.setCellValue(Index.EDITIONI.toString());
                     break;
-                    
-                case ENVI :
+
+                case ENVI:
                     cell.setCellValue(Index.ENVI.toString());
                     break;
-                    
-                case TRAITEI :
+
+                case TRAITEI:
                     cell.setCellValue(Index.TRAITEI.toString());
                     break;
-                    
-                default :
+
+                default:
                     throw new TechnicalException("Nouvel index non géré : " + index.toString(), null);
             }
         }
@@ -381,8 +381,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     }
 
     /**
-     * Ajoute les anomalies closes à la feuille correspondante. On ne sauvegarde pas les lignes qui n'ont pas données
-     * suite à une anomalie Sonar.
+     * Ajoute les anomalies closes à la feuille correspondante. On ne sauvegarde pas les lignes qui n'ont pas données suite à une anomalie Sonar.
      * 
      * @param sheetClose
      * @param anoClose
@@ -610,8 +609,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     }
 
     /**
-     * Enregistre toutes les anomalies de la feuille des anomalies closes, puis retourne une feuille vide pour les
-     * traitements suivants.
+     * Enregistre toutes les anomalies de la feuille des anomalies closes, puis retourne une feuille vide pour les traitements suivants.
      * 
      * @param anoClose
      * @return
@@ -641,8 +639,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     }
 
     /**
-     * Contrôle si le code clarity de l'anomalie est bien dans le fichier Excel et renseigne les informations depuis
-     * celui-ci
+     * Contrôle si le code clarity de l'anomalie est bien dans le fichier Excel et renseigne les informations depuis celui-ci
      * 
      * @param ano
      */
@@ -786,12 +783,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * 
      * @author ETP8137 - Grégoire mathon
      */
-    private enum Index
-    {
-        LOTI("Lot projet RTC"), 
-        EDITIONI("Edition"), 
-        ENVI("Etat du lot"), 
-        TRAITEI("Traitée");
+    private enum Index {
+        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
 
         private String string;
 

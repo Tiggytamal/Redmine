@@ -25,6 +25,7 @@ import org.mockito.Mockito;
 import control.excel.ControlExcel;
 import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
+import junit.JunitBase;
 import model.enums.TypeCol;
 import utilities.FunctionalException;
 
@@ -40,7 +41,7 @@ import utilities.FunctionalException;
  * @param <Y>
  *            Le type de l'objet en valeur de la map
  */
-public abstract class ControlExcelTest<T extends Enum<T> & TypeCol, C extends ControlExcel<T, Y>, Y>
+public abstract class ControlExcelTest<T extends Enum<T> & TypeCol, C extends ControlExcel<T, Y>, Y> extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -67,6 +68,7 @@ public abstract class ControlExcelTest<T extends Enum<T> & TypeCol, C extends Co
      */
     public ControlExcelTest(Class<T> typeColClass, String chemin)
     {
+        super();
         this.typeColClass = typeColClass;
         this.chemin = chemin;
     }

@@ -12,7 +12,13 @@ public class CreerVueParEditionTask extends SonarTask
 
     public CreerVueParEditionTask()
     {
-        super("ETP8137", "28H02m89,;:!", 2);
+        super(2);
+        annulable = false;
+    }
+    
+    public CreerVueParEditionTask(String pseudo, String mdp)
+    {
+        super(pseudo, mdp, 2);
         annulable = false;
     }
 

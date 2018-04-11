@@ -1,11 +1,8 @@
 package junit.control.quartz;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static utilities.Statics.proprietesXML;
 
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +21,7 @@ import org.quartz.TriggerKey;
 
 import control.quartz.ControlJob;
 import control.task.JobForTask;
+import junit.JunitBase;
 import model.Planificateur;
 import model.enums.TypePlan;
 
@@ -32,7 +30,7 @@ import model.enums.TypePlan;
  * 
  * @author ETP137 - Grégoire Mathon
  */
-public class ControlJobTest
+public class ControlJobTest extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -51,7 +49,7 @@ public class ControlJobTest
     public void creationJobsSonar() throws Exception
     {
         // Initialisation
-        Map<TypePlan, Planificateur> mapPlans = proprietesXML.getMapPlans();
+        Map<TypePlan, Planificateur> mapPlans = proprietes.getMapPlans();
         List<String> planKey = new ArrayList<>();
         for (Map.Entry<TypePlan, Planificateur> entry : mapPlans.entrySet())
         {
@@ -85,7 +83,7 @@ public class ControlJobTest
     public void creerTrigger() throws Exception
     {
         // Parcours de tous les planificateur et vérification que les infos sont bonnes après création des triggers
-        for (Map.Entry<TypePlan, Planificateur> entry : proprietesXML.getMapPlans().entrySet())
+        for (Map.Entry<TypePlan, Planificateur> entry : proprietes.getMapPlans().entrySet())
         {
             Trigger trigger = Whitebox.invokeMethod(handler, "creerTrigger", entry);
             Planificateur plan = entry.getValue();
@@ -95,7 +93,7 @@ public class ControlJobTest
             String cron = ((CronTrigger) trigger).getCronExpression().replace(" ", "");
 
             // Récupération de l'heure depuis le planificateur
-            String heure = plan.getHeure().format(new DateTimeFormatterBuilder().appendPattern("mmHH").toFormatter());
+            String heure = plan.getHeure().format(new DateTimeFormatterBuilder().appendPattern("mmH").toFormatter());
 
             // Récupération des jours actifs depuis le planificateur
             StringBuilder builder = new StringBuilder(plan.isLundi() ? "2," : "");

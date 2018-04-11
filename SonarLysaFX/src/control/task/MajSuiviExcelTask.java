@@ -356,12 +356,13 @@ public class MajSuiviExcelTask extends SonarTask
 
         updateMessage(base + projet.getNom());
         // Récupération du composant
-        Composant composant = api.getMetriquesComposant(key, new String[] { "lot", "alert_status" });
+        Composant composant = api.getMetriquesComposant(key, new String[] { "lot", "alert_status", "duplicated_lines_density", "new_blocker_violations", "new_critical_violations" });
 
         // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
         Map<String, String> metriques = composant.getMapMetriques();
         String lot = metriques.get("lot");
         String alert = metriques.get("alert_status");
+        
 
         // Si le lot a un Quality Gate en Erreur, on le rajoute à la liste et on contrôle aussi les erreurs de sécurité.
         // S'il y en a on le rajoute aussi à la liste des lots avec des problèmesde sécurité.

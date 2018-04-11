@@ -258,15 +258,15 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
     <mapPlans>
         <entry>
             <key>SUIVIHEBDO</key>
-            <value active="true" annees="2018" heure="09:42" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
+            <value active="false" annees="2018" heure="01:30" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
         </entry>
         <entry>
             <key>VUECHC</key>
-            <value active="false" annees="2018" heure="13:00" jeudi="false" lundi="true" mardi="true" mercredi="false" vendredi="false"/>
+            <value active="false" annees="2017 2018" heure="17:00" jeudi="false" lundi="true" mardi="true" mercredi="false" vendredi="false"/>
         </entry>
         <entry>
             <key>VUECDM</key>
-            <value active="true" annees="2018" heure="23:00" jeudi="false" lundi="false" mardi="false" mercredi="true" vendredi="true"/>
+            <value active="true" annees="2019 2018" heure="23:04" jeudi="true" lundi="false" mardi="false" mercredi="true" vendredi="true"/>
         </entry>
     </mapPlans>
 </proprietesXML>

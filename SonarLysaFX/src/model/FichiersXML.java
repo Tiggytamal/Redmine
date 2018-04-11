@@ -30,8 +30,8 @@ public class FichiersXML implements XML
     private Map<TypeFichier, String> dateMaj;
     private Map<String, String> mapEditions;
     private boolean controleOK;
-
-    public static final String NOMFICHIER = "\\fichiers.xml";
+    private static final String NOMFICHIER = "\\fichiers.xml";
+    private static final String RESOURCE = "/resources/fichiers.xml";
 
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -53,6 +53,13 @@ public class FichiersXML implements XML
     public File getFile()
     {
         return new File(Statics.JARPATH + NOMFICHIER);
+    }
+    
+
+    @Override
+    public File getResource()
+    {
+        return new File(getClass().getResource(RESOURCE).getFile());
     }
 
     @SuppressWarnings ({ "rawtypes", "unchecked" })

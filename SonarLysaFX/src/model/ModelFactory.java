@@ -4,10 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import utilities.TechnicalException;
 
-public class ModelFactory
-{
-    private ModelFactory() {}
-    
+public interface ModelFactory
+{   
     /**
      * Retourne une instance de la classe de modèle avec le constructeur de base
      * 

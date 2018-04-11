@@ -8,10 +8,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import model.enums.TypeCol;
 import utilities.TechnicalException;
 
-public class ExcelFactory
-{
-    private ExcelFactory() {}
-    
+public interface ExcelFactory
+{   
     /**
      * Retourne une instance d'un controleur Excel en fonction du type d'énumération
      * @param type

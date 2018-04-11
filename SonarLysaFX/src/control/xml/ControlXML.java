@@ -53,11 +53,12 @@ public class ControlXML
      * @throws InvalidFormatException
      * @throws IOException
      */
-    public XML recupererXML(Class<? extends XML> typeXML)
+    @SuppressWarnings("unchecked")
+    public <T extends XML> T recupererXML(Class<T> typeXML)
     {
         // variables
         JAXBContext context;
-        XML retour;
+        T retour;
         try
         {
             retour = typeXML.newInstance();
@@ -71,9 +72,51 @@ public class ControlXML
         try
         {
             context = JAXBContext.newInstance(typeXML);
+            
             // Récupération du paramétrage depuis le fichier externe
             if (file.exists())
-                retour = (XML) context.createUnmarshaller().unmarshal(file);
+                retour = (T) context.createUnmarshaller().unmarshal(file);
+
+        } catch (JAXBException e)
+        {
+            throw new TechnicalException("Impossible de récupérer le fichier de paramètre, erreur JAXB", e);
+        }
+
+        return retour;
+    }
+    
+    /**
+     * Récupère le paramètre depuis le fichier externe ou celui interne par default s'il n'existe pas.
+     * 
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @throws JAXBException
+     * @throws InvalidFormatException
+     * @throws IOException
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends XML> T recupererXMLResources(Class<T> typeXML)
+    {
+        // variables
+        JAXBContext context;
+        T retour;
+        try
+        {
+            retour = typeXML.newInstance();
+        } catch (InstantiationException | IllegalAccessException e)
+        {
+            throw new TechnicalException("Impossible d'instancier le fichier de paramètre", e);
+        }
+
+        File file = retour.getResource();
+
+        try
+        {
+            context = JAXBContext.newInstance(typeXML);
+            
+            // Récupération du paramétrage depuis le fichier externe
+            if (file.exists())
+                retour = (T) context.createUnmarshaller().unmarshal(file);
 
         } catch (JAXBException e)
         {

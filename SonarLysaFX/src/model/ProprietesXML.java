@@ -42,6 +42,7 @@ public class ProprietesXML implements XML
     private Map<TypePlan, Planificateur> mapPlans;
 
     private static final String NOMFICHIER = "\\proprietes.xml";
+    private static final String RESOURCE = "/resources/proprietes.xml";
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -177,6 +178,13 @@ public class ProprietesXML implements XML
     public File getFile()
     {
         return new File(Statics.JARPATH + NOMFICHIER);
+    }
+    
+
+    @Override
+    public File getResource()
+    {
+        return new File(getClass().getResource(RESOURCE).getFile());
     }
 
     /*---------- METHODES PRIVEES ----------*/

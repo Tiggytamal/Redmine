@@ -20,6 +20,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.Test;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlSuivi;
@@ -126,6 +127,36 @@ public class ControlSuiviTest extends ControlExcelTest<TypeColSuivi, ControlSuiv
         removeSheet(SQ);
         sheet = handler.sauvegardeFichier(file.getName());
         assertTrue(sheet.getPhysicalNumberOfRows() == 1);
+    }
+    
+    @Test
+    public void majFeuillePrincipale() throws Exception
+    {
+        // Initialisation
+        handler = PowerMockito.spy(handler);
+        PowerMockito.doNothing().when(handler, "write");
+        List<Anomalie> lotsEnAno = new ArrayList<>();
+        Anomalie ano = ModelFactory.getModel(Anomalie.class);
+        ano.setLot("Lot 290318");
+        lotsEnAno.add(ano);
+        ano = ModelFactory.getModel(Anomalie.class);
+        ano.setLot("Lot 156452");
+        ano.setEtat("Close");
+        lotsEnAno.add(ano);
+        ano = ModelFactory.getModel(Anomalie.class);
+        ano.setLot("Lot 239654");
+        ano.setEtat("Abandonnée");
+        lotsEnAno.add(ano);
+        List<Anomalie> anoAajouter = new ArrayList<>(); 
+        Set<String> lotsEnErreurSonar = new HashSet<>(); 
+        Set<String> lotsSecurite = new HashSet<>(); 
+        lotsSecurite.add("290318");
+        Set<String> lotsRelease = new HashSet<>(); 
+        Sheet sheet = wb.createSheet();
+        Matiere matiere = Matiere.JAVA;
+        
+        // Appel méthode sans écriture du fichier
+        handler.majFeuillePrincipale(lotsEnAno, anoAajouter, lotsEnErreurSonar, lotsSecurite, lotsRelease, sheet, matiere);
     }
 
     @Test(expected = FunctionalException.class)

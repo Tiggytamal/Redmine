@@ -15,10 +15,8 @@ public class CreerVueParEditionTaskTest
     public void task()
     {
         Platform.runLater(() -> {
-            CreerVueParEditionTask task = new CreerVueParEditionTask();
-            ProgressDialog dialog = new ProgressDialog(task, "test");
-            dialog.show();
-//            new Thread(task).start();
+            CreerVueParEditionTask task = new CreerVueParEditionTask("ETP8137", "28H02m89,;:!");
+            new ProgressDialog(task, "test");
         });
     }
 }

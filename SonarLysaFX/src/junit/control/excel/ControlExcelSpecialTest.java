@@ -12,7 +12,9 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import control.excel.ControlSuivi;
 import model.Anomalie;
@@ -65,20 +67,29 @@ public class ControlExcelSpecialTest extends ControlExcelTest<TypeColSuivi, Cont
     public void copieCommentException1() throws Exception
     {
         // Récupération première cellule avec un commentaire, et envoi d'une cellule nulle en paramètre
-        Cell cell1 = wb.getSheetAt(0).getRow(1).getCell(2, MissingCellPolicy.CREATE_NULL_AS_BLANK);
-        invokeMethod(handler, "copieComment", cell1.getCellComment(), null);
+        Cell cell = wb.getSheetAt(0).getRow(1).getCell(2, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+        invokeMethod(handler, "copieComment", cell.getCellComment(), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void copieCommentException2() throws Exception
     {
-        // Envoi d'un commentaire vide en paramètre
+        // Envoi des deux paramètres nuls
         invokeMethod(handler, "copieComment", new Class[] { Comment.class, Cell.class }, null, null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void copieCommentException3() throws Exception
+    {
+        // Envoi d'un commentaire vide en paramètre
+        Cell cell = wb.getSheetAt(0).getRow(1).getCell(2, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+        invokeMethod(handler, "copieComment", new Class[] { Comment.class, Cell.class }, null, cell);
     }
 
     @Test
-    public void copieComment() throws Exception
+    public void copieComment1() throws Exception
     {
+        // test avec drawing de base de la feuille
         // Initialisation - création de la ligne
         Row row1 = wb.getSheetAt(0).getRow(1);
         boolean testEffectue = false;
@@ -88,10 +99,10 @@ public class ControlExcelSpecialTest extends ControlExcelTest<TypeColSuivi, Cont
         {
             Cell cell1 = row1.getCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK);
             Cell cell2 = wb.getSheetAt(0).createRow(3).createCell(i);
-
+            
             // Appel méthode et Test sur les attributs du commentaire
             if (cell1.getCellComment() != null)
-            {
+            {                
                 Comment comment1 = cell1.getCellComment();
                 invokeMethod(handler, "copieComment", comment1, cell2);
                 Comment comment2 = cell2.getCellComment();
@@ -104,6 +115,43 @@ public class ControlExcelSpecialTest extends ControlExcelTest<TypeColSuivi, Cont
         if (!testEffectue)
             fail("Pas de commentaire à tester");
     }
+    
+    @Test
+    public void copieComment2() throws Exception
+    {
+        // test avec drawing de la feuille à nul
+        // Initialisation - création de la ligne
+        Row row1 = wb.getSheetAt(0).getRow(1);
+        boolean testEffectue = false;
+
+        // Itération pour récupérer les cellules avec des commentaires
+        for (int i = 0; i < row1.getPhysicalNumberOfCells(); i++)
+        {
+            // Test dans le cas d'un drawingpatriarch nul
+
+            Cell cell1 = row1.getCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+            
+            Sheet sheet = Mockito.mock(Sheet.class);
+            Mockito.when(sheet.getDrawingPatriarch()).thenReturn(null);
+            Cell cell = Mockito.mock(Cell.class);
+            Mockito.when(cell.getSheet()).thenReturn(sheet, cell1.getSheet());
+            
+            // Appel méthode et Test sur les attributs du commentaire
+            if (cell1.getCellComment() != null)
+            {                
+                Comment comment1 = cell1.getCellComment();       
+                Comment comment2 = invokeMethod(handler, "copieComment", comment1, cell);
+                assertEquals(comment1.getString().getString(), comment2.getString().getString());
+                assertEquals(comment1.getAuthor(), comment2.getAuthor());
+                testEffectue = true;
+                break;
+            }
+        }
+
+        if (!testEffectue)
+            fail("Pas de commentaire à tester");
+    }
+    
     
     @Test(expected = IllegalArgumentException.class)
     public void valoriserCelluleException1() throws Exception
