@@ -1,0 +1,123 @@
+{"component": {
+   "id": "AVrRhTN188Rpl_Q_08Mw",
+   "key": "fr.ca.cat.apim:Fwk_APIManager_Client_Build:13",
+   "name": "Composant Fwk_APIManager_Client 13",
+   "description": "POM parent de tous les projets MAVEN du CA-Technologies. Il declare toutes les informations sur l'organisation.",
+   "qualifier": "TRK",
+   "measures":    [
+            {
+         "metric": "duplicated_lines_density",
+         "value": "53.5",
+         "periods":          [
+                        {
+               "index": 1,
+               "value": "15.299999999999997"
+            },
+                        {
+               "index": 2,
+               "value": "0.0"
+            },
+                        {
+               "index": 3,
+               "value": "0.0"
+            }
+         ]
+      },
+            {
+         "metric": "new_blocker_violations",
+         "periods":          [
+                        {
+               "index": 1,
+               "value": "0"
+            },
+                        {
+               "index": 2,
+               "value": "0"
+            },
+                        {
+               "index": 3,
+               "value": "0"
+            }
+         ]
+      },
+            {
+         "metric": "new_critical_violations",
+         "periods":          [
+                        {
+               "index": 1,
+               "value": "949"
+            },
+                        {
+               "index": 2,
+               "value": "0"
+            },
+                        {
+               "index": 3,
+               "value": "0"
+            }
+         ]
+      }
+   ]
+}}
+
+{"component": {
+   "id": "AWG543ePaTPkwmV2d4Ad",
+   "key": "fr.ca.cat.fin.fwk.middleware:FWK_FIN_MIDDLEWARE_Build:14",
+   "name": "Composant FWK_FIN_MIDDLEWARE 14",
+   "description": "Projet de BUILD du composant FWK_FIN_MIDDLEWARE",
+   "qualifier": "TRK",
+   "measures":    [
+            {
+         "metric": "new_blocker_violations",
+         "periods":          [
+                        {
+               "index": 1,
+               "value": "17"
+            },
+                        {
+               "index": 2,
+               "value": "0"
+            },
+                        {
+               "index": 3,
+               "value": "16"
+            }
+         ]
+      },
+            {
+         "metric": "new_critical_violations",
+         "periods":          [
+                        {
+               "index": 1,
+               "value": "58"
+            },
+                        {
+               "index": 2,
+               "value": "0"
+            },
+                        {
+               "index": 3,
+               "value": "56"
+            }
+         ]
+      },
+            {
+         "metric": "duplicated_lines_density",
+         "value": "13.3",
+         "periods":          [
+                        {
+               "index": 1,
+               "value": "0.40000000000000036"
+            },
+                        {
+               "index": 2,
+               "value": "0.0"
+            },
+                        {
+               "index": 3,
+               "value": "-0.5999999999999996"
+            }
+         ]
+      }
+   ]
+}}
