@@ -1,7 +1,7 @@
 package sonarapi.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import model.enums.TypeMetrique;
 
 @XmlRootElement(name = "component")
 public class Composant implements ModeleSonar
@@ -124,16 +126,16 @@ public class Composant implements ModeleSonar
      * 
      * @return
      */
-    public Map<String, String> getMapMetriques()
+    public Map<TypeMetrique, Metrique> getMapMetriques()
     {
         if (metriques == null)
-            return new HashMap<>();
+            return new EnumMap<>(TypeMetrique.class);
 
-        Map<String, String> retour = new HashMap<>();
+        Map<TypeMetrique, Metrique> retour = new EnumMap<>(TypeMetrique.class);
 
         for (Metrique metrique : metriques)
         {
-            retour.put(metrique.getMetric(), metrique.getValue());
+            retour.put(metrique.getMetric(), metrique);
         }
         return retour;
     }

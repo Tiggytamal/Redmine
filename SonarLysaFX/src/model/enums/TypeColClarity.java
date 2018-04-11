@@ -2,6 +2,11 @@ package model.enums;
 
 import java.io.Serializable;
 
+/**
+ * Colonnes du fichier des projets Clarity
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public enum TypeColClarity implements Serializable, TypeCol
 {
     /*---------- ATTRIBUTS ----------*/
@@ -15,8 +20,8 @@ public enum TypeColClarity implements Serializable, TypeCol
     DEPARTEMENT("Département","colDepart"),
     SERVICE("Service","colService");
         
-    private String valeur;
-    private String nomCol;
+    private final String valeur;
+    private final String nomCol;
 
     /*---------- CONSTRUCTEURS ----------*/
 

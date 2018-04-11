@@ -2,6 +2,11 @@ package model.enums;
 
 import java.io.Serializable;
 
+/**
+ * Colonnes du fichier des chefs de services
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public enum TypeColChefServ implements Serializable, TypeCol 
 {
     /*---------- ATTRIBUTS ----------*/
@@ -12,8 +17,8 @@ public enum TypeColChefServ implements Serializable, TypeCol
     FILIERE("Filière", "colFil"), 
     MANAGER("Manager", "colManager");
 
-    private String valeur;
-    private String nomCol;
+    private final String valeur;
+    private final String nomCol;
     
     /*---------- CONSTRUCTEURS ----------*/
 

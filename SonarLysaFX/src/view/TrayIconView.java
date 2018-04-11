@@ -58,13 +58,22 @@ public class TrayIconView
 	/*---------- METHODES PUBLIQUES ----------*/
 	
 	/**
-	 * Ajoute l'icone à la barre de notifications et ferme la fenetre de l'application
+	 * Ajoute l'icone à la barre de notifications
 	 * @throws AWTException
 	 */
 	public void addToTray() throws AWTException
 	{
 		tray.add(trayIcon);
 	}
+	
+	/**
+     * Retire l'icone à la barre de notifications
+     * @throws AWTException
+     */
+    public void removeFromTray()
+    {
+        tray.remove(trayIcon);
+    }
 	
 	public void hideStage()
 	{

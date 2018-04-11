@@ -10,20 +10,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import model.enums.TypeMetrique;
+
 @XmlRootElement
 public class Metrique
 {
-	private String type;
+	private TypeMetrique type;
 	private String valeur;
 	private List<Periode> listePeriodes;
 
 	@XmlAttribute(name = "metric")
-	public String getMetric()
+	public TypeMetrique getMetric()
 	{
 		return type;
 	}
 
-	public void setMetric(String type)
+	public void setMetric(TypeMetrique type)
 	{
 		this.type = type;
 	}

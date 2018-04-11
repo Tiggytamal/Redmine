@@ -102,8 +102,7 @@ public class AutresVuesViewControl extends ViewControl
                 default :
                     throw new TechnicalException("RadioButton pas géré" + id, null);
             }
-        }
-        
+        }        
     }
     
     /*---------- METHODES PRIVEES ----------*/

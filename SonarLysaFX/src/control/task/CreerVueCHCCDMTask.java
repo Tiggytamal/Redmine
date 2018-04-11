@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import model.enums.TypeMetrique;
 import sonarapi.model.Composant;
+import sonarapi.model.Metrique;
 import sonarapi.model.Projet;
 import sonarapi.model.Vue;
 import utilities.FunctionalException;
@@ -122,16 +124,16 @@ public class CreerVueCHCCDMTask extends SonarTask
             Projet projet = tousLesProjets.get(i);
 
             // Récupération de l'édition du composant sous forme numérique xx.yy.zz.tt et du numéro de lot
-            Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { "edition", "lot" });
+            Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { TypeMetrique.EDITION.toString(), TypeMetrique.LOT.toString() });
 
             // MAJ progression
             updateMessage("Traitement des composants :" + NL + composant.getNom());
             updateProgress(i, tousLesProjets.size());
 
             // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
-            Map<String, String> metriques = composant.getMapMetriques();
-            String lot = metriques.get("lot");
-            String edition = metriques.get("edition");
+            Map<TypeMetrique, Metrique> metriques = composant.getMapMetriques();
+            String lot = metriques.get(TypeMetrique.LOT).getValue();
+            String edition = metriques.get(TypeMetrique.EDITION).getValue();
 
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
             if (lot != null && !lot.isEmpty() && edition != null && mapEditions.keySet().contains(edition))

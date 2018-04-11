@@ -6,22 +6,26 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
+import org.quartz.SchedulerException;
+
+import control.quartz.ControlJob;
 import control.xml.ControlXML;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import utilities.TechnicalException;
 import view.TrayIconView;
 
 /**
- * 
  * @author ETP8137 - Grégoire Mathon
- *
  */
 public class MainScreen extends Application
 {
@@ -29,18 +33,22 @@ public class MainScreen extends Application
 
     /* Attibuts généraux */
 
-    /** Affichage général de l'applicaiton */
+    /** Affichage général de l'application */
     private static final BorderPane root = new BorderPane();
     /** Icône de la barre des tâches */
     private static final TrayIconView trayIcon = new TrayIconView();
+    /** Fenêtre de top niveau de l'application */
+    private Stage stage;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public void start(final Stage stage) throws IOException, InterruptedException, JAXBException, AWTException
+    public void start(final Stage primaryStage) throws IOException, InterruptedException, JAXBException, AWTException
     {
+        stage = primaryStage;
+        
         // Menu de l'application
         final HBox menu = FXMLLoader.load(getClass().getResource("/view/Menu.fxml"));
 
@@ -54,9 +62,11 @@ public class MainScreen extends Application
         stage.setResizable(true);
         stage.setScene(scene);
         stage.iconifiedProperty().addListener(new IconifiedListener());
+        stage.setOnCloseRequest(new CloseEventHandler());
         trayIcon.addToTray();
         stage.show();
         new ControlXML().createAlert();
+
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -67,7 +77,6 @@ public class MainScreen extends Application
      * Accès au panneau principal depuis les autres contrôleurs.
      * 
      * @return
-     * 
      */
     public static BorderPane getRoot()
     {
@@ -80,9 +89,10 @@ public class MainScreen extends Application
     }
 
     /**
-     * Listener rpivé pour réduire l'application dans la barre des tâches.
+     * Listener privé pour réduire l'application dans la barre des tâches.
      * 
      * @author ETP8137 - Grégoire Mathon
+     * @since 1.0
      */
     private class IconifiedListener implements ChangeListener<Boolean>
     {
@@ -95,5 +105,31 @@ public class MainScreen extends Application
                 trayIcon.hideStage();
             }
         }
+    }
+    
+    /**
+     * EventHandler privé pour la gestion de la fermeture du programme.
+     * 
+     * @author ETP8137 - Grégoire Mathon
+     * @since 1.0
+     */
+    private class CloseEventHandler implements EventHandler<WindowEvent>
+    {
+        @Override
+        public void handle(WindowEvent event)
+        {
+            if (!stage.isIconified())
+            {
+                trayIcon.removeFromTray();
+                try
+                {
+                    ControlJob.scheduler.shutdown();
+                }
+                catch (SchedulerException e)
+                {
+                    throw new TechnicalException("Impossible de fermer le planificateur", e);
+                }
+            }           
+        }       
     }
 }

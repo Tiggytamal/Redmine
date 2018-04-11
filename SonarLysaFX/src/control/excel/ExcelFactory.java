@@ -23,7 +23,7 @@ public interface ExcelFactory
     {
         switch (type.getName())
         {           
-            case "model.enums.TypeColClarity" :
+            case "model.enums.TypeColClarity" :                
                 return (R) new ControlClarity(file);
                 
             case "model.enums.TypeColChefServ" :
@@ -43,7 +43,6 @@ public interface ExcelFactory
                 
             default:
                 throw new TechnicalException("ExcelFactory.getControlleur - type non géré : " + type.toString(), null);
-
         }
     }
 }

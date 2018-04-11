@@ -21,6 +21,7 @@ import utilities.enums.Severity;
  * Entrée du programme avec la gestion des erreurs
  * 
  * @author ETP137 - Grégoire Mathon
+ * @since 1.0
  */
 public class Main extends Application
 {
@@ -82,7 +83,7 @@ public class Main extends Application
      * @param ex
      * @param detail
      */
-    public static void createAlert(Severity severity, Throwable ex, String detail)
+    private static void createAlert(Severity severity, Throwable ex, String detail)
     {
         Alert alert;
 

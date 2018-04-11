@@ -2,6 +2,11 @@ package model.enums;
 
 import java.io.Serializable;
 
+/**
+ * Colonnes du fichier de Suivi des anomalies
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public enum TypeColSuivi  implements Serializable, TypeCol
 {
     /*---------- ATTRIBUTS ----------*/
@@ -26,8 +31,8 @@ public enum TypeColSuivi  implements Serializable, TypeCol
     DATERELANCE("Date de relance", "colDateRel"), 
     MATIERE("Matière", "colMatiere");
 
-    private String valeur;
-    private String nomCol;
+    private final String valeur;
+    private final String nomCol;
 
     /*---------- CONSTRUCTEURS ----------*/
 

@@ -133,6 +133,8 @@ public class Planificateur extends Modele
     @XmlJavaTypeAdapter(value = LocalTimeAdapter.class)
     public LocalTime getHeure()
     {
+        if (heure == null)
+            heure = LocalTime.of(0, 0);
         return heure;
     }
 

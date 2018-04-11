@@ -2,6 +2,11 @@ package model.enums;
 
 import java.io.Serializable;
 
+/**
+ * Colonnes des extractions de la Pic
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public enum TypeColPic implements Serializable, TypeCol
 {
 
@@ -19,8 +24,8 @@ public enum TypeColPic implements Serializable, TypeCol
     VMOA ("Livraison VMOA", "colVmoa"),
     LIV ("Livraison édition", "colLiv");
     
-    private String valeur;
-    private String nomCol;
+    private final String valeur;
+    private final String nomCol;
     
     /*---------- CONSTRUCTEURS ----------*/
 

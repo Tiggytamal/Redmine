@@ -2,6 +2,11 @@ package model.enums;
 
 import java.io.Serializable;
 
+/**
+ * Enumération des différents paramètres de l'application
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public enum TypeParam implements Serializable, TypeKey
 {
     /*---------- ATTRIBUTS ----------*/
@@ -18,7 +23,7 @@ public enum TypeParam implements Serializable, TypeKey
     URLSONAR("Url serveur Sonar"), 
     URLSONARTEST("Url Serveur Sonar de test");
 
-    private String string;
+    private final String string;
 
     /*---------- CONSTRUCTEURS ----------*/
 

@@ -20,6 +20,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import control.task.JobForTask;
 import model.Planificateur;
 import model.enums.TypePlan;
+import utilities.TechnicalException;
 
 /**
  * Permet de gérer le planificateur des tâches.
@@ -31,15 +32,10 @@ public class ControlJob
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private Scheduler scheduler;
+    public static final Scheduler scheduler = initScheduler();
     private static final String GROUP = "group";
 
     /*---------- CONSTRUCTEURS ----------*/
-
-    public ControlJob() throws SchedulerException
-    {
-        scheduler = StdSchedulerFactory.getDefaultScheduler();
-    }
 
     /*---------- METHODES PUBLIQUES ----------*/
     
@@ -82,6 +78,22 @@ public class ControlJob
 
     /*---------- METHODES PRIVEES ----------*/
 
+    /**
+     * Initialisation du planificateur
+     * @return
+     */
+    private static Scheduler initScheduler()
+    {
+        try
+        {
+            return StdSchedulerFactory.getDefaultScheduler();
+        }
+        catch (SchedulerException e)
+        {
+            throw new TechnicalException("Impossible de lancer le planificateur", e);
+        }
+    }
+    
     /**
      * Permet de créer un trigger à partir d'une entry de la map
      * 
