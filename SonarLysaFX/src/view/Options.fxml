@@ -112,6 +112,12 @@
 							</children>
 						</VBox>
 						
+						<!-- Autres paramètres booléens chargés depuis le JAVA -->
+						<VBox fx:id="booleanBox" prefWidth="500">
+							<children>
+							</children>
+						</VBox>
+						
 						<!-- Bouton de sauvegarde -->
 						<Region prefHeight="20" />
 						<Button text="Sauvegarder" onAction="#sauvegarder" alignment="CENTER" />

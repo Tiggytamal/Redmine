@@ -26,6 +26,7 @@ import model.Anomalie;
 import model.LotSuiviPic;
 import model.ModelFactory;
 import model.enums.Matiere;
+import model.enums.TypeBool;
 import model.enums.TypeMetrique;
 import model.enums.TypeParam;
 import sonarapi.model.Composant;
@@ -34,6 +35,7 @@ import sonarapi.model.Periode;
 import sonarapi.model.Projet;
 import sonarapi.model.QualityGate;
 import sonarapi.model.Status;
+import sonarapi.model.Vue;
 import utilities.Statics;
 import utilities.Utilities;
 
@@ -66,15 +68,15 @@ public class MajSuiviExcelTask extends SonarTask
     {
         switch (typeMaj)
         {
-            case SUIVI :
+            case SUIVI:
                 majFichierSuiviExcel();
                 break;
 
-            case DATASTAGE :
+            case DATASTAGE:
                 majFichierSuiviExcelDataStage();
                 break;
 
-            case DOUBLE :
+            case DOUBLE:
                 traitementSuiviExcelToutFichiers();
                 break;
         }
@@ -159,7 +161,7 @@ public class MajSuiviExcelTask extends SonarTask
      * @throws IOException
      */
 
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     private List<String> traitementFichierSuivi(Map<String, List<Projet>> composants, String fichier, Matiere matiere) throws InvalidFormatException, IOException
     {
         // 1. Récupération des données depuis les fichiers Excel.
@@ -191,33 +193,38 @@ public class MajSuiviExcelTask extends SonarTask
         etapePlus();
         updateMessage("Mise à jour du fichier Excel...");
         updateProgress(-1, 1);
+
         // 3. Supression des lots déjà créés et création des feuille Excel avec les nouvelles erreurs
         majFichierAnomalies(lotsPIC, mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);
 
+        updateProgress(1, 1);
         etapePlus();
 
-        // 4. Création des vues
-        // for (Map.Entry<String, Set<String>> entry : mapLotsSonar.entrySet())
-        // {
-        // // Création de la vue, gestion du message et ajout à la liste de vues créées en cas d'annulation
-        // String nom = prepareNom(fichier);
-        // String nomVue = nom + " - Edition " + entry.getKey();
-        // String base = "Création Vue " + nomVue + Statics.NL;
-        // updateMessage(base);
-        // Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nomVue, "Vue regroupant tous les lots avec des composants en erreur", true);
-        //
-        // // Ajout des sous-vue
-        // int i = 0;
-        // int size = entry.getValue().size();
-        // for (String lot : entry.getValue())
-        // {
-        // // Traitement + message
-        // String nomLot = "Lot " + lot;
-        // updateMessage(base + "Ajout : " + nomLot);
-        // updateProgress(++i, size);
-        // api.ajouterSousVue(new Vue("view_lot_" + lot, nomLot), vueParent);
-        // }
-        // }
+        // 4. Création des vues si le paramètrage est activé
+        if (proprietesXML.getMapParamsBool().get(TypeBool.VUESSUIVI))
+        {
+            for (Map.Entry<String, Set<String>> entry : mapLotsSonar.entrySet())
+            {
+                // Création de la vue, gestion du message et ajout à la liste de vues créées en cas d'annulation
+                String nom = fichier.replace("_", " ").split("\\.")[0];
+                String nomVue = nom + " - Edition " + entry.getKey();
+                String base = "Création Vue " + nomVue + Statics.NL;
+                updateMessage(base);
+                Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nomVue, "Vue regroupant tous les lots avec des composants en erreur", true);
+
+                // Ajout des sous-vue
+                int i = 0;
+                int size = entry.getValue().size();
+                for (String lot : entry.getValue())
+                {
+                    // Traitement + message
+                    String nomLot = "Lot " + lot;
+                    updateMessage(base + "Ajout : " + nomLot);
+                    updateProgress(++i, size);
+                    api.ajouterSousVue(new Vue("view_lot_" + lot, nomLot), vueParent);
+                }
+            }
+        }
 
         // Traitement liste de retour
         List<String> retour = new ArrayList<>();
@@ -338,11 +345,6 @@ public class MajSuiviExcelTask extends SonarTask
         controlAno.close();
     }
 
-    // private String prepareNom(String fichier)
-    // {
-    // return fichier.replace("_", " ").split("\\.")[0];
-    // }
-
     /**
      * Traitement Sonar d'un projet
      *
@@ -384,17 +386,29 @@ public class MajSuiviExcelTask extends SonarTask
 
     /**
      * Controle si le QG est en erreur, et vérifie qu'il y a bine au moins une erreur bloquante, critique, ou une duplication de code.
+     * 
      * @param metriques
      * @return
      */
     private boolean controleMetriques(Map<TypeMetrique, Metrique> metriques)
     {
         String alert = metriques.computeIfAbsent(TypeMetrique.QG, t -> new Metrique()).getValue();
-        List<Periode> bloquants = metriques.get(TypeMetrique.BLOQUANT).getListePeriodes();
-        List<Periode> critiques = metriques.get(TypeMetrique.CRITIQUE).getListePeriodes();
-        List<Periode> duplication = metriques.get(TypeMetrique.DUPLICATION).getListePeriodes();
+        List<Periode> bloquants = getListPeriode(metriques, TypeMetrique.BLOQUANT);
+        List<Periode> critiques = getListPeriode(metriques, TypeMetrique.CRITIQUE);
+        List<Periode> duplication = getListPeriode(metriques, TypeMetrique.DUPLICATION);
+        return alert != null && Status.getStatus(alert) == Status.ERROR && (recupLeakPeriod(bloquants) > 0 || recupLeakPeriod(critiques) > 0 || recupLeakPeriod(duplication) > 3);
+    }
 
-        return alert != null && Status.getStatus(alert) == Status.ERROR && (recupLeakPeriod(bloquants) > 0 || recupLeakPeriod(critiques) > 0 || recupLeakPeriod(duplication) > 5);
+    /**
+     * Remonte une liste de période en protégeant des nullPointer
+     * 
+     * @param metriques
+     * @param type
+     * @return
+     */
+    private List<Periode> getListPeriode(Map<TypeMetrique, Metrique> metriques, TypeMetrique type)
+    {
+        return metriques.computeIfAbsent(type, t -> new Metrique()).getListePeriodes();
     }
 
     /**
@@ -498,8 +512,7 @@ public class MajSuiviExcelTask extends SonarTask
 
     /*---------- ACCESSEURS ----------*/
 
-    public enum TypeMaj
-    {
+    public enum TypeMaj {
         SUIVI("Maj Fichier de Suivi"), DATASTAGE("Maj Fichier de Suivi DataStage"), DOUBLE("Maj Fichiers de Suivi");
 
         private String string;

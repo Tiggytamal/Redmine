@@ -40,7 +40,7 @@ public class Main extends Application
         
         // Création fenêtre principale		
         MainScreen main = new MainScreen();
-        main.start(stage);
+        main.start(stage); 
     }
     
     /** 

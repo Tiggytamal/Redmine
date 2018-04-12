@@ -725,7 +725,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         retour.setEditionComment(getCellComment(row, colEdition));
         retour.setLot(getCellStringValue(row, colLot));
         retour.setLotComment(getCellComment(row, colLot));
-        retour.setEnvironnement(Environnement.getEnvironnement(getCellStringValue(row, colEnv)));
+        retour.setEnvironnement(Environnement.from(getCellStringValue(row, colEnv)));
         retour.setEnvironnementComment(getCellComment(row, colEnv));
         retour.setNumeroAnomalie(getCellNumericValue(row, colAno));
         retour.setNumeroAnomalieComment(getCellComment(row, colAno));

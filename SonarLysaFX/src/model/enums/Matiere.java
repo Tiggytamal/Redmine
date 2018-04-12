@@ -43,13 +43,13 @@ public enum Matiere
         }        
     }
     
-    private static class Valeur
-    {
+    private abstract class Valeur
+    {        
         private Valeur() {}
         
-        private static final String JAVA = "JAVA";
-        private static final String DATASTAGE = "DATASTAGE";
-        private static final String JAVASCRIPT = "JAVASCRIPT";
-        private static final String PHP = "PHP";
+        public static final String JAVA = "JAVA";
+        public static final String DATASTAGE = "DATASTAGE";
+        public static final String JAVASCRIPT = "JAVASCRIPT";
+        public static final String PHP = "PHP";
     }
 }

@@ -4,6 +4,7 @@ import static utilities.Statics.proprietesXML;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import javax.xml.bind.JAXBException;
@@ -26,6 +27,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
+import model.enums.TypeBool;
 import model.enums.TypeCol;
 import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
@@ -38,6 +40,7 @@ import model.enums.TypeParam;
 import utilities.FunctionalException;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
+import view.BooleanView;
 import view.ColonneView;
 import view.ParamView;
 
@@ -64,13 +67,16 @@ public class OptionViewControl extends ViewControl
     @FXML
     private VBox colonnesBox;
     @FXML
+    private VBox booleanBox;
+    @FXML
     private VBox paramsBox;
 
     // Attributs de classe
 
     private Alert alert;
     private static final int ROW_HEIGHT = 24;
-    private Map<TypeParam, String> mapParam;
+    private Map<TypeParam, String> mapParams;
+    private Map<TypeBool, Boolean> mapParamsBool;
     private ControlXML control;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -86,7 +92,8 @@ public class OptionViewControl extends ViewControl
         alert = new Alert(AlertType.INFORMATION);
         alert.initStyle(StageStyle.UTILITY);
         alert.setHeaderText(null);
-        mapParam = proprietesXML.getMapParams();
+        mapParams = proprietesXML.getMapParams();
+        mapParamsBool = proprietesXML.getMapParamsBool();
         control = new ControlXML();
     }
 
@@ -131,6 +138,9 @@ public class OptionViewControl extends ViewControl
                 
             case "Applications" :
                 afficherColonnes(TypeColApps.class, root);
+                break;
+                
+            case "Nom Colonnes" :
                 break;
 
             default :
@@ -227,7 +237,7 @@ public class OptionViewControl extends ViewControl
             if (i < liste.size() - 1)
                 builder.append("-");
         }
-        mapParam.put(TypeParam.VERSIONS, builder.toString());
+        mapParams.put(TypeParam.VERSIONS, builder.toString());
 
         // Sauvegarde des autres paramètres
         for (Node node : paramsBox.getChildren())
@@ -235,7 +245,17 @@ public class OptionViewControl extends ViewControl
             if (node instanceof ParamView)
             {
                 ParamView view = (ParamView) node;
-                saveText(view.getField(), mapParam, view.getTypeParam());
+                saveText(view.getField(), mapParams, view.getTypeParam());
+            }
+        }
+        
+        // Sauvegarde des paramètres booléens
+        for (Node node : booleanBox.getChildren())
+        {
+            if (node instanceof BooleanView)
+            {
+                BooleanView view = (BooleanView) node;
+                mapParamsBool.put(view.getTypeParam(), view.getCheckBox().isSelected());
             }
         }
 
@@ -293,7 +313,7 @@ public class OptionViewControl extends ViewControl
         paramsBox.getChildren().clear();
 
         // Initialition liste des versions affichée
-        String versionsParam = mapParam.get(TypeParam.VERSIONS);
+        String versionsParam = mapParams.get(TypeParam.VERSIONS);
 
         if (versionsParam != null && !versionsParam.isEmpty())
         {
@@ -310,13 +330,20 @@ public class OptionViewControl extends ViewControl
 
         // Récupération de la map correspondante au type de fichier et affichage des colonnes. On saute juste les
         // versions qui sont gérées différement
-        for (Map.Entry<TypeParam, String> entry : mapParam.entrySet())
+        for (Map.Entry<TypeParam, String> entry : mapParams.entrySet())
         {
             if (entry.getKey() == TypeParam.VERSIONS)
                 continue;
 
             ParamView pv = new ParamView(entry.getKey(), entry.getValue());
             paramsBox.getChildren().add(pv);
+        }
+        
+        // Affichage de tous les paramètres de type booléens
+        for (Entry<TypeBool, Boolean> entry : mapParamsBool.entrySet())
+        {
+            BooleanView pv = new BooleanView(entry.getKey(), entry.getValue());
+            booleanBox.getChildren().add(pv);
         }
     }
 

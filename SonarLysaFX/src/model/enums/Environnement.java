@@ -31,7 +31,7 @@ public enum Environnement
         return string;
     }
     
-    public static Environnement getEnvironnement(String envString)
+    public static Environnement from(String envString)
     {
         switch(envString)
         {

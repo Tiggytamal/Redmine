@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.enums.TypeBool;
 import model.enums.TypeCol;
 import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
@@ -33,6 +34,7 @@ public class ProprietesXML implements XML
     /*---------- ATTRIBUTS ----------*/
 
     private Map<TypeParam, String> mapParams;
+    private Map<TypeBool, Boolean> mapParamsBool;
     private Map<TypeColSuivi, String> mapColsSuivi;    
     private Map<TypeColClarity, String> mapColsClarity;   
     private Map<TypeColChefServ, String> mapColsChefServ;
@@ -56,6 +58,7 @@ public class ProprietesXML implements XML
         mapColsEdition = new EnumMap<>(TypeColEdition.class);
         mapColsApps = new EnumMap<>(TypeColApps.class);
         mapPlans = new EnumMap<>(TypePlan.class);
+        mapParamsBool = new EnumMap<>(TypeBool.class);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -72,7 +75,11 @@ public class ProprietesXML implements XML
         return builder.toString();
     }
 
-
+    /**
+     * Retourne toutes les map de gestions des colonnes
+     * @param typeColClass
+     * @return
+     */
     @SuppressWarnings ("unchecked")
     public <T extends Enum<T> & TypeCol> Map<T, String> getMap(Class<T> typeColClass)
     {
@@ -98,8 +105,7 @@ public class ProprietesXML implements XML
                 
             default :
                 throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);
-        }
-        
+        }        
     }
     
     /**
@@ -126,6 +132,13 @@ public class ProprietesXML implements XML
     }
 
     @XmlElementWrapper
+    @XmlElement (name = "mapParamsBool", required = false)
+    public Map<TypeBool, Boolean> getMapParamsBool()
+    {
+        return mapParamsBool;
+    }
+    
+    @XmlElementWrapper
     @XmlElement (name = "mapPlans", required = false)
     public Map<TypePlan, Planificateur> getMapPlans()
     {
@@ -134,42 +147,42 @@ public class ProprietesXML implements XML
     
     @XmlElementWrapper
     @XmlElement (name = "mapColsSuivi", required = false)
-    public Map<TypeColSuivi, String> getMapColsSuivi()
+    private Map<TypeColSuivi, String> getMapColsSuivi()
     {
         return mapColsSuivi;
     }    
     
     @XmlElementWrapper
     @XmlElement (name = "mapColsClarity", required = false)
-    public Map<TypeColClarity, String> getMapColsClarity()
+    private Map<TypeColClarity, String> getMapColsClarity()
     {
         return mapColsClarity;
     }
     
     @XmlElementWrapper
     @XmlElement (name = "mapColsChefServ", required = false)
-    public Map<TypeColChefServ, String> getMapColsChefServ()
+    private Map<TypeColChefServ, String> getMapColsChefServ()
     {
         return mapColsChefServ;
     }
     
     @XmlElementWrapper
     @XmlElement (name = "mapColsPic", required = false)
-    public Map<TypeColPic, String> getMapColsPic()
+    private Map<TypeColPic, String> getMapColsPic()
     {
         return mapColsPic;
     }
     
     @XmlElementWrapper
     @XmlElement (name = "mapColsEdition", required = false)
-    public Map<TypeColEdition, String> getMapColsEdition()
+    private Map<TypeColEdition, String> getMapColsEdition()
     {
         return mapColsEdition;
     }
     
     @XmlElementWrapper
     @XmlElement (name = "mapColsApps", required = false)
-    public Map<TypeColApps, String> getMapColsApps()
+    private Map<TypeColApps, String> getMapColsApps()
     {
         return mapColsApps;
     }
