@@ -28,12 +28,6 @@ public class CreerVuePatrimoineTask extends SonarTask
         annulable = true;
     }
     
-    public CreerVuePatrimoineTask(String pseudo, String mdp)
-    {
-        super(pseudo, mdp, 3);
-        annulable = true;
-    }
-    
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override

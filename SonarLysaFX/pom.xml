@@ -130,5 +130,11 @@
 			<artifactId>ews-java-api</artifactId>
 			<version>2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ibm.jazz.rtc.api</groupId>
+			<artifactId>rtc-deps</artifactId>
+			<version>6.0.2</version>
+			<type>pom</type>
+		</dependency>
 	</dependencies>
 </project>

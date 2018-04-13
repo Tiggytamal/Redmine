@@ -29,6 +29,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import com.ibm.team.repository.common.TeamRepositoryException;
+import com.ibm.team.workitem.common.model.IWorkItem;
+import com.ibm.team.workitem.common.query.IQueryResult;
+import com.ibm.team.workitem.common.query.IResolvedResult;
+
+import control.rtc.ControlRTC;
 import model.Anomalie;
 import model.InfoClarity;
 import model.ModelFactory;
@@ -102,6 +108,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /**
      * @return
+     * @throws TeamRepositoryException
      */
     public List<Anomalie> recupDonneesDepuisExcel()
     {
@@ -111,12 +118,49 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         // Liste de retour
         List<Anomalie> retour = new ArrayList<>();
 
+        ControlRTC controlRTC = null;
+        try
+        {
+            controlRTC = new ControlRTC();
+        } catch (TeamRepositoryException e)
+        {
+            System.out.println(e);
+        }
+
         // Itération sur chaque ligne pour créer les anomalies
         for (int i = 1; i <= sheet.getLastRowNum(); i++)
         {
             Row row = sheet.getRow(i);
 
             // Création de l'anomalie
+            Anomalie ano = creerAnodepuisExcel(row);
+
+            String anoLot = ano.getLot().substring(4);
+            if (!ano.getProjetClarity().isEmpty() && !anoLot.isEmpty() && ano.getNumeroAnomalie() != 0)
+            {
+                try
+                {
+                    List<String> claritys = controlRTC.getProjetRTCDepuisClarity(ano.getProjetClarity());
+                    if (!claritys.isEmpty())
+                    {
+                        for (String string : claritys)
+                        {
+                            IQueryResult<IResolvedResult<IWorkItem>> results = controlRTC.fetchItemById(string, String.valueOf(ano.getNumeroAnomalie()));
+                            if (results.getResultSize(null).getTotal() == 1)
+                            {
+                                String nouvelEtat = controlRTC.getWorkItemState(results.next(null).getItem());
+                                System.out.println("Numéro Anomalie  : " + ano.getNumeroAnomalie() + "avant : " + ano.getEtat() + " - après :" + nouvelEtat);
+                            }
+                        }
+                    }
+                    else
+                        System.out.println(ano.getProjetClarity() + " sans correspondance : Lot = " + anoLot + " - Anomalie = " + ano.getNumeroAnomalie());
+                } catch (TeamRepositoryException e)
+                {
+                    System.out.println(e);
+                }
+            }
+
             retour.add(creerAnodepuisExcel(row));
         }
         return retour;
@@ -257,11 +301,12 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @param anoAajouter2
      * @param lotsEnErreur
      * @throws IOException
+     * @throws TeamRepositoryException
      * @throws InvalidFormatException
      * @throws EncryptedDocumentException
      */
     public void majFeuillePrincipale(List<Anomalie> lotsEnAno, List<Anomalie> anoAajouter, Set<String> lotsEnErreurSonar, Set<String> lotsSecurite, Set<String> lotsRelease, Sheet sheet,
-            Matiere matiere) throws IOException
+            Matiere matiere) throws IOException, TeamRepositoryException
     {
         // Récupération feuille et liste des anomalies closes
         Map<String, Anomalie> anoClose = new HashMap<>();

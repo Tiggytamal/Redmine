@@ -15,12 +15,6 @@ public class CreerVueParEditionTask extends SonarTask
         super(2);
         annulable = false;
     }
-    
-    public CreerVueParEditionTask(String pseudo, String mdp)
-    {
-        super(pseudo, mdp, 2);
-        annulable = false;
-    }
 
     @Override
     protected Boolean call() throws Exception

@@ -20,6 +20,8 @@ import java.util.TreeSet;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import com.ibm.team.repository.common.TeamRepositoryException;
+
 import application.Main;
 import control.excel.ControlSuivi;
 import model.Anomalie;
@@ -64,7 +66,7 @@ public class MajSuiviExcelTask extends SonarTask
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private boolean majSuiviExcel() throws InvalidFormatException, IOException
+    private boolean majSuiviExcel() throws InvalidFormatException, IOException, TeamRepositoryException
     {
         switch (typeMaj)
         {
@@ -88,8 +90,9 @@ public class MajSuiviExcelTask extends SonarTask
      * 
      * @throws InvalidFormatException
      * @throws IOException
+     * @throws TeamRepositoryException 
      */
-    private void traitementSuiviExcelToutFichiers() throws InvalidFormatException, IOException
+    private void traitementSuiviExcelToutFichiers() throws InvalidFormatException, IOException, TeamRepositoryException
     {
         // Récupération anomalies Datastage
         List<String> anoDatastage = majFichierSuiviExcelDataStage();
@@ -120,8 +123,9 @@ public class MajSuiviExcelTask extends SonarTask
      *
      * @throws InvalidFormatException
      * @throws IOException
+     * @throws TeamRepositoryException 
      */
-    private List<String> majFichierSuiviExcelDataStage() throws InvalidFormatException, IOException
+    private List<String> majFichierSuiviExcelDataStage() throws InvalidFormatException, IOException, TeamRepositoryException
     {
         // Appel de la récupération des composants datastage avec les vesions en paramètre
         Map<String, List<Projet>> composants = recupererComposantsSonarVersion(true);
@@ -139,8 +143,9 @@ public class MajSuiviExcelTask extends SonarTask
      *
      * @throws InvalidFormatException
      * @throws IOException
+     * @throws TeamRepositoryException 
      */
-    private List<String> majFichierSuiviExcel() throws InvalidFormatException, IOException
+    private List<String> majFichierSuiviExcel() throws InvalidFormatException, IOException, TeamRepositoryException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
         Map<String, List<Projet>> composants = recupererComposantsSonarVersion(false);
@@ -159,10 +164,11 @@ public class MajSuiviExcelTask extends SonarTask
      * @param versions
      * @throws InvalidFormatException
      * @throws IOException
+     * @throws TeamRepositoryException 
      */
 
     @SuppressWarnings("unchecked")
-    private List<String> traitementFichierSuivi(Map<String, List<Projet>> composants, String fichier, Matiere matiere) throws InvalidFormatException, IOException
+    private List<String> traitementFichierSuivi(Map<String, List<Projet>> composants, String fichier, Matiere matiere) throws InvalidFormatException, IOException, TeamRepositoryException
     {
         // 1. Récupération des données depuis les fichiers Excel.
 
@@ -280,9 +286,10 @@ public class MajSuiviExcelTask extends SonarTask
      * @param matiere
      * @throws InvalidFormatException
      * @throws IOException
+     * @throws TeamRepositoryException 
      */
     private void majFichierAnomalies(Map<String, LotSuiviPic> mapLotsPIC, Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere)
-            throws InvalidFormatException, IOException
+            throws InvalidFormatException, IOException, TeamRepositoryException
     {
         // Controleur
         String name = proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + fichier;

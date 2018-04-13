@@ -49,20 +49,6 @@ public abstract class SonarTask extends Task<Boolean>
         initEtape(fin);
     }
     
-    /**
-     * Constructeur acceptant des valeurs externes pour le pseudo et le mot de passe. Initialisation des étapes de traitement
-     * 
-     * @param pseudo
-     * @param mdp
-     */
-    protected SonarTask(String pseudo, String mdp, int fin)
-    {
-        if (pseudo == null || pseudo.isEmpty() || mdp == null)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "pseudo et/ou mdp vides");
-        api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), pseudo, mdp);
-        initEtape(fin);
-    }
-    
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     

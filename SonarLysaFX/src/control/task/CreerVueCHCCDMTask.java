@@ -38,15 +38,9 @@ public class CreerVueCHCCDMTask extends SonarTask
     {
         super(3);
         annulable = false;
-        initAnnees(annees);
-        this.cdm = cdm;
-    }
-
-    public CreerVueCHCCDMTask(String pseudo, String mdp, List<String> annees, boolean cdm)
-    {
-        super(pseudo, mdp, 3);
-        annulable = false;
-        initAnnees(annees);
+        if (annees == null || annees.isEmpty())
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Création task CreerVueCHCCDMTask sans liste d'années");
+        this.annees = annees;
         this.cdm = cdm;
     }
 
@@ -216,13 +210,6 @@ public class CreerVueCHCCDMTask extends SonarTask
                 iter.remove();
         }
         return retour;
-    }
-
-    private void initAnnees(List<String> annees)
-    {
-        if (annees == null || annees.isEmpty())
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Création task CreerVueCHCCDMTask sans liste d'années");
-        this.annees = annees;
     }
 
     /*---------- ACCESSEURS ----------*/

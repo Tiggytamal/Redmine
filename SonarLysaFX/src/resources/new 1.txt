@@ -1,123 +1,55 @@
-{"component": {
-   "id": "AVrRhTN188Rpl_Q_08Mw",
-   "key": "fr.ca.cat.apim:Fwk_APIManager_Client_Build:13",
-   "name": "Composant Fwk_APIManager_Client 13",
-   "description": "POM parent de tous les projets MAVEN du CA-Technologies. Il declare toutes les informations sur l'organisation.",
-   "qualifier": "TRK",
-   "measures":    [
-            {
-         "metric": "duplicated_lines_density",
-         "value": "53.5",
-         "periods":          [
-                        {
-               "index": 1,
-               "value": "15.299999999999997"
-            },
-                        {
-               "index": 2,
-               "value": "0.0"
-            },
-                        {
-               "index": 3,
-               "value": "0.0"
-            }
-         ]
-      },
-            {
-         "metric": "new_blocker_violations",
-         "periods":          [
-                        {
-               "index": 1,
-               "value": "0"
-            },
-                        {
-               "index": 2,
-               "value": "0"
-            },
-                        {
-               "index": 3,
-               "value": "0"
-            }
-         ]
-      },
-            {
-         "metric": "new_critical_violations",
-         "periods":          [
-                        {
-               "index": 1,
-               "value": "949"
-            },
-                        {
-               "index": 2,
-               "value": "0"
-            },
-                        {
-               "index": 3,
-               "value": "0"
-            }
-         ]
-      }
-   ]
-}}
-
-{"component": {
-   "id": "AWG543ePaTPkwmV2d4Ad",
-   "key": "fr.ca.cat.fin.fwk.middleware:FWK_FIN_MIDDLEWARE_Build:14",
-   "name": "Composant FWK_FIN_MIDDLEWARE 14",
-   "description": "Projet de BUILD du composant FWK_FIN_MIDDLEWARE",
-   "qualifier": "TRK",
-   "measures":    [
-            {
-         "metric": "new_blocker_violations",
-         "periods":          [
-                        {
-               "index": 1,
-               "value": "17"
-            },
-                        {
-               "index": 2,
-               "value": "0"
-            },
-                        {
-               "index": 3,
-               "value": "16"
-            }
-         ]
-      },
-            {
-         "metric": "new_critical_violations",
-         "periods":          [
-                        {
-               "index": 1,
-               "value": "58"
-            },
-                        {
-               "index": 2,
-               "value": "0"
-            },
-                        {
-               "index": 3,
-               "value": "56"
-            }
-         ]
-      },
-            {
-         "metric": "duplicated_lines_density",
-         "value": "13.3",
-         "periods":          [
-                        {
-               "index": 1,
-               "value": "0.40000000000000036"
-            },
-                        {
-               "index": 2,
-               "value": "0.0"
-            },
-                        {
-               "index": 3,
-               "value": "-0.5999999999999996"
-            }
-         ]
-      }
-   ]
-}}
+BF0430 sans correspondance : Lot = 295711 - Anomalie = 298842
+Numéro Anomalie  : 292733avant : Nouvelle - après :Close 
+Numéro Anomalie  : 292733avant : Nouvelle - après :Close 
+Numéro Anomalie  : 294600avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 285917avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 294557avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 285919avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 292305avant : Nouvelle - après :Nouvelle
+[PRJF_P00184_CRE_Process Agri-Pro] autre cas trouvé CC_P00184_NPF_Agri Pro
+Numéro Anomalie  : 262607avant : Ouverte - après :Ouverte
+[PRJF_P00184_CRE_Process Agri-Pro] autre cas trouvé CC_P00184_NPF_Agri Pro
+Numéro Anomalie  : 298838avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 285884avant : Nouvelle - après :Close 
+Numéro Anomalie  : 285896avant : Nouvelle - après :Abandonnée
+Numéro Anomalie  : 262615avant : Nouvelle - après :Close 
+Numéro Anomalie  : 294426avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 294408avant : Ouverte - après :Ouverte
+Numéro Anomalie  : 294573avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 288251avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 294063avant : Nouvelle - après :Close 
+Numéro Anomalie  : 288150avant : Nouvelle - après :Close 
+Numéro Anomalie  : 292694avant : En cours  - après :Close 
+Numéro Anomalie  : 294594avant : Nouvelle - après :Close 
+Numéro Anomalie  : 294568avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 294591avant : Nouvelle - après :Close 
+RE0217 sans correspondance : Lot = 301159 - Anomalie = 301710
+Numéro Anomalie  : 301717avant :  - après :Ouverte
+Numéro Anomalie  : 301750avant :  - après :Abandonnée
+Numéro Anomalie  : 301756avant : Nouvelle - après :Close 
+Numéro Anomalie  : 301765avant : Résolue - après :En attente vérification MOE
+Numéro Anomalie  : 302780avant :  - après :Résolue
+Numéro Anomalie  : 302796avant :  - après :Nouvelle
+[PRJF_P00184_CRE_Process Agri-Pro] autre cas trouvé CC_P00184_NPF_Agri Pro
+Numéro Anomalie  : 302833avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 307395avant : Nouvelle - après :Close 
+Numéro Anomalie  : 307396avant : Nouvelle - après :Close 
+Numéro Anomalie  : 307398avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 307400avant : Nouvelle - après :Close 
+[PRJM_FE000036_GSI EER PCH VP EPTICA EDS] autre cas trouvé PRJF_P00883_DML_Archivage Mails EPTICA
+[PRJM_FE000036_GSI EER PCH VP EPTICA EDS, PRJF_P00883_DML_Archivage Mails EPTICA] autre cas trouvé PRJF_P00928_DML_EPTICA Evol Fonct
+[PRJM_FE000036_GSI EER PCH VP EPTICA EDS, PRJF_P00883_DML_Archivage Mails EPTICA, PRJF_P00928_DML_EPTICA Evol Fonct] autre cas trouvé PRJF_BF0298_DML_Montée version EPTICA
+Numéro Anomalie  : 307402avant : Nouvelle - après :Close 
+Numéro Anomalie  : 307408avant : Nouvelle - après :Réouverte
+Numéro Anomalie  : 307527avant : Nouvelle - après :Close 
+Numéro Anomalie  : 307535avant : Nouvelle - après :Close 
+Numéro Anomalie  : 307542avant : Nouvelle - après :Ouverte
+Numéro Anomalie  : 309193avant : Nouvelle - après :Nouvelle
+[PRJF_BF0379_MDP_DSP2] autre cas trouvé CC_BF0379_MDP_DSP2
+Numéro Anomalie  : 310773avant : Nouvelle - après :Close 
+[PRJF_BF0379_MDP_DSP2] autre cas trouvé CC_BF0379_MDP_DSP2
+Numéro Anomalie  : 311661avant : Nouvelle - après :Nouvelle
+Numéro Anomalie  : 310726avant :  - après :Abandonnée
+Numéro Anomalie  : 292625avant :  - après :Nouvelle
+Lot BFMBUD24 sans correspondance : Lot = 307311 - Anomalie = 310905
+Numéro Anomalie  : 311370avant :  - après :Close

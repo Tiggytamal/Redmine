@@ -21,7 +21,8 @@ public enum TypeParam implements Serializable, TypeKey
     LIENSANOS("Hyperliens vers anomalie RTC"), 
     NOMQGDATASTAGE("Nom QualityGate Datastage"), 
     URLSONAR("Url serveur Sonar"), 
-    URLSONARTEST("Url Serveur Sonar de test");
+    URLSONARTEST("Url Serveur Sonar de test"),
+    URLRTC("Url serveur RTC Jazz");
 
     private final String string;
 
