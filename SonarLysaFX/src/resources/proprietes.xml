@@ -209,6 +209,10 @@
 			<key>MATIERE</key>
 			<value>Matière</value>
 		</entry>
+		<entry>
+			<key>PROJETRTC</key>
+			<value>Projet RTC</value>
+		</entry>
 	</mapColsSuivi>
 	<mapParams>
 		<entry>
@@ -260,6 +264,12 @@
 			<value>https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm</value>
 		</entry>
 	</mapParams>
+	<mapParamsBool>
+		<entry>
+			<key>VUESSUIVI</key>
+			<value>false</value>
+		</entry>
+	</mapParamsBool>
 	<mapPlans>
 		<entry>
 			<key>SUIVIHEBDO</key>

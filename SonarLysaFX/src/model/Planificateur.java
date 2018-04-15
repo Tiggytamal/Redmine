@@ -17,7 +17,7 @@ import utilities.Statics;
  * @author ETP8137 - Grégoire Mathon
  */
 @XmlRootElement
-public class Planificateur extends Modele
+public class Planificateur implements Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -31,6 +31,8 @@ public class Planificateur extends Modele
     private List<String> annees;
 
     /*---------- CONSTRUCTEURS ----------*/
+    
+    Planificateur() {}
     
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/

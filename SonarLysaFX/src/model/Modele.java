@@ -6,10 +6,10 @@ package model;
  * @author ETP8137 - Grégoire Mathon
  *
  */
-public class Modele
+public interface Modele
 {
     
-    protected String getString(String val)
+    public default String getString(String val)
     {
         return val == null ? "" : val;
     }

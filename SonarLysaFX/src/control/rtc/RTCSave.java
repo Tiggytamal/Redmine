@@ -1,15 +1,19 @@
 package control.rtc;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
+import com.ibm.team.filesystem.common.internal.process.config.DisinterestedApproverWorkItemSaveAdvisorConfig;
 import com.ibm.team.process.client.IProcessClientService;
 import com.ibm.team.process.client.IProcessItemService;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.process.common.IProjectAreaHandle;
+import com.ibm.team.repository.client.IItemManager;
 import com.ibm.team.repository.client.ITeamRepository;
 import com.ibm.team.repository.client.TeamPlatform;
 import com.ibm.team.repository.client.login.UsernameAndPasswordLoginInfo;
@@ -17,9 +21,12 @@ import com.ibm.team.repository.common.IItem;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.common.UUID;
 import com.ibm.team.repository.common.query.ast.IPredicate;
+import com.ibm.team.workitem.api.common.WorkItem;
 import com.ibm.team.workitem.client.IAuditableClient;
 import com.ibm.team.workitem.client.IQueryClient;
 import com.ibm.team.workitem.client.IWorkItemClient;
+import com.ibm.team.workitem.client.IWorkItemWorkingCopyManager;
+import com.ibm.team.workitem.client.WorkItemWorkingCopy;
 import com.ibm.team.workitem.common.IAuditableCommon;
 import com.ibm.team.workitem.common.expression.AttributeExpression;
 import com.ibm.team.workitem.common.expression.Expression;
@@ -37,7 +44,7 @@ import com.ibm.team.workitem.common.query.IQueryDescriptor;
 import com.ibm.team.workitem.common.query.IQueryResult;
 import com.ibm.team.workitem.common.query.IResolvedResult;
 
-@SuppressWarnings("unused")
+@SuppressWarnings ("unused")
 public class RTCSave
 {
     private ITeamRepository repo;
@@ -46,15 +53,15 @@ public class RTCSave
 
     private Map<String, IProjectArea> pareas;
     private Expression expression;
-    
-  public IQueryResult<IResolvedResult<IWorkItem>> resultsResolvedByExpression(IProjectArea projectArea)
-  {
-      IWorkItemClient workItemClient = (IWorkItemClient) repo.getClientLibrary(IWorkItemClient.class);
-      IQueryClient queryClient = workItemClient.getQueryClient();
-      IQueryResult<IResolvedResult<IWorkItem>> results = queryClient.getResolvedExpressionResults(projectArea, expression, IWorkItem.FULL_PROFILE);
-      return results;
-  }
-  
+
+    public IQueryResult<IResolvedResult<IWorkItem>> resultsResolvedByExpression(IProjectArea projectArea)
+    {
+        IWorkItemClient workItemClient = (IWorkItemClient) repo.getClientLibrary(IWorkItemClient.class);
+        IQueryClient queryClient = workItemClient.getQueryClient();
+        IQueryResult<IResolvedResult<IWorkItem>> results = queryClient.getResolvedExpressionResults(projectArea, expression, IWorkItem.FULL_PROFILE);
+        return results;
+    }
+
     public IQueryResult<IResolvedResult<IWorkItem>> test2()
     {
         IWorkItemClient workItemClient = (IWorkItemClient) repo.getClientLibrary(IWorkItemClient.class);
@@ -63,7 +70,7 @@ public class RTCSave
         ItemProfile<IWorkItem> loadProfile = IWorkItem.SMALL_PROFILE;
         return queryClient.getResolvedQueryResults(descriptor, loadProfile);
     }
-    
+
     protected IPredicate createWorkItemQueryFilter(ArtifactRecordField field, IProjectArea parea) throws TeamRepositoryException
     {
 
@@ -75,7 +82,7 @@ public class RTCSave
 
         IQueryableAttribute fieldAttr = factory.findAttribute(parea, field.getName(), auditableClient, null);
 
-       if (fieldAttr.getIdentifier().equals(IWorkItem.CATEGORY_PROPERTY))
+        if (fieldAttr.getIdentifier().equals(IWorkItem.CATEGORY_PROPERTY))
         {
             ICategoryHandle categoryHandle = toCategory(field.getAllValuesAsString());
             fieldSrchPredicate = WorkItemQueryModel.ROOT.category()._eq(categoryHandle);
@@ -112,7 +119,7 @@ public class RTCSave
     {
         return null;
     }
-    
+
     public RTCSave() throws TeamRepositoryException
     {
         TeamPlatform.startup();
@@ -166,8 +173,6 @@ public class RTCSave
         expression = typeinProjectArea;
     }
 
-
-
     public IQueryResult<IResolvedResult<IWorkItem>> fetchAllItems(IProjectArea parea) throws TeamRepositoryException
     {
         IAuditableClient auditableClient = (IAuditableClient) repo.getClientLibrary(IAuditableClient.class);
@@ -180,5 +185,34 @@ public class RTCSave
 
         return queryClient.getResolvedExpressionResults(parea, expression, IWorkItem.SMALL_PROFILE);
     }
-  
+
+    public void test() throws TeamRepositoryException
+    {
+        IWorkItemClient workItemClient = (IWorkItemClient) repo.getClientLibrary(IWorkItemClient.class);
+        IWorkItem workItem = workItemClient.findWorkItemById(319741, IWorkItem.FULL_PROFILE, new SysoutProgressMonitor());
+
+        System.out.println("Listing all attributes....");
+        List<IAttribute> allAttributes = workItemClient.findAttributes(workItem.getProjectArea(), new SysoutProgressMonitor());
+        for (Iterator<IAttribute> iterator = allAttributes.iterator(); iterator.hasNext();)
+        {
+
+            IAttribute iAttributeHandle = iterator.next();
+            IAttribute iAttribute = (IAttribute) repo.itemManager().fetchCompleteItem(iAttributeHandle, IItemManager.DEFAULT, new SysoutProgressMonitor());
+            System.out.println("Attribute Name: " + iAttribute.getDisplayName() + ", Type: " + iAttribute.getAttributeType());
+
+            if (iAttribute.getDisplayName() == "Actual Spent Hours")
+            {
+                System.out.println("Setting a value to the attribute Actual Spent Hours....");
+                IWorkItemWorkingCopyManager copyManager = workItemClient.getWorkItemWorkingCopyManager();
+                copyManager.connect(workItem, IWorkItem.FULL_PROFILE, new SysoutProgressMonitor());
+                WorkItemWorkingCopy workItemCopy = copyManager.getWorkingCopy(workItem);
+                IWorkItem workItem_to_edit = (IWorkItem) workItemCopy.getWorkItem();
+                Integer inter = new Integer("4");
+                workItem_to_edit.setValue(iAttribute, inter);
+
+            }
+        }
+
+    }
+
 }

@@ -18,6 +18,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
+import model.ModelFactory;
+import model.Modele;
 import model.XML;
 import model.enums.TypeCol;
 import model.enums.TypeColApps;
@@ -53,38 +55,31 @@ public class ControlXML
      * @throws InvalidFormatException
      * @throws IOException
      */
-    @SuppressWarnings("unchecked")
-    public <T extends XML> T recupererXML(Class<T> typeXML)
+    @SuppressWarnings ("unchecked")
+    public <T extends XML & Modele> T recupererXML(Class<T> typeXML)
     {
         // variables
         JAXBContext context;
-        T retour;
-        try
-        {
-            retour = typeXML.newInstance();
-        } catch (InstantiationException | IllegalAccessException e)
-        {
-            throw new TechnicalException("Impossible d'instancier le fichier de paramètre", e);
-        }
-
+        T retour = ModelFactory.getModel(typeXML);
         File file = retour.getFile();
 
         try
         {
             context = JAXBContext.newInstance(typeXML);
-            
+
             // Récupération du paramétrage depuis le fichier externe
             if (file.exists())
                 retour = (T) context.createUnmarshaller().unmarshal(file);
 
-        } catch (JAXBException e)
+        }
+        catch (JAXBException e)
         {
             throw new TechnicalException("Impossible de récupérer le fichier de paramètre, erreur JAXB", e);
         }
 
         return retour;
     }
-    
+
     /**
      * Récupère le paramètre depuis le fichier externe ou celui interne par default s'il n'existe pas.
      * 
@@ -94,31 +89,24 @@ public class ControlXML
      * @throws InvalidFormatException
      * @throws IOException
      */
-    @SuppressWarnings("unchecked")
-    public <T extends XML> T recupererXMLResources(Class<T> typeXML)
+    @SuppressWarnings ("unchecked")
+    public <T extends XML & Modele> T recupererXMLResources(Class<T> typeXML)
     {
         // variables
         JAXBContext context;
-        T retour;
-        try
-        {
-            retour = typeXML.newInstance();
-        } catch (InstantiationException | IllegalAccessException e)
-        {
-            throw new TechnicalException("Impossible d'instancier le fichier de paramètre", e);
-        }
-
+        T retour = ModelFactory.getModel(typeXML);
         File file = retour.getResource();
 
         try
         {
             context = JAXBContext.newInstance(typeXML);
-            
+
             // Récupération du paramétrage depuis le fichier externe
             if (file.exists())
                 retour = (T) context.createUnmarshaller().unmarshal(file);
 
-        } catch (JAXBException e)
+        }
+        catch (JAXBException e)
         {
             throw new TechnicalException("Impossible de récupérer le fichier de paramètre, erreur JAXB", e);
         }
@@ -140,7 +128,6 @@ public class ControlXML
     }
 
     /**
-     * 
      * Enregistre le fichier Excel de la liste des applications dans les paramètres XML
      *
      * @return
@@ -193,14 +180,22 @@ public class ControlXML
         saveInfos(TypeFichier.EDITION, TypeColEdition.class, file);
     }
 
-    @SuppressWarnings("rawtypes")
+    /**
+     * Sauvegarde les informations d'un fichier XML
+     * 
+     * @param typeFichier
+     * @param typeCol
+     * @param file
+     */
+    @SuppressWarnings ("rawtypes")
     private <T extends Enum<T> & TypeCol> void saveInfos(TypeFichier typeFichier, Class<T> typeCol, File file)
     {
         try
         {
-            fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getControlleur(typeCol, file).recupDonneesDepuisExcel());            
+            fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getControlleur(typeCol, file).recupDonneesDepuisExcel());
             saveParam(fichiersXML);
-        } catch (InvalidFormatException | IOException | JAXBException e)
+        }
+        catch (InvalidFormatException | IOException | JAXBException e)
         {
             throw new TechnicalException(ERREUR, e);
         }

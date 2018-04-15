@@ -14,13 +14,13 @@ import org.junit.Test;
 import control.excel.ControlPic;
 import model.LotSuiviPic;
 import model.enums.TypeColPic;
-import model.enums.TypeParam;
 import sonarapi.SonarAPI;
 import sonarapi.model.Vue;
 
 public class ControlPicMEPTest extends ControlExcelTest<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
 {
     /*---------- ATTRIBUTS ----------*/
+    
     private SonarAPI api;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -28,7 +28,7 @@ public class ControlPicMEPTest extends ControlExcelTest<TypeColPic, ControlPic, 
     public ControlPicMEPTest()
     {
         super(TypeColPic.class, "/resources/MEP_mars_2018.xlsx");
-        api = new SonarAPI(proprietes.getMapParams().get(TypeParam.URLSONAR), "ETP8137", "28H02m89,;:!");
+        api = SonarAPI.INSTANCE;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

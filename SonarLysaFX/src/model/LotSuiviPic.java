@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * @since 1.0
  */
 @XmlRootElement
-public class LotSuiviPic extends Modele
+public class LotSuiviPic implements Modele
 {
 	/*---------- ATTRIBUTS ----------*/
 
@@ -33,6 +33,9 @@ public class LotSuiviPic extends Modele
 	private LocalDate livraison;
 
 	/*---------- CONSTRUCTEURS ----------*/
+	
+	LotSuiviPic() {}
+	
 	/*---------- METHODES PUBLIQUES ----------*/
 	/*---------- METHODES PRIVEES ----------*/
 	/*---------- ACCESSEURS ----------*/

@@ -6,7 +6,7 @@ package model;
  * @author ETP8137 - Grégoire Mathon
  *
  */
-public class Info extends Modele
+public class Info implements Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -14,6 +14,11 @@ public class Info extends Modele
     private String motDePasse;
     
     /*---------- CONSTRUCTEURS ----------*/
+    
+    Info()
+    {
+        
+    }
     /*---------- METHODES PUBLIQUES ----------*/
     
     public boolean controle()

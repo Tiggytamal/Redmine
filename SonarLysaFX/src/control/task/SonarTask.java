@@ -45,7 +45,7 @@ public abstract class SonarTask extends Task<Boolean>
     {
         if (!info.controle())
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
-        api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), info.getPseudo(), info.getMotDePasse());
+        api = SonarAPI.INSTANCE;
         initEtape(fin);
     }
     

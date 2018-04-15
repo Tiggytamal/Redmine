@@ -29,7 +29,7 @@ import utilities.TechnicalException;
  * @since 1.0
  */
 @XmlRootElement
-public class ProprietesXML implements XML
+public class ProprietesXML implements XML, Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -48,7 +48,7 @@ public class ProprietesXML implements XML
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ProprietesXML()
+    ProprietesXML()
     {
         mapParams = new EnumMap<>(TypeParam.class);
         mapColsSuivi = new EnumMap<>(TypeColSuivi.class);

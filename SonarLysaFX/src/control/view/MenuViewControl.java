@@ -1,10 +1,9 @@
 package control.view;
 
-import static utilities.Statics.proprietesXML;
-
 import java.io.IOException;
 import java.util.Optional;
 
+import control.rtc.ControlRTC;
 import control.task.MajVuesTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +17,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Pair;
-import model.enums.TypeParam;
 import sonarapi.SonarAPI;
 import utilities.FunctionalException;
 import utilities.Statics;
@@ -152,13 +150,18 @@ public class MenuViewControl extends ViewControl
 
     /* ---------- METHODES PRIVEES ---------- */
 
+    /**
+     * Teste la connexion au serveur Sonar et au serveur RTC
+     * @param pseudo
+     * @param mdp
+     */
     private void testMdP(String pseudo, String mdp)
     {
         // Jerome rauline Sylvain Jouet Brice Neuzan
         Statics.info.setPseudo(pseudo);
         Statics.info.setMotDePasse(mdp);
-        SonarAPI api = new SonarAPI(proprietesXML.getMapParams().get(TypeParam.URLSONAR), pseudo, mdp);
-        if (api.verificationUtilisateur())
+        
+        if (SonarAPI.INSTANCE.verificationUtilisateur() && ControlRTC.INSTANCE.connexion())
         {
             mensuel.setDisable(false);
             options.setDisable(false);

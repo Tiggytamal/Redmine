@@ -29,7 +29,9 @@ public enum TypeColSuivi  implements Serializable, TypeCol
     DATECREATION("Date de création", "colDateCrea"), 
     DATEDETECTION("Date de détection", "colDateDetec"),
     DATERELANCE("Date de relance", "colDateRel"), 
-    MATIERE("Matière", "colMatiere");
+    MATIERE("Matière", "colMatiere"),
+    PROJETRTC("Projet RTC", "colProjetRTC"),
+    ACTION("Action", "colAction");
 
     private final String valeur;
     private final String nomCol;

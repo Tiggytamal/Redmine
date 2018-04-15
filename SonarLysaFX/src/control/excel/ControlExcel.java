@@ -61,6 +61,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
     /** Classe de l'énumération des classes filles */
     protected Class<T> enumeration;
 
+
     /*---------- CONSTRUCTEURS ----------*/
 
     /**
@@ -77,6 +78,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
         createWb();
         initEnum();
         calculIndiceColonnes(initSheet());
+
     }
 
     /*---------- METHODES ABSTRAITES ----------*/
@@ -157,7 +159,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
         wb = WorkbookFactory.create(file);
         helper = new CellHelper(wb);
         createHelper = wb.getCreationHelper();
-        ca = createHelper.createClientAnchor();
+        ca = createHelper.createClientAnchor();       
     }
 
     /**

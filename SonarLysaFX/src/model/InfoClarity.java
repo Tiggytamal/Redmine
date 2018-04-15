@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class InfoClarity extends Modele
+public class InfoClarity implements Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -18,6 +18,9 @@ public class InfoClarity extends Modele
     private String service;
     
     /*---------- CONSTRUCTEURS ----------*/
+    
+    InfoClarity() {}
+    
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

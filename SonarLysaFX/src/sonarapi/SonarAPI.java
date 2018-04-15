@@ -21,6 +21,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.mchange.util.AssertException;
+
 import model.enums.TypeParam;
 import sonarapi.model.AjouterProjet;
 import sonarapi.model.AjouterVueLocale;
@@ -48,6 +50,7 @@ public class SonarAPI
 
     /*---------- ATTRIBUTS ----------*/
 
+    public static final SonarAPI INSTANCE = new SonarAPI();
     private final WebTarget webTarget;
     private final String codeUser;
     private static final String AUTHORIZATION = "Authorization";
@@ -79,30 +82,17 @@ public class SonarAPI
      * @throws IOException
      * @throws SecurityException
      */
-    public SonarAPI(final String url, final String user, final String password)
+    private SonarAPI()
     {
-        webTarget = ClientBuilder.newClient().target(url);
-        StringBuilder builder = new StringBuilder(user);
+        // Protection contre la création d'une nouvelle instance par réflexion
+        if (INSTANCE != null)
+            throw new AssertException();
+        
+        webTarget = ClientBuilder.newClient().target(Statics.proprietesXML.getMapParams().get(TypeParam.URLSONAR));
+        StringBuilder builder = new StringBuilder(Statics.info.getPseudo());
         builder.append(":");
-        builder.append(password);
+        builder.append(Statics.info.getMotDePasse());
         codeUser = Base64.getEncoder().encodeToString(builder.toString().getBytes());
-    }
-
-    /**
-     *
-     * @param url
-     *            Url du serveur SonarQube
-     * @param user
-     *            id de l'utilisateur
-     * @param password
-     *            mot de passe de l'utilisateur
-     * @return Une instance singleton de l'api
-     * @throws IOException
-     * @throws SecurityException
-     */
-    public static SonarAPI getInstanceTest()
-    {
-        return new SonarAPI(Statics.proprietesXML.getMapParams().get(TypeParam.URLSONARTEST), "admin", "admin");
     }
 
     /*---------- METHODES PUBLIQUES GET ----------*/

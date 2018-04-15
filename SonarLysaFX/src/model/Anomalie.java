@@ -16,7 +16,7 @@ import model.enums.Matiere;
  * @author ETP8137 - Grégoire mathon
  * @since 1.0
  */
-public class Anomalie extends Modele
+public class Anomalie implements Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -65,23 +65,27 @@ public class Anomalie extends Modele
     private boolean traitee;
     private Set<Matiere> matieres;
     private Comment matieresComment;
+    private String projetRTC;
+    private Comment projetRTCComment;
+    private String action;
+    private Comment actionComment;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public Anomalie()
+    Anomalie()
     {
         matieres = new HashSet<>();
     }
 
-    public Anomalie(LotSuiviPic lot)
+    Anomalie(LotSuiviPic lot)
     {
         this();
         majDepuisPic(lot);
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
-    
-    public void majDepuisPic(LotSuiviPic lot)
+
+    public Anomalie majDepuisPic(LotSuiviPic lot)
     {
         setCpiProjet(lot.getCpiProjet());
         setEdition(lot.getEdition());
@@ -89,8 +93,9 @@ public class Anomalie extends Modele
         setProjetClarity(lot.getProjetClarity());
         setLot("Lot " + lot.getLot());
         setEnvironnement(calculerEnvironnement(lot));
+        return this;
     }
-    
+
     public Anomalie majDepuisClarity(InfoClarity info)
     {
         setDepartement(info.getDepartement());
@@ -98,9 +103,10 @@ public class Anomalie extends Modele
         setService(info.getService());
         return this;
     }
-    
+
     /**
      * Permet de vérifier si une anomalie a été traitée ou non. C'est-à-dire si il y a un numéro d'anomalie ou un commentaire.
+     * 
      * @return
      */
     public boolean calculTraitee()
@@ -108,15 +114,16 @@ public class Anomalie extends Modele
         traitee = (remarque != null && !remarque.isEmpty()) || (numeroAnomalie != 0);
         return traitee;
     }
-    
+
     /**
      * Retourne la liste des matieres de l'anomalie sous forme d'une chaine de caractères enregistrable dans Excel
+     * 
      * @return
      */
     public String getMatieresString()
     {
         StringBuilder builder = new StringBuilder();
-        
+
         for (Iterator<Matiere> iter = matieres.iterator(); iter.hasNext();)
         {
             builder.append(iter.next().toString());
@@ -125,9 +132,10 @@ public class Anomalie extends Modele
         }
         return builder.toString();
     }
-    
+
     /**
      * Remplie la liste des matières depuis une chaine de caractères. Cahque matière doit être séparées par un "-".
+     * 
      * @return
      */
     public void setMatieresString(String matieresString)
@@ -140,7 +148,7 @@ public class Anomalie extends Modele
             matieres.add(Matiere.getMatiere(matiere.trim()));
         }
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
 
     /**
@@ -235,7 +243,7 @@ public class Anomalie extends Modele
     {
         this.cpiProjet = cpiProjet;
     }
-    
+
     public String getEdition()
     {
         return getString(edition);
@@ -245,7 +253,7 @@ public class Anomalie extends Modele
     {
         this.edition = edition;
     }
-    
+
     public String getLot()
     {
         return getString(lot);
@@ -345,39 +353,59 @@ public class Anomalie extends Modele
     {
         this.version = version;
     }
-    
+
     public void setDateCreation(LocalDate dateCreation)
     {
         this.dateCreation = dateCreation;
     }
-    
+
     public LocalDate getDateCreation()
     {
         return dateCreation;
     }
-    
+
     public void setDateDetection(LocalDate dateDetection)
     {
         this.dateDetection = dateDetection;
     }
-    
+
     public LocalDate getDateDetection()
     {
         return dateDetection;
     }
-    
+
     public void setDateRelance(LocalDate dateRelance)
     {
         this.dateRelance = dateRelance;
     }
-    
+
     public LocalDate getDateRelance()
     {
         return dateRelance;
     }
+
+    public String getProjetRTC()
+    {
+        return getString(projetRTC);
+    }
+
+    public void setProjetRTC(String projetRTC)
+    {
+        this.projetRTC = projetRTC;
+    }
     
+    public String getAction()
+    {
+        return getString(action);
+    }
+
+    public void setAction(String action)
+    {
+        this.action = action;
+    }
+
     /*---------- ACCESSEURS COMMENTAIRES ----------*/
-    
+
     public Comment getDirectionComment()
     {
         return directionComment;
@@ -577,7 +605,7 @@ public class Anomalie extends Modele
     {
         this.dateDetectionComment = dateDetectionComment;
     }
-    
+
     public Comment getDateRelanceComment()
     {
         return dateRelanceComment;
@@ -587,7 +615,7 @@ public class Anomalie extends Modele
     {
         this.dateRelanceComment = dateRelanceComment;
     }
-    
+
     public boolean isTraitee()
     {
         return traitee;
@@ -602,6 +630,7 @@ public class Anomalie extends Modele
     {
         this.matieres = matieres;
     }
+
     public Comment getMatieresComment()
     {
         return matieresComment;
@@ -610,5 +639,25 @@ public class Anomalie extends Modele
     public void setMatieresComment(Comment matieresComment)
     {
         this.matieresComment = matieresComment;
+    }
+    
+    public Comment getProjetRTCComment()
+    {
+        return projetRTCComment;
+    }
+
+    public void setProjetRTCComment(Comment projetRTCComment)
+    {
+        this.projetRTCComment = projetRTCComment;
+    }
+
+    public Comment getActionComment()
+    {
+        return actionComment;
+    }
+
+    public void setActionComment(Comment actionComment)
+    {
+        this.actionComment = actionComment;
     }
 }

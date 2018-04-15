@@ -1,0 +1,55 @@
+package model.enums;
+
+/**
+ * Réprésente les valeurs possibles de la colonne actions
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */ 
+public enum TypeAction
+{
+    CREER(Valeur.CREER), 
+    VERIFIER(Valeur.VERIFIER), 
+    INCONNUE(Valeur.INCONNUE),
+    OUBLIER(Valeur.OUBLIER);
+
+    private final String valeur;
+
+    private TypeAction(String valeur)
+    {
+        this.valeur = valeur;
+    }
+
+    @Override
+    public String toString()
+    {
+        return valeur;
+    }
+
+    public static TypeAction from(String typeActionString)
+    {
+        switch (typeActionString)
+        {
+            case Valeur.CREER :
+                return CREER;
+
+            case Valeur.VERIFIER :
+                return VERIFIER;
+                
+            case Valeur.OUBLIER :
+                return OUBLIER;
+
+            default :
+                return INCONNUE;
+        }
+    }
+
+    private static class Valeur
+    {
+        private Valeur() {}
+
+        private static final String CREER = "A créer";
+        private static final String VERIFIER = "A vérifier";
+        private static final String OUBLIER = "A oublier";
+        private static final String INCONNUE = "Inconnue";
+    }
+}

@@ -18,12 +18,14 @@ import model.ProprietesXML;
  * 
  * @author ETP8137 - Grégoire Mathon
  */
-public abstract class Statics
+public class Statics
 {
-    private Statics() {}
+    // Supression instanciation de la classe
+    private Statics() 
+    {
+        throw new AssertionError();
+    }
 
-    /** Wrapper des informations générales de fonctionnement de l'application*/
-    public static final Info info = ModelFactory.getModel(Info.class);
     /** jarPath */
     public static final String JARPATH = Utilities.urlToFile(Utilities.getLocation(Main.class)).getParentFile().getPath();
     /** logger général */
@@ -70,6 +72,8 @@ public abstract class Statics
     public static final String INCONNUE = "INCONNUE";
     /** filter pour fichiers Excel */
     public static final FileChooser.ExtensionFilter FILTEREXCEL = new FileChooser.ExtensionFilter("Fichiers Excel (*.xls)", "*.xls", "*.xlsx", "*.xlsm");
+    /** Wrapper des informations générales de fonctionnement de l'application*/
+    public static final Info info = ModelFactory.getModel(Info.class);
     /** Controleur XML */
     private static final ControlXML controlXML = new ControlXML();
     /** Sauvegarde des fichiers Excel de paramètre */

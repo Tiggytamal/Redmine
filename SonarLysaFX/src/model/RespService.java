@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class RespService extends Modele implements Serializable
+public class RespService implements Modele, Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -19,6 +19,9 @@ public class RespService extends Modele implements Serializable
     private String nom;
 
     /*---------- CONSTRUCTEURS ----------*/
+    
+    RespService() {}
+    
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

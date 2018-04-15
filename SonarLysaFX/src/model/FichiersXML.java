@@ -19,7 +19,7 @@ import utilities.Statics;
 import utilities.TechnicalException;
 
 @XmlRootElement
-public class FichiersXML implements XML
+public class FichiersXML implements XML, Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -36,7 +36,7 @@ public class FichiersXML implements XML
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public FichiersXML()
+    FichiersXML()
     {
         mapClarity = new HashMap<>();
         lotsPic = new HashMap<>();
