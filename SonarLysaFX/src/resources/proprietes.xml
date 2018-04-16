@@ -213,6 +213,10 @@
 			<key>PROJETRTC</key>
 			<value>Projet RTC</value>
 		</entry>
+		<entry>
+			<key>ACTION</key>
+			<value>Action</value>
+		</entry>
 	</mapColsSuivi>
 	<mapParams>
 		<entry>

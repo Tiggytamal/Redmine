@@ -1,5 +1,6 @@
 package model;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import utilities.TechnicalException;
@@ -40,7 +41,9 @@ public interface ModelFactory
             {
                 classParams[i] = params[i].getClass();
             }
-            return modelClass.getConstructor(classParams).newInstance(params);
+            Constructor<T> constructor = modelClass.getDeclaredConstructor(classParams);
+            constructor.setAccessible(true);
+            return constructor.newInstance(params);
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
         {

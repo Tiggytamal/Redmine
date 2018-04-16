@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBException;
 import org.quartz.SchedulerException;
 
 import control.quartz.ControlJob;
+import control.rtc.ControlRTC;
 import control.xml.ControlXML;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -108,7 +109,8 @@ public class MainScreen extends Application
     }
     
     /**
-     * EventHandler privé pour la gestion de la fermeture du programme.
+     * EventHandler privé pour la gestion de la fermeture du programme.<br>
+     * Supression Icône de la barre de notification, fermeture des planificateurs et de l'accès RTC
      * 
      * @author ETP8137 - Grégoire Mathon
      * @since 1.0
@@ -121,6 +123,7 @@ public class MainScreen extends Application
             if (!stage.isIconified())
             {
                 trayIcon.removeFromTray();
+                ControlRTC.INSTANCE.shutdown();
                 try
                 {
                     ControlJob.scheduler.shutdown();

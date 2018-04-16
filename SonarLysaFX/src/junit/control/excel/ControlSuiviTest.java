@@ -24,6 +24,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlSuivi;
+import control.rtc.ControlRTC;
 import junit.TestUtils;
 import model.Anomalie;
 import model.ModelFactory;
@@ -47,16 +48,15 @@ public class ControlSuiviTest extends ControlExcelTest<TypeColSuivi, ControlSuiv
     public ControlSuiviTest()
     {
         super(TypeColSuivi.class, "/resources/Suivi_Quality_GateTest.xlsx");
+        ControlRTC.INSTANCE.connexion();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-
+    
     @Test
-    public void listAnomaliesSurLotsCrees()
+    public void recupDonneesDepuisExcel()
     {
-        List<Anomalie> liste = handler.recupDonneesDepuisExcel();
-        assertTrue(liste != null);
-        assertTrue(liste.size() == 80);
+        recupDonneesDepuisExcel((map) -> map.size() == 79);
     }
 
     @Test

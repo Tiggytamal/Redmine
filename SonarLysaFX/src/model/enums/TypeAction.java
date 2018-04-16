@@ -10,7 +10,7 @@ public enum TypeAction
     CREER(Valeur.CREER), 
     VERIFIER(Valeur.VERIFIER), 
     INCONNUE(Valeur.INCONNUE),
-    OUBLIER(Valeur.OUBLIER);
+    ASSEMBLER(Valeur.ASSEMBLER);
 
     private final String valeur;
 
@@ -35,8 +35,8 @@ public enum TypeAction
             case Valeur.VERIFIER :
                 return VERIFIER;
                 
-            case Valeur.OUBLIER :
-                return OUBLIER;
+            case Valeur.ASSEMBLER :
+                return ASSEMBLER;
 
             default :
                 return INCONNUE;
@@ -49,7 +49,7 @@ public enum TypeAction
 
         private static final String CREER = "A créer";
         private static final String VERIFIER = "A vérifier";
-        private static final String OUBLIER = "A oublier";
+        private static final String ASSEMBLER = "A assembler";
         private static final String INCONNUE = "Inconnue";
     }
 }

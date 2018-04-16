@@ -71,14 +71,14 @@ public enum Environnement
     {
         private Valeur() {}
         
-        private static final String NOUVEAU = "NOUVEAU";
-        private static final String DEVTU = "DEVTU";
+        private static final String NOUVEAU = "Nouveau";
+        private static final String DEVTU = "En DEV-TU";
         private static final String TFON = "TFON";
-        private static final String VMOE = "VMOE";
-        private static final String VMOA = "VMOA";
-        private static final String EDITION = "EDITION";
-        private static final String ABANDONNE = "ABANDONNE";
-        private static final String TERMINE = "TERMINE";
+        private static final String VMOE = "En Vérification MOE";
+        private static final String VMOA = "En Validation MOA";
+        private static final String EDITION = "Livré à l'Edition";
+        private static final String ABANDONNE = "Abandonné";
+        private static final String TERMINE = "Terminé";
         private static final String INCONNU = "INCONNU";
     }
 }
