@@ -10,7 +10,8 @@ public enum TypeAction
     CREER(Valeur.CREER), 
     VERIFIER(Valeur.VERIFIER), 
     INCONNUE(Valeur.INCONNUE),
-    ASSEMBLER(Valeur.ASSEMBLER);
+    ASSEMBLER(Valeur.ASSEMBLER),
+    CLOTURER(Valeur.CLOTURER);
 
     private final String valeur;
 
@@ -37,6 +38,9 @@ public enum TypeAction
                 
             case Valeur.ASSEMBLER :
                 return ASSEMBLER;
+                
+            case Valeur.CLOTURER :
+                return CLOTURER;
 
             default :
                 return INCONNUE;
@@ -51,5 +55,6 @@ public enum TypeAction
         private static final String VERIFIER = "A vérifier";
         private static final String ASSEMBLER = "A assembler";
         private static final String INCONNUE = "Inconnue";
+        private static final String CLOTURER = "A clôturer";
     }
 }

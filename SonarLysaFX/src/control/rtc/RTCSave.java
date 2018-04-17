@@ -71,45 +71,6 @@ public class RTCSave
         return queryClient.getResolvedQueryResults(descriptor, loadProfile);
     }
 
-    protected IPredicate createWorkItemQueryFilter(ArtifactRecordField field, IProjectArea parea) throws TeamRepositoryException
-    {
-
-        IPredicate fieldSrchPredicate = null;
-
-        IAuditableClient auditableClient = (IAuditableClient) repo.getClientLibrary(IAuditableClient.class);
-
-        IQueryableAttributeFactory factory = QueryableAttributes.getFactory(IWorkItem.ITEM_TYPE);
-
-        IQueryableAttribute fieldAttr = factory.findAttribute(parea, field.getName(), auditableClient, null);
-
-        if (fieldAttr.getIdentifier().equals(IWorkItem.CATEGORY_PROPERTY))
-        {
-            ICategoryHandle categoryHandle = toCategory(field.getAllValuesAsString());
-            fieldSrchPredicate = WorkItemQueryModel.ROOT.category()._eq(categoryHandle);
-        }
-        else if (fieldAttr.getIdentifier().equals(IWorkItem.ID_PROPERTY))
-        {
-            Integer id = Integer.valueOf(field.getAllValuesAsString());
-            fieldSrchPredicate = WorkItemQueryModel.ROOT.id()._eq(id);
-        }
-        else if (fieldAttr.getIdentifier().equals(IWorkItem.PROJECT_AREA_PROPERTY))
-        {
-            IProjectAreaHandle projectAreaHandle = toProjectArea(field.getAllValuesAsString());
-            fieldSrchPredicate = WorkItemQueryModel.ROOT.projectArea()._eq(projectAreaHandle);
-        }
-        else if (fieldAttr.getIdentifier().equals(IWorkItem.TAGS_PROPERTY))
-        {
-            fieldSrchPredicate = WorkItemQueryModel.ROOT.internalTags()._eq(field.getAllValuesAsString());
-        }
-        else if (fieldAttr.getIdentifier().equals(IItem.ITEM_ID_PROPERTY))
-        {
-            UUID itemId = UUID.valueOf(field.getAllValuesAsString());
-            fieldSrchPredicate = WorkItemQueryModel.ROOT.itemId()._eq(itemId);
-        }
-        return fieldSrchPredicate;
-
-    }
-
     private ICategoryHandle toCategory(String allValuesAsString)
     {
         return null;
@@ -189,22 +150,22 @@ public class RTCSave
     public void test() throws TeamRepositoryException
     {
         IWorkItemClient workItemClient = (IWorkItemClient) repo.getClientLibrary(IWorkItemClient.class);
-        IWorkItem workItem = workItemClient.findWorkItemById(319741, IWorkItem.FULL_PROFILE, new SysoutProgressMonitor());
+        IWorkItem workItem = workItemClient.findWorkItemById(319741, IWorkItem.FULL_PROFILE, new NullProgressMonitor());
 
         System.out.println("Listing all attributes....");
-        List<IAttribute> allAttributes = workItemClient.findAttributes(workItem.getProjectArea(), new SysoutProgressMonitor());
+        List<IAttribute> allAttributes = workItemClient.findAttributes(workItem.getProjectArea(), new NullProgressMonitor());
         for (Iterator<IAttribute> iterator = allAttributes.iterator(); iterator.hasNext();)
         {
 
             IAttribute iAttributeHandle = iterator.next();
-            IAttribute iAttribute = (IAttribute) repo.itemManager().fetchCompleteItem(iAttributeHandle, IItemManager.DEFAULT, new SysoutProgressMonitor());
+            IAttribute iAttribute = (IAttribute) repo.itemManager().fetchCompleteItem(iAttributeHandle, IItemManager.DEFAULT, new NullProgressMonitor());
             System.out.println("Attribute Name: " + iAttribute.getDisplayName() + ", Type: " + iAttribute.getAttributeType());
 
             if (iAttribute.getDisplayName() == "Actual Spent Hours")
             {
                 System.out.println("Setting a value to the attribute Actual Spent Hours....");
                 IWorkItemWorkingCopyManager copyManager = workItemClient.getWorkItemWorkingCopyManager();
-                copyManager.connect(workItem, IWorkItem.FULL_PROFILE, new SysoutProgressMonitor());
+                copyManager.connect(workItem, IWorkItem.FULL_PROFILE, new NullProgressMonitor());
                 WorkItemWorkingCopy workItemCopy = copyManager.getWorkingCopy(workItem);
                 IWorkItem workItem_to_edit = (IWorkItem) workItemCopy.getWorkItem();
                 Integer inter = new Integer("4");

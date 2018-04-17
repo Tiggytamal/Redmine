@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
+
 import com.ibm.team.filesystem.common.workitems.ILinkConstants;
 import com.ibm.team.links.client.ILinkManager;
 import com.ibm.team.links.common.IItemReference;
@@ -68,7 +70,7 @@ public class FindChangedFiles
                     return new UsernameAndPasswordLoginInfo(userId, password);
                 }
             });
-            repo.login(new SysoutProgressMonitor());
+            repo.login(new NullProgressMonitor());
 
             // Gather the necessary clients and managers necessary from the repository
             // In this case we need the source control workspace manager and the item manager
@@ -90,14 +92,14 @@ public class FindChangedFiles
                 System.exit(1);
             }
 
-            IWorkItem workItem = workItemClient.findWorkItemById(workItemNumber, IWorkItem.FULL_PROFILE, new SysoutProgressMonitor());
+            IWorkItem workItem = workItemClient.findWorkItemById(workItemNumber, IWorkItem.FULL_PROFILE, new NullProgressMonitor());
 
             System.out.println("[" + workItem.getId() + "] " + workItem.getHTMLSummary().getPlainText());
 
             // Find all of the attached change sets using the link manager to find a special kind of
             // link that crosses between work items and source control change sets using its ID.
             IItemReference workItemReference = linkManager.referenceFactory().createReferenceToItem(workItem);
-            ILinkCollection linkCollection = linkManager.findLinksByTarget(ILinkConstants.CHANGESET_WORKITEM_LINKTYPE_ID, workItemReference, new SysoutProgressMonitor()).getAllLinksFromHereOn();
+            ILinkCollection linkCollection = linkManager.findLinksByTarget(ILinkConstants.CHANGESET_WORKITEM_LINKTYPE_ID, workItemReference, new NullProgressMonitor()).getAllLinksFromHereOn();
 
             if (linkCollection.isEmpty())
             {
@@ -116,7 +118,7 @@ public class FindChangedFiles
             }
 
             @SuppressWarnings ("unchecked")
-            List<IChangeSet> changeSets = itemManager.fetchCompleteItems(changeSetHandles, IItemManager.DEFAULT, new SysoutProgressMonitor());
+            List<IChangeSet> changeSets = itemManager.fetchCompleteItems(changeSetHandles, IItemManager.DEFAULT, new NullProgressMonitor());
             Set<String> changedFilesAndFolders = new TreeSet<String>();
             for (IChangeSet cs : changeSets)
             {
@@ -131,7 +133,7 @@ public class FindChangedFiles
                         // Although versionable handles are item handles you cannot use the item
                         // manager to fetch the versionable from the handle. Instead, you use the
                         // versionable manager to do this.
-                        IVersionable afterVersionable = workspaceManager.versionableManager().fetchCompleteState(after, new SysoutProgressMonitor());
+                        IVersionable afterVersionable = workspaceManager.versionableManager().fetchCompleteState(after, new NullProgressMonitor());
 
                         changedFilesAndFolders.add(afterVersionable.getName());
                     }
@@ -141,7 +143,7 @@ public class FindChangedFiles
                     {
                         IVersionableHandle before = change.beforeState();
 
-                        IVersionable beforeVersionable = workspaceManager.versionableManager().fetchCompleteState(before, new SysoutProgressMonitor());
+                        IVersionable beforeVersionable = workspaceManager.versionableManager().fetchCompleteState(before, new NullProgressMonitor());
 
                         changedFilesAndFolders.add(beforeVersionable.getName());
                     }

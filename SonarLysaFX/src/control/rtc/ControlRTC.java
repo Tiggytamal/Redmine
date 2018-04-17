@@ -8,21 +8,34 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
+import com.ibm.team.foundation.common.text.XMLString;
 import com.ibm.team.process.client.IProcessClientService;
 import com.ibm.team.process.client.IProcessItemService;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.repository.client.IItemManager;
 import com.ibm.team.repository.client.ITeamRepository;
 import com.ibm.team.repository.client.TeamPlatform;
+import com.ibm.team.repository.client.internal.TeamRepository;
 import com.ibm.team.repository.client.login.UsernameAndPasswordLoginInfo;
 import com.ibm.team.repository.common.IAuditableHandle;
+import com.ibm.team.repository.common.IContributor;
+import com.ibm.team.repository.common.IContributorHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
+import com.ibm.team.repository.common.model.query.BaseContributorQueryModel.ContributorQueryModel;
+import com.ibm.team.repository.common.query.IItemQuery;
+import com.ibm.team.repository.common.query.IItemQueryPage;
+import com.ibm.team.repository.common.query.ast.IPredicate;
+import com.ibm.team.repository.common.service.IQueryService;
 import com.ibm.team.workitem.client.IAuditableClient;
 import com.ibm.team.workitem.client.IWorkItemClient;
-import com.ibm.team.workitem.client.IWorkItemWorkingCopyManager;
+import com.ibm.team.workitem.client.WorkItemOperation;
 import com.ibm.team.workitem.client.WorkItemWorkingCopy;
 import com.ibm.team.workitem.common.IAuditableCommon;
+import com.ibm.team.workitem.common.internal.model.WorkItem;
 import com.ibm.team.workitem.common.model.IAttribute;
+import com.ibm.team.workitem.common.model.IAttributeHandle;
+import com.ibm.team.workitem.common.model.ICategory;
+import com.ibm.team.workitem.common.model.IEnumeration;
 import com.ibm.team.workitem.common.model.ILiteral;
 import com.ibm.team.workitem.common.model.IWorkItem;
 import com.ibm.team.workitem.common.model.IWorkItemHandle;
@@ -32,6 +45,7 @@ import com.ibm.team.workitem.common.model.ItemProfile;
 import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
 import com.mchange.util.AssertException;
 
+import model.Anomalie;
 import model.enums.TypeEnumRTC;
 import model.enums.TypeParam;
 import utilities.Statics;
@@ -48,7 +62,7 @@ public class ControlRTC
     /*---------- ATTRIBUTS ----------*/
 
     public static final ControlRTC INSTANCE = new ControlRTC();
-
+    
     private ITeamRepository repo;
     private IProgressMonitor progressMonitor;
     private Map<String, IProjectArea> pareas;
@@ -124,17 +138,17 @@ public class ControlRTC
         IProjectArea area = (IProjectArea) repo.itemManager().fetchCompleteItem(workItem.getProjectArea(), IItemManager.DEFAULT, progressMonitor);
         return area.getName();
     }
-    
+
     public <R extends T, T extends IAuditableHandle> R recupererItemDepuisHandle(Class<R> classRetour, T handle) throws TeamRepositoryException
     {
         return classRetour.cast(repo.itemManager().fetchCompleteItem(handle, IItemManager.DEFAULT, progressMonitor));
     }
-    
+
     public <R extends T, T extends IAuditableHandle> R recupererEltDepuisHandle(Class<R> classRetour, T handle, ItemProfile<? extends T> profil) throws TeamRepositoryException
     {
         return classRetour.cast(auditableClient.fetchCurrentAuditable(handle, profil, progressMonitor));
     }
-    
+
     /**
      * Calcul de l'état d'un objet RTC
      * 
@@ -189,31 +203,29 @@ public class ControlRTC
      * @return
      * @throws TeamRepositoryException
      */
-    public int creerDefect(String projetString)
+    public int creerDefect(Anomalie ano)
     {
         IWorkItem workItem = null;
         try
-        {
-            IProjectArea projet = pareas.get(projetString);
+        {           
+            IProjectArea projet = pareas.get(ano.getProjetRTC());
 
             // Type de l'objet
-            IWorkItemType itempType = workItemClient.findWorkItemType(projet, "Defect", progressMonitor);
+            IWorkItemType itemType = workItemClient.findWorkItemType(projet, "defect", progressMonitor);
 
-            // Manager de copie
-            IWorkItemWorkingCopyManager manager = workItemClient.getWorkItemWorkingCopyManager();
-
-            // Connexion au manager et récupération du WorkItem
-            IWorkItemHandle itemhandle = manager.connectNew(itempType, progressMonitor);
-            workItem = auditableClient.fetchCurrentAuditable(itemhandle, IWorkItem.FULL_PROFILE, progressMonitor);
-
-            // Ajout des attributs
+            List<ICategory> liste2 = workItemClient.findCategories(projet, ICategory.FULL_PROFILE, progressMonitor);
+            ICategory cat = null;
+            for (ICategory iCategory : liste2)
+            {
+                if (iCategory.getName().equals("Projet"))
+                    cat = iCategory;
+            }
             
-            IAttribute someAttribute = workItemClient.findAttribute(projet, TypeEnumRTC.ENVIRONNEMENT.toString(), progressMonitor);
-            workItem.setValue(someAttribute, "MOE");
-            
+            // Création
+            WorkItemInitialization init = new WorkItemInitialization("testSummary", itemType, cat, projet, ano);
+            IWorkItemHandle handle = init.run(itemType, progressMonitor);
+            workItem = auditableClient.fetchCurrentAuditable(handle, WorkItem.FULL_PROFILE, progressMonitor);
 
-            // Sauvegarde Workitem
-            manager.save(new WorkItemWorkingCopy[] { manager.getWorkingCopy(itemhandle) }, progressMonitor);
         } catch (TeamRepositoryException e)
         {
             throw new TechnicalException("Erreur traitement RTC création de Defect", e);
@@ -240,10 +252,151 @@ public class ControlRTC
         }
         return null;
     }
-    
+
     public IAttribute findAttribute(String projet, String identifier) throws TeamRepositoryException
     {
         return workItemClient.findAttribute(pareas.get(projet), identifier, progressMonitor);
+    }
+
+    public void test() throws TeamRepositoryException
+    {
+        recupererTousLesProjets();
+        List<IWorkItemType> liste = workItemClient.findWorkItemTypes(pareas.get("PRJF_T300703"), progressMonitor);
+        for (IWorkItemType iWorkItemType : liste)
+        {
+            System.out.println(iWorkItemType.getIdentifier() + " - " + iWorkItemType.getDisplayName());
+        }
+        List<ICategory> liste2 = workItemClient.findCategories(pareas.get("PRJF_T300703"), ICategory.FULL_PROFILE, progressMonitor);
+        for (ICategory iCategory : liste2)
+        {
+            System.out.println(iCategory.getName() + " - " + iCategory.getCategoryId().toString());
+        }
+    }
+
+    private class WorkItemInitialization extends WorkItemOperation
+    {
+        /*---------- ATTRIBUTS ----------*/
+
+        private String summary;
+        private IWorkItemType type;
+        private ICategory cat;
+        private IProjectArea projet;
+        private Anomalie ano;
+        
+        /*---------- CONSTRUCTEURS ----------*/
+
+        public WorkItemInitialization(String summary, IWorkItemType type, ICategory cat, IProjectArea projet, Anomalie ano)
+        {
+            super("Initializing Work Item");
+            this.summary = summary;
+            this.type = type;
+            this.cat = cat;
+            this.projet = projet;
+            this.ano = ano;
+        }
+        
+        /*---------- METHODES PUBLIQUES ----------*/
+
+        @Override
+        protected void execute(WorkItemWorkingCopy workingCopy, IProgressMonitor monitor) throws TeamRepositoryException
+        {
+            IWorkItem workItem = workingCopy.getWorkItem();
+            workItem.setHTMLSummary(XMLString.createFromPlainText(summary));
+            workItem.setHTMLDescription(XMLString.createFromPlainText(summary));
+            workItem.setCategory(cat);
+
+            // Environnement
+            IAttribute attribut = workItemClient.findAttribute(projet, TypeEnumRTC.ENVIRONNEMENT.toString(), null);
+            workItem.setValue(attribut, recupLiteralDepuisString("Br B VMOE", attribut));
+
+            // Importance
+            attribut = workItemClient.findAttribute(projet, TypeEnumRTC.IMPORTANCE.toString(), null);
+            workItem.setValue(attribut, recupLiteralDepuisString("Bloquante", attribut));
+            
+            // Origine
+            attribut = workItemClient.findAttribute(projet, TypeEnumRTC.ORIGINE.toString(), null);
+            workItem.setValue(attribut, recupLiteralDepuisString("Qualimétrie", attribut));
+            
+            // Nature
+            attribut = workItemClient.findAttribute(projet, TypeEnumRTC.NATURE.toString(), null);
+            workItem.setValue(attribut, recupLiteralDepuisString("Développement", attribut));
+
+            // Creator
+            IContributor iContributor = repo.loggedInContributor();
+            workItem.setCreator(iContributor);
+
+            // Owner
+            workItem.setOwner(recupContributorDepuisNom(ano.getCpiProjet()));
+
+            // Maj item
+            workItemClient.updateWorkItemType(workItem, type, null, monitor);
+
+            // Set tags
+            List<String> tags = workItem.getTags2();
+            tags.add("NewTag");
+            workItem.setTags2(tags);
+        }
+        
+        /*---------- METHODES PRIVEES ----------*/
+        /*---------- ACCESSEURS ----------*/
+    }
+
+    /**
+     * 
+     * @param name
+     * @param ia
+     * @return
+     * @throws TeamRepositoryException
+     */
+    private Identifier<? extends ILiteral> recupLiteralDepuisString(String name, IAttributeHandle ia) throws TeamRepositoryException
+    {
+        Identifier<? extends ILiteral> literalID = null;
+        IEnumeration<? extends ILiteral> enumeration = workItemClient.resolveEnumeration(ia, null);
+        List<? extends ILiteral> literals = enumeration.getEnumerationLiterals();
+        for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();)
+        {
+            ILiteral iLiteral = iterator.next();
+            if (iLiteral.getName().equals(name))
+            {
+                literalID = iLiteral.getIdentifier2();
+                break;
+            }
+        }
+        return literalID;
+    }
+
+    /**
+     * Retourne un Contributor depuis le nom d'une personne
+     * 
+     * @param nom
+     * @return
+     * @throws TeamRepositoryException
+     */
+    public IContributor recupContributorDepuisNom(String nom) throws TeamRepositoryException
+    {
+        // Creation Query depuis ContributorQueryModel
+        final IItemQuery query = IItemQuery.FACTORY.newInstance(ContributorQueryModel.ROOT);
+
+        // Predicate avec un paramètre poru chercher depuis le nom avec un paramètre de type String
+        final IPredicate predicate = ContributorQueryModel.ROOT.name()._eq(query.newStringArg());
+
+        // Utilisation du Predicate en filtre.
+        final IItemQuery filtered = (IItemQuery) query.filter(predicate);
+
+        // Appel Service de requêtes depuis TeamRepository et non l'interface.
+        final IQueryService qs = ((TeamRepository) repo).getQueryService();
+
+        // Appel de la reqête avec le filtre
+        final IItemQueryPage page = qs.queryItems(filtered, new Object[] { nom }, 1);
+
+        // Retour de l'objet
+        final List<?> handles = page.getItemHandles();
+        if (!handles.isEmpty())
+        {
+            return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, progressMonitor);
+        }
+
+        return null;
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -8,13 +8,14 @@ import org.junit.Test;
 
 import com.ibm.team.repository.common.IContributor;
 import com.ibm.team.repository.common.TeamRepositoryException;
-import com.ibm.team.repository.common.model.ItemType;
 import com.ibm.team.workitem.common.model.IAttribute;
 import com.ibm.team.workitem.common.model.IAttributeHandle;
 import com.ibm.team.workitem.common.model.IWorkItem;
 
 import control.rtc.ControlRTC;
 import junit.JunitBase;
+import model.Anomalie;
+import model.ModelFactory;
 
 public class ControlRTCTest extends JunitBase
 {
@@ -23,13 +24,13 @@ public class ControlRTCTest extends JunitBase
     public ControlRTCTest()
     {
         handler = ControlRTC.INSTANCE;
-        handler.connexion();
+         if (!handler.connexion())
+             System.out.println("erreur connexion");
     }
 
     @Before
     public void init()
     {
-
     }
 
     @Test
@@ -60,8 +61,17 @@ public class ControlRTCTest extends JunitBase
     @Test
     public void creerDefect() throws TeamRepositoryException
     {
+        String PROJETTEST = "PRJF_T300703";
+        Anomalie ano = ModelFactory.getModel(Anomalie.class);
+        ano.setCpiProjet("MATHON Grégoire");
+        ano.setProjetRTC(PROJETTEST);
+        
+        handler.creerDefect(ano);        
+    }
+    
+    @Test
+    public void test() throws TeamRepositoryException
+    {
 
-        String serveurTest = "PRJF_T300703";
-        handler.creerDefect(serveurTest);        
     }
 }

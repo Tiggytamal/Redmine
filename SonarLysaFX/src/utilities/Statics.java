@@ -74,6 +74,8 @@ public class Statics
     public static final FileChooser.ExtensionFilter FILTEREXCEL = new FileChooser.ExtensionFilter("Fichiers Excel (*.xls)", "*.xls", "*.xlsx", "*.xlsm");
     /** Wrapper des informations générales de fonctionnement de l'application*/
     public static final Info info = ModelFactory.getModel(Info.class);
+    /** fin du lien générique pur les anomalies RTC */
+    public static final String FINLIENSANO = "#action=com.ibm.team.workitem.viewWorkItem&id=";
     /** Controleur XML */
     private static final ControlXML controlXML = new ControlXML();
     /** Sauvegarde des fichiers Excel de paramètre */

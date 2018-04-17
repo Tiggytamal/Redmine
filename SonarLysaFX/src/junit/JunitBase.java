@@ -29,7 +29,7 @@ public abstract class JunitBase
         
         // Mock des infos utilisateurs
         info.setPseudo("ETP8137");
-        info.setMotDePasse("28H02m89,;:!");
+        info.setMotDePasse("28H02m8901,;:!");
         Whitebox.setInternalState(Statics.class, info);
     }
 }

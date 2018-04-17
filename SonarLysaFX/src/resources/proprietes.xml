@@ -249,7 +249,7 @@
 		</entry>
 		<entry>
 			<key>LIENSANOS</key>
-			<value>https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/Support%20NICE#action=com.ibm.team.workitem.viewWorkItem</value>
+			<value>https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/</value>
 		</entry>
 		<entry>
 			<key>NOMQGDATASTAGE</key>
@@ -258,10 +258,6 @@
 		<entry>
 			<key>URLSONAR</key>
 			<value>http://ttp10-snar.ca-technologies.fr</value>
-		</entry>
-		<entry>
-			<key>URLSONARTEST</key>
-			<value>http://ttt10-snar.ca-technologies.fr</value>
 		</entry>
 		<entry>
 			<key>URLRTC</key>

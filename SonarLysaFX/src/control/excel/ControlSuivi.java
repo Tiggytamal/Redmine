@@ -47,6 +47,7 @@ import model.enums.TypeColSuivi;
 import model.enums.TypeParam;
 import utilities.CellHelper;
 import utilities.FunctionalException;
+import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Bordure;
 import utilities.enums.Severity;
@@ -87,12 +88,9 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     // Nom de la feuille avec les naomalies en cours
     private static final String SQ = "SUIVI Qualité";
     private static final String AC = "Anomalies closes";
-    private static final String CLOSE = "Close";
-    private static final String ABANDONNEE = "Abandonnée";
     private static final String SECURITEKO = "X";
     private static final String SNAPSHOT = "SNAPSHOT";
     private static final String RELEASE = "RELEASE";
-    private static final String AVERIFIER = "A vérifier";
     private String lienslots;
     private String liensAnos;
     /** contrainte de validitée de la colonne Action */
@@ -289,7 +287,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 ano.setSecurite(SECURITEKO);
 
             // Si une anomalie est close dans RTC, on la transfert sur l'autre feuille.
-            if (CLOSE.equalsIgnoreCase(ano.getEtat()) || ABANDONNEE.equals(ano.getEtat()))
+            if (TypeAction.from(ano.getAction())  == TypeAction.CLOTURER)
             {
                 row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
                 creerLigneSQ(row, ano, IndexedColors.WHITE);
@@ -303,7 +301,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             if (TypeAction.from(ano.getAction()) == TypeAction.CREER)
             {
                 ano.setAction("");
-                int numeroAno = ControlRTC.INSTANCE.creerDefect(ano.getProjetRTC());
+                int numeroAno = ControlRTC.INSTANCE.creerDefect(ano);
                 ano.setNumeroAnomalie(numeroAno);
             }
 
@@ -371,7 +369,9 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         IndexedColors couleur;
         // Mise en vert des anomalies avec un Quality Gate bon
         if (!lotsEnErreurSonar.contains(anoLot))
+        {
             couleur = IndexedColors.LIGHT_GREEN;
+        }
         else
         {
             // Les lots release sont en jaune
@@ -385,15 +385,15 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 ano.setVersion(SNAPSHOT);
                 couleur = IndexedColors.WHITE;
             }
+            
+            // Les lots venant d'erreurs Sonar sont en bleus
+            if (TypeAction.ASSEMBLER == TypeAction.from(ano.getAction()))
+                couleur = IndexedColors.LIGHT_TURQUOISE;
         }
 
         // Les lots déjà traité une première fois sont en gris
         if (TypeAction.VERIFIER == TypeAction.from(ano.getAction()))
             couleur = IndexedColors.GREY_25_PERCENT;
-
-        // Les lots venant d'erreurs Sonar sont en bleus
-        if (TypeAction.ASSEMBLER == TypeAction.from(ano.getAction()))
-            couleur = IndexedColors.LIGHT_BLUE;
 
         // Remise de la couleur à orange si le lot n'a pas encore été traité
         if (!ano.isTraitee())
@@ -501,7 +501,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             cell.setCellValue(numeroAno);
 
             // Rajout de "&id=", car cela fait planter la désérialisation du fichier de paramètres
-            ajouterLiens(cell, liensAnos + "&id=", String.valueOf(numeroAno));
+            ajouterLiens(cell, liensAnos + ano.getProjetRTC().replace(" ", "%20") + Statics.FINLIENSANO, String.valueOf(numeroAno));
         }
 
         // Etat anomalie
@@ -636,7 +636,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 ano.setDateRelance(anoClose.getDateRelance());
                 ano.setRemarque(anoClose.getRemarque());
                 ano.setNumeroAnomalie(anoClose.getNumeroAnomalie());
-                ano.setEtat(AVERIFIER);
+                ano.setAction(TypeAction.VERIFIER.toString());
                 creerLigneSQ(row, ano, IndexedColors.GREY_25_PERCENT);
                 mapAnoCloses.remove(ano.getLot());
             }
@@ -815,6 +815,10 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         retour.setDateRelanceComment(getCellComment(row, colDateRel));
         retour.setMatieresString(getCellStringValue(row, colMatiere));
         retour.setMatieresComment(getCellComment(row, colMatiere));
+        retour.setAction(getCellStringValue(row, colAction));
+        retour.setActionComment(getCellComment(row, colAction));
+        retour.setProjetRTC(getCellStringValue(row, colProjetRTC));
+        retour.setProjetRTCComment(getCellComment(row, colProjetRTC));
         retour.calculTraitee();
         return retour;
     }
