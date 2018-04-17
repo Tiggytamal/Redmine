@@ -729,7 +729,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
         // Controle si le projet RTC est renseigné. Sinon on le récupère depuis Jazz avec le numéro de lot
         if (ano.getProjetRTC().isEmpty())
-            ano.setProjetRTC(controlRTC.recupProjetRTCFromLot(anoLotInt));
+            ano.setProjetRTC(controlRTC.recupProjetRTCDepuisWiLot(anoLotInt));
 
         // Mise à jour de l'état de l'anomalie
         if (ano.getNumeroAnomalie() != 0)

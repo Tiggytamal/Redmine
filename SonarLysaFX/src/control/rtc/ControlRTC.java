@@ -132,7 +132,7 @@ public class ControlRTC
      * @return
      * @throws TeamRepositoryException
      */
-    public String recupProjetRTCFromLot(int lot) throws TeamRepositoryException
+    public String recupProjetRTCDepuisWiLot(int lot) throws TeamRepositoryException
     {
         IWorkItem workItem = workItemClient.findWorkItemById(lot, IWorkItem.FULL_PROFILE, progressMonitor);
         IProjectArea area = (IProjectArea) repo.itemManager().fetchCompleteItem(workItem.getProjectArea(), IItemManager.DEFAULT, progressMonitor);
@@ -233,13 +233,13 @@ public class ControlRTC
         return workItem.getId();
     }
 
-    public Object recupvalueAttribut(IAttribute attrb, IWorkItem item) throws TeamRepositoryException
+    public String recupererValeurAttribut(IAttribute attrb, IWorkItem item) throws TeamRepositoryException
     {
         Object objet = attrb.getValue(auditableCommon, item, progressMonitor);
-        if (objet != null && objet instanceof Identifier)
+        if (objet instanceof Identifier)
         {
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-            Identifier<? extends ILiteral> literalID = (Identifier) objet;
+            @SuppressWarnings ("unchecked")
+            Identifier<? extends ILiteral> literalID = (Identifier<? extends ILiteral>) objet;
             List<? extends ILiteral> literals = workItemClient.resolveEnumeration(attrb, progressMonitor).getEnumerationLiterals();
 
             for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();)
@@ -247,16 +247,19 @@ public class ControlRTC
                 ILiteral iLiteral = iterator.next();
 
                 if (iLiteral.getIdentifier2().equals(literalID))
+                {
                     System.out.println(attrb.getDisplayName() + " - valeur = " + iLiteral.getName() + " - identifiant : " + literalID);
+                    return iLiteral.getName();
+                }
+                
             }
         }
+        else if (objet instanceof String)
+            return (String) objet;
+        
         return null;
     }
 
-    public IAttribute findAttribute(String projet, String identifier) throws TeamRepositoryException
-    {
-        return workItemClient.findAttribute(pareas.get(projet), identifier, progressMonitor);
-    }
 
     public void test() throws TeamRepositoryException
     {
@@ -273,6 +276,48 @@ public class ControlRTC
         }
     }
 
+    /**
+     * Retourne un Contributor depuis le nom d'une personne
+     * 
+     * @param nom
+     * @return
+     * @throws TeamRepositoryException
+     */
+    public IContributor recupContributorDepuisNom(String nom) throws TeamRepositoryException
+    {
+        // Creation Query depuis ContributorQueryModel
+        final IItemQuery query = IItemQuery.FACTORY.newInstance(ContributorQueryModel.ROOT);
+
+        // Predicate avec un paramètre poru chercher depuis le nom avec un paramètre de type String
+        final IPredicate predicate = ContributorQueryModel.ROOT.name()._eq(query.newStringArg());
+
+        // Utilisation du Predicate en filtre.
+        final IItemQuery filtered = (IItemQuery) query.filter(predicate);
+
+        // Appel Service de requêtes depuis TeamRepository et non l'interface.
+        final IQueryService qs = ((TeamRepository) repo).getQueryService();
+
+        // Appel de la reqête avec le filtre
+        final IItemQueryPage page = qs.queryItems(filtered, new Object[] { nom }, 1);
+
+        // Retour de l'objet
+        final List<?> handles = page.getItemHandles();
+        if (!handles.isEmpty())
+        {
+            return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, progressMonitor);
+        }
+
+        return null;
+    }
+
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
+    
+    /**
+     * Classe privée permettant la création d'une anomalie dans SonarQube
+     * @author ETP8137 - Grégoire Mathon
+     * @since 1.0
+     */
     private class WorkItemInitialization extends WorkItemOperation
     {
         /*---------- ATTRIBUTS ----------*/
@@ -338,67 +383,31 @@ public class ControlRTC
         }
         
         /*---------- METHODES PRIVEES ----------*/
+        
+        /**
+         * 
+         * @param name
+         * @param ia
+         * @return
+         * @throws TeamRepositoryException
+         */
+        private Identifier<? extends ILiteral> recupLiteralDepuisString(String name, IAttributeHandle ia) throws TeamRepositoryException
+        {
+            Identifier<? extends ILiteral> literalID = null;
+            IEnumeration<? extends ILiteral> enumeration = workItemClient.resolveEnumeration(ia, null);
+            List<? extends ILiteral> literals = enumeration.getEnumerationLiterals();
+            for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();)
+            {
+                ILiteral iLiteral = iterator.next();
+                if (iLiteral.getName().equals(name))
+                {
+                    literalID = iLiteral.getIdentifier2();
+                    break;
+                }
+            }
+            return literalID;
+        }
+        
         /*---------- ACCESSEURS ----------*/
     }
-
-    /**
-     * 
-     * @param name
-     * @param ia
-     * @return
-     * @throws TeamRepositoryException
-     */
-    private Identifier<? extends ILiteral> recupLiteralDepuisString(String name, IAttributeHandle ia) throws TeamRepositoryException
-    {
-        Identifier<? extends ILiteral> literalID = null;
-        IEnumeration<? extends ILiteral> enumeration = workItemClient.resolveEnumeration(ia, null);
-        List<? extends ILiteral> literals = enumeration.getEnumerationLiterals();
-        for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();)
-        {
-            ILiteral iLiteral = iterator.next();
-            if (iLiteral.getName().equals(name))
-            {
-                literalID = iLiteral.getIdentifier2();
-                break;
-            }
-        }
-        return literalID;
-    }
-
-    /**
-     * Retourne un Contributor depuis le nom d'une personne
-     * 
-     * @param nom
-     * @return
-     * @throws TeamRepositoryException
-     */
-    public IContributor recupContributorDepuisNom(String nom) throws TeamRepositoryException
-    {
-        // Creation Query depuis ContributorQueryModel
-        final IItemQuery query = IItemQuery.FACTORY.newInstance(ContributorQueryModel.ROOT);
-
-        // Predicate avec un paramètre poru chercher depuis le nom avec un paramètre de type String
-        final IPredicate predicate = ContributorQueryModel.ROOT.name()._eq(query.newStringArg());
-
-        // Utilisation du Predicate en filtre.
-        final IItemQuery filtered = (IItemQuery) query.filter(predicate);
-
-        // Appel Service de requêtes depuis TeamRepository et non l'interface.
-        final IQueryService qs = ((TeamRepository) repo).getQueryService();
-
-        // Appel de la reqête avec le filtre
-        final IItemQueryPage page = qs.queryItems(filtered, new Object[] { nom }, 1);
-
-        // Retour de l'objet
-        final List<?> handles = page.getItemHandles();
-        if (!handles.isEmpty())
-        {
-            return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, progressMonitor);
-        }
-
-        return null;
-    }
-
-    /*---------- METHODES PRIVEES ----------*/
-    /*---------- ACCESSEURS ----------*/
 }

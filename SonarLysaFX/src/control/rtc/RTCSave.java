@@ -173,7 +173,14 @@ public class RTCSave
 
             }
         }
+        IAttribute attribut = findAttribute("PRJF_BF0377_DML_Refonte Ident Auth forte", "fr.ca.cat.attribut.datedelivraison");
 
+    }
+    
+    public IAttribute findAttribute(String projet, String identifier) throws TeamRepositoryException
+    {
+        IWorkItemClient workItemClient = (IWorkItemClient) repo.getClientLibrary(IWorkItemClient.class);
+        return workItemClient.findAttribute(pareas.get(projet), identifier, progressMonitor);
     }
 
 }

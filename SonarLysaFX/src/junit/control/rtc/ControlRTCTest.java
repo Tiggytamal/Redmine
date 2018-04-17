@@ -34,12 +34,9 @@ public class ControlRTCTest extends JunitBase
     }
 
     @Test
-    public void testAttibuts() throws TeamRepositoryException
+    public void testAttibutsItem() throws TeamRepositoryException
     {
         IWorkItem item = handler.recupWorkItemDepuisId(307396);
-        @SuppressWarnings("unused")
-        IAttribute attribut = handler.findAttribute("PRJF_BF0377_DML_Refonte Ident Auth forte", "fr.ca.cat.attribut.datedelivraison");
-
         System.out.println("Id : " + item.getId());
         System.out.println("Tags : " + item.getTags2());
         System.out.println("Type : " +item.getWorkItemType());
@@ -54,7 +51,7 @@ public class ControlRTCTest extends JunitBase
         {
             IAttribute attrb = handler.recupererEltDepuisHandle(IAttribute.class, handle, IAttribute.FULL_PROFILE);
             attrbs.add(attrb);
-            handler.recupvalueAttribut(attrb, item);
+            handler.recupererValeurAttribut(attrb, item);
         }
     }
 
