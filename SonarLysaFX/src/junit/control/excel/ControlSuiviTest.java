@@ -30,6 +30,7 @@ import model.Anomalie;
 import model.ModelFactory;
 import model.enums.Environnement;
 import model.enums.Matiere;
+import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import utilities.FunctionalException;
 
@@ -210,9 +211,16 @@ public class ControlSuiviTest extends ControlExcelTest<TypeColSuivi, ControlSuiv
         couleur = Whitebox.invokeMethod(handler, "calculCouleurLigne", ano, lotsEnErreurSonar, anoLot, lotsRelease);
         assertEquals(IndexedColors.WHITE, couleur);
         assertEquals(SNAPSHOT, ano.getVersion());
+        
+        // Test 3 = Torquoise
+        lotsRelease.clear();
+        ano.setAction(TypeAction.ASSEMBLER);
+        couleur = Whitebox.invokeMethod(handler, "calculCouleurLigne", ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        assertEquals(IndexedColors.LIGHT_TURQUOISE, couleur);
+        assertEquals(SNAPSHOT, ano.getVersion());
 
         // Test 4 = Gris
-        ano.setEtat("A vérifier");
+        ano.setAction(TypeAction.VERIFIER);
         couleur = Whitebox.invokeMethod(handler, "calculCouleurLigne", ano, lotsEnErreurSonar, anoLot, lotsRelease);
         assertEquals(IndexedColors.GREY_25_PERCENT, couleur);
 
@@ -413,7 +421,8 @@ public class ControlSuiviTest extends ControlExcelTest<TypeColSuivi, ControlSuiv
         // Test 1
         Sheet sheet = Whitebox.invokeMethod(handler, "saveAnomaliesCloses", anoClose);
         assertTrue(sheet.getPhysicalNumberOfRows() == 1);
-        assertTrue(anoClose.size() == 50);
+        System.out.println(anoClose.size());
+        assertTrue(anoClose.size() == 49);
 
         // Test 2 - à partir d'une feuille vide
         removeSheet(AC);

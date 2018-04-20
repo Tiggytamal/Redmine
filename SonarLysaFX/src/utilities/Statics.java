@@ -40,6 +40,8 @@ public class Statics
     public static final String NOMAPPLI = "SonarLyza";
     /** Valeur pour le séparateur de ligne indépendant du système */
     public static final String NL = System.getProperty("line.separator");
+    /** Indiqe une anomalie avec un problème de sécurité */
+    public static final String SECURITEKO = "X";
     /** Date du jour */
     public static final LocalDate TODAY = LocalDate.now();
     /** Mois de janvier */

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import model.enums.CHCouCDM;
 import model.enums.TypeMetrique;
 import sonarapi.model.Composant;
 import sonarapi.model.Metrique;
@@ -30,18 +31,18 @@ public class CreerVueCHCCDMTask extends SonarTask
     /*---------- ATTRIBUTS ----------*/
 
     private List<String> annees;
-    private boolean cdm;
+    private CHCouCDM chccdm;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public CreerVueCHCCDMTask(List<String> annees, boolean cdm)
+    public CreerVueCHCCDMTask(List<String> annees, CHCouCDM chccdm)
     {
         super(3);
         annulable = false;
         if (annees == null || annees.isEmpty())
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Création task CreerVueCHCCDMTask sans liste d'années");
         this.annees = annees;
-        this.cdm = cdm;
+        this.chccdm = chccdm;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -57,7 +58,7 @@ public class CreerVueCHCCDMTask extends SonarTask
     private boolean creerVueCHCouCDM()
     {
         // Traitement depuis le fichier XML
-        suppressionVuesMaintenance(cdm, annees);
+        suppressionVuesMaintenance(chccdm, annees);
 
         creerVueMaintenance(recupererEditions(annees));
         return true;
@@ -67,7 +68,7 @@ public class CreerVueCHCCDMTask extends SonarTask
      * @param cdm
      * @param annees
      */
-    private void suppressionVuesMaintenance(boolean cdm, List<String> annees)
+    private void suppressionVuesMaintenance(CHCouCDM chccdm, List<String> annees)
     {
         String base;
         String baseMessage = "Suppression des vues existantes :" + NL;
@@ -76,7 +77,7 @@ public class CreerVueCHCCDMTask extends SonarTask
         for (String annee : annees)
         {
             // préparation de la base de la clef
-            if (cdm)
+            if (chccdm == CHCouCDM.CDM)
                 base = "CHC_CDM" + annee;
             else
                 base = "CHC" + annee;
@@ -126,8 +127,8 @@ public class CreerVueCHCCDMTask extends SonarTask
 
             // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
             Map<TypeMetrique, Metrique> metriques = composant.getMapMetriques();
-            String lot = metriques.get(TypeMetrique.LOT).getValue();
-            String edition = metriques.get(TypeMetrique.EDITION).getValue();
+            String lot = metriques.computeIfAbsent(TypeMetrique.LOT, t -> new Metrique()).getValue();            
+            String edition = metriques.computeIfAbsent(TypeMetrique.EDITION, t -> new Metrique()).getValue();
 
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
             if (lot != null && !lot.isEmpty() && edition != null && mapEditions.keySet().contains(edition))
@@ -135,7 +136,7 @@ public class CreerVueCHCCDMTask extends SonarTask
                 String keyCHC = mapEditions.get(edition);
 
                 // Contrôle pour ne prendre que les CHC ou CDM selon le booléen
-                if (controle(cdm, keyCHC))
+                if (!controle(chccdm, keyCHC))
                     continue;
 
                 // AJout à la map et création de la clef au besoin
@@ -148,9 +149,9 @@ public class CreerVueCHCCDMTask extends SonarTask
         creerVues(mapVuesACreer);
     }
 
-    private boolean controle(boolean cdm, String keyCHC)
+    private boolean controle(CHCouCDM chccdm, String keyCHC)
     {
-        return !cdm && keyCHC.contains("CDM") || cdm && !keyCHC.contains("CDM");
+        return chccdm == CHCouCDM.CDM && keyCHC.contains("CDM") || chccdm == CHCouCDM.CHC  && !keyCHC.contains("CDM");
     }
 
     private void creerVues(Map<String, Set<String>> mapVuesACreer)

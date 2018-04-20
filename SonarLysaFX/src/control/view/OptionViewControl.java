@@ -245,7 +245,7 @@ public class OptionViewControl extends ViewControl
             if (node instanceof ParamView)
             {
                 ParamView view = (ParamView) node;
-                saveText(view.getField(), mapParams, view.getTypeParam());
+                saveText(view.getField(), mapParams, view.getType());
             }
         }
         
@@ -255,7 +255,7 @@ public class OptionViewControl extends ViewControl
             if (node instanceof BooleanView)
             {
                 BooleanView view = (BooleanView) node;
-                mapParamsBool.put(view.getTypeParam(), view.getCheckBox().isSelected());
+                mapParamsBool.put(view.getType(), view.getField().isSelected());
             }
         }
 
@@ -274,8 +274,8 @@ public class OptionViewControl extends ViewControl
             {
                 @SuppressWarnings ("unchecked")
                 ColonneView<T> view = (ColonneView<T>) node;
-                Map<T, String> mapCols = proprietesXML.getMap(view.getTypeCol().getDeclaringClass());
-                saveText(view.getField(), mapCols, view.getTypeCol());
+                Map<T, String> mapCols = proprietesXML.getMap(view.getType().getDeclaringClass());
+                saveText(view.getField(), mapCols, view.getType());
             }
         }
 

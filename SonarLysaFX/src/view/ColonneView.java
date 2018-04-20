@@ -18,7 +18,7 @@ import model.enums.TypeCol;
  *
  * @param <T>
  */
-public class ColonneView<T extends Enum<T> & TypeCol> extends VBox
+public class ColonneView<T extends Enum<T> & TypeCol> extends VBox implements ViewXML<T, TextField>
 {
     private T typeCol;
     private TextField field;
@@ -52,7 +52,7 @@ public class ColonneView<T extends Enum<T> & TypeCol> extends VBox
     /**
      * @return the typeCol
      */
-    public T getTypeCol()
+    public T getType()
     {
         return typeCol;
     }

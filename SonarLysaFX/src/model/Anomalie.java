@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Comment;
 
 import model.enums.Environnement;
 import model.enums.Matiere;
+import model.enums.TypeAction;
 
 /**
  * Classe de modèle qui correspond aux données du fichier Excel des anomalies.
@@ -67,7 +68,7 @@ public class Anomalie implements Modele
     private Comment matieresComment;
     private String projetRTC;
     private Comment projetRTCComment;
-    private String action;
+    private TypeAction action;
     private Comment actionComment;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -394,12 +395,12 @@ public class Anomalie implements Modele
         this.projetRTC = projetRTC;
     }
     
-    public String getAction()
+    public TypeAction getAction()
     {
-        return getString(action);
+        return action;
     }
 
-    public void setAction(String action)
+    public void setAction(TypeAction action)
     {
         this.action = action;
     }

@@ -1,5 +1,7 @@
 package control.rtc;
 
+import static utilities.Statics.logger;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -69,6 +71,8 @@ public class ControlRTC
     private IWorkItemClient workItemClient;
     private IAuditableClient auditableClient;
     private IAuditableCommon auditableCommon;
+    
+    private static final String RECAPITULATIF = "Anomalie Qualimétrie : Quality Gate non conforme";
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -135,15 +139,35 @@ public class ControlRTC
     public String recupProjetRTCDepuisWiLot(int lot) throws TeamRepositoryException
     {
         IWorkItem workItem = workItemClient.findWorkItemById(lot, IWorkItem.FULL_PROFILE, progressMonitor);
+        if (workItem == null)
+        {
+            logger.warn("Récupération projetRTC - Lot introuvable : " + lot);
+            return "";
+        }
         IProjectArea area = (IProjectArea) repo.itemManager().fetchCompleteItem(workItem.getProjectArea(), IItemManager.DEFAULT, progressMonitor);
         return area.getName();
     }
 
+    /**
+     * 
+     * @param classRetour
+     * @param handle
+     * @return
+     * @throws TeamRepositoryException
+     */
     public <R extends T, T extends IAuditableHandle> R recupererItemDepuisHandle(Class<R> classRetour, T handle) throws TeamRepositoryException
     {
         return classRetour.cast(repo.itemManager().fetchCompleteItem(handle, IItemManager.DEFAULT, progressMonitor));
     }
 
+    /**
+     * 
+     * @param classRetour
+     * @param handle
+     * @param profil
+     * @return
+     * @throws TeamRepositoryException
+     */
     public <R extends T, T extends IAuditableHandle> R recupererEltDepuisHandle(Class<R> classRetour, T handle, ItemProfile<? extends T> profil) throws TeamRepositoryException
     {
         return classRetour.cast(auditableClient.fetchCurrentAuditable(handle, profil, progressMonitor));
@@ -172,9 +196,6 @@ public class ControlRTC
      */
     public IWorkItem recupWorkItemDepuisId(int id) throws TeamRepositoryException
     {
-        IWorkItem item = workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, progressMonitor);
-        if (item == null)
-            System.out.println(id);
         return workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, progressMonitor);
     }
 
@@ -222,7 +243,7 @@ public class ControlRTC
             }
             
             // Création
-            WorkItemInitialization init = new WorkItemInitialization("testSummary", itemType, cat, projet, ano);
+            WorkItemInitialization init = new WorkItemInitialization(itemType, cat, projet, ano);
             IWorkItemHandle handle = init.run(itemType, progressMonitor);
             workItem = auditableClient.fetchCurrentAuditable(handle, WorkItem.FULL_PROFILE, progressMonitor);
 
@@ -233,6 +254,14 @@ public class ControlRTC
         return workItem.getId();
     }
 
+    /**
+     * Retourne la valeur d'un attribut d'un WorkItem RTC sous forme d'une chaine de caractères.
+     * 
+     * @param attrb
+     * @param item
+     * @return
+     * @throws TeamRepositoryException
+     */
     public String recupererValeurAttribut(IAttribute attrb, IWorkItem item) throws TeamRepositoryException
     {
         Object objet = attrb.getValue(auditableCommon, item, progressMonitor);
@@ -245,35 +274,15 @@ public class ControlRTC
             for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();)
             {
                 ILiteral iLiteral = iterator.next();
-
+                System.out.println(iLiteral.getName());
                 if (iLiteral.getIdentifier2().equals(literalID))
-                {
-                    System.out.println(attrb.getDisplayName() + " - valeur = " + iLiteral.getName() + " - identifiant : " + literalID);
-                    return iLiteral.getName();
-                }
-                
+                    return iLiteral.getName();                
             }
         }
         else if (objet instanceof String)
             return (String) objet;
         
         return null;
-    }
-
-
-    public void test() throws TeamRepositoryException
-    {
-        recupererTousLesProjets();
-        List<IWorkItemType> liste = workItemClient.findWorkItemTypes(pareas.get("PRJF_T300703"), progressMonitor);
-        for (IWorkItemType iWorkItemType : liste)
-        {
-            System.out.println(iWorkItemType.getIdentifier() + " - " + iWorkItemType.getDisplayName());
-        }
-        List<ICategory> liste2 = workItemClient.findCategories(pareas.get("PRJF_T300703"), ICategory.FULL_PROFILE, progressMonitor);
-        for (ICategory iCategory : liste2)
-        {
-            System.out.println(iCategory.getName() + " - " + iCategory.getCategoryId().toString());
-        }
     }
 
     /**
@@ -285,6 +294,9 @@ public class ControlRTC
      */
     public IContributor recupContributorDepuisNom(String nom) throws TeamRepositoryException
     {
+        if (nom == null)
+            return null;
+        
         // Creation Query depuis ContributorQueryModel
         final IItemQuery query = IItemQuery.FACTORY.newInstance(ContributorQueryModel.ROOT);
 
@@ -322,22 +334,22 @@ public class ControlRTC
     {
         /*---------- ATTRIBUTS ----------*/
 
-        private String summary;
         private IWorkItemType type;
         private ICategory cat;
         private IProjectArea projet;
         private Anomalie ano;
+        private int lotAno;
         
         /*---------- CONSTRUCTEURS ----------*/
 
-        public WorkItemInitialization(String summary, IWorkItemType type, ICategory cat, IProjectArea projet, Anomalie ano)
+        public WorkItemInitialization(IWorkItemType type, ICategory cat, IProjectArea projet, Anomalie ano)
         {
             super("Initializing Work Item");
-            this.summary = summary;
             this.type = type;
             this.cat = cat;
             this.projet = projet;
             this.ano = ano;
+            lotAno = Integer.parseInt(ano.getLot().substring(4));
         }
         
         /*---------- METHODES PUBLIQUES ----------*/
@@ -346,9 +358,9 @@ public class ControlRTC
         protected void execute(WorkItemWorkingCopy workingCopy, IProgressMonitor monitor) throws TeamRepositoryException
         {
             IWorkItem workItem = workingCopy.getWorkItem();
-            workItem.setHTMLSummary(XMLString.createFromPlainText(summary));
-            workItem.setHTMLDescription(XMLString.createFromPlainText(summary));
-            workItem.setCategory(cat);
+            workItem.setHTMLSummary(XMLString.createFromPlainText(RECAPITULATIF));
+            workItem.setHTMLDescription(XMLString.createFromPlainText(creerDescription(lotAno)));
+            workItem.setCategory(cat);           
 
             // Environnement
             IAttribute attribut = workItemClient.findAttribute(projet, TypeEnumRTC.ENVIRONNEMENT.toString(), null);
@@ -365,23 +377,37 @@ public class ControlRTC
             // Nature
             attribut = workItemClient.findAttribute(projet, TypeEnumRTC.NATURE.toString(), null);
             workItem.setValue(attribut, recupLiteralDepuisString("Développement", attribut));
+            
+            // Entité responsable
+            attribut = workItemClient.findAttribute(projet, TypeEnumRTC.ENTITERESPCORRECTION.toString(), null);
+            workItem.setValue(attribut, recupLiteralDepuisString("MOE", attribut));
+            
+            // Edition
+            attribut = workItemClient.findAttribute(projet, TypeEnumRTC.EDITION.toString(), null);
+            workItem.setValue(attribut, recupLiteralDepuisString("E31", attribut));
 
             // Creator
-            IContributor iContributor = repo.loggedInContributor();
-            workItem.setCreator(iContributor);
+            workItem.setCreator(repo.loggedInContributor());
 
             // Owner
             workItem.setOwner(recupContributorDepuisNom(ano.getCpiProjet()));
 
             // Maj item
-            workItemClient.updateWorkItemType(workItem, type, null, monitor);
+            workItemClient.updateWorkItemType(workItem, type, type, monitor);
 
             // Set tags
-            List<String> tags = workItem.getTags2();
-            tags.add("NewTag");
-            workItem.setTags2(tags);
+            creerTags(workItem);
         }
         
+        private void creerTags(IWorkItem workItem)
+        {
+            List<String> tags = workItem.getTags2();
+            tags.add("lot=" + lotAno);
+            if (ano.getSecurite().equals(Statics.SECURITEKO))
+                tags.add("sécurité");
+            workItem.setTags2(tags);            
+        }
+
         /*---------- METHODES PRIVEES ----------*/
         
         /**
@@ -406,6 +432,13 @@ public class ControlRTC
                 }
             }
             return literalID;
+        }
+        
+        private String creerDescription(int lot)
+        {
+            return "Bonjour,\nL'analyse SonarQube de ce jour du lot projet " + lot + "fait apparaitre un quality Gate non conforme.\n"
+                    + "Veuillez trouver ci après le lien vers l'analyse du lot pour prise en compte et correction :\n"
+                    + "http://ttp10-snar.ca-technologies.fr/governance?id=view_lot_" + lot + "\nMerci";            
         }
         
         /*---------- ACCESSEURS ----------*/

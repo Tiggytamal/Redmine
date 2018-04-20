@@ -14,6 +14,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.enums.CHCouCDM;
 import utilities.Statics;
 import utilities.TechnicalException;
 
@@ -38,7 +39,7 @@ public class MaintenanceViewControl extends ViewControl
     @FXML
     private CheckBox precedente;
 
-    private boolean cdm;
+    private CHCouCDM chccdm;
     private CreerVueCHCCDMTask task;
     private String titreTask;
 
@@ -69,14 +70,14 @@ public class MaintenanceViewControl extends ViewControl
                 case "radioCHC" :
                     children.add(checkBoxPane);
                     children.add(creer);
-                    cdm = false;
+                    chccdm = CHCouCDM.CHC;
                     titreTask = "Vues CHC";
                     break;
 
                 case "radioCHCCDM" :
                     children.add(checkBoxPane);
                     children.add(creer);
-                    cdm = true;
+                    chccdm = CHCouCDM.CDM;
                     titreTask = "Vues CHC_CDM";
                     break;
 
@@ -98,7 +99,7 @@ public class MaintenanceViewControl extends ViewControl
             annees.add(String.valueOf(Statics.TODAY.getYear() - 1));
 
         // Lancement de la task
-        task = new CreerVueCHCCDMTask(annees, cdm);
+        task = new CreerVueCHCCDMTask(annees, chccdm);
         startTask(task, titreTask);
     }
 

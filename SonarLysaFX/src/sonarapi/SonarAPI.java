@@ -117,6 +117,11 @@ public class SonarAPI
         return new ArrayList<>();
     }
     
+    /**
+     * 
+     * @param nom
+     * @return
+     */
     public List<Projet> getVuesParNom(String nom)
     {
         //Paramètres
@@ -624,6 +629,11 @@ public class SonarAPI
         return retour;
     }
 
+    /**
+     * 
+     * @param api
+     * @return
+     */
     private String erreurAPI(String api)
     {
         return "Erreur API : " + api + " - Composant : ";

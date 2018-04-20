@@ -27,6 +27,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import model.enums.Environnement;
+import model.enums.TypeAction;
 import model.enums.TypeCol;
 import utilities.CellHelper;
 import utilities.DateConvert;
@@ -40,7 +41,7 @@ import utilities.enums.Severity;
  * @author ETP137 - Grégoire Mathon
  *
  */
-public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
+public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -61,18 +62,18 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
     /** Classe de l'énumération des classes filles */
     protected Class<T> enumeration;
 
-
     /*---------- CONSTRUCTEURS ----------*/
 
     /**
-     * Constructeur du controleur. Crée le workbook, et les gestionnaire. Puis invoque la méthode {@codecalculIndiceColonnes} qui doit être implémentées dans les classe files<br>
+     * Constructeur du controleur. Crée le workbook, et les gestionnaire. Puis invoque la méthode {@codecalculIndiceColonnes} qui doit être implémentées dans les
+     * classe files<br>
      * pour calculer l'indice de chaque colonne de la feuille. Ne pas oublier d'utiliser la méthode {@code close} lorsque les traitements sont finis.
      * 
      * @param file
      * @throws InvalidFormatException
      * @throws IOException
      */
-    protected ControlExcel(File file) throws InvalidFormatException, IOException
+    protected ControlExcel(File file) throws IOException
     {
         this.file = file;
         createWb();
@@ -82,16 +83,16 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
     }
 
     /*---------- METHODES ABSTRAITES ----------*/
-    
+
     public abstract R recupDonneesDepuisExcel();
-    
+
     /**
      * Initialise la classe de l'énumération
      */
     protected abstract void initEnum();
-    
+
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Récupération de la feuille Excel pour le traitement. Remonte de base la première feuille. Surcharge possible si besoin d'un traitement différent.
      */
@@ -107,7 +108,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
         }
         return sheet;
     }
-    
+
     /**
      * Initialise les numéro des colonnes du fichier Excel venant de la PIC.
      */
@@ -115,51 +116,56 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
     {
         titres = sheet.getRow(0);
         int nbreCol = 0;
-        
+
         // Récupération de l'énumération depuis les paramètres XML
         Map<String, T> mapColonnesInvert = proprietesXML.getMapColsInvert(enumeration);
-        
+
         for (Cell cell : titres)
-        {           
+        {
             T typeCol = mapColonnesInvert.get(cell.getStringCellValue());
-            
+
             if (cell.getCellTypeEnum() != CellType.STRING || typeCol == null)
                 continue;
-            
-            // Initialisation du champ, calcul de l'indice max des colonnes, incrémentation du nombre de colonnes et passage à l'élément suivant. 
+
+            // Initialisation du champ, calcul de l'indice max des colonnes, incrémentation du nombre de colonnes et passage à l'élément suivant.
             Field field;
             try
             {
                 field = getClass().getDeclaredField(typeCol.getNomCol());
                 field.setAccessible(true);
                 field.set(this, cell.getColumnIndex());
-                testMax((int)field.get(this));              
-                nbreCol++; 
-            }
-            catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
+                testMax((int) field.get(this));
+                nbreCol++;
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
             {
                 throw new TechnicalException("Erreur à l'affectation d'une variable lors de l'initialisation d'une colonne : " + cell.getStringCellValue(), e);
             }
         }
-        
+
         // Gestion des erreurs si on ne trouve pas le bon nombre de colonnes
         if (nbreCol != enumeration.getEnumConstants().length)
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci.");
     }
-    
+
     /**
      * Permet de recréer un wokbook ainsi que les gestionnaires si celui-ci a été fermé.
      * 
      * @throws InvalidFormatException
      * @throws IOException
      */
-    protected void createWb() throws InvalidFormatException, IOException
+    protected void createWb() throws IOException
     {
         // Création du workbook depuis le fichier excel
-        wb = WorkbookFactory.create(file);
+        try
+        {
+            wb = WorkbookFactory.create(file);
+        } catch (InvalidFormatException e)
+        {
+            throw new TechnicalException("Impossible de creer le Workbook pour " + file.getName(), e);
+        }
         helper = new CellHelper(wb);
         createHelper = wb.getCreationHelper();
-        ca = createHelper.createClientAnchor();       
+        ca = createHelper.createClientAnchor();
     }
 
     /**
@@ -269,7 +275,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
             return (int) cell.getNumericCellValue();
         return 0;
     }
-    
+
     /**
      * Retourne la valeur d'une cellule contenant une formule
      * 
@@ -313,11 +319,11 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
     {
         if (cell == null || commentaire == null)
             throw new IllegalArgumentException("Arguments nuls pour méthode control.parent.ControlExcel.copieComment : commentaire = " + commentaire + " - cell = " + cell);
-        
+
         // Drawing de base pour le commentaire
         Drawing<?> drawing = cell.getSheet().getDrawingPatriarch();
         if (drawing == null)
-        drawing = cell.getSheet().createDrawingPatriarch();
+            drawing = cell.getSheet().createDrawingPatriarch();
 
         // On utilise la position relative du commentaire précedent pour créer le nouveau
         ca.setRow1(cell.getRowIndex());
@@ -364,23 +370,25 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
         // Style
         if (style != null)
             cell.setCellStyle(style);
-        
+
         // Ajout du texte non null dans le bon format
         if (texte == null)
             return cell;
-        
+
         if (texte instanceof String)
             cell.setCellValue((String) texte);
         else if (texte instanceof Environnement)
             cell.setCellValue(((Environnement) texte).toString());
+        else if (texte instanceof TypeAction)
+            cell.setCellValue(((TypeAction) texte).toString());
         else if (texte instanceof LocalDate)
             cell.setCellValue(DateConvert.convertToOldDate(texte));
         else
             throw new IllegalArgumentException("Le texte n'est pas d'un type supporté par la méthode control.parent.ControlExcel.valoriserCellule.");
-        
+
         return cell;
     }
-    
+
     protected void copierCellule(Cell newCell, Cell oldCell)
     {
         // On sort si la cellule est nulle
@@ -392,29 +400,29 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol , R>
         newCellStyle.cloneStyleFrom(oldCell.getCellStyle());
         newCell.setCellStyle(newCellStyle);
 
-        // Copie des valeurs        
+        // Copie des valeurs
         switch (oldCell.getCellTypeEnum())
         {
-            case BOOLEAN :
+            case BOOLEAN:
                 newCell.setCellValue(oldCell.getBooleanCellValue());
                 break;
 
-            case FORMULA :
+            case FORMULA:
                 newCell.setCellFormula(oldCell.getCellFormula());
                 break;
 
-            case NUMERIC :
+            case NUMERIC:
                 newCell.setCellValue(oldCell.getNumericCellValue());
                 break;
 
-            case STRING :
+            case STRING:
                 newCell.setCellValue(oldCell.getRichStringCellValue());
                 break;
 
-            default :
+            default:
                 break;
         }
-        
+
         // Commentaire
         Comment commentaire = oldCell.getCellComment();
         if (commentaire != null)

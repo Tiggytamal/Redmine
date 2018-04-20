@@ -1,6 +1,7 @@
 package control.excel;
 
 import static utilities.Statics.fichiersXML;
+import static utilities.Statics.logger;
 import static utilities.Statics.loginconnue;
 import static utilities.Statics.proprietesXML;
 
@@ -16,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.poi.common.usermodel.HyperlinkType;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -33,6 +33,7 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
+import com.ibm.team.repository.common.PermissionDeniedException;
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
@@ -88,7 +89,6 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     // Nom de la feuille avec les naomalies en cours
     private static final String SQ = "SUIVI Qualité";
     private static final String AC = "Anomalies closes";
-    private static final String SECURITEKO = "X";
     private static final String SNAPSHOT = "SNAPSHOT";
     private static final String RELEASE = "RELEASE";
     private String lienslots;
@@ -98,7 +98,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlSuivi(File file) throws InvalidFormatException, IOException
+    public ControlSuivi(File file) throws IOException
     {
         super(file);
 
@@ -284,10 +284,10 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
             // Contrôle si le lot a une erreur de sécurité pour mettre à jour la donnée.
             if (lotsSecurite.contains(anoLot))
-                ano.setSecurite(SECURITEKO);
+                ano.setSecurite(Statics.SECURITEKO);
 
             // Si une anomalie est close dans RTC, on la transfert sur l'autre feuille.
-            if (TypeAction.from(ano.getAction())  == TypeAction.CLOTURER)
+            if (ano.getAction() == TypeAction.CLOTURER)
             {
                 row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
                 creerLigneSQ(row, ano, IndexedColors.WHITE);
@@ -298,9 +298,9 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             IndexedColors couleur = calculCouleurLigne(ano, lotsEnErreurSonar, anoLot, lotsRelease);
 
             // Contrôle si besoin de créer une anomalie Sonar
-            if (TypeAction.from(ano.getAction()) == TypeAction.CREER)
+            if (ano.getAction() == TypeAction.CREER)
             {
-                ano.setAction("");
+                ano.setAction(null);
                 int numeroAno = ControlRTC.INSTANCE.creerDefect(ano);
                 ano.setNumeroAnomalie(numeroAno);
             }
@@ -313,9 +313,11 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         ajouterNouvellesAnos(sheet, anoAajouter, anoClose, lotsSecurite, lotsRelease, matiere);
         ajouterAnomaliesCloses(sheetClose, anoClose);
 
-        ajouterDataValidation((XSSFSheet) sheet);
+        if (sheet.getLastRowNum() > 0)
+            ajouterDataValidation(sheet);
         autosizeColumns(sheet);
-        ajouterDataValidation((XSSFSheet) sheetClose);
+        if (sheetClose.getLastRowNum() > 0)
+            ajouterDataValidation(sheetClose);
         autosizeColumns(sheetClose);
 
         wb.setActiveSheet(wb.getSheetIndex(sheet));
@@ -385,14 +387,14 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 ano.setVersion(SNAPSHOT);
                 couleur = IndexedColors.WHITE;
             }
-            
+
             // Les lots venant d'erreurs Sonar sont en bleus
-            if (TypeAction.ASSEMBLER == TypeAction.from(ano.getAction()))
+            if (TypeAction.ASSEMBLER == ano.getAction())
                 couleur = IndexedColors.LIGHT_TURQUOISE;
         }
 
         // Les lots déjà traité une première fois sont en gris
-        if (TypeAction.VERIFIER == TypeAction.from(ano.getAction()))
+        if (TypeAction.VERIFIER == ano.getAction())
             couleur = IndexedColors.GREY_25_PERCENT;
 
         // Remise de la couleur à orange si le lot n'a pas encore été traité
@@ -456,6 +458,10 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         try
         {
             controleRTC(ano);
+        } catch (PermissionDeniedException e)
+        {
+            logger.error("Problème authorisation accès lot : " + ano.getLot());
+
         } catch (TeamRepositoryException e)
         {
             throw new TechnicalException("Erreur RTC depuis mise à jour anomalie : " + ano.getLot(), e);
@@ -530,7 +536,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
         // Projet RTC
         valoriserCellule(row, colProjetRTC, centre, ano.getProjetRTC(), ano.getProjetRTCComment());
-        
+
         // Action
         valoriserCellule(row, colAction, centre, ano.getAction(), ano.getActionComment());
     }
@@ -617,7 +623,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
             // Contrôle si le lot a une erreur de sécurité pour mettre à jour la donnée.
             if (lotsSecurite.contains(anoLot))
-                ano.setSecurite(SECURITEKO);
+                ano.setSecurite(Statics.SECURITEKO);
 
             // Ajout de la donnée de version
             if (lotsRelease.contains(anoLot))
@@ -636,7 +642,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 ano.setDateRelance(anoClose.getDateRelance());
                 ano.setRemarque(anoClose.getRemarque());
                 ano.setNumeroAnomalie(anoClose.getNumeroAnomalie());
-                ano.setAction(TypeAction.VERIFIER.toString());
+                ano.setAction(TypeAction.VERIFIER);
                 creerLigneSQ(row, ano, IndexedColors.GREY_25_PERCENT);
                 mapAnoCloses.remove(ano.getLot());
             }
@@ -659,11 +665,9 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         {
             // Itération sur les lignes sauf la première qui correspond aux titres. Récupération des informations des
             // anomalies
-            for (Iterator<Row> iter = retour.rowIterator(); iter.hasNext();)
+            for (int i = 1; i < retour.getLastRowNum() + 1; i++)
             {
-                Row row = iter.next();
-                if (row.getRowNum() == 0)
-                    continue;
+                Row row = retour.getRow(i);
 
                 Anomalie ano = creerAnodepuisExcel(row);
                 anoClose.put(ano.getLot(), ano);
@@ -735,15 +739,20 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         if (ano.getNumeroAnomalie() != 0)
         {
             String newEtat = controlRTC.recupEtatElement(controlRTC.recupWorkItemDepuisId(ano.getNumeroAnomalie()));
-            System.out.println("Lot : " + anoLot + " - etat ano : " + ano.getEtat() + " - nouvel etat : " + newEtat);
-            ano.setEtat(newEtat);
+            if (!newEtat.equals(ano.getEtat()))
+            {
+                logger.info("Lot : " + anoLot + " - nouvel etat : " + newEtat);
+                ano.setEtat(newEtat);
+            }
         }
 
         // Mise à jour de l'état du lot
         Environnement etatLot = Environnement.from(controlRTC.recupEtatElement(controlRTC.recupWorkItemDepuisId(anoLotInt)));
-        System.out.println("Lot : " + anoLot + " - etat lot : " + ano.getEnvironnement().toString() + " - nouvel etat Lot : " + etatLot);
-        ano.setEnvironnement(etatLot);
-
+        if (ano.getEnvironnement() != etatLot)
+        {
+            logger.info("Lot : " + anoLot + " - nouvel etat Lot : " + etatLot);
+            ano.setEnvironnement(etatLot);
+        }
         return ano;
     }
 
@@ -815,7 +824,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         retour.setDateRelanceComment(getCellComment(row, colDateRel));
         retour.setMatieresString(getCellStringValue(row, colMatiere));
         retour.setMatieresComment(getCellComment(row, colMatiere));
-        retour.setAction(getCellStringValue(row, colAction));
+        retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));
         retour.setActionComment(getCellComment(row, colAction));
         retour.setProjetRTC(getCellStringValue(row, colProjetRTC));
         retour.setProjetRTCComment(getCellComment(row, colProjetRTC));
@@ -848,7 +857,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier n'a pas de page Suivi Qualité");
         return sheet;
     }
-    
+
     /**
      * Initialisation liste des contraintes depuis les paramètres
      */
@@ -869,12 +878,15 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     private void ajouterDataValidation(Sheet sheet)
     {
         // Protection pour les veuilles qui ne sont pas des .xlsx
-        if (!(sheet instanceof XSSFSheet))
+        XSSFSheet xssfSheet = null;
+        if (sheet instanceof XSSFSheet)
+            xssfSheet = (XSSFSheet) sheet;
+        else
             return;
-        
-        XSSFDataValidationConstraint dvContraintes = (XSSFDataValidationConstraint) sheet.getDataValidationHelper().createExplicitListConstraint(contraintes);
-        CellRangeAddressList addressList = new CellRangeAddressList(1, sheet.getLastRowNum(), colAction, colAction);
-        XSSFDataValidation dataValidation = (XSSFDataValidation) sheet.getDataValidationHelper().createValidation(dvContraintes, addressList);
+
+        XSSFDataValidationConstraint dvContraintes = (XSSFDataValidationConstraint) xssfSheet.getDataValidationHelper().createExplicitListConstraint(contraintes);
+        CellRangeAddressList addressList = new CellRangeAddressList(1, xssfSheet.getLastRowNum(), colAction, colAction);
+        XSSFDataValidation dataValidation = (XSSFDataValidation) xssfSheet.getDataValidationHelper().createValidation(dvContraintes, addressList);
         dataValidation.setSuppressDropDownArrow(false);
         dataValidation.setErrorStyle(DataValidation.ErrorStyle.STOP);
         dataValidation.createErrorBox("Erreur Action", "Valeur pour l'action interdite");
@@ -889,12 +901,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @author ETP8137 - Grégoire mathon
      * @since 1.0
      */
-    private enum Index 
-    {
-        LOTI("Lot projet RTC"), 
-        EDITIONI("Edition"), 
-        ENVI("Etat du lot"), 
-        TRAITEI("Traitée");
+    private enum Index {
+        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
 
         private String string;
 

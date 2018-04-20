@@ -85,7 +85,8 @@ public class TimeSpinner extends Spinner<LocalTime>
 
     // Mode represents the unit that is currently being edited.
     // For convenience expose methods for incrementing and decrementing that unit, and for selecting the appropriate portion in a spinner's editor
-    private enum Mode {
+    private enum Mode 
+    {
         HOURS {
             @Override
             LocalTime increment(LocalTime time, int steps)
@@ -114,6 +115,7 @@ public class TimeSpinner extends Spinner<LocalTime>
                 spinner.getEditor().selectRange(hrIndex + 1, hrIndex + 3);
             }
         };
+        
         abstract LocalTime increment(LocalTime time, int steps);
 
         abstract void select(TimeSpinner spinner);
@@ -125,6 +127,7 @@ public class TimeSpinner extends Spinner<LocalTime>
     }
 
     /**
+     * Convertisseur pour enregistrer les heures sous forme de String
      * 
      * @author ETP8137 - Grégoire Mathon
      * @since 1.0
@@ -153,6 +156,7 @@ public class TimeSpinner extends Spinner<LocalTime>
     }
 
     /**
+     * Factory pour les valeurs du spinner pour augmenter de diminuer les heures et minutes
      * 
      * @author ETP8137 - Grégoire Mathon
      * @since 1.0

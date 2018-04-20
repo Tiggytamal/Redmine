@@ -3,6 +3,7 @@ package sonarapi.junit;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -60,20 +61,12 @@ public class SonarAPITest
 		api.creerVueAsync(vue);
 	}
 	
-//	@SuppressWarnings("static-access")
-//	@Test
-//	public void getSecuriteComposant()
-//	{
-//	    //Mock
-//		Statics mock = Mockito.mock(Statics.class);
-//		
-//		//Test retour erreurs
-//		int testA = api.getSecuriteComposant("fr.ca.cat.green:WEBLIV_Green_Build:14");
-//		Assert.assertEquals(2, testA);
-//		
-//		//Test avec nom non conforme
-//		int testB = api.getSecuriteComposant("nom erreur");
-//		Mockito.verify(mock, Mockito.atLeastOnce()).logger.error(Mockito.anyString());
-//		Assert.assertEquals(0, testB);
-//	}
+	@Test
+	public void test()
+	{
+        StringBuilder builder = new StringBuilder("ETP8137");
+        builder.append(":");
+        builder.append("28H02m8901,;:!");
+        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
+	}
 }

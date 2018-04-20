@@ -42,7 +42,7 @@ public class TrayIconView
 		trayIcon = new TrayIcon(imageBase, Statics.NOMAPPLI);
 		trayIcon.setImageAutoSize(true);
 		trayIcon.setToolTip("Tooltip");
-		trayIcon.displayMessage(Statics.NOMAPPLI, "demo", MessageType.INFO);
+		trayIcon.displayMessage(Statics.NOMAPPLI, "SonarLyza", MessageType.INFO);
 		
 		// Création du menu
 		PopupMenu menu = new PopupMenu(Statics.NOMAPPLI);

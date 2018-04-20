@@ -17,7 +17,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Pair;
-import sonarapi.SonarAPI;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -40,6 +39,8 @@ public class MenuViewControl extends ViewControl
     @FXML
     private MenuItem majvues;
     @FXML
+    private MenuItem maintenance;
+    @FXML
     private MenuItem suivi;
     @FXML
     private Button connexion;
@@ -47,7 +48,7 @@ public class MenuViewControl extends ViewControl
     private Button deConnexion;
     @FXML
     private HBox box;
-    
+
     private BorderPane border;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -56,7 +57,7 @@ public class MenuViewControl extends ViewControl
     {
         border = MainScreen.getRoot();
     }
-    
+
     @FXML
     public void initialize()
     {
@@ -67,19 +68,20 @@ public class MenuViewControl extends ViewControl
         autres.setDisable(false);
         suivi.setDisable(false);
         majvues.setDisable(false);
+        maintenance.setDisable(false);
     }
 
     /* ---------- METHODES PUBLIQUES ---------- */
-    
+
     @FXML
     public void openPopup()
     {
         // Création de la popup de connexion
         ConnexionDialog dialog = new ConnexionDialog();
-        
+
         // Récupération du pseudo et du mdp
         Optional<Pair<String, String>> result = dialog.showAndWait();
-        
+
         // Contrôle dans Sonar de la validitée
         result.ifPresent(pair -> testMdP(pair.getKey(), pair.getValue()));
     }
@@ -101,8 +103,8 @@ public class MenuViewControl extends ViewControl
     @Override
     public void afficher(ActionEvent event) throws IOException
     {
-//        if (!Statics.info.controle())
-//            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
+        if (!Statics.info.controle())
+            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
         String id = "";
         Object source = event.getSource();
         if (source instanceof MenuItem)
@@ -113,38 +115,42 @@ public class MenuViewControl extends ViewControl
             case "mensuel":
                 load("/view/Mensuel.fxml");
                 break;
-                
+
             case "options":
                 load("/view/Options.fxml");
                 break;
-                
+
             case "planificateur":
                 load("/view/Planificateur.fxml");
                 break;
-                
+
             case "autres":
                 load("/view/AutresVues.fxml");
                 break;
                 
+            case "maintenance":
+                load("/view/Maintenance.fxml");
+                break;
+
             case "suivi":
                 load("/view/Suivi.fxml");
                 break;
-                
+
             default:
                 throw new TechnicalException("MenuItem pas géré" + id, null);
         }
     }
-    
+
     @FXML
     public void majVues()
     {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle(MajVuesTask.TITRE);
         alert.setHeaderText(null);
-        alert.setContentText("Cela lancera la mise à jour de toutes les vues Sonar."+ Statics.NL + "Etes-vous sur?");
+        alert.setContentText("Cela lancera la mise à jour de toutes les vues Sonar." + Statics.NL + "Etes-vous sur?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() &&  result.get() == ButtonType.OK)
+        if (result.isPresent() && result.get() == ButtonType.OK)
             new Thread(new MajVuesTask()).start();
     }
 
@@ -152,6 +158,7 @@ public class MenuViewControl extends ViewControl
 
     /**
      * Teste la connexion au serveur Sonar et au serveur RTC
+     * 
      * @param pseudo
      * @param mdp
      */
@@ -160,8 +167,9 @@ public class MenuViewControl extends ViewControl
         // Jerome rauline Sylvain Jouet Brice Neuzan
         Statics.info.setPseudo(pseudo);
         Statics.info.setMotDePasse(mdp);
-        
-        if (SonarAPI.INSTANCE.verificationUtilisateur() && ControlRTC.INSTANCE.connexion())
+
+        // Suppression controle SonarAPI. SonarAPI.INSTANCE.verificationUtilisateur() car mdp différent de RTC
+        if (ControlRTC.INSTANCE.connexion())
         {
             mensuel.setDisable(false);
             options.setDisable(false);
@@ -173,16 +181,17 @@ public class MenuViewControl extends ViewControl
         else
             throw new FunctionalException(Severity.SEVERITY_INFO, "Utilisateur incorrect");
     }
-    
+
     /**
      * Chargement de la nouvelle page en utilisant la ressource en paramètre
+     * 
      * @param ressource
      * @throws IOException
      */
     private void load(String ressource) throws IOException
     {
         Node pane = FXMLLoader.load(getClass().getResource(ressource));
-        border.setCenter(pane);       
+        border.setCenter(pane);
     }
 
     /* ---------- ACCESSEURS ---------- */

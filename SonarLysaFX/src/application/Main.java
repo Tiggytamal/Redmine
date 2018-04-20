@@ -3,6 +3,7 @@ package application;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.ExecutionException;
 
 import control.view.MainScreen;
 import javafx.application.Application;
@@ -26,7 +27,7 @@ import utilities.enums.Severity;
 public class Main extends Application
 {
     public static final boolean DESER = false;
-    
+
     public static void main(final String[] args)
     {
         Application.launch(args);
@@ -37,43 +38,44 @@ public class Main extends Application
     {
         // Permet de controler toutes les erreurs remontées par l'application
         Thread.currentThread().setUncaughtExceptionHandler((t, e) -> gestionException(e));
-        
-        // Création fenêtre principale		
+
+        // Création fenêtre principale
         MainScreen main = new MainScreen();
-        main.start(stage); 
+        main.start(stage);
     }
-    
-    /** 
+
+    /**
      * Gestion des erreurs du Thread
      * 
      * @param e
      */
     public static void gestionException(Throwable e)
     {
-        if (e.getCause() instanceof InvocationTargetException)
+        Throwable t = null;
+        if (e instanceof InvocationTargetException)
+            t = ((InvocationTargetException) e).getTargetException();
+        else if (e instanceof ExecutionException)
+            t = ((ExecutionException) e).getCause();
+
+        if (t instanceof FunctionalException)
         {
-            InvocationTargetException ex0 = (InvocationTargetException) e.getCause();
-            if (ex0.getTargetException() instanceof FunctionalException)
-            {
-                // Affichage informations de l'erreur fonctionnelle
-                FunctionalException ex1 = (FunctionalException) ex0.getTargetException();
-                createAlert(ex1.getSeverity(), null, ex1.getMessage());
-            }
-            else if (ex0.getTargetException() instanceof TechnicalException)
-            {
-                // Affichage informations de l'erreur fonctionnelle
-                TechnicalException ex1 = (TechnicalException) ex0.getTargetException();
-                createAlert(ex1.getSeverity(), ex1.getCause(), ex1.getMessage());
-            }
-            else
-            {
-                // Affichage de la classe de l'Exception et du message d'erreur
-                Throwable t1 = ex0.getTargetException();
-                createAlert(Severity.SEVERITY_ERROR, ex0, t1.getClass().getSimpleName() + t1.getMessage());
-            }
+            // Affichage informations de l'erreur fonctionnelle
+            FunctionalException ex1 = (FunctionalException) t;
+            createAlert(ex1.getSeverity(), null, ex1.getMessage());
+        }
+        else if (t instanceof TechnicalException)
+        {
+            // Affichage informations de l'erreur fonctionnelle
+            TechnicalException ex1 = (TechnicalException) t;
+            createAlert(ex1.getSeverity(), ex1.getCause(), ex1.getMessage());
+        }
+        else if (t != null)
+        {
+            // Affichage de la classe de l'Exception et du message d'erreur
+            createAlert(Severity.SEVERITY_ERROR, t, t.getClass().getSimpleName() + t.getMessage());
         }
         else
-            createAlert(Severity.SEVERITY_ERROR, e, e.getMessage());
+            createAlert(Severity.SEVERITY_ERROR, e, e.getClass().getSimpleName() + e.getMessage());
     }
 
     /**
@@ -114,7 +116,6 @@ public class Main extends Application
             TextArea textArea = new TextArea(exceptionText);
             textArea.setEditable(false);
             textArea.setWrapText(true);
-
 
             GridPane.setVgrow(textArea, Priority.ALWAYS);
             GridPane.setHgrow(textArea, Priority.ALWAYS);

@@ -17,7 +17,7 @@ import model.enums.TypeParam;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ParamView extends VBox
+public class ParamView extends VBox implements ViewXML<TypeParam, TextField>
 {
     private TypeParam typeParam;
     private TextField field;
@@ -51,7 +51,7 @@ public class ParamView extends VBox
     /**
      * @return the typeCol
      */
-    public TypeParam getTypeParam()
+    public TypeParam getType()
     {
         return typeParam;
     }

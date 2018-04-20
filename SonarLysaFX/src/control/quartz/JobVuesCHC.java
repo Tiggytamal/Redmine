@@ -7,6 +7,7 @@ import org.quartz.JobExecutionContext;
 import control.task.CreerVueCHCCDMTask;
 import control.task.JobForTask;
 import javafx.application.Platform;
+import model.enums.CHCouCDM;
 import model.enums.TypePlan;
 
 public class JobVuesCHC extends JobForTask
@@ -18,7 +19,7 @@ public class JobVuesCHC extends JobForTask
     {
         Platform.runLater(() -> {
             List<String> liste = getObjectFromJobMap(List.class, CLEFANNEES + TypePlan.VUECHC.toString(), context);
-            startTask(new CreerVueCHCCDMTask(liste, false), context.getJobDetail().getKey().getName());
+            startTask(new CreerVueCHCCDMTask(liste, CHCouCDM.CHC), context.getJobDetail().getKey().getName());
         });
     }
 }

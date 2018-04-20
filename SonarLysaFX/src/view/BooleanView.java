@@ -16,7 +16,7 @@ import model.enums.TypeBool;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class BooleanView extends VBox
+public class BooleanView extends VBox implements ViewXML<TypeBool, CheckBox>
 {
     private TypeBool typeBool;
     private CheckBox checkBox;
@@ -50,7 +50,7 @@ public class BooleanView extends VBox
     /**
      * @return the typeCol
      */
-    public TypeBool getTypeParam()
+    public TypeBool getType()
     {
         return typeBool;
     }
@@ -58,7 +58,7 @@ public class BooleanView extends VBox
     /**
      * @return the field
      */
-    public CheckBox getCheckBox()
+    public CheckBox getField()
     {
         return checkBox;
     }
