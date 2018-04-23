@@ -21,7 +21,7 @@ import model.enums.TypeFichier;
 import utilities.TechnicalException;
 
 @RunWith (JfxRunner.class)
-public class ControlXMLTest
+public class TestControlXML
 {
     private ControlXML handler;
 

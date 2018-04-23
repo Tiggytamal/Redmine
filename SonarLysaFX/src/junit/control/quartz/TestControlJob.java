@@ -30,7 +30,7 @@ import model.enums.TypePlan;
  * 
  * @author ETP137 - Grégoire Mathon
  */
-public class ControlJobTest extends JunitBase
+public class TestControlJob extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 

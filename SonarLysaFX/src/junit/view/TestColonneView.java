@@ -10,7 +10,7 @@ import model.enums.TypeColSuivi;
 import view.ColonneView;
 
 @RunWith(JfxRunner.class)
-public class ColonneViewTest
+public class TestColonneView
 {
     @Test
     public void colonneView()

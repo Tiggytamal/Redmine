@@ -7,13 +7,13 @@ import org.junit.Test;
 import control.excel.ControlApps;
 import model.enums.TypeColApps;
 
-public class ControlAppsTest extends ControlExcelTest<TypeColApps, ControlApps, Map<String, Boolean>>
+public class TestControlApps extends TestControlExcel<TypeColApps, ControlApps, Map<String, Boolean>>
 {
     /*---------- ATTRIBUTS ----------*/
     
     /*---------- CONSTRUCTEURS ----------*/
     
-    public ControlAppsTest()
+    public TestControlApps()
     {
         super(TypeColApps.class, "/resources/liste_applis.xlsx");
     }

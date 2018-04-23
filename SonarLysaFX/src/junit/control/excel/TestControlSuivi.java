@@ -34,7 +34,7 @@ import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import utilities.FunctionalException;
 
-public class ControlSuiviTest extends ControlExcelTest<TypeColSuivi, ControlSuivi, List<Anomalie>>
+public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -46,7 +46,7 @@ public class ControlSuiviTest extends ControlExcelTest<TypeColSuivi, ControlSuiv
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlSuiviTest()
+    public TestControlSuivi()
     {
         super(TypeColSuivi.class, "/resources/Suivi_Quality_GateTest.xlsx");
         ControlRTC.INSTANCE.connexion();

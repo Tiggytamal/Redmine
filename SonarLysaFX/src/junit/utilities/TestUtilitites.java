@@ -8,7 +8,7 @@ import org.junit.Test;
 import utilities.Utilities;
 
 
-public class UtilititesTest
+public class TestUtilitites
 {
 
 	@Test

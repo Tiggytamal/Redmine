@@ -13,13 +13,13 @@ import model.RespService;
 import model.enums.TypeColChefServ;
 import utilities.FunctionalException;
 
-public class ControlChefServiceTest extends ControlExcelTest<TypeColChefServ, ControlChefService, Map<String, RespService>>
+public class TestControlChefService extends TestControlExcel<TypeColChefServ, ControlChefService, Map<String, RespService>>
 {
     /*---------- ATTRIBUTS ----------*/
     
     /*---------- CONSTRUCTEURS ----------*/
     
-    public ControlChefServiceTest()
+    public TestControlChefService()
     {
         super(TypeColChefServ.class, "/resources/Reorg_managers.xlsx");
     }

@@ -262,6 +262,10 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
 			<key>URLRTC</key>
 			<value>https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm</value>
 		</entry>
+		<entry>
+			<key>RTCLOTCHC</key>
+			<value>E31.0.FDL</value>
+		</entry>
 	</mapParams>
 	<mapParamsBool>
 		<entry>

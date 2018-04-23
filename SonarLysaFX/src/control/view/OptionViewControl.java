@@ -311,6 +311,7 @@ public class OptionViewControl extends ViewControl
     private void afficherParams()
     {
         paramsBox.getChildren().clear();
+        booleanBox.getChildren().clear();
 
         // Initialition liste des versions affichée
         String versionsParam = mapParams.get(TypeParam.VERSIONS);

@@ -10,7 +10,7 @@ import de.saxsys.javafx.test.JfxRunner;
 import view.TimeSpinner;
 
 @RunWith(JfxRunner.class)
-public class TimeSpinnerTest
+public class TestTimeSpinner
 {
     private TimeSpinner ts;
     

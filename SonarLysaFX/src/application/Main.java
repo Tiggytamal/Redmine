@@ -1,9 +1,8 @@
 package application;
 
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.ExecutionException;
 
 import control.view.MainScreen;
 import javafx.application.Application;
@@ -45,35 +44,31 @@ public class Main extends Application
     }
 
     /**
-     * Gestion des erreurs du Thread
+     * Gestion des erreurs du Thread. Utilisation de la récursivité pour tester toutes les Exception en cause.
      * 
      * @param e
      */
     public static void gestionException(Throwable e)
     {
-        Throwable t = null;
-        if (e instanceof InvocationTargetException)
-            t = ((InvocationTargetException) e).getTargetException();
-        else if (e instanceof ExecutionException)
-            t = ((ExecutionException) e).getCause();
-
-        if (t instanceof FunctionalException)
-        {
+        if (e instanceof FunctionalException)
+        {    
             // Affichage informations de l'erreur fonctionnelle
-            FunctionalException ex1 = (FunctionalException) t;
+            FunctionalException ex1 = (FunctionalException) e;
             createAlert(ex1.getSeverity(), null, ex1.getMessage());
         }
-        else if (t instanceof TechnicalException)
+        else if (e instanceof TechnicalException)
         {
-            // Affichage informations de l'erreur fonctionnelle
-            TechnicalException ex1 = (TechnicalException) t;
+            // Affichage informations de l'erreur technique
+            TechnicalException ex1 = (TechnicalException) e;
             createAlert(ex1.getSeverity(), ex1.getCause(), ex1.getMessage());
         }
-        else if (t != null)
+        else if (e instanceof FileNotFoundException && e.getMessage().contains("Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus"))
         {
-            // Affichage de la classe de l'Exception et du message d'erreur
-            createAlert(Severity.SEVERITY_ERROR, t, t.getClass().getSimpleName() + t.getMessage());
+            // gestion des fichiers utilisès par un autre utilisateur
+            createAlert(Severity.SEVERITY_ERROR, null, "Fichier utilisé par un autre utilisateur : \n" + e.getMessage().split("\\(")[0]);
         }
+        else if (e.getCause() != null)
+            gestionException(e.getCause());
         else
             createAlert(Severity.SEVERITY_ERROR, e, e.getClass().getSimpleName() + e.getMessage());
     }

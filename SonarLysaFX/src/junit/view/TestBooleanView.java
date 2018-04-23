@@ -10,7 +10,7 @@ import model.enums.TypeBool;
 import view.BooleanView;
 
 @RunWith(JfxRunner.class)
-public class BooleanViewTest
+public class TestBooleanView
 {
     @Test
     public void booleanView()

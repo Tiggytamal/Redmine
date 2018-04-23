@@ -146,7 +146,7 @@ public class Anomalie implements Modele
         matieres.clear();
         for (String matiere : matieresString.split("-"))
         {
-            matieres.add(Matiere.getMatiere(matiere.trim()));
+            matieres.add(Matiere.from(matiere.trim()));
         }
     }
 
@@ -355,19 +355,14 @@ public class Anomalie implements Modele
         this.version = version;
     }
 
-    public void setDateCreation(LocalDate dateCreation)
-    {
-        this.dateCreation = dateCreation;
-    }
-
     public LocalDate getDateCreation()
     {
         return dateCreation;
     }
 
-    public void setDateDetection(LocalDate dateDetection)
+    public void setDateCreation(LocalDate dateCreation)
     {
-        this.dateDetection = dateDetection;
+        this.dateCreation = dateCreation;
     }
 
     public LocalDate getDateDetection()
@@ -375,14 +370,19 @@ public class Anomalie implements Modele
         return dateDetection;
     }
 
-    public void setDateRelance(LocalDate dateRelance)
+    public void setDateDetection(LocalDate dateDetection)
     {
-        this.dateRelance = dateRelance;
+        this.dateDetection = dateDetection;
     }
 
     public LocalDate getDateRelance()
     {
         return dateRelance;
+    }
+
+    public void setDateRelance(LocalDate dateRelance)
+    {
+        this.dateRelance = dateRelance;
     }
 
     public String getProjetRTC()
@@ -403,6 +403,21 @@ public class Anomalie implements Modele
     public void setAction(TypeAction action)
     {
         this.action = action;
+    }
+
+    public boolean isTraitee()
+    {
+        return traitee;
+    }
+
+    public Set<Matiere> getMatieres()
+    {
+        return matieres;
+    }
+
+    public void setMatieres(Set<Matiere> matieres)
+    {
+        this.matieres = matieres;
     }
 
     /*---------- ACCESSEURS COMMENTAIRES ----------*/
@@ -615,21 +630,6 @@ public class Anomalie implements Modele
     public void setDateRelanceComment(Comment dateRelanceComment)
     {
         this.dateRelanceComment = dateRelanceComment;
-    }
-
-    public boolean isTraitee()
-    {
-        return traitee;
-    }
-
-    public Set<Matiere> getMatieres()
-    {
-        return matieres;
-    }
-
-    public void setMatieres(Set<Matiere> matieres)
-    {
-        this.matieres = matieres;
     }
 
     public Comment getMatieresComment()

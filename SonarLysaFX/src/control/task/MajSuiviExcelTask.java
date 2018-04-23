@@ -519,8 +519,11 @@ public class MajSuiviExcelTask extends SonarTask
 
     /*---------- ACCESSEURS ----------*/
 
-    public enum TypeMaj {
-        SUIVI("Maj Fichier de Suivi"), DATASTAGE("Maj Fichier de Suivi DataStage"), DOUBLE("Maj Fichiers de Suivi");
+    public enum TypeMaj 
+    {
+        SUIVI("Maj Fichier de Suivi"), 
+        DATASTAGE("Maj Fichier de Suivi DataStage"), 
+        DOUBLE("Maj Fichiers de Suivi");
 
         private String string;
 

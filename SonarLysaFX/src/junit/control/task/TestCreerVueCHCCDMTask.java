@@ -21,7 +21,7 @@ import sonarapi.SonarAPI;
 import utilities.FunctionalException;
 
 @RunWith(JfxRunner.class)
-public class CreerVueCHCCDMTaskTest extends JunitBase
+public class TestCreerVueCHCCDMTask extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 

@@ -127,6 +127,12 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         for (int i = 1; i <= sheet.getLastRowNum(); i++)
         {
             Row row = sheet.getRow(i);
+            Anomalie ano = creerAnodepuisExcel(row);
+            if (ano.getAction() == TypeAction.CREER)
+            {
+                ControlRTC.INSTANCE.creerDefect(ano);
+                ano.setAction(null);
+            }
             retour.add(creerAnodepuisExcel(row));
         }
         return retour;

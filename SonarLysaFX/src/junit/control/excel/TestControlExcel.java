@@ -41,7 +41,7 @@ import utilities.FunctionalException;
  * @param <Y>
  *            Le type de l'objet en valeur de la map
  */
-public abstract class ControlExcelTest<T extends Enum<T> & TypeCol, C extends ControlExcel<T, Y>, Y> extends JunitBase
+public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends ControlExcel<T, Y>, Y> extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -66,7 +66,7 @@ public abstract class ControlExcelTest<T extends Enum<T> & TypeCol, C extends Co
      * @param chemin
      *            Chemin d'accès au fichier de test dans les ressources
      */
-    public ControlExcelTest(Class<T> typeColClass, String chemin)
+    public TestControlExcel(Class<T> typeColClass, String chemin)
     {
         super();
         this.typeColClass = typeColClass;

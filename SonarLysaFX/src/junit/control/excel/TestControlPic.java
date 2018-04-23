@@ -16,13 +16,13 @@ import utilities.FunctionalException;
  * @since 1.0
  *
  */
-public class ControlPicTest extends ControlExcelTest<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
+public class TestControlPic extends TestControlExcel<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
 {
     /*---------- ATTRIBUTS ----------*/
 
     /*---------- CONSTRUCTEURS ----------*/
     
-    public ControlPicTest()
+    public TestControlPic()
     {
         super(TypeColPic.class, "/resources/Lots_Pic.xlsx");
     }

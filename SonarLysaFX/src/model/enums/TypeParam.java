@@ -21,7 +21,8 @@ public enum TypeParam implements Serializable, TypeKey
     LIENSANOS("Hyperliens vers anomalie RTC"), 
     NOMQGDATASTAGE("Nom QualityGate Datastage"), 
     URLSONAR("Url serveur Sonar"), 
-    URLRTC("Url serveur RTC Jazz");
+    URLRTC("Url serveur RTC Jazz"),
+    RTCLOTCHC("Edition RTC pour lots CHC");
 
     private final String string;
 
@@ -39,6 +40,7 @@ public enum TypeParam implements Serializable, TypeKey
     {
         return string;
     }
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

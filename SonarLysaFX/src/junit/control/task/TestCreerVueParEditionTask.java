@@ -8,7 +8,7 @@ import de.saxsys.javafx.test.JfxRunner;
 import javafx.application.Platform;
 
 @RunWith(JfxRunner.class)
-public class CreerVueParEditionTaskTest
+public class TestCreerVueParEditionTask
 {
     @Test
     public void task()

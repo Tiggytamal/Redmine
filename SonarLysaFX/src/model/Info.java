@@ -52,7 +52,7 @@ public class Info implements Modele, XML
     @Override
     public String controleDonnees()
     {
-        if (pseudo.isEmpty() || motDePasse.isEmpty())
+        if (!controle())
             return "fichiers infos de connexion Connexion vide";
         return "";
     }

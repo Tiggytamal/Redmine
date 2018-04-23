@@ -8,13 +8,13 @@ import control.excel.ControlClarity;
 import model.InfoClarity;
 import model.enums.TypeColClarity;
 
-public class ControlClarityTest extends ControlExcelTest<TypeColClarity, ControlClarity, Map<String, InfoClarity>>
+public class TestControlClarity extends TestControlExcel<TypeColClarity, ControlClarity, Map<String, InfoClarity>>
 {
     /*---------- ATTRIBUTS ----------*/
     
     /*---------- CONSTRUCTEURS ----------*/
     
-    public ControlClarityTest()
+    public TestControlClarity()
     {
         super(TypeColClarity.class, "/resources/Referentiel_Projets.xlsm");
     }

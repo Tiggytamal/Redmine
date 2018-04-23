@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import view.TrayIconView;
 
 @RunWith(JfxRunner.class)
-public class TrayIconViewTest
+public class TestTrayIconView
 {
     private TrayIconView tray;
     private Stage stage;

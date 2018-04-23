@@ -1,5 +1,7 @@
 package model;
 
+import static utilities.Statics.TODAY;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +10,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import utilities.Statics;
 
 /**
  * représente la configuration d'un planificateur
@@ -31,9 +31,11 @@ public class Planificateur implements Modele
     private List<String> annees;
 
     /*---------- CONSTRUCTEURS ----------*/
-    
-    Planificateur() {}
-    
+
+    Planificateur()
+    {
+    }
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
@@ -41,7 +43,7 @@ public class Planificateur implements Modele
     /**
      * @return the lundi
      */
-    @XmlAttribute (name = "lundi")
+    @XmlAttribute(name = "lundi")
     public boolean isLundi()
     {
         return lundi;
@@ -59,7 +61,7 @@ public class Planificateur implements Modele
     /**
      * @return the mardi
      */
-    @XmlAttribute (name = "mardi")
+    @XmlAttribute(name = "mardi")
     public boolean isMardi()
     {
         return mardi;
@@ -77,7 +79,7 @@ public class Planificateur implements Modele
     /**
      * @return the mercredi
      */
-    @XmlAttribute (name = "mercredi")
+    @XmlAttribute(name = "mercredi")
     public boolean isMercredi()
     {
         return mercredi;
@@ -95,7 +97,7 @@ public class Planificateur implements Modele
     /**
      * @return the jeudi
      */
-    @XmlAttribute (name = "jeudi")
+    @XmlAttribute(name = "jeudi")
     public boolean isJeudi()
     {
         return jeudi;
@@ -113,7 +115,7 @@ public class Planificateur implements Modele
     /**
      * @return the vendredi
      */
-    @XmlAttribute (name = "vendredi")
+    @XmlAttribute(name = "vendredi")
     public boolean isVendredi()
     {
         return vendredi;
@@ -131,7 +133,7 @@ public class Planificateur implements Modele
     /**
      * @return the heure
      */
-    @XmlAttribute (name = "heure")
+    @XmlAttribute(name = "heure")
     @XmlJavaTypeAdapter(value = LocalTimeAdapter.class)
     public LocalTime getHeure()
     {
@@ -152,7 +154,7 @@ public class Planificateur implements Modele
     /**
      * @return the active
      */
-    @XmlAttribute (name = "active")
+    @XmlAttribute(name = "active")
     public boolean isActive()
     {
         return active;
@@ -166,43 +168,45 @@ public class Planificateur implements Modele
     {
         this.active = active;
     }
-    
-    @XmlAttribute (name = "annees", required = false)
+
+    @XmlAttribute(name = "annees", required = false)
     public List<String> getAnnees()
     {
         if (annees == null)
             annees = new ArrayList<>();
-        if (!annees.contains(String.valueOf(Statics.TODAY.getYear())))
-            annees.add(String.valueOf(Statics.TODAY.getYear()));
+        if (!annees.contains(String.valueOf(TODAY.getYear())))
+            annees.add(String.valueOf(TODAY.getYear()));
         return annees;
     }
-    
+
     /**
      * Ajoute l'annèe dernière à la liste des annèes
+     * 
      * @return
      */
     public List<String> addLastYear()
     {
         if (annees == null)
             annees = new ArrayList<>();
-        if (!annees.contains(String.valueOf(Statics.TODAY.getYear() - 1)))
-            annees.add(String.valueOf(Statics.TODAY.getYear() - 1));
+        if (!annees.contains(String.valueOf(TODAY.getYear() - 1)))
+            annees.add(String.valueOf(TODAY.getYear() - 1));
         return annees;
     }
-    
+
     /**
      * Ajoute l'annèe prochaine à la liste des annèes
+     * 
      * @return
      */
     public List<String> addNextYear()
     {
         if (annees == null)
             annees = new ArrayList<>();
-        if (!annees.contains(String.valueOf(Statics.TODAY.getYear() + 1)))
-            annees.add(String.valueOf(Statics.TODAY.getYear() + 1));
+        if (!annees.contains(String.valueOf(TODAY.getYear() + 1)))
+            annees.add(String.valueOf(TODAY.getYear() + 1));
         return annees;
     }
-    
+
     private static class LocalTimeAdapter extends XmlAdapter<String, LocalTime>
     {
         public LocalTime unmarshal(String v) throws Exception

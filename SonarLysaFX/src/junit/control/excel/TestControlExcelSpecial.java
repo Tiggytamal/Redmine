@@ -20,12 +20,12 @@ import control.excel.ControlSuivi;
 import model.Anomalie;
 import model.enums.TypeColSuivi;
 
-public class ControlExcelSpecialTest extends ControlExcelTest<TypeColSuivi, ControlSuivi, List<Anomalie>>
+public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, ControlSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlExcelSpecialTest()
+    public TestControlExcelSpecial()
     {
         super(TypeColSuivi.class, "/resources/Tests.xlsx");
     }

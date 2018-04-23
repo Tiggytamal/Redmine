@@ -44,11 +44,11 @@ import model.enums.TypeEnumRTC;
 import model.enums.TypeParam;
 import utilities.Statics;
 
-public class ControlRTCTest extends JunitBase
+public class TestControlRTC extends JunitBase
 {
     private ControlRTC handler;
 
-    public ControlRTCTest() throws IllegalAccessException
+    public TestControlRTC() throws IllegalAccessException
     {
         handler = ControlRTC.INSTANCE;
         handler.connexion();
@@ -74,7 +74,7 @@ public class ControlRTCTest extends JunitBase
     }
 
     @Test
-    public void connexionFalse() throws Exception
+    public void connexionFalse() throws IllegalAccessException, TeamRepositoryException
     {
         // Test d'un retour à false de la connexion suite à une exception de l'appel à login.
         // Création mock puis remplacement repo du handler.
@@ -89,7 +89,7 @@ public class ControlRTCTest extends JunitBase
     }
 
     @Test
-    public void recupProjetRTCDepuisWiLot() throws TeamRepositoryException, IllegalAccessException
+    public void recupProjetRTCDepuisWiLot() throws TeamRepositoryException
     {
         // Intialisation
         Logger logger = TestUtils.getMockLogger("logger");
@@ -154,14 +154,15 @@ public class ControlRTCTest extends JunitBase
     }
 
     @Test
-    public void creerDefect() throws TeamRepositoryException
+    public void creerDefect()
     {
-        String PROJETTEST = "PRJF_T300703";
+        String projetTest = "PRJF_T300703";
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
-        ano.setCpiProjet("LARGER Emmanuel");
-        ano.setProjetRTC(PROJETTEST);
-
-        // handler.creerDefect(ano);
+        ano.setCpiProjet("MATHON Gregoire");
+        ano.setProjetRTC(projetTest);
+        ano.setLot("Lot 315765");
+        ano.setVersion("E32_Fil_De_Leau");
+        handler.creerDefect(ano);
     }
 
     @Test

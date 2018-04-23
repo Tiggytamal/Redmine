@@ -10,7 +10,7 @@ import model.enums.TypeParam;
 import view.ParamView;
 
 @RunWith(JfxRunner.class)
-public class ParamViewTest
+public class TestParamView
 {
     @Test
     public void paramView()

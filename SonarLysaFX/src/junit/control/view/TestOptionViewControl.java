@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import de.saxsys.javafx.test.JfxRunner;
 
 @RunWith(JfxRunner.class)
-public class OptionViewControlTest
+public class TestOptionViewControl
 {
 
     @Before

@@ -17,7 +17,7 @@ import model.enums.TypeColPic;
 import sonarapi.SonarAPI;
 import sonarapi.model.Vue;
 
-public class ControlPicMEPTest extends ControlExcelTest<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
+public class TestControlPicMEP extends TestControlExcel<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -25,7 +25,7 @@ public class ControlPicMEPTest extends ControlExcelTest<TypeColPic, ControlPic, 
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlPicMEPTest()
+    public TestControlPicMEP()
     {
         super(TypeColPic.class, "/resources/MEP_mars_2018.xlsx");
         api = SonarAPI.INSTANCE;
