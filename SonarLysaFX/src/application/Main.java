@@ -44,7 +44,7 @@ public class Main extends Application
     }
 
     /**
-     * Gestion des erreurs du Thread. Utilisation de la récursivité pour tester toutes les Exception en cause.
+     * Gestion des erreurs du Thread. Utilisation de la récursivité pour tester toutes les Exceptions précedentes.
      * 
      * @param e
      */
@@ -68,6 +68,7 @@ public class Main extends Application
             createAlert(Severity.SEVERITY_ERROR, null, "Fichier utilisé par un autre utilisateur : \n" + e.getMessage().split("\\(")[0]);
         }
         else if (e.getCause() != null)
+            // Récursivité pour tester la cause de cette exception
             gestionException(e.getCause());
         else
             createAlert(Severity.SEVERITY_ERROR, e, e.getClass().getSimpleName() + e.getMessage());

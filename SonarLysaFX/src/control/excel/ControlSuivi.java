@@ -127,12 +127,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         for (int i = 1; i <= sheet.getLastRowNum(); i++)
         {
             Row row = sheet.getRow(i);
-            Anomalie ano = creerAnodepuisExcel(row);
-            if (ano.getAction() == TypeAction.CREER)
-            {
-                ControlRTC.INSTANCE.creerDefect(ano);
-                ano.setAction(null);
-            }
+            
+            // Création anomalie
             retour.add(creerAnodepuisExcel(row));
         }
         return retour;
@@ -299,17 +295,22 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 creerLigneSQ(row, ano, IndexedColors.WHITE);
                 continue;
             }
-
-            // Calcul de la couleur de la ligne dans le fichier Excel
-            IndexedColors couleur = calculCouleurLigne(ano, lotsEnErreurSonar, anoLot, lotsRelease);
-
+            
             // Contrôle si besoin de créer une anomalie Sonar
             if (ano.getAction() == TypeAction.CREER)
             {
-                ano.setAction(null);
                 int numeroAno = ControlRTC.INSTANCE.creerDefect(ano);
-                ano.setNumeroAnomalie(numeroAno);
+                if (numeroAno != 0)
+                {
+                    ano.setAction(null);
+                    ano.setNumeroAnomalie(numeroAno);
+                    ano.setDateCreation(Statics.TODAY);
+                    logger.info("Création anomalie " + numeroAno + " pour le lot " + anoLot);
+                }
             }
+
+            // Calcul de la couleur de la ligne dans le fichier Excel
+            IndexedColors couleur = calculCouleurLigne(ano, lotsEnErreurSonar, anoLot, lotsRelease);
 
             // Création de la ligne
             row = sheet.createRow(sheet.getLastRowNum() + 1);
@@ -706,20 +707,23 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         // Sinon on itère sur les clefs en supprimant les indices de lot, et on prend la première clef correspondante
         for (String key : keyset)
         {
-            // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
-            if (anoClarity.startsWith("T") && anoClarity.length() == 7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
-                temp = key;
-
             // On retire les deux dernières lettres pour les clefs de plus de 6 caractères finissants par 0[1-9]
             if (controleKey(anoClarity, key))
                 return ano.majDepuisClarity(map.get(key));
+            
+            // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
+            if (anoClarity.startsWith("T") && anoClarity.length() == 7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
+                temp = key;
         }
 
         if (!temp.isEmpty())
             return ano.majDepuisClarity(map.get(temp));
 
         // Si on ne trouve pas, on renvoie juste l'anomalie avec le log d'erreur
-        loginconnue.warn("Code Clarity inconnu : " + anoClarity + " - Lot : " + ano.getLot());
+        loginconnue.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLot());
+        ano.setDepartement(Statics.INCONNU);
+        ano.setService(Statics.INCONNU);
+        ano.setDirection(Statics.INCONNUE);
         return ano;
     }
 
@@ -844,7 +848,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         String smallkey = key.length() > 5 && key.matches(".*0[0-9E]$") ? key.substring(0, 6) : key;
 
         // Contrôle si la clef est de type T*.
-        String newKey = key.length() == 9 && key.startsWith("T") ? key.substring(0, 8) : smallkey;
+        String newKey = key.length() > 8 ? key.substring(0, 8) : smallkey;
         return anoClarity.equalsIgnoreCase(newKey);
     }
 
@@ -893,9 +897,10 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         XSSFDataValidationConstraint dvContraintes = (XSSFDataValidationConstraint) xssfSheet.getDataValidationHelper().createExplicitListConstraint(contraintes);
         CellRangeAddressList addressList = new CellRangeAddressList(1, xssfSheet.getLastRowNum(), colAction, colAction);
         XSSFDataValidation dataValidation = (XSSFDataValidation) xssfSheet.getDataValidationHelper().createValidation(dvContraintes, addressList);
-        dataValidation.setSuppressDropDownArrow(false);
+        dataValidation.setSuppressDropDownArrow(true);
         dataValidation.setErrorStyle(DataValidation.ErrorStyle.STOP);
         dataValidation.createErrorBox("Erreur Action", "Valeur pour l'action interdite");
+        dataValidation.setShowErrorBox(true);
         sheet.addValidationData(dataValidation);
     }
 
@@ -907,8 +912,12 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @author ETP8137 - Grégoire mathon
      * @since 1.0
      */
-    private enum Index {
-        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
+    private enum Index 
+    {
+        LOTI("Lot projet RTC"), 
+        EDITIONI("Edition"), 
+        ENVI("Etat du lot"), 
+        TRAITEI("Traitée");
 
         private String string;
 

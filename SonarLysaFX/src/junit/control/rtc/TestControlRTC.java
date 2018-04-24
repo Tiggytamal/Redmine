@@ -25,7 +25,6 @@ import org.powermock.reflect.Whitebox;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.repository.client.TeamPlatform;
 import com.ibm.team.repository.client.internal.TeamRepository;
-import com.ibm.team.repository.common.IContributor;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IAttribute;
 import com.ibm.team.workitem.common.model.IAttributeHandle;
@@ -61,7 +60,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test(expected = AssertException.class)
-    public void createReflexion() throws Throwable
+    public void createReflexion() throws InstantiationException, IllegalAccessException
     {
         // Contrôle que l'on ne peut pas instancier un deuxième controleur par réflexion
         try
@@ -69,7 +68,8 @@ public class TestControlRTC extends JunitBase
             Whitebox.getConstructor(ControlRTC.class).newInstance();
         } catch (InvocationTargetException e)
         {
-            throw e.getTargetException();
+            if (e.getCause() instanceof AssertException)
+            throw (AssertException) e.getCause();
         }
     }
 
@@ -112,7 +112,6 @@ public class TestControlRTC extends JunitBase
         if (item != null)
             assertEquals("Abandonnée", handler.recupEtatElement(item).trim());
         item = handler.recupWorkItemDepuisId(288850);
-        System.out.println(handler.recupEtatElement(item));
         if (item != null)
             assertEquals("Close", handler.recupEtatElement(item).trim());
 
@@ -161,8 +160,8 @@ public class TestControlRTC extends JunitBase
         ano.setCpiProjet("MATHON Gregoire");
         ano.setProjetRTC(projetTest);
         ano.setLot("Lot 315765");
-        ano.setVersion("E32_Fil_De_Leau");
-        handler.creerDefect(ano);
+        ano.setEdition("E32_Fil_De_Leau");
+//        handler.creerDefect(ano);
     }
 
     @Test
@@ -179,7 +178,6 @@ public class TestControlRTC extends JunitBase
         {
             IAttribute attrb = handler.recupererEltDepuisHandle(IAttribute.class, handle, IAttribute.FULL_PROFILE);
             attrbs.add(attrb);
-            System.out.println(handler.recupererValeurAttribut(attrb, item));
             if (attrb.getAttributeType().equals(TypeEnumRTC.IMPORTANCE.toString()))
                 assertEquals("Bloquante", handler.recupererValeurAttribut(attrb, item));
             else if (attrb.getAttributeType().equals(TypeEnumRTC.ORIGINE.toString()))
@@ -209,25 +207,16 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testAttibutsItem() throws TeamRepositoryException
     {
-        IWorkItem item = handler.recupWorkItemDepuisId(307396);
-        System.out.println("Id : " + item.getId());
-        System.out.println("Tags : " + item.getTags2());
-        System.out.println("Type : " + item.getWorkItemType());
-        System.out.println("Date création : " + item.getCreationDate());
-        IContributor creator = handler.recupererItemDepuisHandle(IContributor.class, item.getCreator());
-        System.out.println("creator : " + creator.getName());
-        IContributor contributor = handler.recupererItemDepuisHandle(IContributor.class, item.getOwner());
-        System.out.println("Owner : " + contributor.getName());
+        IWorkItem item = handler.recupWorkItemDepuisId(322706);
         List<IAttributeHandle> liste = item.getCustomAttributes();
         for (IAttributeHandle handle : liste)
         {
             IAttribute attrb = handler.recupererEltDepuisHandle(IAttribute.class, handle, IAttribute.FULL_PROFILE);
-            if (attrb.getIdentifier().equals(TypeEnumRTC.EDITION.toString()))
+            if (attrb.getIdentifier().equals(TypeEnumRTC.ORIGINE.toString()))
             {
                 handler.recupererValeurAttribut(attrb, item);
             }
         }
-
     }
 
     @Test

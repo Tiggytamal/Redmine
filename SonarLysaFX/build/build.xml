@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<project name="SonarLysaFX" default="do-deploy" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
-		<property name="JDK1.6.dir" location="/usr/lib/jvm/java-6-openjdk-amd64" />
-		<property name="javac1.6" location="${JDK1.6.dir}/bin/javac" />
 	<target name="init-fx-tasks">
 		<path id="fxant">
 			<filelist>
@@ -27,18 +25,23 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\apache\logging\log4j\log4j-api\2.10.0">
-				<filename name="log4j-api-2.10.0.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.repository.common.remoteaccess.auth_1.3.1000.v20141126_0052\6.0.2">
+				<filename name="com.ibm.team.repository.common.remoteaccess.auth_1.3.1000.v20141126_0052-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\hk2\hk2-utils\2.5.0-b42">
-				<filename name="hk2-utils-2.5.0-b42.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.process.common_1.3.3000.v20160308_1839\6.0.2">
+				<filename name="com.ibm.team.process.common_1.3.3000.v20160308_1839-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\com\fasterxml\jackson\module\jackson-module-jaxb-annotations\2.8.4">
-				<filename name="jackson-module-jaxb-annotations-2.8.4.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.filesystem.client.1.7\6.0.2">
+				<filename name="com.ibm.team.filesystem.client.1.7-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.workitem.common_3.2.600.v20160225_1717\6.0.2">
+				<filename name="com.ibm.team.workitem.common_3.2.600.v20160225_1717-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -47,18 +50,28 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\httpcore-ab-4.4.1\6.0.2">
+				<filename name="httpcore-ab-4.4.1-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\httpmime-4.5\6.0.2">
+				<filename name="httpmime-4.5-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.repository.common.remoteaccess_1.2.3000.v20160308_1839\6.0.2">
+				<filename name="com.ibm.team.repository.common.remoteaccess_1.2.3000.v20160308_1839-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\org\apache\logging\log4j\log4j-core\2.10.0">
 				<filename name="log4j-core-2.10.0.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\net\bytebuddy\byte-buddy\1.7.9">
-				<filename name="byte-buddy-1.7.9.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\jersey\ext\jersey-entity-filtering\2.26">
-				<filename name="jersey-entity-filtering-2.26.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\microsoft\ews-java-api\ews-java-api\2.0">
+				<filename name="ews-java-api-2.0.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -67,8 +80,18 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\powermock\powermock-api-mockito2\2.0.0-beta.5">
+				<filename name="powermock-api-mockito2-2.0.0-beta.5.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.8.4">
 				<filename name="jackson-core-2.8.4.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.emf.ecore.change_2.5.1.v20100907-1643\6.0.2">
+				<filename name="org.eclipse.emf.ecore.change_2.5.1.v20100907-1643-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -77,13 +100,8 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\powermock\powermock-api-mockito-common\1.7.3">
-				<filename name="powermock-api-mockito-common-1.7.3.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\apache\commons\commons-collections4\4.1">
-				<filename name="commons-collections4-4.1.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.scm.admin.common_3.2.100.v20151207_2229\6.0.2">
+				<filename name="com.ibm.team.scm.admin.common_3.2.100.v20151207_2229-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -92,38 +110,38 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\com\github\virtuald\curvesapi\1.04">
-				<filename name="curvesapi-1.04.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\org\quartz-scheduler\quartz-jobs\2.3.0">
 				<filename name="quartz-jobs-2.3.0.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\mockito\mockito-core\2.15.0">
-				<filename name="mockito-core-2.15.0.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.filesystem.common.workitems_3.1.900.v20160301_1740\6.0.2">
+				<filename name="com.ibm.team.filesystem.common.workitems_3.1.900.v20160301_1740-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\junit\junit\4.11">
-				<filename name="junit-4.11.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.apache.commons.codec_1.3.0.v20100518-1140\6.0.2">
+				<filename name="org.apache.commons.codec_1.3.0.v20100518-1140-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\javax\inject\javax.inject\1">
-				<filename name="javax.inject-1.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.reports.client_2.1.1200.v20130129_0138\6.0.2">
+				<filename name="com.ibm.team.reports.client_2.1.1200.v20130129_0138-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\javax\annotation\javax.annotation-api\1.2">
-				<filename name="javax.annotation-api-1.2.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.equinox.registry_3.5.0.v20100503\6.0.2">
+				<filename name="org.eclipse.equinox.registry_3.5.0.v20100503-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\powermock\powermock-core\2.0.0-beta.5">
-				<filename name="powermock-core-2.0.0-beta.5.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.interop.client.rest_3.0.600.v20160120_1740\6.0.2">
+				<filename name="com.ibm.team.interop.client.rest_3.0.600.v20160120_1740-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.interop.common_3.0.900.v20151207_2229\6.0.2">
+				<filename name="com.ibm.team.interop.common_3.0.900.v20151207_2229-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -132,18 +150,28 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\powermock\powermock-api-support\1.7.3">
-				<filename name="powermock-api-support-1.7.3.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.icu_4.2.1.v20100412\6.0.2">
+				<filename name="com.ibm.icu_4.2.1.v20100412-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\powermock\powermock-reflect\2.0.0-beta.5">
-				<filename name="powermock-reflect-2.0.0-beta.5.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.emf.common_2.6.0.v20100914-1218\6.0.2">
+				<filename name="org.eclipse.emf.common_2.6.0.v20100914-1218-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\commons-io\commons-io\2.6">
-				<filename name="commons-io-2.6.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.osgi_3.6.50.R36x_v20111004-1525\6.0.2">
+				<filename name="org.eclipse.osgi_3.6.50.R36x_v20111004-1525-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.fulltext.common_1.2.2000.v20160308_1839\6.0.2">
+				<filename name="com.ibm.team.fulltext.common_1.2.2000.v20160308_1839-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\powermock\powermock-api-support\2.0.0-beta.5">
+				<filename name="powermock-api-support-2.0.0-beta.5.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -152,8 +180,28 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\apache\xmlbeans\xmlbeans\2.6.0">
-				<filename name="xmlbeans-2.6.0.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.foundation.common_1.3.2000.v20151009_1716\6.0.2">
+				<filename name="com.ibm.team.foundation.common_1.3.2000.v20151009_1716-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.enterprise.scd.common_1.0.100.v20160108_1736\6.0.2">
+				<filename name="com.ibm.team.enterprise.scd.common_1.0.100.v20160108_1736-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.rational.wvcm.factory_3.0.200.v20151207_2315\6.0.2">
+				<filename name="com.ibm.rational.wvcm.factory_3.0.200.v20151207_2315-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.repository.common.serialize_1.2.3000.v20160308_1839\6.0.2">
+				<filename name="com.ibm.team.repository.common.serialize_1.2.3000.v20160308_1839-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\httpcore-nio-4.4.1\6.0.2">
+				<filename name="httpcore-nio-4.4.1-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -162,8 +210,28 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.dev.jdojo.runtime.common_3.0.800.v20151207_2229\6.0.2">
+				<filename name="com.ibm.team.dev.jdojo.runtime.common_3.0.800.v20151207_2229-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\hk2\osgi-resource-locator\1.0.1">
 				<filename name="osgi-resource-locator-1.0.1.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.rational.wvcm.ri.repo_3.0.700.v20151207_2315\6.0.2">
+				<filename name="com.ibm.rational.wvcm.ri.repo_3.0.700.v20151207_2315-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\apache\httpcomponents\httpcore\4.4.1">
+				<filename name="httpcore-4.4.1.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.calm.foundation.common_3.1.1200.v20160205_0047\6.0.2">
+				<filename name="com.ibm.team.calm.foundation.common_3.1.1200.v20160205_0047-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -177,6 +245,16 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.foundation.rcp.core_1.1.3000.v20150814_0104\6.0.2">
+				<filename name="com.ibm.team.foundation.rcp.core_1.1.3000.v20150814_0104-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.datawarehouse.common_2.2.1000.v20150218_1646\6.0.2">
+				<filename name="com.ibm.team.datawarehouse.common_2.2.1000.v20150218_1646-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.8.4">
 				<filename name="jackson-annotations-2.8.4.jar"/>
 			</fileset>
@@ -184,6 +262,16 @@
 		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\jersey\media\jersey-media-json-jackson\2.26">
 				<filename name="jersey-media-json-jackson-2.26.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.equinox.common_3.6.0.v20100503\6.0.2">
+				<filename name="org.eclipse.equinox.common_3.6.0.v20100503-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\httpcore-4.4.1\6.0.2">
+				<filename name="httpcore-4.4.1-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -197,13 +285,13 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\stax\stax-api\1.0.1">
-				<filename name="stax-api-1.0.1.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\jersey\core\jersey-client\2.26">
+				<filename name="jersey-client-2.26.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\jersey\core\jersey-client\2.26">
-				<filename name="jersey-client-2.26.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.filesystem.client_3.2.700.v20160310_1729\6.0.2">
+				<filename name="com.ibm.team.filesystem.client_3.2.700.v20160310_1729-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -222,23 +310,18 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\com\zaxxer\HikariCP-java6\2.3.13">
-				<filename name="HikariCP-java6-2.3.13.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\hk2\hk2-locator\2.5.0-b42">
-				<filename name="hk2-locator-2.5.0-b42.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\slf4j\slf4j-simple\1.6.4">
-				<filename name="slf4j-simple-1.6.4.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.core.runtime_3.6.0.v20100505\6.0.2">
+				<filename name="org.eclipse.core.runtime_3.6.0.v20100505-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="D:\eclipse\plugins\org.junit_4.12.0.v201504281640">
 				<filename name="junit.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.connector.scm.client_3.0.1100.v20151207_2315\6.0.2">
+				<filename name="com.ibm.team.connector.scm.client_3.0.1100.v20151207_2315-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -252,23 +335,13 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\powermock\powermock-api-mockito\1.7.3">
-				<filename name="powermock-api-mockito-1.7.3.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.apache.commons.logging_1.0.4.v201005080501\6.0.2">
+				<filename name="org.apache.commons.logging_1.0.4.v201005080501-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\apache\poi\poi-ooxml\3.17">
-				<filename name="poi-ooxml-3.17.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\net\bytebuddy\byte-buddy-agent\1.7.9">
-				<filename name="byte-buddy-agent-1.7.9.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\de\saxsys\jfx-testrunner\1.2">
-				<filename name="jfx-testrunner-1.2.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.workitem.api.common_3.1.1000.v20151219_0043\6.0.2">
+				<filename name="com.ibm.team.workitem.api.common_3.1.1000.v20151219_0043-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -277,8 +350,8 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\org\hamcrest\hamcrest-core\1.3">
-				<filename name="hamcrest-core-1.3.jar"/>
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.build.client_3.0.1300.v20151207_2315\6.0.2">
+				<filename name="com.ibm.team.build.client_3.0.1300.v20151207_2315-6.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -287,8 +360,378 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.enterprise.buildablesubset.client_3.1.700.v20160212_0131\6.0.2">
+				<filename name="com.ibm.team.enterprise.buildablesubset.client_3.1.700.v20160212_0131-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.osgi_3.6.50.R36x_v20120315-1500\6.0.2">
+				<filename name="org.eclipse.osgi_3.6.50.R36x_v20120315-1500-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.enterprise.buildablesubset.common_3.1.900.v20160211_0055\6.0.2">
+				<filename name="com.ibm.team.enterprise.buildablesubset.common_3.1.900.v20160211_0055-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.emf.ecore.xmi_2.5.0.v20100521-1846\6.0.2">
+				<filename name="org.eclipse.emf.ecore.xmi_2.5.0.v20100521-1846-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.core.resources_3.6.2.R36x_v20120712-1700\6.0.2">
+				<filename name="org.eclipse.core.resources_3.6.2.R36x_v20120712-1700-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.interop.client_3.0.700.v20151207_2315\6.0.2">
+				<filename name="com.ibm.team.interop.client_3.0.700.v20151207_2315-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.scm.common_3.2.700.v20160316_1838\6.0.2">
+				<filename name="com.ibm.team.scm.common_3.2.700.v20160316_1838-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.rtc.foundation.api.common_3.1.700.v20160212_1735\6.0.2">
+				<filename name="com.ibm.team.rtc.foundation.api.common_3.1.700.v20160212_1735-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.workitem.client_3.1.1400.v20160114_0102\6.0.2">
+				<filename name="com.ibm.team.workitem.client_3.1.1400.v20160114_0102-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\apache\logging\log4j\log4j-api\2.10.0">
+				<filename name="log4j-api-2.10.0.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\javax.wvcm_1.6.200.v20151207_2315\6.0.2">
+				<filename name="javax.wvcm_1.6.200.v20151207_2315-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\hk2\hk2-utils\2.5.0-b42">
+				<filename name="hk2-utils-2.5.0-b42.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.repository.common.json_1.2.1000.v20150610_0124\6.0.2">
+				<filename name="com.ibm.team.repository.common.json_1.2.1000.v20150610_0124-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.xsd_2.6.0.v20100914-1218\6.0.2">
+				<filename name="org.eclipse.xsd_2.6.0.v20100914-1218-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\fasterxml\jackson\module\jackson-module-jaxb-annotations\2.8.4">
+				<filename name="jackson-module-jaxb-annotations-2.8.4.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.filesystem.client.daemon_3.1.700.v20151207_2315\6.0.2">
+				<filename name="com.ibm.team.filesystem.client.daemon_3.1.700.v20151207_2315-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\javax.servlet_2.5.0.v200910301333\6.0.2">
+				<filename name="javax.servlet_2.5.0.v200910301333-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.rational.wvcm.interop_3.1.800.v20151207_2315\6.0.2">
+				<filename name="com.ibm.rational.wvcm.interop_3.1.800.v20151207_2315-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\jersey\ext\jersey-entity-filtering\2.26">
+				<filename name="jersey-entity-filtering-2.26.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.repository.rcp.common_3.1.600.v20151207_2229\6.0.2">
+				<filename name="com.ibm.team.repository.rcp.common_3.1.600.v20151207_2229-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\apache\httpcomponents\httpclient\4.4.1">
+				<filename name="httpclient-4.4.1.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.connector.scm.common_3.1.200.v20151207_2229\6.0.2">
+				<filename name="com.ibm.team.connector.scm.common_3.1.200.v20151207_2229-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\httpclient-4.5\6.0.2">
+				<filename name="httpclient-4.5-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\apache\commons\commons-collections4\4.1">
+				<filename name="commons-collections4-4.1.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\apache\commons\commons-lang3\3.4">
+				<filename name="commons-lang3-3.4.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.core.jobs_3.5.2.R36x_v20110419\6.0.2">
+				<filename name="org.eclipse.core.jobs_3.5.2.R36x_v20110419-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\github\virtuald\curvesapi\1.04">
+				<filename name="curvesapi-1.04.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\net\bytebuddy\byte-buddy-agent\1.8.0">
+				<filename name="byte-buddy-agent-1.8.0.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\commons-io-1.2\6.0.2">
+				<filename name="commons-io-1.2-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.emf.ecore_2.6.1.v20100914-1218\6.0.2">
+				<filename name="org.eclipse.emf.ecore_2.6.1.v20100914-1218-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\junit\junit\4.11">
+				<filename name="junit-4.11.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.filesystem.client.workitems_3.1.1000.v20151219_0057\6.0.2">
+				<filename name="com.ibm.team.filesystem.client.workitems_3.1.1000.v20151219_0057-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\javax\inject\javax.inject\1">
+				<filename name="javax.inject-1.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\javax\annotation\javax.annotation-api\1.2">
+				<filename name="javax.annotation-api-1.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.reports.common_2.4.1000.v20150326_0016\6.0.2">
+				<filename name="com.ibm.team.reports.common_2.4.1000.v20150326_0016-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\powermock\powermock-core\2.0.0-beta.5">
+				<filename name="powermock-core-2.0.0-beta.5.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.jface.text_3.6.2.r362_v20121025\6.0.2">
+				<filename name="org.eclipse.jface.text_3.6.2.r362_v20121025-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.rational.wvcm.ct_3.0.1000.v20151207_2315\6.0.2">
+				<filename name="com.ibm.rational.wvcm.ct_3.0.1000.v20151207_2315-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\powermock\powermock-reflect\2.0.0-beta.5">
+				<filename name="powermock-reflect-2.0.0-beta.5.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.connector.scm.operations_3.1.500.v20151207_2315\6.0.2">
+				<filename name="com.ibm.team.connector.scm.operations_3.1.500.v20151207_2315-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\commons-io\commons-io\2.6">
+				<filename name="commons-io-2.6.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.process.client_1.3.2000.v20150716_0248\6.0.2">
+				<filename name="com.ibm.team.process.client_1.3.2000.v20150716_0248-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.build.common_3.1.1300.v20160301_1740\6.0.2">
+				<filename name="com.ibm.team.build.common_3.1.1300.v20160301_1740-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.repository.common_1.4.3000.v20160308_1839\6.0.2">
+				<filename name="com.ibm.team.repository.common_1.4.3000.v20160308_1839-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\httpclient-cache-4.5\6.0.2">
+				<filename name="httpclient-cache-4.5-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\apache\xmlbeans\xmlbeans\2.6.0">
+				<filename name="xmlbeans-2.6.0.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.foundation.client_1.1.1100.v20120901_0511\6.0.2">
+				<filename name="com.ibm.team.foundation.client_1.1.1100.v20120901_0511-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\net\bytebuddy\byte-buddy\1.8.0">
+				<filename name="byte-buddy-1.8.0.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.apache.commons.httpclient_3.1.0.v201005080502\6.0.2">
+				<filename name="org.apache.commons.httpclient_3.1.0.v201005080502-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.core.resources_3.6.2.R36x_v20110628-1020\6.0.2">
+				<filename name="org.eclipse.core.resources_3.6.2.R36x_v20110628-1020-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.repository.common.transport_1.2.0.v20140307_1622\6.0.2">
+				<filename name="com.ibm.team.repository.common.transport_1.2.0.v20140307_1622-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.jface.text_3.6.1.r361_v20100825-0800\6.0.2">
+				<filename name="org.eclipse.jface.text_3.6.1.r361_v20100825-0800-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\stax\stax-api\1.0.1">
+				<filename name="stax-api-1.0.1.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.filesystem.common_3.2.700.v20160225_1717\6.0.2">
+				<filename name="com.ibm.team.filesystem.common_3.2.700.v20160225_1717-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.equinox.preferences_3.3.1.R36x_v20110302\6.0.2">
+				<filename name="org.eclipse.equinox.preferences_3.3.1.R36x_v20110302-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\httpclient-win-4.5\6.0.2">
+				<filename name="httpclient-win-4.5-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.repository.client_1.3.3000.v20160308_1839\6.0.2">
+				<filename name="com.ibm.team.repository.client_1.3.3000.v20160308_1839-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\mockito\mockito-core\2.17.0">
+				<filename name="mockito-core-2.17.0.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\zaxxer\HikariCP-java6\2.3.13">
+				<filename name="HikariCP-java6-2.3.13.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\slf4j\slf4j-simple\1.6.4">
+				<filename name="slf4j-simple-1.6.4.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\hk2\hk2-locator\2.5.0-b42">
+				<filename name="hk2-locator-2.5.0-b42.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.core.filesystem_1.3.1.R36x_v20100727-0745\6.0.2">
+				<filename name="org.eclipse.core.filesystem_1.3.1.R36x_v20100727-0745-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\joda-time\joda-time\2.8">
+				<filename name="joda-time-2.8.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.eclipse.text_3.5.0.v20100601-1300\6.0.2">
+				<filename name="org.eclipse.text_3.5.0.v20100601-1300-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\apache\poi\poi-ooxml\3.17">
+				<filename name="poi-ooxml-3.17.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\de\saxsys\jfx-testrunner\1.2">
+				<filename name="jfx-testrunner-1.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\net.oauth_0.2.3000.v20160321_1859\6.0.2">
+				<filename name="net.oauth_0.2.3000.v20160321_1859-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\org\hamcrest\hamcrest-core\1.3">
+				<filename name="hamcrest-core-1.3.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.rtc.common_3.1.1400.v20160226_0115\6.0.2">
+				<filename name="com.ibm.team.rtc.common_3.1.1400.v20160226_0115-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\jersey\inject\jersey-hk2\2.26">
 				<filename name="jersey-hk2-2.26.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.enterprise.scd.client_1.0.100.v20151219_0057\6.0.2">
+				<filename name="com.ibm.team.enterprise.scd.client_1.0.100.v20151219_0057-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.scm.client_3.2.700.v20160307_1710\6.0.2">
+				<filename name="com.ibm.team.scm.client_3.2.700.v20160307_1710-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\commons-logging\commons-logging\1.2">
+				<filename name="commons-logging-1.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\apache-mime4j-0.6\6.0.2">
+				<filename name="apache-mime4j-0.6-6.0.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\org.apache.log4j_1.2.15.v201012070815\6.0.2">
+				<filename name="org.apache.log4j_1.2.15.v201012070815-6.0.2.jar"/>
 			</fileset>
 		</copy>
 	
@@ -310,59 +753,148 @@
 		<!-- Copy project-libs references -->
 		<copy todir="build/libs">
 			<fileset dir="externalLibs">
-				<include name="hk2-api-2.5.0-b42.jar"/>
-				<include name="log4j-core-2.10.0.jar"/>
-				<include name="powermock-api-mockito-common-1.7.3.jar"/>
+				<include name="com.ibm.team.dev.jdojo.runtime.common_3.0.800.v20151207_2229-6.0.2.jar"/>
+				<include name="org.eclipse.equinox.registry_3.5.0.v20100503-6.0.2.jar"/>
+				<include name="com.ibm.team.repository.client_1.3.3000.v20160308_1839-6.0.2.jar"/>
+				<include name="net.oauth_0.2.3000.v20160321_1859-6.0.2.jar"/>
 				<include name="jackson-module-jaxb-annotations-2.8.4.jar"/>
-				<include name="stax-api-1.0.1.jar"/>
-				<include name="xmlbeans-2.6.0.jar"/>
-				<include name="powermock-api-mockito-1.7.3.jar"/>
-				<include name="slf4j-simple-1.6.4.jar"/>
-				<include name="powermock-api-support-1.7.3.jar"/>
-				<include name="osgi-resource-locator-1.0.1.jar"/>
+				<include name="byte-buddy-1.8.0.jar"/>
+				<include name="com.ibm.rational.wvcm.ri.repo_3.0.700.v20151207_2315-6.0.2.jar"/>
+				<include name="org.eclipse.emf.common_2.6.0.v20100914-1218-6.0.2.jar"/>
+				<include name="com.ibm.team.rtc.foundation.api.common_3.1.700.v20160212_1735-6.0.2.jar"/>
+				<include name="org.apache.commons.logging_1.0.4.v201005080501-6.0.2.jar"/>
+				<include name="com.ibm.team.repository.common.remoteaccess.auth_1.3.1000.v20141126_0052-6.0.2.jar"/>
+				<include name="org.eclipse.emf.ecore.xmi_2.5.0.v20100521-1846-6.0.2.jar"/>
+				<include name="com.ibm.team.foundation.client_1.1.1100.v20120901_0511-6.0.2.jar"/>
 				<include name="curvesapi-1.04.jar"/>
 				<include name="javax.annotation-api-1.2.jar"/>
-				<include name="jackson-annotations-2.8.4.jar"/>
 				<include name="aopalliance-repackaged-2.5.0-b42.jar"/>
-				<include name="byte-buddy-agent-1.7.9.jar"/>
+				<include name="httpclient-4.5-6.0.2.jar"/>
 				<include name="hk2-utils-2.5.0-b42.jar"/>
-				<include name="quartz-jobs-2.3.0.jar"/>
+				<include name="com.ibm.team.fulltext.common_1.2.2000.v20160308_1839-6.0.2.jar"/>
 				<include name="quartz-2.3.0.jar"/>
 				<include name="javax.inject-2.5.0-b42.jar"/>
+				<include name="org.eclipse.osgi_3.6.50.R36x_v20120315-1500-6.0.2.jar"/>
 				<include name="HikariCP-java6-2.3.13.jar"/>
-				<include name="c3p0-0.9.5.2.jar"/>
 				<include name="log4j-api-2.10.0.jar"/>
+				<include name="org.eclipse.jface.text_3.6.1.r361_v20100825-0800-6.0.2.jar"/>
+				<include name="joda-time-2.8.jar"/>
 				<include name="jackson-databind-2.8.4.jar"/>
-				<include name="mockito-core-2.15.0.jar"/>
-				<include name="commons-codec-1.10.jar"/>
+				<include name="org.eclipse.core.resources_3.6.2.R36x_v20110628-1020-6.0.2.jar"/>
+				<include name="com.ibm.team.scm.common_3.2.700.v20160316_1838-6.0.2.jar"/>
+				<include name="commons-lang3-3.4.jar"/>
+				<include name="org.apache.log4j_1.2.15.v201012070815-6.0.2.jar"/>
+				<include name="com.ibm.team.reports.common_2.4.1000.v20150326_0016-6.0.2.jar"/>
+				<include name="javax.servlet_2.5.0.v200910301333-6.0.2.jar"/>
 				<include name="powermock-core-2.0.0-beta.5.jar"/>
-				<include name="mchange-commons-java-0.2.11.jar"/>
-				<include name="byte-buddy-1.7.9.jar"/>
-				<include name="junit.jar"/>
 				<include name="powermock-reflect-2.0.0-beta.5.jar"/>
 				<include name="javassist-3.22.0-CR2.jar"/>
+				<include name="httpcore-4.4.1.jar"/>
+				<include name="org.eclipse.equinox.preferences_3.3.1.R36x_v20110302-6.0.2.jar"/>
 				<include name="jersey-common-2.26.jar"/>
 				<include name="jersey-client-2.26.jar"/>
-				<include name="hamcrest-core-1.3.jar"/>
-				<include name="javax.inject-1.jar"/>
+				<include name="com.ibm.team.filesystem.client.1.7-6.0.2.jar"/>
+				<include name="com.ibm.team.workitem.common_3.2.600.v20160225_1717-6.0.2.jar"/>
 				<include name="javax.ws.rs-api-2.1.jar"/>
-				<include name="jersey-entity-filtering-2.26.jar"/>
 				<include name="poi-ooxml-schemas-3.17.jar"/>
 				<include name="powermock-module-junit4-common-2.0.0-beta.5.jar"/>
+				<include name="com.ibm.team.enterprise.buildablesubset.common_3.1.900.v20160211_0055-6.0.2.jar"/>
+				<include name="org.eclipse.xsd_2.6.0.v20100914-1218-6.0.2.jar"/>
+				<include name="com.ibm.team.rtc.common_3.1.1400.v20160226_0115-6.0.2.jar"/>
+				<include name="com.ibm.team.repository.common.remoteaccess_1.2.3000.v20160308_1839-6.0.2.jar"/>
+				<include name="org.eclipse.core.resources_3.6.2.R36x_v20120712-1700-6.0.2.jar"/>
 				<include name="poi-ooxml-3.17.jar"/>
-				<include name="objenesis-2.6.jar"/>
-				<include name="slf4j-api-1.7.7.jar"/>
+				<include name="com.ibm.team.filesystem.client.workitems_3.1.1000.v20151219_0057-6.0.2.jar"/>
+				<include name="com.ibm.team.calm.foundation.common_3.1.1200.v20160205_0047-6.0.2.jar"/>
 				<include name="org.hamcrest.core_1.3.0.v201303031735.jar"/>
 				<include name="jfx-testrunner-1.2.jar"/>
-				<include name="resources"/>
+				<include name="powermock-api-support-2.0.0-beta.5.jar"/>
 				<include name="hk2-locator-2.5.0-b42.jar"/>
-				<include name="junit-4.11.jar"/>
+				<include name="httpcore-nio-4.4.1-6.0.2.jar"/>
 				<include name="poi-3.17.jar"/>
+				<include name="com.ibm.team.filesystem.client_3.2.700.v20160310_1729-6.0.2.jar"/>
+				<include name="com.ibm.team.connector.scm.operations_3.1.500.v20151207_2315-6.0.2.jar"/>
+				<include name="httpclient-win-4.5-6.0.2.jar"/>
+				<include name="byte-buddy-agent-1.8.0.jar"/>
+				<include name="org.eclipse.emf.ecore_2.6.1.v20100914-1218-6.0.2.jar"/>
+				<include name="com.ibm.team.interop.common_3.0.900.v20151207_2229-6.0.2.jar"/>
+				<include name="jackson-core-2.8.4.jar"/>
+				<include name="org.eclipse.jface.text_3.6.2.r362_v20121025-6.0.2.jar"/>
+				<include name="com.ibm.rational.wvcm.interop_3.1.800.v20151207_2315-6.0.2.jar"/>
+				<include name="hk2-api-2.5.0-b42.jar"/>
+				<include name="com.ibm.team.enterprise.scd.client_1.0.100.v20151219_0057-6.0.2.jar"/>
+				<include name="log4j-core-2.10.0.jar"/>
+				<include name="org.eclipse.text_3.5.0.v20100601-1300-6.0.2.jar"/>
+				<include name="com.ibm.team.filesystem.common_3.2.700.v20160225_1717-6.0.2.jar"/>
+				<include name="stax-api-1.0.1.jar"/>
+				<include name="httpcore-4.4.1-6.0.2.jar"/>
+				<include name="com.ibm.team.filesystem.client.daemon_3.1.700.v20151207_2315-6.0.2.jar"/>
+				<include name="commons-logging-1.2.jar"/>
+				<include name="mockito-core-2.17.0.jar"/>
+				<include name="com.ibm.team.scm.admin.common_3.2.100.v20151207_2229-6.0.2.jar"/>
+				<include name="xmlbeans-2.6.0.jar"/>
+				<include name="com.ibm.team.connector.scm.common_3.1.200.v20151207_2229-6.0.2.jar"/>
+				<include name="com.ibm.team.foundation.common_1.3.2000.v20151009_1716-6.0.2.jar"/>
+				<include name="slf4j-simple-1.6.4.jar"/>
+				<include name="httpcore-ab-4.4.1-6.0.2.jar"/>
+				<include name="osgi-resource-locator-1.0.1.jar"/>
+				<include name="com.ibm.team.connector.scm.client_3.0.1100.v20151207_2315-6.0.2.jar"/>
+				<include name="com.ibm.team.workitem.api.common_3.1.1000.v20151219_0043-6.0.2.jar"/>
+				<include name="com.ibm.team.repository.common.serialize_1.2.3000.v20160308_1839-6.0.2.jar"/>
+				<include name="jackson-annotations-2.8.4.jar"/>
+				<include name="com.ibm.team.repository.common.transport_1.2.0.v20140307_1622-6.0.2.jar"/>
+				<include name="quartz-jobs-2.3.0.jar"/>
+				<include name="com.ibm.icu_4.2.1.v20100412-6.0.2.jar"/>
+				<include name="com.ibm.team.scm.client_3.2.700.v20160307_1710-6.0.2.jar"/>
+				<include name="httpclient-cache-4.5-6.0.2.jar"/>
+				<include name="c3p0-0.9.5.2.jar"/>
+				<include name="com.ibm.team.filesystem.common.workitems_3.1.900.v20160301_1740-6.0.2.jar"/>
+				<include name="com.ibm.team.datawarehouse.common_2.2.1000.v20150218_1646-6.0.2.jar"/>
+				<include name="org.eclipse.emf.ecore.change_2.5.1.v20100907-1643-6.0.2.jar"/>
+				<include name="org.eclipse.core.runtime_3.6.0.v20100505-6.0.2.jar"/>
+				<include name="httpclient-4.4.1.jar"/>
+				<include name="ews-java-api-2.0.jar"/>
+				<include name="com.ibm.team.enterprise.buildablesubset.client_3.1.700.v20160212_0131-6.0.2.jar"/>
+				<include name="com.ibm.team.workitem.client_3.1.1400.v20160114_0102-6.0.2.jar"/>
+				<include name="apache-mime4j-0.6-6.0.2.jar"/>
+				<include name="com.ibm.rational.wvcm.ct_3.0.1000.v20151207_2315-6.0.2.jar"/>
+				<include name="com.ibm.team.process.client_1.3.2000.v20150716_0248-6.0.2.jar"/>
+				<include name="commons-codec-1.10.jar"/>
+				<include name="mchange-commons-java-0.2.11.jar"/>
+				<include name="com.ibm.team.repository.common_1.4.3000.v20160308_1839-6.0.2.jar"/>
+				<include name="junit.jar"/>
+				<include name="commons-io-1.2-6.0.2.jar"/>
+				<include name="hamcrest-core-1.3.jar"/>
+				<include name="javax.inject-1.jar"/>
+				<include name="com.ibm.team.reports.client_2.1.1200.v20130129_0138-6.0.2.jar"/>
+				<include name="jersey-entity-filtering-2.26.jar"/>
+				<include name="org.eclipse.osgi_3.6.50.R36x_v20111004-1525-6.0.2.jar"/>
+				<include name="org.eclipse.core.filesystem_1.3.1.R36x_v20100727-0745-6.0.2.jar"/>
+				<include name="com.ibm.team.build.client_3.0.1300.v20151207_2315-6.0.2.jar"/>
+				<include name="javax.wvcm_1.6.200.v20151207_2315-6.0.2.jar"/>
+				<include name="httpmime-4.5-6.0.2.jar"/>
+				<include name="com.ibm.team.foundation.rcp.core_1.1.3000.v20150814_0104-6.0.2.jar"/>
+				<include name="com.ibm.team.process.common_1.3.3000.v20160308_1839-6.0.2.jar"/>
+				<include name="objenesis-2.6.jar"/>
+				<include name="slf4j-api-1.7.7.jar"/>
+				<include name="com.ibm.team.repository.common.json_1.2.1000.v20150610_0124-6.0.2.jar"/>
+				<include name="resources"/>
+				<include name="org.apache.commons.codec_1.3.0.v20100518-1140-6.0.2.jar"/>
+				<include name="junit-4.11.jar"/>
+				<include name="com.ibm.team.interop.client_3.0.700.v20151207_2315-6.0.2.jar"/>
+				<include name="powermock-api-mockito2-2.0.0-beta.5.jar"/>
+				<include name="com.ibm.team.repository.rcp.common_3.1.600.v20151207_2229-6.0.2.jar"/>
+				<include name="com.ibm.rational.wvcm.factory_3.0.200.v20151207_2315-6.0.2.jar"/>
 				<include name="commons-io-2.6.jar"/>
 				<include name="jersey-media-json-jackson-2.26.jar"/>
+				<include name="com.ibm.team.build.common_3.1.1300.v20160301_1740-6.0.2.jar"/>
+				<include name="org.eclipse.equinox.common_3.6.0.v20100503-6.0.2.jar"/>
+				<include name="org.apache.commons.httpclient_3.1.0.v201005080502-6.0.2.jar"/>
 				<include name="jersey-hk2-2.26.jar"/>
+				<include name="com.ibm.team.enterprise.scd.common_1.0.100.v20160108_1736-6.0.2.jar"/>
+				<include name="org.eclipse.core.jobs_3.5.2.R36x_v20110419-6.0.2.jar"/>
+				<include name="com.ibm.team.interop.client.rest_3.0.600.v20160120_1740-6.0.2.jar"/>
 				<include name="commons-collections4-4.1.jar"/>
-				<include name="jackson-core-2.8.4.jar"/>
 				<include name="powermock-module-junit4-2.0.0-beta.5.jar"/>
 			</fileset>
 		</copy>
@@ -414,7 +946,7 @@
 	
 		<fx:application id="fxApplication"
 			name="SonarLysa"
-			mainClass="application.Main"
+			mainClass="application.application.Main"
 			toolkit="fx"
 		/>
 	
@@ -424,7 +956,8 @@
 	
 		<fx:jar destfile="dist/SonarLysaFX.jar">
 			<fx:application refid="fxApplication"/>
-			<fileset dir="build/classes" />
+			<fileset dir="build/classes">
+			</fileset>
 			<fx:resources refid="appRes"/>
 	
 			<manifest>
@@ -433,7 +966,8 @@
 				<attribute name="Implementation-Version" value="1.0.0"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
-		</fx:jar>	
+		</fx:jar>
+	
 	
 		<mkdir dir="deploy" />
 		<!-- Need to use ${basedir} because somehow the ant task is calculating the directory differently -->
@@ -451,6 +985,8 @@
 	
 			<fx:application refId="fxApplication"/>
 			<fx:resources refid="appRes"/>
-		</fx:deploy>	
+		</fx:deploy>
+	
+	
 	</target>
 </project>

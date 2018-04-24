@@ -25,7 +25,6 @@ import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlSuivi;
 import control.rtc.ControlRTC;
-import junit.TestUtils;
 import model.Anomalie;
 import model.ModelFactory;
 import model.enums.Environnement;
@@ -33,6 +32,7 @@ import model.enums.Matiere;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import utilities.FunctionalException;
+import utilities.Statics;
 
 public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuivi, List<Anomalie>>
 {
@@ -43,6 +43,8 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     private static final String LOT = "Lot 10";
     private static final String SQ = "SUIVI Qualité";
     private static final String AC = "Anomalies closes";
+    private static final String CREERLIGNESQ = "creerLigneSQ";
+    private static final String AJOUTERLIENS = "ajouterLiens";
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -53,21 +55,22 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     @Test
     public void recupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel((map) -> map.size() == 79);
+        recupDonneesDepuisExcel(map -> map.size() == 79);
     }
 
     @Test
     public void controleKey() throws Exception
     {
-        assertTrue(TestUtils.callPrivate("controleKey", handler, Boolean.class, "a", "a"));
-        assertTrue(TestUtils.callPrivate("controleKey", handler, Boolean.class, "A", "a"));
-        assertFalse(TestUtils.callPrivate("controleKey", handler, Boolean.class, "A", "b"));
-        assertTrue(TestUtils.callPrivate("controleKey", handler, Boolean.class, "BEF000", "BEF0009"));
-        assertTrue(TestUtils.callPrivate("controleKey", handler, Boolean.class, "T7004360", "T7004360E"));
+        String methode = "controleKey";
+        assertTrue(Whitebox.invokeMethod(handler, methode, "a", "a"));
+        assertTrue(Whitebox.invokeMethod(handler, methode, "A", "a"));
+        assertFalse(Whitebox.invokeMethod(handler, methode, "A", "b"));
+        assertTrue(Whitebox.invokeMethod(handler, methode, "BEF000", "BEF0009"));
+        assertTrue(Whitebox.invokeMethod(handler, methode, "T7004360", "T7004360E"));
     }
 
     @Test
@@ -84,7 +87,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         ano.setEnvironnement(Environnement.NOUVEAU);
         anoAcreer.add(ano);
         List<Anomalie> liste = handler.createSheetError(nomSheet, anoAcreer, anoDejacrees);
-        assertTrue(liste.size() == 0);
+        assertTrue(liste.isEmpty());
 
         // Test 2 - nouvelle ano - Retour normalement à 1
         ano = ModelFactory.getModel(Anomalie.class);
@@ -106,6 +109,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         ano.setEdition("E31");
         anoDejacrees.add(ano);
         liste = handler.createSheetError(nomSheet, anoAcreer, anoDejacrees);
+        assertEquals(2, liste.size());
         assertTrue(wb.getSheet(nomSheet).getPhysicalNumberOfRows() == 4);
 
     }
@@ -118,7 +122,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void sauvegardeFichier() throws Exception
+    public void sauvegardeFichier() throws IOException
     {
         // Test 1 - On vérifie que la feuille renvoyée ne contient bien qu'une seule ligne.
         Sheet sheet = handler.sauvegardeFichier(file.getName());
@@ -129,7 +133,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         sheet = handler.sauvegardeFichier(file.getName());
         assertTrue(sheet.getPhysicalNumberOfRows() == 1);
     }
-    
+
     @Test
     public void majFeuillePrincipale() throws Exception
     {
@@ -148,14 +152,14 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         ano.setLot("Lot 239654");
         ano.setEtat("Abandonnée");
         lotsEnAno.add(ano);
-        List<Anomalie> anoAajouter = new ArrayList<>(); 
-        Set<String> lotsEnErreurSonar = new HashSet<>(); 
-        Set<String> lotsSecurite = new HashSet<>(); 
+        List<Anomalie> anoAajouter = new ArrayList<>();
+        Set<String> lotsEnErreurSonar = new HashSet<>();
+        Set<String> lotsSecurite = new HashSet<>();
         lotsSecurite.add("290318");
-        Set<String> lotsRelease = new HashSet<>(); 
+        Set<String> lotsRelease = new HashSet<>();
         Sheet sheet = wb.createSheet();
         Matiere matiere = Matiere.JAVA;
-        
+
         // Appel méthode sans écriture du fichier
         handler.majFeuillePrincipale(lotsEnAno, anoAajouter, lotsEnErreurSonar, lotsSecurite, lotsRelease, sheet, matiere);
     }
@@ -187,6 +191,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
 
         // Initialisation
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
+        String methode = "calculCouleurLigne";
         Set<String> lotsEnErreurSonar = new HashSet<>();
         String anoLot = "";
         Set<String> lotsRelease = new HashSet<>();
@@ -195,39 +200,39 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         ano.setEtat("");
         ano.setNumeroAnomalie(1);
         ano.calculTraitee();
-        IndexedColors couleur = Whitebox.invokeMethod(handler, "calculCouleurLigne", ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        IndexedColors couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
         assertEquals(IndexedColors.LIGHT_GREEN, couleur);
 
         // Test 2 = Jaune
         anoLot = LOT;
         lotsRelease.add(anoLot);
         lotsEnErreurSonar.add(anoLot);
-        couleur = Whitebox.invokeMethod(handler, "calculCouleurLigne", ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
         assertEquals(IndexedColors.LIGHT_YELLOW, couleur);
         assertEquals(RELEASE, ano.getVersion());
 
         // Test 3 = Blanc
         lotsRelease.clear();
-        couleur = Whitebox.invokeMethod(handler, "calculCouleurLigne", ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
         assertEquals(IndexedColors.WHITE, couleur);
         assertEquals(SNAPSHOT, ano.getVersion());
-        
+
         // Test 3 = Torquoise
         lotsRelease.clear();
         ano.setAction(TypeAction.ASSEMBLER);
-        couleur = Whitebox.invokeMethod(handler, "calculCouleurLigne", ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
         assertEquals(IndexedColors.LIGHT_TURQUOISE, couleur);
         assertEquals(SNAPSHOT, ano.getVersion());
 
         // Test 4 = Gris
         ano.setAction(TypeAction.VERIFIER);
-        couleur = Whitebox.invokeMethod(handler, "calculCouleurLigne", ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
         assertEquals(IndexedColors.GREY_25_PERCENT, couleur);
 
         // Test 5 = Orange
         ano.setNumeroAnomalie(0);
         ano.calculTraitee();
-        couleur = Whitebox.invokeMethod(handler, "calculCouleurLigne", ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
         assertEquals(IndexedColors.LIGHT_ORANGE, couleur);
     }
 
@@ -237,7 +242,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         // Vérification si une anomaie est bien rajoutée à la feuille des anomalies closes.
 
         // Initialisation
-        Sheet sheet = wb.getSheet("Anomalies closes");
+        Sheet sheet = wb.getSheet(AC);
         Map<String, Anomalie> anoClose = new HashMap<>();
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
         ano.setNumeroAnomalie(10);
@@ -252,61 +257,65 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         // Appel méthode et controle
         int nbreLignes = sheet.getPhysicalNumberOfRows();
         Whitebox.invokeMethod(handler, "ajouterAnomaliesCloses", sheet, anoClose);
-        assertEquals(nbreLignes + 1, sheet.getPhysicalNumberOfRows());
+        assertEquals(nbreLignes + 1l, sheet.getPhysicalNumberOfRows());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void creerLigneSQException1() throws Throwable
+    public void creerLigneSQException1() throws IllegalAccessException
     {
-        Method method = Whitebox.getMethod(ControlSuivi.class, "creerLigneSQ", Row.class, Anomalie.class, IndexedColors.class);
+        Method method = Whitebox.getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
         try
         {
-            method.invoke(handler, wb.getSheetAt(0).getRow(0), null, IndexedColors.AQUA);
+            method.invoke(handler, null, ModelFactory.getModel(Anomalie.class), IndexedColors.AQUA);
 
         } catch (InvocationTargetException e)
         {
-            throw e.getCause();
+            if (e.getCause() instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e.getCause();
         }
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void creerLigneSQException2() throws Throwable
+    public void creerLigneSQException2() throws IllegalAccessException
     {
-        Method method = Whitebox.getMethod(ControlSuivi.class, "creerLigneSQ", Row.class, Anomalie.class, IndexedColors.class);
+        Method method = Whitebox.getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
         try
         {
             method.invoke(handler, wb.getSheetAt(0).getRow(0), null, IndexedColors.AQUA);
         } catch (InvocationTargetException e)
         {
-            throw e.getCause();
+            if (e.getCause() instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e.getCause();
         }
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void creerLigneSQException3() throws Throwable
+    public void creerLigneSQException3() throws IllegalAccessException
     {
-        Method method = Whitebox.getMethod(ControlSuivi.class, "creerLigneSQ", Row.class, Anomalie.class, IndexedColors.class);
+        Method method = Whitebox.getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
         try
         {
             method.invoke(handler, wb.getSheetAt(0).getRow(0), ModelFactory.getModel(Anomalie.class), null);
 
         } catch (InvocationTargetException e)
         {
-            throw e.getCause();
+            if (e.getCause() instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e.getCause();
         }
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
-    public void creerLigneSQException4() throws Throwable
+    public void creerLigneSQException4() throws IllegalAccessException
     {
-        Method method = Whitebox.getMethod(ControlSuivi.class, "creerLigneSQ", Row.class, Anomalie.class, IndexedColors.class);
+        Method method = Whitebox.getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
         try
         {
             method.invoke(handler, null, null, null);
 
         } catch (InvocationTargetException e)
         {
-            throw e.getCause();
+            if (e.getCause() instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e.getCause();
         }
     }
 
@@ -327,25 +336,25 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         Cell cell = null;
         String baseAdresse = "adresse";
         String variable = "var";
-        Whitebox.invokeMethod(handler, "ajouterLiens", cell, baseAdresse, variable);
+        Whitebox.invokeMethod(handler, AJOUTERLIENS, cell, baseAdresse, variable);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void ajouterLiensException2() throws Exception
     {
         Cell cell = wb.createSheet().createRow(0).createCell(0);
         String baseAdresse = null;
         String variable = "var";
-        Whitebox.invokeMethod(handler, "ajouterLiens", cell, baseAdresse, variable);
+        Whitebox.invokeMethod(handler, AJOUTERLIENS, cell, baseAdresse, variable);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void ajouterLiensException3() throws Exception
     {
         Cell cell = wb.createSheet().createRow(0).createCell(0);
         String baseAdresse = "";
         String variable = "var";
-        Whitebox.invokeMethod(handler, "ajouterLiens", cell, baseAdresse, variable);
+        Whitebox.invokeMethod(handler, AJOUTERLIENS, cell, baseAdresse, variable);
     }
 
     @Test
@@ -354,7 +363,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         Cell cell = wb.createSheet().createRow(0).createCell(0);
         String baseAdresse = "adresse";
         String variable = "var";
-        Whitebox.invokeMethod(handler, "ajouterLiens", cell, baseAdresse, variable);
+        Whitebox.invokeMethod(handler, AJOUTERLIENS, cell, baseAdresse, variable);
         assertEquals(baseAdresse + variable, cell.getHyperlink().getAddress());
     }
 
@@ -363,6 +372,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     {
         // Initialisation
         Sheet sheet = wb.createSheet();
+        String methode = "ajouterNouvellesAnos";
         List<Anomalie> anoAajouter = new ArrayList<>();
         Map<String, Anomalie> mapAnoCloses = new HashMap<>();
         Set<String> lotsSecurite = new HashSet<>();
@@ -370,7 +380,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         Matiere matiere = Matiere.JAVA;
 
         // Test 1. liste vide
-        Whitebox.invokeMethod(handler, "ajouterNouvellesAnos", sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
+        Whitebox.invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
         assertTrue(sheet.getPhysicalNumberOfRows() == 0);
 
         // Test 2. ni securite / ni release / ni close
@@ -380,7 +390,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         ano.setLot(LOT);
         ano.setMatieresString("JAVA");
         anoAajouter.add(ano);
-        Whitebox.invokeMethod(handler, "ajouterNouvellesAnos", sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
+        Whitebox.invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
         assertTrue(sheet.getPhysicalNumberOfRows() == 1);
         assertEquals(TODAY, ano.getDateDetection());
         assertEquals("", ano.getSecurite());
@@ -389,7 +399,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         // Test 3. securite / release
         lotsSecurite.add("10");
         lotsRelease.add("10");
-        Whitebox.invokeMethod(handler, "ajouterNouvellesAnos", sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
+        Whitebox.invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
         assertTrue(sheet.getPhysicalNumberOfRows() == 2);
         assertEquals(TODAY, ano.getDateDetection());
         assertEquals("X", ano.getSecurite());
@@ -403,7 +413,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         anoClose.setDateRelance(TODAY);
         anoClose.setRemarque("remarque");
         mapAnoCloses.put(LOT, anoClose);
-        Whitebox.invokeMethod(handler, "ajouterNouvellesAnos", sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
+        Whitebox.invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
         assertTrue(sheet.getPhysicalNumberOfRows() == 3);
         assertEquals(anoClose.getNumeroAnomalie(), ano.getNumeroAnomalie());
         assertEquals(anoClose.getLot(), ano.getLot());
@@ -421,7 +431,6 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         // Test 1
         Sheet sheet = Whitebox.invokeMethod(handler, "saveAnomaliesCloses", anoClose);
         assertTrue(sheet.getPhysicalNumberOfRows() == 1);
-        System.out.println(anoClose.size());
         assertTrue(anoClose.size() == 49);
 
         // Test 2 - à partir d'une feuille vide
@@ -438,16 +447,17 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         // Intialisation
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
         ano.setProjetClarity("a");
+        String methode = "controleClarity";
 
         // Test 1 - aucune correspondance
-        Whitebox.invokeMethod(handler, "controleClarity", ano);
-        assertEquals("", ano.getDepartement());
-        assertEquals("", ano.getService());
-        assertEquals("", ano.getDirection());
+        Whitebox.invokeMethod(handler, methode, ano);
+        assertEquals(Statics.INCONNU, ano.getDepartement());
+        assertEquals(Statics.INCONNU, ano.getService());
+        assertEquals(Statics.INCONNUE, ano.getDirection());
 
         // Test 2 - correspondance parfaite - données tirées du fichier excel
         ano.setProjetClarity("BT097902");
-        Whitebox.invokeMethod(handler, "controleClarity", ano);
+        Whitebox.invokeMethod(handler, methode, ano);
         assertEquals("GESTION DES SERVICES DEVOPS", ano.getDepartement());
         assertEquals("Gestion projets techniques Ouest", ano.getService());
         assertEquals("DEVOPS", ano.getDirection());
@@ -455,14 +465,14 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         // test 3 - correspondance trouvé avec algo de recherche du projet T le plus récent
         // On doit trouver les informations du projet T3004736E
         ano.setProjetClarity("T300473");
-        Whitebox.invokeMethod(handler, "controleClarity", ano);
+        Whitebox.invokeMethod(handler, methode, ano);
         assertEquals("Distribution Ouest et Marches specialises", ano.getDepartement());
         assertEquals("Distribution Ouest", ano.getService());
         assertEquals("DOMAINE DISTRIBUTION ET OUTILS SOCLES", ano.getDirection());
 
         // test 4 - Correspondance avec les deux derniers caratères manquants
         ano.setProjetClarity("P00839");
-        Whitebox.invokeMethod(handler, "controleClarity", ano);
+        Whitebox.invokeMethod(handler, methode, ano);
         assertEquals("Risques Financier RH et CIS", ano.getDepartement());
         assertEquals("Financier", ano.getService());
         assertEquals("DOMAINES REGALIENS", ano.getDirection());
@@ -473,9 +483,10 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     {
         // Initialisation
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
+        String methode = "controleChefDeService";
 
         // Test 1 nulle
-        Whitebox.invokeMethod(handler, "controleChefDeService", ano);
+        Whitebox.invokeMethod(handler, methode, ano);
         assertTrue(ano.getSecurite() == "");
 
         // Test 2 empty
@@ -484,25 +495,27 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
 
         // Test 3 ok
         ano.setService("Projets Credits");
-        Whitebox.invokeMethod(handler, "controleChefDeService", ano);
+        Whitebox.invokeMethod(handler, methode, ano);
         assertEquals("METROP-TAINTURIER, NATHALIE", ano.getResponsableService());
 
         // Test 4 loggin
         ano.setService("abc");
         ano.setResponsableService("abc");
-        Whitebox.invokeMethod(handler, "controleChefDeService", ano);
+        Whitebox.invokeMethod(handler, methode, ano);
         assertEquals("abc", ano.getResponsableService());
 
     }
 
     @Test
-    public void initEnum() throws IllegalArgumentException, IllegalAccessException
+    @Override
+    public void initEnum() throws IllegalAccessException
     {
         // Test - énumération du bon type
         assertTrue(Whitebox.getField(ControlSuivi.class, "enumeration").get(handler).equals(TypeColSuivi.class));
     }
 
     @Test
+    @Override
     public void initSheet() throws Exception
     {
         // Test 1 - feuille ok
@@ -512,6 +525,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = FunctionalException.class)
+    @Override
     public void initSheetException() throws Exception
     {
         // Test 2 - feuille nulle

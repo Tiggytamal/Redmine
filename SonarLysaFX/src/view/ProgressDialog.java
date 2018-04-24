@@ -3,7 +3,9 @@ package view;
 import control.task.SonarTask;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -91,11 +93,17 @@ public class ProgressDialog extends Dialog<Boolean>
         Button cancel = new Button("Annuler");
         cancel.setOnAction(event -> annuler());
         grid.add(cancel, 1, 3);
-        if (task.isAnnulable())
+        if (!task.isAnnulable())
         {
             cancel.setDisable(true);
             cancel.setTooltip(new Tooltip("Cette tâche ne peut pas être annulée"));
         }
+        
+        // Ajout d'un bouton close caché pour permettre la fermeture du dialog en cas de plantage de la tâche
+        getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        Node closeButton = getDialogPane().lookupButton(ButtonType.CLOSE);
+        closeButton.managedProperty().bind(closeButton.visibleProperty());
+        closeButton.setVisible(false);
 
         // Bouton OK actif lorsque le traitement est fini.
         Button ok = new Button("OK");

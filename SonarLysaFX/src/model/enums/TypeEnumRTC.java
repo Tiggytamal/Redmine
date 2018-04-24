@@ -6,6 +6,7 @@ public enum TypeEnumRTC
     ENVIRONNEMENT("fr.ca.cat.attribut.environnement"),
     NATURE("NatureProbleme"),
     EDITION("fr.ca.cat.attribut.edition"),
+    EDITIONSICIBLE("fr.ca.cat.attribut.editionsicible"),
     IMPORTANCE("NiveauImportance"),
     ORIGINE("Origine");
     

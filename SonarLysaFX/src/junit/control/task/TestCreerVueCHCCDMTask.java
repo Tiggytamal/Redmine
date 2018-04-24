@@ -33,12 +33,12 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     /*---------- CONSTRUCTEURS ----------*/
 
     @Before
-    public void init() throws IllegalArgumentException, IllegalAccessException
+    public void init() throws IllegalAccessException
     {
         annees = new ArrayList<>();
         annees.add("2018");
         task = new CreerVueCHCCDMTask(annees, CHCouCDM.CDM);
-        SonarAPI mock = Mockito.mock(SonarAPI.class);
+        mock = Mockito.mock(SonarAPI.class);
         Whitebox.getField(CreerVueCHCCDMTask.class, "api").set(task, mock);
     }
     
@@ -59,16 +59,16 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     @Test
     public void controle() throws Exception
     {
-        assertTrue(Whitebox.invokeMethod(task, "controle", CHCouCDM.CDM, "CDM2018"));
-        assertFalse(Whitebox.invokeMethod(task, "controle", CHCouCDM.CDM, "CHC2018"));
-        assertTrue(Whitebox.invokeMethod(task, "controle", CHCouCDM.CHC, "CHC2018"));
-        assertFalse(Whitebox.invokeMethod(task, "controle", CHCouCDM.CHC, "CDM2018"));
+        String methode = "controle";
+        assertTrue(Whitebox.invokeMethod(task, methode, CHCouCDM.CDM, "CDM2018"));
+        assertFalse(Whitebox.invokeMethod(task, methode, CHCouCDM.CDM, "CHC2018"));
+        assertTrue(Whitebox.invokeMethod(task, methode, CHCouCDM.CHC, "CHC2018"));
+        assertFalse(Whitebox.invokeMethod(task, methode, CHCouCDM.CHC, "CDM2018"));
     }
     
     @Test
     public void suppressionVuesMaintenance() throws Exception
     {
-
         Whitebox.invokeMethod(task, "suppressionVuesMaintenance", CHCouCDM.CHC, annees);
         Mockito.verify(mock, Mockito.times(52)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
         Whitebox.invokeMethod(task, "suppressionVuesMaintenance", CHCouCDM.CDM, annees);

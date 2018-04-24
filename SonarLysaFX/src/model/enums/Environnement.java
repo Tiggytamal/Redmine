@@ -13,6 +13,7 @@ public enum Environnement
     TFON(Valeur.TFON),
     VMOE(Valeur.VMOE),
     VMOA(Valeur.VMOA),
+    MOA(Valeur.MOA),
     EDITION(Valeur.EDITION),
     ABANDONNE(Valeur.ABANDONNE),
     TERMINE(Valeur.TERMINE),
@@ -59,6 +60,9 @@ public enum Environnement
             case Valeur.TERMINE :
                 return TERMINE;
                 
+            case Valeur.MOA :
+                return MOA;
+                
             default :
                 if (envString.contains(Valeur.EDITION))
                     return EDITION;
@@ -76,6 +80,7 @@ public enum Environnement
         private static final String TFON = "TFON";
         private static final String VMOE = "En Vérification MOE";
         private static final String VMOA = "En Validation MOA";
+        private static final String MOA = "Candidat pour la Validation MOA";
         private static final String EDITION = "Livré à l'Edition";
         private static final String ABANDONNE = "Abandonné";
         private static final String TERMINE = "Terminé";

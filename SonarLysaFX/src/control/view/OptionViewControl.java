@@ -99,6 +99,10 @@ public class OptionViewControl extends ViewControl
 
     /*---------- METHODES PUBLIQUES ----------*/
 
+    /**
+     * Controle de l'affichage des options en utilisant la TreeView
+     * @param ov
+     */
     private void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
     {
         ObservableList<Node> root = rightSide.getChildren();
@@ -385,7 +389,7 @@ public class OptionViewControl extends ViewControl
     @Override
     protected void afficher(ActionEvent event)
     {
-        // Gestion de l'affichage délégué ç une autre méthode à cause de l'utilisation de la ViewList
+        // Gestion de l'affichage délégué à une autre méthode à cause de l'utilisation de la ViewList
     }
 
     /*---------- ACCESSEURS ----------*/

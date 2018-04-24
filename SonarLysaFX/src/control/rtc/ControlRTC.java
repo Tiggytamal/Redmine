@@ -56,7 +56,6 @@ import model.enums.Matiere;
 import model.enums.TypeEnumRTC;
 import model.enums.TypeParam;
 import utilities.Statics;
-import utilities.TechnicalException;
 
 /**
  * Classe de controle des accès RTC sous form dénumération pour forcer le singleton
@@ -254,9 +253,15 @@ public class ControlRTC
 
         } catch (TeamRepositoryException e)
         {
-            throw new TechnicalException("Erreur traitement RTC création de Defect", e);
+            logger.error("Erreur traitement RTC création de Defect. Lot : " + ano.getLot());
         }
-        return workItem.getId();
+
+        if (workItem != null)
+        {
+            logger.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " +ano.getLot());
+            return workItem.getId();
+        }
+        return 0;
     }
 
     /**
@@ -355,7 +360,7 @@ public class ControlRTC
             this.cat = cat;
             this.projet = projet;
             this.ano = ano;
-            lotAno = Integer.parseInt(ano.getLot().substring(4));
+            lotAno = Integer.parseInt(this.ano.getLot().substring(4));
         }
 
         /*---------- METHODES PUBLIQUES ----------*/
@@ -373,7 +378,7 @@ public class ControlRTC
             if (calculPariteVersion(ano.getVersion()))
                 workItem.setValue(attribut, recupLiteralDepuisString("Br A VMOE", attribut));
             else
-                workItem.setValue(attribut, recupLiteralDepuisString("Br B VMOE", attribut));               
+                workItem.setValue(attribut, recupLiteralDepuisString("Br B VMOE", attribut));
 
             // Importance
             attribut = workItemClient.findAttribute(projet, TypeEnumRTC.IMPORTANCE.toString(), null);
@@ -392,8 +397,16 @@ public class ControlRTC
             workItem.setValue(attribut, recupLiteralDepuisString("MOE", attribut));
 
             // Edition
+            String edition = ano.getEdition();
             attribut = workItemClient.findAttribute(projet, TypeEnumRTC.EDITION.toString(), null);
-            workItem.setValue(attribut, recupLiteralDepuisString(calculVersionRTC(ano.getVersion()), attribut));
+            workItem.setValue(attribut, recupLiteralDepuisString(calculEditionRTC(edition), attribut));
+
+            // Edition SI Cible
+            if (edition.contains("CHC") || edition.contains("CDM"))
+            {
+                attribut = workItemClient.findAttribute(projet, TypeEnumRTC.EDITIONSICIBLE.toString(), null);
+                workItem.setValue(attribut, recupLiteralDepuisString(edition, attribut));
+            }
 
             // Subscriptions
             ISubscriptions subscription = workItem.getSubscriptions();
@@ -427,29 +440,42 @@ public class ControlRTC
             creerTags(workItem);
         }
 
-        private String calculVersionRTC(String version)
+        /**
+         * Calcul la valeur de l'édition de l'anomalie
+         * 
+         * @param edition
+         * @return
+         */
+        private String calculEditionRTC(String edition)
         {
-            if (version.contains("CHC") || version.contains("CDM"))
+            // Si on a une édition CHC, on va chercher la version dans les paramètres
+            if (edition.contains("CHC") || edition.contains("CDM"))
                 return proprietesXML.getMapParams().get(TypeParam.RTCLOTCHC);
-            String versionRegex = "^E[2-9][0-9](\\.[0-1]) {0,1}";
+
+            String versionRegex = "^E[2-9][0-9](\\.[0-1]){0,1}";
             String fdlregex = "Fil_De_Leau";
-            String retour = "";            
-            Matcher matcher = Pattern.compile(versionRegex).matcher(version);
+            String retour = "";
+            Matcher matcher = Pattern.compile(versionRegex).matcher(edition);
             if (matcher.find())
                 retour = matcher.group(0);
-            if (version.contains(fdlregex))
-                retour = retour + ".FDL";
+
+            // Ajout du Fil de l'eau.
+            if (edition.contains(fdlregex))
+                if (retour.matches("^.*\\.[0-9]$"))
+                    retour = retour + ".FDL";
+                else
+                    retour = retour + ".0.FDL";
             return retour;
         }
-        
+
         private boolean calculPariteVersion(String version)
         {
             Matcher matcher = Pattern.compile("^E[2-9][0-9]").matcher(version);
             int i = 0;
             if (matcher.find())
                 i = Integer.parseInt(matcher.group(0).substring(1));
-            return (i %2 == 0);
-                
+            return (i % 2 == 0);
+
         }
 
         private void creerTags(IWorkItem workItem)

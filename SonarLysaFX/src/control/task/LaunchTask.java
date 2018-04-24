@@ -22,7 +22,10 @@ public abstract class LaunchTask
                 task.get();
             } catch (InterruptedException | ExecutionException e)
             {
-                Platform.runLater(() -> Main.gestionException(e));
+                Platform.runLater(() -> {
+                    dialog.close();
+                    Main.gestionException(e);
+                });
             }
         }).start();
         new Thread(task).start();

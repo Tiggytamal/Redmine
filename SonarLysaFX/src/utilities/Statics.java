@@ -72,6 +72,8 @@ public class Statics
     public static final String SPACE = " ";
     /** apllication inconnue dans Sonar */
     public static final String INCONNUE = "INCONNUE";
+    /** donnée inconnue */
+    public static final String INCONNU = "INCONNU";
     /** filter pour fichiers Excel */
     public static final FileChooser.ExtensionFilter FILTEREXCEL = new FileChooser.ExtensionFilter("Fichiers Excel (*.xls)", "*.xls", "*.xlsx", "*.xlsm");
     /** Wrapper des informations générales de fonctionnement de l'application*/

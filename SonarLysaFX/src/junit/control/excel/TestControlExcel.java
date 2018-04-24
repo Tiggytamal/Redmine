@@ -105,7 +105,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     }
 
     @Test
-    public void initEnum() throws IllegalArgumentException, IllegalAccessException
+    public void initEnum() throws IllegalAccessException
     {
         // test - énumération du bon Type
         assertTrue(getField(ControlSuivi.class, "enumeration").get(handler).equals(typeColClass));
