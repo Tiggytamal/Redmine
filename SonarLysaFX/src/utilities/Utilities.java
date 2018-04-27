@@ -11,8 +11,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.function.Supplier;
 
-import org.apache.commons.io.FileUtils;
-
 import utilities.enums.Severity;
 
 /**
@@ -39,7 +37,6 @@ public class Utilities
      *
      * @param c
      *            The class whose location is desired.
-     * @see FileUtils#urlToFile(URL) to convert the result to a {@link File}.
      */
     public static URL getLocation(final Class<?> c)
     {
@@ -166,6 +163,7 @@ public class Utilities
      * Transcodification d'une version de composant en version d'édition
      * 
      * @param versionComposant
+     *            Version Sonar d'un composant (14,15,16,...)
      * @return
      */
     public static String transcoVersion(String versionComposant)
@@ -178,7 +176,8 @@ public class Utilities
     /**
      * Transcodifition dune version d'édition en version de composant
      * 
-     * @param versionComposant
+     * @param versionEdition
+     *            Version RTC d'un composant (E30,E31,E32,...)
      * @return
      */
     public static String transcoEdition(String versionEdition)
@@ -192,8 +191,9 @@ public class Utilities
      * Permet d'enregistrer un objet pour le récupérer plus tard
      * 
      * @param adresseFichier
+     *            Adresse du fichier à enregistrer
      * @param objet
-     * @throws IOException
+     *            Objet à sérialiser
      */
     public static void serialisation(String adresseFichier, Object objet)
     {
@@ -208,7 +208,15 @@ public class Utilities
         }
     }
 
-    
+    /**
+     * Transofmration en objet JAVA d'une sérialisation
+     * 
+     * @param adresseFichier
+     *            Edresse du fichier à récupérer
+     * @param classeObjet
+     *            Classe de l'objet correpondante à la sauvegarde
+     * @return
+     */
     public static <T> T deserialisation(String adresseFichier, Class<T> classeObjet)
     {
         Object objet = null;
@@ -222,6 +230,19 @@ public class Utilities
         return classeObjet.cast(objet);
     }
 
+    /**
+     * Permet de récupérer un objet soit par désiralisation, soit par une méthdoe en paramètre
+     * 
+     * @param deserialisation
+     *            Choix entre sérialisation et désérialisation
+     * @param classRetour
+     *            Classe de l'objet de retour
+     * @param nomSer
+     *            Adresse du fichier à utiliser en cas de sérialisation / désérialisation
+     * @param fonction
+     *            Fonction à utliser pour récupérer les informations necessaire à la créationde l'objet de retour
+     * @return
+     */
     public static <T> T recuperation(boolean deserialisation, Class<T> classRetour, String nomSer, Supplier<T> fonction)
     {
         T retour;

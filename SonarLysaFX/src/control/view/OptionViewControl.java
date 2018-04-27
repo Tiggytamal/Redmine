@@ -101,6 +101,7 @@ public class OptionViewControl extends ViewControl
 
     /**
      * Controle de l'affichage des options en utilisant la TreeView
+     * 
      * @param ov
      */
     private void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
@@ -109,45 +110,45 @@ public class OptionViewControl extends ViewControl
 
         switch (ov.getValue().getValue())
         {
-            case "Chargement fichiers" :
+            case "Chargement fichiers":
                 root.clear();
                 root.add(chargementPane);
                 break;
 
-            case "Paramètres" :
+            case "Paramètres":
                 root.clear();
                 afficherParams();
                 root.add(optionsPane);
                 break;
 
-            case "SuiviQualité" :
+            case "SuiviQualité":
                 afficherColonnes(TypeColSuivi.class, root);
                 break;
 
-            case "Clarity" :
+            case "Clarity":
                 afficherColonnes(TypeColClarity.class, root);
                 break;
 
-            case "Chef de Service" :
+            case "Chef de Service":
                 afficherColonnes(TypeColChefServ.class, root);
                 break;
 
-            case "Lots Pic" :
+            case "Lots Pic":
                 afficherColonnes(TypeColPic.class, root);
                 break;
 
-            case "Codification Editions" :
+            case "Codification Editions":
                 afficherColonnes(TypeColEdition.class, root);
                 break;
-                
-            case "Applications" :
+
+            case "Applications":
                 afficherColonnes(TypeColApps.class, root);
                 break;
-                
-            case "Nom Colonnes" :
+
+            case "Nom Colonnes":
                 break;
 
-            default :
+            default:
                 throw new TechnicalException("TreeItem pas géré" + ov.getValue().getValue(), null);
         }
     }
@@ -162,35 +163,33 @@ public class OptionViewControl extends ViewControl
 
         switch (id)
         {
-            case "lotsPic" :
+            case "lotsPic":
                 charger("Lots Pic", file -> control.recupLotsPicDepuisExcel(file));
                 break;
 
-            case "apps" :
+            case "apps":
                 charger("Applications", file -> control.recupListeAppsDepuisExcel(file));
                 break;
 
-            case "clarity" :
+            case "clarity":
                 charger("Referentiel Clarity", file -> control.recupInfosClarityDepuisExcel(file));
                 break;
 
-            case "chefSrev" :
+            case "chefSrev":
                 charger("Chefs de Service", file -> control.recupChefServiceDepuisExcel(file));
                 break;
 
-            case "edition" :
+            case "edition":
                 charger("Editions CDM", file -> control.recupEditionDepuisExcel(file));
                 break;
 
-            default :
+            default:
                 break;
         }
     }
 
     /**
      * Supprime la version selectionnée de la liste
-     * 
-     * @throws JAXBException
      */
     public void suppVersion()
     {
@@ -209,7 +208,6 @@ public class OptionViewControl extends ViewControl
     /**
      * Ajoute une nouvelle version à la liste et au fichier de paramètre
      * 
-     * @throws JAXBException
      */
     public void ajouterVersion()
     {
@@ -252,7 +250,7 @@ public class OptionViewControl extends ViewControl
                 saveText(view.getField(), mapParams, view.getType());
             }
         }
-        
+
         // Sauvegarde des paramètres booléens
         for (Node node : booleanBox.getChildren())
         {
@@ -276,7 +274,7 @@ public class OptionViewControl extends ViewControl
         {
             if (node instanceof ColonneView)
             {
-                @SuppressWarnings ("unchecked")
+                @SuppressWarnings("unchecked")
                 ColonneView<T> view = (ColonneView<T>) node;
                 Map<T, String> mapCols = proprietesXML.getMap(view.getType().getDeclaringClass());
                 saveText(view.getField(), mapCols, view.getType());
@@ -343,7 +341,7 @@ public class OptionViewControl extends ViewControl
             ParamView pv = new ParamView(entry.getKey(), entry.getValue());
             paramsBox.getChildren().add(pv);
         }
-        
+
         // Affichage de tous les paramètres de type booléens
         for (Entry<TypeBool, Boolean> entry : mapParamsBool.entrySet())
         {

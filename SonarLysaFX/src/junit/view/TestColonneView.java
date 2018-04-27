@@ -16,10 +16,10 @@ public class TestColonneView
     public void colonneView()
     {
         String texte = "a";
-        ColonneView<TypeColSuivi> view = new ColonneView<TypeColSuivi>(TypeColSuivi.ACTION, texte);
+        ColonneView<TypeColSuivi> view = new ColonneView<>(TypeColSuivi.ACTION, texte);
         assertTrue(view.getField().getText().equals(texte));
         assertTrue(view.getType() == TypeColSuivi.ACTION);
-        view = new ColonneView<TypeColSuivi>(TypeColSuivi.ANOMALIE, null);
+        view = new ColonneView<>(TypeColSuivi.ANOMALIE, null);
         assertTrue(view.getField().getText().equals(""));
         assertTrue(view.getType() == TypeColSuivi.ANOMALIE);
     }

@@ -44,6 +44,7 @@ public class CellHelper
      * Retourne une map avec tous les styles possible d'une couleur. les Elements à true ont un style centré horizontalement.
      * 
      * @param couleur
+     *              Couleur du texte
      * @return
      */
     public Map<Boolean, CellStyle> createAllStyles(IndexedColors couleur)
@@ -145,7 +146,7 @@ public class CellHelper
     /**
      * Retourne le style de cellule voulu selon la couleur, la bordure désirée et l'alignement du texte
      * 
-     * @param IndexedColors
+     * @param couleur
      *            {@link org.apache.poi.ss.usermodel.IndexedColors}
      * @param bordure
      *            {@link utilities.enums.Bordure}
@@ -168,7 +169,9 @@ public class CellHelper
      * Retourne le style de cellule voulu selon la couleur, la bordure désirée et l'alignement du texte est celui par défault.
      * 
      * @param couleur
+     *              couleur de fond de la cellule
      * @param bordure
+     *              désignation des bordures de la cellule
      * @return
      */
     public CellStyle getStyle(IndexedColors couleur, Bordure bordure)
@@ -238,6 +241,7 @@ public class CellHelper
      * Retourne le style de cellule voulu selon la couleur, sans bordure spécifique
      * 
      * @param couleur
+     *          Couleur de fond du style
      * @return
      */
     public CellStyle getStyle(IndexedColors couleur)
@@ -248,7 +252,9 @@ public class CellHelper
     /**
      * Rajoute un lien hypertexte à la cellule donnée
      * @param adresse
+     *          liens hypertexte a ajouter à la cellule
      * @param cell
+     *          cellule à traiter
      * @return
      */
     public Cell createHyperLink(String adresse, Cell cell)

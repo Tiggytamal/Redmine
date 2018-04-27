@@ -43,7 +43,9 @@ public class ControlJob
      * Création des jobs. Mise à jour de la map des données et démarrage du planificateur
      * 
      * @return
+     *      Le planificateur crééeS
      * @throws SchedulerException
+     *      Exception lors de la création du planificateur
      */
     public Scheduler creationJobsSonar() throws SchedulerException
     {

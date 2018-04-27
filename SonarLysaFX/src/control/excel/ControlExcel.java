@@ -144,7 +144,8 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
 
         // Gestion des erreurs si on ne trouve pas le bon nombre de colonnes
         if (nbreCol != enumeration.getEnumConstants().length)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci.");
+            throw new FunctionalException(Severity.SEVERITY_ERROR,
+                    "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci : Différence = " + String.valueOf(enumeration.getEnumConstants().length - nbreCol));
     }
 
     /**
@@ -172,6 +173,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * Ferme un workbook.
      * 
      * @throws IOException
+     *             Exception lors d'un problème I/O
      */
     public void close() throws IOException
     {
@@ -182,6 +184,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * Ecris le workbook dans le fichier cible.
      * 
      * @throws IOException
+     *             Exception lors d'un problème I/O
      */
     protected void write() throws IOException
     {
@@ -192,7 +195,9 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * Permet de changer la couleur de fond d'une ligne du fichier
      * 
      * @param row
+     *            Ligne à traitée
      * @param couleur
+     *            Couleur à utiliser pour le fond de la ligne
      */
     protected void majCouleurLigne(Row row, IndexedColors couleur)
     {
@@ -211,6 +216,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * recalcule la largeur de chaque colonne de la feuille.
      * 
      * @param sheet
+     *            Feuillle à traiter
      */
     protected void autosizeColumns(Sheet sheet)
     {
@@ -235,7 +241,9 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * Retourne la valeur d'une cellule de type String
      * 
      * @param row
+     *            Ligne à traiter
      * @param cellIndex
+     *            Index de la cellule à traiter
      * @return
      */
     protected String getCellStringValue(Row row, int cellIndex)
@@ -250,7 +258,9 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * Retourne la valeur d'une cellule de type Date
      * 
      * @param row
+     *            Ligne à traiter
      * @param cellIndex
+     *            Index de la cellule à traiter
      * @return
      */
     protected LocalDate getCellDateValue(Row row, int cellIndex)
@@ -265,7 +275,9 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * Retourne la valeur d'une cellule de type numerique
      * 
      * @param row
+     *            Ligne à traiter
      * @param cellIndex
+     *            Index de la cellule à traiter
      * @return
      */
     protected int getCellNumericValue(Row row, int cellIndex)
@@ -280,7 +292,9 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * Retourne la valeur d'une cellule contenant une formule
      * 
      * @param row
+     *            Ligne à traiter
      * @param cellIndex
+     *            Index de la cellule à traiter
      * @return
      */
     protected String getCellFormulaValue(Row row, int cellIndex)
@@ -300,7 +314,9 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * Retourne le commentaire d'une cellule
      * 
      * @param row
+     *            Ligne à traiter
      * @param cellIndex
+     *            Index de la cellule à traiter
      * @return
      */
     protected Comment getCellComment(Row row, int cellIndex)
@@ -313,7 +329,9 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * Copie un commentaire dans une cellule
      * 
      * @param commentaire
+     *            Commentaire à ajouter
      * @param cell
+     *            Cellule à traiter
      */
     protected Comment copieComment(Comment commentaire, Cell cell)
     {
@@ -389,6 +407,14 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
         return cell;
     }
 
+    /**
+     * Copie d'une cellule
+     * 
+     * @param newCell
+     *            Nouvelle cellule
+     * @param oldCell
+     *            Cellule copiée
+     */
     protected void copierCellule(Cell newCell, Cell oldCell)
     {
         // On sort si la cellule est nulle

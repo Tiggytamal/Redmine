@@ -30,7 +30,7 @@ public class TestControlApps extends TestControlExcel<TypeColApps, ControlApps, 
     @Test
     public void recupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel((map) -> map.size() == 1842);
+        recupDonneesDepuisExcel(map -> map.size() == 1842);
     }
     
     /*---------- METHODES PRIVEES ----------*/

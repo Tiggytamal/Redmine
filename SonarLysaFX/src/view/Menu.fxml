@@ -30,8 +30,8 @@
 				</Menu>
 			</menus>
 		</MenuBar>
-		<Button fx:id="connexion" text="Connexion" onAction="#openPopup" />
-		<Button fx:id="deConnexion" text="Deconnexion" onAction="#deco" />
+		<Button fx:id="connexion" text="Connexion" onAction="#openPopup"/>
+		<Button fx:id="deConnexion" text="Deconnexion" onAction="#deco"/>
 	</children>
 </HBox>
 

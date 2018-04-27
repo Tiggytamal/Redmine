@@ -11,14 +11,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import application.Main;
+import control.sonar.SonarAPI;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import model.enums.TypeParam;
-import sonarapi.SonarAPI;
-import sonarapi.model.Projet;
-import sonarapi.model.Vue;
+import model.sonarapi.Projet;
+import model.sonarapi.Vue;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.Utilities;
@@ -35,9 +35,9 @@ public abstract class SonarTask extends Task<Boolean>
     protected int debut;
     protected int fin;
     protected boolean annulable;
-    
+
     /*---------- CONSTRUCTEURS ----------*/
-    
+
     /**
      * Constructeur utilisant les données de l'utilisateur. Initialisation des étapes de traitement
      */
@@ -48,10 +48,10 @@ public abstract class SonarTask extends Task<Boolean>
         api = SonarAPI.INSTANCE;
         initEtape(fin);
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Utilisée pour permettre le retour arrière si possible du traitement
      */
@@ -60,7 +60,6 @@ public abstract class SonarTask extends Task<Boolean>
         // Pas de traitement par default
     }
 
-    
     /**
      * Permet de récupérer la dernière version de chaque composants créés dans Sonar
      *
@@ -71,7 +70,7 @@ public abstract class SonarTask extends Task<Boolean>
         updateMessage(RECUPCOMPOSANTS);
         updateProgress(-1, 1);
         // Appel du webservice pour remonter tous les composants
-        
+
         @SuppressWarnings("unchecked")
         List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "d:\\composants.ser", () -> api.getComposants());
 
@@ -98,7 +97,7 @@ public abstract class SonarTask extends Task<Boolean>
         updateMessage(RECUPCOMPOSANTS + " OK");
         return retour;
     }
-    
+
     /**
      * Permet de récupérer les composants de Sonar triés par version avec sépration des composants datastage
      *
@@ -168,51 +167,54 @@ public abstract class SonarTask extends Task<Boolean>
         if (description != null)
             vue.setDescription(description);
 
-        // Suppresison de la vue précedente
+        // Suppression de la vue précedente. Utilisation supression projet et vue pour éviter la recréation de la vue
         if (suppression)
+        {
             api.supprimerProjet(vue, false);
+            api.supprimerVue(vue, false);
+        }
 
         // Appel de l'API Sonar
         api.creerVue(vue);
 
         return vue;
     }
-   
+
     protected void updateMessage(String message, int etape, int nbreEtapes)
     {
         StringBuilder base = new StringBuilder("Etape ").append(etape).append("/").append(nbreEtapes).append(Statics.NL);
         updateMessage(base.append(message).toString());
     }
-    
+
     protected void initEtape(int fin)
     {
         debut = 1;
         this.fin = fin;
         setEtape(debut, fin);
     }
-    
+
     protected void etapePlus()
     {
         setEtape(++debut, fin);
     }
-    
-    /*---------- ACCESSEURS ----------*/  
-    
+
+    /*---------- ACCESSEURS ----------*/
+
     public String getEtape()
     {
         return etape.get();
     }
-    
+
     public void setEtape(int debut, int fin)
     {
-        Platform.runLater(() ->etape.set("Etape " + debut + " / " + fin));
+        Platform.runLater(() -> etape.set("Etape " + debut + " / " + fin));
     }
-    
+
     public StringProperty etapeProperty()
     {
         return etape;
     }
-    
+
     public boolean isAnnulable()
     {
         return annulable;

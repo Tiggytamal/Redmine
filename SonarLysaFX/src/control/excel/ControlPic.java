@@ -1,7 +1,6 @@
 package control.excel;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -21,7 +19,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import model.LotSuiviPic;
 import model.ModelFactory;
 import model.enums.TypeColPic;
-import sonarapi.model.Vue;
+import model.sonarapi.Vue;
 import utilities.DateConvert;
 
 public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic>>
@@ -57,12 +55,9 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
      * Puis on les classes dans des listes, la clef de chaque liste correspond au mois et à l'année de mise en production du lot.<br>
      * Le fichier excel doit avoir un formattage spécifique, avec une colonne <b>Lot</b> (numérique) et un colonne <b>livraison édition</b> (date).<br>
      * 
-     * @param file
-     *            Le fichier excel envoyé par l'interface
+     * @param mapQube
+     *            map des Vues venants de SonarQube
      * @return
-     * @throws FileNotFoundException
-     * @throws EncryptedDocumentException
-     * @throws InvalidFormatException
      * @throws IOException
      */
     public Map<LocalDate, List<Vue>> recupLotsExcelPourMEP(Map<String, Vue> mapQube) throws IOException
@@ -128,8 +123,9 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
 
     /**
      * @param sheet
-     * @param wb
+     *          Feuille à traiter
      * @param mapQube
+     *          Map des Vues venants de SonarQube
      * @return
      */
     private Map<LocalDate, List<Vue>> creerMapVuesParMois(Sheet sheet, Map<String, Vue> mapQube)

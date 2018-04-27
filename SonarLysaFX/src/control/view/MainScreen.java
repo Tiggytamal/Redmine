@@ -58,6 +58,7 @@ public class MainScreen extends Application
 
         // Affichage de l'interface
         final Scene scene = new Scene(root, 640, 480);
+        scene.getStylesheets().add("/application/application.css");
         trayIcon.setStage(stage);
         stage.setTitle("Sonar Lysa");
         stage.setResizable(true);

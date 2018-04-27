@@ -32,10 +32,11 @@ public class TestControlPic extends TestControlExcel<TypeColPic, ControlPic, Map
     @Test
     public void recupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel((map) -> map.size() == 1931);
+        recupDonneesDepuisExcel(map -> map.size() == 1931);
     }
     
     @Test(expected = FunctionalException.class)
+    @Override
     public void initSheetException() throws Exception
     {
         // Test 2 - feuille nulle

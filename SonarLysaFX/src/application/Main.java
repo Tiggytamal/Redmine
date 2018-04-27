@@ -47,11 +47,12 @@ public class Main extends Application
      * Gestion des erreurs du Thread. Utilisation de la récursivité pour tester toutes les Exceptions précedentes.
      * 
      * @param e
+     *            Exception à gérer
      */
     public static void gestionException(Throwable e)
     {
         if (e instanceof FunctionalException)
-        {    
+        {
             // Affichage informations de l'erreur fonctionnelle
             FunctionalException ex1 = (FunctionalException) e;
             createAlert(ex1.getSeverity(), null, ex1.getMessage());

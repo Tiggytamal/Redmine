@@ -37,7 +37,7 @@ public class TestControlEdition extends TestControlExcel<TypeColEdition, Control
     public void recupDonneesDepuisExcel()
     {
         // Premiers test génériques
-        Map<String, String> map = recupDonneesDepuisExcel((a) -> a.size() == 72);
+        Map<String, String> map = recupDonneesDepuisExcel(a -> a.size() == 72);
         
         // Test sur le format des clefs/valeurs dans la map
         for (Map.Entry<String, String> entry : map.entrySet())
@@ -57,14 +57,16 @@ public class TestControlEdition extends TestControlExcel<TypeColEdition, Control
     @Test
     public void prepareLibelle() throws Exception
     {       
+        String methode = "prepareLibelle";
         // Tests des différents cas de la préparation du libellé
-        assertEquals("CHC_CDM2018-S32", Whitebox.invokeMethod(handler, "prepareLibelle", "CDM2018-S32"));
-        assertEquals("CHC_CDM2021-S01", Whitebox.invokeMethod(handler, "prepareLibelle", "CDM2021-S01 / CHC2017-S22"));
-        assertEquals("CHC_CDM2019-S16", Whitebox.invokeMethod(handler, "prepareLibelle", "CHC2013-S51 / CDM2019-S16"));
-        assertEquals("CHC2017-S15", Whitebox.invokeMethod(handler, "prepareLibelle", "CHC2017-S15"));
+        assertEquals("CHC_CDM2018-S32", Whitebox.invokeMethod(handler, methode, "CDM2018-S32"));
+        assertEquals("CHC_CDM2021-S01", Whitebox.invokeMethod(handler, methode, "CDM2021-S01 / CHC2017-S22"));
+        assertEquals("CHC_CDM2019-S16", Whitebox.invokeMethod(handler, methode, "CHC2013-S51 / CDM2019-S16"));
+        assertEquals("CHC2017-S15", Whitebox.invokeMethod(handler, methode, "CHC2017-S15"));
     }
     
     @Test
+    @Override
     public void initSheet() throws Exception
     {
         // Test 1 - feuille ok
@@ -74,6 +76,7 @@ public class TestControlEdition extends TestControlExcel<TypeColEdition, Control
     }
     
     @Test(expected = FunctionalException.class)
+    @Override
     public void initSheetException() throws Exception
     {
         // Test 2 - feuille nulle

@@ -17,7 +17,7 @@ public class TestPlanificateur
     /*---------- ATTRIBUTS ----------*/
 
     private Planificateur plan;
-    private String annee;
+    private String anneeEnCours;
     private String prec;
     private String suiv;
     
@@ -25,7 +25,7 @@ public class TestPlanificateur
     
     public TestPlanificateur()
     {
-        annee = String.valueOf(TODAY.getYear());
+        anneeEnCours = String.valueOf(TODAY.getYear());
         prec = String.valueOf(TODAY.getYear() - 1);
         suiv = String.valueOf(TODAY.getYear() + 1);
     }
@@ -119,17 +119,17 @@ public class TestPlanificateur
     public void getAnnees()
     {       
         // Test valeur après initialisation
-        assertEquals(annee, plan.getAnnees().get(0));
+        assertEquals(anneeEnCours, plan.getAnnees().get(0));
         
         // Test ajout annèe précedente
         plan.addLastYear();        
         assertTrue(plan.getAnnees().contains(prec));
-        assertTrue(plan.getAnnees().contains(annee));
+        assertTrue(plan.getAnnees().contains(anneeEnCours));
         
         // test ajout année suivante
         plan.addNextYear();
         assertTrue(plan.getAnnees().contains(suiv)); 
-        assertTrue(plan.getAnnees().contains(annee));
+        assertTrue(plan.getAnnees().contains(anneeEnCours));
         
         // Test avec nouvel objet
         plan = ModelFactory.getModel(Planificateur.class);
@@ -137,7 +137,7 @@ public class TestPlanificateur
         // Test ajout annèe précedente
         plan.addLastYear();        
         assertTrue(plan.getAnnees().contains(prec));
-        assertTrue(plan.getAnnees().contains(annee));
+        assertTrue(plan.getAnnees().contains(anneeEnCours));
         
         // Test avec nouvel objet
         plan = ModelFactory.getModel(Planificateur.class);
@@ -145,7 +145,7 @@ public class TestPlanificateur
         // test ajout année suivante
         plan.addNextYear();
         assertTrue(plan.getAnnees().contains(suiv)); 
-        assertTrue(plan.getAnnees().contains(annee));
+        assertTrue(plan.getAnnees().contains(anneeEnCours));
     }
     
     @Test
@@ -154,7 +154,7 @@ public class TestPlanificateur
         // Test ajout annèe précedente
         plan.addLastYear();        
         assertTrue(plan.getAnnees().contains(prec));
-        assertTrue(plan.getAnnees().contains(annee));  
+        assertTrue(plan.getAnnees().contains(anneeEnCours));  
         
         // Vérification qu'on ajoute pas de doublons d'année
         plan.addLastYear();  
@@ -175,7 +175,7 @@ public class TestPlanificateur
         // test ajout année suivante
         plan.addNextYear();
         assertTrue(plan.getAnnees().contains(suiv)); 
-        assertTrue(plan.getAnnees().contains(annee));
+        assertTrue(plan.getAnnees().contains(anneeEnCours));
         
         // Vérification qu'on ajoute pas de doublons d'année
         plan.addNextYear();

@@ -14,8 +14,15 @@ public class FunctionalException extends RuntimeException
     private final Severity severity;  
 
     /**
+
+     */
+    /**
      * Constructeur des erreurs fonctionnelles.<br>
      * Choix de la sévérité (INFO ou ERROR), du message afficher, ainsi que de l'affichage ou non de la fenêtre du stacktrace
+     * @param severity
+     *          Sévérité de l'exception
+     * @param message
+     *          Message à afficher dan sla boîte de dialogue
      */
     public FunctionalException(Severity severity, String message)
     {

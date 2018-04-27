@@ -16,7 +16,6 @@ import java.util.Map;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -51,12 +50,6 @@ public class TestControlRTC extends JunitBase
     {
         handler = ControlRTC.INSTANCE;
         handler.connexion();
-    }
-
-    @Before
-    public void init()
-    {
-
     }
 
     @Test(expected = AssertException.class)

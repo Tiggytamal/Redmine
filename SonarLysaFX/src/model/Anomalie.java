@@ -137,7 +137,6 @@ public class Anomalie implements Modele
     /**
      * Remplie la liste des matières depuis une chaine de caractères. Cahque matière doit être séparées par un "-".
      * 
-     * @return
      */
     public void setMatieresString(String matieresString)
     {

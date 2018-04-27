@@ -68,7 +68,6 @@ public class TrayIconView
 	
 	/**
      * Retire l'icone à la barre de notifications
-     * @throws AWTException
      */
     public void removeFromTray()
     {

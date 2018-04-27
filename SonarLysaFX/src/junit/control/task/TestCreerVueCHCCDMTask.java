@@ -7,17 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.Response.Status;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
+import control.sonar.SonarAPI;
 import control.task.CreerVueCHCCDMTask;
 import de.saxsys.javafx.test.JfxRunner;
 import junit.JunitBase;
 import model.enums.CHCouCDM;
-import sonarapi.SonarAPI;
+import model.sonarapi.Vue;
 import utilities.FunctionalException;
 
 @RunWith(JfxRunner.class)
@@ -57,13 +61,18 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     }
     
     @Test
-    public void controle() throws Exception
+    public void call() throws Exception
     {
-        String methode = "controle";
-        assertTrue(Whitebox.invokeMethod(task, methode, CHCouCDM.CDM, "CDM2018"));
-        assertFalse(Whitebox.invokeMethod(task, methode, CHCouCDM.CDM, "CHC2018"));
-        assertTrue(Whitebox.invokeMethod(task, methode, CHCouCDM.CHC, "CHC2018"));
-        assertFalse(Whitebox.invokeMethod(task, methode, CHCouCDM.CHC, "CDM2018"));
+        task = PowerMockito.spy(task);
+        assertTrue(Whitebox.invokeMethod(task, "call"));
+    }
+    
+    @Test
+    public void creerVueCHCouCDM() throws Exception
+    {
+        // test du retour avec les méthode mockées
+        task = PowerMockito.spy(task);
+        assertTrue(Whitebox.invokeMethod(task, "creerVueCHCouCDM"));
     }
     
     @Test
@@ -74,6 +83,27 @@ public class TestCreerVueCHCCDMTask extends JunitBase
         Whitebox.invokeMethod(task, "suppressionVuesMaintenance", CHCouCDM.CDM, annees);
         Mockito.verify(mock, Mockito.times(104)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
     }
+    
+    @Test
+    public void creerVuesMaintenance() throws Exception
+    {
+        PowerMockito.when(mock.getComposants()).thenCallRealMethod();
+        PowerMockito.when(mock.appelWebserviceGET(Mockito.anyString(), Mockito.any())).thenCallRealMethod();
+        PowerMockito.when(mock.creerVue(Mockito.any(Vue.class))).thenReturn(Status.OK);    
+        PowerMockito.doNothing().when(mock).ajouterSousVue(Mockito.any(Vue.class), Mockito.any(Vue.class));  
+        Map<String, String> map = Whitebox.invokeMethod(task, "recupererEditions", annees);
+//        Whitebox.invokeMethod(task, "creerVueMaintenance", map);
+    }
+    
+    @Test
+    public void controle() throws Exception
+    {
+        String methode = "controle";
+        assertTrue(Whitebox.invokeMethod(task, methode, CHCouCDM.CDM, "CDM2018"));
+        assertFalse(Whitebox.invokeMethod(task, methode, CHCouCDM.CDM, "CHC2018"));
+        assertTrue(Whitebox.invokeMethod(task, methode, CHCouCDM.CHC, "CHC2018"));
+        assertFalse(Whitebox.invokeMethod(task, methode, CHCouCDM.CHC, "CDM2018"));
+    }  
     
     @Test
     public void recupererEditions() throws Exception

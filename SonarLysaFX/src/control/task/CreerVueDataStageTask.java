@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.Main;
-import sonarapi.model.Projet;
-import sonarapi.model.Vue;
+import model.sonarapi.Projet;
+import model.sonarapi.Vue;
 import utilities.Statics;
 import utilities.Utilities;
 
@@ -30,7 +30,10 @@ public class CreerVueDataStageTask extends SonarTask
     public void annuler()
     {
         if (vue != null)
+        {
             api.supprimerProjet(vue, true);
+            api.supprimerVue(vue, true);
+        }
     }
 
     @Override

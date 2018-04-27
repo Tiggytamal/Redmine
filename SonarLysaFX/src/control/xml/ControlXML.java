@@ -49,13 +49,11 @@ public class ControlXML
     /**
      * Récupère le paramètre depuis le fichier externe ou celui interne par default s'il n'existe pas.
      * 
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws JAXBException
-     * @throws InvalidFormatException
-     * @throws IOException
+     * @param typeXML
+     *            Classe du paramètre à récupérer
+     * @return le fichier XML desérialisé
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public <T extends XML & Modele> T recupererXML(Class<T> typeXML)
     {
         // variables
@@ -71,8 +69,7 @@ public class ControlXML
             if (file.exists())
                 retour = (T) context.createUnmarshaller().unmarshal(file);
 
-        }
-        catch (JAXBException e)
+        } catch (JAXBException e)
         {
             throw new TechnicalException("Impossible de récupérer le fichier de paramètre, erreur JAXB", e);
         }
@@ -83,13 +80,11 @@ public class ControlXML
     /**
      * Récupère le paramètre depuis le fichier externe ou celui interne par default s'il n'existe pas.
      * 
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws JAXBException
-     * @throws InvalidFormatException
-     * @throws IOException
+     * @param typeXML
+     *            Classe du paramètre à récupérer
+     * @return
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public <T extends XML & Modele> T recupererXMLResources(Class<T> typeXML)
     {
         // variables
@@ -105,8 +100,7 @@ public class ControlXML
             if (file.exists())
                 retour = (T) context.createUnmarshaller().unmarshal(file);
 
-        }
-        catch (JAXBException e)
+        } catch (JAXBException e)
         {
             throw new TechnicalException("Impossible de récupérer le fichier de paramètre, erreur JAXB", e);
         }
@@ -117,6 +111,8 @@ public class ControlXML
     /**
      * Sauvegarde le fichier de paramètres
      * 
+     * @param fichier
+     *            Fichier à suvagarder, doit implémenter l'interface {@link model.XML}.
      * @throws JAXBException
      */
     public void saveParam(XML fichier) throws JAXBException
@@ -128,12 +124,10 @@ public class ControlXML
     }
 
     /**
-     * Enregistre le fichier Excel de la liste des applications dans les paramètres XML
-     *
-     * @return
-     * @throws InvalidFormatException
-     * @throws IOException
-     * @throws JAXBException
+     * Enregistre le fichier Excel de la liste des applications dans les paramètres XML.
+     * 
+     * @param file
+     *            Fichier à utiliser
      */
     public void recupListeAppsDepuisExcel(File file)
     {
@@ -144,6 +138,7 @@ public class ControlXML
      * Enregistre le fichier Excel des informations Clarity dans les paramètres XML
      * 
      * @param file
+     *            Fichier à utiliser
      */
     public void recupInfosClarityDepuisExcel(File file)
     {
@@ -154,6 +149,7 @@ public class ControlXML
      * Enregistre le fichier Excel des lots Pic dans les paramètres XML
      * 
      * @param file
+     *            Fichier à utiliser
      */
     public void recupLotsPicDepuisExcel(File file)
     {
@@ -164,6 +160,7 @@ public class ControlXML
      * Enregistre le fichier Excel des chef de services dans les paramètres XML
      * 
      * @param file
+     *            Fichier à utiliser
      */
     public void recupChefServiceDepuisExcel(File file)
     {
@@ -174,6 +171,7 @@ public class ControlXML
      * Récupère depuis le fichier Excel toutes les édition CHC/CDM, aver leurs numéros de version, pour l'annèe en cours, la précedente et la suivante.
      * 
      * @param file
+     *            Fichier à utiliser
      */
     public void recupEditionDepuisExcel(File file)
     {
@@ -184,18 +182,19 @@ public class ControlXML
      * Sauvegarde les informations d'un fichier XML
      * 
      * @param typeFichier
+     *            Type de fichier à suavegarder, énumaration {@link model.enums.TypeFichier}.
      * @param typeCol
+     *            Type de colonnes de fichiers, énumération
      * @param file
      */
-    @SuppressWarnings ("rawtypes")
+    @SuppressWarnings("rawtypes")
     private <T extends Enum<T> & TypeCol> void saveInfos(TypeFichier typeFichier, Class<T> typeCol, File file)
     {
         try
         {
             fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getControlleur(typeCol, file).recupDonneesDepuisExcel());
             saveParam(fichiersXML);
-        }
-        catch (InvalidFormatException | IOException | JAXBException e)
+        } catch (InvalidFormatException | IOException | JAXBException e)
         {
             throw new TechnicalException(ERREUR, e);
         }
@@ -204,7 +203,7 @@ public class ControlXML
     /*---------- METHODES PRIVEES ----------*/
 
     /**
-     * @param texte
+     * Affichage alerte du controle des données
      */
     public void createAlert()
     {

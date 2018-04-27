@@ -32,6 +32,7 @@ public class TestInfo
     @Test
     public void controle()
     {
+        String valeur = "pasvide";
         // Test après initialisation
         assertFalse(info.controle());
         
@@ -50,17 +51,17 @@ public class TestInfo
         assertFalse(info.controle());
         
         // Test mot de passe rempli
-        info.setMotDePasse("pasvide");
+        info.setMotDePasse(valeur);
         assertFalse(info.controle());
         
         // Test pseudo rempli
         info.setMotDePasse("");
-        info.setPseudo("pasvide");
+        info.setPseudo(valeur);
         assertFalse(info.controle());
         
         // Test les deux remplis
-        info.setPseudo("pasvide");
-        info.setMotDePasse("pasvide");
+        info.setPseudo(valeur);
+        info.setMotDePasse(valeur);
         assertTrue(info.controle());
     }
     
@@ -103,9 +104,9 @@ public class TestInfo
         assertEquals("", info.getMotDePasse());
         
         // Test setter et getter
-        String motDePasse = "motDePasse";
-        info.setMotDePasse(motDePasse);
-        assertEquals(motDePasse, info.getMotDePasse());  
+        String mdp = "motDePasse";
+        info.setMotDePasse(mdp);
+        assertEquals(mdp, info.getMotDePasse());  
     }
     
     @Test

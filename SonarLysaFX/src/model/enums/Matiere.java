@@ -28,7 +28,7 @@ public enum Matiere
     
     public static Matiere from(String matiere)
     {
-        switch(matiere)
+        switch(matiere.trim())
         {
             case Valeur.JAVA :
                 return JAVA;
@@ -39,7 +39,7 @@ public enum Matiere
             case Valeur.PHP :
                 return PHP;
             default :
-                throw new IllegalArgumentException("Matière inconnue");
+                throw new IllegalArgumentException("Matière inconnue :" + matiere);
         }        
     }
     

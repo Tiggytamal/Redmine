@@ -175,7 +175,7 @@ public class DateConvert
     }
 
     /**
-     * Appel {@link #createDate(Object, ZoneId)} avec la time-zone par default du système.
+     * Appel {@link #convertToOldDate(Object, ZoneId)} avec la time-zone par default du système.
      */
     public static Date convertToOldDate(Object date)
     {

@@ -13,10 +13,10 @@ import java.util.Set;
 
 import model.enums.CHCouCDM;
 import model.enums.TypeMetrique;
-import sonarapi.model.Composant;
-import sonarapi.model.Metrique;
-import sonarapi.model.Projet;
-import sonarapi.model.Vue;
+import model.sonarapi.Composant;
+import model.sonarapi.Metrique;
+import model.sonarapi.Projet;
+import model.sonarapi.Vue;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 

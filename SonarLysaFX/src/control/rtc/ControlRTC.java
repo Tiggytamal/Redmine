@@ -105,12 +105,6 @@ public class ControlRTC
 
     /**
      * Connection au repository RTC
-     * 
-     * @param user
-     * @param password
-     * @param repoUrl
-     * @return
-     * @throws TeamRepositoryException
      */
     public boolean connexion()
     {
@@ -219,14 +213,10 @@ public class ControlRTC
     }
 
     /**
-     * @param thisItem
-     * @param workItemType
-     * @param someAttribute
-     * @param someLiteral
-     * @param parsedConfig
-     * @param monitor
+     * Création du Defect dans RTC
+     * @param ano
+     *          anomalie servant d'origine au Defect
      * @return
-     * @throws TeamRepositoryException
      */
     public int creerDefect(Anomalie ano)
     {
@@ -284,7 +274,6 @@ public class ControlRTC
             for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();)
             {
                 ILiteral iLiteral = iterator.next();
-                System.out.println(iLiteral.getName());
                 if (iLiteral.getIdentifier2().equals(literalID))
                     return iLiteral.getName();
             }
@@ -390,7 +379,7 @@ public class ControlRTC
 
             // Nature
             attribut = workItemClient.findAttribute(projet, TypeEnumRTC.NATURE.toString(), null);
-            workItem.setValue(attribut, recupLiteralDepuisString("Développement", attribut));
+            workItem.setValue(attribut, recupLiteralDepuisString("Qualité", attribut));
 
             // Entité responsable
             attribut = workItemClient.findAttribute(projet, TypeEnumRTC.ENTITERESPCORRECTION.toString(), null);

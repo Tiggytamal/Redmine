@@ -111,10 +111,6 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    /**
-     * @return
-     * @throws TeamRepositoryException
-     */
     public List<Anomalie> recupDonneesDepuisExcel()
     {
         // Récupération de la première feuille
@@ -127,7 +123,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         for (int i = 1; i <= sheet.getLastRowNum(); i++)
         {
             Row row = sheet.getRow(i);
-            
+
             // Création anomalie
             retour.add(creerAnodepuisExcel(row));
         }
@@ -141,7 +137,6 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @param anoAcreer
      * @param anoDejacrees
      * @return
-     * @throws IOException
      */
     public List<Anomalie> createSheetError(String nomSheet, List<Anomalie> anoAcreer, List<Anomalie> anoDejacrees)
     {
@@ -153,8 +148,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         // Liste retour des anomalies à créer
         List<Anomalie> retour = new ArrayList<>();
 
-        // 2. Sauvegarde données existantes. On itère pour récupérer tous les numéros de lot déjà abandonés, puis
-        // suppression de la feuille
+        // 2. Sauvegarde données existantes. On itère pour récupérer tous les numéros de lot déjà abandonés, puis suppression de la feuille
         List<String> lotsAbandon = new ArrayList<>();
         if (sheet != null)
         {
@@ -174,51 +168,23 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
         // Recréation de la feuille
         sheet = wb.createSheet(nomSheet);
-        Cell cell;
         Row row;
 
-        // Création du style des titres
-        CellStyle styleTitre = helper.getStyle(IndexedColors.AQUA, Bordure.VIDE, HorizontalAlignment.CENTER);
-
-        // Création des noms des colonnes
-        Row titres = sheet.createRow(0);
-        for (Index index : Index.values())
-        {
-            cell = titres.createCell(index.ordinal());
-            cell.setCellStyle(styleTitre);
-            switch (index)
-            {
-                case LOTI:
-                    cell.setCellValue(Index.LOTI.toString());
-                    break;
-
-                case EDITIONI:
-                    cell.setCellValue(Index.EDITIONI.toString());
-                    break;
-
-                case ENVI:
-                    cell.setCellValue(Index.ENVI.toString());
-                    break;
-
-                case TRAITEI:
-                    cell.setCellValue(Index.TRAITEI.toString());
-                    break;
-
-                default:
-                    throw new TechnicalException("Nouvel index non géré : " + index.toString(), null);
-            }
-        }
+        // Création des titres
+        creerTitresSE(sheet);
 
         // 4. Ajout anomalies déjà créées
         for (Anomalie ano : anoDejacrees)
         {
             row = sheet.createRow(sheet.getLastRowNum() + 1);
-            creerLigneVersion(row, ano, IndexedColors.WHITE, "O");
+            if (TypeAction.ABANDONNER == ano.getAction())
+                creerLigneVersion(row, ano, IndexedColors.WHITE, "A");
+            else
+                creerLigneVersion(row, ano, IndexedColors.WHITE, "O");
         }
 
         // 5. Itération sur les anomalies à créer. Si elles sont déjà dans les anomalies abandonnées, on créée une ligne
-        // à l'état abandon, sinon on crée une ligne à
-        // l'état non traité et on ajoute celle-ci aux anomalies à créer.
+        // à l'état abandon, sinon on crée une ligne à l'état non traité et on ajoute celle-ci aux anomalies à créer.
         for (Anomalie ano : anoAcreer)
         {
             row = sheet.createRow(sheet.getLastRowNum() + 1);
@@ -262,12 +228,13 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /**
      * Gestion de la feuille principale des anomalies. Maj des anciennes plus création des nouvelles
-     * 
+     * @param lotsEnAno
      * @param anoAajouter
+     * @param lotsEnErreurSonar
      * @param lotsSecurite
-     * @param matiere2
-     * @param anoAajouter2
-     * @param lotsEnErreur
+     * @param lotsRelease
+     * @param sheet
+     * @param matiere
      * @throws IOException
      */
     public void majFeuillePrincipale(List<Anomalie> lotsEnAno, List<Anomalie> anoAajouter, Set<String> lotsEnErreurSonar, Set<String> lotsSecurite, Set<String> lotsRelease, Sheet sheet,
@@ -280,7 +247,6 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         // Mise à jour anomalies déjà créées
         for (Anomalie ano : lotsEnAno)
         {
-            Row row;
             ano.getMatieres().add(matiere);
             String anoLot = ano.getLot().substring(4);
 
@@ -288,32 +254,20 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             if (lotsSecurite.contains(anoLot))
                 ano.setSecurite(Statics.SECURITEKO);
 
-            // Si une anomalie est close dans RTC, on la transfert sur l'autre feuille.
-            if (ano.getAction() == TypeAction.CLOTURER)
-            {
-                row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
-                creerLigneSQ(row, ano, IndexedColors.WHITE);
+            // Calcul version SNAPSHOT ou RELEASE
+            if (lotsRelease.contains(anoLot))
+                ano.setVersion(RELEASE);
+            else
+                ano.setVersion(SNAPSHOT);
+
+            if (!gestionAction(ano, anoLot, sheetClose))
                 continue;
-            }
-            
-            // Contrôle si besoin de créer une anomalie Sonar
-            if (ano.getAction() == TypeAction.CREER)
-            {
-                int numeroAno = ControlRTC.INSTANCE.creerDefect(ano);
-                if (numeroAno != 0)
-                {
-                    ano.setAction(null);
-                    ano.setNumeroAnomalie(numeroAno);
-                    ano.setDateCreation(Statics.TODAY);
-                    logger.info("Création anomalie " + numeroAno + " pour le lot " + anoLot);
-                }
-            }
 
             // Calcul de la couleur de la ligne dans le fichier Excel
-            IndexedColors couleur = calculCouleurLigne(ano, lotsEnErreurSonar, anoLot, lotsRelease);
+            IndexedColors couleur = calculCouleurLigne(ano, lotsEnErreurSonar, anoLot);
 
             // Création de la ligne
-            row = sheet.createRow(sheet.getLastRowNum() + 1);
+            Row row = sheet.createRow(sheet.getLastRowNum() + 1);
             creerLigneSQ(row, ano, couleur);
         }
 
@@ -357,6 +311,45 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     /*---------- METHODES PRIVEES ----------*/
 
     /**
+     * Crée la ligne de titre des feuilles par édition
+     * @param sheet
+     */
+    private void creerTitresSE(Sheet sheet)
+    {
+        // Création du style des titres
+        CellStyle styleTitre = helper.getStyle(IndexedColors.AQUA, Bordure.VIDE, HorizontalAlignment.CENTER);
+
+        // Création des noms des colonnes
+        Row titres = sheet.createRow(0);
+        for (Index index : Index.values())
+        {
+            Cell cell = titres.createCell(index.ordinal());
+            cell.setCellStyle(styleTitre);
+            switch (index)
+            {
+                case LOTI:
+                    cell.setCellValue(Index.LOTI.toString());
+                    break;
+
+                case EDITIONI:
+                    cell.setCellValue(Index.EDITIONI.toString());
+                    break;
+
+                case ENVI:
+                    cell.setCellValue(Index.ENVI.toString());
+                    break;
+
+                case TRAITEI:
+                    cell.setCellValue(Index.TRAITEI.toString());
+                    break;
+
+                default:
+                    throw new TechnicalException("Nouvel index non géré : " + index.toString(), null);
+            }
+        }
+    }
+    
+    /**
      * Permet de calculer la couleur d'une ligne du fichier Excel : <br>
      * - orange = nouvelle aomalie non traitée<br>
      * - jaune = anomalie avec au moisn un composant en version figée<br>
@@ -373,32 +366,19 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      *            Liste des lots en version Release
      * @return
      */
-    private IndexedColors calculCouleurLigne(Anomalie ano, Set<String> lotsEnErreurSonar, String anoLot, Set<String> lotsRelease)
+    private IndexedColors calculCouleurLigne(Anomalie ano, Set<String> lotsEnErreurSonar, String anoLot)
     {
         IndexedColors couleur;
+
         // Mise en vert des anomalies avec un Quality Gate bon
         if (!lotsEnErreurSonar.contains(anoLot))
-        {
             couleur = IndexedColors.LIGHT_GREEN;
-        }
+        // Les lots qui ont besoin juste d'un réassemblage sont en bleu
+        else if (TypeAction.ASSEMBLER == ano.getAction())
+            couleur = IndexedColors.LIGHT_TURQUOISE;
+        // Le reste est en blanc
         else
-        {
-            // Les lots release sont en jaune
-            if (lotsRelease.contains(anoLot))
-            {
-                ano.setVersion(RELEASE);
-                couleur = IndexedColors.LIGHT_YELLOW;
-            }
-            else
-            {
-                ano.setVersion(SNAPSHOT);
-                couleur = IndexedColors.WHITE;
-            }
-
-            // Les lots venant d'erreurs Sonar sont en bleus
-            if (TypeAction.ASSEMBLER == ano.getAction())
-                couleur = IndexedColors.LIGHT_TURQUOISE;
-        }
+            couleur = IndexedColors.WHITE;
 
         // Les lots déjà traité une première fois sont en gris
         if (TypeAction.VERIFIER == ano.getAction())
@@ -409,6 +389,43 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             couleur = IndexedColors.LIGHT_ORANGE;
 
         return couleur;
+    }
+
+    /**
+     * Gestion des actions possibles pour une anomalie (Creer, Clôturer, Abandonner)
+     * 
+     * @param ano
+     *            Anomalie à traiter
+     * @param anoLot
+     *            Numéro de lot l'anomalie
+     * @param sheetClose
+     *            Feuille des anomalies closes
+     * @return {@code true} si l'on doit continuer le traitement<br>
+     *         {@code false} si l'anomalie est à clôturer ou abandonner
+     */
+    private boolean gestionAction(Anomalie ano, String anoLot, Sheet sheetClose)
+    {
+        // Si on doit clôturer ou abandonner l'anomalie, on la recopie dans la feuille des anomalies closes
+        if (TypeAction.CLOTURER == ano.getAction() || TypeAction.ABANDONNER == ano.getAction())
+        {
+            Row row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
+            creerLigneSQ(row, ano, IndexedColors.WHITE);
+            return false;
+        }
+
+        // Contrôle si besoin de créer une anomalie Sonar
+        if (TypeAction.CREER == ano.getAction())
+        {
+            int numeroAno = ControlRTC.INSTANCE.creerDefect(ano);
+            if (numeroAno != 0)
+            {
+                ano.setAction(null);
+                ano.setNumeroAnomalie(numeroAno);
+                ano.setDateCreation(Statics.TODAY);
+                logger.info("Création anomalie " + numeroAno + " pour le lot " + anoLot);
+            }
+        }
+        return true;
     }
 
     /**
@@ -670,8 +687,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         Sheet retour = wb.getSheet(AC);
         if (retour != null)
         {
-            // Itération sur les lignes sauf la première qui correspond aux titres. Récupération des informations des
-            // anomalies
+            // Itération sur les lignes sauf la première qui correspond aux titres. Récupération des informations des anomalies
             for (int i = 1; i < retour.getLastRowNum() + 1; i++)
             {
                 Row row = retour.getRow(i);
@@ -710,7 +726,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             // On retire les deux dernières lettres pour les clefs de plus de 6 caractères finissants par 0[1-9]
             if (controleKey(anoClarity, key))
                 return ano.majDepuisClarity(map.get(key));
-            
+
             // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
             if (anoClarity.startsWith("T") && anoClarity.length() == 7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
                 temp = key;
@@ -912,12 +928,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @author ETP8137 - Grégoire mathon
      * @since 1.0
      */
-    private enum Index 
-    {
-        LOTI("Lot projet RTC"), 
-        EDITIONI("Edition"), 
-        ENVI("Etat du lot"), 
-        TRAITEI("Traitée");
+    private enum Index {
+        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
 
         private String string;
 

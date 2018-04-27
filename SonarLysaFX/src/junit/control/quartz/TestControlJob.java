@@ -35,18 +35,19 @@ public class TestControlJob extends JunitBase
     /*---------- ATTRIBUTS ----------*/
 
     private ControlJob handler;
+    private static final String SCHEDULER = "scheduler";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     @Before
-    public void init() throws SchedulerException
+    public void init()
     {
         handler = new ControlJob();
     }
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
-    public void creationJobsSonar() throws Exception
+    public void creationJobsSonar() throws SchedulerException, IllegalAccessException
     {
         // Initialisation
         Map<TypePlan, Planificateur> mapPlans = proprietes.getMapPlans();
@@ -61,7 +62,7 @@ public class TestControlJob extends JunitBase
 
         // Test 1 - nombre de jobs
         handler.creationJobsSonar();
-        Scheduler scheduler = ((Scheduler) Whitebox.getField(ControlJob.class, "scheduler").get(handler));
+        Scheduler scheduler = ((Scheduler) Whitebox.getField(ControlJob.class, SCHEDULER).get(handler));
         for (String clef : planKey)
         {
             JobDetail job = scheduler.getJobDetail(new JobKey(clef, "group"));
@@ -108,18 +109,18 @@ public class TestControlJob extends JunitBase
     }
 
     @Test
-    public void creationJobAnomaliesSonar() throws Exception
+    public void creationJobAnomaliesSonar() throws SchedulerException, IllegalAccessException
     {
         handler.creationJobsSonar();
-        assertTrue(((Scheduler) Whitebox.getField(ControlJob.class, "scheduler").get(handler)).isStarted());
+        assertTrue(((Scheduler) Whitebox.getField(ControlJob.class, SCHEDULER).get(handler)).isStarted());
     }
 
     @Test
-    public void fermeturePlanificateur() throws Exception
+    public void fermeturePlanificateur() throws IllegalAccessException, SchedulerException
     {
         // Test si le planificateur se ferme bien
         handler.fermeturePlanificateur();
-        assertTrue(((Scheduler) Whitebox.getField(ControlJob.class, "scheduler").get(handler)).isInStandbyMode());
+        assertTrue(((Scheduler) Whitebox.getField(ControlJob.class, SCHEDULER).get(handler)).isInStandbyMode());
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -31,7 +31,7 @@ public class TestControlClarity extends TestControlExcel<TypeColClarity, Control
     @Test
     public void recupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel((map) -> map.size() == 8277);
+        recupDonneesDepuisExcel(map -> map.size() == 8277);
     }
     
     /*---------- METHODES PRIVEES ----------*/

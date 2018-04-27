@@ -36,10 +36,11 @@ public class TestControlChefService extends TestControlExcel<TypeColChefServ, Co
     @Test
     public void recupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel((map) -> map.size() == 28);
+        recupDonneesDepuisExcel(map -> map.size() == 28);
     }
     
     @Test
+    @Override
     public void initSheet() throws Exception
     {
         // Test 1 - feuille ok
@@ -49,6 +50,7 @@ public class TestControlChefService extends TestControlExcel<TypeColChefServ, Co
     }
     
     @Test(expected = FunctionalException.class)
+    @Override
     public void initSheetException() throws Exception
     {
         // Test 2 - feuille nulle

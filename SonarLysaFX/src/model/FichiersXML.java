@@ -33,7 +33,6 @@ public class FichiersXML implements XML, Modele
     private static final String NOMFICHIER = "\\fichiers.xml";
     private static final String RESOURCE = "/resources/fichiers.xml";
 
-
     /*---------- CONSTRUCTEURS ----------*/
 
     FichiersXML()
@@ -54,7 +53,6 @@ public class FichiersXML implements XML, Modele
     {
         return new File(Statics.JARPATH + NOMFICHIER);
     }
-    
 
     @Override
     public File getResource()
@@ -62,48 +60,51 @@ public class FichiersXML implements XML, Modele
         return new File(getClass().getResource(RESOURCE).getFile());
     }
 
-    @SuppressWarnings ({ "rawtypes", "unchecked" })
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void majMapDonnees(TypeFichier typeFichier, Map map)
     {
         switch (typeFichier)
         {
-            case APPS :
+            case APPS:
                 mapApplis.clear();
                 mapApplis.putAll(map);
                 setDateFichier(typeFichier);
                 break;
 
-            case CLARITY :
+            case CLARITY:
                 mapClarity.clear();
                 mapClarity.putAll(map);
                 setDateFichier(typeFichier);
                 break;
 
-            case EDITION :
+            case EDITION:
                 mapEditions.clear();
                 mapEditions.putAll(map);
                 setDateFichier(typeFichier);
                 break;
 
-            case LOTSPICS :
+            case LOTSPICS:
                 lotsPic.clear();
                 lotsPic.putAll(map);
                 setDateFichier(typeFichier);
                 break;
 
-            case RESPSERVICE :
+            case RESPSERVICE:
                 mapRespService.clear();
                 mapRespService.putAll(map);
                 setDateFichier(typeFichier);
                 break;
 
-            default :
+            default:
                 throw new TechnicalException("FichiersXML.majMapDonnees - Type de fichier non géré :" + typeFichier.toString(), null);
         }
     }
 
     /**
-     * @param clef
+     * Permet de mettre à jour la date à laquel le fichier a été mis à jour.
+     * 
+     * @param fichier
+     *            Type du fichier mis à jour
      */
     public void setDateFichier(TypeFichier fichier)
     {
@@ -137,7 +138,7 @@ public class FichiersXML implements XML, Modele
     }
 
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Permet de controler si une map est vide ou non, et met à jour le message.
      * 
@@ -146,7 +147,7 @@ public class FichiersXML implements XML, Modele
      * @param texte
      * @param typeFichier
      */
-    private void controleMap(@SuppressWarnings ("rawtypes") Map map, StringBuilder builder, String texte, TypeFichier typeFichier)
+    private void controleMap(@SuppressWarnings("rawtypes") Map map, StringBuilder builder, String texte, TypeFichier typeFichier)
     {
         if (map.isEmpty())
         {
@@ -160,42 +161,42 @@ public class FichiersXML implements XML, Modele
     /*---------- ACCESSEURS ----------*/
 
     @XmlElementWrapper
-    @XmlElement (name = "mapApplis", required = false)
+    @XmlElement(name = "mapApplis", required = false)
     public Map<String, Boolean> getMapApplis()
     {
         return mapApplis;
     }
 
     @XmlElementWrapper
-    @XmlElement (name = "mapClarity", required = false)
+    @XmlElement(name = "mapClarity", required = false)
     public Map<String, InfoClarity> getMapClarity()
     {
         return mapClarity;
     }
 
     @XmlElementWrapper
-    @XmlElement (name = "maplotsPic", required = false)
+    @XmlElement(name = "maplotsPic", required = false)
     public Map<String, LotSuiviPic> getLotsPic()
     {
         return lotsPic;
     }
 
     @XmlElementWrapper
-    @XmlElement (name = "dateMaj", required = false)
+    @XmlElement(name = "dateMaj", required = false)
     public Map<TypeFichier, String> getDateMaj()
     {
         return dateMaj;
     }
 
     @XmlElementWrapper
-    @XmlElement (name = "mapRespService", required = false)
+    @XmlElement(name = "mapRespService", required = false)
     public Map<String, RespService> getMapRespService()
     {
         return mapRespService;
     }
 
     @XmlElementWrapper
-    @XmlElement (name = "mapEditions", required = false)
+    @XmlElement(name = "mapEditions", required = false)
     public Map<String, String> getMapEditions()
     {
         return mapEditions;

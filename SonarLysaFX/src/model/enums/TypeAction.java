@@ -7,19 +7,26 @@ package model.enums;
  */ 
 public enum TypeAction
 {
+    /*---------- ATTRIBUTS ----------*/
+
     CREER(Valeur.CREER), 
     VERIFIER(Valeur.VERIFIER), 
     VIDE(Valeur.VIDE),
     ASSEMBLER(Valeur.ASSEMBLER),
-    CLOTURER(Valeur.CLOTURER);
+    CLOTURER(Valeur.CLOTURER),
+    ABANDONNER(Valeur.ABANDONNER);
 
     private final String valeur;
 
+    /*---------- CONSTRUCTEURS ----------*/
+    
     private TypeAction(String valeur)
     {
         this.valeur = valeur;
     }
 
+    /*---------- METHODES PUBLIQUES ----------*/
+    
     @Override
     public String toString()
     {
@@ -41,12 +48,18 @@ public enum TypeAction
                 
             case Valeur.CLOTURER :
                 return CLOTURER;
+                
+            case Valeur.ABANDONNER :
+                return ABANDONNER;
 
             default :
                 return VIDE;
         }
     }
 
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
+    
     private static class Valeur
     {
         private Valeur() {}
@@ -54,7 +67,8 @@ public enum TypeAction
         private static final String CREER = "A créer";
         private static final String VERIFIER = "A vérifier";
         private static final String ASSEMBLER = "A assembler";
-        private static final String VIDE = "";
         private static final String CLOTURER = "A clôturer";
+        private static final String ABANDONNER = "A abandonner";
+        private static final String VIDE = "";
     }
 }

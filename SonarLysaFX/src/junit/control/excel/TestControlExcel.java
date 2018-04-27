@@ -55,6 +55,8 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     protected Workbook wb;
     /** Le controleur Excel */
     protected C handler;
+    
+    private static final String MAXINDICE = "maxIndice";
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -84,7 +86,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
      * @throws IllegalAccessException
      */
     @Before
-    public void init() throws InvalidFormatException, IOException, IllegalArgumentException, IllegalAccessException
+    public void init() throws InvalidFormatException, IOException, IllegalAccessException
     {
         file = new File(getClass().getResource(chemin).getFile());
         handler = ExcelFactory.getControlleur(typeColClass, file);
@@ -176,24 +178,26 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
         
         // Test - vérifie qu'on appele bien la méthode autant de fois qu'il y a de colonnes
         invokeMethod(handler, "autosizeColumns", mock);
-        Mockito.verify(mock, Mockito.times((int) getField(handler.getClass(), "maxIndice").get(handler) +1)).autoSizeColumn(Mockito.anyInt());
+        Mockito.verify(mock, Mockito.times((int) getField(handler.getClass(), MAXINDICE).get(handler) +1)).autoSizeColumn(Mockito.anyInt());
     }
     
     @Test
     public void testMax() throws Exception
     {
+        String methode = "testMax";
+        
         // Test - Appel méthode avec différentes valeur. le maxIndice doit toujours avoir la valeur maximum
         
         // Valur initiale du nombre max = taille du nombre d'éléments de l'énumération
-        int max = (int) getField(handler.getClass(), "maxIndice").get(handler);
-        invokeMethod(handler, "testMax", max -2);
-        assertEquals(max, getField(handler.getClass(), "maxIndice").get(handler));
-        invokeMethod(handler, "testMax", 0);
-        assertEquals(max, getField(handler.getClass(), "maxIndice").get(handler));
-        invokeMethod(handler, "testMax", max +3);
-        assertEquals(max + 3, getField(handler.getClass(), "maxIndice").get(handler));
-        invokeMethod(handler, "testMax", max -1);
-        assertEquals(max + 3, getField(handler.getClass(), "maxIndice").get(handler));
+        int max = (int) getField(handler.getClass(), MAXINDICE).get(handler);
+        invokeMethod(handler, methode, max -2);
+        assertEquals(max, getField(handler.getClass(), MAXINDICE).get(handler));
+        invokeMethod(handler, methode, 0);
+        assertEquals(max, getField(handler.getClass(), MAXINDICE).get(handler));
+        invokeMethod(handler, methode, max +3);
+        assertEquals(max + 3, getField(handler.getClass(), MAXINDICE).get(handler));
+        invokeMethod(handler, methode, max -1);
+        assertEquals(max + 3, getField(handler.getClass(), MAXINDICE).get(handler));
     }
     
     @Test
@@ -216,22 +220,23 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     @Test
     public void copierCelluleVide() throws Exception
     {
+        String methode = "copierCellule";
         // Initialisation
         Cell newCell = null;
         Cell oldCell = null;
         
         // test 1 - retour avec cellules vides.
-        invokeMethod(handler, "copierCellule", newCell, oldCell);
+        invokeMethod(handler, methode, newCell, oldCell);
         assertNull(newCell);
         assertNull(oldCell);
         
         newCell = wb.getSheetAt(0).getRow(0).getCell(0);
-        invokeMethod(handler, "copierCellule", newCell, oldCell);
+        invokeMethod(handler, methode, newCell, oldCell);
         assertNull(oldCell);  
         
         newCell = null;
         oldCell = wb.getSheetAt(0).getRow(0).getCell(0);
-        invokeMethod(handler, "copierCellule", newCell, oldCell);
+        invokeMethod(handler, methode, newCell, oldCell);
         assertNull(newCell);  
     }
     

@@ -1,11 +1,7 @@
 package junit.control.xml;
 
 import java.io.File;
-import java.io.IOException;
 
-import javax.xml.bind.JAXBException;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,38 +29,38 @@ public class TestControlXML
 
     @Test
     @TestInJfxThread
-    public void recuprerParamXML() throws InvalidFormatException, JAXBException, IOException
+    public void recuprerParamXML()
     {
         handler.recupererXMLResources(FichiersXML.class);
         handler.recupererXMLResources(ProprietesXML.class);
     }
 
     @Test
-    public void recupListeAppsDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+    public void recupListeAppsDepuisExcel()
     {
         handler.recupListeAppsDepuisExcel(new File(getClass().getResource("/resources/liste_applis.xlsx").getFile()));       
     }
 
     @Test
-    public void recupInfosClarityDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+    public void recupInfosClarityDepuisExcel()
     {
         handler.recupInfosClarityDepuisExcel(new File(getClass().getResource("/resources/Referentiel_Projets.xlsm").getFile()));
     }
 
     @Test
-    public void recupLotsPicDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+    public void recupLotsPicDepuisExcel()
     {
         handler.recupLotsPicDepuisExcel(new File(getClass().getResource("/resources/lots_Pic.xlsx").getFile()));
     }
 
     @Test
-    public void recupChefServiceDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+    public void recupChefServiceDepuisExcel()
     {
         handler.recupChefServiceDepuisExcel(new File(getClass().getResource("/resources/Reorg_managers.xlsx").getFile()));
     }
 
     @Test
-    public void recupEditionDepuisExcel() throws InvalidFormatException, IOException, JAXBException
+    public void recupEditionDepuisExcel()
     {
         handler.recupEditionDepuisExcel(new File(getClass().getResource("/resources/Codification_des_Editions.xlsx").getFile()));
     }

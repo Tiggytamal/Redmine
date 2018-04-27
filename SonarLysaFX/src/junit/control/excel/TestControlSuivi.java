@@ -193,46 +193,34 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
         String methode = "calculCouleurLigne";
         Set<String> lotsEnErreurSonar = new HashSet<>();
-        String anoLot = "";
-        Set<String> lotsRelease = new HashSet<>();
+        String anoLot = "123456";
 
         // Test 1 = Vert
         ano.setEtat("");
         ano.setNumeroAnomalie(1);
         ano.calculTraitee();
-        IndexedColors couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        IndexedColors couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.LIGHT_GREEN, couleur);
 
-        // Test 2 = Jaune
-        anoLot = LOT;
-        lotsRelease.add(anoLot);
-        lotsEnErreurSonar.add(anoLot);
-        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
-        assertEquals(IndexedColors.LIGHT_YELLOW, couleur);
-        assertEquals(RELEASE, ano.getVersion());
-
         // Test 3 = Blanc
-        lotsRelease.clear();
-        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        lotsEnErreurSonar.add(anoLot);
+        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.WHITE, couleur);
-        assertEquals(SNAPSHOT, ano.getVersion());
 
-        // Test 3 = Torquoise
-        lotsRelease.clear();
+        // Test 3 = Turquoise
         ano.setAction(TypeAction.ASSEMBLER);
-        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.LIGHT_TURQUOISE, couleur);
-        assertEquals(SNAPSHOT, ano.getVersion());
 
         // Test 4 = Gris
         ano.setAction(TypeAction.VERIFIER);
-        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.GREY_25_PERCENT, couleur);
 
         // Test 5 = Orange
         ano.setNumeroAnomalie(0);
         ano.calculTraitee();
-        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot, lotsRelease);
+        couleur = Whitebox.invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.LIGHT_ORANGE, couleur);
     }
 

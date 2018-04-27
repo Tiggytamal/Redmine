@@ -3,8 +3,8 @@ package control.task;
 import java.util.List;
 import java.util.Map;
 
-import sonarapi.model.Projet;
-import sonarapi.model.Vue;
+import model.sonarapi.Projet;
+import model.sonarapi.Vue;
 import utilities.Statics;
 
 public class CreerVueParEditionTask extends SonarTask

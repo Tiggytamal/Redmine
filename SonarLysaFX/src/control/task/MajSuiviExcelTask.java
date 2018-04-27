@@ -31,13 +31,13 @@ import model.enums.Matiere;
 import model.enums.TypeBool;
 import model.enums.TypeMetrique;
 import model.enums.TypeParam;
-import sonarapi.model.Composant;
-import sonarapi.model.Metrique;
-import sonarapi.model.Periode;
-import sonarapi.model.Projet;
-import sonarapi.model.QualityGate;
-import sonarapi.model.Status;
-import sonarapi.model.Vue;
+import model.sonarapi.Composant;
+import model.sonarapi.Metrique;
+import model.sonarapi.Periode;
+import model.sonarapi.Projet;
+import model.sonarapi.QualityGate;
+import model.sonarapi.Status;
+import model.sonarapi.Vue;
 import utilities.Statics;
 import utilities.Utilities;
 
@@ -299,7 +299,7 @@ public class MajSuiviExcelTask extends SonarTask
         List<Anomalie> listeLotenAno = controlAno.recupDonneesDepuisExcel();
 
         // Création de la liste des lots déjà dans le fichier
-        List<String> lotsDejaDansFichier = creationNumerosLots(listeLotenAno, mapLotsPIC);
+        Map<String, Anomalie> lotsDejaDansFichier = creationNumerosLots(listeLotenAno, mapLotsPIC);
 
         // Liste des anomalies à ajouter après traitement
         List<Anomalie> anoAajouter = new ArrayList<>();
@@ -328,14 +328,12 @@ public class MajSuiviExcelTask extends SonarTask
                     lognonlistee.warn("Mettre à jour le fichier Pic - Lots : " + numeroLot + " non listé");
                     continue;
                 }
-                Anomalie ano = ModelFactory.getModelWithParams(Anomalie.class, lot);
 
-                // On ajoute le lot soit, dans la liste des anos déjà créées soit, dans celle des anos à créer.
-                if (lotsDejaDansFichier.contains(numeroLot))
-
-                    anoDejacrees.add(ano);
+                // On ajoute, soit le lot dans la liste des anos déjà créées soit, on ajoute une nouvelle anomalie dans la liste des anoACeer.
+                if (lotsDejaDansFichier.keySet().contains(numeroLot))
+                    anoDejacrees.add(lotsDejaDansFichier.get(numeroLot));
                 else
-                    anoACreer.add(ano);
+                    anoACreer.add(ModelFactory.getModelWithParams(Anomalie.class, lot));
             }
 
             // Mise à jour de la feuille des anomalies pour chaque version de composants
@@ -438,7 +436,7 @@ public class MajSuiviExcelTask extends SonarTask
     }
 
     /**
-     * Permet de créer la liste des numéros de lots déjà en anomalie et met à jour les {@code Anomalie} depuis les infos de la Pic
+     * Permet de créer une map numéros de lots déjà en anomalie et met à jour les {@code Anomalie} depuis les infos de la Pic
      *
      * @param listeLotenAno
      *            liste des {@code Anomalie} déjà connues
@@ -446,27 +444,27 @@ public class MajSuiviExcelTask extends SonarTask
      *            map des lots connus de la Pic.
      * @return
      */
-    private List<String> creationNumerosLots(List<Anomalie> listeLotenAno, Map<String, LotSuiviPic> mapLotsPIC)
+    private Map<String, Anomalie> creationNumerosLots(List<Anomalie> listeLotenAno, Map<String, LotSuiviPic> mapLotsPIC)
     {
-        List<String> retour = new ArrayList<>();
+        Map<String, Anomalie> retour = new HashMap<>();
 
         // Iteration sur la liste des anomalies
         for (Anomalie ano : listeLotenAno)
         {
-            String string = ano.getLot();
+            String anoLot = ano.getLot();
 
-            if (string.startsWith("Lot "))
-                string = string.substring(4);
+            if (anoLot.startsWith("Lot "))
+                anoLot = anoLot.substring(4);
 
             // Mise à jour des données depuis la PIC
-            LotSuiviPic lotPic = mapLotsPIC.get(string);
+            LotSuiviPic lotPic = mapLotsPIC.get(anoLot);
 
             if (lotPic != null)
                 ano.majDepuisPic(lotPic);
             else
-                logger.warn("Un lot du fichier Excel n'est pas connu dans la Pic : " + string);
+                logger.warn("Un lot du fichier Excel n'est pas connu dans la Pic : " + anoLot);
 
-            retour.add(string);
+            retour.put(anoLot, ano);
         }
         return retour;
     }

@@ -61,14 +61,14 @@ public class MenuViewControl extends ViewControl
     @FXML
     public void initialize()
     {
+        // mensuel.setDisable(false);
+        // options.setDisable(false);
+        // planificateur.setDisable(false);
+        // autres.setDisable(false);
+        // suivi.setDisable(false);
+        // majvues.setDisable(false);
+        // maintenance.setDisable(false);
         box.getChildren().remove(deConnexion);
-        mensuel.setDisable(false);
-        options.setDisable(false);
-        planificateur.setDisable(false);
-        autres.setDisable(false);
-        suivi.setDisable(false);
-        majvues.setDisable(false);
-        maintenance.setDisable(false);
     }
 
     /* ---------- METHODES PUBLIQUES ---------- */
@@ -127,7 +127,7 @@ public class MenuViewControl extends ViewControl
             case "autres":
                 load("/view/AutresVues.fxml");
                 break;
-                
+
             case "maintenance":
                 load("/view/Maintenance.fxml");
                 break;
@@ -164,7 +164,7 @@ public class MenuViewControl extends ViewControl
      */
     private void testMdP(String pseudo, String mdp)
     {
-        // Jerome rauline Sylvain Jouet Brice Neuzan
+        // Sauvegarde informations de connexion
         Statics.info.setPseudo(pseudo);
         Statics.info.setMotDePasse(mdp);
 
@@ -175,6 +175,10 @@ public class MenuViewControl extends ViewControl
             options.setDisable(false);
             planificateur.setDisable(false);
             autres.setDisable(false);
+            suivi.setDisable(false);
+            majvues.setDisable(false);
+            maintenance.setDisable(false);
+
             box.getChildren().remove(connexion);
             box.getChildren().add(deConnexion);
         }

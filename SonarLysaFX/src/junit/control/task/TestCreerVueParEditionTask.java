@@ -13,8 +13,6 @@ public class TestCreerVueParEditionTask
     @Test
     public void task()
     {
-        Platform.runLater(() -> {
-            new CreerVueParEditionTask();
-        });
+        Platform.runLater( CreerVueParEditionTask::new);
     }
 }

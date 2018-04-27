@@ -36,9 +36,6 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    /**
-     * @return
-     */
     public Map<String, String> recupDonneesDepuisExcel()
     {
         // Initialisation map

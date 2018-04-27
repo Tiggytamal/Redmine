@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import application.Main;
-import sonarapi.model.Composant;
-import sonarapi.model.Projet;
-import sonarapi.model.Vue;
+import model.sonarapi.Composant;
+import model.sonarapi.Projet;
+import model.sonarapi.Vue;
 import utilities.Statics;
 import utilities.Utilities;
 
@@ -28,7 +28,7 @@ public class CreerVueParAppsTask extends SonarTask
     
     public CreerVueParAppsTask()
     {
-        super(2);
+        super(3);
         annulable = false;
     }
     /*---------- METHODES PUBLIQUES ----------*/
@@ -62,7 +62,8 @@ public class CreerVueParAppsTask extends SonarTask
         for (int i = 0; i < listeVuesExistantes.size(); i++)
         {           
             Projet projet = listeVuesExistantes.get(i);
-            api.supprimerProjet(projet.getKey(), true);
+            api.supprimerProjet(projet.getKey(), false);
+            api.supprimerVue(projet.getKey(), false);
             
             // Message
             updateMessage(base + projet.getNom());

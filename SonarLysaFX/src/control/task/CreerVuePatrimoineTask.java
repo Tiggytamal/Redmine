@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import sonarapi.model.Projet;
-import sonarapi.model.Vue;
+import model.sonarapi.Projet;
+import model.sonarapi.Vue;
 import utilities.Statics;
 
 public class CreerVuePatrimoineTask extends SonarTask

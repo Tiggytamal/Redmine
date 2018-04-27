@@ -163,29 +163,30 @@ public class TestAnomalie
     @Test
     public void calculerEnvironnement() throws Exception
     {
+        String methode = "calculerEnvironnement";
         // Test sans date
         LotSuiviPic lotPic = ModelFactory.getModel(LotSuiviPic.class);
-        assertEquals(Environnement.NOUVEAU, Whitebox.invokeMethod(ano, "calculerEnvironnement", lotPic));
+        assertEquals(Environnement.NOUVEAU, Whitebox.invokeMethod(ano, methode, lotPic));
         
         // Test DEVTU
         lotPic.setDevtu(TODAY);
-        assertEquals(Environnement.DEVTU, Whitebox.invokeMethod(ano, "calculerEnvironnement", lotPic));
+        assertEquals(Environnement.DEVTU, Whitebox.invokeMethod(ano, methode, lotPic));
         
         // Test TFON
         lotPic.setTfon(TODAY);
-        assertEquals(Environnement.TFON, Whitebox.invokeMethod(ano, "calculerEnvironnement", lotPic));
+        assertEquals(Environnement.TFON, Whitebox.invokeMethod(ano, methode, lotPic));
         
         // Test VMOE
         lotPic.setVmoe(TODAY);
-        assertEquals(Environnement.VMOE, Whitebox.invokeMethod(ano, "calculerEnvironnement", lotPic));
+        assertEquals(Environnement.VMOE, Whitebox.invokeMethod(ano, methode, lotPic));
         
         // Test VMOA
         lotPic.setVmoa(TODAY);
-        assertEquals(Environnement.VMOA, Whitebox.invokeMethod(ano, "calculerEnvironnement", lotPic));
+        assertEquals(Environnement.VMOA, Whitebox.invokeMethod(ano, methode, lotPic));
         
         // Test EDITION
         lotPic.setLivraison(TODAY);
-        assertEquals(Environnement.EDITION, Whitebox.invokeMethod(ano, "calculerEnvironnement", lotPic));
+        assertEquals(Environnement.EDITION, Whitebox.invokeMethod(ano, methode, lotPic));
         
     }
     

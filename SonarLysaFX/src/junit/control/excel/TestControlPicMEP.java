@@ -12,10 +12,10 @@ import java.util.Map;
 import org.junit.Test;
 
 import control.excel.ControlPic;
+import control.sonar.SonarAPI;
 import model.LotSuiviPic;
 import model.enums.TypeColPic;
-import sonarapi.SonarAPI;
-import sonarapi.model.Vue;
+import model.sonarapi.Vue;
 
 public class TestControlPicMEP extends TestControlExcel<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
 {

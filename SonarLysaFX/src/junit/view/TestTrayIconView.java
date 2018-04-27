@@ -43,7 +43,7 @@ public class TestTrayIconView
     }
 
     @Test
-    public void setStage() throws IllegalArgumentException, IllegalAccessException, InterruptedException
+    public void setStage() throws IllegalAccessException
     {
         tray.setStage(stage);
         assertTrue(Whitebox.getField(TrayIconView.class, "stage").get(tray).equals(stage));
@@ -51,7 +51,7 @@ public class TestTrayIconView
     }
     
     @Test
-    public void hideStage() throws IllegalArgumentException, IllegalAccessException, InterruptedException
+    public void hideStage() throws IllegalAccessException
     {
         tray.setStage(stage);
         Platform.runLater(() -> stage.hide());
@@ -59,7 +59,7 @@ public class TestTrayIconView
     }
     
     @Test
-    public void openStage() throws InterruptedException
+    public void openStage()
     {
         tray.openStage();
     }

@@ -17,6 +17,12 @@ public class TestUtils
     {
     }
 
+    /**
+     * Création d'un  mock des logger de l'application
+     * @param loggerName
+     *          non du logger (ils sont déclarès dans la classe {@code utilities.Statics}
+     * @return
+     */
     public static Logger getMockLogger(String loggerName)
     {
         Logger logger = PowerMockito.mock(Logger.class);
@@ -30,13 +36,14 @@ public class TestUtils
      * {@code retour} correspond au type de retour de la méthode (null si retour void). {@code params} est un array de tous les paramètres de la méthode
      * 
      * @param nomMethode
+     *          Nom de la méthode à appeler
      * @param instance
+     *          Instance de l'objet déclarant la méthode
+     * @param retour
+     *          Classe de l'objet de retour
      * @param params
-     * @throws SecurityException
-     * @throws NoSuchMethodException
-     * @throws IllegalArgumentException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
+     *          Paramètre de la méthode
+     * @return
      */
     public static <T> T callPrivate(String nomMethode, Object instance, Class<T> retour, Object... params)
     {

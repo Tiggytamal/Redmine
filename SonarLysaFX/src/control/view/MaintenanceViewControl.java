@@ -40,7 +40,6 @@ public class MaintenanceViewControl extends ViewControl
     private CheckBox precedente;
 
     private CHCouCDM chccdm;
-    private CreerVueCHCCDMTask task;
     private String titreTask;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -99,7 +98,7 @@ public class MaintenanceViewControl extends ViewControl
             annees.add(String.valueOf(Statics.TODAY.getYear() - 1));
 
         // Lancement de la task
-        task = new CreerVueCHCCDMTask(annees, chccdm);
+        CreerVueCHCCDMTask task = new CreerVueCHCCDMTask(annees, chccdm);
         startTask(task, titreTask);
     }
 
