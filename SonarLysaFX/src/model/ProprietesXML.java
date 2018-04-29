@@ -80,28 +80,28 @@ public class ProprietesXML implements XML, Modele
      * @param typeColClass
      * @return
      */
-    @SuppressWarnings ("unchecked")
-    public <T extends Enum<T> & TypeCol> Map<T, String> getMap(Class<T> typeColClass)
+    @SuppressWarnings ("rawtypes")
+    public <T extends Enum<T> & TypeCol> Map getMap(Class<T> typeColClass)
     {
         switch (typeColClass.getName())
         {
             case "model.enums.TypeColSuivi" :
-                return (Map<T, String>) mapColsSuivi;
+                return mapColsSuivi;
             
             case "model.enums.TypeColClarity" :
-                return (Map<T,String>) mapColsClarity;
+                return mapColsClarity;
                 
             case "model.enums.TypeColChefServ" :
-                return (Map<T,String>) mapColsChefServ;
+                return mapColsChefServ;
             
             case "model.enums.TypeColPic" :
-                return (Map<T,String>) mapColsPic;
+                return mapColsPic;
                 
             case "model.enums.TypeColEdition" :
-                return (Map<T,String>) mapColsEdition;
+                return mapColsEdition;
                 
             case "model.enums.TypeColApps" :
-                return (Map<T,String>) mapColsApps;
+                return mapColsApps;
                 
             default :
                 throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);
@@ -115,9 +115,11 @@ public class ProprietesXML implements XML, Modele
     public <T extends Enum<T> & TypeCol> Map<String, T> getMapColsInvert(Class<T> typeColClass)
     {
         Map<String, T> retour = new HashMap<>();
-        for (Map.Entry<T, String> entry : getMap(typeColClass).entrySet())
+        for (Object entry : getMap(typeColClass).entrySet())
         {
-            retour.put(entry.getValue(), entry.getKey());
+            @SuppressWarnings ({ "unchecked", "rawtypes" })
+            Map.Entry<T, String> test = (Map.Entry) entry;
+            retour.put((String)test.getValue(), (T)test.getKey());
         }
         return retour;
     }
