@@ -34,6 +34,9 @@ public enum Environnement
     
     public static Environnement from(String envString)
     {
+        if (envString == null)
+            return Environnement.INCONNU;
+        
         switch(envString)
         {
             case Valeur.NOUVEAU :
@@ -64,8 +67,6 @@ public enum Environnement
                 return MOA;
                 
             default :
-                if (envString.contains(Valeur.EDITION))
-                    return EDITION;
                 return INCONNU;
         }
         
@@ -73,7 +74,11 @@ public enum Environnement
     
     private static class Valeur
     {
-        private Valeur() {}
+        // Contructeur privé empéchant l'instanciation
+        private Valeur() 
+        {
+            throw new AssertionError("Classe non instanciable : model.enums.Environnement$Valeur");
+        }
         
         private static final String NOUVEAU = "Nouveau";
         private static final String DEVTU = "En DEV-TU";

@@ -1,70 +1,72 @@
 package model.enums;
 
-import utilities.TechnicalException;
-
 /**
  * Regroupe les différents méttriques utilisés dasn SonarQube
+ * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum TypeMetrique
+public enum TypeMetrique 
 {
-    LOT(Valeur.LOT),
-    QG(Valeur.QG),
-    DUPLICATION(Valeur.DUPLICATION),
-    BLOQUANT(Valeur.BLOQUANT),
-    CRITIQUE(Valeur.CRITIQUE),
-    APPLI(Valeur.APPLI),
+    LOT(Valeur.LOT), 
+    QG(Valeur.QG), 
+    DUPLICATION(Valeur.DUPLICATION), 
+    BLOQUANT(Valeur.BLOQUANT), 
+    CRITIQUE(Valeur.CRITIQUE), 
+    APPLI(Valeur.APPLI), 
     EDITION(Valeur.EDITION);
-    
+
     private final String valeur;
-    
+
     private TypeMetrique(String valeur)
     {
         this.valeur = valeur;
     }
-    
+
     @Override
     public String toString()
     {
         return valeur;
     }
-    
+
     public static TypeMetrique from(String string)
     {
-        switch(string)
+        switch (string)
         {
-            case Valeur.LOT :
+            case Valeur.LOT:
                 return LOT;
-                
-            case Valeur.QG :
+
+            case Valeur.QG:
                 return QG;
-                
-            case Valeur.DUPLICATION :
+
+            case Valeur.DUPLICATION:
                 return DUPLICATION;
-                
-            case Valeur.BLOQUANT :
+
+            case Valeur.BLOQUANT:
                 return BLOQUANT;
-                
-            case Valeur.CRITIQUE :
+
+            case Valeur.CRITIQUE:
                 return CRITIQUE;
-                
-            case Valeur.APPLI :
+
+            case Valeur.APPLI:
                 return APPLI;
-                
-            case Valeur.EDITION :
+
+            case Valeur.EDITION:
                 return EDITION;
-                
-            default :
-                throw new TechnicalException("model.enums.TypeMetrique inconnu" + string, null);
+
+            default:
+                throw new IllegalArgumentException("model.enums.TypeMetrique inconnu : " + string, null);
         }
-        
+
     }
-    
+
     private static class Valeur
     {
-        private Valeur() {}
-        
+        private Valeur()
+        {
+            throw new AssertionError("Classe non instanciable : model.enums.TypeMetrique$Valeur");
+        }
+
         private static final String LOT = "lot";
         private static final String QG = "alert_status";
         private static final String DUPLICATION = "duplicated_lines_density";

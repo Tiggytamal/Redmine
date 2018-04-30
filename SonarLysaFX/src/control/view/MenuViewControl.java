@@ -61,13 +61,6 @@ public class MenuViewControl extends ViewControl
     @FXML
     public void initialize()
     {
-        // mensuel.setDisable(false);
-        // options.setDisable(false);
-        // planificateur.setDisable(false);
-        // autres.setDisable(false);
-        // suivi.setDisable(false);
-        // majvues.setDisable(false);
-        // maintenance.setDisable(false);
         box.getChildren().remove(deConnexion);
     }
 

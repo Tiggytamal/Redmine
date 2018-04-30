@@ -422,6 +422,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 ano.setAction(null);
                 ano.setNumeroAnomalie(numeroAno);
                 ano.setDateCreation(Statics.TODAY);
+                ano.calculTraitee();
                 logger.info("Création anomalie " + numeroAno + " pour le lot " + anoLot);
             }
         }

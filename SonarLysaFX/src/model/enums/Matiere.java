@@ -43,9 +43,12 @@ public enum Matiere
         }        
     }
     
-    private abstract class Valeur
+    private static class Valeur
     {        
-        private Valeur() {}
+        private Valeur() 
+        {
+            throw new AssertionError("Classe non instanciable : model.enums.Matiere$Valeur");
+        }
         
         public static final String JAVA = "JAVA";
         public static final String DATASTAGE = "DATASTAGE";

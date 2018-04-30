@@ -91,6 +91,7 @@ public class TestCreerVueCHCCDMTask extends JunitBase
         PowerMockito.when(mock.appelWebserviceGET(Mockito.anyString(), Mockito.any())).thenCallRealMethod();
         PowerMockito.when(mock.creerVue(Mockito.any(Vue.class))).thenReturn(Status.OK);    
         PowerMockito.doNothing().when(mock).ajouterSousVue(Mockito.any(Vue.class), Mockito.any(Vue.class));  
+        @SuppressWarnings("unused")
         Map<String, String> map = Whitebox.invokeMethod(task, "recupererEditions", annees);
 //        Whitebox.invokeMethod(task, "creerVueMaintenance", map);
     }

@@ -13,12 +13,12 @@ public class TestOptionViewControl
     @Before
     public void init()
     {
-        
+        // A créer
     }
     
     @Test
     public void chargerLotsPic()
     {
-        
+        // A créer
     }
 }

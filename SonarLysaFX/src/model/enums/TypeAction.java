@@ -62,7 +62,10 @@ public enum TypeAction
     
     private static class Valeur
     {
-        private Valeur() {}
+        private Valeur() 
+        {
+            throw new AssertionError("Classe non instanciable : model.enums.TypeAction$Valeur.");
+        }
 
         private static final String CREER = "A créer";
         private static final String VERIFIER = "A vérifier";

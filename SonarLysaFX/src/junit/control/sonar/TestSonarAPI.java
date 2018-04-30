@@ -2,19 +2,16 @@ package junit.control.sonar;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Before;
 import org.junit.Test;
 
 import control.sonar.SonarAPI;
 import model.sonarapi.Composant;
 import model.sonarapi.Vue;
+import utilities.Statics;
 
 public class TestSonarAPI
 {
@@ -22,20 +19,20 @@ public class TestSonarAPI
 
     
     @Before
-    public void init() throws InvalidFormatException, JAXBException, IOException, InterruptedException
+    public void init()
     {
         api = SonarAPI.INSTANCE;
     }
     
 	@Test
-	public void metrics() throws InvalidFormatException, IOException
+	public void metrics()
 	{
 		@SuppressWarnings("unused")
 		Composant composant = api.getMetriquesComposant("fr.ca.cat.cocl.ds:DS_COCL_RepriseOscare_Build:13", new String[] { "bugs", "vulnerabilities" });
 	}
 
 	@Test
-	public void getVues() throws InvalidFormatException, IOException
+	public void getVues()
 	{
 		List<Vue> vues = api.getVues();
 		assertTrue(vues != null && !vues.isEmpty());
@@ -67,6 +64,6 @@ public class TestSonarAPI
         StringBuilder builder = new StringBuilder("ETP8137");
         builder.append(":");
         builder.append("28H02m8901,;:!");
-        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
+        Statics.logger.info(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
 	}
 }
