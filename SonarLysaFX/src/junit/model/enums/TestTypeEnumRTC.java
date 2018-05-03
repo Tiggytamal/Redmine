@@ -11,7 +11,7 @@ public class TestTypeEnumRTC
     @Test
     public void testSize()
     {
-        assertEquals(7, TypeEnumRTC.values().length);
+        assertEquals(8, TypeEnumRTC.values().length);
     }
     
     @Test
@@ -24,5 +24,6 @@ public class TestTypeEnumRTC
         assertEquals("fr.ca.cat.attribut.editionsicible", TypeEnumRTC.EDITIONSICIBLE.toString());
         assertEquals("NiveauImportance", TypeEnumRTC.IMPORTANCE.toString());
         assertEquals("Origine", TypeEnumRTC.ORIGINE.toString());
+        assertEquals("fr.ca.cat.attribut.codeprojetclarity", TypeEnumRTC.CLARITY.toString());
     }
 }

@@ -244,6 +244,11 @@ public class ProprietesXML implements XML, Modele
         }
     }
 
+    /**
+     * 
+     * @param builder
+     * @return
+     */
     private boolean controleParams(StringBuilder builder)
     {
         // Contrôle des paramètres
@@ -265,6 +270,11 @@ public class ProprietesXML implements XML, Modele
         }
     }
     
+    /**
+     * 
+     * @param builder
+     * @return
+     */
     private boolean controlePlanificateurs(StringBuilder builder)
     {
         // Contrôle des planificateurs

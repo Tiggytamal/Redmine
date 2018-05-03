@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import utilities.FunctionalException;
+import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
 
@@ -72,7 +73,10 @@ public class Main extends Application
             // Récursivité pour tester la cause de cette exception
             gestionException(e.getCause());
         else
-            createAlert(Severity.SEVERITY_ERROR, e, e.getClass().getSimpleName() + e.getMessage());
+            {
+                Statics.logger.error(e);
+                createAlert(Severity.SEVERITY_ERROR, e, e.getClass().getSimpleName() + e.getMessage());
+            }
     }
 
     /**

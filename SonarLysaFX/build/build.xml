@@ -946,7 +946,7 @@
 	
 		<fx:application id="fxApplication"
 			name="SonarLysa"
-			mainClass="application.application.Main"
+			mainClass="application.Main"
 			toolkit="fx"
 		/>
 	

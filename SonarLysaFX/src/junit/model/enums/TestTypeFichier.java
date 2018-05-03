@@ -11,6 +11,6 @@ public class TestTypeFichier
     @Test
     public void testSize()
     {
-        assertEquals(5, TypeFichier.values().length);
+        assertEquals(6, TypeFichier.values().length);
     }
 }

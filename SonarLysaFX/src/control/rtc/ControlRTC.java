@@ -3,6 +3,9 @@ package control.rtc;
 import static utilities.Statics.logger;
 import static utilities.Statics.proprietesXML;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +29,7 @@ import com.ibm.team.repository.common.IAuditableHandle;
 import com.ibm.team.repository.common.IContributor;
 import com.ibm.team.repository.common.IContributorHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
+import com.ibm.team.repository.common.UUID;
 import com.ibm.team.repository.common.model.query.BaseContributorQueryModel.ContributorQueryModel;
 import com.ibm.team.repository.common.query.IItemQuery;
 import com.ibm.team.repository.common.query.IItemQueryPage;
@@ -37,6 +41,7 @@ import com.ibm.team.workitem.client.WorkItemOperation;
 import com.ibm.team.workitem.client.WorkItemWorkingCopy;
 import com.ibm.team.workitem.common.IAuditableCommon;
 import com.ibm.team.workitem.common.internal.model.WorkItem;
+import com.ibm.team.workitem.common.internal.model.query.BaseWorkItemQueryModel.WorkItemQueryModel;
 import com.ibm.team.workitem.common.model.IAttribute;
 import com.ibm.team.workitem.common.model.IAttributeHandle;
 import com.ibm.team.workitem.common.model.ICategory;
@@ -52,9 +57,14 @@ import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
 import com.mchange.util.AssertException;
 
 import model.Anomalie;
+import model.LotSuiviRTC;
+import model.ModelFactory;
+import model.enums.Environnement;
 import model.enums.Matiere;
 import model.enums.TypeEnumRTC;
+import model.enums.TypeFichier;
 import model.enums.TypeParam;
+import utilities.DateConvert;
 import utilities.Statics;
 
 /**
@@ -214,8 +224,9 @@ public class ControlRTC
 
     /**
      * Création du Defect dans RTC
+     * 
      * @param ano
-     *          anomalie servant d'origine au Defect
+     *            anomalie servant d'origine au Defect
      * @return
      */
     public int creerDefect(Anomalie ano)
@@ -248,7 +259,7 @@ public class ControlRTC
 
         if (workItem != null)
         {
-            logger.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " +ano.getLot());
+            logger.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + ano.getLot());
             return workItem.getId();
         }
         return 0;
@@ -319,6 +330,98 @@ public class ControlRTC
         }
 
         return null;
+    }
+
+    /**
+     * Récupération de tous les lots RTC selon les paramètres fournis : <br>
+     * - remiseAZero = indique si l'on prend tous les loes depuis la date de création fournie ou seulement depuis la dernière mise à jour <br>
+     * - date Création = date de la dernière mise àjour du fichier <br>
+     * Si la date de dernière mise àjour n'est pas connue, il y aura forcement une remise à zéro du fichier.
+     * 
+     * @param remiseAZero
+     * @param dateCreation
+     * @return
+     * @throws TeamRepositoryException
+     */
+    @SuppressWarnings("unchecked")
+    public List<?> recupLotsRTC(boolean remiseAZero, LocalDate dateCreation) throws TeamRepositoryException
+    {
+        // 2. Requetage sur RTC pour récupérer tous les Lots
+
+        // Creation Query depuis ContributorQueryModel
+        IItemQuery query = IItemQuery.FACTORY.newInstance(WorkItemQueryModel.ROOT);
+
+        // Predicate avec un paramètre poru chercher depuis le nom avec un paramètre de type String
+        IPredicate predicatFinal = WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotprojet");
+
+        // Prise en compte de la date de création si elle est fournie
+        if (dateCreation != null)
+        {
+            IPredicate predicatCreation = WorkItemQueryModel.ROOT.creationDate()._gt(DateConvert.convertToOldDate(dateCreation));
+            predicatFinal = predicatFinal._and(predicatCreation);
+        }
+
+        // Dans le cas, où l'on ne fait pas une remise à zéro du fichier, on ne prend que les lots qui ont été midifiés depuis la dernière mise à jour.
+        if (!remiseAZero)
+        {
+            String dateMajFichierRTC = Statics.fichiersXML.getDateMaj().get(TypeFichier.LOTSRTC);
+            if (dateMajFichierRTC != null && !dateMajFichierRTC.isEmpty())
+            {
+                // Date de la dernière mise à jour
+                LocalDate lastUpdate = LocalDate.parse(dateMajFichierRTC);
+
+                // Periode entre la dernière mise à jour et aujourd'hui
+                Period periode = Period.between(lastUpdate, Statics.TODAY);
+
+                // Ajout du contrôle pour la requête
+                IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(DateConvert.convertToOldDate(Statics.TODAY.minusDays(periode.getDays())));
+                predicatFinal = predicatFinal._and(dateModification);
+            }
+        }
+
+        // Utilisation du Predicate en filtre.
+        IItemQuery filtered = (IItemQuery) query.filter(predicatFinal);
+
+        // Appel Service de requêtes depuis TeamRepository et non l'interface.
+        IQueryService qs = ((TeamRepository) repo).getQueryService();
+
+        // Appel de la reqête avec le filtre
+        int pageSize = 512;
+        IItemQueryPage page = qs.queryItems(filtered, new Object[] {}, pageSize);
+
+        // Liste de tous les lots trouvés.
+        List<?> retour = new ArrayList<>();
+        retour.addAll(page.getItemHandles());
+        int nextPosition = page.getNextStartPosition();
+        UUID token = page.getToken();
+
+        // On itère sur toutes les pages de retour de la requêtes pour remplir la liste.
+        while (nextPosition != -1)
+        {
+            IItemQueryPage nextPage = (IItemQueryPage) qs.fetchPage(token, nextPosition, pageSize);
+            nextPosition = nextPage.getNextStartPosition();
+            retour.addAll(nextPage.getItemHandles());
+        }
+
+        return retour;
+    }
+
+    public LotSuiviRTC creerLotSuiviRTCDepuisHandle(Object item) throws TeamRepositoryException
+    {
+        if (item instanceof IWorkItem)
+        {
+            IWorkItem workItem = (IWorkItem) repo.itemManager().fetchCompleteItem((IWorkItemHandle) item, IItemManager.DEFAULT, progressMonitor);
+            LotSuiviRTC retour = ModelFactory.getModel(LotSuiviRTC.class);
+            retour.setLot(String.valueOf(workItem.getId()));
+            retour.setLibelle(workItem.getHTMLSummary().getPlainText());
+            retour.setCpiProjet(recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
+            retour.setProjetClarity(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.toString(), null), workItem));
+            retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.toString(), null), workItem));
+            retour.setEtatLot(Environnement.from(recupEtatElement(workItem)));
+            retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
+            return retour;
+        }
+            return null;
     }
 
     /*---------- METHODES PRIVEES ----------*/

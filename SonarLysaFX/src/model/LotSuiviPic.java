@@ -9,200 +9,202 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * Classe représentant les informations du fichier Excel d'extraction de la Pic
- * @author ETP8137 - Grégoire Mathon 
+ * 
+ * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
 @XmlRootElement
 public class LotSuiviPic implements Modele
 {
-	/*---------- ATTRIBUTS ----------*/
+    /*---------- ATTRIBUTS ----------*/
 
+    private String lot;
+    private String libelle;
+    private String projetClarity;
+    private String cpiProjet;
+    private String edition;
+    private int nbreComposants;
+    private int nbrePaquets;
+    private LocalDate build;
+    private LocalDate devtu;
+    private LocalDate tfon;
+    private LocalDate vmoe;
+    private LocalDate vmoa;
+    private LocalDate livraison;
 
-	private String lot;
-	private String libelle;
-	private String projetClarity;
-	private String cpiProjet;
-	private String edition;
-	private int nbreComposants;
-	private int nbrePaquets;
-	private LocalDate build;
-	private LocalDate devtu;
-	private LocalDate tfon;
-	private LocalDate vmoe;
-	private LocalDate vmoa;
-	private LocalDate livraison;
+    /*---------- CONSTRUCTEURS ----------*/
 
-	/*---------- CONSTRUCTEURS ----------*/
-	
-	LotSuiviPic() {}
-	
-	/*---------- METHODES PUBLIQUES ----------*/
-	/*---------- METHODES PRIVEES ----------*/
-	/*---------- ACCESSEURS ----------*/
+    LotSuiviPic()
+    {
+    }
 
-	@XmlAttribute (required = false)
-	public String getLot()
-	{
-		return getString(lot);
-	}
+    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
 
-	public void setLot(String lot)
-	{
-		this.lot = lot;
-	}
+    @XmlAttribute(required = false)
+    public String getLot()
+    {
+        return getString(lot);
+    }
 
-	@XmlAttribute (required = false)
-	public String getLibelle()
-	{
-		return getString(libelle);
-	}
+    public void setLot(String lot)
+    {
+        this.lot = lot;
+    }
 
-	public void setLibelle(String libelle)
-	{
-		this.libelle = libelle;
-	}
+    @XmlAttribute(required = false)
+    public String getLibelle()
+    {
+        return getString(libelle);
+    }
 
-	@XmlAttribute (required = false)
-	public String getProjetClarity()
-	{
-		return getString(projetClarity);
-	}
+    public void setLibelle(String libelle)
+    {
+        this.libelle = libelle;
+    }
 
-	public void setProjetClarity(String projetClarity)
-	{
-		this.projetClarity = projetClarity;
-	}
+    @XmlAttribute(required = false)
+    public String getProjetClarity()
+    {
+        return getString(projetClarity);
+    }
 
-	@XmlAttribute (required = false)
-	public String getCpiProjet()
-	{
-		return getString(cpiProjet);
-	}
+    public void setProjetClarity(String projetClarity)
+    {
+        this.projetClarity = projetClarity;
+    }
 
-	public void setCpiProjet(String cpiProjet)
-	{
-		this.cpiProjet = cpiProjet;
-	}
+    @XmlAttribute(required = false)
+    public String getCpiProjet()
+    {
+        return getString(cpiProjet);
+    }
 
-	@XmlAttribute (required = false)
-	public String getEdition()
-	{
-		return getString(edition);
-	}
+    public void setCpiProjet(String cpiProjet)
+    {
+        this.cpiProjet = cpiProjet;
+    }
 
-	public void setEdition(String edition)
-	{
-		this.edition = edition;
-	}
+    @XmlAttribute(required = false)
+    public String getEdition()
+    {
+        return getString(edition);
+    }
 
-	@XmlAttribute (required = false)
-	public int getNbreComposants()
-	{
-		return nbreComposants;
-	}
+    public void setEdition(String edition)
+    {
+        this.edition = edition;
+    }
 
-	public void setNbreComposants(int nbreComposants)
-	{
-		this.nbreComposants = nbreComposants;
-	}
+    @XmlAttribute(required = false)
+    public int getNbreComposants()
+    {
+        return nbreComposants;
+    }
 
-	@XmlAttribute (required = false)
-	public int getNbrePaquets()
-	{
-		return nbrePaquets;
-	}
+    public void setNbreComposants(int nbreComposants)
+    {
+        this.nbreComposants = nbreComposants;
+    }
 
-	public void setNbrePaquets(int nbrePaquets)
-	{
-		this.nbrePaquets = nbrePaquets;
-	}
+    @XmlAttribute(required = false)
+    public int getNbrePaquets()
+    {
+        return nbrePaquets;
+    }
 
-	@XmlAttribute (required = false)
-	@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
-	public LocalDate getBuild()
-	{
-		return build;
-	}
+    public void setNbrePaquets(int nbrePaquets)
+    {
+        this.nbrePaquets = nbrePaquets;
+    }
 
-	public void setBuild(LocalDate build)
-	{
-		this.build = build;
-	}
+    @XmlAttribute(required = false)
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+    public LocalDate getBuild()
+    {
+        return build;
+    }
 
-	@XmlAttribute (required = false)
-	@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
-	public LocalDate getDevtu()
-	{
-		return devtu;
-	}
+    public void setBuild(LocalDate build)
+    {
+        this.build = build;
+    }
 
-	public void setDevtu(LocalDate devtu)
-	{
-		this.devtu = devtu;
-	}
+    @XmlAttribute(required = false)
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+    public LocalDate getDevtu()
+    {
+        return devtu;
+    }
 
-	@XmlAttribute (required = false)
-	@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
-	public LocalDate getTfon()
-	{
-		return tfon;
-	}
+    public void setDevtu(LocalDate devtu)
+    {
+        this.devtu = devtu;
+    }
 
-	public void setTfon(LocalDate tfon)
-	{
-		this.tfon = tfon;
-	}
+    @XmlAttribute(required = false)
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+    public LocalDate getTfon()
+    {
+        return tfon;
+    }
 
-	@XmlAttribute (required = false)
-	@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
-	public LocalDate getVmoe()
-	{
-		return vmoe;
-	}
+    public void setTfon(LocalDate tfon)
+    {
+        this.tfon = tfon;
+    }
 
-	public void setVmoe(LocalDate vmoe)
-	{
-		this.vmoe = vmoe;
-	}
+    @XmlAttribute(required = false)
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+    public LocalDate getVmoe()
+    {
+        return vmoe;
+    }
 
-	@XmlAttribute (required = false)
-	@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
-	public LocalDate getVmoa()
-	{
-		return vmoa;
-	}
+    public void setVmoe(LocalDate vmoe)
+    {
+        this.vmoe = vmoe;
+    }
 
-	public void setVmoa(LocalDate vmoa)
-	{
-		this.vmoa = vmoa;
-	}
+    @XmlAttribute(required = false)
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+    public LocalDate getVmoa()
+    {
+        return vmoa;
+    }
 
-	@XmlAttribute (required = false)
-	@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
-	public LocalDate getLivraison()
-	{
-		return livraison;
-	}
+    public void setVmoa(LocalDate vmoa)
+    {
+        this.vmoa = vmoa;
+    }
 
-	public void setLivraison(LocalDate livraison)
-	{
-		this.livraison = livraison;
-	}
+    @XmlAttribute(required = false)
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+    public LocalDate getLivraison()
+    {
+        return livraison;
+    }
 
-	private static class LocalDateAdapter extends XmlAdapter<String, LocalDate>
-	{
-		public LocalDate unmarshal(String v) throws Exception
-		{
-			if (v != null)
-				return LocalDate.parse(v);
-			return null;
-		}
+    public void setLivraison(LocalDate livraison)
+    {
+        this.livraison = livraison;
+    }
 
-		public String marshal(LocalDate v) throws Exception
-		{
-			if (v != null)
-				return v.toString();
-			return null;
-		}
-	}
+    private static class LocalDateAdapter extends XmlAdapter<String, LocalDate>
+    {
+        public LocalDate unmarshal(String v) throws Exception
+        {
+            if (v != null)
+                return LocalDate.parse(v);
+            return null;
+        }
+
+        public String marshal(LocalDate v) throws Exception
+        {
+            if (v != null)
+                return v.toString();
+            return null;
+        }
+    }
 }

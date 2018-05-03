@@ -8,7 +8,8 @@ public enum TypeEnumRTC
     EDITION("fr.ca.cat.attribut.edition"),
     EDITIONSICIBLE("fr.ca.cat.attribut.editionsicible"),
     IMPORTANCE("NiveauImportance"),
-    ORIGINE("Origine");
+    ORIGINE("Origine"),
+    CLARITY("fr.ca.cat.attribut.codeprojetclarity");
     
     private String valeur;
     

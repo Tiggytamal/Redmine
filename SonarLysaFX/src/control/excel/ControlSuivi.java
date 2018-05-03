@@ -93,6 +93,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     private static final String RELEASE = "RELEASE";
     private String lienslots;
     private String liensAnos;
+    
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
 
@@ -861,12 +862,19 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     private boolean controleKey(String anoClarity, String key)
     {
-        // Controle si la clef n'a pas les indices de numéro de lot
+        // Retourne une clef avec 6 caractères maximum si celle-ci finie par un numéro de lot
         String smallkey = key.length() > 5 && key.matches(".*0[0-9E]$") ? key.substring(0, 6) : key;
-
-        // Contrôle si la clef est de type T*.
-        String newKey = key.length() > 8 ? key.substring(0, 8) : smallkey;
-        return anoClarity.equalsIgnoreCase(newKey);
+        
+        // Contrôle si la clef est de type T* ou P*.
+        String newKey = key.length() == 9 && (key.startsWith("T") || key.startsWith("P")) ? key.substring(0, 8) : smallkey;
+        
+        // Retourne la clef clairity de l'anomalie avec 6 caractères maximum si celle-ci finie par un numéro de lot
+        String smallClarity = anoClarity.length() > 5 && anoClarity.matches(".*0[0-9E]$") ? anoClarity.substring(0, 6) : anoClarity;
+        
+        // Contrôle si la clef est de type T* ou P*.
+        String newClarity = anoClarity.length() == 9 && (anoClarity.startsWith("T") || anoClarity.startsWith("P")) ? anoClarity.substring(0, 8) : smallClarity;
+        
+        return anoClarity.equalsIgnoreCase(newKey) || newClarity.equalsIgnoreCase(key);
     }
 
     @Override

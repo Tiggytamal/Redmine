@@ -35,6 +35,8 @@ public class MenuViewControl extends ViewControl
     @FXML
     private MenuItem planificateur;
     @FXML
+    private MenuItem rtc;
+    @FXML
     private MenuItem autres;
     @FXML
     private MenuItem majvues;
@@ -84,6 +86,7 @@ public class MenuViewControl extends ViewControl
     {
         mensuel.setDisable(true);
         options.setDisable(true);
+        rtc.setDisable(true);
         planificateur.setDisable(true);
         autres.setDisable(true);
         Statics.info.setPseudo(null);
@@ -128,6 +131,10 @@ public class MenuViewControl extends ViewControl
             case "suivi":
                 load("/view/Suivi.fxml");
                 break;
+                
+            case "rtc":
+                load("/view/FichierRTC.fxml");
+                break;
 
             default:
                 throw new TechnicalException("MenuItem pas géré" + id, null);
@@ -143,7 +150,7 @@ public class MenuViewControl extends ViewControl
         alert.setContentText("Cela lancera la mise à jour de toutes les vues Sonar." + Statics.NL + "Etes-vous sur?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK)
+        if (result.isPresent() && result.get().equals(ButtonType.OK))
             new Thread(new MajVuesTask()).start();
     }
 
@@ -171,7 +178,8 @@ public class MenuViewControl extends ViewControl
             suivi.setDisable(false);
             majvues.setDisable(false);
             maintenance.setDisable(false);
-
+            rtc.setDisable(false);
+            
             box.getChildren().remove(connexion);
             box.getChildren().add(deConnexion);
         }

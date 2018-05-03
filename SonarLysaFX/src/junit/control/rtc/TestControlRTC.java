@@ -133,6 +133,12 @@ public class TestControlRTC extends JunitBase
         assertNotNull(item);
         assertEquals("defect", item.getWorkItemType());
     }
+    
+    @Test
+    public void test() throws TeamRepositoryException
+    {
+        handler.recupLotsRTC(false, null);
+    }
 
     @Test
     public void recupererTousLesProjets() throws Exception

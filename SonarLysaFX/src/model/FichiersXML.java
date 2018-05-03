@@ -29,6 +29,7 @@ public class FichiersXML implements XML, Modele
     private Map<String, RespService> mapRespService;
     private Map<TypeFichier, String> dateMaj;
     private Map<String, String> mapEditions;
+    private Map<String, LotSuiviRTC> lotsRTC;
     private boolean controleOK;
     private static final String NOMFICHIER = "\\fichiers.xml";
     private static final String RESOURCE = "/resources/fichiers.xml";
@@ -39,6 +40,7 @@ public class FichiersXML implements XML, Modele
     {
         mapClarity = new HashMap<>();
         lotsPic = new HashMap<>();
+        lotsRTC = new HashMap<>();
         mapApplis = new HashMap<>();
         mapRespService = new HashMap<>();
         dateMaj = new EnumMap<>(TypeFichier.class);
@@ -94,6 +96,12 @@ public class FichiersXML implements XML, Modele
                 mapRespService.putAll(map);
                 setDateFichier(typeFichier);
                 break;
+                
+            case LOTSRTC:
+                lotsRTC.clear();
+                lotsRTC.putAll(map);
+                setDateFichier(typeFichier);
+                break;
 
             default:
                 throw new TechnicalException("FichiersXML.majMapDonnees - Type de fichier non géré :" + typeFichier.toString(), null);
@@ -130,6 +138,9 @@ public class FichiersXML implements XML, Modele
 
         // Contrôle Editions
         controleMap(mapEditions, builder, "Editions Pic", TypeFichier.EDITION);
+        
+        // Contrôle Lots RTC
+        controleMap(lotsRTC, builder, "lots RTC", TypeFichier.LOTSRTC);
 
         if (!controleOK)
             builder.append("Merci de recharger le(s) fichier(s) de paramétrage.").append(NL);
@@ -200,5 +211,12 @@ public class FichiersXML implements XML, Modele
     public Map<String, String> getMapEditions()
     {
         return mapEditions;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapLotsRTC", required = false)
+    public Map<String, LotSuiviRTC> getLotsRTC()
+    {
+        return lotsRTC;
     }
 }
