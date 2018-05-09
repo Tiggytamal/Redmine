@@ -40,7 +40,7 @@ public class CreerVueCHCCDMTask extends SonarTask
         super(3);
         annulable = false;
         if (annees == null || annees.isEmpty())
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Création task CreerVueCHCCDMTask sans liste d'années");
+            throw new FunctionalException(Severity.ERROR, "Création task CreerVueCHCCDMTask sans liste d'années");
         this.annees = annees;
         this.chccdm = chccdm;
     }

@@ -67,7 +67,7 @@ public class Main extends Application
         else if (e instanceof FileNotFoundException && e.getMessage().contains("Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus"))
         {
             // gestion des fichiers utilisès par un autre utilisateur
-            createAlert(Severity.SEVERITY_ERROR, null, "Fichier utilisé par un autre utilisateur : \n" + e.getMessage().split("\\(")[0]);
+            createAlert(Severity.ERROR, null, "Fichier utilisé par un autre utilisateur : \n" + e.getMessage().split("\\(")[0]);
         }
         else if (e.getCause() != null)
             // Récursivité pour tester la cause de cette exception
@@ -75,7 +75,7 @@ public class Main extends Application
         else
             {
                 Statics.logger.error(e);
-                createAlert(Severity.SEVERITY_ERROR, e, e.getClass().getSimpleName() + e.getMessage());
+                createAlert(Severity.ERROR, e, e.getClass().getSimpleName() + e.getMessage());
             }
     }
 
@@ -91,7 +91,7 @@ public class Main extends Application
         Alert alert;
 
         // Switch sur les sévérités pour récupérer le type d'alerte
-        if (severity == Severity.SEVERITY_ERROR)
+        if (severity == Severity.ERROR)
         {
             alert = new Alert(AlertType.ERROR);
             alert.setTitle("Erreur");

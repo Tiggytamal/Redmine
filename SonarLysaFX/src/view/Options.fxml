@@ -21,8 +21,7 @@
 <?import javafx.scene.control.TreeItem?>
 <?import javafx.scene.control.ScrollPane?>
 
-<SplitPane fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/8.0.141">
+<SplitPane fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
 	<items>
 
 		<!-- Menu de selection des options -->
@@ -34,6 +33,7 @@
 							<children>
 								<TreeItem value="Chargement fichiers" />
 								<TreeItem value="Paramètres" />
+								<TreeItem value="Autres Paramètres" />
 								<TreeItem value="Nom Colonnes" expanded="true">
 									<children>
 										<TreeItem value="SuiviQualité" />
@@ -79,48 +79,114 @@
 						<padding>
 							<Insets top="10" right="10" bottom="10" left="25" />
 						</padding>
-						
-						<!-- Gestion des versions des éditions -->
-						<HBox>
-							<padding>
-								<Insets top="10" right="10" bottom="10" left="10" />
-							</padding>
-							<Label text="Versions : " />
-							<Region prefWidth="10" />
-							<ListView fx:id="versionsField" prefWidth="50">
-								<items>
-									<FXCollections fx:factory="observableArrayList">
-									</FXCollections>
-								</items>
-							</ListView>
-							<Region prefWidth="10" />
-							<Button text="Supprimer" onAction="#suppVersion" />
-						</HBox>
-						<Region prefHeight="10" />
-						<HBox>
-							<TextField fx:id="newVersionField" prefWidth="80" promptText="Version" />
-							<Region prefWidth="10" />
-							<Button text="ajouter" onAction="#ajouterVersion" />
-						</HBox>
-						<Region prefHeight="10" />
-						<Separator />
-						<Region prefHeight="10" />
 
-						<!-- Autres paramètres chargés depuis le JAVA -->
+						<!-- Paramètres chargés depuis le JAVA -->
 						<VBox fx:id="paramsBox" prefWidth="500">
 							<children>
 							</children>
 						</VBox>
-						
+
 						<!-- Autres paramètres booléens chargés depuis le JAVA -->
 						<VBox fx:id="booleanBox" prefWidth="500">
 							<children>
 							</children>
 						</VBox>
-						
+
 						<!-- Bouton de sauvegarde -->
 						<Region prefHeight="20" />
 						<Button text="Sauvegarder" onAction="#sauvegarder" alignment="CENTER" />
+					</VBox>
+				</ScrollPane>
+
+				<ScrollPane fx:id="optionsPane2" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
+					<VBox alignment="center">
+						<padding>
+							<Insets top="10" right="10" bottom="10" left="25" />
+						</padding>
+
+						<!-- Autres Paramètres chargés depuis le JAVA -->
+						<VBox fx:id="paramsBox2" prefWidth="500">
+							<children>
+								<!-- Gestion des versions des éditions -->
+								<HBox>
+									<padding>
+										<Insets top="10" right="10" bottom="10" left="10" />
+									</padding>
+									<Label text="Versions : " />
+									<Region prefWidth="10" />
+									<ListView fx:id="versionsField" prefWidth="50">
+										<items>
+											<FXCollections fx:factory="observableArrayList">
+											</FXCollections>
+										</items>
+									</ListView>
+									<Region prefWidth="10" />
+									<Button text="Supprimer" onAction="#suppVersion" />
+								</HBox>
+								<Region prefHeight="10" />
+								<HBox>
+									<TextField fx:id="newVersionField" prefWidth="80" promptText="Responsable" />
+									<Region prefWidth="10" />
+									<Button text="ajouter" onAction="#ajouterVersion" />
+								</HBox>
+								<Region prefHeight="10" />
+								<Separator />
+								<Region prefHeight="10" />
+
+								<!-- Gestion des responsables des anomalies RTC JAVA -->
+								<HBox>
+									<padding>
+										<Insets top="10" right="10" bottom="10" left="10" />
+									</padding>
+									<Label text="Responsables RTC JAVA : " />
+									<Region prefWidth="10" />
+									<ListView fx:id="respJavaField" prefWidth="150">
+										<items>
+											<FXCollections fx:factory="observableArrayList">
+											</FXCollections>
+										</items>
+									</ListView>
+									<Region prefWidth="10" />
+									<Button text="Supprimer" onAction="#suppVersion" />
+								</HBox>
+								<Region prefHeight="10" />
+								<HBox>
+									<TextField fx:id="newRespJavaField" prefWidth="150" promptText="Responsable" />
+									<Region prefWidth="10" />
+									<Button text="ajouter" onAction="#ajouterVersion" />
+								</HBox>
+								<Region prefHeight="10" />
+								<Separator />
+								<Region prefHeight="10" />
+
+								<!-- Gestion des responsables des anomalies RTC DATASTAGE -->
+								<HBox>
+									<padding>
+										<Insets top="10" right="10" bottom="10" left="10" />
+									</padding>
+									<Label text="Responsables RTC DATASTAGE : " />
+									<Region prefWidth="10" />
+									<ListView fx:id="respDatastageField" prefWidth="150">
+										<items>
+											<FXCollections fx:factory="observableArrayList">
+											</FXCollections>
+										</items>
+									</ListView>
+									<Region prefWidth="10" />
+									<Button text="Supprimer" onAction="#suppVersion" />
+								</HBox>
+								<Region prefHeight="10" />
+								<HBox>
+									<TextField fx:id="newRespDatastageField" prefWidth="150" promptText="Version" />
+									<Region prefWidth="10" />
+									<Button text="ajouter" onAction="#ajouterVersion" />
+								</HBox>
+								<Region prefHeight="10" />
+								<Separator />
+								<Region prefHeight="10" />
+
+							</children>
+						</VBox>
 					</VBox>
 				</ScrollPane>
 
@@ -130,14 +196,14 @@
 						<padding>
 							<Insets top="10" right="10" bottom="10" left="25" />
 						</padding>
-						
+
 						<!-- Liste des colonnes chargèes depuis le JAVA -->
 						<VBox fx:id="colonnesBox" prefWidth="500">
 							<children>
 							</children>
 						</VBox>
-						
-						<!-- Bouton de sauvegarde -->					
+
+						<!-- Bouton de sauvegarde -->
 						<Region prefHeight="20" />
 						<Button text="Sauvegarder" onAction="#saveCols" alignment="CENTER" />
 					</VBox>

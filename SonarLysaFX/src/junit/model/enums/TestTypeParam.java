@@ -12,13 +12,12 @@ public class TestTypeParam
     @Test
     public void testSize()
     {
-        assertEquals(12, TypeParam.values().length);
+        assertEquals(11, TypeParam.values().length);
     }
     
     @Test
     public void testToString()
     {
-        assertFalse(TypeParam.VERSIONS.toString().isEmpty());
         assertFalse(TypeParam.FILTREDATASTAGE.toString().isEmpty());
         assertFalse(TypeParam.ABSOLUTEPATH.toString().isEmpty());
         assertFalse(TypeParam.NOMFICHIER.toString().isEmpty());

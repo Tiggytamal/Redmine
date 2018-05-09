@@ -104,7 +104,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
             sheet = wb.getSheetAt(0);
         } catch (IllegalArgumentException e)
         {
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier est vide");
+            throw new FunctionalException(Severity.ERROR, "Le fichier est vide");
         }
         return sheet;
     }
@@ -144,7 +144,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
 
         // Gestion des erreurs si on ne trouve pas le bon nombre de colonnes
         if (nbreCol != enumeration.getEnumConstants().length)
-            throw new FunctionalException(Severity.SEVERITY_ERROR,
+            throw new FunctionalException(Severity.ERROR,
                     "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci : Différence = " + (enumeration.getEnumConstants().length - nbreCol));
     }
 

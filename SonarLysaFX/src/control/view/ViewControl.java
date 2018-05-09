@@ -47,7 +47,7 @@ public abstract class ViewControl extends LaunchTask
         fc.getExtensionFilters().add(Statics.FILTEREXCEL);
         File file = fc.showOpenDialog(MainScreen.getRoot().getScene().getWindow());
         if (file == null)
-            throw new FunctionalException(Severity.SEVERITY_INFO, "Impossible de récupérer le fichier.");
+            throw new FunctionalException(Severity.INFO, "Impossible de récupérer le fichier.");
         return file;
     }
 

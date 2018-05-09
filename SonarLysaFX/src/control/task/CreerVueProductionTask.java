@@ -101,13 +101,13 @@ public class CreerVueProductionTask extends SonarTask
         else if (mapLot.size() == 3)
             creerVueTrimestrielle(mapLot);
         else
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier Excel donné ou les dates fournies ne sont ni mensuels ni trimetriels.");
+            throw new FunctionalException(Severity.ERROR, "Le fichier Excel donné ou les dates fournies ne sont ni mensuels ni trimetriels.");
         return true;
     }
 
     private Map<LocalDate, List<Vue>> recupLotSonarPourMEP(LocalDate dateDebut, LocalDate dateFin)
     {
-        throw new FunctionalException(Severity.SEVERITY_INFO, "Pas encore implémenté");
+        throw new FunctionalException(Severity.INFO, "Pas encore implémenté");
     }
 
     /**

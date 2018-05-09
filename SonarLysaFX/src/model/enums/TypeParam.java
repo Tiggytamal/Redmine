@@ -11,7 +11,6 @@ public enum TypeParam implements Serializable, TypeKey
 {
     /*---------- ATTRIBUTS ----------*/
 
-    VERSIONS("Version"), 
     FILTREDATASTAGE("Filtre DataStage"), 
     ABSOLUTEPATH("Chemin des fichiers"), 
     NOMFICHIER("Nom fichier de suivi"), 

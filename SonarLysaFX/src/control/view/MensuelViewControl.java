@@ -109,7 +109,7 @@ public class MensuelViewControl extends ViewControl
         LocalDate dateDebut = dateDebutPicker.getValue();
         LocalDate dateFin = dateFinPicker.getValue();
         if (dateDebut == null || dateFin == null || dateFin.isBefore(dateDebut))
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Les dates sont mal renseignées");
+            throw new FunctionalException(Severity.ERROR, "Les dates sont mal renseignées");
 
         // Traitement
         startTask(new CreerVueProductionTask(dateDebut, dateFin), null);

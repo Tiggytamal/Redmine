@@ -297,7 +297,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         Sheet sheet = wb.getSheet(SQ);
 
         if (sheet == null)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Problème récupération feuille Excel principale");
+            throw new FunctionalException(Severity.ERROR, "Problème récupération feuille Excel principale");
 
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
@@ -889,7 +889,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         // Récupération de la feuille principale
         Sheet sheet = wb.getSheet(SQ);
         if (sheet == null)
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Le fichier n'a pas de page Suivi Qualité");
+            throw new FunctionalException(Severity.ERROR, "Le fichier n'a pas de page Suivi Qualité");
         return sheet;
     }
 

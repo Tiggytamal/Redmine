@@ -66,6 +66,7 @@ import model.enums.TypeFichier;
 import model.enums.TypeParam;
 import utilities.DateConvert;
 import utilities.Statics;
+import utilities.TechnicalException;
 
 /**
  * Classe de controle des accès RTC sous form dénumération pour forcer le singleton
@@ -88,6 +89,10 @@ public class ControlRTC
 
     private static final String RECAPITULATIF = "Anomalie Qualimétrie : Quality Gate non conforme";
 
+    // Valeurs pour le texte des anomalies :
+    private static final String securite = "Attention certains défauts sont liés à la sécurité (classés dans vulnérabilité) et sont à prioriser dans la correction.\nMerci";
+    private static final String TEXTEANO = "Bonjour,\nL'analyse SonarQube de ce jour du lot projet <lot> fait apparaitre un quality Gate non conforme.\nVeuillez trouver ci après le lien vers l'analyse du lot pour prise en compte et correction :\nhttp://ttp10-snar.ca-technologies.fr/governance?id=view_lot_<lot>\nMerci";
+    
     /*---------- CONSTRUCTEURS ----------*/
 
     /**
@@ -336,7 +341,8 @@ public class ControlRTC
      * Récupération de tous les lots RTC selon les paramètres fournis : <br>
      * - remiseAZero = indique si l'on prend tous les loes depuis la date de création fournie ou seulement depuis la dernière mise à jour <br>
      * - date Création = date de la dernière mise àjour du fichier <br>
-     * Si la date de dernière mise àjour n'est pas connue, il y aura forcement une remise à zéro du fichier.
+     * Si la date de dernière mise àjour n'est pas connue, une demande de remise à zéero sera renvoyée.<br>
+     * Une erreur sera remontée pour toute remise à zéro sans date limite de création
      * 
      * @param remiseAZero
      * @param dateCreation
@@ -346,6 +352,12 @@ public class ControlRTC
     @SuppressWarnings("unchecked")
     public List<?> recupLotsRTC(boolean remiseAZero, LocalDate dateCreation) throws TeamRepositoryException
     {
+        // 1. Contrôle
+
+        // On retourne une erreur si l'on souhaite une remise à zéro mais que la date de création n'est pas renseignée
+        if (remiseAZero && dateCreation == null)
+            throw new TechnicalException("méthode control.rts.ControlRTC.recupLotsRTC : date Creation non renseignée lors d'une remise à zéro.", null);
+
         // 2. Requetage sur RTC pour récupérer tous les Lots
 
         // Creation Query depuis ContributorQueryModel
@@ -361,7 +373,7 @@ public class ControlRTC
             predicatFinal = predicatFinal._and(predicatCreation);
         }
 
-        // Dans le cas, où l'on ne fait pas une remise à zéro du fichier, on ne prend que les lots qui ont été midifiés depuis la dernière mise à jour.
+        // Dans le cas où l'on ne fait pas une remise à zéro du fichier, on ne prend que les lots qui ont été modifiés ou créées depuis la dernière mise à jour.
         if (!remiseAZero)
         {
             String dateMajFichierRTC = Statics.fichiersXML.getDateMaj().get(TypeFichier.LOTSRTC);
@@ -373,9 +385,15 @@ public class ControlRTC
                 // Periode entre la dernière mise à jour et aujourd'hui
                 Period periode = Period.between(lastUpdate, Statics.TODAY);
 
-                // Ajout du contrôle pour la requête
+                // Prédicat des lots qui ont été modifiés depuis la dernière mise à jour
                 IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(DateConvert.convertToOldDate(Statics.TODAY.minusDays(periode.getDays())));
-                predicatFinal = predicatFinal._and(dateModification);
+
+                // Prédicat des lots qui ont été créés depuis la dernière mise à jour
+                IPredicate predicatCreation = WorkItemQueryModel.ROOT.creationDate()._gt(DateConvert.convertToOldDate(Statics.TODAY.minusDays(periode.getDays())));
+
+                // Ajout du contrôle Or et modification du prédicat final
+                IPredicate predicatOu = dateModification._or(predicatCreation);
+                predicatFinal = predicatFinal._and(predicatOu);
             }
         }
 
@@ -408,7 +426,7 @@ public class ControlRTC
 
     public LotSuiviRTC creerLotSuiviRTCDepuisHandle(Object item) throws TeamRepositoryException
     {
-        if (item instanceof IWorkItem)
+        if (item instanceof IWorkItemHandle)
         {
             IWorkItem workItem = (IWorkItem) repo.itemManager().fetchCompleteItem((IWorkItemHandle) item, IItemManager.DEFAULT, progressMonitor);
             LotSuiviRTC retour = ModelFactory.getModel(LotSuiviRTC.class);
@@ -421,7 +439,7 @@ public class ControlRTC
             retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
             return retour;
         }
-            return null;
+        return null;
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -462,7 +480,7 @@ public class ControlRTC
         {
             IWorkItem workItem = workingCopy.getWorkItem();
             workItem.setHTMLSummary(XMLString.createFromPlainText(RECAPITULATIF));
-            workItem.setHTMLDescription(XMLString.createFromPlainText(creerDescription(lotAno)));
+            workItem.setHTMLDescription(XMLString.createFromPlainText(creerDescription()));
             workItem.setCategory(cat);
 
             // Environnement
@@ -605,11 +623,12 @@ public class ControlRTC
             return literalID;
         }
 
-        private String creerDescription(int lot)
+        private String creerDescription()
         {
-            return "Bonjour,\nL'analyse SonarQube de ce jour du lot projet " + lot + " fait apparaitre un quality Gate non conforme.\n"
-                    + "Veuillez trouver ci après le lien vers l'analyse du lot pour prise en compte et correction :\n" + "http://ttp10-snar.ca-technologies.fr/governance?id=view_lot_" + lot
-                    + "\nMerci";
+            String retour = TEXTEANO.replace("<lot>", String.valueOf(lotAno));
+            if (ano.getSecurite().equals(Statics.SECURITEKO))
+                retour = retour.replace("Merci", securite);
+            return retour;
         }
 
         /*---------- ACCESSEURS ----------*/

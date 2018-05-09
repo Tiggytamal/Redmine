@@ -4,6 +4,8 @@ import control.task.LaunchTask;
 import control.task.MajFichierRTCTask;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
+import utilities.FunctionalException;
+import utilities.enums.Severity;
 
 public class FichierRTCViewControl extends LaunchTask
 {
@@ -18,8 +20,12 @@ public class FichierRTCViewControl extends LaunchTask
     @FXML
     public void majFichierRTC()
     {
-        startTask(new MajFichierRTCTask(datePicker.getValue(), true), "Initialisation fichier lots RTC");        
+        if (datePicker.getValue() != null)
+            startTask(new MajFichierRTCTask(datePicker.getValue(), true), "Initialisation fichier lots RTC");    
+        else
+            throw new FunctionalException(Severity.ERROR, "La date limite de création des lots doit être renseignée.");
     }
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

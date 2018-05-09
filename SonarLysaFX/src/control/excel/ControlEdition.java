@@ -80,7 +80,7 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
         if (retour.matches("^CHC20[12][0-9]\\-S[0-5][0-9]$"))
             return retour;
 
-        throw new FunctionalException(Severity.SEVERITY_ERROR, "Mauvais format d'une edition du fichier Excel - libelle " + libelle);
+        throw new FunctionalException(Severity.ERROR, "Mauvais format d'une edition du fichier Excel - libelle " + libelle);
     }
 
     @Override

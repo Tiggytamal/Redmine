@@ -37,6 +37,7 @@ import model.enums.TypeColPic;
 import model.enums.TypeColSuivi;
 import model.enums.TypeKey;
 import model.enums.TypeParam;
+import model.enums.TypeParamSpec;
 import utilities.FunctionalException;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
@@ -57,9 +58,19 @@ public class OptionViewControl extends ViewControl
     @FXML
     private ScrollPane optionsPane;
     @FXML
+    private ScrollPane optionsPane2;
+    @FXML
     private ListView<String> versionsField;
     @FXML
     private TextField newVersionField;
+    @FXML
+    private ListView<String> respJavaField;
+    @FXML
+    private TextField newRespJavaField;
+    @FXML
+    private ListView<String> respDatastageField;
+    @FXML
+    private TextField newRespDatastageField;
     @FXML
     private ScrollPane colonnesPane;
     @FXML
@@ -70,12 +81,15 @@ public class OptionViewControl extends ViewControl
     private VBox booleanBox;
     @FXML
     private VBox paramsBox;
+    @FXML
+    private VBox paramsBox2;
 
     // Attributs de classe
 
     private Alert alert;
     private static final int ROW_HEIGHT = 24;
     private Map<TypeParam, String> mapParams;
+    private Map<TypeParamSpec, String> mapParamsSpec;
     private Map<TypeBool, Boolean> mapParamsBool;
     private ControlXML control;
 
@@ -94,6 +108,7 @@ public class OptionViewControl extends ViewControl
         alert.setHeaderText(null);
         mapParams = proprietesXML.getMapParams();
         mapParamsBool = proprietesXML.getMapParamsBool();
+        mapParamsSpec = proprietesXML.getMapParamsSpec(); 
         control = new ControlXML();
     }
 
@@ -107,18 +122,22 @@ public class OptionViewControl extends ViewControl
     private void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
     {
         ObservableList<Node> root = rightSide.getChildren();
+        root.clear();
 
         switch (ov.getValue().getValue())
         {
             case "Chargement fichiers":
-                root.clear();
                 root.add(chargementPane);
                 break;
 
             case "Paramètres":
-                root.clear();
                 afficherParams();
                 root.add(optionsPane);
+                break;
+            
+            case "Autres Paramètres":
+                afficherParamsAutres();
+                root.add(optionsPane2);
                 break;
 
             case "SuiviQualité":
@@ -220,7 +239,7 @@ public class OptionViewControl extends ViewControl
         }
         else
         {
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "La version doit être de la forme ^E[0-9][0-9]");
+            throw new FunctionalException(Severity.ERROR, "La version doit être de la forme ^E[0-9][0-9]");
         }
         liste.sort((o1, o2) -> o1.compareTo(o2));
     }
@@ -237,9 +256,9 @@ public class OptionViewControl extends ViewControl
         {
             builder.append(liste.get(i));
             if (i < liste.size() - 1)
-                builder.append("-");
+                builder.append(";");
         }
-        mapParams.put(TypeParam.VERSIONS, builder.toString());
+        mapParamsSpec.put(TypeParamSpec.VERSIONS, builder.toString());
 
         // Sauvegarde des autres paramètres
         for (Node node : paramsBox.getChildren())
@@ -296,7 +315,6 @@ public class OptionViewControl extends ViewControl
     private <T extends Enum<T> & TypeCol> void afficherColonnes(Class<T> typeCol, ObservableList<Node> root)
     {
         // Nettoyage de l'affichage
-        root.clear();
         colonnesBox.getChildren().clear();
 
         // Récupération de la map correspondante au type de fichier et affichage des colonnes
@@ -318,29 +336,10 @@ public class OptionViewControl extends ViewControl
         paramsBox.getChildren().clear();
         booleanBox.getChildren().clear();
 
-        // Initialition liste des versions affichée
-        String versionsParam = mapParams.get(TypeParam.VERSIONS);
-
-        if (versionsParam != null && !versionsParam.isEmpty())
-        {
-            versionsField.getItems().clear();
-            versionsField.getItems().addAll(versionsParam.split("-"));
-            versionsField.getItems().sort((o1, o2) -> o1.compareTo(o2));
-        }
-
-        // Mise à jour automatique de la liste des versions
-        versionsField.getSelectionModel().selectFirst();
-        double taille = (double) versionsField.getItems().size() * ROW_HEIGHT + 2;
-        versionsField.setPrefHeight(taille);
-        versionsField.getItems().addListener((ListChangeListener.Change<? extends String> c) -> versionsField.setPrefHeight(taille));
-
         // Récupération de la map correspondante au type de fichier et affichage des colonnes. On saute juste les
         // versions qui sont gérées différement
         for (Map.Entry<TypeParam, String> entry : mapParams.entrySet())
         {
-            if (entry.getKey() == TypeParam.VERSIONS)
-                continue;
-
             ParamView pv = new ParamView(entry.getKey(), entry.getValue());
             paramsBox.getChildren().add(pv);
         }
@@ -351,6 +350,16 @@ public class OptionViewControl extends ViewControl
             BooleanView pv = new BooleanView(entry.getKey(), entry.getValue());
             booleanBox.getChildren().add(pv);
         }
+    }
+    
+    /**
+     * Affichage des paramètres autres
+     */
+    private void afficherParamsAutres()
+    {      
+        gestionAffListView(mapParamsSpec.get(TypeParamSpec.VERSIONS), versionsField);
+        gestionAffListView(mapParamsSpec.get(TypeParamSpec.MEMBRESJAVA), respJavaField);
+        gestionAffListView(mapParamsSpec.get(TypeParamSpec.MEMBRESDTATSTAGE), respDatastageField);
     }
 
     /**
@@ -385,6 +394,22 @@ public class OptionViewControl extends ViewControl
             alert.show();
         });
 
+    }
+    
+    private void gestionAffListView(String infosDepuisMap, ListView<String> listView)
+    {
+        if (infosDepuisMap != null && !infosDepuisMap.isEmpty())
+        {
+            listView.getItems().clear();
+            listView.getItems().addAll(infosDepuisMap.split(";"));
+            listView.getItems().sort((o1, o2) -> o1.compareTo(o2));
+        }
+
+        // Mise à jour automatique de la liste des versions
+        listView.getSelectionModel().selectFirst();
+        double taille = (double) listView.getItems().size() * ROW_HEIGHT + 2;
+        listView.setPrefHeight(taille);
+        listView.getItems().addListener((ListChangeListener.Change<? extends String> c) -> listView.setPrefHeight(taille));
     }
 
     @Override

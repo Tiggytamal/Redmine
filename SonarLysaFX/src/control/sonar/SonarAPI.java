@@ -304,7 +304,7 @@ public class SonarAPI
         else
         {
             logger.error("Impossible de remonter tous les composants de Sonar - API : " + PROJECTSINDEX + "/search=composant ");
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Impossible de remonter tous les composants de Sonar - API : " + PROJECTSINDEX + "/search=composant ");
+            throw new FunctionalException(Severity.ERROR, "Impossible de remonter tous les composants de Sonar - API : " + PROJECTSINDEX + "/search=composant ");
         }
     }
 
@@ -322,7 +322,7 @@ public class SonarAPI
             if (qualityGate.getName().equals(nomQG))
                 return qualityGate;
         }
-        throw new FunctionalException(Severity.SEVERITY_ERROR, "impossible de trouver la Qualitygate avec le nom donné : " + nomQG);
+        throw new FunctionalException(Severity.ERROR, "impossible de trouver la Qualitygate avec le nom donné : " + nomQG);
     }
 
     /**
@@ -339,7 +339,7 @@ public class SonarAPI
         else
         {
             logger.error("Impossible de remonter les QualityGate de Sonar - API : " + QGLIST);
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Impossible de remonter les QualityGate de Sonar - API : " + QGLIST);
+            throw new FunctionalException(Severity.ERROR, "Impossible de remonter les QualityGate de Sonar - API : " + QGLIST);
         }
     }
 

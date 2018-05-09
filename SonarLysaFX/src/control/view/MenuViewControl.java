@@ -100,7 +100,7 @@ public class MenuViewControl extends ViewControl
     public void afficher(ActionEvent event) throws IOException
     {
         if (!Statics.info.controle())
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
+            throw new FunctionalException(Severity.ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
         String id = "";
         Object source = event.getSource();
         if (source instanceof MenuItem)
@@ -184,7 +184,7 @@ public class MenuViewControl extends ViewControl
             box.getChildren().add(deConnexion);
         }
         else
-            throw new FunctionalException(Severity.SEVERITY_INFO, "Utilisateur incorrect");
+            throw new FunctionalException(Severity.INFO, "Utilisateur incorrect");
     }
 
     /**

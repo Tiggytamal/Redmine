@@ -48,7 +48,7 @@ public class TestUtils
     public static <T> T callPrivate(String nomMethode, Object instance, Class<T> retour, Object... params)
     {
         if (nomMethode == null || instance == null)
-            throw new FunctionalException(Severity.SEVERITY_ERROR,
+            throw new FunctionalException(Severity.ERROR,
                     "Les paramètres de la méthodes ne peuvent pas être nuls - TestUtils.callPrivate() - " + "nomMethode = " + nomMethode + " - instance = " + instance);
 
         Class<?>[] classParams = new Class<?>[params.length];

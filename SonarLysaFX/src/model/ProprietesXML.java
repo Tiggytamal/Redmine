@@ -18,6 +18,7 @@ import model.enums.TypeColEdition;
 import model.enums.TypeColPic;
 import model.enums.TypeColSuivi;
 import model.enums.TypeParam;
+import model.enums.TypeParamSpec;
 import model.enums.TypePlan;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -42,6 +43,7 @@ public class ProprietesXML implements XML, Modele
     private Map<TypeColEdition, String> mapColsEdition;   
     private Map<TypeColApps, String> mapColsApps;  
     private Map<TypePlan, Planificateur> mapPlans;
+    private Map<TypeParamSpec, String> mapParamsSpec;
 
     private static final String NOMFICHIER = "\\proprietes.xml";
     private static final String RESOURCE = "/resources/proprietes.xml";
@@ -59,6 +61,7 @@ public class ProprietesXML implements XML, Modele
         mapColsApps = new EnumMap<>(TypeColApps.class);
         mapPlans = new EnumMap<>(TypePlan.class);
         mapParamsBool = new EnumMap<>(TypeBool.class);
+        mapParamsSpec = new EnumMap<>(TypeParamSpec.class);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -188,6 +191,13 @@ public class ProprietesXML implements XML, Modele
     {
         return mapColsApps;
     }
+    
+    @XmlElementWrapper
+    @XmlElement (name = "mapParamsSpec", required = false)
+    public Map<TypeParamSpec, String> getMapParamsSpec()
+    {
+        return mapParamsSpec;
+    }
 
     @Override
     public File getFile()
@@ -253,11 +263,21 @@ public class ProprietesXML implements XML, Modele
     {
         // Contrôle des paramètres
         StringBuilder builderErreurs = new StringBuilder();
+        
+        // Paramètres classiques
         for (TypeParam typeParam : TypeParam.values())
         {
             if (mapParams.get(typeParam) == null || mapParams.get(typeParam).isEmpty())
                 builderErreurs.append(typeParam.toString()).append(Statics.NL);
         }
+        
+        // Paramètres spéciaux
+        for (TypeParamSpec typeParam : TypeParamSpec.values())
+        {
+            if (mapParamsSpec.get(typeParam) == null || mapParamsSpec.get(typeParam).isEmpty())
+                builderErreurs.append(typeParam.toString()).append(Statics.NL);
+        }
+        
         if (builderErreurs.length() == 0)
         {
             builder.append("Paramètres OK").append(Statics.NL);

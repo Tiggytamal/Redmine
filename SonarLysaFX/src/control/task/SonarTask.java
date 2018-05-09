@@ -17,6 +17,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import model.enums.TypeParam;
+import model.enums.TypeParamSpec;
 import model.sonarapi.Projet;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
@@ -44,7 +45,7 @@ public abstract class SonarTask extends Task<Boolean>
     protected SonarTask(int fin)
     {
         if (!info.controle())
-            throw new FunctionalException(Severity.SEVERITY_ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
+            throw new FunctionalException(Severity.ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
         api = SonarAPI.INSTANCE;
         initEtape(fin);
     }
@@ -107,7 +108,7 @@ public abstract class SonarTask extends Task<Boolean>
     {
         updateMessage(RECUPCOMPOSANTS);
         // Récupération des versions en paramètre
-        String[] versions = proprietesXML.getMapParams().get(TypeParam.VERSIONS).split("-");
+        String[] versions = proprietesXML.getMapParamsSpec().get(TypeParamSpec.VERSIONS).split("-");
 
         // Appel du webservice pour remonter tous les composants
         @SuppressWarnings("unchecked")

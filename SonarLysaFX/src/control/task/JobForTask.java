@@ -21,6 +21,6 @@ public abstract class JobForTask extends LaunchTask implements Job
         Object objet = context.getJobDetail().getJobDataMap().get(clef);
         if (retour.isAssignableFrom(objet.getClass()) )
             return retour.cast(objet);
-        throw new FunctionalException(Severity.SEVERITY_ERROR, "Mauvais format de donnée");
+        throw new FunctionalException(Severity.ERROR, "Mauvais format de donnée");
     }
 }

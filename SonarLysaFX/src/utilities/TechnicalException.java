@@ -11,7 +11,7 @@ import utilities.enums.Severity;
 public class TechnicalException extends RuntimeException
 {
     private static final long serialVersionUID = 1L;    
-    private static final Severity severity = Severity.SEVERITY_ERROR;  
+    private static final Severity severity = Severity.ERROR;  
 
     /**
      * Constructeur des erreurs fonctionnelles.<br>
