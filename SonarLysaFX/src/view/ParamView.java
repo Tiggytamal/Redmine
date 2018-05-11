@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import model.enums.TypeParam;
+import utilities.Statics;
 
 /**
  * Bloc d'affichage pour paramétrer une donnée de l'application
@@ -21,7 +22,6 @@ public class ParamView extends VBox implements ViewXML<TypeParam, TextField>
 {
     private TypeParam typeParam;
     private TextField field;
-    private static final String POINT = " : ";
 
     public ParamView(TypeParam typeParam, String texte)
     {
@@ -31,7 +31,7 @@ public class ParamView extends VBox implements ViewXML<TypeParam, TextField>
         HBox box = new HBox();
 
         // Label
-        Label label = new Label(typeParam.toString() + POINT);
+        Label label = new Label(typeParam.toString() + Statics.DEUXPOINTS);
         label.setPrefWidth(200);
         box.getChildren().add(label);
 

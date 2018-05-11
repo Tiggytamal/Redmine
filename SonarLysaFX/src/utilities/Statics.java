@@ -26,8 +26,18 @@ public class Statics
         throw new AssertionError();
     }
 
+    /* ----- Paramètres fix ----- */
     /** jarPath */
     public static final String JARPATH = Utilities.urlToFile(Utilities.getLocation(Main.class)).getParentFile().getPath();
+    /** filter pour fichiers Excel */
+    public static final FileChooser.ExtensionFilter FILTEREXCEL = new FileChooser.ExtensionFilter("Fichiers Excel (*.xls)", "*.xls", "*.xlsx", "*.xlsm");
+    /** fin du lien générique pur les anomalies RTC */
+    public static final String FINLIENSANO = "#action=com.ibm.team.workitem.viewWorkItem&id=";
+    /** Hauteur d'une ligne */
+    public static final int ROW_HEIGHT = 24;
+    
+    /* ----- loggers ----- */
+    
     /** logger général */
 	public static final Logger logger = LogManager.getLogger("complet.log");
     /** logger composants sans applications */
@@ -36,6 +46,9 @@ public class Statics
     public static final Logger loginconnue = LogManager.getLogger("inconnue-log");
     /** logger applications non listée dans le référentiel */
     public static final Logger lognonlistee = LogManager.getLogger("nonlistee-log");
+    
+    /* ----- String statiques ----- */
+    
     /** Nom de l'application */
     public static final String NOMAPPLI = "SonarLyza";
     /** Valeur pour le séparateur de ligne indépendant du système */
@@ -70,16 +83,17 @@ public class Statics
     public static final String DECEMBRE = "Decembre";
     /** espace */
     public static final String SPACE = " ";
+    /** " : " */
+    public static final String DEUXPOINTS = " : ";   
     /** apllication inconnue dans Sonar */
     public static final String INCONNUE = "INCONNUE";
     /** donnée inconnue */
     public static final String INCONNU = "INCONNU";
-    /** filter pour fichiers Excel */
-    public static final FileChooser.ExtensionFilter FILTEREXCEL = new FileChooser.ExtensionFilter("Fichiers Excel (*.xls)", "*.xls", "*.xlsx", "*.xlsm");
+
+    /* ----- Objets statiques ----- */
+    
     /** Wrapper des informations générales de fonctionnement de l'application*/
     public static final Info info = ModelFactory.getModel(Info.class);
-    /** fin du lien générique pur les anomalies RTC */
-    public static final String FINLIENSANO = "#action=com.ibm.team.workitem.viewWorkItem&id=";
     /** Controleur XML */
     private static final ControlXML controlXML = new ControlXML();
     /** Sauvegarde des fichiers Excel de paramètre */

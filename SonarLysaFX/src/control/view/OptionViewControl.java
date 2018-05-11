@@ -12,15 +12,15 @@ import javax.xml.bind.JAXBException;
 import control.xml.ControlXML;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -38,11 +38,10 @@ import model.enums.TypeColSuivi;
 import model.enums.TypeKey;
 import model.enums.TypeParam;
 import model.enums.TypeParamSpec;
-import utilities.FunctionalException;
 import utilities.TechnicalException;
-import utilities.enums.Severity;
 import view.BooleanView;
 import view.ColonneView;
+import view.ParamListView;
 import view.ParamView;
 
 public class OptionViewControl extends ViewControl
@@ -60,18 +59,6 @@ public class OptionViewControl extends ViewControl
     @FXML
     private ScrollPane optionsPane2;
     @FXML
-    private ListView<String> versionsField;
-    @FXML
-    private TextField newVersionField;
-    @FXML
-    private ListView<String> respJavaField;
-    @FXML
-    private TextField newRespJavaField;
-    @FXML
-    private ListView<String> respDatastageField;
-    @FXML
-    private TextField newRespDatastageField;
-    @FXML
     private ScrollPane colonnesPane;
     @FXML
     private TreeView<String> options;
@@ -83,14 +70,22 @@ public class OptionViewControl extends ViewControl
     private VBox paramsBox;
     @FXML
     private VBox paramsBox2;
+    @FXML
+    private Label labelDescAnoRTC;
+    @FXML
+    private Label labelSecuAnoRTC;
+    @FXML
+    private TextArea descAnoRTC;
+    @FXML
+    private TextArea secuAnoRTC;
 
     // Attributs de classe
 
     private Alert alert;
-    private static final int ROW_HEIGHT = 24;
+
     private Map<TypeParam, String> mapParams;
-    private Map<TypeParamSpec, String> mapParamsSpec;
     private Map<TypeBool, Boolean> mapParamsBool;
+    private Map<TypeParamSpec, String> mapParamsSpec;
     private ControlXML control;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -108,7 +103,7 @@ public class OptionViewControl extends ViewControl
         alert.setHeaderText(null);
         mapParams = proprietesXML.getMapParams();
         mapParamsBool = proprietesXML.getMapParamsBool();
-        mapParamsSpec = proprietesXML.getMapParamsSpec(); 
+        mapParamsSpec = proprietesXML.getMapParamsSpec();
         control = new ControlXML();
     }
 
@@ -207,59 +202,14 @@ public class OptionViewControl extends ViewControl
         }
     }
 
-    /**
-     * Supprime la version selectionnée de la liste
-     */
-    public void suppVersion()
-    {
-        // Suppression de la version de la liste affichée
-        int index = versionsField.getSelectionModel().getSelectedIndex();
-        ObservableList<String> liste = versionsField.getItems();
-        if (index != -1)
-        {
-            liste.remove(index);
-            if (!liste.isEmpty())
-                versionsField.getSelectionModel().select(index - 1);
-        }
-        liste.sort((o1, o2) -> o1.compareTo(o2));
-    }
 
     /**
-     * Ajoute une nouvelle version à la liste et au fichier de paramètre
+     * Sauvegarde les paramètres String et booléens
      * 
-     */
-    public void ajouterVersion()
-    {
-        String version = newVersionField.getText();
-        ObservableList<String> liste = versionsField.getItems();
-        // On contrôle la bonne structure du nom de la version et on ne crée pas de doublon
-        if (version.matches("^E[0-9][0-9]") && !liste.contains(version))
-        {
-            liste.add(version);
-        }
-        else
-        {
-            throw new FunctionalException(Severity.ERROR, "La version doit être de la forme ^E[0-9][0-9]");
-        }
-        liste.sort((o1, o2) -> o1.compareTo(o2));
-    }
-
-    /**
      * @throws JAXBException
      */
-    public void sauvegarder() throws JAXBException
+    public void saveParams() throws JAXBException
     {
-        // Sauvegarde versions
-        StringBuilder builder = new StringBuilder();
-        ObservableList<String> liste = versionsField.getItems();
-        for (int i = 0; i < liste.size(); i++)
-        {
-            builder.append(liste.get(i));
-            if (i < liste.size() - 1)
-                builder.append(";");
-        }
-        mapParamsSpec.put(TypeParamSpec.VERSIONS, builder.toString());
-
         // Sauvegarde des autres paramètres
         for (Node node : paramsBox.getChildren())
         {
@@ -278,6 +228,23 @@ public class OptionViewControl extends ViewControl
                 BooleanView view = (BooleanView) node;
                 mapParamsBool.put(view.getType(), view.getField().isSelected());
             }
+        }
+
+        // Enregistrement paramètres
+        new ControlXML().saveParam(proprietesXML);
+    }
+    
+    /**
+     * Sauvegarde les paramètres spéciaux
+     * 
+     * @throws JAXBException
+     */
+    public void saveParamsSpec() throws JAXBException
+    {
+        for (Node node : paramsBox2.getChildren())
+        {
+            if (node instanceof ParamListView)
+                ((ParamListView)node).sauverValeurs();
         }
 
         // Enregistrement paramètres
@@ -336,8 +303,7 @@ public class OptionViewControl extends ViewControl
         paramsBox.getChildren().clear();
         booleanBox.getChildren().clear();
 
-        // Récupération de la map correspondante au type de fichier et affichage des colonnes. On saute juste les
-        // versions qui sont gérées différement
+        // Récupération de la map correspondante au type de fichier et affichage des colonnes.
         for (Map.Entry<TypeParam, String> entry : mapParams.entrySet())
         {
             ParamView pv = new ParamView(entry.getKey(), entry.getValue());
@@ -357,9 +323,14 @@ public class OptionViewControl extends ViewControl
      */
     private void afficherParamsAutres()
     {      
-        gestionAffListView(mapParamsSpec.get(TypeParamSpec.VERSIONS), versionsField);
-        gestionAffListView(mapParamsSpec.get(TypeParamSpec.MEMBRESJAVA), respJavaField);
-        gestionAffListView(mapParamsSpec.get(TypeParamSpec.MEMBRESDTATSTAGE), respDatastageField);
+        paramsBox2.getChildren().clear();
+        paramsBox2.getChildren().add(new ParamListView(TypeParamSpec.VERSIONS));
+        paramsBox2.getChildren().add(new ParamListView(TypeParamSpec.MEMBRESJAVA));
+        paramsBox2.getChildren().add(new ParamListView(TypeParamSpec.MEMBRESDTATSTAGE));
+        labelDescAnoRTC.setText(TypeParamSpec.TEXTEDEFECT.toString());
+        descAnoRTC.setText(mapParamsSpec.get(TypeParamSpec.TEXTEDEFECT));
+        labelSecuAnoRTC.setText(TypeParamSpec.TEXTESECURITE.toString());
+        secuAnoRTC.setText(mapParamsSpec.get(TypeParamSpec.TEXTESECURITE));       
     }
 
     /**
@@ -393,29 +364,12 @@ public class OptionViewControl extends ViewControl
             alert.setContentText("Chargement " + texte + " effectué");
             alert.show();
         });
-
-    }
-    
-    private void gestionAffListView(String infosDepuisMap, ListView<String> listView)
-    {
-        if (infosDepuisMap != null && !infosDepuisMap.isEmpty())
-        {
-            listView.getItems().clear();
-            listView.getItems().addAll(infosDepuisMap.split(";"));
-            listView.getItems().sort((o1, o2) -> o1.compareTo(o2));
-        }
-
-        // Mise à jour automatique de la liste des versions
-        listView.getSelectionModel().selectFirst();
-        double taille = (double) listView.getItems().size() * ROW_HEIGHT + 2;
-        listView.setPrefHeight(taille);
-        listView.getItems().addListener((ListChangeListener.Change<? extends String> c) -> listView.setPrefHeight(taille));
     }
 
     @Override
     protected void afficher(ActionEvent event)
     {
-        // Gestion de l'affichage délégué à une autre méthode à cause de l'utilisation de la ViewList
+        // Gestion de l'affichage délégué à une autre méthode à cause de l'utilisation de la TreeView
     }
 
     /*---------- ACCESSEURS ----------*/

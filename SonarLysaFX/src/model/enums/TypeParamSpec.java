@@ -13,9 +13,10 @@ public enum TypeParamSpec implements Serializable, TypeKey
 
     VERSIONS("Version"),
     TEXTEDEFECT("Description Defect RTC"),
-    TEXTESECURITE("Texte Defect"),
-    MEMBRESJAVA("Responsables anomalies JAVA"),
-    MEMBRESDTATSTAGE("Responsables anomalies DATASTAGE");
+    TEXTESECURITE("Texte Sécurité RTC"),
+    RECAPDEFECT("Récapitulatif Defect RTC"),
+    MEMBRESJAVA("Responsables  JAVA"),
+    MEMBRESDTATSTAGE("Responsables DATASTAGE");
     
     
     private final String string;

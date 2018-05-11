@@ -64,6 +64,7 @@ import model.enums.Matiere;
 import model.enums.TypeEnumRTC;
 import model.enums.TypeFichier;
 import model.enums.TypeParam;
+import model.enums.TypeParamSpec;
 import utilities.DateConvert;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -88,11 +89,7 @@ public class ControlRTC
     private IAuditableCommon auditableCommon;
 
     private static final String RECAPITULATIF = "Anomalie Qualimétrie : Quality Gate non conforme";
-
-    // Valeurs pour le texte des anomalies :
-    private static final String securite = "Attention certains défauts sont liés à la sécurité (classés dans vulnérabilité) et sont à prioriser dans la correction.\nMerci";
-    private static final String TEXTEANO = "Bonjour,\nL'analyse SonarQube de ce jour du lot projet <lot> fait apparaitre un quality Gate non conforme.\nVeuillez trouver ci après le lien vers l'analyse du lot pour prise en compte et correction :\nhttp://ttp10-snar.ca-technologies.fr/governance?id=view_lot_<lot>\nMerci";
-    
+   
     /*---------- CONSTRUCTEURS ----------*/
 
     /**
@@ -625,9 +622,9 @@ public class ControlRTC
 
         private String creerDescription()
         {
-            String retour = TEXTEANO.replace("<lot>", String.valueOf(lotAno));
+            String retour = Statics.proprietesXML.getMapParamsSpec().get(TypeParamSpec.TEXTEDEFECT).replace("-lot-", String.valueOf(lotAno));
             if (ano.getSecurite().equals(Statics.SECURITEKO))
-                retour = retour.replace("Merci", securite);
+                retour = retour.replace("Merci", Statics.proprietesXML.getMapParamsSpec().get(TypeParamSpec.TEXTESECURITE));
             return retour;
         }
 
