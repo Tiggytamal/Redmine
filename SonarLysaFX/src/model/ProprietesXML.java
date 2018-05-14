@@ -17,8 +17,8 @@ import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
 import model.enums.TypeColPic;
 import model.enums.TypeColSuivi;
-import model.enums.TypeParam;
-import model.enums.TypeParamSpec;
+import model.enums.Param;
+import model.enums.ParamSpec;
 import model.enums.TypePlan;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -34,7 +34,7 @@ public class ProprietesXML implements XML, Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private Map<TypeParam, String> mapParams;
+    private Map<Param, String> mapParams;
     private Map<TypeBool, Boolean> mapParamsBool;
     private Map<TypeColSuivi, String> mapColsSuivi;    
     private Map<TypeColClarity, String> mapColsClarity;   
@@ -43,7 +43,7 @@ public class ProprietesXML implements XML, Modele
     private Map<TypeColEdition, String> mapColsEdition;   
     private Map<TypeColApps, String> mapColsApps;  
     private Map<TypePlan, Planificateur> mapPlans;
-    private Map<TypeParamSpec, String> mapParamsSpec;
+    private Map<ParamSpec, String> mapParamsSpec;
 
     private static final String NOMFICHIER = "\\proprietes.xml";
     private static final String RESOURCE = "/resources/proprietes.xml";
@@ -52,7 +52,7 @@ public class ProprietesXML implements XML, Modele
 
     ProprietesXML()
     {
-        mapParams = new EnumMap<>(TypeParam.class);
+        mapParams = new EnumMap<>(Param.class);
         mapColsSuivi = new EnumMap<>(TypeColSuivi.class);
         mapColsClarity = new EnumMap<>(TypeColClarity.class);
         mapColsChefServ = new EnumMap<>(TypeColChefServ.class);
@@ -61,7 +61,7 @@ public class ProprietesXML implements XML, Modele
         mapColsApps = new EnumMap<>(TypeColApps.class);
         mapPlans = new EnumMap<>(TypePlan.class);
         mapParamsBool = new EnumMap<>(TypeBool.class);
-        mapParamsSpec = new EnumMap<>(TypeParamSpec.class);
+        mapParamsSpec = new EnumMap<>(ParamSpec.class);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -131,7 +131,7 @@ public class ProprietesXML implements XML, Modele
 
     @XmlElementWrapper
     @XmlElement (name = "mapParams", required = false)
-    public Map<TypeParam, String> getMapParams()
+    public Map<Param, String> getMapParams()
     {
         return mapParams;
     }
@@ -194,7 +194,7 @@ public class ProprietesXML implements XML, Modele
     
     @XmlElementWrapper
     @XmlElement (name = "mapParamsSpec", required = false)
-    public Map<TypeParamSpec, String> getMapParamsSpec()
+    public Map<ParamSpec, String> getMapParamsSpec()
     {
         return mapParamsSpec;
     }
@@ -265,14 +265,14 @@ public class ProprietesXML implements XML, Modele
         StringBuilder builderErreurs = new StringBuilder();
         
         // Paramètres classiques
-        for (TypeParam typeParam : TypeParam.values())
+        for (Param typeParam : Param.values())
         {
             if (mapParams.get(typeParam) == null || mapParams.get(typeParam).isEmpty())
                 builderErreurs.append(typeParam.toString()).append(Statics.NL);
         }
         
         // Paramètres spéciaux
-        for (TypeParamSpec typeParam : TypeParamSpec.values())
+        for (ParamSpec typeParam : ParamSpec.values())
         {
             if (mapParamsSpec.get(typeParam) == null || mapParamsSpec.get(typeParam).isEmpty())
                 builderErreurs.append(typeParam.toString()).append(Statics.NL);

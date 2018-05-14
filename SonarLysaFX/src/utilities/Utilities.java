@@ -40,10 +40,9 @@ public class Utilities
      */
     public static URL getLocation(final Class<?> c)
     {
+        // could not load the class
         if (c == null)
-        {
-            return null; // could not load the class
-        }
+            return null;
 
         // try the easy way first
         try
@@ -64,17 +63,17 @@ public class Utilities
 
         // get the class's raw resource path
         final URL classResource = c.getResource(c.getSimpleName() + ".class");
+        
+        // cannot find class resource
         if (classResource == null)
-        {
-            return null; // cannot find class resource
-        }
+            return null;
 
         final String url = classResource.toString();
         final String suffix = c.getCanonicalName().replace('.', '/') + ".class";
+        
+        // weird URL
         if (!url.endsWith(suffix))
-        {
-            return null; // weird URL
-        }
+            return null;
 
         // strip the class's path from the URL string
         final String base = url.substring(0, url.length() - suffix.length());
@@ -134,9 +133,7 @@ public class Utilities
         try
         {
             if (osName().startsWith("Win") && path.matches("file:[A-Za-z]:.*"))
-            {
                 path = "file:/" + path.substring(5);
-            }
             return new File(new URL(path).toURI());
         } catch (final MalformedURLException | URISyntaxException e)
         {

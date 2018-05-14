@@ -39,7 +39,7 @@ import model.Anomalie;
 import model.ModelFactory;
 import model.enums.TypeColSuivi;
 import model.enums.TypeEnumRTC;
-import model.enums.TypeParam;
+import model.enums.Param;
 import utilities.Statics;
 
 public class TestControlRTC extends JunitBase
@@ -77,7 +77,7 @@ public class TestControlRTC extends JunitBase
 
         // Appel méthode
         assertFalse(handler.connexion());
-        Whitebox.getField(ControlRTC.class, "repo").set(handler, TeamPlatform.getTeamRepositoryService().getTeamRepository(Statics.proprietesXML.getMapParams().get(TypeParam.URLRTC)));
+        Whitebox.getField(ControlRTC.class, "repo").set(handler, TeamPlatform.getTeamRepositoryService().getTeamRepository(Statics.proprietesXML.getMapParams().get(Param.URLRTC)));
         handler.connexion();
     }
 

@@ -30,7 +30,7 @@ import model.ModelFactory;
 import model.enums.Matiere;
 import model.enums.TypeBool;
 import model.enums.TypeMetrique;
-import model.enums.TypeParam;
+import model.enums.Param;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Periode;
@@ -110,8 +110,8 @@ public class MajSuiviExcelTask extends SonarTask
         }
 
         // Mise à jour des fichiers Excel
-        ControlSuivi controlAnoJava = new ControlSuivi(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIER)));
-        ControlSuivi controlAnoDataStage = new ControlSuivi(new File(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE)));
+        ControlSuivi controlAnoJava = new ControlSuivi(new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIER)));
+        ControlSuivi controlAnoDataStage = new ControlSuivi(new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE)));
         controlAnoJava.majMultiMatiere(anoMultiple);
         controlAnoDataStage.majMultiMatiere(anoMultiple);
         controlAnoJava.close();
@@ -132,10 +132,10 @@ public class MajSuiviExcelTask extends SonarTask
 
         // Mise à jour des liens des composants datastage avec le bon QG
         etapePlus();
-        liensQG(composants.values(), proprietesXML.getMapParams().get(TypeParam.NOMQGDATASTAGE));
+        liensQG(composants.values(), proprietesXML.getMapParams().get(Param.NOMQGDATASTAGE));
 
         // Traitement du fichier datastage de suivi
-        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(TypeParam.NOMFICHIERDATASTAGE), Matiere.DATASTAGE);
+        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE), Matiere.DATASTAGE);
     }
 
     /**
@@ -152,7 +152,7 @@ public class MajSuiviExcelTask extends SonarTask
         etapePlus();
 
         // Traitement du fichier de suivi
-        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(TypeParam.NOMFICHIER), Matiere.JAVA);
+        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIER), Matiere.JAVA);
     }
 
     /**
@@ -292,7 +292,7 @@ public class MajSuiviExcelTask extends SonarTask
             throws IOException
     {
         // Controleur
-        String name = proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATH) + fichier;
+        String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;
         ControlSuivi controlAno = new ControlSuivi(new File(name));
 
         // Lecture du fichier pour remonter les anomalies en cours.

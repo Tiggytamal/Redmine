@@ -45,7 +45,7 @@ import model.enums.Environnement;
 import model.enums.Matiere;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
-import model.enums.TypeParam;
+import model.enums.Param;
 import utilities.CellHelper;
 import utilities.FunctionalException;
 import utilities.Statics;
@@ -104,9 +104,9 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         super(file);
 
         // Initialisation des parties constantes des liens
-        Map<TypeParam, String> proprietes = proprietesXML.getMapParams();
-        lienslots = proprietes.get(TypeParam.LIENSLOTS);
-        liensAnos = proprietes.get(TypeParam.LIENSANOS);
+        Map<Param, String> proprietes = proprietesXML.getMapParams();
+        lienslots = proprietes.get(Param.LIENSLOTS);
+        liensAnos = proprietes.get(Param.LIENSANOS);
         initContraintes();
     }
 
@@ -217,7 +217,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         if (retour != null)
         {
             // Création du fichier de sauvegarde et effacement de la feuille
-            wb.write(new FileOutputStream(new StringBuilder(proprietesXML.getMapParams().get(TypeParam.ABSOLUTEPATHHISTO)).append(LocalDate.now().toString()).append("-").append(fichier).toString()));
+            wb.write(new FileOutputStream(new StringBuilder(proprietesXML.getMapParams().get(Param.ABSOLUTEPATHHISTO)).append(LocalDate.now().toString()).append("-").append(fichier).toString()));
             wb.removeSheetAt(wb.getSheetIndex(retour));
         }
 

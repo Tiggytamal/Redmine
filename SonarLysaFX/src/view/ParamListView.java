@@ -15,24 +15,29 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import model.enums.TypeParamSpec;
+import model.enums.ParamSpec;
 import utilities.FunctionalException;
 import utilities.Statics;
+import utilities.TechnicalException;
 import utilities.enums.Severity;
 
 public class ParamListView extends VBox
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private TypeParamSpec typeParam;
+    private ParamSpec param;
     private ListView<String> listView;
-    private TextField newResp;
-    
+    private TextField valeurField;
+    private static final double CARAC_WIDTH = 10;
+
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ParamListView(TypeParamSpec typeParam)
+    public ParamListView(ParamSpec param)
     {
-        this.typeParam = typeParam;
+        // Contrôle du type de paramètre
+        
+        
+        this.param = param;
         ObservableList<Node> rootChildren = getChildren();
 
         // ----- 1. Box1 -----
@@ -41,8 +46,7 @@ public class ParamListView extends VBox
         box.setPadding(new Insets(10, 10, 10, 10));
 
         // Label
-        Label label = new Label(typeParam.toString() + Statics.DEUXPOINTS);
-        label.setPrefWidth(200);
+        Label label = new Label(param.toString() + Statics.DEUXPOINTS);
         box.getChildren().add(label);
 
         // Region
@@ -53,25 +57,26 @@ public class ParamListView extends VBox
 
         // ListView
         listView = new ListView<>();
-        String listeValeurs = Statics.proprietesXML.getMapParamsSpec().get(typeParam);
+        String listeValeurs = Statics.proprietesXML.getMapParamsSpec().get(param);
         if (listeValeurs != null && !listeValeurs.isEmpty())
         {
             listView.getItems().clear();
             listView.getItems().addAll(listeValeurs.split(";"));
             listView.getItems().sort((o1, o2) -> o1.compareTo(o2));
         }
-        
+
         // Mise à jour automatique de la hauteur de la liste des versions
         listView.getSelectionModel().selectFirst();
         double taille = (double) listView.getItems().size() * Statics.ROW_HEIGHT + 2;
         listView.setPrefHeight(taille);
+        listView.setPrefWidth(calculLongueur(listView.getItems()));
         listView.getItems().addListener((ListChangeListener.Change<? extends String> c) -> listView.setPrefHeight(taille));
+        listView.getItems().addListener((ListChangeListener.Change<? extends String> c) -> listView.setPrefWidth(calculLongueur(listView.getItems())));
         box.getChildren().add(listView);
 
         // Region
         region = new Region();
         region.setPrefWidth(10);
-        region.setPrefHeight(10);
         box.getChildren().add(region);
 
         // Bouton supprimer
@@ -80,7 +85,7 @@ public class ParamListView extends VBox
         box.getChildren().add(suppr);
 
         rootChildren.add(box);
-        
+
         region = new Region();
         region.setPrefWidth(10);
         region.setPrefHeight(10);
@@ -90,13 +95,13 @@ public class ParamListView extends VBox
         box = new HBox();
 
         // TextField
-        newResp = new TextField();
-        newResp.setPrefWidth(150);
-        box.getChildren().add(newResp);
+        valeurField = new TextField();
+        valeurField.setPrefWidth(150);
+        box.getChildren().add(valeurField);
 
         // Bouton ajouter
         Button add = new Button("ajouter");
-        suppr.setOnAction(event -> ajouter());
+        add.setOnAction(event -> ajouter());
         box.getChildren().add(add);
 
         // Region
@@ -104,18 +109,17 @@ public class ParamListView extends VBox
         region.setPrefWidth(10);
         region.setPrefHeight(10);
         box.getChildren().add(region);
-        
+
         rootChildren.add(box);
 
         // ----- 3. Séparateur -----
         Separator separ = new Separator();
         separ.setPadding(new Insets(10, 5, 10, 5));
         rootChildren.add(separ);
-
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     /**
      * Sauvegarde la liste des valeurs dans la map des propriétés
      */
@@ -130,10 +134,10 @@ public class ParamListView extends VBox
             if (i < liste.size() - 1)
                 builder.append(";");
         }
-        Statics.proprietesXML.getMapParamsSpec().put(typeParam, builder.toString());
+        Statics.proprietesXML.getMapParamsSpec().put(param, builder.toString());
     }
+
     /*---------- METHODES PRIVEES ----------*/
-    /*---------- ACCESSEURS ----------*/
 
     /**
      * Retire une responable de la liste
@@ -157,31 +161,72 @@ public class ParamListView extends VBox
      */
     private void ajouter()
     {
-        String resp = newResp.getText();
+        String valeur = valeurField.getText();
         ObservableList<String> liste = listView.getItems();
 
-        // On contrôle la bonne structure du nom de la version et on ne crée pas de doublon
-        if (testNom(resp) && !liste.contains(resp))
-            liste.add(resp);
-        else
-            throw new FunctionalException(Severity.ERROR, "Le nom n'est pas reconnu dans RTC. Essayez [NOM] [Prenom] sans accent.");
+        if (liste.contains(valeur))
+            throw new FunctionalException(Severity.ERROR, "La valeur est déjà contenu dans la liste.");
+        
+        // Controôle de la valeur rentrée et ajout à la liste
+        ajouterValeur(valeur, liste);
+
         liste.sort((o1, o2) -> o1.compareTo(o2));
     }
 
     /**
-     * Contrôle que le nom du responsable est bien présent dans RTC.
-     * @param nom
+     * Contrôle de la valeur rentrée par l'utilisateur et ajout à la liste.
+     * 
+     * @param valeur
+     * @param liste
      * @return
      */
-    private boolean testNom(String nom)
+    private void ajouterValeur(String valeur, ObservableList<String> liste)
     {
-        try
+        
+        switch (param.getType())
         {
-            return ControlRTC.INSTANCE.recupContributorDepuisNom(nom) != null;
-        } catch (TeamRepositoryException e)
-        {
-            Statics.logger.error("Erreur appel RTC depuis viw.ParamListView.testNom - " + nom);
-            return false;
+            case LISTVIEWNOM:
+                try
+                {
+                    if (ControlRTC.INSTANCE.recupContributorDepuisNom(valeur) == null)
+                        throw new FunctionalException(Severity.ERROR, "Le nom n'est pas reconnu dans RTC. Essayez [NOM] [Prenom] sans accent.");
+
+                } catch (TeamRepositoryException e)
+                {
+                    throw new TechnicalException("Erreur appel RTC depuis viw.ParamListView.testNom - " + valeur, e);
+                }
+                break;
+
+            case LISTVIEWVERSION:
+                if (!valeur.matches("^E[0-9][0-9]"))
+                    throw new FunctionalException(Severity.ERROR, "La version doit être de la forme ^E[0-9][0-9]");
+                break;
+
+            default:
+                throw new IllegalArgumentException("Méthode view.ParamListView.ajouterValeur - le type de TypeParamSpec n'est pas géré : " + param.getType());
         }
+
+        // Ajout de la valeur à la liste
+        liste.add(valeur);
     }
+
+    /**
+     * Calcul la longueur de la fenêtre pour la listView
+     * 
+     * @param items
+     * @return
+     */
+    private double calculLongueur(ObservableList<String> items)
+    {
+        double retour = 0;
+        for (String string : items)
+        {
+            double temp = string.length() * CARAC_WIDTH;
+            if (temp > retour)
+                retour = temp;
+        }
+        return retour + 10;
+    }
+
+    /*---------- ACCESSEURS ----------*/
 }

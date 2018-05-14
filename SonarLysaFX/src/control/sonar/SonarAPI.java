@@ -23,7 +23,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.mchange.util.AssertException;
 
-import model.enums.TypeParam;
+import model.enums.Param;
 import model.sonarapi.AjouterProjet;
 import model.sonarapi.AjouterVueLocale;
 import model.sonarapi.AssocierQG;
@@ -88,7 +88,7 @@ public class SonarAPI
         if (INSTANCE != null)
             throw new AssertException();
 
-        webTarget = ClientBuilder.newClient().target(Statics.proprietesXML.getMapParams().get(TypeParam.URLSONAR));
+        webTarget = ClientBuilder.newClient().target(Statics.proprietesXML.getMapParams().get(Param.URLSONAR));
         StringBuilder builder = new StringBuilder(Statics.info.getPseudo());
         builder.append(":");
         builder.append(Statics.info.getMotDePasse());

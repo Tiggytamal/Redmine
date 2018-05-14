@@ -5,29 +5,29 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-import model.enums.TypeParam;
+import model.enums.Param;
 
 public class TestTypeParam
 {
     @Test
     public void testSize()
     {
-        assertEquals(11, TypeParam.values().length);
+        assertEquals(11, Param.values().length);
     }
     
     @Test
     public void testToString()
     {
-        assertFalse(TypeParam.FILTREDATASTAGE.toString().isEmpty());
-        assertFalse(TypeParam.ABSOLUTEPATH.toString().isEmpty());
-        assertFalse(TypeParam.NOMFICHIER.toString().isEmpty());
-        assertFalse(TypeParam.NOMFICHIERDATASTAGE.toString().isEmpty());
-        assertFalse(TypeParam.ABSOLUTEPATHHISTO.toString().isEmpty());
-        assertFalse(TypeParam.LIENSLOTS.toString().isEmpty());
-        assertFalse(TypeParam.LIENSANOS.toString().isEmpty());
-        assertFalse(TypeParam.NOMQGDATASTAGE.toString().isEmpty());
-        assertFalse(TypeParam.URLSONAR.toString().isEmpty());
-        assertFalse(TypeParam.URLRTC.toString().isEmpty());
-        assertFalse(TypeParam.RTCLOTCHC.toString().isEmpty());
+        assertFalse(Param.FILTREDATASTAGE.toString().isEmpty());
+        assertFalse(Param.ABSOLUTEPATH.toString().isEmpty());
+        assertFalse(Param.NOMFICHIER.toString().isEmpty());
+        assertFalse(Param.NOMFICHIERDATASTAGE.toString().isEmpty());
+        assertFalse(Param.ABSOLUTEPATHHISTO.toString().isEmpty());
+        assertFalse(Param.LIENSLOTS.toString().isEmpty());
+        assertFalse(Param.LIENSANOS.toString().isEmpty());
+        assertFalse(Param.NOMQGDATASTAGE.toString().isEmpty());
+        assertFalse(Param.URLSONAR.toString().isEmpty());
+        assertFalse(Param.URLRTC.toString().isEmpty());
+        assertFalse(Param.RTCLOTCHC.toString().isEmpty());
     }
 }

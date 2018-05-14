@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import model.enums.TypeParam;
+import model.enums.Param;
 import utilities.Statics;
 
 /**
@@ -18,12 +18,12 @@ import utilities.Statics;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ParamView extends VBox implements ViewXML<TypeParam, TextField>
+public class ParamView extends VBox implements ViewXML<Param, TextField>
 {
-    private TypeParam typeParam;
+    private Param typeParam;
     private TextField field;
 
-    public ParamView(TypeParam typeParam, String texte)
+    public ParamView(Param typeParam, String texte)
     {
         this.typeParam = typeParam;
         ObservableList<Node> rootChildren = getChildren();
@@ -51,7 +51,7 @@ public class ParamView extends VBox implements ViewXML<TypeParam, TextField>
     /**
      * @return the typeCol
      */
-    public TypeParam getType()
+    public Param getType()
     {
         return typeParam;
     }

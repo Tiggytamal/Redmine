@@ -1,41 +1,12 @@
 package model.enums;
 
-import java.io.Serializable;
-
 /**
+ * Liste des types des paramètres spéciaux
  * 
- * @author ETP8137 - Grégoire mathon
- *
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
  */
-public enum TypeParamSpec implements Serializable, TypeKey 
+public enum TypeParamSpec 
 {
-    /*---------- ATTRIBUTS ----------*/
-
-    VERSIONS("Version"),
-    TEXTEDEFECT("Description Defect RTC"),
-    TEXTESECURITE("Texte Sécurité RTC"),
-    RECAPDEFECT("Récapitulatif Defect RTC"),
-    MEMBRESJAVA("Responsables  JAVA"),
-    MEMBRESDTATSTAGE("Responsables DATASTAGE");
-    
-    
-    private final String string;
-
-    /*---------- CONSTRUCTEURS ----------*/
-
-    private TypeParamSpec(String string)
-    {
-        this.string = string;
-    }
-
-    /*---------- METHODES PUBLIQUES ----------*/
-    
-    @Override
-    public String toString()
-    {
-        return string;
-    }
-    
-    /*---------- METHODES PRIVEES ----------*/
-    /*---------- ACCESSEURS ----------*/
+    LISTVIEWVERSION, LISTVIEWNOM, TEXTAREA;
 }

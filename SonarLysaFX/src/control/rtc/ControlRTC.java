@@ -63,8 +63,8 @@ import model.enums.Environnement;
 import model.enums.Matiere;
 import model.enums.TypeEnumRTC;
 import model.enums.TypeFichier;
-import model.enums.TypeParam;
-import model.enums.TypeParamSpec;
+import model.enums.Param;
+import model.enums.ParamSpec;
 import utilities.DateConvert;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -105,7 +105,7 @@ public class ControlRTC
 
         // Récupération du référentiel de données depuis l'url
         TeamPlatform.startup();
-        repo = TeamPlatform.getTeamRepositoryService().getTeamRepository(Statics.proprietesXML.getMapParams().get(TypeParam.URLRTC));
+        repo = TeamPlatform.getTeamRepositoryService().getTeamRepository(Statics.proprietesXML.getMapParams().get(Param.URLRTC));
         workItemClient = (IWorkItemClient) repo.getClientLibrary(IWorkItemClient.class);
         auditableClient = (IAuditableClient) repo.getClientLibrary(IAuditableClient.class);
         auditableCommon = (IAuditableCommon) repo.getClientLibrary(IAuditableCommon.class);
@@ -557,7 +557,7 @@ public class ControlRTC
         {
             // Si on a une édition CHC, on va chercher la version dans les paramètres
             if (edition.contains("CHC") || edition.contains("CDM"))
-                return proprietesXML.getMapParams().get(TypeParam.RTCLOTCHC);
+                return proprietesXML.getMapParams().get(Param.RTCLOTCHC);
 
             String versionRegex = "^E[2-9][0-9](\\.[0-1]){0,1}";
             String fdlregex = "Fil_De_Leau";
@@ -622,9 +622,9 @@ public class ControlRTC
 
         private String creerDescription()
         {
-            String retour = Statics.proprietesXML.getMapParamsSpec().get(TypeParamSpec.TEXTEDEFECT).replace("-lot-", String.valueOf(lotAno));
+            String retour = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEDEFECT).replace("-lot-", String.valueOf(lotAno));
             if (ano.getSecurite().equals(Statics.SECURITEKO))
-                retour = retour.replace("Merci", Statics.proprietesXML.getMapParamsSpec().get(TypeParamSpec.TEXTESECURITE));
+                retour = retour.replace("Merci", Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTESECURITE));
             return retour;
         }
 

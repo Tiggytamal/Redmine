@@ -36,8 +36,9 @@ import model.enums.TypeColEdition;
 import model.enums.TypeColPic;
 import model.enums.TypeColSuivi;
 import model.enums.TypeKey;
-import model.enums.TypeParam;
-import model.enums.TypeParamSpec;
+import model.enums.Param;
+import model.enums.ParamSpec;
+import utilities.Statics;
 import utilities.TechnicalException;
 import view.BooleanView;
 import view.ColonneView;
@@ -83,9 +84,9 @@ public class OptionViewControl extends ViewControl
 
     private Alert alert;
 
-    private Map<TypeParam, String> mapParams;
+    private Map<Param, String> mapParams;
     private Map<TypeBool, Boolean> mapParamsBool;
-    private Map<TypeParamSpec, String> mapParamsSpec;
+    private Map<ParamSpec, String> mapParamsSpec;
     private ControlXML control;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -114,7 +115,7 @@ public class OptionViewControl extends ViewControl
      * 
      * @param ov
      */
-    private void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
+    protected void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
     {
         ObservableList<Node> root = rightSide.getChildren();
         root.clear();
@@ -246,6 +247,9 @@ public class OptionViewControl extends ViewControl
             if (node instanceof ParamListView)
                 ((ParamListView)node).sauverValeurs();
         }
+        
+        proprietesXML.getMapParamsSpec().put(ParamSpec.TEXTEDEFECT, descAnoRTC.getText());
+        proprietesXML.getMapParamsSpec().put(ParamSpec.TEXTESECURITE, secuAnoRTC.getText());
 
         // Enregistrement paramètres
         new ControlXML().saveParam(proprietesXML);
@@ -304,7 +308,7 @@ public class OptionViewControl extends ViewControl
         booleanBox.getChildren().clear();
 
         // Récupération de la map correspondante au type de fichier et affichage des colonnes.
-        for (Map.Entry<TypeParam, String> entry : mapParams.entrySet())
+        for (Map.Entry<Param, String> entry : mapParams.entrySet())
         {
             ParamView pv = new ParamView(entry.getKey(), entry.getValue());
             paramsBox.getChildren().add(pv);
@@ -324,13 +328,13 @@ public class OptionViewControl extends ViewControl
     private void afficherParamsAutres()
     {      
         paramsBox2.getChildren().clear();
-        paramsBox2.getChildren().add(new ParamListView(TypeParamSpec.VERSIONS));
-        paramsBox2.getChildren().add(new ParamListView(TypeParamSpec.MEMBRESJAVA));
-        paramsBox2.getChildren().add(new ParamListView(TypeParamSpec.MEMBRESDTATSTAGE));
-        labelDescAnoRTC.setText(TypeParamSpec.TEXTEDEFECT.toString());
-        descAnoRTC.setText(mapParamsSpec.get(TypeParamSpec.TEXTEDEFECT));
-        labelSecuAnoRTC.setText(TypeParamSpec.TEXTESECURITE.toString());
-        secuAnoRTC.setText(mapParamsSpec.get(TypeParamSpec.TEXTESECURITE));       
+        paramsBox2.getChildren().add(new ParamListView(ParamSpec.VERSIONS));
+        paramsBox2.getChildren().add(new ParamListView(ParamSpec.MEMBRESJAVA));
+        paramsBox2.getChildren().add(new ParamListView(ParamSpec.MEMBRESDTATSTAGE));
+        labelDescAnoRTC.setText(ParamSpec.TEXTEDEFECT.toString());
+        descAnoRTC.setText(mapParamsSpec.get(ParamSpec.TEXTEDEFECT).replace("\\n", Statics.NL));
+        labelSecuAnoRTC.setText(ParamSpec.TEXTESECURITE.toString());
+        secuAnoRTC.setText(mapParamsSpec.get(ParamSpec.TEXTESECURITE).replace("\\n", Statics.NL));       
     }
 
     /**
