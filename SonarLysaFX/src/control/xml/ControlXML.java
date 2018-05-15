@@ -11,8 +11,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
 import control.excel.ExcelFactory;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -194,7 +192,7 @@ public class ControlXML
         {
             fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getControlleur(typeCol, file).recupDonneesDepuisExcel());
             saveParam(fichiersXML);
-        } catch (InvalidFormatException | IOException | JAXBException e)
+        } catch (IOException | JAXBException e)
         {
             throw new TechnicalException(ERREUR, e);
         }

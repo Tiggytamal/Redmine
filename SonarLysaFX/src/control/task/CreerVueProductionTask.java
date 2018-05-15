@@ -15,6 +15,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import java.util.Map.Entry;
 
 import control.excel.ControlPic;
+import control.excel.ExcelFactory;
+import model.enums.TypeColPic;
 import model.sonarapi.Vue;
 import utilities.DateConvert;
 import utilities.FunctionalException;
@@ -79,7 +81,7 @@ public class CreerVueProductionTask extends SonarTask
         if (file != null)
         {
             // Traitement données fichier Excel
-            ControlPic excel = new ControlPic(file);
+            ControlPic excel = ExcelFactory.getControlleur(TypeColPic.class, file);
             Map<String, Vue> mapSonar = recupererLotsSonarQube();
             
             // Message

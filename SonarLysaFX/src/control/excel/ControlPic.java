@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -43,7 +42,7 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlPic(File file) throws InvalidFormatException, IOException
+    ControlPic(File file) throws IOException
     {
         super(file);
     }

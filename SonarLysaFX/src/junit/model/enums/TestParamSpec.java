@@ -7,12 +7,12 @@ import org.junit.Test;
 
 import model.enums.ParamSpec;
 
-public class TestTypeParamSpec
+public class TestParamSpec
 {
     @Test
     public void testSize()
     {
-        assertEquals(5, ParamSpec.values().length);
+        assertEquals(6, ParamSpec.values().length);
     }
     
     @Test
@@ -23,5 +23,6 @@ public class TestTypeParamSpec
         assertFalse(ParamSpec.TEXTESECURITE.toString().isEmpty());
         assertFalse(ParamSpec.MEMBRESJAVA.toString().isEmpty());
         assertFalse(ParamSpec.MEMBRESDTATSTAGE.toString().isEmpty());
+        assertFalse(ParamSpec.RECAPDEFECT.toString().isEmpty());
     }
 }

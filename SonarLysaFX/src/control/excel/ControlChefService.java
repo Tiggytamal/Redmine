@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -29,7 +28,7 @@ public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
-    public ControlChefService(File file) throws InvalidFormatException, IOException
+    public ControlChefService(File file) throws IOException
     {
         super(file);
     }

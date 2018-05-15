@@ -421,6 +421,13 @@ public class ControlRTC
         return retour;
     }
 
+    /**
+     * 
+     * 
+     * @param item
+     * @return
+     * @throws TeamRepositoryException
+     */
     public LotSuiviRTC creerLotSuiviRTCDepuisHandle(Object item) throws TeamRepositoryException
     {
         if (item instanceof IWorkItemHandle)

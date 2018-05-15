@@ -99,7 +99,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlSuivi(File file) throws IOException
+    ControlSuivi(File file) throws IOException
     {
         super(file);
 

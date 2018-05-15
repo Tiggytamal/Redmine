@@ -19,7 +19,7 @@ public interface ExcelFactory
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Enum<T> & TypeCol, R extends ControlExcel<T, Y>, Y> R getControlleur(Class<T> type, File file) throws InvalidFormatException, IOException
+    public static <T extends Enum<T> & TypeCol, R extends ControlExcel<T, Y>, Y> R getControlleur(Class<T> type, File file) throws IOException
     {
         switch (type.getName())
         {           

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,7 +23,7 @@ public class ControlApps extends ControlExcel<TypeColApps, Map<String, Boolean>>
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlApps(File file) throws InvalidFormatException, IOException
+    public ControlApps(File file) throws IOException
     {
         super(file);
     }

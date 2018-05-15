@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -29,7 +28,7 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlEdition(File file) throws InvalidFormatException, IOException
+    public ControlEdition(File file) throws IOException
     {
         super(file);
     }

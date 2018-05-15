@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import model.enums.Param;
 
-public class TestTypeParam
+public class TestParam
 {
     @Test
     public void testSize()
