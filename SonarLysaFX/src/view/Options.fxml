@@ -23,7 +23,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.Region?>
 
-<SplitPane fx:controller="control.view.OptionViewControl" dividerPositions="0.20" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
+<SplitPane fx:controller="control.view.OptionViewControl" prefWidth="900" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
 	<items>
 
 		<!-- Menu de selection des options -->
@@ -112,12 +112,6 @@
 							<children>
 							</children>
 						</VBox>
-
-						<Label fx:id="labelDescAnoRTC" />
-						<TextArea fx:id="descAnoRTC" prefHeight="100" prefWidth="300" wrapText="true"/>
-						<Region prefHeight="10" />
-						<Label fx:id="labelSecuAnoRTC" />
-						<TextArea fx:id="secuAnoRTC" prefHeight="100" prefWidth="300" wrapText="true"/>
 
 						<!-- Bouton de sauvegarde -->
 						<Region prefHeight="20" />

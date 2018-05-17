@@ -18,16 +18,16 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
-import model.enums.TypeBool;
+import model.enums.Param;
+import model.enums.ParamBool;
+import model.enums.ParamSpec;
 import model.enums.TypeCol;
 import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
@@ -36,13 +36,12 @@ import model.enums.TypeColEdition;
 import model.enums.TypeColPic;
 import model.enums.TypeColSuivi;
 import model.enums.TypeKey;
-import model.enums.Param;
-import model.enums.ParamSpec;
-import utilities.Statics;
+import model.enums.TypeParamSpec;
 import utilities.TechnicalException;
-import view.BooleanView;
 import view.ColonneView;
+import view.ParamBoolView;
 import view.ParamListView;
+import view.ParamTextView;
 import view.ParamView;
 
 public class OptionViewControl extends ViewControl
@@ -71,22 +70,13 @@ public class OptionViewControl extends ViewControl
     private VBox paramsBox;
     @FXML
     private VBox paramsBox2;
-    @FXML
-    private Label labelDescAnoRTC;
-    @FXML
-    private Label labelSecuAnoRTC;
-    @FXML
-    private TextArea descAnoRTC;
-    @FXML
-    private TextArea secuAnoRTC;
 
     // Attributs de classe
 
     private Alert alert;
 
     private Map<Param, String> mapParams;
-    private Map<TypeBool, Boolean> mapParamsBool;
-    private Map<ParamSpec, String> mapParamsSpec;
+    private Map<ParamBool, Boolean> mapParamsBool;
     private ControlXML control;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -104,7 +94,6 @@ public class OptionViewControl extends ViewControl
         alert.setHeaderText(null);
         mapParams = proprietesXML.getMapParams();
         mapParamsBool = proprietesXML.getMapParamsBool();
-        mapParamsSpec = proprietesXML.getMapParamsSpec();
         control = new ControlXML();
     }
 
@@ -224,9 +213,9 @@ public class OptionViewControl extends ViewControl
         // Sauvegarde des paramètres booléens
         for (Node node : booleanBox.getChildren())
         {
-            if (node instanceof BooleanView)
+            if (node instanceof ParamBoolView)
             {
-                BooleanView view = (BooleanView) node;
+                ParamBoolView view = (ParamBoolView) node;
                 mapParamsBool.put(view.getType(), view.getField().isSelected());
             }
         }
@@ -246,10 +235,9 @@ public class OptionViewControl extends ViewControl
         {
             if (node instanceof ParamListView)
                 ((ParamListView)node).sauverValeurs();
+            else if (node instanceof ParamTextView)
+                ((ParamTextView)node).sauverValeurs();
         }
-        
-        proprietesXML.getMapParamsSpec().put(ParamSpec.TEXTEDEFECT, descAnoRTC.getText());
-        proprietesXML.getMapParamsSpec().put(ParamSpec.TEXTESECURITE, secuAnoRTC.getText());
 
         // Enregistrement paramètres
         new ControlXML().saveParam(proprietesXML);
@@ -315,9 +303,9 @@ public class OptionViewControl extends ViewControl
         }
 
         // Affichage de tous les paramètres de type booléens
-        for (Entry<TypeBool, Boolean> entry : mapParamsBool.entrySet())
+        for (Entry<ParamBool, Boolean> entry : mapParamsBool.entrySet())
         {
-            BooleanView pv = new BooleanView(entry.getKey(), entry.getValue());
+            ParamBoolView pv = new ParamBoolView(entry.getKey(), entry.getValue());
             booleanBox.getChildren().add(pv);
         }
     }
@@ -328,13 +316,15 @@ public class OptionViewControl extends ViewControl
     private void afficherParamsAutres()
     {      
         paramsBox2.getChildren().clear();
-        paramsBox2.getChildren().add(new ParamListView(ParamSpec.VERSIONS));
-        paramsBox2.getChildren().add(new ParamListView(ParamSpec.MEMBRESJAVA));
-        paramsBox2.getChildren().add(new ParamListView(ParamSpec.MEMBRESDTATSTAGE));
-        labelDescAnoRTC.setText(ParamSpec.TEXTEDEFECT.toString());
-        descAnoRTC.setText(mapParamsSpec.get(ParamSpec.TEXTEDEFECT).replace("\\n", Statics.NL));
-        labelSecuAnoRTC.setText(ParamSpec.TEXTESECURITE.toString());
-        secuAnoRTC.setText(mapParamsSpec.get(ParamSpec.TEXTESECURITE).replace("\\n", Statics.NL));       
+        for (ParamSpec param : ParamSpec.values())
+        {
+            if (param.getType() == TypeParamSpec.TEXTAREA)
+                paramsBox2.getChildren().add(new ParamTextView(param));
+            else if (param.getType() == TypeParamSpec.LISTVIEWNOM || param.getType() == TypeParamSpec.LISTVIEWVERSION)
+                paramsBox2.getChildren().add(new ParamListView(param));
+            else
+                throw new TechnicalException("control.view.OptionViewControl.afficherParamsAutres - TypeParamSpec non géré : " + param.getType(), null);
+        }
     }
 
     /**

@@ -16,6 +16,12 @@ import model.enums.TypeColEdition;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
+/**
+ * Classe de contrôle 
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, String>>
 {
     /*---------- ATTRIBUTS ----------*/
@@ -28,13 +34,22 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlEdition(File file) throws IOException
+    /**
+     * Constructeur avec visibilité par default pour obliger l'utilisation de la factory
+     * 
+     * @param file
+     *            Fichier qui sera traiter par l'instance du contrôleur
+     * @throws IOException
+     *             Exception lors des accès lecture/écriture
+     */
+    ControlEdition(File file) throws IOException
     {
         super(file);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
+    @Override
     public Map<String, String> recupDonneesDepuisExcel()
     {
         // Initialisation map
@@ -62,6 +77,14 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
 
     /*---------- METHODES PRIVEES ----------*/
 
+    /**
+     * Contrôle des libelle des éditions dans le fichier.
+     * 
+     * @param libelle
+     *  
+     * @return
+     * 
+     */
     private String prepareLibelle(String libelle)
     {
         // On découpe les libéllés avec /. Ensuite, on teste le format pour bien ne renvoyer que des CHC ou CDM.

@@ -21,6 +21,11 @@ import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
 
+/**
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class ParamListView extends VBox
 {
     /*---------- ATTRIBUTS ----------*/
@@ -28,15 +33,11 @@ public class ParamListView extends VBox
     private ParamSpec param;
     private ListView<String> listView;
     private TextField valeurField;
-    private static final double CARAC_WIDTH = 10;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public ParamListView(ParamSpec param)
     {
-        // Contrôle du type de paramètre
-        
-        
         this.param = param;
         ObservableList<Node> rootChildren = getChildren();
 
@@ -221,11 +222,11 @@ public class ParamListView extends VBox
         double retour = 0;
         for (String string : items)
         {
-            double temp = string.length() * CARAC_WIDTH;
+            double temp = string.length() * Statics.CARAC_WIDTH;
             if (temp > retour)
                 retour = temp;
         }
-        return retour + 10;
+        return retour + 20;
     }
 
     /*---------- ACCESSEURS ----------*/

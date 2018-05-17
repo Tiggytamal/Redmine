@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import model.enums.TypeBool;
+import model.enums.ParamBool;
 import model.enums.TypeCol;
 import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
@@ -34,16 +34,21 @@ public class ProprietesXML implements XML, Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
+    // Map des paramètres
     private Map<Param, String> mapParams;
-    private Map<TypeBool, Boolean> mapParamsBool;
+    private Map<ParamBool, Boolean> mapParamsBool;
+    private Map<ParamSpec, String> mapParamsSpec;
+    
+    // Map des colonnes
     private Map<TypeColSuivi, String> mapColsSuivi;    
     private Map<TypeColClarity, String> mapColsClarity;   
     private Map<TypeColChefServ, String> mapColsChefServ;
     private Map<TypeColPic, String> mapColsPic;
     private Map<TypeColEdition, String> mapColsEdition;   
     private Map<TypeColApps, String> mapColsApps;  
+    
+    // Map planificateurs
     private Map<TypePlan, Planificateur> mapPlans;
-    private Map<ParamSpec, String> mapParamsSpec;
 
     private static final String NOMFICHIER = "\\proprietes.xml";
     private static final String RESOURCE = "/resources/proprietes.xml";
@@ -60,7 +65,7 @@ public class ProprietesXML implements XML, Modele
         mapColsEdition = new EnumMap<>(TypeColEdition.class);
         mapColsApps = new EnumMap<>(TypeColApps.class);
         mapPlans = new EnumMap<>(TypePlan.class);
-        mapParamsBool = new EnumMap<>(TypeBool.class);
+        mapParamsBool = new EnumMap<>(ParamBool.class);
         mapParamsSpec = new EnumMap<>(ParamSpec.class);
     }
 
@@ -138,7 +143,7 @@ public class ProprietesXML implements XML, Modele
 
     @XmlElementWrapper
     @XmlElement (name = "mapParamsBool", required = false)
-    public Map<TypeBool, Boolean> getMapParamsBool()
+    public Map<ParamBool, Boolean> getMapParamsBool()
     {
         return mapParamsBool;
     }

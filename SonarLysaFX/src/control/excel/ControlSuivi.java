@@ -41,7 +41,7 @@ import model.Anomalie;
 import model.InfoClarity;
 import model.ModelFactory;
 import model.RespService;
-import model.enums.Environnement;
+import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
@@ -522,7 +522,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         ajouterLiens(cell, lienslots, ano.getLot().substring(4));
 
         // Environnement
-        valoriserCellule(row, colEnv, centre, ano.getEnvironnement(), ano.getEnvironnementComment());
+        valoriserCellule(row, colEnv, centre, ano.getEtatLot(), ano.getEtatLotComment());
 
         // Numéros anomalie
         cell = row.createCell(colAno);
@@ -581,7 +581,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
         valoriserCellule(row, Index.LOTI.ordinal(), centre, ano.getLot(), null);
         valoriserCellule(row, Index.EDITIONI.ordinal(), helper.getStyle(couleur), ano.getEdition(), null);
-        valoriserCellule(row, Index.ENVI.ordinal(), centre, ano.getEnvironnement().toString(), null);
+        valoriserCellule(row, Index.ENVI.ordinal(), centre, ano.getEtatLot().toString(), null);
         valoriserCellule(row, Index.TRAITEI.ordinal(), centre, traite, null);
     }
 
@@ -775,11 +775,11 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         }
 
         // Mise à jour de l'état du lot
-        Environnement etatLot = Environnement.from(controlRTC.recupEtatElement(controlRTC.recupWorkItemDepuisId(anoLotInt)));
-        if (ano.getEnvironnement() != etatLot)
+        EtatLot etatLot = EtatLot.from(controlRTC.recupEtatElement(controlRTC.recupWorkItemDepuisId(anoLotInt)));
+        if (ano.getEtatLot() != etatLot)
         {
             logger.info("Lot : " + anoLot + " - nouvel etat Lot : " + etatLot);
-            ano.setEnvironnement(etatLot);
+            ano.setEtatLot(etatLot);
         }
         return ano;
     }
@@ -832,8 +832,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         retour.setEditionComment(getCellComment(row, colEdition));
         retour.setLot(getCellStringValue(row, colLot));
         retour.setLotComment(getCellComment(row, colLot));
-        retour.setEnvironnement(Environnement.from(getCellStringValue(row, colEnv)));
-        retour.setEnvironnementComment(getCellComment(row, colEnv));
+        retour.setEtatLot(EtatLot.from(getCellStringValue(row, colEnv)));
+        retour.setEtatLotComment(getCellComment(row, colEnv));
         retour.setNumeroAnomalie(getCellNumericValue(row, colAno));
         retour.setNumeroAnomalieComment(getCellComment(row, colAno));
         retour.setEtat(getCellStringValue(row, colEtat));
@@ -937,8 +937,12 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @author ETP8137 - Grégoire mathon
      * @since 1.0
      */
-    private enum Index {
-        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
+    private enum Index 
+    {
+        LOTI("Lot projet RTC"), 
+        EDITIONI("Edition"), 
+        ENVI("Etat du lot"), 
+        TRAITEI("Traitée");
 
         private String string;
 

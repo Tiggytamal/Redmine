@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Comment;
 
-import model.enums.Environnement;
+import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
 
@@ -41,8 +41,8 @@ public class Anomalie implements Modele
     private Comment lotComment;
     private String liensLot;
     private Comment liensLotComment;
-    private Environnement environnement;
-    private Comment environnementComment;
+    private EtatLot etatLot;
+    private Comment etatLotComment;
     private int numeroAnomalie;
     private Comment numeroAnomalieComment;
     private String liensAno;
@@ -78,22 +78,23 @@ public class Anomalie implements Modele
         matieres = new HashSet<>();
     }
 
-    Anomalie(LotSuiviPic lot)
+    Anomalie(LotSuiviRTC lot)
     {
         this();
-        majDepuisPic(lot);
+        majDepuisRTC(lot);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public Anomalie majDepuisPic(LotSuiviPic lot)
+    public Anomalie majDepuisRTC(LotSuiviRTC lotRTC)
     {
-        setCpiProjet(lot.getCpiProjet());
-        setEdition(lot.getEdition());
-        setLibelleProjet(lot.getLibelle());
-        setProjetClarity(lot.getProjetClarity());
-        setLot("Lot " + lot.getLot());
-        setEnvironnement(calculerEnvironnement(lot));
+        setCpiProjet(lotRTC.getCpiProjet());
+        setEdition(lotRTC.getEdition());
+        setLibelleProjet(lotRTC.getLibelle());
+        setProjetClarity(lotRTC.getProjetClarity());
+        setLot("Lot " + lotRTC.getLot());
+        setEtatLot(lotRTC.getEtatLot());
+        setProjetRTC(lotRTC.getProjetRTC());
         return this;
     }
 
@@ -150,27 +151,6 @@ public class Anomalie implements Modele
     }
 
     /*---------- METHODES PRIVEES ----------*/
-
-    /**
-     * Permet de valoriser l'environnement par rapport aux dates de publication
-     * 
-     * @param lot
-     * @return
-     */
-    private Environnement calculerEnvironnement(LotSuiviPic lot)
-    {
-        if (lot.getLivraison() != null)
-            return Environnement.EDITION;
-        if (lot.getVmoa() != null)
-            return Environnement.VMOA;
-        if (lot.getVmoe() != null)
-            return Environnement.VMOE;
-        if (lot.getTfon() != null)
-            return Environnement.TFON;
-        if (lot.getDevtu() != null)
-            return Environnement.DEVTU;
-        return Environnement.NOUVEAU;
-    }
 
     /*---------- ACCESSEURS ----------*/
 
@@ -264,14 +244,14 @@ public class Anomalie implements Modele
         this.lot = lot;
     }
 
-    public Environnement getEnvironnement()
+    public EtatLot getEtatLot()
     {
-        return environnement != null ? environnement : Environnement.INCONNU;
+        return etatLot != null ? etatLot : EtatLot.INCONNU;
     }
 
-    public void setEnvironnement(Environnement environnement)
+    public void setEtatLot(EtatLot etatLot)
     {
-        this.environnement = environnement;
+        this.etatLot = etatLot;
     }
 
     public int getNumeroAnomalie()
@@ -521,14 +501,14 @@ public class Anomalie implements Modele
         this.liensLotComment = liensLotComment;
     }
 
-    public Comment getEnvironnementComment()
+    public Comment getEtatLotComment()
     {
-        return environnementComment;
+        return etatLotComment;
     }
 
-    public void setEnvironnementComment(Comment environnementComment)
+    public void setEtatLotComment(Comment etatLotComment)
     {
-        this.environnementComment = environnementComment;
+        this.etatLotComment = etatLotComment;
     }
 
     public Comment getNumeroAnomalieComment()

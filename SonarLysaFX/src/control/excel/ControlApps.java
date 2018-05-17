@@ -13,6 +13,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 import model.enums.TypeColApps;
 
+/**
+ * Classe de contrôle du fichier des applications
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class ControlApps extends ControlExcel<TypeColApps, Map<String, Boolean>>
 {
     /*---------- ATTRIBUTS ----------*/
@@ -23,7 +29,15 @@ public class ControlApps extends ControlExcel<TypeColApps, Map<String, Boolean>>
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlApps(File file) throws IOException
+    /**
+     * Constructeur avec visibilité par default pour obliger l'utilisation de la factory
+     * 
+     * @param file
+     *            Fichier qui sera traiter par l'instance du contrôleur
+     * @throws IOException
+     *             Exception lors des accès lecture/écriture
+     */
+    ControlApps(File file) throws IOException
     {
         super(file);
     }

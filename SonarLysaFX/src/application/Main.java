@@ -26,7 +26,7 @@ import utilities.enums.Severity;
  */
 public class Main extends Application
 {
-    public static final boolean DESER = false;
+    public static final boolean DESER = true;
 
     public static void main(final String[] args)
     {
@@ -73,18 +73,21 @@ public class Main extends Application
             // Récursivité pour tester la cause de cette exception
             gestionException(e.getCause());
         else
-            {
-                Statics.logger.error(e);
-                createAlert(Severity.ERROR, e, e.getClass().getSimpleName() + e.getMessage());
-            }
+        {
+            Statics.logger.error(e);
+            createAlert(Severity.ERROR, e, e.getClass().getSimpleName() + e.getMessage());
+        }
     }
 
     /**
      * Méthode permettant de créer un message d'erreur
      * 
      * @param severity
+     *            Sévérité de l'anomalie
      * @param ex
+     *            Throwable d'ou provient le plantage
      * @param detail
+     *            message à afficher dans la fenetre de l'exception
      */
     private static void createAlert(Severity severity, Throwable ex, String detail)
     {

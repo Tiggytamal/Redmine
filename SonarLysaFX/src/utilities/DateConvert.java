@@ -22,6 +22,8 @@ import java.util.Locale;
 public class DateConvert
 {
     /*---------- ATTRIBUTS ----------*/
+    
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRANCE);
 
     private DateConvert()
     {

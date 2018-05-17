@@ -35,6 +35,8 @@ public class Statics
     public static final String FINLIENSANO = "#action=com.ibm.team.workitem.viewWorkItem&id=";
     /** Hauteur d'une ligne */
     public static final int ROW_HEIGHT = 24;
+    /** Largeur d'un caractère */
+    public static final double CARAC_WIDTH = 7;
     
     /* ----- loggers ----- */
     

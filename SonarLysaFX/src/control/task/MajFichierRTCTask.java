@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
+import com.ibm.team.workitem.common.model.IWorkItemHandle;
 
 import control.rtc.ControlRTC;
 import control.xml.ControlXML;
@@ -53,12 +54,14 @@ public class MajFichierRTCTask extends SonarTask
         
         int i = 0;
         int size = handles.size();
-        for (Object object : handles)
+        String base = "Récupération RTC - Traitement lot : ";
+        String fin = "Nbre de lots traités : ";
+        for (Object handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête
-            LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle(object);
+            LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle((IWorkItemHandle) handle);
             updateProgress(++i, size);
-            updateMessage("Traitement lot : " + lot.getLot());
+            updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).toString());
             map.put(lot.getLot(), lot);
         }
 

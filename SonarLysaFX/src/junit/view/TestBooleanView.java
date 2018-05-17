@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.saxsys.javafx.test.JfxRunner;
-import model.enums.TypeBool;
-import view.BooleanView;
+import model.enums.ParamBool;
+import view.ParamBoolView;
 
 @RunWith(JfxRunner.class)
 public class TestBooleanView
@@ -15,12 +15,12 @@ public class TestBooleanView
     @Test
     public void booleanView()
     {
-        BooleanView view = new BooleanView(TypeBool.VUESSUIVI, true);
-        assertTrue(view.getType() == TypeBool.VUESSUIVI); 
+        ParamBoolView view = new ParamBoolView(ParamBool.VUESSUIVI, true);
+        assertTrue(view.getType() == ParamBool.VUESSUIVI); 
         assertTrue(view.getField().isSelected()); 
 
-        view = new BooleanView(TypeBool.VUESSUIVI, null);
-        assertTrue(view.getType() == TypeBool.VUESSUIVI); 
+        view = new ParamBoolView(ParamBool.VUESSUIVI, null);
+        assertTrue(view.getType() == ParamBool.VUESSUIVI); 
         assertTrue(!view.getField().isSelected());
     }
 }

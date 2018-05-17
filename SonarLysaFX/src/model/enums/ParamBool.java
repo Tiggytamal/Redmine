@@ -2,7 +2,7 @@ package model.enums;
 
 import java.io.Serializable;
 
-public enum TypeBool implements Serializable,TypeKey 
+public enum ParamBool implements Serializable,TypeKey 
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -12,7 +12,7 @@ public enum TypeBool implements Serializable,TypeKey
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private TypeBool(String string)
+    private ParamBool(String string)
     {
         this.string = string;
     }

@@ -11,13 +11,12 @@ import java.util.Set;
 import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.junit.Before;
 import org.junit.Test;
-import org.powermock.reflect.Whitebox;
 
 import model.Anomalie;
 import model.InfoClarity;
-import model.LotSuiviPic;
+import model.LotSuiviRTC;
 import model.ModelFactory;
-import model.enums.Environnement;
+import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
 
@@ -46,33 +45,34 @@ public class TestAnomalie
     @Test
     public void anomlieWithLot()
     {
-        ano = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotSuiviPic.class));
+        ano = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotSuiviRTC.class));
     }
     
     @Test
     public void majDepuisPic()
     {
         // Création lotPic
-        LotSuiviPic lotPic = ModelFactory.getModel(LotSuiviPic.class);
+        LotSuiviRTC lotRTC = ModelFactory.getModel(LotSuiviRTC.class);
         String cpi = "cpi";
-        lotPic.setCpiProjet(cpi);
+        lotRTC.setCpiProjet(cpi);
         String edition = "edition";
-        lotPic.setEdition(edition);
+        lotRTC.setEdition(edition);
         String libProjet = "libProjet";
-        lotPic.setLibelle(libProjet);
+        lotRTC.setLibelle(libProjet);
         String clarity = "clarity";
-        lotPic.setProjetClarity(clarity);
+        lotRTC.setProjetClarity(clarity);
         String lot = "123456";
-        lotPic.setLot(lot);
+        lotRTC.setLot(lot);
+        lotRTC.setEtatLot(EtatLot.NOUVEAU);
         
         // Test
-        ano.majDepuisPic(lotPic);
+        ano.majDepuisRTC(lotRTC);
         assertEquals(cpi, ano.getCpiProjet());
         assertEquals(edition, ano.getEdition());
         assertEquals(libProjet, ano.getLibelleProjet());
         assertEquals(clarity, ano.getProjetClarity());
         assertEquals("Lot " + lot, ano.getLot());
-        assertEquals(Environnement.NOUVEAU, ano.getEnvironnement());       
+        assertEquals(EtatLot.NOUVEAU, ano.getEtatLot());       
     }
     
     @Test
@@ -158,36 +158,6 @@ public class TestAnomalie
         ano.setMatieresString(matieres);
         assertTrue(ano.getMatieres().contains(Matiere.JAVA));
         assertTrue(ano.getMatieres().contains(Matiere.DATASTAGE));
-    }
-    
-    @Test
-    public void calculerEnvironnement() throws Exception
-    {
-        String methode = "calculerEnvironnement";
-        // Test sans date
-        LotSuiviPic lotPic = ModelFactory.getModel(LotSuiviPic.class);
-        assertEquals(Environnement.NOUVEAU, Whitebox.invokeMethod(ano, methode, lotPic));
-        
-        // Test DEVTU
-        lotPic.setDevtu(TODAY);
-        assertEquals(Environnement.DEVTU, Whitebox.invokeMethod(ano, methode, lotPic));
-        
-        // Test TFON
-        lotPic.setTfon(TODAY);
-        assertEquals(Environnement.TFON, Whitebox.invokeMethod(ano, methode, lotPic));
-        
-        // Test VMOE
-        lotPic.setVmoe(TODAY);
-        assertEquals(Environnement.VMOE, Whitebox.invokeMethod(ano, methode, lotPic));
-        
-        // Test VMOA
-        lotPic.setVmoa(TODAY);
-        assertEquals(Environnement.VMOA, Whitebox.invokeMethod(ano, methode, lotPic));
-        
-        // Test EDITION
-        lotPic.setLivraison(TODAY);
-        assertEquals(Environnement.EDITION, Whitebox.invokeMethod(ano, methode, lotPic));
-        
     }
     
     @Test
@@ -410,12 +380,12 @@ public class TestAnomalie
     public void getEnvironnement()
     {
         // test valeur vide ou nulle
-        assertEquals(Environnement.INCONNU, ano.getEnvironnement());
+        assertEquals(EtatLot.INCONNU, ano.getEtatLot());
         
         // Test setter et getter
-        Environnement env = Environnement.DEVTU;
-        ano.setEnvironnement(env);
-        assertEquals(env, ano.getEnvironnement());       
+        EtatLot env = EtatLot.DEVTU;
+        ano.setEtatLot(env);
+        assertEquals(env, ano.getEtatLot());       
     }
     
     @Test
@@ -579,11 +549,11 @@ public class TestAnomalie
     public void getEnvironnementComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getEnvironnementComment());
+        assertEquals(null, ano.getEtatLotComment());
         
         // Test setter et getter
-        ano.setEnvironnementComment(comment);
-        assertEquals(comment, ano.getEnvironnementComment());   
+        ano.setEtatLotComment(comment);
+        assertEquals(comment, ano.getEtatLotComment());   
     }
     
     @Test

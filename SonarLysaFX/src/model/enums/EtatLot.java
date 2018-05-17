@@ -6,7 +6,7 @@ package model.enums;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum Environnement
+public enum EtatLot
 {
     NOUVEAU(Valeur.NOUVEAU),
     DEVTU(Valeur.DEVTU),
@@ -21,7 +21,7 @@ public enum Environnement
     
     private final String string;
     
-    private Environnement(String string)
+    private EtatLot(String string)
     {
         this.string = string;
     }
@@ -32,10 +32,10 @@ public enum Environnement
         return string;
     }
     
-    public static Environnement from(String envString)
+    public static EtatLot from(String envString)
     {
         if (envString == null)
-            return Environnement.INCONNU;
+            return EtatLot.INCONNU;
         
         switch(envString)
         {

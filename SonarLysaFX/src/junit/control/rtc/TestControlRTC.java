@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -37,9 +36,9 @@ import junit.JunitBase;
 import junit.TestUtils;
 import model.Anomalie;
 import model.ModelFactory;
+import model.enums.Param;
 import model.enums.TypeColSuivi;
 import model.enums.TypeEnumRTC;
-import model.enums.Param;
 import utilities.Statics;
 
 public class TestControlRTC extends JunitBase
@@ -186,7 +185,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void recupContributorDepuisNom() throws TeamRepositoryException, InvalidFormatException, IOException
+    public void recupContributorDepuisNom() throws TeamRepositoryException, IOException
     {
         // Appel du service pour récupérer le fichier de suivi.
         ControlSuivi control = ExcelFactory.getControlleur(TypeColSuivi.class, new File(getClass().getResource("/resources/Suivi_Quality_GateTest.xlsx").getFile()));

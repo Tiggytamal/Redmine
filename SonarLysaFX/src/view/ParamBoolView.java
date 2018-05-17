@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import model.enums.TypeBool;
+import model.enums.ParamBool;
 
 /**
  * Bloc d'affichage pour paramétrer une donnée de l'application
@@ -16,13 +16,13 @@ import model.enums.TypeBool;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class BooleanView extends VBox implements ViewXML<TypeBool, CheckBox>
+public class ParamBoolView extends VBox implements ViewXML<ParamBool, CheckBox>
 {
-    private TypeBool typeBool;
+    private ParamBool typeBool;
     private CheckBox checkBox;
     private static final String POINT = " : ";
 
-    public BooleanView(TypeBool typeBool, Boolean bool)
+    public ParamBoolView(ParamBool typeBool, Boolean bool)
     {
         this.typeBool = typeBool;
         ObservableList<Node> rootChildren = getChildren();
@@ -50,7 +50,7 @@ public class BooleanView extends VBox implements ViewXML<TypeBool, CheckBox>
     /**
      * @return the typeCol
      */
-    public TypeBool getType()
+    public ParamBool getType()
     {
         return typeBool;
     }

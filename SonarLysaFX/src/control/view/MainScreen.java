@@ -68,7 +68,6 @@ public class MainScreen extends Application
         trayIcon.addToTray();
         stage.show();
         new ControlXML().createAlert();
-
     }
 
     /*---------- METHODES PRIVEES ----------*/

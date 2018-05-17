@@ -12,6 +12,12 @@ import model.ModelFactory;
 import model.RespService;
 import model.enums.TypeColChefServ;
 
+/**
+ * classe de contrôle pour le fichier des chefs de services
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String, RespService>>
 {
     /*---------- ATTRIBUTS ----------*/
@@ -28,7 +34,15 @@ public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
-    public ControlChefService(File file) throws IOException
+    /**
+     * Constructeur avec visibilité par default pour obliger l'utilisation de la factory
+     * 
+     * @param file
+     *            Fichier qui sera traiter par l'instance du contrôleur
+     * @throws IOException
+     *             Exception lors des accès lecture/écriture
+     */
+    ControlChefService(File file) throws IOException
     {
         super(file);
     }
@@ -57,7 +71,7 @@ public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String
             respServ.setNom(getCellStringValue(row, colManager));
             retour.put(respServ.getService(), respServ);
         }
-        
+
         return retour;
     }
 
@@ -66,8 +80,8 @@ public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String
     @Override
     protected void initEnum()
     {
-       enumeration = TypeColChefServ.class;       
+        enumeration = TypeColChefServ.class;
     }
-    
+
     /*---------- ACCESSEURS ----------*/
 }

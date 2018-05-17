@@ -3,10 +3,10 @@ package model;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import model.enums.Environnement;
+import model.enums.EtatLot;
 
 /**
- * Classe répresentant l'extratcion d'un lot depuis RTC
+ * Classe répresentant l'extraction d'un lot depuis RTC
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
@@ -21,7 +21,7 @@ public class LotSuiviRTC implements Modele
     private String projetClarity;
     private String cpiProjet;
     private String edition;
-    private Environnement etatLot;
+    private EtatLot etatLot;
     private String projetRTC;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -91,12 +91,12 @@ public class LotSuiviRTC implements Modele
     }
 
     @XmlAttribute(required = false)
-    public Environnement getEtatLot()
+    public EtatLot getEtatLot()
     {
         return etatLot;
     }
 
-    public void setEtatLot(Environnement etatLot)
+    public void setEtatLot(EtatLot etatLot)
     {
         this.etatLot = etatLot;
     }

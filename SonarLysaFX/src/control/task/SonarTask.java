@@ -140,6 +140,7 @@ public abstract class SonarTask extends Task<Boolean>
                 }
             }
         }
+        
         updateMessage(RECUPCOMPOSANTS + "OK");
         return retour;
     }

@@ -27,7 +27,7 @@ import control.excel.ControlSuivi;
 import control.rtc.ControlRTC;
 import model.Anomalie;
 import model.ModelFactory;
-import model.enums.Environnement;
+import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
@@ -84,7 +84,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         // Test 1 - ano déja abandonnée - Retour normalement vide
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
         ano.setLot("Lot 305388");
-        ano.setEnvironnement(Environnement.NOUVEAU);
+        ano.setEtatLot(EtatLot.NOUVEAU);
         anoAcreer.add(ano);
         List<Anomalie> liste = handler.createSheetError(nomSheet, anoAcreer, anoDejacrees);
         assertTrue(liste.isEmpty());
@@ -92,7 +92,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         // Test 2 - nouvelle ano - Retour normalement à 1
         ano = ModelFactory.getModel(Anomalie.class);
         ano.setLot("Lot 305128");
-        ano.setEnvironnement(Environnement.NOUVEAU);
+        ano.setEtatLot(EtatLot.NOUVEAU);
         anoAcreer.add(ano);
         liste = handler.createSheetError(nomSheet, anoAcreer, anoDejacrees);
         assertTrue(liste.size() == 1);
@@ -235,7 +235,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
         ano.setNumeroAnomalie(10);
         ano.setLot(LOT);
-        ano.setEnvironnement(Environnement.NOUVEAU);
+        ano.setEtatLot(EtatLot.NOUVEAU);
         anoClose.put(ano.getLot(), ano);
         ano = ModelFactory.getModel(Anomalie.class);
         ano.setNumeroAnomalie(0);
@@ -374,7 +374,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         // Test 2. ni securite / ni release / ni close
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
         ano.setNumeroAnomalie(10);
-        ano.setEnvironnement(Environnement.NOUVEAU);
+        ano.setEtatLot(EtatLot.NOUVEAU);
         ano.setLot(LOT);
         ano.setMatieresString("JAVA");
         anoAajouter.add(ano);

@@ -75,7 +75,7 @@ public class CreerVueProductionTask extends SonarTask
      * @throws IOException
      * @throws InvalidFormatException
      */
-    private boolean creerVueProduction() throws IOException, InvalidFormatException
+    private boolean creerVueProduction() throws IOException
     {
         Map<LocalDate, List<Vue>> mapLot;
         if (file != null)

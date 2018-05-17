@@ -86,7 +86,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
      * @throws IllegalAccessException
      */
     @Before
-    public void init() throws InvalidFormatException, IOException, IllegalAccessException
+    public void init() throws IOException, IllegalAccessException
     {
         file = new File(getClass().getResource(chemin).getFile());
         handler = ExcelFactory.getControlleur(typeColClass, file);

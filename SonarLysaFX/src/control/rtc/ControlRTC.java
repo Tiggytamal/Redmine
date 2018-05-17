@@ -28,6 +28,7 @@ import com.ibm.team.repository.client.login.UsernameAndPasswordLoginInfo;
 import com.ibm.team.repository.common.IAuditableHandle;
 import com.ibm.team.repository.common.IContributor;
 import com.ibm.team.repository.common.IContributorHandle;
+import com.ibm.team.repository.common.IItemHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.common.UUID;
 import com.ibm.team.repository.common.model.query.BaseContributorQueryModel.ContributorQueryModel;
@@ -59,12 +60,12 @@ import com.mchange.util.AssertException;
 import model.Anomalie;
 import model.LotSuiviRTC;
 import model.ModelFactory;
-import model.enums.Environnement;
+import model.enums.EtatLot;
 import model.enums.Matiere;
-import model.enums.TypeEnumRTC;
-import model.enums.TypeFichier;
 import model.enums.Param;
 import model.enums.ParamSpec;
+import model.enums.TypeEnumRTC;
+import model.enums.TypeFichier;
 import utilities.DateConvert;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -87,8 +88,6 @@ public class ControlRTC
     private IWorkItemClient workItemClient;
     private IAuditableClient auditableClient;
     private IAuditableCommon auditableCommon;
-
-    private static final String RECAPITULATIF = "Anomalie Qualimétrie : Quality Gate non conforme";
    
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -347,7 +346,7 @@ public class ControlRTC
      * @throws TeamRepositoryException
      */
     @SuppressWarnings("unchecked")
-    public List<?> recupLotsRTC(boolean remiseAZero, LocalDate dateCreation) throws TeamRepositoryException
+    public List<IItemHandle> recupLotsRTC(boolean remiseAZero, LocalDate dateCreation) throws TeamRepositoryException
     {
         // 1. Contrôle
 
@@ -361,7 +360,7 @@ public class ControlRTC
         IItemQuery query = IItemQuery.FACTORY.newInstance(WorkItemQueryModel.ROOT);
 
         // Predicate avec un paramètre poru chercher depuis le nom avec un paramètre de type String
-        IPredicate predicatFinal = WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotprojet");
+        IPredicate predicatFinal = WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotprojet")._or(WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotfonctionnement"));
 
         // Prise en compte de la date de création si elle est fournie
         if (dateCreation != null)
@@ -377,8 +376,8 @@ public class ControlRTC
             if (dateMajFichierRTC != null && !dateMajFichierRTC.isEmpty())
             {
                 // Date de la dernière mise à jour
-                LocalDate lastUpdate = LocalDate.parse(dateMajFichierRTC);
-
+                LocalDate lastUpdate = DateConvert.FORMATTER.parse(dateMajFichierRTC, LocalDate::from);
+                
                 // Periode entre la dernière mise à jour et aujourd'hui
                 Period periode = Period.between(lastUpdate, Statics.TODAY);
 
@@ -405,7 +404,7 @@ public class ControlRTC
         IItemQueryPage page = qs.queryItems(filtered, new Object[] {}, pageSize);
 
         // Liste de tous les lots trouvés.
-        List<?> retour = new ArrayList<>();
+        List<IItemHandle> retour = new ArrayList<>();
         retour.addAll(page.getItemHandles());
         int nextPosition = page.getNextStartPosition();
         UUID token = page.getToken();
@@ -422,13 +421,15 @@ public class ControlRTC
     }
 
     /**
-     * 
+     * Création d'un LotSuiviRTC regroupant les informations depuis RTC. Ne prend en compte que les IWorkItemHandle
      * 
      * @param item
+     *      IItemHandle provenant de RTC.
      * @return
+     *  {@link model.LotSuiviRTC} 
      * @throws TeamRepositoryException
      */
-    public LotSuiviRTC creerLotSuiviRTCDepuisHandle(Object item) throws TeamRepositoryException
+    public LotSuiviRTC creerLotSuiviRTCDepuisHandle(IItemHandle item) throws TeamRepositoryException
     {
         if (item instanceof IWorkItemHandle)
         {
@@ -439,7 +440,7 @@ public class ControlRTC
             retour.setCpiProjet(recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
             retour.setProjetClarity(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.toString(), null), workItem));
             retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.toString(), null), workItem));
-            retour.setEtatLot(Environnement.from(recupEtatElement(workItem)));
+            retour.setEtatLot(EtatLot.from(recupEtatElement(workItem)));
             retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
             return retour;
         }
@@ -483,7 +484,7 @@ public class ControlRTC
         protected void execute(WorkItemWorkingCopy workingCopy, IProgressMonitor monitor) throws TeamRepositoryException
         {
             IWorkItem workItem = workingCopy.getWorkItem();
-            workItem.setHTMLSummary(XMLString.createFromPlainText(RECAPITULATIF));
+            workItem.setHTMLSummary(XMLString.createFromPlainText(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.RECAPDEFECT)));
             workItem.setHTMLDescription(XMLString.createFromPlainText(creerDescription()));
             workItem.setCategory(cat);
 
@@ -530,15 +531,19 @@ public class ControlRTC
             // Contributeurs JAVA
             if (ano.getMatieres().contains(Matiere.JAVA))
             {
-                subscription.add(recupContributorDepuisNom("PRUDENT Alain"));
-                subscription.add(recupContributorDepuisNom("TRICOT Nicolas"));
-                subscription.add(recupContributorDepuisNom("MATHON Gregoire"));
+                for (String nom : Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.MEMBRESJAVA).split(";"))
+                {
+                    subscription.add(recupContributorDepuisNom(nom));
+                }
             }
 
             // Contribureurs DATASTAGE
             if (ano.getMatieres().contains(Matiere.DATASTAGE))
             {
-                subscription.add(recupContributorDepuisNom("BONORIS Jean-Louis"));
+                for (String nom : Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.MEMBRESDTATSTAGE).split(";"))
+                {
+                    subscription.add(recupContributorDepuisNom(nom));
+                }
             }
 
             // Creator

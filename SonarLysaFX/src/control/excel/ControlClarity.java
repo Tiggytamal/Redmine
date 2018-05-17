@@ -12,6 +12,12 @@ import model.InfoClarity;
 import model.ModelFactory;
 import model.enums.TypeColClarity;
 
+/**
+ * Classe de contrôle du fichier Clarity
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, InfoClarity>>
 {
     /*---------- ATTRIBUTS ----------*/
@@ -26,10 +32,18 @@ public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, Inf
     private int colDir;
     private int colDepart;
     private int colService;
-   
+
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlClarity(File file) throws IOException
+    /**
+     * Constructeur avec visibilité par default pour obliger l'utilisation de la factory
+     * 
+     * @param file
+     *            Fichier qui sera traiter par l'instance du contrôleur
+     * @throws IOException
+     *             Exception lors des accès lecture/écriture
+     */
+    ControlClarity(File file) throws IOException
     {
         super(file);
     }
@@ -42,7 +56,7 @@ public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, Inf
         Sheet sheet = wb.getSheetAt(0);
 
         Map<String, InfoClarity> retour = new HashMap<>();
-        
+
         // Itération sur la feuille hormis la ligne des titres, et récupération des lignes qui ont un code Clarity
         for (int i = 1; i < sheet.getLastRowNum(); i++)
         {
@@ -57,11 +71,13 @@ public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, Inf
     }
 
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Création d'un objet InfoClarity depuis une ligne du fichier Excel
+     * 
      * @param row
-     * @return
+     *            Ligne du fichier Excel utilisée pour créer l'Objet JAVA
+     * @return {@link model.InfoClarity} - Modèle de données du fichier excel
      */
     private InfoClarity creerInfoClarityDepuisExcel(Row row)
     {
@@ -78,14 +94,14 @@ public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, Inf
             retour.setActif(true);
         else
             retour.setActif(false);
-        
+
         return retour;
     }
 
     @Override
     protected void initEnum()
     {
-        enumeration = TypeColClarity.class;        
+        enumeration = TypeColClarity.class;
     }
 
     /*---------- ACCESSEURS ----------*/

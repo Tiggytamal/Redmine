@@ -26,7 +26,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import model.enums.Environnement;
+import model.enums.EtatLot;
 import model.enums.TypeAction;
 import model.enums.TypeCol;
 import utilities.CellHelper;
@@ -84,6 +84,11 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
 
     /*---------- METHODES ABSTRAITES ----------*/
 
+    /**
+     * Remonte les données depuisle fichier Excel selon l'implémentation choisie.
+     * 
+     * @return
+     */
     public abstract R recupDonneesDepuisExcel();
 
     /**
@@ -395,8 +400,8 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
 
         if (texte instanceof String)
             cell.setCellValue((String) texte);
-        else if (texte instanceof Environnement)
-            cell.setCellValue(((Environnement) texte).toString());
+        else if (texte instanceof EtatLot)
+            cell.setCellValue(((EtatLot) texte).toString());
         else if (texte instanceof TypeAction)
             cell.setCellValue(((TypeAction) texte).toString());
         else if (texte instanceof LocalDate)

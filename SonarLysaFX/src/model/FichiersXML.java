@@ -4,10 +4,8 @@ import static utilities.Statics.NL;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -15,6 +13,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import model.enums.TypeFichier;
+import utilities.DateConvert;
 import utilities.Statics;
 import utilities.TechnicalException;
 
@@ -116,7 +115,7 @@ public class FichiersXML implements XML, Modele
      */
     public void setDateFichier(TypeFichier fichier)
     {
-        dateMaj.put(fichier, LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRANCE)));
+        dateMaj.put(fichier, LocalDate.now().format(DateConvert.FORMATTER));
     }
 
     @Override

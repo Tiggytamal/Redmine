@@ -1,5 +1,3 @@
 autoEnabled=true
 eclipse.preferences.version=1
 extraProperties=
-moduleKey=SonarLint_for_JavaKey
-serverId=SonarQube

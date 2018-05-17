@@ -9,7 +9,6 @@ public class TesteurMain
 {
     public static void main(String[] args)
     {
-        String NL = System.getProperty("line.separator");
-        System.out.println(NL);
+        // Méthode de test
     }
 }

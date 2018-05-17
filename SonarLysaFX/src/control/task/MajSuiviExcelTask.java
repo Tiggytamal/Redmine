@@ -22,6 +22,7 @@ import javax.xml.bind.JAXBException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import com.ibm.team.repository.common.IItemHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 import application.Main;
@@ -30,12 +31,11 @@ import control.excel.ExcelFactory;
 import control.rtc.ControlRTC;
 import control.xml.ControlXML;
 import model.Anomalie;
-import model.LotSuiviPic;
 import model.LotSuiviRTC;
 import model.ModelFactory;
 import model.enums.Matiere;
 import model.enums.Param;
-import model.enums.TypeBool;
+import model.enums.ParamBool;
 import model.enums.TypeColSuivi;
 import model.enums.TypeFichier;
 import model.enums.TypeMetrique;
@@ -50,6 +50,11 @@ import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.Utilities;
 
+/**
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class MajSuiviExcelTask extends SonarTask
 {
     /*---------- ATTRIBUTS ----------*/
@@ -60,7 +65,7 @@ public class MajSuiviExcelTask extends SonarTask
 
     public MajSuiviExcelTask(TypeMaj typeMaj)
     {
-        super(5);
+        super(6);
         this.typeMaj = typeMaj;
         annulable = false;
     }
@@ -75,10 +80,20 @@ public class MajSuiviExcelTask extends SonarTask
 
     /*---------- METHODES PRIVEES ----------*/
 
+    /**
+     * 
+     * @return
+     * @throws IOException
+     * @throws TeamRepositoryException
+     * @throws JAXBException
+     */
     private boolean majSuiviExcel() throws IOException, TeamRepositoryException, JAXBException
     {
         // Mise à jour du fichier RTC à la date du jour.
         majFichierRTC();
+        
+        updateProgress(-1, 0);
+        etapePlus();
         
         // Mise à jour d'un fichier ou des deux , selon le type de mise à jour.
         switch (typeMaj)
@@ -98,22 +113,30 @@ public class MajSuiviExcelTask extends SonarTask
         return true;
     }
 
+    /**
+     * 
+     * @throws TeamRepositoryException
+     * @throws JAXBException
+     */
     private void majFichierRTC() throws TeamRepositoryException, JAXBException
     {
         ControlRTC control = ControlRTC.INSTANCE;
         Map<String, LotSuiviRTC> map = new HashMap<>();
-        List<?> handles = control.recupLotsRTC(false, null);
+        map.putAll(fichiersXML.getLotsRTC());
+        List<IItemHandle> handles = control.recupLotsRTC(false, null);
         if (handles.isEmpty())
             throw new TechnicalException("La liste des lots RTC est vide!", null);
         
         int i = 0;
         int size = handles.size();
-        for (Object object : handles)
+        String base = "Récupération RTC - Traitement lot : ";
+        String fin = "Nbre de lots traités : ";
+        for (IItemHandle handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête
-            LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle(object);
+            LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle(handle);
             updateProgress(++i, size);
-            updateMessage("Traitement lot : " + lot.getLot());
+            updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).toString());
             map.put(lot.getLot(), lot);
         }
 
@@ -208,9 +231,7 @@ public class MajSuiviExcelTask extends SonarTask
     {
         // 1. Récupération des données depuis les fichiers Excel.
 
-        // Fichier des lots édition
-        Map<String, LotSuiviPic> lotsPIC = fichiersXML.getLotsPic();
-        
+        // Fichier des lots édition        
         Map<String, LotSuiviRTC> lotsRTC = fichiersXML.getLotsRTC();
 
         // 2. Récupération des lots Sonar en erreur.
@@ -239,13 +260,13 @@ public class MajSuiviExcelTask extends SonarTask
         updateProgress(-1, 1);
 
         // 3. Supression des lots déjà créés et création des feuille Excel avec les nouvelles erreurs
-        majFichierAnomalies(lotsPIC, mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);
+        majFichierAnomalies(lotsRTC, mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);
 
         updateProgress(1, 1);
         etapePlus();
 
         // 4. Création des vues si le paramètrage est activé
-        if (proprietesXML.getMapParamsBool().get(TypeBool.VUESSUIVI))
+        if (proprietesXML.getMapParamsBool().get(ParamBool.VUESSUIVI))
         {
             for (Map.Entry<String, Set<String>> entry : mapLotsSonar.entrySet())
             {
@@ -315,7 +336,7 @@ public class MajSuiviExcelTask extends SonarTask
     /**
      * Permet de mettre à jour le fichier des anomalies Sonar, en allant chercher les nouvelles dans Sonar et en vérifiant celles qui ne sont plus d'actualité.
      *
-     * @param mapLotsPIC
+     * @param lotsRTC
      *            Fichier excel d'extraction de la PIC de tous les lots.
      * @param mapLotsSonar
      *            map des lots Sonar avec une quality Gate en erreur
@@ -326,7 +347,7 @@ public class MajSuiviExcelTask extends SonarTask
      * @throws IOException
      * @throws TeamRepositoryException
      */
-    private void majFichierAnomalies(Map<String, LotSuiviPic> mapLotsPIC, Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere)
+    private void majFichierAnomalies(Map<String, LotSuiviRTC> lotsRTC, Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere)
             throws IOException
     {
         // Controleur
@@ -337,7 +358,7 @@ public class MajSuiviExcelTask extends SonarTask
         List<Anomalie> listeLotenAno = controlAno.recupDonneesDepuisExcel();
 
         // Création de la liste des lots déjà dans le fichier
-        Map<String, Anomalie> lotsDejaDansFichier = creationNumerosLots(listeLotenAno, mapLotsPIC);
+        Map<String, Anomalie> lotsDejaDansFichier = creationNumerosLots(listeLotenAno, lotsRTC);
 
         // Liste des anomalies à ajouter après traitement
         List<Anomalie> anoAajouter = new ArrayList<>();
@@ -360,7 +381,7 @@ public class MajSuiviExcelTask extends SonarTask
             {
                 // On va chercher les informations de ce lot dans le fichier des lots de la PIC. Si on ne les trouve
                 // pas, il faudra mettre à jour ce fichier
-                LotSuiviPic lot = mapLotsPIC.get(numeroLot);
+                LotSuiviRTC lot = lotsRTC.get(numeroLot);
                 if (lot == null)
                 {
                     lognonlistee.warn("Mettre à jour le fichier Pic - Lots : " + numeroLot + " non listé");
@@ -478,11 +499,11 @@ public class MajSuiviExcelTask extends SonarTask
      *
      * @param listeLotenAno
      *            liste des {@code Anomalie} déjà connues
-     * @param mapLotsPIC
+     * @param lotsRTC
      *            map des lots connus de la Pic.
      * @return
      */
-    private Map<String, Anomalie> creationNumerosLots(List<Anomalie> listeLotenAno, Map<String, LotSuiviPic> mapLotsPIC)
+    private Map<String, Anomalie> creationNumerosLots(List<Anomalie> listeLotenAno, Map<String, LotSuiviRTC> lotsRTC)
     {
         Map<String, Anomalie> retour = new HashMap<>();
 
@@ -495,12 +516,12 @@ public class MajSuiviExcelTask extends SonarTask
                 anoLot = anoLot.substring(4);
 
             // Mise à jour des données depuis la PIC
-            LotSuiviPic lotPic = mapLotsPIC.get(anoLot);
+            LotSuiviRTC lotRTC = lotsRTC.get(anoLot);
 
-            if (lotPic != null)
-                ano.majDepuisPic(lotPic);
+            if (lotRTC != null)
+                ano.majDepuisRTC(lotRTC);
             else
-                logger.warn("Un lot du fichier Excel n'est pas connu dans la Pic : " + anoLot);
+                logger.warn("Un lot du fichier Excel n'est pas connu dans RTC : " + anoLot);
 
             retour.put(anoLot, ano);
         }
