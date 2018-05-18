@@ -6,6 +6,7 @@ import static utilities.Statics.proprietesXML;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -380,12 +381,13 @@ public class ControlRTC
                 
                 // Periode entre la dernière mise à jour et aujourd'hui
                 Period periode = Period.between(lastUpdate, Statics.TODAY);
+                Date datePredicat = DateConvert.convertToOldDate(Statics.TODAY.minusDays(periode.getDays()));
 
                 // Prédicat des lots qui ont été modifiés depuis la dernière mise à jour
-                IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(DateConvert.convertToOldDate(Statics.TODAY.minusDays(periode.getDays())));
+                IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(datePredicat);
 
                 // Prédicat des lots qui ont été créés depuis la dernière mise à jour
-                IPredicate predicatCreation = WorkItemQueryModel.ROOT.creationDate()._gt(DateConvert.convertToOldDate(Statics.TODAY.minusDays(periode.getDays())));
+                IPredicate predicatCreation = WorkItemQueryModel.ROOT.creationDate()._gt(datePredicat);
 
                 // Ajout du contrôle Or et modification du prédicat final
                 IPredicate predicatOu = dateModification._or(predicatCreation);
@@ -515,13 +517,6 @@ public class ControlRTC
             String edition = ano.getEdition();
             attribut = workItemClient.findAttribute(projet, TypeEnumRTC.EDITION.toString(), null);
             workItem.setValue(attribut, recupLiteralDepuisString(calculEditionRTC(edition), attribut));
-
-            // Edition SI Cible
-            if (edition.contains("CHC") || edition.contains("CDM"))
-            {
-                attribut = workItemClient.findAttribute(projet, TypeEnumRTC.EDITIONSICIBLE.toString(), null);
-                workItem.setValue(attribut, recupLiteralDepuisString(edition, attribut));
-            }
 
             // Subscriptions
             ISubscriptions subscription = workItem.getSubscriptions();
