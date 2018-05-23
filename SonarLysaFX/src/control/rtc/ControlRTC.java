@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import com.ibm.team.foundation.common.text.XMLString;
 import com.ibm.team.process.client.IProcessClientService;
 import com.ibm.team.process.client.IProcessItemService;
+import com.ibm.team.process.common.IAccessGroup;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.repository.client.IItemManager;
 import com.ibm.team.repository.client.ITeamRepository;
@@ -333,6 +334,43 @@ public class ControlRTC
 
         return null;
     }
+    
+    /**
+     * Retourne un Contributor depuis le nom d'une personne
+     * 
+     * @param Id
+     * @return
+     * @throws TeamRepositoryException
+     */
+    public IContributor recupContributorDepuisId(String Id) throws TeamRepositoryException
+    {
+        if (Id == null)
+            return null;
+
+        // Creation Query depuis ContributorQueryModel
+        final IItemQuery query = IItemQuery.FACTORY.newInstance(ContributorQueryModel.ROOT);
+
+        // Predicate avec un paramètre poru chercher depuis le nom avec un paramètre de type String
+        final IPredicate predicate = ContributorQueryModel.ROOT.userId()._eq(query.newStringArg());
+
+        // Utilisation du Predicate en filtre.
+        final IItemQuery filtered = (IItemQuery) query.filter(predicate);
+
+        // Appel Service de requêtes depuis TeamRepository et non l'interface.
+        final IQueryService qs = ((TeamRepository) repo).getQueryService();
+
+        // Appel de la reqête avec le filtre
+        final IItemQueryPage page = qs.queryItems(filtered, new Object[] { Id }, 1);
+
+        // Retour de l'objet
+        final List<?> handles = page.getItemHandles();
+        if (!handles.isEmpty())
+        {
+            return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, progressMonitor);
+        }
+
+        return null;
+    }
 
     /**
      * Récupération de tous les lots RTC selon les paramètres fournis : <br>
@@ -450,6 +488,21 @@ public class ControlRTC
     }
 
     /*---------- METHODES PRIVEES ----------*/
+    
+    public void test() throws TeamRepositoryException
+    {
+
+        IAccessGroup[] groups;
+        groups = auditableCommon.getAccessGroups(null, Integer.MAX_VALUE, progressMonitor);
+        for (IAccessGroup group : groups)
+        {
+            System.out.println(group.getName());
+        }
+        
+        IContributor contributeur = recupContributorDepuisId(Statics.info.getPseudo());
+        System.out.println(contributeur.getEmailAddress());
+    }
+    
     /*---------- ACCESSEURS ----------*/
 
     /**
@@ -535,7 +588,7 @@ public class ControlRTC
             // Contribureurs DATASTAGE
             if (ano.getMatieres().contains(Matiere.DATASTAGE))
             {
-                for (String nom : Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.MEMBRESDTATSTAGE).split(";"))
+                for (String nom : Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.MEMBRESDATASTAGE).split(";"))
                 {
                     subscription.add(recupContributorDepuisNom(nom));
                 }

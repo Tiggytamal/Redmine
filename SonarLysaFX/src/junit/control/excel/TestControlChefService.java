@@ -21,7 +21,7 @@ public class TestControlChefService extends TestControlExcel<TypeColChefServ, Co
     
     public TestControlChefService()
     {
-        super(TypeColChefServ.class, "/resources/Reorg_managers.xlsx");
+        super(TypeColChefServ.class, "Reorg_managers.xlsx");
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

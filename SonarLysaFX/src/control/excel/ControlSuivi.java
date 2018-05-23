@@ -239,7 +239,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @throws IOException
      */
     public void majFeuillePrincipale(List<Anomalie> lotsEnAno, List<Anomalie> anoAajouter, Set<String> lotsEnErreurSonar, Set<String> lotsSecurite, Set<String> lotsRelease, Sheet sheet,
-            Matiere matiere) throws IOException
+            Matiere matiere)
     {
         // Récupération feuille et liste des anomalies closes
         Map<String, Anomalie> anoClose = new HashMap<>();
@@ -292,7 +292,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @param anoMultiple
      * @throws IOException
      */
-    public void majMultiMatiere(List<String> anoMultiple) throws IOException
+    public void majMultiMatiere(List<String> anoMultiple)
     {
         Sheet sheet = wb.getSheet(SQ);
 

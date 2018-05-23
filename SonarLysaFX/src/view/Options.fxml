@@ -63,8 +63,6 @@
 						<Insets top="10" right="10" bottom="10" left="25" />
 					</padding>
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
-					<Button fx:id="lotsPic" text="Charger Lots Pic" onAction="#chargerFichier" alignment="CENTER" />
-					<Region prefHeight="20" />
 					<Button fx:id="apps" text="Charger Applications" onAction="#chargerFichier" alignment="CENTER" />
 					<Region prefHeight="20" />
 					<Button fx:id="clarity" text="Charger Referentiel Clarity" onAction="#chargerFichier" alignment="CENTER" />

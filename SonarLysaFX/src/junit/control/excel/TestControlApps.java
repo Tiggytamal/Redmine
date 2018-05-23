@@ -15,7 +15,7 @@ public class TestControlApps extends TestControlExcel<TypeColApps, ControlApps, 
     
     public TestControlApps()
     {
-        super(TypeColApps.class, "/resources/liste_applis.xlsx");
+        super(TypeColApps.class, "liste_applis.xlsx");
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

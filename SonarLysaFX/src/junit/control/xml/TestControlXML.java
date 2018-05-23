@@ -14,6 +14,7 @@ import model.FichiersXML;
 import model.ProprietesXML;
 import model.enums.TypeColChefServ;
 import model.enums.TypeFichier;
+import utilities.Statics;
 import utilities.TechnicalException;
 
 @RunWith (JfxRunner.class)
@@ -38,31 +39,25 @@ public class TestControlXML
     @Test
     public void recupListeAppsDepuisExcel()
     {
-        handler.recupListeAppsDepuisExcel(new File(getClass().getResource("/resources/liste_applis.xlsx").getFile()));       
+        handler.recupListeAppsDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "liste_applis.xlsx").getFile()));       
     }
 
     @Test
     public void recupInfosClarityDepuisExcel()
     {
-        handler.recupInfosClarityDepuisExcel(new File(getClass().getResource("/resources/Referentiel_Projets.xlsm").getFile()));
-    }
-
-    @Test
-    public void recupLotsPicDepuisExcel()
-    {
-        handler.recupLotsPicDepuisExcel(new File(getClass().getResource("/resources/lots_Pic.xlsx").getFile()));
+        handler.recupInfosClarityDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "Referentiel_Projets.xlsm").getFile()));
     }
 
     @Test
     public void recupChefServiceDepuisExcel()
     {
-        handler.recupChefServiceDepuisExcel(new File(getClass().getResource("/resources/Reorg_managers.xlsx").getFile()));
+        handler.recupChefServiceDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "Reorg_managers.xlsx").getFile()));
     }
 
     @Test
     public void recupEditionDepuisExcel()
     {
-        handler.recupEditionDepuisExcel(new File(getClass().getResource("/resources/Codification_des_Editions.xlsx").getFile()));
+        handler.recupEditionDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "Codification_des_Editions.xlsx").getFile()));
     }
     
     @Test (expected = TechnicalException.class)

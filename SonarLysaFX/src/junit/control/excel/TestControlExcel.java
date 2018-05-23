@@ -28,6 +28,8 @@ import control.excel.ExcelFactory;
 import junit.JunitBase;
 import model.enums.TypeCol;
 import utilities.FunctionalException;
+import utilities.Statics;
+import utilities.TechnicalException;
 
 /**
  * Classe générale pour les Junits sur les controleurs Excel.
@@ -48,7 +50,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     /** L'énumération du type de colonne */
     private Class<T> typeColClass;
     /** Le chemin d'accès au fichier Excel depuis les ressources */
-    private String chemin;
+    private String fichier;
     /** Le fichier Excel utilisé */
     protected File file;
     /** Le workbook gérant le fichier Excel */
@@ -65,14 +67,14 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
      * 
      * @param typeColClass
      *            L'énumération correspondante au fichier
-     * @param chemin
-     *            Chemin d'accès au fichier de test dans les ressources
+     * @param fichier
+     *            Nom du fichier dans les resources de test
      */
-    public TestControlExcel(Class<T> typeColClass, String chemin)
+    public TestControlExcel(Class<T> typeColClass, String fichier)
     {
         super();
         this.typeColClass = typeColClass;
-        this.chemin = chemin;
+        this.fichier = fichier;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -88,7 +90,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     @Before
     public void init() throws IOException, IllegalAccessException
     {
-        file = new File(getClass().getResource(chemin).getFile());
+        file = new File(getClass().getResource(Statics.RESOURCESTEST + fichier).getFile());
         handler = ExcelFactory.getControlleur(typeColClass, file);
         wb = (Workbook) getField(handler.getClass(), "wb").get(handler);
     }
@@ -151,22 +153,14 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
         invokeMethod(handler, "initSheet");
     }
 
-    @Test (expected = IOException.class)
+    @Test (expected = TechnicalException.class)
     public void close() throws Exception
     {
         // Test - appel de la méthode close.
         invokeMethod(handler, "close");
         
         // Appel méthode write  pour voir si le Workbook est bine fermé
-        try
-        {
-            invokeMethod(handler, "write");
-        }
-        catch (IOException e)
-        {
-            assertTrue(e.getMessage().equals("Cannot write data, document seems to have been closed already"));
-            throw e;
-        }
+        invokeMethod(handler, "write");
     }
     
     @Test

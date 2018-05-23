@@ -167,10 +167,6 @@ public class OptionViewControl extends ViewControl
 
         switch (id)
         {
-            case "lotsPic":
-                charger("Lots Pic", file -> control.recupLotsPicDepuisExcel(file));
-                break;
-
             case "apps":
                 charger("Applications", file -> control.recupListeAppsDepuisExcel(file));
                 break;

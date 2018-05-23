@@ -22,7 +22,7 @@ public class TestParamSpec
         assertFalse(ParamSpec.TEXTEDEFECT.toString().isEmpty());
         assertFalse(ParamSpec.TEXTESECURITE.toString().isEmpty());
         assertFalse(ParamSpec.MEMBRESJAVA.toString().isEmpty());
-        assertFalse(ParamSpec.MEMBRESDTATSTAGE.toString().isEmpty());
+        assertFalse(ParamSpec.MEMBRESDATASTAGE.toString().isEmpty());
         assertFalse(ParamSpec.RECAPDEFECT.toString().isEmpty());
     }
 }

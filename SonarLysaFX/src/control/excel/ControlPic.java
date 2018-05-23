@@ -59,7 +59,7 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
      * @return
      * @throws IOException
      */
-    public Map<LocalDate, List<Vue>> recupLotsExcelPourMEP(Map<String, Vue> mapQube) throws IOException
+    public Map<LocalDate, List<Vue>> recupLotsExcelPourMEP(Map<String, Vue> mapQube)
     {
         // controle mapSonar
         if (mapQube == null || mapQube.isEmpty())

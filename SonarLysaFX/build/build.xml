@@ -140,6 +140,11 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\javax\activation\activation\1.1">
+				<filename name="activation-1.1.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.interop.common_3.0.900.v20151207_2229\6.0.2">
 				<filename name="com.ibm.team.interop.common_3.0.900.v20151207_2229-6.0.2.jar"/>
 			</fileset>
@@ -282,6 +287,11 @@
 		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\org\slf4j\slf4j-api\1.7.7">
 				<filename name="slf4j-api-1.7.7.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\sun\mail\javax.mail\1.6.1">
+				<filename name="javax.mail-1.6.1.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -786,6 +796,7 @@
 				<include name="org.apache.log4j_1.2.15.v201012070815-6.0.2.jar"/>
 				<include name="com.ibm.team.reports.common_2.4.1000.v20150326_0016-6.0.2.jar"/>
 				<include name="javax.servlet_2.5.0.v200910301333-6.0.2.jar"/>
+				<include name="activation-1.1.jar"/>
 				<include name="powermock-core-2.0.0-beta.5.jar"/>
 				<include name="powermock-reflect-2.0.0-beta.5.jar"/>
 				<include name="javassist-3.22.0-CR2.jar"/>
@@ -838,6 +849,7 @@
 				<include name="slf4j-simple-1.6.4.jar"/>
 				<include name="httpcore-ab-4.4.1-6.0.2.jar"/>
 				<include name="osgi-resource-locator-1.0.1.jar"/>
+				<include name="javax.mail-1.6.1.jar"/>
 				<include name="com.ibm.team.connector.scm.client_3.0.1100.v20151207_2315-6.0.2.jar"/>
 				<include name="com.ibm.team.workitem.api.common_3.1.1000.v20151219_0043-6.0.2.jar"/>
 				<include name="com.ibm.team.repository.common.serialize_1.2.3000.v20160308_1839-6.0.2.jar"/>

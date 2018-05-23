@@ -73,7 +73,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * @throws InvalidFormatException
      * @throws IOException
      */
-    protected ControlExcel(File file) throws IOException
+    protected ControlExcel(File file) 
     {
         this.file = file;
         createWb();
@@ -159,13 +159,13 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * @throws InvalidFormatException
      * @throws IOException
      */
-    protected void createWb() throws IOException
+    protected void createWb()
     {
         // Création du workbook depuis le fichier excel
         try
         {
             wb = WorkbookFactory.create(file);
-        } catch (InvalidFormatException e)
+        } catch (IOException | InvalidFormatException e)
         {
             throw new TechnicalException("Impossible de creer le Workbook pour " + file.getName(), e);
         }
@@ -180,9 +180,15 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * @throws IOException
      *             Exception lors d'un problème I/O
      */
-    public void close() throws IOException
+    public void close()
     {
-        wb.close();
+        try
+        {
+            wb.close();
+        } catch (IOException e)
+        {
+            throw new TechnicalException("Impossible de clôturer le workbook du fichier : " + file.getName(), e);
+        }
     }
 
     /**
@@ -191,9 +197,15 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
      * @throws IOException
      *             Exception lors d'un problème I/O
      */
-    protected void write() throws IOException
+    protected void write()
     {
-        wb.write(new FileOutputStream(file.getName()));
+        try(FileOutputStream stream = new FileOutputStream(file.getName()))
+        {
+            wb.write(stream);
+        } catch (IOException e)
+        {
+            throw new TechnicalException("Erreur au moment de sauvegarder le fichier Excel :" + file.getName(), e);
+        }
     }
 
     /**

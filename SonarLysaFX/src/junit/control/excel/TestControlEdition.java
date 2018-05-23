@@ -21,7 +21,7 @@ public class TestControlEdition extends TestControlExcel<TypeColEdition, Control
     
     public TestControlEdition()
     {
-        super(TypeColEdition.class, "/resources/Codification_des_Editions.xlsx");
+        super(TypeColEdition.class, "Codification_des_Editions.xlsx");
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

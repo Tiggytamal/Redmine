@@ -3,7 +3,6 @@ package junit.control.excel;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +26,7 @@ public class TestControlPicMEP extends TestControlExcel<TypeColPic, ControlPic, 
 
     public TestControlPicMEP()
     {
-        super(TypeColPic.class, "/resources/MEP_mars_2018.xlsx");
+        super(TypeColPic.class, "MEP_mars_2018.xlsx");
         api = SonarAPI.INSTANCE;
     }
 
@@ -41,7 +40,7 @@ public class TestControlPicMEP extends TestControlExcel<TypeColPic, ControlPic, 
     }
 
     @Test
-    public void recupLotsExcelPourMEP() throws IOException
+    public void recupLotsExcelPourMEP()
     {
         // Initialisation - récupérer vues depuis Sonar
         Map<String, Vue> mapQube = new HashMap<>();
@@ -59,7 +58,7 @@ public class TestControlPicMEP extends TestControlExcel<TypeColPic, ControlPic, 
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void recupLotsExcelPourMEPException1() throws IOException
+    public void recupLotsExcelPourMEPException1()
     {
         // Appel avec map vide
         Map<String, Vue> mapQube = new HashMap<>();
@@ -67,7 +66,7 @@ public class TestControlPicMEP extends TestControlExcel<TypeColPic, ControlPic, 
     }
     
     @Test (expected = IllegalArgumentException.class)
-    public void recupLotsExcelPourMEPException2() throws IOException
+    public void recupLotsExcelPourMEPException2()
     {
         // Appel avec map nulle
         handler.recupLotsExcelPourMEP(null);

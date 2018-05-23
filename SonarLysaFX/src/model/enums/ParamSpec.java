@@ -12,12 +12,13 @@ public enum ParamSpec implements Serializable, TypeKey
 {
     /*---------- ATTRIBUTS ----------*/
 
-    VERSIONS("Version", TypeParamSpec.LISTVIEWVERSION),
+    RECAPDEFECT("Récapitulatif Defect RTC", TypeParamSpec.TEXTAREA),
     TEXTEDEFECT("Description Defect RTC", TypeParamSpec.TEXTAREA),
     TEXTESECURITE("Texte Sécurité RTC", TypeParamSpec.TEXTAREA),
-    RECAPDEFECT("Récapitulatif Defect RTC", TypeParamSpec.TEXTAREA),
+    VERSIONS("Version", TypeParamSpec.LISTVIEWVERSION),
     MEMBRESJAVA("Responsables  JAVA", TypeParamSpec.LISTVIEWNOM),
-    MEMBRESDTATSTAGE("Responsables DATASTAGE", TypeParamSpec.LISTVIEWNOM);
+    MEMBRESDATASTAGE("Responsables DATASTAGE", TypeParamSpec.LISTVIEWNOM),
+    MEMBRESMAIL("Groupe de reception des rapports", TypeParamSpec.LISTVIEWNOM);
         
     private final String string;
     private final TypeParamSpec type;

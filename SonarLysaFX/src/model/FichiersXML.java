@@ -23,7 +23,6 @@ public class FichiersXML implements XML, Modele
     /*---------- ATTRIBUTS ----------*/
 
     private Map<String, InfoClarity> mapClarity;
-    private Map<String, LotSuiviPic> lotsPic;
     private Map<String, Boolean> mapApplis;
     private Map<String, RespService> mapRespService;
     private Map<TypeFichier, String> dateMaj;
@@ -38,7 +37,6 @@ public class FichiersXML implements XML, Modele
     FichiersXML()
     {
         mapClarity = new HashMap<>();
-        lotsPic = new HashMap<>();
         lotsRTC = new HashMap<>();
         mapApplis = new HashMap<>();
         mapRespService = new HashMap<>();
@@ -84,12 +82,6 @@ public class FichiersXML implements XML, Modele
                 setDateFichier(typeFichier);
                 break;
 
-            case LOTSPICS:
-                lotsPic.clear();
-                lotsPic.putAll(map);
-                setDateFichier(typeFichier);
-                break;
-
             case RESPSERVICE:
                 mapRespService.clear();
                 mapRespService.putAll(map);
@@ -107,24 +99,10 @@ public class FichiersXML implements XML, Modele
         }
     }
 
-    /**
-     * Permet de mettre à jour la date à laquel le fichier a été mis à jour.
-     * 
-     * @param fichier
-     *            Type du fichier mis à jour
-     */
-    public void setDateFichier(TypeFichier fichier)
-    {
-        dateMaj.put(fichier, LocalDate.now().format(DateConvert.FORMATTER));
-    }
-
     @Override
     public String controleDonnees()
     {
         StringBuilder builder = new StringBuilder("Chargement fichiers Excel :").append(NL);
-
-        // Contrôle lots Pic
-        controleMap(lotsPic, builder, "Lots Pic", TypeFichier.LOTSPICS);
 
         // Contrôle liste application
         controleMap(mapApplis, builder, "Liste des applications", TypeFichier.APPS);
@@ -149,6 +127,17 @@ public class FichiersXML implements XML, Modele
 
     /*---------- METHODES PRIVEES ----------*/
 
+    /**
+     * Permet de mettre à jour la date à laquel le fichier a été mis à jour.
+     * 
+     * @param fichier
+     *            Type du fichier mis à jour
+     */
+    private void setDateFichier(TypeFichier fichier)
+    {
+        dateMaj.put(fichier, LocalDate.now().format(DateConvert.FORMATTER));
+    }
+    
     /**
      * Permet de controler si une map est vide ou non, et met à jour le message.
      * 
@@ -182,13 +171,6 @@ public class FichiersXML implements XML, Modele
     public Map<String, InfoClarity> getMapClarity()
     {
         return mapClarity;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "maplotsPic", required = false)
-    public Map<String, LotSuiviPic> getLotsPic()
-    {
-        return lotsPic;
     }
 
     @XmlElementWrapper

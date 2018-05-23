@@ -56,12 +56,13 @@ public class MajFichierRTCTask extends SonarTask
         int size = handles.size();
         String base = "Récupération RTC - Traitement lot : ";
         String fin = "Nbre de lots traités : ";
+        String sur = " sur ";
         for (Object handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête
             LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle((IWorkItemHandle) handle);
             updateProgress(++i, size);
-            updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).toString());
+            updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).append(sur).append(size).toString());
             map.put(lot.getLot(), lot);
         }
 

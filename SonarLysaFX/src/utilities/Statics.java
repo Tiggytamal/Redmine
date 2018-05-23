@@ -26,7 +26,7 @@ public class Statics
         throw new AssertionError();
     }
 
-    /* ----- Paramètres fix ----- */
+    /* ----- Paramètres fixes ----- */
     /** jarPath */
     public static final String JARPATH = Utilities.urlToFile(Utilities.getLocation(Main.class)).getParentFile().getPath();
     /** filter pour fichiers Excel */
@@ -37,6 +37,8 @@ public class Statics
     public static final int ROW_HEIGHT = 24;
     /** Largeur d'un caractère */
     public static final double CARAC_WIDTH = 7;
+    
+    public static final String RESOURCESTEST = "/resources/";
     
     /* ----- loggers ----- */
     

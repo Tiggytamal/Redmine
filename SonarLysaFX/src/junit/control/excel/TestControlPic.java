@@ -24,7 +24,7 @@ public class TestControlPic extends TestControlExcel<TypeColPic, ControlPic, Map
     
     public TestControlPic()
     {
-        super(TypeColPic.class, "/resources/Lots_Pic.xlsx");
+        super(TypeColPic.class, "Lots_Pic.xlsx");
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

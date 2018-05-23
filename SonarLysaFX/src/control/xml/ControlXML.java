@@ -24,7 +24,6 @@ import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
-import model.enums.TypeColPic;
 import model.enums.TypeFichier;
 import utilities.TechnicalException;
 
@@ -141,17 +140,6 @@ public class ControlXML
     public void recupInfosClarityDepuisExcel(File file)
     {
         saveInfos(TypeFichier.CLARITY, TypeColClarity.class, file);
-    }
-
-    /**
-     * Enregistre le fichier Excel des lots Pic dans les paramètres XML
-     * 
-     * @param file
-     *            Fichier à utiliser
-     */
-    public void recupLotsPicDepuisExcel(File file)
-    {
-        saveInfos(TypeFichier.LOTSPICS, TypeColPic.class, file);
     }
 
     /**

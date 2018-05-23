@@ -30,7 +30,7 @@ public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, Cont
 
     public TestControlExcelSpecial()
     {
-        super(TypeColSuivi.class, "/resources/Tests.xlsx");
+        super(TypeColSuivi.class, "Tests.xlsx");
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

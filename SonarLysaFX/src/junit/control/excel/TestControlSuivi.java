@@ -50,7 +50,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
 
     public TestControlSuivi()
     {
-        super(TypeColSuivi.class, "/resources/Suivi_Quality_GateTest.xlsx");
+        super(TypeColSuivi.class, "Suivi_Quality_GateTest.xlsx");
         ControlRTC.INSTANCE.connexion();
     }
 
@@ -165,14 +165,14 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = FunctionalException.class)
-    public void majMultiMatiereException() throws IOException
+    public void majMultiMatiereException()
     {
         removeSheet(SQ);
         handler.majMultiMatiere(new ArrayList<>());
     }
 
     @Test
-    public void majMultiMatiere() throws IOException
+    public void majMultiMatiere()
     {
         // intialisation
         List<String> anoMultiple = new ArrayList<>();

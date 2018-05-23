@@ -16,7 +16,7 @@ public class TestControlClarity extends TestControlExcel<TypeColClarity, Control
     
     public TestControlClarity()
     {
-        super(TypeColClarity.class, "/resources/Referentiel_Projets.xlsm");
+        super(TypeColClarity.class, "Referentiel_Projets.xlsm");
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
