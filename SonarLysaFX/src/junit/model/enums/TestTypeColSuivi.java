@@ -44,7 +44,15 @@ public class TestTypeColSuivi
         assertEquals("colDepart", TypeColSuivi.DEPARTEMENT.getNomCol());
         assertEquals("colService", TypeColSuivi.SERVICE.getNomCol());
         assertEquals("colResp", TypeColSuivi.RESPSERVICE.getNomCol());
+        assertEquals("colEnv", TypeColSuivi.ENV.getNomCol());
+        assertEquals("colAno", TypeColSuivi.ANOMALIE.getNomCol());
+        assertEquals("colEtat", TypeColSuivi.ETAT.getNomCol());
+        assertEquals("colSec", TypeColSuivi.SECURITE.getNomCol());
+        assertEquals("colRemarque", TypeColSuivi.REMARQUE.getNomCol());
+        assertEquals("colVer", TypeColSuivi.VERSION.getNomCol());        
         assertEquals("colDateCrea", TypeColSuivi.DATECREATION.getNomCol());
+        assertEquals("colDateDetec", TypeColSuivi.DATEDETECTION.getNomCol());
+        assertEquals("colDateRel", TypeColSuivi.DATERELANCE.getNomCol());
         assertEquals("colMatiere", TypeColSuivi.MATIERE.getNomCol());
         assertEquals("colProjetRTC", TypeColSuivi.PROJETRTC.getNomCol());
         assertEquals("colAction", TypeColSuivi.ACTION.getNomCol());

@@ -38,7 +38,7 @@ public class Statics
     /** Largeur d'un caractère */
     public static final double CARAC_WIDTH = 7;
     
-    public static final String RESOURCESTEST = "/resources/";
+    public static final String RESOURCESTEST = "/resourcesTest/";
     
     /* ----- loggers ----- */
     
@@ -50,6 +50,8 @@ public class Statics
     public static final Logger loginconnue = LogManager.getLogger("inconnue-log");
     /** logger applications non listée dans le référentiel */
     public static final Logger lognonlistee = LogManager.getLogger("nonlistee-log");
+    /** logger plantages de l'application */
+    public static final Logger logPlantage = LogManager.getLogger("plantage-log"); 
     
     /* ----- String statiques ----- */
     

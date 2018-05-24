@@ -12,7 +12,7 @@ public class TestParamSpec
     @Test
     public void testSize()
     {
-        assertEquals(6, ParamSpec.values().length);
+        assertEquals(7, ParamSpec.values().length);
     }
     
     @Test

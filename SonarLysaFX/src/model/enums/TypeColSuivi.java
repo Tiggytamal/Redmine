@@ -12,7 +12,7 @@ public enum TypeColSuivi  implements Serializable, TypeCol
     /*---------- ATTRIBUTS ----------*/
 
     DIRECTION("Direction", "colDir"), 
-    DEPARTEMENT("Département", "colDepart"), 
+    DEPARTEMENT("Département", "colDepart"),
     SERVICE("Service", "colService"), 
     RESPSERVICE("Responsable Service", "colResp"),
     CLARITY("Code Clarity", "colClarity"),

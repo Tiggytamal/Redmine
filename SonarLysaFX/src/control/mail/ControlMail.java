@@ -1,6 +1,9 @@
 package control.mail;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -16,6 +19,7 @@ import javax.mail.internet.MimeMessage;
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
+import model.enums.EtatLot;
 import model.enums.ParamSpec;
 import model.enums.TypeInfoMail;
 import utilities.Statics;
@@ -37,54 +41,33 @@ public class ControlMail
     private String adresseConnecte;
     private String adressesEnvoi;
     private Properties props;
-    private Map<TypeInfoMail, String> mapInformations; 
+    private Map<String, EtatLot> lotsMaJ;
+    private Map<TypeInfoMail, List<String>> mapInfos;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlMail()
+    public ControlMail() throws TeamRepositoryException
     {
-        mapInformations = new EnumMap<>(TypeInfoMail.class);
+        lotsMaJ = new HashMap<>();
+        mapInfos = new EnumMap<>(TypeInfoMail.class);
+        for (TypeInfoMail type : TypeInfoMail.values())
+        {
+            mapInfos.put(type, new ArrayList<>());
+        }
+        initInfosMail();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public void envoyerMail() throws MessagingException
-    {
-        Transport.send(message);
-    }
-
-    public void initInfosMail() throws TeamRepositoryException
-    {
-        props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", SERVEUR);
-        props.put("mail.smtp.port", "25");
-        
-        adresseConnecte = ControlRTC.INSTANCE.recupContributorDepuisId(Statics.info.getPseudo()).getEmailAddress();
-        // Création de la liste des adresses
-        StringBuilder adressesBuilder = new StringBuilder();
-        String[] noms = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.MEMBRESMAIL).split(";");
-
-        // Itération sur la liste des membres, puis création de la liste des adresses séparées par des virgules.
-        for (int i = 0; i < noms.length; i++)
-        {
-            adressesBuilder.append(ControlRTC.INSTANCE.recupContributorDepuisNom(noms[i]).getEmailAddress());
-            if (i != noms.length - 1)
-                adressesBuilder.append(",");
-        }
-        adressesEnvoi = adressesBuilder.toString();
-    }
-    
-    public void test()
+    public void envoyerMail()
     {
         try
         {
             Session session = Session.getInstance(props, new MailAuthenticator());
-            
+
             // ----- 2. Création du message depuis la session -----
             message = new MimeMessage(session);
-            
+
             // ----- 3. Enregistrement envoyeur du mail -----
             message.setFrom(new InternetAddress(adresseConnecte));
 
@@ -110,17 +93,42 @@ public class ControlMail
     }
 
     /*---------- METHODES PRIVEES ----------*/
-    /*---------- ACCESSEURS ----------*/
-
-    public void addValeur(TypeInfoMail type)
+    
+    private void initInfosMail() throws TeamRepositoryException
     {
+        props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", SERVEUR);
+        props.put("mail.smtp.port", "25");
+
+        adresseConnecte = ControlRTC.INSTANCE.recupContributorDepuisId(Statics.info.getPseudo()).getEmailAddress();
         
+        // Création de la liste des adresses
+        StringBuilder adressesBuilder = new StringBuilder();
+        String[] noms = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.MEMBRESMAIL).split(";");
+
+        // Itération sur la liste des membres, puis création de la liste des adresses séparées par des virgules.
+        for (int i = 0; i < noms.length; i++)
+        {
+            adressesBuilder.append(ControlRTC.INSTANCE.recupContributorDepuisNom(noms[i]).getEmailAddress());
+            if (i != noms.length - 1)
+                adressesBuilder.append(",");
+        }
+        adressesEnvoi = adressesBuilder.toString();
     }
     
+    /*---------- ACCESSEURS ----------*/
+
+    public void addInfo(TypeInfoMail type, String info)
+    {
+        mapInfos.get(type).add(info);
+    }
+
     /*---------- CLASSES PRIVEES ----------*/
 
     /**
-     * 
+     * CLasse pour l'authentification du serveur mail.
      * 
      * @author ETP8137 - Grégoire Mathon
      * @since 1.0

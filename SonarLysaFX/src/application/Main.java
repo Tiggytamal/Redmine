@@ -91,6 +91,7 @@ public class Main extends Application
      */
     private static void createAlert(Severity severity, Throwable ex, String detail)
     {
+        
         Alert alert;
 
         // Switch sur les sévérités pour récupérer le type d'alerte
@@ -110,11 +111,16 @@ public class Main extends Application
         // Création du message d'exception si celle-ci est fournie.
         if (ex != null)
         {
+            // Création de la trace
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
             String exceptionText = sw.toString();
+            
+            // Logging de l'erreur
+            Statics.logPlantage.info(sw.toString());
 
+            // Préparation de l'affichage dans al fenêtre
             Label label = new Label("Stacktrace :");
 
             TextArea textArea = new TextArea(exceptionText);
@@ -128,7 +134,7 @@ public class Main extends Application
             expContent.add(label, 0, 0);
             expContent.add(textArea, 0, 1);
 
-            // Set expandable Exception into the dialog pane.
+            // Ajout de la fenêtre au Dialog 
             alert.getDialogPane().setExpandableContent(expContent);
         }
         alert.showAndWait();
