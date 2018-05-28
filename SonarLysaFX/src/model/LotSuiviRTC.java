@@ -1,9 +1,13 @@
 package model;
 
+import java.time.LocalDate;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import model.enums.EtatLot;
+import utilities.LocalDateAdapter;
 
 /**
  * Classe répresentant l'extraction d'un lot depuis RTC
@@ -23,13 +27,11 @@ public class LotSuiviRTC implements Modele
     private String edition;
     private EtatLot etatLot;
     private String projetRTC;
+    private LocalDate dateMajEtat;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    LotSuiviRTC()
-    {
-
-    }
+    LotSuiviRTC() {}
 
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
@@ -110,5 +112,17 @@ public class LotSuiviRTC implements Modele
     public void setProjetRTC(String projetRTC)
     {
         this.projetRTC = projetRTC;
+    }
+    
+    @XmlAttribute(required = false)
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+    public LocalDate getDateMajEtat()
+    {
+        return dateMajEtat;
+    }
+
+    public void setDateMajEtat(LocalDate dateMajEtat)
+    {
+        this.dateMajEtat = dateMajEtat;
     }
 }

@@ -63,6 +63,10 @@ public class Anomalie implements Modele
     private Comment dateDetectionComment;
     private LocalDate dateRelance;
     private Comment dateRelanceComment;
+    private LocalDate dateReso;
+    private Comment dateResoComment;
+    private LocalDate dateMajEtat;
+    private Comment dateMajEtatComment;
     private boolean traitee;
     private Set<Matiere> matieres;
     private Comment matieresComment;
@@ -95,6 +99,7 @@ public class Anomalie implements Modele
         setLot("Lot " + lotRTC.getLot());
         setEtatLot(lotRTC.getEtatLot());
         setProjetRTC(lotRTC.getProjetRTC());
+        setDateMajEtat(lotRTC.getDateMajEtat());
         return this;
     }
 
@@ -363,6 +368,26 @@ public class Anomalie implements Modele
     {
         this.dateRelance = dateRelance;
     }
+    
+    public LocalDate getDateReso()
+    {
+        return dateReso;
+    }
+    
+    public void setDateReso(LocalDate dateReso)
+    {
+        this.dateReso = dateReso;
+    }
+    
+    public LocalDate getDateMajEtat()
+    {
+        return dateMajEtat;
+    }
+
+    public void setDateMajEtat(LocalDate dateMajEtat)
+    {
+        this.dateMajEtat = dateMajEtat;
+    }
 
     public String getProjetRTC()
     {
@@ -609,6 +634,26 @@ public class Anomalie implements Modele
     public void setDateRelanceComment(Comment dateRelanceComment)
     {
         this.dateRelanceComment = dateRelanceComment;
+    }
+    
+    public Comment getDateResoComment()
+    {
+        return dateResoComment;
+    }
+    
+    public void setDateResoComment(Comment dateResoComment)
+    {
+        this.dateResoComment = dateResoComment;
+    }
+    
+    public Comment getDateMajEtatComment()
+    {
+        return dateMajEtatComment;
+    }
+
+    public void setDateMajEtatComment(Comment dateMajEtatComment)
+    {
+        this.dateMajEtatComment = dateMajEtatComment;
     }
 
     public Comment getMatieresComment()

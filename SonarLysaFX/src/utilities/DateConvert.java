@@ -35,7 +35,7 @@ public class DateConvert
     /**
      * Appel de {@link #convert(Class, Object, ZoneId)} avec la time-zone par default du système, et l'Offset de Greenwich.
      */
-    public static Temporal convert(Class<? extends Temporal> classe, Object date)
+    public static <T extends Temporal> T convert(Class<T> classe, Object date)
     {
         return convert(classe, date, ZoneId.systemDefault());
     }
@@ -73,7 +73,7 @@ public class DateConvert
      *         <li>{@link java.time.YearMonth}
      *         </ul>
      */
-    public static Temporal convert(Class<? extends Temporal> classeRetour, Object date, ZoneId zone)
+    public static <T extends Temporal> T convert(Class<T> classeRetour, Object date, ZoneId zone)
     {
         if (classeRetour == null || date == null || zone == null)
             throw new IllegalArgumentException(
@@ -253,7 +253,7 @@ public class DateConvert
                 retour = ((LocalDate) date).atStartOfDay(zone).toInstant();
                 break;
                 
-            case "java.time.Timestamp":
+            case "java.sql.Timestamp":
                 retour = ((Timestamp) date).toInstant();
                 break;
                 
@@ -272,26 +272,27 @@ public class DateConvert
         return retour;
     }
     
-    private static Temporal intantToClasseRetour(Class<? extends Temporal> classeRetour, Instant temp, ZoneId zone)
+    @SuppressWarnings("unchecked")
+    private static <T extends Temporal> T intantToClasseRetour(Class<T> classeRetour, Instant temp, ZoneId zone)
     {
-        switch (classeRetour.getSimpleName())
+        switch (classeRetour.getName())
         {
-            case "LocalDate":
-                return temp.atZone(zone).toLocalDate();
-            case "LocalDateTime":
-                return temp.atZone(zone).toLocalDateTime();
-            case "ZonedDateTime":
-                return temp.atZone(zone);
-            case "OffestTime":
-                return temp.atOffset(ZoneOffset.UTC).toOffsetTime();
-            case "OffsetDateTime":
-                return temp.atOffset(ZoneOffset.UTC);
-            case "Instant":
-                return temp;
-            case "Year":
-                return Year.from(temp);
-            case "YearMonth":
-                return YearMonth.from(temp);
+            case "java.time.LocalDate":
+                return (T) temp.atZone(zone).toLocalDate();
+            case "java.time.LocalDateTime":
+                return (T) temp.atZone(zone).toLocalDateTime();
+            case "java.time.ZonedDateTime":
+                return (T) temp.atZone(zone);
+            case "java.time.OffestTime":
+                return (T) temp.atOffset(ZoneOffset.UTC).toOffsetTime();
+            case "java.time.OffsetDateTime":
+                return (T) temp.atOffset(ZoneOffset.UTC);
+            case "java.time.Instant":
+                return (T) temp;
+            case "java.time.Year":
+                return (T) Year.from(temp);
+            case "java.time.YearMonth":
+                return (T) YearMonth.from(temp);
             default:
                 throw new UnsupportedOperationException("Classe de retour non supportée : " + classeRetour.getClass().getName());
         }

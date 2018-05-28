@@ -12,10 +12,14 @@ import java.util.TreeMap;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
+import com.ibm.team.repository.common.TeamRepositoryException;
+
 import java.util.Map.Entry;
 
 import control.excel.ControlPic;
 import control.excel.ExcelFactory;
+import control.rtc.ControlRTC;
+import model.enums.EtatLot;
 import model.enums.TypeColPic;
 import model.sonarapi.Vue;
 import utilities.DateConvert;
@@ -78,26 +82,29 @@ public class CreerVueProductionTask extends SonarTask
     private boolean creerVueProduction() throws IOException
     {
         Map<LocalDate, List<Vue>> mapLot;
+        etapePlus();
+
+        // Récupération des données
+        Map<String, Vue> mapSonar = recupererLotsSonarQube();
         if (file != null)
         {
             // Traitement données fichier Excel
             ControlPic excel = ExcelFactory.getControlleur(TypeColPic.class, file);
-            Map<String, Vue> mapSonar = recupererLotsSonarQube();
-            
+
             // Message
             if (isCancelled())
                 return false;
-            
-            etapePlus();
+
+
             updateMessage("Traitement Fichier Excel...");
             mapLot = excel.recupLotsExcelPourMEP(mapSonar);
             updateMessage("Traitement Fichier Excel OK");
             excel.close();
         }
         else
-            mapLot = recupLotSonarPourMEP(dateDebut, dateFin);
+            mapLot = recupLotSonarPourMEP(dateDebut, dateFin, mapSonar);
 
-        // Création des vues menseulles ou trimestrielles
+        // Création des vues mensuelles ou trimestrielles
         if (mapLot.size() == 1)
             creerVueMensuelle(mapLot);
         else if (mapLot.size() == 3)
@@ -107,9 +114,44 @@ public class CreerVueProductionTask extends SonarTask
         return true;
     }
 
-    private Map<LocalDate, List<Vue>> recupLotSonarPourMEP(LocalDate dateDebut, LocalDate dateFin)
+    private Map<LocalDate, List<Vue>> recupLotSonarPourMEP(LocalDate dateDebut, LocalDate dateFin, Map<String, Vue> mapSonar)
     {
-        throw new FunctionalException(Severity.INFO, "Pas encore implémenté");
+        Map<LocalDate, List<Vue>> retour = new HashMap<>();
+
+        // Affichage fenêtre       
+        String base = "Traitement RTC :";
+        int size = mapSonar.size();
+        int i = 0;
+                    
+        // Itération sur les lots Sonar
+        for (Map.Entry<String, Vue> entry : mapSonar.entrySet())
+        {
+            Map<EtatLot, LocalDate> map;
+            try
+            {
+                // Récupération des états du lot depuis RTC
+                map = ControlRTC.INSTANCE.recupDatesEtatsLot(ControlRTC.INSTANCE.recupWorkItemDepuisId(Integer.valueOf(entry.getKey())));
+                updateMessage(base + Statics.NL + "Lot " + entry.getKey());
+                updateProgress(++i, size);
+            } catch (TeamRepositoryException e)
+            {
+                Statics.logger.error("Erreur au moment de l'appel RTC pour récupérer un lot : méthode control.task.CreerVueProductionTask.recupLotSonarPourMEP - " + entry.getKey());
+                continue;
+            }
+            
+            // Récupération de la date de livraison à l'édition
+            LocalDate date = map.get(EtatLot.EDITION);
+            if (date != null && ((date.isAfter(dateDebut) && date.isBefore(dateFin)) || date.isEqual(dateDebut) || date.isEqual(dateFin)))
+            {
+                // Création d'une nouvelle date au 1er du mois qui servira du clef à la map.
+                LocalDate clef = LocalDate.of(date.getYear(), date.getMonth(), 1);
+                if (!retour.keySet().contains(clef))
+                    retour.put(clef, new ArrayList<>());
+                retour.get(clef).add(entry.getValue());
+            }
+        }
+
+        return retour;
     }
 
     /**
@@ -141,7 +183,7 @@ public class CreerVueProductionTask extends SonarTask
     {
         if (isCancelled())
             return;
-        
+
         // Iteration pour récupérer le premier élément de la map
         Iterator<Entry<LocalDate, List<Vue>>> iter = mapLot.entrySet().iterator();
         Entry<LocalDate, List<Vue>> entry = iter.next();
@@ -163,7 +205,7 @@ public class CreerVueProductionTask extends SonarTask
         {
             if (isCancelled())
                 return;
-            
+
             updateMessage(base + "ajout : " + vue.getName());
             updateProgress(++i, size);
             api.ajouterSousVue(vue, vueParent);
@@ -179,7 +221,7 @@ public class CreerVueProductionTask extends SonarTask
     {
         if (isCancelled())
             return;
-        
+
         // Création des variables. Transfert de la HashMap dans une TreeMap pour trier les dates.
         List<Vue> lotsTotal = new ArrayList<>();
         Map<LocalDate, List<Vue>> treeLot = new TreeMap<>(mapLot);
@@ -224,17 +266,16 @@ public class CreerVueProductionTask extends SonarTask
         etapePlus();
         String base = "Vue " + nomVue + Statics.NL;
         updateMessage(base);
-        Vue vueParent = creerVue(vueKey, nomVue,
-                new StringBuilder("Vue des lots mis en production pendant les mois de ").append(nom).append(Statics.SPACE).append(date).toString(), true);
+        Vue vueParent = creerVue(vueKey, nomVue, new StringBuilder("Vue des lots mis en production pendant les mois de ").append(nom).append(Statics.SPACE).append(date).toString(), true);
 
         // Ajout des sous-vue
-        int i =0;
+        int i = 0;
         int size = lotsTotal.size();
         for (Vue vue : lotsTotal)
         {
             if (isCancelled())
                 return;
-            
+
             updateMessage(base + "ajout : " + vue.getName());
             updateProgress(++i, size);
             api.ajouterSousVue(vue, vueParent);

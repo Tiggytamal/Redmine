@@ -12,11 +12,11 @@ public enum EtatLot
     DEVTU(Valeur.DEVTU),
     TFON(Valeur.TFON),
     VMOE(Valeur.VMOE),
-    VMOA(Valeur.VMOA),
     MOA(Valeur.MOA),
+    VMOA(Valeur.VMOA),
     EDITION(Valeur.EDITION),
-    ABANDONNE(Valeur.ABANDONNE),
     TERMINE(Valeur.TERMINE),
+    ABANDONNE(Valeur.ABANDONNE),
     INCONNU(Valeur.INCONNU);
     
     private final String string;

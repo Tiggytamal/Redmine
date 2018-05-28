@@ -35,6 +35,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import com.ibm.team.repository.common.PermissionDeniedException;
 import com.ibm.team.repository.common.TeamRepositoryException;
+import com.ibm.team.workitem.common.model.IWorkItem;
 
 import control.rtc.ControlRTC;
 import model.Anomalie;
@@ -47,6 +48,7 @@ import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import model.enums.Param;
 import utilities.CellHelper;
+import utilities.DateConvert;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -85,6 +87,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     private int colMatiere;
     private int colProjetRTC;
     private int colAction;
+    private int colDateRes;
+    private int colDateMajEtat;
 
     // Nom de la feuille avec les naomalies en cours
     private static final String SQ = "SUIVI Qualité";
@@ -556,6 +560,12 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
         // Date relance
         valoriserCellule(row, colDateRel, date, ano.getDateRelance(), ano.getDateRelanceComment());
+        
+        // Date resolution
+        valoriserCellule(row, colDateRes, date, ano.getDateReso(), ano.getDateResoComment());
+        
+        // Date mise à jour de l'état de l'anomalie
+        valoriserCellule(row, colDateMajEtat, date, ano.getDateMajEtat(), ano.getDateMajEtatComment());
 
         // Matiere
         valoriserCellule(row, colMatiere, centre, ano.getMatieresString(), ano.getMatieresComment());
@@ -763,24 +773,30 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         if (ano.getProjetRTC().isEmpty())
             ano.setProjetRTC(controlRTC.recupProjetRTCDepuisWiLot(anoLotInt));
 
-        // Mise à jour de l'état de l'anomalie
+        // Mise à jour de l'état de l'anomalie ainsi que les dates de résolution et de création
         if (ano.getNumeroAnomalie() != 0)
         {
-            String newEtat = controlRTC.recupEtatElement(controlRTC.recupWorkItemDepuisId(ano.getNumeroAnomalie()));
+            IWorkItem anoRTC = controlRTC.recupWorkItemDepuisId(ano.getNumeroAnomalie());
+            String newEtat = controlRTC.recupEtatElement(anoRTC);
             if (!newEtat.equals(ano.getEtat()))
             {
                 logger.info("Lot : " + anoLot + " - nouvel etat : " + newEtat);
                 ano.setEtat(newEtat);
             }
+            ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
+            if (anoRTC.getResolutionDate() != null)
+                ano.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));           
         }
 
-        // Mise à jour de l'état du lot
-        EtatLot etatLot = EtatLot.from(controlRTC.recupEtatElement(controlRTC.recupWorkItemDepuisId(anoLotInt)));
+        // Mise à jour de l'état du lot et de la date de mise à jour
+        IWorkItem lotRTC = controlRTC.recupWorkItemDepuisId(anoLotInt);
+        EtatLot etatLot = EtatLot.from(controlRTC.recupEtatElement(lotRTC));
         if (ano.getEtatLot() != etatLot)
         {
             logger.info("Lot : " + anoLot + " - nouvel etat Lot : " + etatLot);
             ano.setEtatLot(etatLot);
         }
+        ano.setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));
         return ano;
     }
 
@@ -850,6 +866,10 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         retour.setDateDetectionComment(getCellComment(row, colDateDetec));
         retour.setDateRelance(getCellDateValue(row, colDateRel));
         retour.setDateRelanceComment(getCellComment(row, colDateRel));
+        retour.setDateReso(getCellDateValue(row, colDateRes));
+        retour.setDateResoComment(getCellComment(row, colDateRes));
+        retour.setDateMajEtat(getCellDateValue(row, colDateMajEtat));
+        retour.setDateMajEtatComment(getCellComment(row, colDateMajEtat));
         retour.setMatieresString(getCellStringValue(row, colMatiere));
         retour.setMatieresComment(getCellComment(row, colMatiere));
         retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));

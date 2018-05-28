@@ -297,7 +297,7 @@ public class ProprietesXML implements XML, Modele
     
     /**
      * 
-     * @param builder
+     * @param
      * @return
      */
     private boolean controlePlanificateurs(StringBuilder builder)

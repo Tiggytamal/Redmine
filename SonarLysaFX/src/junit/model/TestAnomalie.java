@@ -2,6 +2,7 @@ package junit.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static utilities.Statics.TODAY;
 
@@ -45,7 +46,9 @@ public class TestAnomalie
     @Test
     public void anomlieWithLot()
     {
+        // Test création anomalie depuis LotSuiviRTC
         ano = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotSuiviRTC.class));
+        assertNotNull(ano);
     }
     
     @Test

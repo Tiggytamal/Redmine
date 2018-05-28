@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,7 +21,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import com.ibm.team.foundation.common.text.XMLString;
 import com.ibm.team.process.client.IProcessClientService;
 import com.ibm.team.process.client.IProcessItemService;
-import com.ibm.team.process.common.IAccessGroup;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.repository.client.IItemManager;
 import com.ibm.team.repository.client.ITeamRepository;
@@ -90,7 +90,7 @@ public class ControlRTC
     private IWorkItemClient workItemClient;
     private IAuditableClient auditableClient;
     private IAuditableCommon auditableCommon;
-   
+
     /*---------- CONSTRUCTEURS ----------*/
 
     /**
@@ -334,7 +334,7 @@ public class ControlRTC
 
         return null;
     }
-    
+
     /**
      * Retourne un Contributor depuis le nom d'une personne
      * 
@@ -416,7 +416,7 @@ public class ControlRTC
             {
                 // Date de la dernière mise à jour
                 LocalDate lastUpdate = DateConvert.FORMATTER.parse(dateMajFichierRTC, LocalDate::from);
-                
+
                 // Periode entre la dernière mise à jour et aujourd'hui
                 Period periode = Period.between(lastUpdate, Statics.TODAY);
                 Date datePredicat = DateConvert.convertToOldDate(Statics.TODAY.minusDays(periode.getDays()));
@@ -464,9 +464,8 @@ public class ControlRTC
      * Création d'un LotSuiviRTC regroupant les informations depuis RTC. Ne prend en compte que les IWorkItemHandle
      * 
      * @param item
-     *      IItemHandle provenant de RTC.
-     * @return
-     *  {@link model.LotSuiviRTC} 
+     *            IItemHandle provenant de RTC.
+     * @return {@link model.LotSuiviRTC}
      * @throws TeamRepositoryException
      */
     public LotSuiviRTC creerLotSuiviRTCDepuisHandle(IItemHandle item) throws TeamRepositoryException
@@ -486,23 +485,39 @@ public class ControlRTC
         }
         return null;
     }
+    
+    /**
+     * Remonte une liste des tous les états passés par le lot ainsi que les dates de mise à jour.
+     * @param lot
+     * @throws TeamRepositoryException
+     */
+    @SuppressWarnings("unchecked")
+    public Map<EtatLot, LocalDate> recupDatesEtatsLot(IWorkItem lot) throws TeamRepositoryException
+    {        
+        // Manager
+        IItemManager itemManager = repo.itemManager();
+
+        // Récupération de l'historique des modifications faites sur le lot.
+        List<IAuditableHandle> handles = itemManager.fetchAllStateHandles((IAuditableHandle) lot.getItemHandle(), progressMonitor);
+        List<IWorkItem> workItems = itemManager.fetchCompleteStates(handles, null);
+        
+        // Tri de la liste par dates décroissantes
+        workItems.sort((o1, o2) -> o2.modified().compareTo(o1.modified()));
+        
+        // Transfert des données dans une map, pour avoir la première date de mise à jour de chaque état.
+        Map<EtatLot, LocalDate> retour = new EnumMap<>(EtatLot.class);
+        for (IWorkItem iWorkItem : workItems)
+        {
+            IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(iWorkItem, progressMonitor);
+            String etat = workflowInfo.getStateName(iWorkItem.getState2());
+            retour.put(EtatLot.from(etat), DateConvert.localDate(iWorkItem.modified()));
+        }
+
+        return retour;
+    }
 
     /*---------- METHODES PRIVEES ----------*/
-    
-    public void test() throws TeamRepositoryException
-    {
 
-        IAccessGroup[] groups;
-        groups = auditableCommon.getAccessGroups(null, Integer.MAX_VALUE, progressMonitor);
-        for (IAccessGroup group : groups)
-        {
-            System.out.println(group.getName());
-        }
-        
-        IContributor contributeur = recupContributorDepuisId(Statics.info.getPseudo());
-        System.out.println(contributeur.getEmailAddress());
-    }
-    
     /*---------- ACCESSEURS ----------*/
 
     /**

@@ -8,8 +8,9 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import utilities.LocalTimeAdapter;
 
 /**
  * représente la configuration d'un planificateur
@@ -205,22 +206,5 @@ public class Planificateur implements Modele
         if (!annees.contains(String.valueOf(TODAY.getYear() + 1)))
             annees.add(String.valueOf(TODAY.getYear() + 1));
         return annees;
-    }
-
-    private static class LocalTimeAdapter extends XmlAdapter<String, LocalTime>
-    {
-        public LocalTime unmarshal(String v) throws Exception
-        {
-            if (v != null)
-                return LocalTime.parse(v);
-            return null;
-        }
-
-        public String marshal(LocalTime v) throws Exception
-        {
-            if (v != null)
-                return v.toString();
-            return null;
-        }
     }
 }
