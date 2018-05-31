@@ -2,35 +2,45 @@ package model.sonarapi;
 
 public class Parametre
 {
-	private String clef;
-	private String valeur;
+    /*---------- ATTRIBUTS ----------*/
 
-	public Parametre(String clef, String valeur)
-	{
-		this.clef = clef;
-		this.valeur = valeur;
-	}
+    private String clef;
+    private String valeur;
 
-	public Parametre() {}
+    /*---------- CONSTRUCTEURS ----------*/
 
-	public String getClef()
-	{
-		return clef;
-	}
+    public Parametre(String clef, String valeur)
+    {
+        this.clef = clef;
+        this.valeur = valeur;
+    }
 
-	public void setClef(String clef)
-	{
-		this.clef = clef;
-	}
+    public Parametre()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML  
+    }
 
-	public String getValeur()
-	{
-		return valeur;
-	}
+    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
 
-	public void setValeur(String valeur)
-	{
-		this.valeur = valeur;
-	}
+    public String getClef()
+    {
+        return clef;
+    }
 
+    public void setClef(String clef)
+    {
+        this.clef = clef;
+    }
+
+    public String getValeur()
+    {
+        return valeur;
+    }
+
+    public void setValeur(String valeur)
+    {
+        this.valeur = valeur;
+    }
 }

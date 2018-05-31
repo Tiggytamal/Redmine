@@ -30,6 +30,55 @@ public class Composant implements ModeleSonar
     private String longName;
     private int projectId;
     private int subProjectId;
+    
+    /*---------- CONSTRUCTEURS ----------*/
+    
+    public Composant(String id, String key, String nom, String descritpion, String qualifier, String langage, String path, List<Metrique> metriques, String uuid, boolean enabled, String longName,
+            int projectId, int subProjectId)
+    {
+        this.id = id;
+        this.key = key;
+        this.nom = nom;
+        this.descritpion = descritpion;
+        this.qualifier = qualifier;
+        this.langage = langage;
+        this.path = path;
+        this.metriques = metriques;
+        this.uuid = uuid;
+        this.enabled = enabled;
+        this.longName = longName;
+        this.projectId = projectId;
+        this.subProjectId = subProjectId;
+    }
+    
+    public Composant()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre
+    }
+ 
+    /*---------- METHODES PUBLIQUES ----------*/
+    
+    /**
+     * Permet de retourner une map des métriques plutôt qu'une liste.<br>
+     * clef = identifation du métrique<br>
+     * valeur = valeur du métrique
+     * 
+     * @return la map des metriques
+     */
+    public Map<TypeMetrique, Metrique> getMapMetriques()
+    {
+        if (metriques == null)
+            return new EnumMap<>(TypeMetrique.class);
+
+        Map<TypeMetrique, Metrique> retour = new EnumMap<>(TypeMetrique.class);
+
+        for (Metrique metrique : metriques)
+        {
+            if (metrique.getMetric() != null)
+                retour.put(metrique.getMetric(), metrique);
+        }
+        return retour;
+    }
 
     /*---------- ACCESSEURS ----------*/
 
@@ -38,7 +87,7 @@ public class Composant implements ModeleSonar
     {
         return id;
     }
-
+    
     public void setId(String id)
     {
         this.id = id;
@@ -49,7 +98,7 @@ public class Composant implements ModeleSonar
     {
         return key;
     }
-
+    
     public void setKey(String key)
     {
         this.key = key;
@@ -60,10 +109,10 @@ public class Composant implements ModeleSonar
     {
         return nom;
     }
-
-    public void setNom(String name)
+    
+    public void setNom(String nom)
     {
-        this.nom = name;
+        this.nom = nom;
     }
 
     @XmlAttribute(name = "description", required = false)
@@ -71,7 +120,7 @@ public class Composant implements ModeleSonar
     {
         return descritpion;
     }
-
+    
     public void setDescritpion(String descritpion)
     {
         this.descritpion = descritpion;
@@ -82,7 +131,7 @@ public class Composant implements ModeleSonar
     {
         return qualifier;
     }
-
+    
     public void setQualifier(String qualifier)
     {
         this.qualifier = qualifier;
@@ -93,7 +142,7 @@ public class Composant implements ModeleSonar
     {
         return langage;
     }
-
+    
     public void setLangage(String langage)
     {
         this.langage = langage;
@@ -104,7 +153,7 @@ public class Composant implements ModeleSonar
     {
         return path;
     }
-
+    
     public void setPath(String path)
     {
         this.path = path;
@@ -118,28 +167,7 @@ public class Composant implements ModeleSonar
             return new ArrayList<>();
         return metriques;
     }
-
-    /**
-     * Permet de retourner une map des métriques plutôt qu'une liste.<br>
-     * clef = identifation du métrique<br>
-     * valeur = valeur du métrique
-     * 
-     * @return la map des metrique
-     */
-    public Map<TypeMetrique, Metrique> getMapMetriques()
-    {
-        if (metriques == null)
-            return new EnumMap<>(TypeMetrique.class);
-
-        Map<TypeMetrique, Metrique> retour = new EnumMap<>(TypeMetrique.class);
-
-        for (Metrique metrique : metriques)
-        {
-            retour.put(metrique.getMetric(), metrique);
-        }
-        return retour;
-    }
-
+    
     public void setMetriques(List<Metrique> metriques)
     {
         this.metriques = metriques;
@@ -150,7 +178,7 @@ public class Composant implements ModeleSonar
     {
         return uuid;
     }
-
+    
     public void setUuid(String uuid)
     {
         this.uuid = uuid;
@@ -161,7 +189,7 @@ public class Composant implements ModeleSonar
     {
         return enabled;
     }
-
+    
     public void setEnabled(boolean enabled)
     {
         this.enabled = enabled;
@@ -172,7 +200,7 @@ public class Composant implements ModeleSonar
     {
         return longName;
     }
-
+    
     public void setLongName(String longName)
     {
         this.longName = longName;
@@ -183,7 +211,7 @@ public class Composant implements ModeleSonar
     {
         return projectId;
     }
-
+    
     public void setProjectId(int projectId)
     {
         this.projectId = projectId;
@@ -198,5 +226,5 @@ public class Composant implements ModeleSonar
     public void setSubProjectId(int subProjectId)
     {
         this.subProjectId = subProjectId;
-    }
+    }  
 }

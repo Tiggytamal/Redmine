@@ -1,5 +1,6 @@
 package model.sonarapi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Classe de modèle pour les erreurs remontées dans SonarQube
+ * les propriétés flows et components sont ignorées pour diminuer la taille des flux XML traités.
  * 
  * @author ETP8137 - Grégoire Mathon
  *
@@ -45,10 +47,50 @@ public class Issue implements ModeleSonar
     private String closeDate;
     private String type;
     private List<Composant> composants;
-    private List<Rules> rules;
+    private List<Rule> rules;
     private List<User> users;
 
     /*---------- CONSTRUCTEURS ----------*/
+    
+    public Issue(String key, String resolution, int line, TextRange textRange, String effort, String debt, List<Commentaire> commentaires, String attr, List<String> transitions, List<String> actions,
+            String rule, String severity, String composant, String composantId, String projet, String subProject, String status, String message, String auteur, List<String> tags, List<Flow> flows,
+            String creationDate, String updateDate, String closeDate, String type, List<Composant> composants, List<Rule> rules, List<User> users)
+    {
+        this.key = key;
+        this.resolution = resolution;
+        this.line = line;
+        this.textRange = textRange;
+        this.effort = effort;
+        this.debt = debt;
+        this.commentaires = commentaires;
+        this.attr = attr;
+        this.transitions = transitions;
+        this.actions = actions;
+        this.rule = rule;
+        this.severity = severity;
+        this.composant = composant;
+        this.composantId = composantId;
+        this.projet = projet;
+        this.subProject = subProject;
+        this.status = status;
+        this.message = message;
+        this.auteur = auteur;
+        this.tags = tags;
+        this.flows = flows;
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
+        this.closeDate = closeDate;
+        this.type = type;
+        this.composants = composants;
+        this.rules = rules;
+        this.users = users;
+    }
+    
+    public Issue()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML
+    }
+    
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
@@ -58,7 +100,7 @@ public class Issue implements ModeleSonar
     {
         return key;
     }
-
+    
     public void setKey(String key)
     {
         this.key = key;
@@ -69,7 +111,7 @@ public class Issue implements ModeleSonar
     {
         return rule;
     }
-
+    
     public void setRule(String rule)
     {
         this.rule = rule;
@@ -80,7 +122,7 @@ public class Issue implements ModeleSonar
     {
         return severity;
     }
-
+    
     public void setSeverity(String severity)
     {
         this.severity = severity;
@@ -91,7 +133,7 @@ public class Issue implements ModeleSonar
     {
         return composant;
     }
-
+    
     public void setComposant(String composant)
     {
         this.composant = composant;
@@ -102,7 +144,7 @@ public class Issue implements ModeleSonar
     {
         return composantId;
     }
-
+    
     public void setComposantId(String composantId)
     {
         this.composantId = composantId;
@@ -113,7 +155,7 @@ public class Issue implements ModeleSonar
     {
         return projet;
     }
-
+    
     public void setProjet(String projet)
     {
         this.projet = projet;
@@ -124,7 +166,7 @@ public class Issue implements ModeleSonar
     {
         return status;
     }
-
+    
     public void setStatus(String status)
     {
         this.status = status;
@@ -135,19 +177,19 @@ public class Issue implements ModeleSonar
     {
         return message;
     }
-
+    
     public void setMessage(String message)
     {
         this.message = message;
     }
 
     @XmlAttribute(name = "author", required = false)
-    public String getAuteur()
+    public String getAutheur()
     {
         return auteur;
     }
-
-    public void setAuteur(String auteur)
+    
+    public void setAutheur(String auteur)
     {
         this.auteur = auteur;
     }
@@ -155,9 +197,11 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "tags", required = false)
     public List<String> getTags()
     {
+        if (tags == null)
+            return new ArrayList<>();
         return tags;
     }
-
+    
     public void setTags(List<String> tags)
     {
         this.tags = tags;
@@ -168,7 +212,7 @@ public class Issue implements ModeleSonar
     {
         return creationDate;
     }
-
+    
     public void setCreationDate(String creationDate)
     {
         this.creationDate = creationDate;
@@ -179,7 +223,7 @@ public class Issue implements ModeleSonar
     {
         return updateDate;
     }
-
+    
     public void setUpdateDate(String updateDate)
     {
         this.updateDate = updateDate;
@@ -190,7 +234,7 @@ public class Issue implements ModeleSonar
     {
         return type;
     }
-
+    
     public void setType(String type)
     {
         this.type = type;
@@ -201,7 +245,7 @@ public class Issue implements ModeleSonar
     {
         return resolution;
     }
-
+    
     public void setResolution(String resolution)
     {
         this.resolution = resolution;
@@ -212,7 +256,7 @@ public class Issue implements ModeleSonar
     {
         return line;
     }
-
+    
     public void setLine(int line)
     {
         this.line = line;
@@ -223,7 +267,7 @@ public class Issue implements ModeleSonar
     {
         return textRange;
     }
-
+    
     public void setTextRange(TextRange textRange)
     {
         this.textRange = textRange;
@@ -234,7 +278,7 @@ public class Issue implements ModeleSonar
     {
         return effort;
     }
-
+    
     public void setEffort(String effort)
     {
         this.effort = effort;
@@ -243,9 +287,11 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "comments", required = false)
     public List<Commentaire> getCommentaires()
     {
+        if (commentaires == null)
+            return new ArrayList<>();
         return commentaires;
     }
-
+    
     public void setCommentaires(List<Commentaire> commentaires)
     {
         this.commentaires = commentaires;
@@ -256,7 +302,7 @@ public class Issue implements ModeleSonar
     {
         return attr;
     }
-
+    
     public void setAttr(String attr)
     {
         this.attr = attr;
@@ -265,9 +311,11 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "transitions", required = false)
     public List<String> getTransitions()
     {
+        if (transitions == null)
+            return new ArrayList<>();
         return transitions;
     }
-
+    
     public void setTransitions(List<String> transitions)
     {
         this.transitions = transitions;
@@ -276,9 +324,11 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "actions", required = false)
     public List<String> getActions()
     {
+        if (actions == null)
+            return new ArrayList<>();
         return actions;
     }
-
+    
     public void setActions(List<String> actions)
     {
         this.actions = actions;
@@ -287,42 +337,48 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "components", required = false)
     public List<Composant> getComposants()
     {
+        if (composants == null)
+            return new ArrayList<>();
         return composants;
     }
-
+    
     public void setComposants(List<Composant> composants)
     {
         this.composants = composants;
     }
 
     @XmlAttribute(name = "rules", required = false)
-    public List<Rules> getRules()
+    public List<Rule> getRules()
     {
+        if (rules == null)
+            return new ArrayList<>();
         return rules;
     }
-
-    public void setRules(List<Rules> rules)
+    
+    public void setRules(List<Rule> rules)
     {
         this.rules = rules;
     }
-
+    
     @XmlAttribute(name = "users", required = false)
     public List<User> getUsers()
     {
+        if (users == null)
+            return new ArrayList<>();
         return users;
     }
-
+    
     public void setUsers(List<User> users)
     {
         this.users = users;
-    }
+    }   
 
     @XmlAttribute(name = "subProject", required = false)
     public String getSubProject()
     {
         return subProject;
     }
-
+    
     public void setSubProject(String subProject)
     {
         this.subProject = subProject;
@@ -333,7 +389,7 @@ public class Issue implements ModeleSonar
     {
         return debt;
     }
-
+    
     public void setDebt(String debt)
     {
         this.debt = debt;
@@ -342,9 +398,11 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "flows", required = false)
     public List<Flow> getFlows()
     {
+        if (flows == null)
+            return new ArrayList<>();
         return flows;
     }
-
+    
     public void setFlows(List<Flow> flows)
     {
         this.flows = flows;
@@ -360,5 +418,4 @@ public class Issue implements ModeleSonar
     {
         this.closeDate = closeDate;
     }
-
 }

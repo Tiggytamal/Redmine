@@ -6,13 +6,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Clef implements ModeleSonar
 {
+    /*---------- ATTRIBUTS ----------*/
+
     private String key;
+
+    /*---------- CONSTRUCTEURS ----------*/
 
     public Clef(String key)
     {
         this.key = key;
     }
+    
+    public Clef()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML        
+    }
 
+    /*---------- ACCESSEURS ----------*/
+    
     @XmlAttribute(name = "key")
     public String getKey()
     {
@@ -23,5 +34,5 @@ public class Clef implements ModeleSonar
     {
         this.key = key;
     }
-
+    
 }

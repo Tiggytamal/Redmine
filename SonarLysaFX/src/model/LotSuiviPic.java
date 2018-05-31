@@ -4,8 +4,9 @@ import java.time.LocalDate;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import utilities.adapter.LocalDateAdapter;
 
 /**
  * Classe représentant les informations du fichier Excel d'extraction de la Pic
@@ -189,22 +190,5 @@ public class LotSuiviPic implements Modele
     public void setLivraison(LocalDate livraison)
     {
         this.livraison = livraison;
-    }
-
-    private static class LocalDateAdapter extends XmlAdapter<String, LocalDate>
-    {
-        public LocalDate unmarshal(String v) throws Exception
-        {
-            if (v != null)
-                return LocalDate.parse(v);
-            return null;
-        }
-
-        public String marshal(LocalDate v) throws Exception
-        {
-            if (v != null)
-                return v.toString();
-            return null;
-        }
     }
 }

@@ -39,7 +39,7 @@ public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, Cont
     public void calculIndiceColonnes() throws Exception
     {
         // Test initialisation colonnes. Pour ce fichier, la première colonne est utilisée
-        calculIndiceColonnes(1);
+        calculIndiceColonnes(2);
     }
 
     @Test

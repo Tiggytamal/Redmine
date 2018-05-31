@@ -97,7 +97,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     private static final String RELEASE = "RELEASE";
     private String lienslots;
     private String liensAnos;
-    
+
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
 
@@ -233,6 +233,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /**
      * Gestion de la feuille principale des anomalies. Maj des anciennes plus création des nouvelles
+     * 
      * @param lotsEnAno
      * @param anoAajouter
      * @param lotsEnErreurSonar
@@ -265,6 +266,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             else
                 ano.setVersion(SNAPSHOT);
 
+            // Gestion des actions demandées sur l'anomalie et quitte le traitment en cas d'action de fin (abandon ou clôture)
             if (!gestionAction(ano, anoLot, sheetClose))
                 continue;
 
@@ -317,6 +319,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /**
      * Crée la ligne de titre des feuilles par édition
+     * 
      * @param sheet
      */
     private void creerTitresSE(Sheet sheet)
@@ -353,7 +356,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             }
         }
     }
-    
+
     /**
      * Permet de calculer la couleur d'une ligne du fichier Excel : <br>
      * - orange = nouvelle aomalie non traitée<br>
@@ -413,9 +416,17 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         // Si on doit clôturer ou abandonner l'anomalie, on la recopie dans la feuille des anomalies closes
         if (TypeAction.CLOTURER == ano.getAction() || TypeAction.ABANDONNER == ano.getAction())
         {
-            Row row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
-            creerLigneSQ(row, ano, IndexedColors.WHITE);
-            return false;
+            if (ControlRTC.INSTANCE.testSiAnomalieClose(ano.getNumeroAnomalie()))
+            {
+                Row row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
+                creerLigneSQ(row, ano, IndexedColors.WHITE);
+                return false;
+            }
+            else
+            {
+                Statics.logger.warn("L'anomalie " + ano.getNumeroAnomalie() + " n'a pas été clôturée. Impossible de la supprimée du fichier de suivi.");
+                return true;
+            }
         }
 
         // Contrôle si besoin de créer une anomalie Sonar
@@ -560,10 +571,10 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
         // Date relance
         valoriserCellule(row, colDateRel, date, ano.getDateRelance(), ano.getDateRelanceComment());
-        
+
         // Date resolution
         valoriserCellule(row, colDateRes, date, ano.getDateReso(), ano.getDateResoComment());
-        
+
         // Date mise à jour de l'état de l'anomalie
         valoriserCellule(row, colDateMajEtat, date, ano.getDateMajEtat(), ano.getDateMajEtatComment());
 
@@ -785,7 +796,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             }
             ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
             if (anoRTC.getResolutionDate() != null)
-                ano.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));           
+                ano.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
         }
 
         // Mise à jour de l'état du lot et de la date de mise à jour
@@ -884,16 +895,16 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     {
         // Retourne une clef avec 6 caractères maximum si celle-ci finie par un numéro de lot
         String smallkey = key.length() > 5 && key.matches(".*0[0-9E]$") ? key.substring(0, 6) : key;
-        
+
         // Contrôle si la clef est de type T* ou P*.
         String newKey = key.length() == 9 && (key.startsWith("T") || key.startsWith("P")) ? key.substring(0, 8) : smallkey;
-        
+
         // Retourne la clef clairity de l'anomalie avec 6 caractères maximum si celle-ci finie par un numéro de lot
         String smallClarity = anoClarity.length() > 5 && anoClarity.matches(".*0[0-9E]$") ? anoClarity.substring(0, 6) : anoClarity;
-        
+
         // Contrôle si la clef est de type T* ou P*.
         String newClarity = anoClarity.length() == 9 && (anoClarity.startsWith("T") || anoClarity.startsWith("P")) ? anoClarity.substring(0, 8) : smallClarity;
-        
+
         return anoClarity.equalsIgnoreCase(newKey) || newClarity.equalsIgnoreCase(key);
     }
 
@@ -957,12 +968,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @author ETP8137 - Grégoire mathon
      * @since 1.0
      */
-    private enum Index 
-    {
-        LOTI("Lot projet RTC"), 
-        EDITIONI("Edition"), 
-        ENVI("Etat du lot"), 
-        TRAITEI("Traitée");
+    private enum Index {
+        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
 
         private String string;
 

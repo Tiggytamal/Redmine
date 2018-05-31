@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import model.enums.EtatLot;
-import utilities.LocalDateAdapter;
+import utilities.adapter.LocalDateAdapter;
 
 /**
  * Classe répresentant l'extraction d'un lot depuis RTC

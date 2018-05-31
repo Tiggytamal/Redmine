@@ -429,7 +429,7 @@ public class MajSuiviExcelTask extends SonarTask
 
         // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
         Map<TypeMetrique, Metrique> metriques = composant.getMapMetriques();
-        String lot = metriques.computeIfAbsent(TypeMetrique.LOT, t -> new Metrique()).getValue();
+        String lot = metriques.computeIfAbsent(TypeMetrique.LOT, t -> new Metrique(TypeMetrique.LOT, null)).getValue();
 
         // Vérification que le lot est bien valorisé et controle le QG
         if (lot != null && !lot.isEmpty() && controleMetriques(metriques))
@@ -455,7 +455,7 @@ public class MajSuiviExcelTask extends SonarTask
      */
     private boolean controleMetriques(Map<TypeMetrique, Metrique> metriques)
     {
-        String alert = metriques.computeIfAbsent(TypeMetrique.QG, t -> new Metrique()).getValue();
+        String alert = metriques.computeIfAbsent(TypeMetrique.QG, t -> new Metrique(TypeMetrique.QG, null)).getValue();
         List<Periode> bloquants = getListPeriode(metriques, TypeMetrique.BLOQUANT);
         List<Periode> critiques = getListPeriode(metriques, TypeMetrique.CRITIQUE);
         List<Periode> duplication = getListPeriode(metriques, TypeMetrique.DUPLICATION);
@@ -471,7 +471,7 @@ public class MajSuiviExcelTask extends SonarTask
      */
     private List<Periode> getListPeriode(Map<TypeMetrique, Metrique> metriques, TypeMetrique type)
     {
-        return metriques.computeIfAbsent(type, t -> new Metrique()).getListePeriodes();
+        return metriques.computeIfAbsent(type, t -> new Metrique(type, null)).getListePeriodes();
     }
 
     /**

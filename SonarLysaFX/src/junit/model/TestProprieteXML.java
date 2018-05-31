@@ -3,6 +3,7 @@ package junit.model;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.junit.Before;
@@ -11,6 +12,8 @@ import org.powermock.reflect.Whitebox;
 
 import model.ModelFactory;
 import model.ProprietesXML;
+import model.enums.TypeCol;
+import utilities.TechnicalException;
 
 public class TestProprieteXML
 {
@@ -56,6 +59,12 @@ public class TestProprieteXML
         // Test all true
     }
     
+    @Test (expected = TechnicalException.class)
+    public void getMapException()
+    {
+        propriete.getMap(TypcColTest.class);
+    }
+    
     /*---------- METHODES PRIVEES ----------*/
     
     private <T> void testMap(String methode) throws Exception
@@ -65,4 +74,26 @@ public class TestProprieteXML
         assertTrue(map.isEmpty());
     }
     /*---------- ACCESSEURS ----------*/
+    
+    /*---------- CLASSES PRIVEES ----------*/
+    
+    private enum TypcColTest implements Serializable, TypeCol
+    {
+        VIDE;
+
+        @Override
+        public String getValeur()
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public String getNomCol()
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
+        
+    }
 }

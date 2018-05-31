@@ -127,8 +127,8 @@ public class CreerVueCHCCDMTask extends SonarTask
 
             // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
             Map<TypeMetrique, Metrique> metriques = composant.getMapMetriques();
-            String lot = metriques.computeIfAbsent(TypeMetrique.LOT, t -> new Metrique()).getValue();            
-            String edition = metriques.computeIfAbsent(TypeMetrique.EDITION, t -> new Metrique()).getValue();
+            String lot = metriques.computeIfAbsent(TypeMetrique.LOT, t -> new Metrique(TypeMetrique.LOT, null)).getValue();            
+            String edition = metriques.computeIfAbsent(TypeMetrique.EDITION, t -> new Metrique(TypeMetrique.EDITION, null)).getValue();
 
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
             if (lot != null && !lot.isEmpty() && edition != null && mapEditions.keySet().contains(edition))

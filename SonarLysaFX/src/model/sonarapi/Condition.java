@@ -15,6 +15,23 @@ public class Condition implements ModeleSonar
     private String errorThreshold;
     private String actualValue;
 
+    /*---------- CONSTRUCTEURS ----------*/
+    
+    public Condition(String status, String metricKeys, String comparator, int periodIndex, String errorThreshold, String actualValue)
+    {
+        this.status = status;
+        this.metricKeys = metricKeys;
+        this.comparator = comparator;
+        this.periodIndex = periodIndex;
+        this.errorThreshold = errorThreshold;
+        this.actualValue = actualValue;
+    }
+    
+    public Condition()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML
+    }
+    
     /*---------- ACCESSEURS ----------*/
 
     @XmlAttribute(name = "status")
@@ -22,7 +39,7 @@ public class Condition implements ModeleSonar
     {
         return status;
     }
-
+    
     public void setStatus(String status)
     {
         this.status = status;
@@ -33,7 +50,7 @@ public class Condition implements ModeleSonar
     {
         return metricKeys;
     }
-
+    
     public void setMetricKeys(String metricKeys)
     {
         this.metricKeys = metricKeys;
@@ -44,7 +61,7 @@ public class Condition implements ModeleSonar
     {
         return comparator;
     }
-
+    
     public void setComparator(String comparator)
     {
         this.comparator = comparator;
@@ -55,7 +72,7 @@ public class Condition implements ModeleSonar
     {
         return periodIndex;
     }
-
+    
     public void setPeriodIndex(int periodIndex)
     {
         this.periodIndex = periodIndex;
@@ -66,7 +83,7 @@ public class Condition implements ModeleSonar
     {
         return errorThreshold;
     }
-
+    
     public void setErrorThreshold(String errorThreshold)
     {
         this.errorThreshold = errorThreshold;
@@ -81,5 +98,5 @@ public class Condition implements ModeleSonar
     public void setActualValue(String actualValue)
     {
         this.actualValue = actualValue;
-    }
+    }    
 }

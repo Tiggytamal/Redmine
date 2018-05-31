@@ -14,7 +14,9 @@ public enum TypeMetrique
     BLOQUANT(Valeur.BLOQUANT), 
     CRITIQUE(Valeur.CRITIQUE), 
     APPLI(Valeur.APPLI), 
-    EDITION(Valeur.EDITION);
+    EDITION(Valeur.EDITION),
+    VULNERABILITIES(Valeur.VULNERABILITIES),
+    BUGS(Valeur.BUGS);
 
     private final String valeur;
 
@@ -53,6 +55,12 @@ public enum TypeMetrique
 
             case Valeur.EDITION:
                 return EDITION;
+                
+            case Valeur.VULNERABILITIES:
+                return VULNERABILITIES;
+                
+            case Valeur.BUGS:
+                return BUGS;
 
             default:
                 throw new IllegalArgumentException("model.enums.TypeMetrique inconnu : " + string, null);
@@ -74,5 +82,7 @@ public enum TypeMetrique
         private static final String CRITIQUE = "new_critical_violations";
         private static final String APPLI = "application";
         private static final String EDITION = "edition";
+        private static final String VULNERABILITIES = "vulnerabilities";
+        private static final String BUGS = "bugs";
     }
 }

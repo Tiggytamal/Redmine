@@ -1,11 +1,11 @@
-package utilities;
+package utilities.adapter;
 
 import java.time.LocalTime;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * Classe de gestion des {@code LocalTime} pour la persistance XML
+ * Classe de gestion des {@link java.time.LocalTime} pour la persistance XML
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0

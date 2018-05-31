@@ -11,7 +11,7 @@ public class TestTypeColSuivi
     @Test
     public void testSize()
     {
-        assertEquals(21, TypeColSuivi.values().length);
+        assertEquals(23, TypeColSuivi.values().length);
     }
     
     @Test

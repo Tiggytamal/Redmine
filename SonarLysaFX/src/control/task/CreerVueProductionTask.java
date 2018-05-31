@@ -94,15 +94,15 @@ public class CreerVueProductionTask extends SonarTask
             // Message
             if (isCancelled())
                 return false;
-
-
             updateMessage("Traitement Fichier Excel...");
+
             mapLot = excel.recupLotsExcelPourMEP(mapSonar);
+
             updateMessage("Traitement Fichier Excel OK");
             excel.close();
         }
         else
-            mapLot = recupLotSonarPourMEP(dateDebut, dateFin, mapSonar);
+            mapLot = recupLotRTCPourMEP(dateDebut, dateFin, mapSonar);
 
         // Création des vues mensuelles ou trimestrielles
         if (mapLot.size() == 1)
@@ -114,15 +114,26 @@ public class CreerVueProductionTask extends SonarTask
         return true;
     }
 
-    private Map<LocalDate, List<Vue>> recupLotSonarPourMEP(LocalDate dateDebut, LocalDate dateFin, Map<String, Vue> mapSonar)
+    /**
+     * Récupération des lots RTC pour création des vues.
+     * 
+     * @param dateDebut
+     *            Date limite inférieure pour la livraison à l'édition
+     * @param dateFin
+     *            Date limite supérieure pour la livraison à l'édition
+     * @param mapSonar
+     *            Map de tous le slots Sonar
+     * @return
+     */
+    private Map<LocalDate, List<Vue>> recupLotRTCPourMEP(LocalDate dateDebut, LocalDate dateFin, Map<String, Vue> mapSonar)
     {
         Map<LocalDate, List<Vue>> retour = new HashMap<>();
 
-        // Affichage fenêtre       
+        // Affichage fenêtre
         String base = "Traitement RTC :";
         int size = mapSonar.size();
         int i = 0;
-                    
+
         // Itération sur les lots Sonar
         for (Map.Entry<String, Vue> entry : mapSonar.entrySet())
         {
@@ -136,9 +147,10 @@ public class CreerVueProductionTask extends SonarTask
             } catch (TeamRepositoryException e)
             {
                 Statics.logger.error("Erreur au moment de l'appel RTC pour récupérer un lot : méthode control.task.CreerVueProductionTask.recupLotSonarPourMEP - " + entry.getKey());
+                Statics.logPlantage.error(e);
                 continue;
             }
-            
+
             // Récupération de la date de livraison à l'édition
             LocalDate date = map.get(EtatLot.EDITION);
             if (date != null && ((date.isAfter(dateDebut) && date.isBefore(dateFin)) || date.isEqual(dateDebut) || date.isEqual(dateFin)))

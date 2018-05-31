@@ -16,6 +16,22 @@ public class Event implements ModeleSonar
     private String dt;
 
     /*---------- CONSTRUCTEURS ----------*/
+
+    public Event(String id, String rk, String n, String c, String dt)
+    {
+        super();
+        this.id = id;
+        this.rk = rk;
+        this.n = n;
+        this.c = c;
+        this.dt = dt;
+    }
+    
+    public Event()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML
+    }
+    
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
@@ -25,7 +41,7 @@ public class Event implements ModeleSonar
     {
         return id;
     }
-
+    
     public void setId(String id)
     {
         this.id = id;
@@ -36,7 +52,7 @@ public class Event implements ModeleSonar
     {
         return rk;
     }
-
+    
     public void setRk(String rk)
     {
         this.rk = rk;
@@ -47,7 +63,7 @@ public class Event implements ModeleSonar
     {
         return n;
     }
-
+    
     public void setN(String n)
     {
         this.n = n;
@@ -64,14 +80,14 @@ public class Event implements ModeleSonar
         this.c = c;
     }
 
+    @XmlAttribute(name = "dt")
     public String getDt()
     {
         return dt;
     }
 
-    @XmlAttribute(name = "dt")
     public void setDt(String dt)
     {
         this.dt = dt;
-    }
+    }    
 }

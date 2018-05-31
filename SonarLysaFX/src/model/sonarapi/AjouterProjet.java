@@ -19,6 +19,11 @@ public class AjouterProjet implements ModeleSonar
         this.key = key;
         this.projectKey = projectKey;
     }
+    
+    public AjouterProjet()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML
+    }
 
     /*---------- ACCESSEURS ----------*/
 
@@ -27,7 +32,7 @@ public class AjouterProjet implements ModeleSonar
     {
         return key;
     }
-
+    
     public void setKey(String key)
     {
         this.key = key;
@@ -38,7 +43,7 @@ public class AjouterProjet implements ModeleSonar
     {
         return projectKey;
     }
-
+    
     public void setProjectKey(String projectKey)
     {
         this.projectKey = projectKey;

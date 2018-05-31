@@ -24,7 +24,16 @@ public class Retour implements ModeleSonar
     private List<Message> errors;
     private List<QualityGate> qualityGates;
     private String defaut;
-
+    
+    /*---------- CONSTRUCTEURS ----------*/
+    
+    public Retour()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML   
+    }
+    
+    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
     @XmlAttribute(name = "component", required = false)

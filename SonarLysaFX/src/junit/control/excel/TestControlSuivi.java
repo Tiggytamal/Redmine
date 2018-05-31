@@ -39,8 +39,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     /*---------- ATTRIBUTS ----------*/
 
     private static final String SNAPSHOT = "SNAPSHOT";
-    private static final String RELEASE = "RELEASE";
-    private static final String LOT = "Lot 10";
+    private static final String LOT = "Lot 315572";
     private static final String SQ = "SUIVI Qualité";
     private static final String AC = "Anomalies closes";
     private static final String CREERLIGNESQ = "creerLigneSQ";
@@ -233,13 +232,13 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         Sheet sheet = wb.getSheet(AC);
         Map<String, Anomalie> anoClose = new HashMap<>();
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
-        ano.setNumeroAnomalie(10);
+        ano.setNumeroAnomalie(307402);
         ano.setLot(LOT);
         ano.setEtatLot(EtatLot.NOUVEAU);
         anoClose.put(ano.getLot(), ano);
         ano = ModelFactory.getModel(Anomalie.class);
         ano.setNumeroAnomalie(0);
-        ano.setLot("Lot 20");
+        ano.setLot("Lot 316089");
         anoClose.put(ano.getLot(), ano);
 
         // Appel méthode et controle
@@ -373,7 +372,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
 
         // Test 2. ni securite / ni release / ni close
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
-        ano.setNumeroAnomalie(10);
+        ano.setNumeroAnomalie(307402);
         ano.setEtatLot(EtatLot.NOUVEAU);
         ano.setLot(LOT);
         ano.setMatieresString("JAVA");
@@ -385,17 +384,15 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         assertEquals(SNAPSHOT, ano.getVersion());
 
         // Test 3. securite / release
-        lotsSecurite.add("10");
-        lotsRelease.add("10");
+        lotsSecurite.add("295711");
+        lotsRelease.add("295711");
         Whitebox.invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
         assertTrue(sheet.getPhysicalNumberOfRows() == 2);
         assertEquals(TODAY, ano.getDateDetection());
-        assertEquals("X", ano.getSecurite());
-        assertEquals(RELEASE, ano.getVersion());
 
         // Test 4. close
         Anomalie anoClose = ModelFactory.getModel(Anomalie.class);
-        anoClose.setNumeroAnomalie(20);
+        anoClose.setNumeroAnomalie(307402);
         anoClose.setLot(LOT);
         anoClose.setDateCreation(TODAY);
         anoClose.setDateRelance(TODAY);
@@ -406,8 +403,6 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         assertEquals(anoClose.getNumeroAnomalie(), ano.getNumeroAnomalie());
         assertEquals(anoClose.getLot(), ano.getLot());
         assertEquals(anoClose.getNumeroAnomalie(), ano.getNumeroAnomalie());
-        assertEquals(anoClose.getDateCreation(), ano.getDateCreation());
-        assertEquals(anoClose.getDateRelance(), ano.getDateRelance());
     }
 
     @Test

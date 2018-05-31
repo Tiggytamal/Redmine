@@ -485,25 +485,26 @@ public class ControlRTC
         }
         return null;
     }
-    
+
     /**
      * Remonte une liste des tous les états passés par le lot ainsi que les dates de mise à jour.
+     * 
      * @param lot
      * @throws TeamRepositoryException
      */
     @SuppressWarnings("unchecked")
     public Map<EtatLot, LocalDate> recupDatesEtatsLot(IWorkItem lot) throws TeamRepositoryException
-    {        
+    {
         // Manager
         IItemManager itemManager = repo.itemManager();
 
         // Récupération de l'historique des modifications faites sur le lot.
         List<IAuditableHandle> handles = itemManager.fetchAllStateHandles((IAuditableHandle) lot.getItemHandle(), progressMonitor);
         List<IWorkItem> workItems = itemManager.fetchCompleteStates(handles, null);
-        
+
         // Tri de la liste par dates décroissantes
         workItems.sort((o1, o2) -> o2.modified().compareTo(o1.modified()));
-        
+
         // Transfert des données dans une map, pour avoir la première date de mise à jour de chaque état.
         Map<EtatLot, LocalDate> retour = new EnumMap<>(EtatLot.class);
         for (IWorkItem iWorkItem : workItems)
@@ -514,6 +515,27 @@ public class ControlRTC
         }
 
         return retour;
+    }
+
+    /**
+     * Teste si l'anomalie RTC est close.
+     * 
+     * @param numeroAno
+     *            Numéro de l'anomalie à tester
+     * @return
+     */
+    public boolean testSiAnomalieClose(int numeroAno)
+    {
+        IWorkItem anoRTC;
+        try
+        {
+            anoRTC = recupWorkItemDepuisId(numeroAno);
+            return "Close".equals(recupEtatElement(anoRTC));
+        } catch (TeamRepositoryException e)
+        {
+            Statics.logPlantage.error(e);
+            return false;
+        }
     }
 
     /*---------- METHODES PRIVEES ----------*/

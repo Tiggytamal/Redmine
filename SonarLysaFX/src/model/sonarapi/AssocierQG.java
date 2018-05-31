@@ -18,6 +18,11 @@ public class AssocierQG implements ModeleSonar
         this.gateId = gateId;
         this.projectId = projetId;
     }
+    
+    public AssocierQG()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML
+    }
 
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
@@ -28,7 +33,7 @@ public class AssocierQG implements ModeleSonar
     {
         return gateId;
     }
-
+    
     public void setGateId(String gateId)
     {
         this.gateId = gateId;
@@ -44,4 +49,5 @@ public class AssocierQG implements ModeleSonar
     {
         this.projectId = projectId;
     }
+    
 }

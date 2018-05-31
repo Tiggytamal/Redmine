@@ -16,8 +16,23 @@ public class Commentaire
     private String createdAt;
 
     /*---------- CONSTRUCTEURS ----------*/
-    /*---------- METHODES PUBLIQUES ----------*/
-    /*---------- METHODES PRIVEES ----------*/
+
+    public Commentaire(String key, String login, String htmlText, String markdown, String updatable, String createdAt)
+    {
+        super();
+        this.key = key;
+        this.login = login;
+        this.htmlText = htmlText;
+        this.markdown = markdown;
+        this.updatable = updatable;
+        this.createdAt = createdAt;
+    }
+    
+    public Commentaire()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML        
+    }
+    
     /*---------- ACCESSEURS ----------*/
 
     @XmlAttribute(name = "key")
@@ -25,7 +40,7 @@ public class Commentaire
     {
         return key;
     }
-
+    
     public void setKey(String key)
     {
         this.key = key;
@@ -36,7 +51,7 @@ public class Commentaire
     {
         return login;
     }
-
+    
     public void setLogin(String login)
     {
         this.login = login;
@@ -47,7 +62,7 @@ public class Commentaire
     {
         return htmlText;
     }
-
+    
     public void setHtmlText(String htmlText)
     {
         this.htmlText = htmlText;
@@ -58,7 +73,7 @@ public class Commentaire
     {
         return markdown;
     }
-
+    
     public void setMarkdown(String markdown)
     {
         this.markdown = markdown;
@@ -69,7 +84,7 @@ public class Commentaire
     {
         return updatable;
     }
-
+    
     public void setUpdatable(String updatable)
     {
         this.updatable = updatable;
@@ -84,5 +99,5 @@ public class Commentaire
     public void setCreatedAt(String createdAt)
     {
         this.createdAt = createdAt;
-    }
+    }    
 }

@@ -7,13 +7,14 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import model.enums.TypeMetrique;
+import utilities.adapter.TypeMetriqueAdapter;
 
 /**
  * Représente les types de métrique utilisés dans Sonar
+ * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
@@ -22,72 +23,70 @@ public class Metrique
 {
     /*---------- ATTRIBUTS ----------*/
 
-	private TypeMetrique type;
-	private String valeur;
-	private List<Periode> listePeriodes;
+    private TypeMetrique type;
+    private String valeur;
+    private List<Periode> listePeriodes;
 
     /*---------- CONSTRUCTEURS ----------*/
-	
-	public Metrique()
-	{
-	    listePeriodes = new ArrayList<>();
-	}
-	
+
+    public Metrique(TypeMetrique type)
+    {
+        this(type, null);
+    }
+
+    public Metrique(TypeMetrique type, String valeur)
+    {
+        if (type == null)
+            throw new IllegalArgumentException("Création model.sonarapi.Metrique : TypeMetrique = null");
+
+        this.type = type;
+        this.valeur = valeur;
+        listePeriodes = new ArrayList<>();
+    }
+
+    public Metrique()
+    {
+
+    }
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
-	
-	@XmlAttribute(name = "metric")
-	@XmlJavaTypeAdapter(value = TypeMetriqueAdapter.class)
-	public TypeMetrique getMetric()
-	{
-		return type;
-	}
 
-	public void setMetric(TypeMetrique type)
-	{
-		this.type = type;
-	}
-
-	@XmlAttribute(name = "value")
-	public String getValue()
-	{
-		return valeur;
-	}
-
-	public void setValue(String value)
-	{
-		this.valeur = value;
-	}
-
-	@XmlElementWrapper
-	@XmlElement(name = "periods")
-	public List<Periode> getListePeriodes()
-	{
-		if (listePeriodes == null)
-			return new ArrayList<>();
-		return listePeriodes;
-	}
-
-	public void setListePeriodes(List<Periode> periods)
-	{
-		this.listePeriodes = periods;
-	}
-	
-    private static class TypeMetriqueAdapter extends XmlAdapter<String, TypeMetrique>
+    @XmlAttribute(name = "metric")
+    @XmlJavaTypeAdapter(value = TypeMetriqueAdapter.class)
+    public TypeMetrique getMetric()
     {
-        public TypeMetrique unmarshal(String v) throws Exception
-        {
-            if (v != null)
-                return TypeMetrique.from(v);
-            return null;
-        }
+        return type;
+    }
 
-        public String marshal(TypeMetrique v) throws Exception
-        {
-            if (v != null)
-                return v.toString();
-            return null;
-        }
+    public void setMetric(TypeMetrique metric)
+    {
+        type = metric;
+    }
+
+    @XmlAttribute(name = "value")
+    public String getValue()
+    {
+        return valeur;
+    }
+    
+    public void setValue(String value)
+    {
+        valeur = value;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "periods", required = false)
+    public List<Periode> getListePeriodes()
+    {
+        if (listePeriodes == null)
+            return new ArrayList<>();
+        return listePeriodes;
+    }
+    
+    public void setListePeriodes(List<Periode> listePeriodes)
+    {
+        this.listePeriodes = listePeriodes;
     }
 }

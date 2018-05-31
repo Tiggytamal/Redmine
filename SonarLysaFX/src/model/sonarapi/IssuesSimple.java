@@ -1,5 +1,7 @@
 package model.sonarapi;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -12,4 +14,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class IssuesSimple extends Issues
 {
 
+    public IssuesSimple(int total, int p, int ps, Paging paging, List<Composant> composants, List<Issue> issues)
+    {
+        super(total, p, ps, paging, composants, issues);
+    }
+
+    public IssuesSimple()
+    {
+        super();
+    }
 }

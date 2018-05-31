@@ -161,7 +161,7 @@ public class TestControlRTC extends JunitBase
         ano.setLot("Lot 315765");
         ano.setEdition("E32_Fil_De_Leau");
         ano.setSecurite(Statics.SECURITEKO);
-        handler.creerDefect(ano);
+//        handler.creerDefect(ano);
     }
 
     @Test

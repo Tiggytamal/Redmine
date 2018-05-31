@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import utilities.LocalTimeAdapter;
+import utilities.adapter.LocalTimeAdapter;
 
 /**
  * représente la configuration d'un planificateur

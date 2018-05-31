@@ -552,6 +552,20 @@ public class SonarAPI
     /*---------- METHODES PRIVEES ----------*/
 
     /**
+     * Appel des webservices en GET sans paramètres supplémentaires
+     * 
+     * @param url
+     *            Url du webservices
+     * @return
+     */
+    public Response appelWebserviceGET(final String url)
+    {
+        WebTarget requete = webTarget.path(url);
+
+        return requete.request(MediaType.APPLICATION_JSON).header(AUTHORIZATION, codeUser).get();
+    }
+    
+    /**
      * Appel des webservices en GET
      * 
      * @param url

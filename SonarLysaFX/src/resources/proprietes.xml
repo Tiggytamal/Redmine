@@ -216,6 +216,14 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>ACTION</key>
             <value>Action</value>
         </entry>
+		<entry>
+            <key>DATERESOLUTION</key>
+            <value>Date résolution</value>
+        </entry>
+        <entry>
+			<key>DATEMAJETAT</key>
+            <value>Date mise à jour état</value>
+        </entry>
     </mapColsSuivi>
     <mapParams>
         <entry>
@@ -228,11 +236,11 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
         </entry>
         <entry>
             <key>NOMFICHIER</key>
-            <value>Suivi_Quality_Gate.xlsx</value>
+            <value>Suivi_Quality_GateTest.xlsx</value>
         </entry>
         <entry>
             <key>NOMFICHIERDATASTAGE</key>
-            <value>Suivi_Quality_Gate - DataStage.xlsx</value>
+            <value>Suivi_Quality_Gate - DataStageTest.xlsx</value>
         </entry>
         <entry>
             <key>ABSOLUTEPATHHISTO</key>
@@ -271,8 +279,8 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
     </mapParamsBool>
     <mapParamsSpec>
         <entry>
-            <key>VERSIONS</key>
-            <value>E30;E31;E32</value>
+            <key>RECAPDEFECT</key>
+            <value>Anomalie Qualimétrie : Quality Gate non conforme</value>
         </entry>
         <entry>
             <key>TEXTEDEFECT</key>
@@ -288,8 +296,8 @@ Merci</value>
 Merci</value>
         </entry>
         <entry>
-            <key>RECAPDEFECT</key>
-            <value>Anomalie Qualimétrie : Quality Gate non conforme</value>
+            <key>VERSIONS</key>
+            <value>E30;E31;E32</value>
         </entry>
         <entry>
             <key>MEMBRESJAVA</key>
@@ -298,6 +306,10 @@ Merci</value>
         <entry>
             <key>MEMBRESDATASTAGE</key>
             <value>BONORIS Jean-Louis;GREFFET Gaetan;PRUDENT Alain</value>
+        </entry>
+        <entry>
+            <key>MEMBRESMAIL</key>
+            <value>BONORIS Jean-Louis;GREFFET Gaetan;MATHON Gregoire;TRICOT Nicolas</value>
         </entry>
     </mapParamsSpec>
     <mapPlans>

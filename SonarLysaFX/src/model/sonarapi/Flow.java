@@ -1,5 +1,6 @@
 package model.sonarapi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -13,6 +14,20 @@ public class Flow
     private List<Location> locations;
 
     /*---------- CONSTRUCTEURS ----------*/
+
+    public Flow(List<Location> locations)
+    {
+        if (locations == null || locations.isEmpty())
+            throw new IllegalArgumentException("Création model.sonarapi.Flow - locations nulle ou vide.");
+        
+        this.locations = locations;
+    }
+    
+    public Flow()
+    {
+        locations = new ArrayList<>();
+    }
+    
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
