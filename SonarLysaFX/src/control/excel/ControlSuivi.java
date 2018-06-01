@@ -791,7 +791,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             String newEtat = controlRTC.recupEtatElement(anoRTC);
             if (!newEtat.equals(ano.getEtat()))
             {
-                logger.info("Lot : " + anoLot + " - nouvel etat : " + newEtat);
+                logger.info("Lot : " + anoLot + " - nouvel etat anomalie : " + newEtat);
                 ano.setEtat(newEtat);
             }
             ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
@@ -805,6 +805,10 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         if (ano.getEtatLot() != etatLot)
         {
             logger.info("Lot : " + anoLot + " - nouvel etat Lot : " + etatLot);
+            
+            // Si on arrive en VMOA ou que l'on passe à livré à l'édition directement, on met l'anomalie à relancer
+            if (etatLot == EtatLot.VMOA || (etatLot != EtatLot.VMOA && etatLot == EtatLot.EDITION))
+                    ano.setAction(TypeAction.RELANCER);                   
             ano.setEtatLot(etatLot);
         }
         ano.setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));

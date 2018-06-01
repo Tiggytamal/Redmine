@@ -1,6 +1,8 @@
 package junit.control.sonar;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +24,7 @@ import com.mchange.util.AssertException;
 import control.sonar.SonarAPI;
 import junit.JunitBase;
 import junit.TestUtils;
+import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
 import model.sonarapi.Parametre;
 import model.sonarapi.Projet;
@@ -121,7 +124,73 @@ public class TestSonarAPI extends JunitBase
         assertFalse(verif);
         Mockito.verify(logger, Mockito.times(1)).info("Utilisateur KO");       
     }
-
+    
+    @Test
+    public void getMetriquesComposant()
+    {
+        // Appel classique sans erreur
+        Composant composant = api.getMetriquesComposant("fr.ca.cat.apimanager.resources:RESS_Dossiers_Epargne_Patrimoniale_Recapitulatif_entretien_Build:14", new String[] {TypeMetrique.VULNERABILITIES.toString(), TypeMetrique.BUGS.toString()});
+        assertNotNull(composant);
+        assertNotNull(composant.getMetriques());
+        assertFalse(composant.getMetriques().isEmpty());
+        
+        // Appel avec un mauvais composant. Contrôle du log de l'erreur
+        composant = api.getMetriquesComposant("a", new String[] {TypeMetrique.BUGS.toString()});
+        assertNotNull(composant);
+        assertNotNull(composant.getMetriques());
+        assertTrue(composant.getMetriques().isEmpty());
+        Mockito.verify(logger, Mockito.times(1)).error(Mockito.anyString());
+        
+    }
+    
+    @Test
+    public void getSecuriteComposant()
+    {
+        // Appel sans erreur
+        api.getSecuriteComposant("fr.ca.cat.apimanager.resources:RESS_Dossiers_Epargne_Patrimoniale_Recapitulatif_entretien_Build:14");
+        Mockito.verify(logger, Mockito.never()).error(Mockito.anyString());
+        
+        // Appel avec retour d'une erreur
+        assertEquals(0, api.getSecuriteComposant("fa"));
+        Mockito.verify(logger, Mockito.times(1)).error(Mockito.anyString());
+    }
+    
+    @Test
+    public void getIssuesComposant()
+    {
+        
+    }
+    
+    @Test
+    public void getVersionComposant()
+    {
+        
+    }
+    
+    @Test
+    public void getComposants()
+    {
+        
+    }
+    
+    @Test
+    public void getQualityGate()
+    {
+        
+    }
+    
+    @Test
+    public void getListQualitygate()
+    {
+        
+    }
+    
+    @Test
+    public void testVueExiste()
+    {
+        
+    }
+    
     @Test
     public void creerVue()
     {
@@ -141,14 +210,19 @@ public class TestSonarAPI extends JunitBase
         vue.setDescription("vue description");
         api.creerVueAsync(vue);
     }
-
+    
     @Test
-    public void metrics()
+    public void supprimerProjet()
     {
-        @SuppressWarnings("unused")
-        Composant composant = api.getMetriquesComposant("fr.ca.cat.apimanager.apis:APIM_CatalogueDesNomenclatures_Build:15", new String[] { "bugs", "vulnerabilities" });
+        
     }
 
+    @Test
+    public void supprimerVue()
+    {
+        
+    }
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

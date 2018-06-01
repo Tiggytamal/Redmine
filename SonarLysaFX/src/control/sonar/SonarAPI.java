@@ -419,7 +419,7 @@ public class SonarAPI
     public Status supprimerProjet(String vueKey, boolean erreur)
     {
         if (vueKey == null || vueKey.isEmpty())
-            throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerProjet a son argument nul");
+            throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerProjet a un argument nul");
 
         Response response = appelWebservicePOST("api/projects/delete", new Clef(vueKey));
         logger.info("retour supprimer projet " + vueKey + " : " + HTTP + response.getStatus());

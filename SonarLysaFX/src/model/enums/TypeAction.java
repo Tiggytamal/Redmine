@@ -14,7 +14,8 @@ public enum TypeAction
     VIDE(Valeur.VIDE),
     ASSEMBLER(Valeur.ASSEMBLER),
     CLOTURER(Valeur.CLOTURER),
-    ABANDONNER(Valeur.ABANDONNER);
+    ABANDONNER(Valeur.ABANDONNER),
+    RELANCER(Valeur.RELANCER);
 
     private final String valeur;
 
@@ -51,6 +52,9 @@ public enum TypeAction
                 
             case Valeur.ABANDONNER :
                 return ABANDONNER;
+                
+            case Valeur.RELANCER :
+                return RELANCER;   
 
             default :
                 return VIDE;
@@ -72,6 +76,7 @@ public enum TypeAction
         private static final String ASSEMBLER = "A assembler";
         private static final String CLOTURER = "A clôturer";
         private static final String ABANDONNER = "A abandonner";
+        private static final String RELANCER = "A relancer";
         private static final String VIDE = "";
     }
 }
