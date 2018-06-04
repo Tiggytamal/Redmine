@@ -459,7 +459,7 @@ public class MajSuiviExcelTask extends SonarTask
         List<Periode> bloquants = getListPeriode(metriques, TypeMetrique.BLOQUANT);
         List<Periode> critiques = getListPeriode(metriques, TypeMetrique.CRITIQUE);
         List<Periode> duplication = getListPeriode(metriques, TypeMetrique.DUPLICATION);
-        return alert != null && Status.getStatus(alert) == Status.ERROR && (recupLeakPeriod(bloquants) > 0 || recupLeakPeriod(critiques) > 0 || recupLeakPeriod(duplication) > 3);
+        return alert != null && Status.from(alert) == Status.ERROR && (recupLeakPeriod(bloquants) > 0 || recupLeakPeriod(critiques) > 0 || recupLeakPeriod(duplication) > 3);
     }
 
     /**

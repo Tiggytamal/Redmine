@@ -15,6 +15,22 @@ public class Rule
 	private String langName;
 
 	/*---------- CONSTRUCTEURS ----------*/
+	
+    public Rule(String key, String name, String status, String lang, String langName)
+    {
+        super();
+        this.key = key;
+        this.name = name;
+        this.status = status;
+        this.lang = lang;
+        this.langName = langName;
+    }
+
+    public Rule()
+    {
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML
+    }
+    
 	/*---------- METHODES PUBLIQUES ----------*/
 	/*---------- METHODES PRIVEES ----------*/
 	/*---------- ACCESSEURS ----------*/
@@ -25,7 +41,7 @@ public class Rule
 		return key;
 	}
 
-	public void setKey(String key)
+    public void setKey(String key)
 	{
 		this.key = key;
 	}
@@ -73,5 +89,4 @@ public class Rule
 	{
 		this.langName = langName;
 	}
-
 }

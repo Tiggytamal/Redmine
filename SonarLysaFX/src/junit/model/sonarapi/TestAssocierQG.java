@@ -1,7 +1,6 @@
 package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
-import static junit.TestUtils.NOTNULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -42,8 +41,8 @@ public class TestAssocierQG
     {
         modele.setGateId(NEWVAL);
         assertEquals(NEWVAL, modele.getGateId());
-        modeleNull.setGateId(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getGateId());
+        modeleNull.setGateId(GATEID);
+        assertEquals(GATEID, modeleNull.getGateId());
     }
     
     @Test
@@ -58,8 +57,8 @@ public class TestAssocierQG
     {
         modele.setProjectId(NEWVAL);
         assertEquals(NEWVAL, modele.getProjectId());
-        modeleNull.setProjectId(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getProjectId());
+        modeleNull.setProjectId(PROJECTID);
+        assertEquals(PROJECTID, modeleNull.getProjectId());
     }
     
     /*---------- METHODES PRIVEES ----------*/

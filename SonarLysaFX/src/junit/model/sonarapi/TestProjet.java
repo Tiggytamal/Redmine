@@ -1,7 +1,6 @@
 package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
-import static junit.TestUtils.NOTNULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -46,8 +45,8 @@ public class TestProjet
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
-        modeleNull.setKey(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getKey());
+        modeleNull.setKey(KEY);
+        assertEquals(KEY, modeleNull.getKey());
     }
     
     @Test
@@ -62,8 +61,8 @@ public class TestProjet
     {
         modele.setId(NEWVAL);
         assertEquals(NEWVAL, modele.getId());
-        modeleNull.setId(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getId());
+        modeleNull.setId(ID);
+        assertEquals(ID, modeleNull.getId());
     }
     
     @Test
@@ -78,8 +77,8 @@ public class TestProjet
     {
         modele.setNom(NEWVAL);
         assertEquals(NEWVAL, modele.getNom());
-        modeleNull.setNom(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getNom());
+        modeleNull.setNom(NOM);
+        assertEquals(NOM, modeleNull.getNom());
     }
     
     @Test
@@ -94,8 +93,8 @@ public class TestProjet
     {
         modele.setSc(NEWVAL);
         assertEquals(NEWVAL, modele.getSc());
-        modeleNull.setSc(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getSc());
+        modeleNull.setSc(SC);
+        assertEquals(SC, modeleNull.getSc());
     }
     
     @Test
@@ -110,8 +109,8 @@ public class TestProjet
     {
         modele.setQu(NEWVAL);
         assertEquals(NEWVAL, modele.getQu());
-        modeleNull.setQu(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getQu());
+        modeleNull.setQu(QU);
+        assertEquals(QU, modeleNull.getQu());
     }
     
     @Test
@@ -126,8 +125,8 @@ public class TestProjet
     {
         modele.setLot(NEWVAL);
         assertEquals(NEWVAL, modele.getLot());
-        modeleNull.setLot(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getLot());
+        modeleNull.setLot(LOT);
+        assertEquals(LOT, modeleNull.getLot());
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -26,7 +26,7 @@ public enum Status
         return string;
     }
     
-    public static Status getStatus (String status)
+    public static Status from (String status)
     {
     	switch(status)
     	{
@@ -39,7 +39,7 @@ public enum Status
     		case Valeur.NONE :
     			return NONE;
     		default :
-    			return null;
+                throw new IllegalArgumentException("model.enums.sonarapi.Status inconnu : " + status, null);
     	}
     }
 	
@@ -47,7 +47,10 @@ public enum Status
     
     private static class Valeur
     {
-    	private Valeur() {}
+    	private Valeur() 
+    	{
+            throw new AssertionError("Classe non instanciable : model.sonarapi.Status#Valeur");
+    	}
     	
     	private static final String OK = "OK";
     	private static final String NONE = "NONE";

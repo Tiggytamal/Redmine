@@ -1,7 +1,6 @@
 package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
-import static junit.TestUtils.NOTNULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -46,8 +45,8 @@ public class TestCommentaire
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
-        modeleNull.setKey(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getKey());
+        modeleNull.setKey(KEY);
+        assertEquals(KEY, modeleNull.getKey());
     }
     
     @Test
@@ -62,8 +61,8 @@ public class TestCommentaire
     {
         modele.setLogin(NEWVAL);
         assertEquals(NEWVAL, modele.getLogin());
-        modeleNull.setLogin(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getLogin());
+        modeleNull.setLogin(LOGIN);
+        assertEquals(LOGIN, modeleNull.getLogin());
     }
     
     @Test
@@ -78,8 +77,8 @@ public class TestCommentaire
     {
         modele.setHtmlText(NEWVAL);
         assertEquals(NEWVAL, modele.getHtmlText());
-        modeleNull.setHtmlText(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getHtmlText());
+        modeleNull.setHtmlText(HTMLTEXT);
+        assertEquals(HTMLTEXT, modeleNull.getHtmlText());
     }
     
     @Test
@@ -94,8 +93,8 @@ public class TestCommentaire
     {
         modele.setMarkdown(NEWVAL);
         assertEquals(NEWVAL, modele.getMarkdown());
-        modeleNull.setMarkdown(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getMarkdown());
+        modeleNull.setMarkdown(MARKDOWN);
+        assertEquals(MARKDOWN, modeleNull.getMarkdown());
     }
     
     @Test
@@ -110,8 +109,8 @@ public class TestCommentaire
     {
         modele.setUpdatable(NEWVAL);
         assertEquals(NEWVAL, modele.getUpdatable());
-        modeleNull.setUpdatable(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getUpdatable());
+        modeleNull.setUpdatable(UPDATABLE);
+        assertEquals(UPDATABLE, modeleNull.getUpdatable());
     }
     
     @Test
@@ -126,8 +125,8 @@ public class TestCommentaire
     {
         modele.setCreatedAt(NEWVAL);
         assertEquals(NEWVAL, modele.getCreatedAt());
-        modeleNull.setCreatedAt(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getCreatedAt());
+        modeleNull.setCreatedAt(CREATEDAT);
+        assertEquals(CREATEDAT, modeleNull.getCreatedAt());
     }
     
     /*---------- METHODES PRIVEES ----------*/

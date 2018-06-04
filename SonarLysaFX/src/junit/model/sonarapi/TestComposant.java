@@ -1,7 +1,6 @@
 package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
-import static junit.TestUtils.NOTNULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -89,8 +88,8 @@ public class TestComposant
     {
         modele.setId(NEWVAL);
         assertEquals(NEWVAL, modele.getId());
-        modeleNull.setId(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getId());
+        modeleNull.setId(ID);
+        assertEquals(ID, modeleNull.getId());
     }
     
     @Test
@@ -105,8 +104,8 @@ public class TestComposant
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
-        modeleNull.setKey(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getKey());
+        modeleNull.setKey(KEY);
+        assertEquals(KEY, modeleNull.getKey());
     }
       
     @Test
@@ -121,8 +120,8 @@ public class TestComposant
     {
         modele.setNom(NEWVAL);
         assertEquals(NEWVAL, modele.getNom());
-        modeleNull.setNom(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getNom());
+        modeleNull.setNom(NOM);
+        assertEquals(NOM, modeleNull.getNom());
     }
     
     @Test
@@ -137,8 +136,8 @@ public class TestComposant
     {
         modele.setDescritpion(NEWVAL);
         assertEquals(NEWVAL, modele.getDescritpion());
-        modeleNull.setDescritpion(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getDescritpion());
+        modeleNull.setDescritpion(DESC);
+        assertEquals(DESC, modeleNull.getDescritpion());
     }
     
     @Test
@@ -153,8 +152,8 @@ public class TestComposant
     {
         modele.setQualifier(NEWVAL);
         assertEquals(NEWVAL, modele.getQualifier());
-        modeleNull.setQualifier(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getQualifier());
+        modeleNull.setQualifier(QUALIFIER);
+        assertEquals(QUALIFIER, modeleNull.getQualifier());
     }
     
     @Test
@@ -169,8 +168,8 @@ public class TestComposant
     {
         modele.setLangage(NEWVAL);
         assertEquals(NEWVAL, modele.getLangage());
-        modeleNull.setLangage(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getLangage());
+        modeleNull.setLangage(LANGUAGE);
+        assertEquals(LANGUAGE, modeleNull.getLangage());
     }
     
     @Test
@@ -185,8 +184,8 @@ public class TestComposant
     {
         modele.setPath(NEWVAL);
         assertEquals(NEWVAL, modele.getPath());
-        modeleNull.setPath(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getPath());
+        modeleNull.setPath(PATH);
+        assertEquals(PATH, modeleNull.getPath());
     }
     
     @Test
@@ -218,8 +217,8 @@ public class TestComposant
     {
         modele.setUuid(NEWVAL);
         assertEquals(NEWVAL, modele.getUuid());
-        modeleNull.setUuid(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getUuid());
+        modeleNull.setUuid(UUID);
+        assertEquals(UUID, modeleNull.getUuid());
     }
         
     @Test
@@ -250,8 +249,8 @@ public class TestComposant
     {
         modele.setLongName(NEWVAL);
         assertEquals(NEWVAL, modele.getLongName());
-        modeleNull.setKey(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getKey());
+        modeleNull.setKey(LONGNAME);
+        assertEquals(LONGNAME, modeleNull.getKey());
     }
     
     @Test

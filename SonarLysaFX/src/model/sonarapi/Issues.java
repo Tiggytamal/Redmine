@@ -49,20 +49,10 @@ public class Issues implements ModeleSonar
         return total;
     }
 
-    public void setTotal(int total)
-    {
-        this.total = total;
-    }
-
     @XmlAttribute(name = "p")
     public int getP()
     {
         return p;
-    }
-
-    public void setP(int p)
-    {
-        this.p = p;
     }
 
     @XmlAttribute(name = "ps")
@@ -71,20 +61,10 @@ public class Issues implements ModeleSonar
         return ps;
     }
 
-    public void setPs(int ps)
-    {
-        this.ps = ps;
-    }
-
     @XmlAttribute(name = "paging")
     public Paging getPaging()
     {
         return paging;
-    }
-
-    public void setPaging(Paging paging)
-    {
-        this.paging = paging;
     }
 
     @XmlElementWrapper
@@ -96,11 +76,6 @@ public class Issues implements ModeleSonar
         return composants;
     }
 
-    public void setComposants(List<Composant> composants)
-    {
-        this.composants = composants;
-    }
-
     @XmlElementWrapper
     @XmlAttribute(name = "issues", required = false)
     public List<Issue> getListIssues()
@@ -108,10 +83,5 @@ public class Issues implements ModeleSonar
         if (listIssues == null)
             return new ArrayList<>();
         return listIssues;
-    }
-
-    public void setListIssues(List<Issue> listIssues)
-    {
-        this.listIssues = listIssues;
     }
 }

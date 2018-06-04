@@ -1,7 +1,6 @@
 package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
-import static junit.TestUtils.NOTNULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -46,8 +45,8 @@ public class TestCondition
     {
         modele.setStatus(NEWVAL);
         assertEquals(NEWVAL, modele.getStatus());
-        modeleNull.setStatus(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getStatus());
+        modeleNull.setStatus(STATUS);
+        assertEquals(STATUS, modeleNull.getStatus());
     }
     
     @Test
@@ -62,8 +61,8 @@ public class TestCondition
     {
         modele.setMetricKeys(NEWVAL);
         assertEquals(NEWVAL, modele.getMetricKeys());
-        modeleNull.setMetricKeys(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getMetricKeys());
+        modeleNull.setMetricKeys(METRICKEYS);
+        assertEquals(METRICKEYS, modeleNull.getMetricKeys());
     }
     
     @Test
@@ -78,8 +77,8 @@ public class TestCondition
     {
         modele.setComparator(NEWVAL);
         assertEquals(NEWVAL, modele.getComparator());
-        modeleNull.setComparator(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getComparator());
+        modeleNull.setComparator(COMPARATOR);
+        assertEquals(COMPARATOR, modeleNull.getComparator());
     }
     
     @Test
@@ -110,8 +109,8 @@ public class TestCondition
     {
         modele.setErrorThreshold(NEWVAL);
         assertEquals(NEWVAL, modele.getErrorThreshold());
-        modeleNull.setErrorThreshold(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getErrorThreshold());
+        modeleNull.setErrorThreshold(ERRORTHRESHOLD);
+        assertEquals(ERRORTHRESHOLD, modeleNull.getErrorThreshold());
     }
     
     @Test
@@ -126,8 +125,8 @@ public class TestCondition
     {
         modele.setActualValue(NEWVAL);
         assertEquals(NEWVAL, modele.getActualValue());
-        modeleNull.setActualValue(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getActualValue());
+        modeleNull.setActualValue(VALUE);
+        assertEquals(VALUE, modeleNull.getActualValue());
     }
     
     /*---------- METHODES PRIVEES ----------*/

@@ -1,7 +1,6 @@
 package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
-import static junit.TestUtils.NOTNULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -66,8 +65,8 @@ public class TestMetrique
     {
         modele.setValue(NEWVAL);
         assertEquals(NEWVAL, modele.getValue());
-        modeleNull.setValue(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getValue());
+        modeleNull.setValue(VALEUR);
+        assertEquals(VALEUR, modeleNull.getValue());
     }
     
     @Test

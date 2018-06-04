@@ -1,7 +1,6 @@
 package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
-import static junit.TestUtils.NOTNULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -58,8 +57,8 @@ public class TestPeriode
     {
         modele.setValeur(NEWVAL);
         assertEquals(NEWVAL, modele.getValeur());
-        modeleNull.setValeur(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getValeur());
+        modeleNull.setValeur(VALEUR);
+        assertEquals(VALEUR, modeleNull.getValeur());
     }
     
     /*---------- METHODES PRIVEES ----------*/

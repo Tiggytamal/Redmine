@@ -50,28 +50,10 @@ public class TestIssuesSimple
     }
     
     @Test
-    public void setTotal()
-    {
-        modele.setTotal(50);
-        assertEquals(50, modele.getTotal());
-        modeleNull.setTotal(12);
-        assertEquals(12, modeleNull.getTotal());
-    }
-    
-    @Test
     public void getP()
     {
         assertEquals(P, modele.getP());
         assertEquals(0, modeleNull.getP());
-    }
-    
-    @Test
-    public void setP()
-    {
-        modele.setP(50);
-        assertEquals(50, modele.getP());
-        modeleNull.setP(12);
-        assertEquals(12, modeleNull.getP());
     }
     
     @Test
@@ -82,28 +64,10 @@ public class TestIssuesSimple
     }
     
     @Test
-    public void setPs()
-    {
-        modele.setPs(50);
-        assertEquals(50, modele.getPs());
-        modeleNull.setPs(12);
-        assertEquals(12, modeleNull.getPs());
-    }
-    
-    @Test
     public void getPaging()
     {
         assertEquals(PAGING, modele.getPaging());
         assertNull(modeleNull.getPaging());
-    }
-    
-    @Test
-    public void setPaging()
-    {
-        modele.setPaging(null);
-        assertNull(modele.getPaging());
-        modeleNull.setPaging(PAGING);
-        assertEquals(PAGING, modeleNull.getPaging());
     }
     
     @Test
@@ -113,15 +77,6 @@ public class TestIssuesSimple
         assertNotNull(modeleNull.getComposants());
         assertTrue(modeleNull.getComposants().isEmpty());
     }
-
-    @Test
-    public void setComposants()
-    {
-        modele.setComposants(null);
-        assertNotNull(modele.getComposants());
-        modeleNull.setComposants(COMPOSANTS);
-        assertEquals(COMPOSANTS, modeleNull.getComposants());
-    }
     
     @Test
     public void getListIssues()
@@ -129,15 +84,6 @@ public class TestIssuesSimple
         assertEquals(ISSUES, modele.getListIssues());
         assertNotNull(modeleNull.getListIssues());
         assertTrue(modeleNull.getListIssues().isEmpty());
-    }
-
-    @Test
-    public void setListIssues()
-    {
-        modele.setListIssues(null);
-        assertNotNull(modele.getListIssues());
-        modeleNull.setListIssues(ISSUES);
-        assertEquals(ISSUES, modeleNull.getListIssues());
     }
     
     /*---------- METHODES PRIVEES ----------*/

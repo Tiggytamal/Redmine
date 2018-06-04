@@ -15,7 +15,7 @@ public class TestTypeAction
     @Test
     public void testSize()
     {
-        assertEquals(6, TypeAction.values().length);
+        assertEquals(7, TypeAction.values().length);
     }
     
     @Test
@@ -33,6 +33,8 @@ public class TestTypeAction
         assertEquals("A abandonner", TypeAction.ABANDONNER.toString());
         assertEquals(TypeAction.VIDE, TypeAction.from("inconnu"));
         assertEquals("", TypeAction.VIDE.toString());
+        assertEquals(TypeAction.VERIFIER, TypeAction.from("A vérifier"));
+        assertEquals("A vérifier", TypeAction.VERIFIER.toString());
     }
 
     @Test

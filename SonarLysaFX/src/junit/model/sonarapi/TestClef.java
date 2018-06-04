@@ -1,7 +1,6 @@
 package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
-import static junit.TestUtils.NOTNULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -41,8 +40,8 @@ public class TestClef
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
-        modeleNull.setKey(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getKey());
+        modeleNull.setKey(KEY);
+        assertEquals(KEY, modeleNull.getKey());
     }
     
     /*---------- METHODES PRIVEES ----------*/

@@ -27,6 +27,19 @@ public class Retour implements ModeleSonar
     
     /*---------- CONSTRUCTEURS ----------*/
     
+    public Retour(Composant component, List<Vue> listeVues, StatusProjet statusProjet, List<Vue> results, boolean more, List<Message> errors, List<QualityGate> qualityGates, String defaut)
+    {
+        super();
+        this.component = component;
+        this.listeVues = listeVues;
+        this.statusProjet = statusProjet;
+        this.results = results;
+        this.more = more;
+        this.errors = errors;
+        this.qualityGates = qualityGates;
+        this.defaut = defaut;
+    }
+    
     public Retour()
     {
         // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML   

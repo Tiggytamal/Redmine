@@ -1,7 +1,6 @@
 package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
-import static junit.TestUtils.NOTNULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -45,8 +44,8 @@ public class TestEvent
     {
         modele.setId(NEWVAL);
         assertEquals(NEWVAL, modele.getId());
-        modeleNull.setId(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getId());
+        modeleNull.setId(ID);
+        assertEquals(ID, modeleNull.getId());
     }
     
     @Test
@@ -61,8 +60,8 @@ public class TestEvent
     {
         modele.setRk(NEWVAL);
         assertEquals(NEWVAL, modele.getRk());
-        modeleNull.setRk(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getRk());
+        modeleNull.setRk(RK);
+        assertEquals(RK, modeleNull.getRk());
     }
     
     @Test
@@ -77,8 +76,8 @@ public class TestEvent
     {
         modele.setN(NEWVAL);
         assertEquals(NEWVAL, modele.getN());
-        modeleNull.setN(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getN());
+        modeleNull.setN(N);
+        assertEquals(N, modeleNull.getN());
     }
     
     @Test
@@ -93,8 +92,8 @@ public class TestEvent
     {
         modele.setC(NEWVAL);
         assertEquals(NEWVAL, modele.getC());
-        modeleNull.setC(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getC());
+        modeleNull.setC(C);
+        assertEquals(C, modeleNull.getC());
     }
     
     @Test
@@ -109,8 +108,8 @@ public class TestEvent
     {
         modele.setDt(NEWVAL);
         assertEquals(NEWVAL, modele.getDt());
-        modeleNull.setDt(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getDt());
+        modeleNull.setDt(DT);
+        assertEquals(DT, modeleNull.getDt());
     }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/   

@@ -1,7 +1,6 @@
 package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
-import static junit.TestUtils.NOTNULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -41,8 +40,8 @@ public class TestMessage
     {
         modele.setMsg(NEWVAL);
         assertEquals(NEWVAL, modele.getMsg());
-        modeleNull.setMsg(NOTNULL);
-        assertEquals(NOTNULL, modeleNull.getMsg());
+        modeleNull.setMsg(MSG);
+        assertEquals(MSG, modeleNull.getMsg());
     }
     
     /*---------- METHODES PRIVEES ----------*/
