@@ -40,6 +40,11 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\javax\mail\javax.mail-api\1.6.1">
+				<filename name="javax.mail-api-1.6.1.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.workitem.common_3.2.600.v20160225_1717\6.0.2">
 				<filename name="com.ibm.team.workitem.common_3.2.600.v20160225_1717-6.0.2.jar"/>
 			</fileset>
@@ -147,11 +152,6 @@
 		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\com\ibm\jazz\rtc\api\com.ibm.team.interop.common_3.0.900.v20151207_2229\6.0.2">
 				<filename name="com.ibm.team.interop.common_3.0.900.v20151207_2229-6.0.2.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="D:\git\Redmine\SonarLysaFX\src">
-				<filename name="resources"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -287,11 +287,6 @@
 		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\org\slf4j\slf4j-api\1.7.7">
 				<filename name="slf4j-api-1.7.7.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="D:\REPO\P\.m2\repository\com\sun\mail\javax.mail\1.6.1">
-				<filename name="javax.mail-1.6.1.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -748,7 +743,12 @@
 		<mkdir dir="project" />
 		<copy todir="project">
 			<fileset dir="D:\git\Redmine\SonarLysaFX">
-				<include name="src/**" />
+				<include name="test\java/**" />
+			</fileset>
+		</copy>
+		<copy todir="project">
+			<fileset dir="D:\git\Redmine\SonarLysaFX">
+				<include name="main\java/**" />
 			</fileset>
 		</copy>
 	
@@ -849,7 +849,6 @@
 				<include name="slf4j-simple-1.6.4.jar"/>
 				<include name="httpcore-ab-4.4.1-6.0.2.jar"/>
 				<include name="osgi-resource-locator-1.0.1.jar"/>
-				<include name="javax.mail-1.6.1.jar"/>
 				<include name="com.ibm.team.connector.scm.client_3.0.1100.v20151207_2315-6.0.2.jar"/>
 				<include name="com.ibm.team.workitem.api.common_3.1.1000.v20151219_0043-6.0.2.jar"/>
 				<include name="com.ibm.team.repository.common.serialize_1.2.3000.v20160308_1839-6.0.2.jar"/>
@@ -887,10 +886,10 @@
 				<include name="httpmime-4.5-6.0.2.jar"/>
 				<include name="com.ibm.team.foundation.rcp.core_1.1.3000.v20150814_0104-6.0.2.jar"/>
 				<include name="com.ibm.team.process.common_1.3.3000.v20160308_1839-6.0.2.jar"/>
+				<include name="javax.mail-api-1.6.1.jar"/>
 				<include name="objenesis-2.6.jar"/>
 				<include name="slf4j-api-1.7.7.jar"/>
 				<include name="com.ibm.team.repository.common.json_1.2.1000.v20150610_0124-6.0.2.jar"/>
-				<include name="resources"/>
 				<include name="org.apache.commons.codec_1.3.0.v20100518-1140-6.0.2.jar"/>
 				<include name="junit-4.11.jar"/>
 				<include name="com.ibm.team.interop.client_3.0.700.v20151207_2315-6.0.2.jar"/>
@@ -915,7 +914,12 @@
 	
 		<!-- Copy project sources itself -->
 		<copy todir="build/src">
-			<fileset dir="project/src">
+			<fileset dir="project/test/java">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="build/src">
+			<fileset dir="project/main/java">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
@@ -930,7 +934,10 @@
 	
 		<!-- Copy over none Java-Files -->
 		<copy todir="build/classes">
-		<fileset dir="project/src">
+		<fileset dir="project/test/java">
+			<exclude name="**/*.java"/>
+		</fileset>
+		<fileset dir="project/main/java">
 			<exclude name="**/*.java"/>
 		</fileset>
 		</copy>
