@@ -110,6 +110,12 @@ public class Anomalie implements Modele
         setService(info.getService());
         return this;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "Anomalie du lot " + getLot() + " - RTC = " + getNumeroAnomalie();
+    }
 
     /**
      * Permet de vérifier si une anomalie a été traitée ou non. C'est-à-dire si il y a un numéro d'anomalie ou un commentaire.

@@ -211,21 +211,6 @@ public class ControlRTC
     }
 
     /**
-     * Récupération de tous les projets RTC
-     * 
-     * @throws TeamRepositoryException
-     */
-    private void recupererTousLesProjets() throws TeamRepositoryException
-    {
-        IProcessItemService pis = (IProcessItemService) repo.getClientLibrary(IProcessItemService.class);
-        for (Object pareaObj : pis.findAllProjectAreas(IProcessClientService.ALL_PROPERTIES, null))
-        {
-            IProjectArea parea = (IProjectArea) pareaObj;
-            pareas.put(parea.getName(), parea);
-        }
-    }
-
-    /**
      * Création du Defect dans RTC
      * 
      * @param ano
@@ -537,6 +522,21 @@ public class ControlRTC
         {
             Statics.logPlantage.error(e);
             return false;
+        }
+    }
+    
+    /**
+     * Récupération de tous les projets RTC
+     * 
+     * @throws TeamRepositoryException
+     */
+    public void recupererTousLesProjets() throws TeamRepositoryException
+    {
+        IProcessItemService pis = (IProcessItemService) repo.getClientLibrary(IProcessItemService.class);
+        for (Object pareaObj : pis.findAllProjectAreas(IProcessClientService.ALL_PROPERTIES, null))
+        {
+            IProjectArea parea = (IProjectArea) pareaObj;
+            pareas.put(parea.getName(), parea);
         }
     }
 

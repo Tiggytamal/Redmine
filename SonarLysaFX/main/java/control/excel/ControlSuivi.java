@@ -90,7 +90,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     private int colDateRes;
     private int colDateMajEtat;
 
-    // Nom de la feuille avec les naomalies en cours
+    // Nom de la feuille avec les anomalies en cours
     private static final String SQ = "SUIVI Qualité";
     private static final String AC = "Anomalies closes";
     private static final String SNAPSHOT = "SNAPSHOT";

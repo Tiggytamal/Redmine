@@ -72,7 +72,7 @@ public class ConnexionDialog extends Dialog<Pair<String, String>>
 
         // Converion des données en Pair
         setResultConverter(dialogButton -> {
-            if (dialogButton == loginButtonType)
+            if (dialogButton.equals(loginButtonType))
                 return new Pair<>(username.getText(), password.getText());
             return null;
         });

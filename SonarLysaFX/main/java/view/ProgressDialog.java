@@ -134,7 +134,6 @@ public class ProgressDialog extends Dialog<Boolean>
      */
     private void annuler()
     {
-
         bar.progressProperty().unbind();
         label.textProperty().unbind();
         indicator.progressProperty().unbind();

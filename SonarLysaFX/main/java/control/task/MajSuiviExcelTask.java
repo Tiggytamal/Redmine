@@ -104,6 +104,9 @@ public class MajSuiviExcelTask extends SonarTask
             case DATASTAGE:
                 majFichierSuiviExcelDataStage();
                 break;
+                
+            case COBOL:
+                majFichierSuiviExcelCOBOL();
 
             case DOUBLE:
                 traitementSuiviExcelToutFichiers();
@@ -177,7 +180,7 @@ public class MajSuiviExcelTask extends SonarTask
     }
 
     /**
-     * Mise à jour du fichier Excel des suivis d'anomalies pour les composants Datastage
+     * Mise à jour du fichier Excel des suivi des anomalies pour les composants Datastage
      *
      * @throws InvalidFormatException
      * @throws IOException
@@ -196,6 +199,23 @@ public class MajSuiviExcelTask extends SonarTask
         return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE), Matiere.DATASTAGE);
     }
 
+    /**
+     * Mise à jour du fichier Excel du suivi des anomalies pour tous les composants COBOL
+     *
+     * @throws InvalidFormatException
+     * @throws IOException
+     * @throws TeamRepositoryException
+     */
+    private List<String> majFichierSuiviExcelCOBOL() throws IOException
+    {
+        // Appel de la récupération des composants non datastage avec les vesions en paramètre
+        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(false);
+        etapePlus();
+
+        // Traitement du fichier de suivi
+        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIER), Matiere.JAVA);
+    }
+    
     /**
      * Mise à jour du fichier Excel des suivis d'anomalies pour tous les composants non Datastage
      *
@@ -575,9 +595,10 @@ public class MajSuiviExcelTask extends SonarTask
 
     public enum TypeMaj 
     {
-        SUIVI("Maj Fichier de Suivi"), 
+        SUIVI("Maj Fichier de Suivi JAVA"), 
         DATASTAGE("Maj Fichier de Suivi DataStage"), 
-        DOUBLE("Maj Fichiers de Suivi");
+        DOUBLE("Maj Fichiers de Suivi"),
+        COBOL("Maj Fichier de Suivi COBOL");
 
         private String string;
 

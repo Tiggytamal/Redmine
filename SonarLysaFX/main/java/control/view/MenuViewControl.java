@@ -45,6 +45,8 @@ public class MenuViewControl extends ViewControl
     @FXML
     private MenuItem suivi;
     @FXML
+    private MenuItem aide;   
+    @FXML
     private Button connexion;
     @FXML
     private Button deConnexion;
@@ -89,6 +91,7 @@ public class MenuViewControl extends ViewControl
         rtc.setDisable(true);
         planificateur.setDisable(true);
         autres.setDisable(true);
+        aide.setDisable(true);
         Statics.info.setPseudo(null);
         Statics.info.setMotDePasse(null);
         box.getChildren().remove(deConnexion);
@@ -153,6 +156,12 @@ public class MenuViewControl extends ViewControl
         if (result.isPresent() && result.get().equals(ButtonType.OK))
             new Thread(new MajVuesTask()).start();
     }
+    
+    @FXML
+    public void aide()
+    {
+        //TODO : affichage de l'aide
+    }
 
     /* ---------- METHODES PRIVEES ---------- */
 
@@ -169,6 +178,9 @@ public class MenuViewControl extends ViewControl
         Statics.info.setMotDePasse(mdp);
 
         // Suppression controle SonarAPI. SonarAPI.INSTANCE.verificationUtilisateur() car mdp différent de RTC
+        
+        
+        
         if (ControlRTC.INSTANCE.connexion())
         {
             mensuel.setDisable(false);
@@ -177,6 +189,7 @@ public class MenuViewControl extends ViewControl
             autres.setDisable(false);
             suivi.setDisable(false);
             majvues.setDisable(false);
+            aide.setDisable(false);
             maintenance.setDisable(false);
             rtc.setDisable(false);
             
