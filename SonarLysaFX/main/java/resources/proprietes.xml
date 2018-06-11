@@ -243,6 +243,10 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <value>Suivi_Quality_Gate - DataStageTest.xlsx</value>
         </entry>
         <entry>
+            <key>NOMFICHIERCOBOL</key>
+            <value>Suivi_Quality_Gate - COBOL.xlsx</value>
+        </entry>
+        <entry>
             <key>ABSOLUTEPATHHISTO</key>
             <value>S:\\SER_ASSURANCE_QUALITE\\COMMUN\\Qualimétrie\\Suivi des anomalies qualimétriques\\Historique SUIVI\\</value>
         </entry>

@@ -107,6 +107,7 @@ public class MajSuiviExcelTask extends SonarTask
                 
             case COBOL:
                 majFichierSuiviExcelCOBOL();
+                break;
 
             case DOUBLE:
                 traitementSuiviExcelToutFichiers();
@@ -189,7 +190,7 @@ public class MajSuiviExcelTask extends SonarTask
     private List<String> majFichierSuiviExcelDataStage() throws IOException
     {
         // Appel de la récupération des composants datastage avec les vesions en paramètre
-        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(true);
+        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(Matiere.DATASTAGE);
 
         // Mise à jour des liens des composants datastage avec le bon QG
         etapePlus();
@@ -209,11 +210,11 @@ public class MajSuiviExcelTask extends SonarTask
     private List<String> majFichierSuiviExcelCOBOL() throws IOException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
-        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(false);
+        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(Matiere.COBOL);
         etapePlus();
 
         // Traitement du fichier de suivi
-        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIER), Matiere.JAVA);
+        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIERCOBOL), Matiere.COBOL);
     }
     
     /**
@@ -226,7 +227,7 @@ public class MajSuiviExcelTask extends SonarTask
     private List<String> majFichierSuiviExcel() throws IOException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
-        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(false);
+        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(Matiere.JAVA);
         etapePlus();
 
         // Traitement du fichier de suivi

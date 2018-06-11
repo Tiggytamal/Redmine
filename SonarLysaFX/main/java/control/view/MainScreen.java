@@ -95,7 +95,7 @@ public class MainScreen extends Application
      * @author ETP8137 - Grégoire Mathon
      * @since 1.0
      */
-    private class IconifiedListener implements ChangeListener<Boolean>
+    private static class IconifiedListener implements ChangeListener<Boolean>
     {
         @Override
         public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)

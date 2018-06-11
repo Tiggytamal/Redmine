@@ -83,6 +83,8 @@ public class TimeSpinner extends Spinner<LocalTime>
         modeProperty().set(mode);
     }
 
+    /*---------- CLASSES INTERNES ----------*/
+    
     // Mode represents the unit that is currently being edited.
     // For convenience expose methods for incrementing and decrementing that unit, and for selecting the appropriate portion in a spinner's editor
     private enum Mode 
@@ -132,7 +134,7 @@ public class TimeSpinner extends Spinner<LocalTime>
      * @author ETP8137 - Grégoire Mathon
      * @since 1.0
      */
-    private class LocalTimeConverter extends StringConverter<LocalTime>
+    private static class LocalTimeConverter extends StringConverter<LocalTime>
     {
         @Override
         public String toString(LocalTime time)

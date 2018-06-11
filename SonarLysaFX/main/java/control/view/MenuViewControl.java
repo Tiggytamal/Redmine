@@ -1,9 +1,11 @@
 package control.view;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 
 import control.rtc.ControlRTC;
+import control.sonar.SonarAPI;
 import control.task.MajVuesTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,6 +18,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.web.WebView;
+import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import utilities.FunctionalException;
 import utilities.Statics;
@@ -45,7 +49,7 @@ public class MenuViewControl extends ViewControl
     @FXML
     private MenuItem suivi;
     @FXML
-    private MenuItem aide;   
+    private MenuItem aide;
     @FXML
     private Button connexion;
     @FXML
@@ -91,7 +95,6 @@ public class MenuViewControl extends ViewControl
         rtc.setDisable(true);
         planificateur.setDisable(true);
         autres.setDisable(true);
-        aide.setDisable(true);
         Statics.info.setPseudo(null);
         Statics.info.setMotDePasse(null);
         box.getChildren().remove(deConnexion);
@@ -134,7 +137,7 @@ public class MenuViewControl extends ViewControl
             case "suivi":
                 load("/view/Suivi.fxml");
                 break;
-                
+
             case "rtc":
                 load("/view/FichierRTC.fxml");
                 break;
@@ -156,11 +159,22 @@ public class MenuViewControl extends ViewControl
         if (result.isPresent() && result.get().equals(ButtonType.OK))
             new Thread(new MajVuesTask()).start();
     }
-    
+
     @FXML
     public void aide()
     {
-        //TODO : affichage de l'aide
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setTitle("Aide");
+        alert.setHeaderText(null);
+        alert.setContentText(null);
+        WebView webView = new WebView();
+        URL url = this.getClass().getResource("/resources/aide/aide.html");
+        webView.getEngine().load(url.toString());
+        webView.setPrefSize(640 , 480);
+        alert.setResizable(true);
+        alert.getDialogPane().setContent(webView);
+        alert.show();
     }
 
     /* ---------- METHODES PRIVEES ---------- */
@@ -177,22 +191,17 @@ public class MenuViewControl extends ViewControl
         Statics.info.setPseudo(pseudo);
         Statics.info.setMotDePasse(mdp);
 
-        // Suppression controle SonarAPI. SonarAPI.INSTANCE.verificationUtilisateur() car mdp différent de RTC
-        
-        
-        
-        if (ControlRTC.INSTANCE.connexion())
+        // Contrôle connexion RTC et SonarQube
+        if (ControlRTC.INSTANCE.connexion() && SonarAPI.INSTANCE.verificationUtilisateur())
         {
             mensuel.setDisable(false);
             options.setDisable(false);
             planificateur.setDisable(false);
             autres.setDisable(false);
             suivi.setDisable(false);
-            majvues.setDisable(false);
-            aide.setDisable(false);
             maintenance.setDisable(false);
             rtc.setDisable(false);
-            
+
             box.getChildren().remove(connexion);
             box.getChildren().add(deConnexion);
         }

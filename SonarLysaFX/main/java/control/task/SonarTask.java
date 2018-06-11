@@ -16,6 +16,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
+import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamSpec;
 import model.sonarapi.Projet;
@@ -104,10 +105,10 @@ public abstract class SonarTask extends Task<Boolean>
      *
      * @return
      */
-    protected Map<String, List<Projet>> recupererComposantsSonarVersion(Boolean datastage)
+    protected Map<String, List<Projet>> recupererComposantsSonarVersion(Matiere matiere)
     {
         updateMessage(RECUPCOMPOSANTS);
-        
+
         // Récupération des versions en paramètre
         String[] versions = proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONS).split(";");
 
@@ -128,19 +129,37 @@ public abstract class SonarTask extends Task<Boolean>
         {
             for (String version : versions)
             {
-                // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans
-                // version E32
+                // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans version E32
                 if (projet.getNom().endsWith(Utilities.transcoEdition(version)))
                 {
-                    // Selon que l'on regarde les composants datastage ou non, on remplie la liste en conséquence en
+                    // Switch de contrôle selon la type de matière
                     // utilisant le filtre en paramètre. Si le Boolean est nul, on prend tous les composants
-                    String filtre = proprietesXML.getMapParams().get(Param.FILTREDATASTAGE);
-                    if (datastage == null || datastage && projet.getNom().startsWith(filtre) || !datastage && !projet.getNom().startsWith(filtre))
-                        retour.get(version).add(projet);
+                    String filtreDataStage = proprietesXML.getMapParams().get(Param.FILTREDATASTAGE);
+                    switch (matiere)
+                    {
+                        case DATASTAGE:
+                            if (projet.getNom().startsWith(filtreDataStage))
+                                retour.get(version).add(projet);
+                            break;
+
+                        case JAVA:
+                            if (!projet.getNom().startsWith(filtreDataStage))
+                                retour.get(version).add(projet);
+                            break;
+                            
+                        case COBOL:
+                            throw new FunctionalException(Severity.ERROR, "COBOL pas pris en compte!");
+                            
+                        case PHP:
+                            throw new FunctionalException(Severity.ERROR, "PHP pas pris en compte!");
+
+                        default:
+                            throw new FunctionalException(Severity.ERROR, "Nouvelle matière pas prise en compte");
+                    }
                 }
             }
         }
-        
+
         updateMessage(RECUPCOMPOSANTS + "OK");
         return retour;
     }

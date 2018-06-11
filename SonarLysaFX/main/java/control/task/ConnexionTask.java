@@ -26,7 +26,7 @@ public class ConnexionTask extends Task<Boolean>
     
     public ConnexionTask()
     {
-
+        // Constructeur par default
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

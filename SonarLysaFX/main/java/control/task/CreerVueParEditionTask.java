@@ -3,6 +3,7 @@ package control.task;
 import java.util.List;
 import java.util.Map;
 
+import model.enums.Matiere;
 import model.sonarapi.Projet;
 import model.sonarapi.Vue;
 import utilities.Statics;
@@ -25,7 +26,7 @@ public class CreerVueParEditionTask extends SonarTask
     private Boolean creerVueParEdition()
     {
         // Récupération des composants par édition
-        Map<String, List<Projet>> map = recupererComposantsSonarVersion(false);
+        Map<String, List<Projet>> map = recupererComposantsSonarVersion(Matiere.JAVA);
         
         // Création des vues
         etapePlus();

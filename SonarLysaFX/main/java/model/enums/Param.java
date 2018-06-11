@@ -14,14 +14,15 @@ public enum Param implements Serializable, TypeKey
     FILTREDATASTAGE("Filtre DataStage"), 
     ABSOLUTEPATH("Chemin des fichiers"), 
     NOMFICHIER("Nom fichier de suivi"), 
-    NOMFICHIERDATASTAGE("Nom fichier de suivi datastage"), 
+    NOMFICHIERDATASTAGE("Nom fichier de suivi DataStage"), 
     ABSOLUTEPATHHISTO("Chemin vers fichier d'historique"), 
     LIENSLOTS("Hyperliens vers lots Sonar"), 
     LIENSANOS("Hyperliens vers anomalie RTC"), 
     NOMQGDATASTAGE("Nom QualityGate Datastage"), 
     URLSONAR("Url serveur Sonar"), 
     URLRTC("Url serveur RTC Jazz"),
-    RTCLOTCHC("Edition RTC pour lots CHC");
+    RTCLOTCHC("Edition RTC pour lots CHC"), 
+    NOMFICHIERCOBOL("Nom fichier de suivi COBOL");
 
     private final String string;
 

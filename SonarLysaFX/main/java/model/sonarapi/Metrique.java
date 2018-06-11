@@ -46,7 +46,7 @@ public class Metrique
 
     public Metrique()
     {
-
+        // Constructeur vide pour initialiser des objets sans paramètre
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

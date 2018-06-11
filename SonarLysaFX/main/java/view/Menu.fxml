@@ -27,7 +27,7 @@
 						<MenuItem fx:id="options" text="Options" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="planificateur" text="Planificateur" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="majvues" text="Mise à jour vues" onAction="#majVues" disable="true" />
-						<MenuItem fx:id="aide" text="Aide" onAction="#aide" disable="true" />
+						<MenuItem fx:id="aide" text="Aide" onAction="#aide" disable="false" />
 					</items>
 				</Menu>
 			</menus>
