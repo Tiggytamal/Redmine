@@ -30,7 +30,7 @@ public class FichiersXML implements XML, Modele
     private Map<String, LotSuiviRTC> lotsRTC;
     private boolean controleOK;
     private static final String NOMFICHIER = "\\fichiers.xml";
-    private static final String RESOURCE = "/resources/fichiers.xml";
+    private static final String RESOURCE = "/fichiers.xml";
 
     /*---------- CONSTRUCTEURS ----------*/
 

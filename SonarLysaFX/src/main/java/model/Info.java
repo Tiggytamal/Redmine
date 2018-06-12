@@ -21,7 +21,7 @@ public class Info implements Modele, XML
     private String pseudo;
     private String motDePasse;
     private static final String NOMFICHIER = "\\info.xml";
-    private static final String RESOURCE = "/resources/info.xml";
+    private static final String RESOURCE = "/info.xml";
 
     /*---------- CONSTRUCTEURS ----------*/
 

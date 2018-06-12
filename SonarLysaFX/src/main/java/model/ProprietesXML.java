@@ -51,7 +51,7 @@ public class ProprietesXML implements XML, Modele
     private Map<TypePlan, Planificateur> mapPlans;
 
     private static final String NOMFICHIER = "\\proprietes.xml";
-    private static final String RESOURCE = "/resources/proprietes.xml";
+    private static final String RESOURCE = "/proprietes.xml";
 
     /*---------- CONSTRUCTEURS ----------*/
 

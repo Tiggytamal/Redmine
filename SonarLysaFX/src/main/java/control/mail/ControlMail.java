@@ -35,7 +35,7 @@ public class ControlMail
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private static final String SERVEUR = "muz10-e1smtp-IN-DC-INT.zres.ztech";
+    private static final String SERVEUR = "10.154.159.3";
 
     private Message message;
     private String adresseConnecte;
@@ -63,7 +63,7 @@ public class ControlMail
     {
         try
         {
-            Session session = Session.getInstance(props, new MailAuthenticator());
+            Session session = Session.getInstance(props);
 
             // ----- 2. Création du message depuis la session -----
             message = new MimeMessage(session);
@@ -97,10 +97,10 @@ public class ControlMail
     private void initInfosMail() throws TeamRepositoryException
     {
         props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "off");
         props.put("mail.smtp.host", SERVEUR);
         props.put("mail.smtp.port", "25");
+        props.put("mail.smtp.starttls.enable", "false");
 
         adresseConnecte = ControlRTC.INSTANCE.recupContributorDepuisId(Statics.info.getPseudo()).getEmailAddress();
         

@@ -28,8 +28,8 @@ public class TrayIconView
 	private SystemTray tray;
 	private TrayIcon trayIcon;
 	private Stage stage;
-	public static final Image imageBase = Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/resources/sonar.jpg"));
-	public static final Image imageRed = Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/resources/sonarRed.png"));
+	public static final Image imageBase = Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/sonar.jpg"));
+	public static final Image imageRed = Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/sonarRed.png"));
 	
 	/*---------- CONSTRUCTEURS ----------*/
 
