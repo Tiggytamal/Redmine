@@ -90,6 +90,7 @@ public class ControlRTC
     private IWorkItemClient workItemClient;
     private IAuditableClient auditableClient;
     private IAuditableCommon auditableCommon;
+    private final LocalDate today = LocalDate.now();
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -403,8 +404,8 @@ public class ControlRTC
                 LocalDate lastUpdate = DateConvert.FORMATTER.parse(dateMajFichierRTC, LocalDate::from);
 
                 // Periode entre la dernière mise à jour et aujourd'hui
-                Period periode = Period.between(lastUpdate, Statics.TODAY);
-                Date datePredicat = DateConvert.convertToOldDate(Statics.TODAY.minusDays(periode.getDays()));
+                Period periode = Period.between(lastUpdate, today);
+                Date datePredicat = DateConvert.convertToOldDate(today.minusDays(periode.getDays()));
 
                 // Prédicat des lots qui ont été modifiés depuis la dernière mise à jour
                 IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(datePredicat);

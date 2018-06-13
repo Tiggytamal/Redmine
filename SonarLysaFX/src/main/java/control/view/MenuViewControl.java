@@ -163,17 +163,18 @@ public class MenuViewControl extends ViewControl
     @FXML
     public void aide()
     {
-        Alert alert = new Alert(AlertType.INFORMATION);
+        Alert alert = new Alert(AlertType.NONE);
         alert.initStyle(StageStyle.UTILITY);
         alert.setTitle("Aide");
         alert.setHeaderText(null);
         alert.setContentText(null);
         WebView webView = new WebView();
-        URL url = this.getClass().getResource("/resources/aide/aide.html");
+        URL url = this.getClass().getResource("/resources/aide/menu.html");
         webView.getEngine().load(url.toString());
         webView.setPrefSize(640 , 480);
         alert.setResizable(true);
         alert.getDialogPane().setContent(webView);
+        alert.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
         alert.show();
     }
 

@@ -1,7 +1,5 @@
 package utilities;
 
-import java.time.LocalDate;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,8 +59,6 @@ public class Statics
     public static final String NL = System.getProperty("line.separator");
     /** Indiqe une anomalie avec un problème de sécurité */
     public static final String SECURITEKO = "X";
-    /** Date du jour */
-    public static final LocalDate TODAY = LocalDate.now();
     /** Mois de janvier */
     public static final String JANVIER = "Janvier";
     /** Mois de janvier */

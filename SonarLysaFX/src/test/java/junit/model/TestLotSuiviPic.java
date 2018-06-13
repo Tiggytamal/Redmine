@@ -1,15 +1,15 @@
 package junit.model;
 
 import static org.junit.Assert.assertEquals;
-import static utilities.Statics.TODAY;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.JunitBase;
 import model.LotSuiviPic;
 import model.ModelFactory;
 
-public class TestLotSuiviPic
+public class TestLotSuiviPic extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -114,8 +114,8 @@ public class TestLotSuiviPic
         assertEquals(null, lotSUiviPic.getBuild());
         
         // Test setter et getter
-        lotSUiviPic.setBuild(TODAY);
-        assertEquals(TODAY, lotSUiviPic.getBuild());       
+        lotSUiviPic.setBuild(today);
+        assertEquals(today, lotSUiviPic.getBuild());       
     }
     
     @Test
@@ -125,8 +125,8 @@ public class TestLotSuiviPic
         assertEquals(null, lotSUiviPic.getDevtu());
         
         // Test setter et getter
-        lotSUiviPic.setDevtu(TODAY);
-        assertEquals(TODAY, lotSUiviPic.getDevtu());       
+        lotSUiviPic.setDevtu(today);
+        assertEquals(today, lotSUiviPic.getDevtu());       
     }
     
     @Test
@@ -136,8 +136,8 @@ public class TestLotSuiviPic
         assertEquals(null, lotSUiviPic.getTfon());
         
         // Test setter et getter
-        lotSUiviPic.setTfon(TODAY);
-        assertEquals(TODAY, lotSUiviPic.getTfon());       
+        lotSUiviPic.setTfon(today);
+        assertEquals(today, lotSUiviPic.getTfon());       
     }
     
     @Test
@@ -147,8 +147,8 @@ public class TestLotSuiviPic
         assertEquals(null, lotSUiviPic.getVmoe());
         
         // Test setter et getter
-        lotSUiviPic.setVmoe(TODAY);
-        assertEquals(TODAY, lotSUiviPic.getVmoe());       
+        lotSUiviPic.setVmoe(today);
+        assertEquals(today, lotSUiviPic.getVmoe());       
     }
     
     @Test
@@ -158,8 +158,8 @@ public class TestLotSuiviPic
         assertEquals(null, lotSUiviPic.getVmoa());
         
         // Test setter et getter
-        lotSUiviPic.setVmoa(TODAY);
-        assertEquals(TODAY, lotSUiviPic.getVmoa());       
+        lotSUiviPic.setVmoa(today);
+        assertEquals(today, lotSUiviPic.getVmoa());       
     }
     
     @Test
@@ -169,8 +169,8 @@ public class TestLotSuiviPic
         assertEquals(null, lotSUiviPic.getLivraison());
         
         // Test setter et getter
-        lotSUiviPic.setLivraison(TODAY);
-        assertEquals(TODAY, lotSUiviPic.getLivraison());       
+        lotSUiviPic.setLivraison(today);
+        assertEquals(today, lotSUiviPic.getLivraison());       
     }
     
     /*---------- METHODES PRIVEES ----------*/

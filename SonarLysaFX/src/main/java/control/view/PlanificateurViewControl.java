@@ -1,7 +1,8 @@
 package control.view;
 
-import static utilities.Statics.TODAY;
 import static utilities.Statics.proprietesXML;
+
+import java.time.LocalDate;
 
 import javax.xml.bind.JAXBException;
 
@@ -72,6 +73,7 @@ public class PlanificateurViewControl extends ViewControl
     private ControlJob control;
     private TimeSpinner spinner;
     private Planificateur planificateur;
+    private final LocalDate today = LocalDate.now();
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -177,12 +179,12 @@ public class PlanificateurViewControl extends ViewControl
         hboxPane.getChildren().add(spinner);
         
         // Gestion des cases à cocher
-        if (planificateur.getAnnees().contains(String.valueOf(TODAY.getYear() + 1)))
+        if (planificateur.getAnnees().contains(String.valueOf(today.getYear() + 1)))
                 suivanteBox.setSelected(true);
         else
             suivanteBox.setSelected(false);
         
-        if (planificateur.getAnnees().contains(String.valueOf(TODAY.getYear() - 1)))
+        if (planificateur.getAnnees().contains(String.valueOf(today.getYear() - 1)))
                 precedenteBox.setSelected(true);
         else
             precedenteBox.setSelected(false);

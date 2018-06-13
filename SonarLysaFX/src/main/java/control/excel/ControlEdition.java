@@ -1,9 +1,8 @@
 package control.excel;
 
-import static utilities.Statics.TODAY;
-
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,8 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
 
     private static final String CHC = "CHC";
     private static final String CDM = "CDM";
-
+    private final LocalDate today = LocalDate.now();
+    
     /*---------- CONSTRUCTEURS ----------*/
 
     /**
@@ -57,7 +57,7 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
 
         Sheet sheet = wb.getSheetAt(0);
 
-        int year = TODAY.getYear();
+        int year = today.getYear();
         List<String> annees = Arrays.asList(String.valueOf(year), String.valueOf(year + 1), String.valueOf(year - 1));
 
         // Itération sur toutes les lignes sauf la première. ON enregistre l'édition si le libelle correspond à une CHC

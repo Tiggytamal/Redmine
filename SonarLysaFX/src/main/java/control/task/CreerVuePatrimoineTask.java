@@ -1,7 +1,6 @@
 package control.task;
 
-import static utilities.Statics.TODAY;
-
+import java.time.LocalDate;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ public class CreerVuePatrimoineTask extends SonarTask
     
     private String key;
     public static final String TITRE = "Vue Patrimoine";
+    private final LocalDate today = LocalDate.now();
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -59,8 +59,8 @@ public class CreerVuePatrimoineTask extends SonarTask
         TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
         
         // Clef et nom de la vue
-        key = "vue_patrimoine_" + TODAY.getYear() + "_S" + TODAY.get(woy);
-        String nom = "Vue patrimoine " + TODAY.getYear() + " S" + TODAY.get(woy);
+        key = "vue_patrimoine_" + today.getYear() + "_S" + today.get(woy);
+        String nom = "Vue patrimoine " + today.getYear() + " S" + today.get(woy);
         
         // Récupération des composants
         List<Projet> composants = new ArrayList<>(recupererComposantsSonar().values());

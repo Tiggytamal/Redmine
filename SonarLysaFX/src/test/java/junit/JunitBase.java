@@ -1,5 +1,7 @@
 package junit;
 
+import java.time.LocalDate;
+
 import org.powermock.reflect.Whitebox;
 
 import control.xml.ControlXML;
@@ -19,6 +21,7 @@ public abstract class JunitBase
     protected static final ProprietesXML proprietes = new ControlXML().recupererXMLResources(ProprietesXML.class);
     protected static final FichiersXML fichiers = new ControlXML().recupererXMLResources(FichiersXML.class);
     protected static final Info info = new ControlXML().recupererXMLResources(Info.class);
+    protected final LocalDate today = LocalDate.now();
     
     protected JunitBase()
     {

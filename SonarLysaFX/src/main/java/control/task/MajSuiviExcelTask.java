@@ -109,7 +109,7 @@ public class MajSuiviExcelTask extends SonarTask
                 majFichierSuiviExcelCOBOL();
                 break;
 
-            case DOUBLE:
+            case MULTI:
                 traitementSuiviExcelToutFichiers();
                 break;
         }
@@ -598,7 +598,7 @@ public class MajSuiviExcelTask extends SonarTask
     {
         SUIVI("Maj Fichier de Suivi JAVA"), 
         DATASTAGE("Maj Fichier de Suivi DataStage"), 
-        DOUBLE("Maj Fichiers de Suivi"),
+        MULTI("Maj Fichiers de Suivi"),
         COBOL("Maj Fichier de Suivi COBOL");
 
         private String string;

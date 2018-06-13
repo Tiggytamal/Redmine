@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static utilities.Statics.TODAY;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.JunitBase;
 import model.Anomalie;
 import model.InfoClarity;
 import model.LotSuiviRTC;
@@ -21,7 +21,7 @@ import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
 
-public class TestAnomalie
+public class TestAnomalie extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -410,8 +410,8 @@ public class TestAnomalie
         assertEquals(null, ano.getDateCreation());
         
         // Test setter et getter
-        ano.setDateCreation(TODAY);
-        assertEquals(TODAY, ano.getDateCreation());       
+        ano.setDateCreation(today);
+        assertEquals(today, ano.getDateCreation());       
     }
     
     @Test
@@ -421,8 +421,8 @@ public class TestAnomalie
         assertEquals(null, ano.getDateDetection());
         
         // Test setter et getter
-        ano.setDateDetection(TODAY);
-        assertEquals(TODAY, ano.getDateDetection());       
+        ano.setDateDetection(today);
+        assertEquals(today, ano.getDateDetection());       
     }
     
     @Test
@@ -432,8 +432,8 @@ public class TestAnomalie
         assertEquals(null, ano.getDateRelance());
         
         // Test setter et getter
-        ano.setDateRelance(TODAY);
-        assertEquals(TODAY, ano.getDateRelance());       
+        ano.setDateRelance(today);
+        assertEquals(today, ano.getDateRelance());       
     }
     
     /* TEST COMMENTAIRES */

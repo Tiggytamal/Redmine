@@ -97,6 +97,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     private static final String RELEASE = "RELEASE";
     private String lienslots;
     private String liensAnos;
+    private final LocalDate today = LocalDate.now();
 
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
@@ -437,7 +438,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             {
                 ano.setAction(null);
                 ano.setNumeroAnomalie(numeroAno);
-                ano.setDateCreation(Statics.TODAY);
+                ano.setDateCreation(today);
                 ano.calculTraitee();
                 logger.info("Création anomalie " + numeroAno + " pour le lot " + anoLot);
             }
@@ -682,9 +683,10 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             ano.setDateDetection(LocalDate.now());
 
             // Création de la ligne
-            if (mapAnoCloses.keySet().contains(ano.getLot()))
+            if (mapAnoCloses.keySet().contains(ano.getLot()) && ano.getEtatLot() != EtatLot.EDITION && ano.getEtatLot() != EtatLot.TERMINE)
             {
                 Anomalie anoClose = mapAnoCloses.get(ano.getLot());
+                ano.setDateDetection(today);
                 ano.setDateCreation(anoClose.getDateCreation());
                 ano.setDateRelance(anoClose.getDateRelance());
                 ano.setRemarque(anoClose.getRemarque());

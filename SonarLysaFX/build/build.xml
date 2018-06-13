@@ -290,6 +290,11 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
+			<fileset dir="D:\REPO\P\.m2\repository\com\sun\mail\javax.mail\1.6.1">
+				<filename name="javax.mail-1.6.1.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="D:\REPO\P\.m2\repository\org\glassfish\jersey\core\jersey-client\2.26">
 				<filename name="jersey-client-2.26.jar"/>
 			</fileset>
@@ -743,12 +748,17 @@
 		<mkdir dir="project" />
 		<copy todir="project">
 			<fileset dir="D:\git\Redmine\SonarLysaFX">
-				<include name="test\java/**" />
+				<include name="src\main\java/**" />
 			</fileset>
 		</copy>
 		<copy todir="project">
 			<fileset dir="D:\git\Redmine\SonarLysaFX">
-				<include name="main\java/**" />
+				<include name="src\test\java/**" />
+			</fileset>
+		</copy>
+		<copy todir="project">
+			<fileset dir="D:\git\Redmine\SonarLysaFX">
+				<include name="src\main\resources/**" />
 			</fileset>
 		</copy>
 	
@@ -849,6 +859,7 @@
 				<include name="slf4j-simple-1.6.4.jar"/>
 				<include name="httpcore-ab-4.4.1-6.0.2.jar"/>
 				<include name="osgi-resource-locator-1.0.1.jar"/>
+				<include name="javax.mail-1.6.1.jar"/>
 				<include name="com.ibm.team.connector.scm.client_3.0.1100.v20151207_2315-6.0.2.jar"/>
 				<include name="com.ibm.team.workitem.api.common_3.1.1000.v20151219_0043-6.0.2.jar"/>
 				<include name="com.ibm.team.repository.common.serialize_1.2.3000.v20160308_1839-6.0.2.jar"/>
@@ -914,12 +925,17 @@
 	
 		<!-- Copy project sources itself -->
 		<copy todir="build/src">
-			<fileset dir="project/test/java">
+			<fileset dir="project/src/test/java">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
 		<copy todir="build/src">
-			<fileset dir="project/main/java">
+			<fileset dir="project/src/main/resources">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="build/src">
+			<fileset dir="project/src/main/java">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
@@ -934,10 +950,13 @@
 	
 		<!-- Copy over none Java-Files -->
 		<copy todir="build/classes">
-		<fileset dir="project/test/java">
+		<fileset dir="project/src/test/java">
 			<exclude name="**/*.java"/>
 		</fileset>
-		<fileset dir="project/main/java">
+		<fileset dir="project/src/main/resources">
+			<exclude name="**/*.java"/>
+		</fileset>
+		<fileset dir="project/src/main/java">
 			<exclude name="**/*.java"/>
 		</fileset>
 		</copy>
@@ -965,7 +984,7 @@
 	
 		<fx:application id="fxApplication"
 			name="SonarLysa"
-			mainClass="application.Main"
+			mainClass="application.application.Main"
 			toolkit="fx"
 		/>
 	

@@ -1,5 +1,6 @@
 package control.view;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.enums.CHCouCDM;
-import utilities.Statics;
 import utilities.TechnicalException;
 
 public class MaintenanceViewControl extends ViewControl
@@ -41,6 +41,7 @@ public class MaintenanceViewControl extends ViewControl
 
     private CHCouCDM chccdm;
     private String titreTask;
+    private final LocalDate today = LocalDate.now();
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -91,11 +92,11 @@ public class MaintenanceViewControl extends ViewControl
     {
         // Création de la liste des annèes
         List<String> annees = new ArrayList<>();
-        annees.add(String.valueOf(Statics.TODAY.getYear()));
+        annees.add(String.valueOf(today.getYear()));
         if (suivante.isSelected())
-            annees.add(String.valueOf(Statics.TODAY.getYear() + 1));
+            annees.add(String.valueOf(today.getYear() + 1));
         if (precedente.isSelected())
-            annees.add(String.valueOf(Statics.TODAY.getYear() - 1));
+            annees.add(String.valueOf(today.getYear() - 1));
 
         // Lancement de la task
         CreerVueCHCCDMTask task = new CreerVueCHCCDMTask(annees, chccdm);

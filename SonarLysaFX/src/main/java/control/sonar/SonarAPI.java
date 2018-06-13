@@ -426,7 +426,7 @@ public class SonarAPI
      */
     public void supprimerProjet(Vue vue, boolean erreur)
     {
-        if (Vue.controleVue(vue))
+        if (!Vue.controleVue(vue))
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerProjet a son argument nul");
 
         supprimerProjet(vue.getKey(), erreur);

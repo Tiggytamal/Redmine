@@ -1,7 +1,6 @@
 package model;
 
-import static utilities.Statics.TODAY;
-
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,7 @@ public class Planificateur implements Modele
     private boolean active;
     private LocalTime heure;
     private List<String> annees;
+    private final LocalDate today = LocalDate.now();
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -175,8 +175,8 @@ public class Planificateur implements Modele
     {
         if (annees == null)
             annees = new ArrayList<>();
-        if (!annees.contains(String.valueOf(TODAY.getYear())))
-            annees.add(String.valueOf(TODAY.getYear()));
+        if (!annees.contains(String.valueOf(today.getYear())))
+            annees.add(String.valueOf(today.getYear()));
         return annees;
     }
 
@@ -189,8 +189,8 @@ public class Planificateur implements Modele
     {
         if (annees == null)
             annees = new ArrayList<>();
-        if (!annees.contains(String.valueOf(TODAY.getYear() - 1)))
-            annees.add(String.valueOf(TODAY.getYear() - 1));
+        if (!annees.contains(String.valueOf(today.getYear() - 1)))
+            annees.add(String.valueOf(today.getYear() - 1));
         return annees;
     }
 
@@ -203,8 +203,8 @@ public class Planificateur implements Modele
     {
         if (annees == null)
             annees = new ArrayList<>();
-        if (!annees.contains(String.valueOf(TODAY.getYear() + 1)))
-            annees.add(String.valueOf(TODAY.getYear() + 1));
+        if (!annees.contains(String.valueOf(today.getYear() + 1)))
+            annees.add(String.valueOf(today.getYear() + 1));
         return annees;
     }
 }

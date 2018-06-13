@@ -2,17 +2,18 @@ package junit.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static utilities.Statics.TODAY;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.JunitBase;
 import model.ModelFactory;
 import model.Planificateur;
 
-public class TestPlanificateur
+public class TestPlanificateur extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -20,14 +21,15 @@ public class TestPlanificateur
     private String anneeEnCours;
     private String prec;
     private String suiv;
+    private final LocalDate today = LocalDate.now();
     
     /*---------- CONSTRUCTEURS ----------*/
     
     public TestPlanificateur()
     {
-        anneeEnCours = String.valueOf(TODAY.getYear());
-        prec = String.valueOf(TODAY.getYear() - 1);
-        suiv = String.valueOf(TODAY.getYear() + 1);
+        anneeEnCours = String.valueOf(today.getYear());
+        prec = String.valueOf(today.getYear() - 1);
+        suiv = String.valueOf(today.getYear() + 1);
     }
     
     @Before

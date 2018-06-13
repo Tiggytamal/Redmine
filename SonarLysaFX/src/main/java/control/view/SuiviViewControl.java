@@ -19,7 +19,9 @@ public class SuiviViewControl extends ViewControl
     @FXML
     private RadioButton radioDataStage;
     @FXML
-    private RadioButton radioDouble;
+    private RadioButton radioMulti;
+    @FXML
+    private RadioButton radioCobol;
     @FXML
     private ToggleGroup toggleGroup;
     @FXML
@@ -59,9 +61,14 @@ public class SuiviViewControl extends ViewControl
                 typeMaj = TypeMaj.DATASTAGE;
                 break;
                 
-            case "radioDouble" :
+            case "radioCobol" :
                 executer.setDisable(false);
-                typeMaj = TypeMaj.DOUBLE;
+                typeMaj = TypeMaj.COBOL;
+                break;
+                
+            case "radioMulti" :
+                executer.setDisable(false);
+                typeMaj = TypeMaj.MULTI;
                 break;
                 
             default :

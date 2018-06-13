@@ -3,11 +3,11 @@ package junit.control.excel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static utilities.Statics.TODAY;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +44,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     private static final String AC = "Anomalies closes";
     private static final String CREERLIGNESQ = "creerLigneSQ";
     private static final String AJOUTERLIENS = "ajouterLiens";
+    private final LocalDate today = LocalDate.now();
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -379,7 +380,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         anoAajouter.add(ano);
         Whitebox.invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
         assertTrue(sheet.getPhysicalNumberOfRows() == 1);
-        assertEquals(TODAY, ano.getDateDetection());
+        assertEquals(today, ano.getDateDetection());
         assertEquals("", ano.getSecurite());
         assertEquals(SNAPSHOT, ano.getVersion());
 
@@ -388,14 +389,14 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         lotsRelease.add("295711");
         Whitebox.invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
         assertTrue(sheet.getPhysicalNumberOfRows() == 2);
-        assertEquals(TODAY, ano.getDateDetection());
+        assertEquals(today, ano.getDateDetection());
 
         // Test 4. close
         Anomalie anoClose = ModelFactory.getModel(Anomalie.class);
         anoClose.setNumeroAnomalie(307402);
         anoClose.setLot(LOT);
-        anoClose.setDateCreation(TODAY);
-        anoClose.setDateRelance(TODAY);
+        anoClose.setDateCreation(today);
+        anoClose.setDateRelance(today);
         anoClose.setRemarque("remarque");
         mapAnoCloses.put(LOT, anoClose);
         Whitebox.invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);

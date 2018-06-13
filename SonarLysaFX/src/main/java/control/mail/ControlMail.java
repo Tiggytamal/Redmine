@@ -1,5 +1,6 @@
 package control.mail;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class ControlMail
     private Properties props;
     private Map<String, EtatLot> lotsMaJ;
     private Map<TypeInfoMail, List<String>> mapInfos;
+    private final LocalDate today = LocalDate.now();
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -76,7 +78,7 @@ public class ControlMail
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adressesEnvoi));
 
             // ---- 5. Sujet du mail. -----
-            message.setSubject("Rapport MAJ fichier Qualimétrie" + Statics.TODAY);
+            message.setSubject("Rapport MAJ fichier Qualimétrie" + today);
 
             // ----- 6. Corps du mail. -----
             message.setText("Mail test ");

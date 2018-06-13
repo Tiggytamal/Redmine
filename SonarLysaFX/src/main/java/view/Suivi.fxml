@@ -24,7 +24,8 @@
 		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
 			<RadioButton fx:id="radioSuivi" text="Suivi JAVA" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 			<RadioButton fx:id="radioDataStage" text="Suivi DataStage" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
-			<RadioButton fx:id="radioDouble" text="JAVA et DataStage" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioCobol" text="Suivi COBOL" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioMulti" text="JAVA et DataStage" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 		</VBox>
 
 

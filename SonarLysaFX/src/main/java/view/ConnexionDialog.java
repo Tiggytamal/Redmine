@@ -35,7 +35,7 @@ public class ConnexionDialog extends Dialog<Pair<String, String>>
         setHeaderText(null);
 
         // Icône
-        setGraphic(new ImageView(this.getClass().getResource("/resources/login.jpg").toString()));
+        setGraphic(new ImageView(this.getClass().getResource("/login.jpg").toString()));
 
         // Boutons
         ButtonType loginButtonType = new ButtonType("Login", ButtonData.OK_DONE);
