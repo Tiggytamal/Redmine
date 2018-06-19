@@ -20,6 +20,7 @@ public class Info implements Modele, XML
 
     private String pseudo;
     private String motDePasse;
+    private String nom;
     private static final String NOMFICHIER = "\\info.xml";
     private static final String RESOURCE = "/info.xml";
 
@@ -78,5 +79,15 @@ public class Info implements Modele, XML
     public void setMotDePasse(String motDePasse)
     {
         this.motDePasse = motDePasse;
+    }
+    
+    public String getNom()
+    {
+        return nom;
+    }
+
+    public void setNom(String nom)
+    {
+        this.nom = nom;
     }
 }

@@ -28,7 +28,8 @@ public class ColonneView<T extends Enum<T> & TypeCol> extends VBox implements Vi
     {
         this.typeCol = typeCol;
         ObservableList<Node> children = getChildren();
-
+        getStylesheets().add("application.css");
+        getStyleClass().add("bgimage");
         HBox box = new HBox();
 
         // Label

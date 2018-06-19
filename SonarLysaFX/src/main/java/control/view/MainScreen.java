@@ -52,13 +52,13 @@ public class MainScreen extends Application
         
         // Menu de l'application
         final HBox menu = FXMLLoader.load(getClass().getResource("/view/Menu.fxml"));
-
+        
         // Ajout au panneau principal
         root.setTop(menu);
 
         // Affichage de l'interface
         final Scene scene = new Scene(root, 640, 480);
-        scene.getStylesheets().add("/application/application.css");
+        scene.getStylesheets().add("application.css");
         trayIcon.setStage(stage);
         stage.setTitle("Sonar Lysa");
         stage.setResizable(true);

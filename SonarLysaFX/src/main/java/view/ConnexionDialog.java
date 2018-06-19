@@ -11,7 +11,6 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
@@ -33,9 +32,7 @@ public class ConnexionDialog extends Dialog<Pair<String, String>>
     {
         setTitle("Connexion");
         setHeaderText(null);
-
-        // Icône
-        setGraphic(new ImageView(this.getClass().getResource("/login.jpg").toString()));
+        getDialogPane().getStylesheets().add("application.css");
 
         // Boutons
         ButtonType loginButtonType = new ButtonType("Login", ButtonData.OK_DONE);

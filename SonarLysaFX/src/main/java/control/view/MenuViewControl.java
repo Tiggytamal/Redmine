@@ -1,8 +1,11 @@
 package control.view;
 
+import static utilities.Statics.info;
+
 import java.io.IOException;
-import java.net.URL;
 import java.util.Optional;
+
+import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
 import control.sonar.SonarAPI;
@@ -91,12 +94,12 @@ public class MenuViewControl extends ViewControl
     public void deco()
     {
         mensuel.setDisable(true);
-        options.setDisable(true);
+        majvues.setDisable(true);
         rtc.setDisable(true);
         planificateur.setDisable(true);
         autres.setDisable(true);
-        Statics.info.setPseudo(null);
-        Statics.info.setMotDePasse(null);
+        info.setPseudo(null);
+        info.setMotDePasse(null);
         box.getChildren().remove(deConnexion);
         box.getChildren().add(connexion);
         border.setCenter(null);
@@ -105,12 +108,13 @@ public class MenuViewControl extends ViewControl
     @Override
     public void afficher(ActionEvent event) throws IOException
     {
-        if (!Statics.info.controle())
-            throw new FunctionalException(Severity.ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
         String id = "";
         Object source = event.getSource();
         if (source instanceof MenuItem)
             id = ((MenuItem) source).getId();
+        
+        if (!info.controle() && !id.equals("options"))
+            throw new FunctionalException(Severity.ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
 
         switch (id)
         {
@@ -161,21 +165,21 @@ public class MenuViewControl extends ViewControl
     }
 
     @FXML
-    public void aide()
+    public void aide() throws TeamRepositoryException
     {
-        Alert alert = new Alert(AlertType.NONE);
-        alert.initStyle(StageStyle.UTILITY);
-        alert.setTitle("Aide");
-        alert.setHeaderText(null);
-        alert.setContentText(null);
+        Alert aide = new Alert(AlertType.NONE);
+        aide.initStyle(StageStyle.UTILITY);
+        aide.getDialogPane().getStylesheets().add("application.css");
+        aide.setTitle("Aide");
+        aide.setHeaderText(null);
+        aide.setContentText(null);
         WebView webView = new WebView();
-        URL url = this.getClass().getResource("/resources/aide/menu.html");
-        webView.getEngine().load(url.toString());
+        webView.getEngine().load(getClass().getResource("/aide/menu.html").toString());
         webView.setPrefSize(640 , 480);
-        alert.setResizable(true);
-        alert.getDialogPane().setContent(webView);
-        alert.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
-        alert.show();
+        aide.setResizable(true);
+        aide.getDialogPane().setContent(webView);
+        aide.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
+        aide.show();
     }
 
     /* ---------- METHODES PRIVEES ---------- */
@@ -189,19 +193,21 @@ public class MenuViewControl extends ViewControl
     private void testMdP(String pseudo, String mdp)
     {
         // Sauvegarde informations de connexion
-        Statics.info.setPseudo(pseudo);
-        Statics.info.setMotDePasse(mdp);
+        info.setPseudo(pseudo);
+        info.setMotDePasse(mdp);
 
         // Contrôle connexion RTC et SonarQube
         if (ControlRTC.INSTANCE.connexion() && SonarAPI.INSTANCE.verificationUtilisateur())
         {
             mensuel.setDisable(false);
-            options.setDisable(false);
+            majvues.setDisable(false);
             planificateur.setDisable(false);
             autres.setDisable(false);
             suivi.setDisable(false);
             maintenance.setDisable(false);
             rtc.setDisable(false);
+            info.setNom(ControlRTC.INSTANCE.recupNomContributorConnecte());
+            deConnexion.setText(info.getNom());
 
             box.getChildren().remove(connexion);
             box.getChildren().add(deConnexion);

@@ -399,7 +399,7 @@ public class SonarAPI
      */
     public Status creerVue(Vue vue)
     {
-        if (Vue.controleVue(vue))
+        if (!Vue.controleVue(vue))
             return Status.BAD_REQUEST;
 
         Response response = appelWebservicePOST(VIEWSCREATE, vue);
@@ -458,7 +458,7 @@ public class SonarAPI
      */
     public void supprimerVue(Vue vue, boolean erreur)
     {
-        if (Vue.controleVue(vue))
+        if (!Vue.controleVue(vue))
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerVue a son argument nul");
 
         supprimerVue(vue.getKey(), erreur);
@@ -503,7 +503,7 @@ public class SonarAPI
     {
         for (Vue vue : listeViews)
         {
-            if (Vue.controleVue(vue))
+            if (!Vue.controleVue(vue))
                 ajouterSousVue(vue, parent);
         }
     }

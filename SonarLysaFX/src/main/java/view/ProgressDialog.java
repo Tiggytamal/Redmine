@@ -51,6 +51,7 @@ public class ProgressDialog extends Dialog<Boolean>
         setHeaderText(null);
         setResizable(true);
         initModality(Modality.NONE);
+        getDialogPane().getStylesheets().add("application.css");
 
         // Gridpane
         GridPane grid = new GridPane();

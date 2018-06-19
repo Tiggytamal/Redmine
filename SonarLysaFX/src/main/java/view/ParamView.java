@@ -25,14 +25,17 @@ public class ParamView extends VBox implements ViewXML<Param, TextField>
 
     public ParamView(Param typeParam, String texte)
     {
+        // Initialisation + style CSS
         this.typeParam = typeParam;
         ObservableList<Node> rootChildren = getChildren();
+        getStylesheets().add("application.css");
+        getStyleClass().add("bgimage");
 
         HBox box = new HBox();
 
         // Label
         Label label = new Label(typeParam.toString() + Statics.DEUXPOINTS);
-        label.setPrefWidth(200);
+        label.setPrefWidth(250);
         box.getChildren().add(label);
 
         // TextField

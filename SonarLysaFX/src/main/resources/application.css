@@ -1,0 +1,83 @@
+.bar {
+	-fx-background-color: linear-gradient(#61a2b1, #2A5058);
+	-fx-min-height: 31px;
+}
+
+.bgimage{
+    -fx-background-image: url("background.jpg");
+}
+
+.button {
+    -fx-text-fill: white;
+    -fx-font-family: "Comic Sans MS";
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-effect: dropshadow( three-pass-box , rgba(0.0,0.0,0.0,0.6) , 5.0, 0.0 , 0.0 , 1.0 );
+    -fx-font-size: 14.0;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+
+.button.connexion {
+    -fx-effect: none;
+    -fx-background-radius: 0;
+
+}
+
+.label {
+    -fx-text-fill: white;
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 14.0;
+}
+
+.menu-item 
+{ 
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+	-fx-text-fill: white;
+}
+
+.menu-item:hover
+{ 
+	-fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+
+.menu
+{ 
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+}
+
+.menu:hover {
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+
+.radio-button {
+    -fx-text-fill: white;
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 14.0;
+}
+
+.root {
+    -fx-background-image: url("background.jpg");
+}
+
+.scroll-pane.fit {
+    -fx-fit-to-width: true;
+}
+
+.scroll-pane.fitboth {
+    -fx-fit-to-width: true;
+    -fx-fit-to-height: true;
+}
+
+.split-pane {
+    -fx-background-image: url("background.jpg");
+}
+
+.tree-view:focused .tree-cell:filled:selected {
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+}
+
+.tree-cell:filled:selected{
+    -fx-background-color: linear-gradient(#c1dbe1, #8cbdc8);
+}

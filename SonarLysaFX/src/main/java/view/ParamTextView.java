@@ -29,8 +29,11 @@ public class ParamTextView extends VBox
 
     public ParamTextView(ParamSpec param)
     {
+        // Initialisation + style CSS
         this.param = param;
         ObservableList<Node> rootChildren = getChildren();
+        getStylesheets().add("application.css");
+        getStyleClass().add("bgimage");
 
         // ----- 1. Label -----
         Label label = new Label(param.toString() + Statics.DEUXPOINTS);

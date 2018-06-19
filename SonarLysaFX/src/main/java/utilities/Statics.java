@@ -36,7 +36,7 @@ public class Statics
     /** Largeur d'un caractère */
     public static final double CARAC_WIDTH = 7;
     
-    public static final String RESOURCESTEST = "/resourcesTest/";
+    public static final String RESOURCESTEST = "/";
     
     /* ----- loggers ----- */
     

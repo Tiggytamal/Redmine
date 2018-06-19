@@ -221,6 +221,7 @@ public class ControlRTC
     public int creerDefect(Anomalie ano)
     {
         IWorkItem workItem = null;
+        
         try
         {
             IProjectArea projet = pareas.get(ano.getProjetRTC());
@@ -284,6 +285,15 @@ public class ControlRTC
         return null;
     }
 
+    /**
+     * Retourne le nom de la personne connecté à RTC.
+     * @return
+     */
+    public String recupNomContributorConnecte()
+    {
+        return repo.loggedInContributor().getName();
+    }
+    
     /**
      * Retourne un Contributor depuis le nom d'une personne
      * 

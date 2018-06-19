@@ -24,8 +24,11 @@ public class ParamBoolView extends VBox implements ViewXML<ParamBool, CheckBox>
 
     public ParamBoolView(ParamBool typeBool, Boolean bool)
     {
+        // Initialisation + style CSS
         this.typeBool = typeBool;
         ObservableList<Node> rootChildren = getChildren();
+        getStylesheets().add("application.css");
+        getStyleClass().add("bgimage");
 
         HBox box = new HBox();
 

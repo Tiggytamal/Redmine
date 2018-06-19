@@ -74,8 +74,8 @@
 				</VBox>
 
 				<!-- Paramètre -->
-				<ScrollPane fx:id="optionsPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
-					<VBox alignment="center">
+				<ScrollPane fx:id="optionsPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" styleClass="fitboth">
+					<VBox alignment="center"  styleClass="bgimage">
 						<padding>
 							<Insets top="10" right="10" bottom="10" left="25" />
 						</padding>
@@ -99,8 +99,8 @@
 				</ScrollPane>
 
 				<!-- Autres Paramètres -->
-				<ScrollPane fx:id="optionsPane2" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
-					<VBox alignment="center">
+				<ScrollPane fx:id="optionsPane2" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" styleClass="fit">
+					<VBox alignment="center"  styleClass="bgimage">
 						<padding>
 							<Insets top="10" right="10" bottom="10" left="25" />
 						</padding>
@@ -118,8 +118,8 @@
 				</ScrollPane>
 
 				<!-- Nom des colonnes -->
-				<ScrollPane fx:id="colonnesPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
-					<VBox alignment="center">
+				<ScrollPane fx:id="colonnesPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" styleClass="fitboth">
+					<VBox alignment="center" styleClass="bgimage">
 						<padding>
 							<Insets top="10" right="10" bottom="10" left="25" />
 						</padding>

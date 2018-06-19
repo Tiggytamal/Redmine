@@ -36,7 +36,7 @@ public class ControlMail
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private static final String SERVEUR = "10.154.159.3";
+    private static final String SERVEUR = "muz10-e1smtp-IN-DC-INT.zres.ztech";
 
     private Message message;
     private String adresseConnecte;

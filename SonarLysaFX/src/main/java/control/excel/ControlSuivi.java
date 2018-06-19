@@ -130,8 +130,10 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         {
             Row row = sheet.getRow(i);
 
-            // Création anomalie
-            retour.add(creerAnodepuisExcel(row));
+            // Création anomalie si la ligne n'est pas vide : lot vide.
+            Anomalie ano = creerAnodepuisExcel(row);
+            if (!ano.getLot().isEmpty())
+            retour.add(ano);
         }
         return retour;
     }

@@ -11,11 +11,11 @@
 
 <HBox fx:id="box" fx:controller="control.view.MenuViewControl" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml">
 	<children>
-		<MenuBar HBox.hgrow="ALWAYS">
+		<MenuBar HBox.hgrow="ALWAYS" styleClass="bar">
 			<menus>
-				<Menu text="Fonctions">
+				<Menu text="Fonctions" >
 					<items>
-						<MenuItem fx:id="mensuel" text="Création Vue MEP/TEP" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="mensuel" text="Création Vue MEP/TEP" onAction="#afficher" styleClass="bar" disable="true" />
 						<MenuItem fx:id="suivi" text="Fichiers de Suivi" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="maintenance" text="Création Vues Maintenance" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="rtc" text="Mise à jour lots RTC" onAction="#afficher" disable="true" />
@@ -24,7 +24,7 @@
 				</Menu>
 				<Menu text="Outils">
 					<items>
-						<MenuItem fx:id="options" text="Options" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="options" text="Options" onAction="#afficher" disable="false" />
 						<MenuItem fx:id="planificateur" text="Planificateur" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="majvues" text="Mise à jour vues" onAction="#majVues" disable="true" />
 						<MenuItem fx:id="aide" text="Aide" onAction="#aide" disable="false" />
@@ -32,8 +32,8 @@
 				</Menu>
 			</menus>
 		</MenuBar>
-		<Button fx:id="connexion" text="Connexion" onAction="#openPopup"/>
-		<Button fx:id="deConnexion" text="Deconnexion" onAction="#deco"/>
+		<Button fx:id="connexion" text="Connexion" styleClass="connexion" onAction="#openPopup"/>
+		<Button fx:id="deConnexion" text="Deconnexion" styleClass="connexion" onAction="#deco"/>
 	</children>
 </HBox>
 

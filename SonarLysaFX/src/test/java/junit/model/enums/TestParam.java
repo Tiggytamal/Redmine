@@ -12,7 +12,7 @@ public class TestParam
     @Test
     public void testSize()
     {
-        assertEquals(11, Param.values().length);
+        assertEquals(12, Param.values().length);
     }
     
     @Test
@@ -29,5 +29,6 @@ public class TestParam
         assertFalse(Param.URLSONAR.toString().isEmpty());
         assertFalse(Param.URLRTC.toString().isEmpty());
         assertFalse(Param.RTCLOTCHC.toString().isEmpty());
+        assertFalse(Param.NOMFICHIERCOBOL.toString().isEmpty());
     }
 }
