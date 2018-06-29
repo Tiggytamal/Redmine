@@ -13,7 +13,7 @@ import view.ParamView;
 public class TestParamView
 {
     @Test
-    public void paramView()
+    public void testParamView()
     {
         String texte = "a";
         ParamView view = new ParamView(Param.ABSOLUTEPATH, texte);

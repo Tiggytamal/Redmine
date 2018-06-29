@@ -34,14 +34,14 @@ public class TestCommentaire
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getKey()
+    public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
         assertNull(modeleNull.getKey());
     }
     
     @Test
-    public void setKey()
+    public void testSetKey()
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
@@ -50,14 +50,14 @@ public class TestCommentaire
     }
     
     @Test
-    public void getLogin()
+    public void testGetLogin()
     {
         assertEquals(LOGIN, modele.getLogin());
         assertNull(modeleNull.getLogin());
     }
     
     @Test
-    public void setLogin()
+    public void testSetLogin()
     {
         modele.setLogin(NEWVAL);
         assertEquals(NEWVAL, modele.getLogin());
@@ -66,14 +66,14 @@ public class TestCommentaire
     }
     
     @Test
-    public void getHtmlText()
+    public void testGetHtmlText()
     {
         assertEquals(HTMLTEXT, modele.getHtmlText());
         assertNull(modeleNull.getHtmlText());
     }
     
     @Test
-    public void setHtmlText()
+    public void testSetHtmlText()
     {
         modele.setHtmlText(NEWVAL);
         assertEquals(NEWVAL, modele.getHtmlText());
@@ -82,14 +82,14 @@ public class TestCommentaire
     }
     
     @Test
-    public void getMarkdown()
+    public void testGetMarkdown()
     {
         assertEquals(MARKDOWN, modele.getMarkdown());
         assertNull(modeleNull.getMarkdown());
     }
     
     @Test
-    public void setMarkdown()
+    public void testSetMarkdown()
     {
         modele.setMarkdown(NEWVAL);
         assertEquals(NEWVAL, modele.getMarkdown());
@@ -98,14 +98,14 @@ public class TestCommentaire
     }
     
     @Test
-    public void getUpdatable()
+    public void testGetUpdatable()
     {
         assertEquals(UPDATABLE, modele.getUpdatable());
         assertNull(modeleNull.getUpdatable());
     }
     
     @Test
-    public void setUpdatable()
+    public void testSetUpdatable()
     {
         modele.setUpdatable(NEWVAL);
         assertEquals(NEWVAL, modele.getUpdatable());
@@ -114,14 +114,14 @@ public class TestCommentaire
     }
     
     @Test
-    public void getCreatedAt()
+    public void testGetCreatedAt()
     {
         assertEquals(CREATEDAT, modele.getCreatedAt());
         assertNull(modeleNull.getCreatedAt());
     }
     
     @Test
-    public void setCreatedAt()
+    public void testSetCreatedAt()
     {
         modele.setCreatedAt(NEWVAL);
         assertEquals(NEWVAL, modele.getCreatedAt());

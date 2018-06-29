@@ -8,9 +8,11 @@ package model.enums;
  */
 public enum TypeInfoMail 
 {
-    LOTSNONRTC,
     ANOSCREES,
-    ERREURSRTC,
+    ANONEW,
+    ANOABANDON,
+    ANOABANDONRATE,
+    ANOARELANCER,
     CLARITYINCONNU,
     SERVICESSANSRESP;   
 }

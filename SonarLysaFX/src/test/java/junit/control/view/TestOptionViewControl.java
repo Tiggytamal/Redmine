@@ -17,7 +17,7 @@ public class TestOptionViewControl
     }
     
     @Test
-    public void chargerLotsPic()
+    public void testChargerLotsPic()
     {
         // A créer
     }

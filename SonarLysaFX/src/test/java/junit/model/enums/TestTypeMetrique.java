@@ -13,7 +13,7 @@ import model.enums.TypeMetrique;
 public class TestTypeMetrique
 {
     @Test
-    public void from()
+    public void testFrom()
     {
         assertEquals(TypeMetrique.LOT, TypeMetrique.from("lot"));
         assertEquals("lot", TypeMetrique.LOT.toString());
@@ -36,7 +36,7 @@ public class TestTypeMetrique
     }
     
     @Test (expected = IllegalArgumentException.class)
-    public void fromException()
+    public void testFromException()
     {
         TypeMetrique.from("inconnu");
     }
@@ -48,7 +48,7 @@ public class TestTypeMetrique
     }
 
     @Test
-    public void valeurInstanciation() throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    public void testValeurInstanciation() throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         Class<Object> inner = Whitebox.getInnerClassType(TypeMetrique.class, "Valeur");
         Constructor<Object> constructor = Whitebox.getConstructor(inner);

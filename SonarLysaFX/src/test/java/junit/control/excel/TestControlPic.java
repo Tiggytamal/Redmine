@@ -30,14 +30,14 @@ public class TestControlPic extends TestControlExcel<TypeColPic, ControlPic, Map
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void recupDonneesDepuisExcel()
+    public void testRecupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel(map -> map.size() == 1931);
+        testRecupDonneesDepuisExcel(map -> map.size() == 1931);
     }
     
     @Test(expected = FunctionalException.class)
     @Override
-    public void initSheetException() throws Exception
+    public void testInitSheetException() throws Exception
     {
         // Test 2 - feuille nulle
         for(int i = wb.getNumberOfSheets() - 1; i >= 0; i--)
@@ -49,10 +49,10 @@ public class TestControlPic extends TestControlExcel<TypeColPic, ControlPic, Map
     }
     
     @Test
-    public void calculIndiceColonnes() throws Exception
+    public void testCalculIndiceColonnes() throws Exception
     {
         // Test initialisation colonnes. Pour ce fichier, la première colonne ne sert pas.
-        calculIndiceColonnes(0);
+        testCalculIndiceColonnes(0);
     }
     
     /*---------- METHODES PRIVEES ----------*/

@@ -30,38 +30,38 @@ public class TestControlXML
 
     @Test
     @TestInJfxThread
-    public void recuprerParamXML()
+    public void testRecuprerParamXML()
     {
         handler.recupererXMLResources(FichiersXML.class);
         handler.recupererXMLResources(ProprietesXML.class);
     }
 
     @Test
-    public void recupListeAppsDepuisExcel()
+    public void testRecupListeAppsDepuisExcel()
     {
         handler.recupListeAppsDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "liste_applis.xlsx").getFile()));       
     }
 
     @Test
-    public void recupInfosClarityDepuisExcel()
+    public void testRecupInfosClarityDepuisExcel()
     {
         handler.recupInfosClarityDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "Referentiel_Projets.xlsm").getFile()));
     }
 
     @Test
-    public void recupChefServiceDepuisExcel()
+    public void testRecupChefServiceDepuisExcel()
     {
         handler.recupChefServiceDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "Reorg_managers.xlsx").getFile()));
     }
 
     @Test
-    public void recupEditionDepuisExcel()
+    public void testRecupEditionDepuisExcel()
     {
         handler.recupEditionDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "Codification_des_Editions.xlsx").getFile()));
     }
     
     @Test (expected = TechnicalException.class)
-    public void saveInfosException() throws Exception
+    public void testSaveInfosException() throws Exception
     {        
         Whitebox.invokeMethod(handler, "saveInfos", TypeFichier.RESPSERVICE, TypeColChefServ.class, new File("аз&;:["));
     }

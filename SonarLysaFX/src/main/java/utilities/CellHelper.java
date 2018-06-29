@@ -26,11 +26,12 @@ import utilities.enums.Bordure;
  */
 public class CellHelper
 {
-    /* ---------- ATTIBUTES ---------- */
+    /*---------- ATTRIBUTS ----------*/
+    
     private Workbook wb;
     private CreationHelper ch;
 
-    /* ---------- CONSTUCTORS ---------- */
+    /*---------- CONSTRUCTEURS ----------*/
 
     public CellHelper(Workbook wb)
     {
@@ -38,7 +39,7 @@ public class CellHelper
         ch = wb.getCreationHelper();
     }
 
-    /* ---------- METHODS ---------- */
+    /*---------- METHODES PUBLIQUES ----------*/
 
     /**
      * Retourne une map avec tous les styles possible d'une couleur. les Elements à true ont un style centré horizontalement.
@@ -61,57 +62,9 @@ public class CellHelper
             // Création du style
             CellStyle style = wb.createCellStyle();
 
-            // Alignement vertical centré plus lignes fines en bordure
-            style.setVerticalAlignment(VerticalAlignment.CENTER);
-            style.setBorderLeft(BorderStyle.THIN);
-            style.setBorderRight(BorderStyle.THIN);
-            style.setWrapText(true);
-
-            // Choix de la couleur de fond
-            style.setFillForegroundColor(couleur.index);
-            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-            // Switch sur le placement de la cellule, rajout d'une bordure plus épaisse au bord du tableau
-            switch (bordure)
-            {
-                case BAS:
-                    style.setBorderBottom(BorderStyle.THICK);
-                    break;
-
-                case DROITE:
-                    style.setBorderRight(BorderStyle.THICK);
-                    break;
-
-                case GAUCHE:
-                    style.setBorderLeft(BorderStyle.THICK);
-                    break;
-
-                case HAUT:
-                    style.setBorderTop(BorderStyle.THICK);
-                    break;
-
-                case BASDROITE:
-                    style.setBorderRight(BorderStyle.THICK);
-                    style.setBorderBottom(BorderStyle.THICK);
-                    break;
-
-                case BASGAUCHE:
-                    style.setBorderLeft(BorderStyle.THICK);
-                    style.setBorderBottom(BorderStyle.THICK);
-                    break;
-
-                case HAUTDROITE:
-                    style.setBorderTop(BorderStyle.THICK);
-                    style.setBorderRight(BorderStyle.THICK);
-                    break;
-
-                case HAUTGAUCHE:
-                    style.setBorderTop(BorderStyle.THICK);
-                    style.setBorderLeft(BorderStyle.THICK);
-                    break;
-                case VIDE:
-                    break;
-            }
+            // Création du style
+            prepareStyle(style, couleur, bordure);
+            
             retour.put(false, style);
             CellStyle styleC = wb.createCellStyle();
             styleC.cloneStyleFrom(style);
@@ -160,6 +113,7 @@ public class CellHelper
             throw new IllegalArgumentException("La couleur ou la bordure ne peuvent être nulles");
 
         CellStyle style = getStyle(couleur, bordure);
+        
         // Ajout de l'alignement horizontal
         style.setAlignment(alignement);
         return style;
@@ -183,6 +137,64 @@ public class CellHelper
         if (couleur == null || bordure == null)
             throw new IllegalArgumentException("La couleur ou la bordure ne peuvent être nulles");
 
+        // Création du style
+        prepareStyle(style, couleur, bordure);
+        
+        return style;
+    }
+
+    /**
+     * Retourne le style de cellule voulu selon la couleur, sans bordure spécifique
+     * 
+     * @param couleur
+     *          Couleur de fond du style
+     * @return
+     */
+    public CellStyle getStyle(IndexedColors couleur)
+    {
+        return getStyle(couleur, Bordure.VIDE);
+    }
+
+    /**
+     * Rajoute un lien hypertexte à la cellule donnée
+     * @param adresse
+     *          liens hypertexte a ajouter à la cellule
+     * @param cell
+     *          cellule à traiter
+     * @return
+     */
+    public Cell createHyperLink(String adresse, Cell cell)
+    {
+        // Création de l'hyperlink
+        Hyperlink link = ch.createHyperlink(HyperlinkType.URL);
+        link.setAddress(adresse);
+
+        // copie du style de la cellule
+        CellStyle style = wb.createCellStyle();
+        style.cloneStyleFrom(cell.getCellStyle());
+
+        // Création ed la police de caractères
+        Font font = wb.createFont();
+        font.setUnderline(Font.U_SINGLE);
+        font.setColor(IndexedColors.BLUE.index);
+
+        // retour de la cellule
+        style.setFont(font);
+        cell.setHyperlink(link);
+        cell.setCellStyle(style);
+        return cell;
+    }
+    
+    /*---------- METHODES PRIVEES ----------*/
+    
+    /**
+     * Permet de créer un stye avec les informations de couleur et de bordure.
+     * @param style
+     * @param couleur
+     * @param bordure
+     */
+    private void prepareStyle(CellStyle style, IndexedColors couleur, Bordure bordure)
+    {
         // Alignement vertical centré plus ligne fine en bordure
         style.setVerticalAlignment(VerticalAlignment.CENTER);
         style.setBorderLeft(BorderStyle.THIN);
@@ -234,52 +246,6 @@ public class CellHelper
             case VIDE:
                 break;
         }
-        return style;
     }
-
-    /**
-     * Retourne le style de cellule voulu selon la couleur, sans bordure spécifique
-     * 
-     * @param couleur
-     *          Couleur de fond du style
-     * @return
-     */
-    public CellStyle getStyle(IndexedColors couleur)
-    {
-        return getStyle(couleur, Bordure.VIDE);
-    }
-
-    /**
-     * Rajoute un lien hypertexte à la cellule donnée
-     * @param adresse
-     *          liens hypertexte a ajouter à la cellule
-     * @param cell
-     *          cellule à traiter
-     * @return
-     */
-    public Cell createHyperLink(String adresse, Cell cell)
-    {
-        // Création de l'hyperlink
-        Hyperlink link = ch.createHyperlink(HyperlinkType.URL);
-        link.setAddress(adresse);
-
-        // copie du style de la cellule
-        CellStyle style = wb.createCellStyle();
-        style.cloneStyleFrom(cell.getCellStyle());
-
-        // Création ed la police de caractères
-        Font font = wb.createFont();
-        font.setUnderline(Font.U_SINGLE);
-        font.setColor(IndexedColors.BLUE.index);
-
-        // retour de la cellule
-        style.setFont(font);
-        cell.setHyperlink(link);
-        cell.setCellStyle(style);
-        return cell;
-    }
-
-    /* ---------- PRIVATE METHODS ---------- */
-    /* ---------- ACCESS ---------- */
-
+    /*---------- ACCESSEURS ----------*/
 }

@@ -47,14 +47,14 @@ public class TestVue
     }
     
     @Test
-    public void getName()
+    public void testGetName()
     {
         assertEquals(NAME, modele.getName());
         assertNull(modeleNull.getName());
     }
     
     @Test
-    public void setName()
+    public void testSetName()
     {
         modele.setName(NEWVAL);
         assertEquals(NEWVAL, modele.getName());
@@ -63,14 +63,14 @@ public class TestVue
     }
     
     @Test
-    public void getKey()
+    public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
         assertNull(modeleNull.getKey());
     }
     
     @Test
-    public void setKey()
+    public void testSetKey()
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
@@ -79,14 +79,14 @@ public class TestVue
     }
       
     @Test
-    public void getSelectionMode()
+    public void testGetSelectionMode()
     {
         assertEquals(SELECTIONMODE, modele.getSelectionMode());
         assertNull(modeleNull.getSelectionMode());
     }
     
     @Test
-    public void setSelectionMode()
+    public void testSetSelectionMode()
     {
         modele.setSelectionMode(NEWVAL);
         assertEquals(NEWVAL, modele.getSelectionMode());
@@ -95,14 +95,14 @@ public class TestVue
     }
     
     @Test
-    public void getDescription()
+    public void testGetDescription()
     {
         assertEquals(DESCRIPTION, modele.getDescription());
         assertNull(modeleNull.getDescription());
     }
     
     @Test
-    public void setDescription()
+    public void testSetDescription()
     {
         modele.setDescription(NEWVAL);
         assertEquals(NEWVAL, modele.getDescription());
@@ -111,14 +111,14 @@ public class TestVue
     }
     
     @Test
-    public void getListeClefsComposants()
+    public void testGetListeClefsComposants()
     {
         assertEquals(LISTECLEFSCOMPOSANTS, modele.getListeClefsComposants());
         assertNull(modeleNull.getListeClefsComposants());
     }
     
     @Test
-    public void setListeClefsComposants()
+    public void testSetListeClefsComposants()
     {
         modele.setListeClefsComposants(new ArrayList<>());
         assertTrue(modele.getListeClefsComposants().isEmpty());
@@ -127,14 +127,14 @@ public class TestVue
     }
         
     @Test
-    public void isSelected()
+    public void testIsSelected()
     {
         assertTrue(modele.isSelected());
         assertFalse(modeleNull.isSelected());
     }
     
     @Test
-    public void setSelected()
+    public void testSetSelected()
     {
         modele.setSelected(false);
         assertFalse(modele.isSelected());

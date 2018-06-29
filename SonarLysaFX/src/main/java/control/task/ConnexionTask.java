@@ -50,6 +50,7 @@ public class ConnexionTask extends Task<Boolean>
                 control.recupererTousLesProjets();
         } catch (TeamRepositoryException e)
         {
+            Statics.LOGPLANTAGE.error(e);
             return Boolean.FALSE;
         }
         return Boolean.TRUE;

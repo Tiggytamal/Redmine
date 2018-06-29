@@ -29,14 +29,14 @@ public class TestClef
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getKey()
+    public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
         assertNull(modeleNull.getKey());
     }
     
     @Test
-    public void setKey()
+    public void testSetKey()
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());

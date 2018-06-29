@@ -32,6 +32,7 @@ import model.enums.TypeCol;
 import utilities.CellHelper;
 import utilities.DateConvert;
 import utilities.FunctionalException;
+import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
 
@@ -109,6 +110,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
             sheet = wb.getSheetAt(0);
         } catch (IllegalArgumentException e)
         {
+            Statics.LOGPLANTAGE.error(e);
             throw new FunctionalException(Severity.ERROR, "Le fichier est vide");
         }
         return sheet;

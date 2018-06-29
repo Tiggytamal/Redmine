@@ -19,7 +19,7 @@ public class TestTypeAction
     }
     
     @Test
-    public void from()
+    public void testFrom()
     {
         assertEquals(TypeAction.CREER, TypeAction.from("A créer"));
         assertEquals("A créer", TypeAction.CREER.toString());
@@ -38,7 +38,7 @@ public class TestTypeAction
     }
 
     @Test
-    public void valeurInstanciation() throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    public void testValeurInstanciation() throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         Class<Object> inner = Whitebox.getInnerClassType(TypeAction.class, "Valeur");
         Constructor<Object> constructor = Whitebox.getConstructor(inner);

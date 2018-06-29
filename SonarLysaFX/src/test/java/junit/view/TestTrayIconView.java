@@ -29,21 +29,21 @@ public class TestTrayIconView
     }
 
     @Test
-    public void addToTray() throws AWTException
+    public void testAddToTray() throws AWTException
     {
         tray.addToTray();
         tray.removeFromTray();
     }
 
     @Test
-    public void changeImage()
+    public void testChangeImage()
     {
         tray.changeImage(TrayIconView.imageBase);
         tray.changeImage(null);
     }
 
     @Test
-    public void setStage() throws IllegalAccessException
+    public void testSetStage() throws IllegalAccessException
     {
         tray.setStage(stage);
         assertTrue(Whitebox.getField(TrayIconView.class, "stage").get(tray).equals(stage));
@@ -51,7 +51,7 @@ public class TestTrayIconView
     }
     
     @Test
-    public void hideStage() throws IllegalAccessException
+    public void testHideStage() throws IllegalAccessException
     {
         tray.setStage(stage);
         Platform.runLater(() -> stage.hide());
@@ -59,7 +59,7 @@ public class TestTrayIconView
     }
     
     @Test
-    public void openStage()
+    public void testOpenStage()
     {
         tray.openStage();
     }

@@ -44,7 +44,7 @@ public class TestAnomalie extends JunitBase
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
-    public void anomlieWithLot()
+    public void testAnomlieWithLot()
     {
         // Test création anomalie depuis LotSuiviRTC
         ano = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotSuiviRTC.class));
@@ -52,7 +52,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void majDepuisPic()
+    public void testMajDepuisPic()
     {
         // Création lotPic
         LotSuiviRTC lotRTC = ModelFactory.getModel(LotSuiviRTC.class);
@@ -79,7 +79,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void majDepuisClarity()
+    public void testMajDepuisClarity()
     {
         // Création Clarity
         InfoClarity infoClarity = ModelFactory.getModel(InfoClarity.class);
@@ -98,7 +98,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void calculTraitee()
+    public void testCalculTraitee()
     {
         // Avec une objet juste initialisé, le booleén doit être à faux.
         ano.calculTraitee();
@@ -127,7 +127,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getMatieresString()
+    public void testGetMatieresString()
     {
         // Initialisation
         Set<Matiere> matieres = new HashSet<>();
@@ -142,7 +142,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void setMatieresString()
+    public void testSetMatieresString()
     {
         // Test avec string vide ou null
         ano.setMatieresString(null);
@@ -164,7 +164,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getDirection()
+    public void testGetDirection()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getDirection());
@@ -176,7 +176,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getDepartement()
+    public void testGetDepartement()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getDepartement());
@@ -188,7 +188,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getService()
+    public void testGetService()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getService());
@@ -200,7 +200,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getResponsableService()
+    public void testGetResponsableService()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getResponsableService());
@@ -212,7 +212,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getProjetClarity()
+    public void testGetProjetClarity()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getProjetClarity());
@@ -224,7 +224,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getLibelleProjet()
+    public void testGetLibelleProjet()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getLibelleProjet());
@@ -236,7 +236,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getCpiProjet()
+    public void testGetCpiProjet()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getCpiProjet());
@@ -248,7 +248,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getEdition()
+    public void testGetEdition()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getEdition());
@@ -260,7 +260,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getLot()
+    public void testGetLot()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getLot());
@@ -272,7 +272,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getNumeroAnomalie()
+    public void testGetNumeroAnomalie()
     {
         // test valeur vide ou nulle
         assertEquals(0, ano.getNumeroAnomalie());
@@ -284,7 +284,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getEtat()
+    public void testGetEtat()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getEtat());
@@ -296,7 +296,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getSecurite()
+    public void testGetSecurite()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getSecurite());
@@ -308,7 +308,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getRemarque()
+    public void testGetRemarque()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getRemarque());
@@ -320,7 +320,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getLiensLot()
+    public void testGetLiensLot()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getLiensLot());
@@ -332,7 +332,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getLiensAno()
+    public void testGetLiensAno()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getLiensAno());
@@ -344,7 +344,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getTypeAssemblage()
+    public void testGetTypeAssemblage()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getTypeAssemblage());
@@ -356,7 +356,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getVersion()
+    public void testGetVersion()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getVersion());
@@ -368,7 +368,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getProjetRTC()
+    public void testGetProjetRTC()
     {
         // test valeur vide ou nulle
         assertEquals("", ano.getProjetRTC());
@@ -380,7 +380,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getEnvironnement()
+    public void testGetEnvironnement()
     {
         // test valeur vide ou nulle
         assertEquals(EtatLot.INCONNU, ano.getEtatLot());
@@ -392,7 +392,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getAction()
+    public void testGetAction()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getAction());
@@ -404,7 +404,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getDateCreation()
+    public void testGetDateCreation()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getDateCreation());
@@ -415,7 +415,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getDateDetection()
+    public void testGetDateDetection()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getDateDetection());
@@ -426,7 +426,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getDateRelance()
+    public void testGetDateRelance()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getDateRelance());
@@ -439,7 +439,7 @@ public class TestAnomalie extends JunitBase
     /* TEST COMMENTAIRES */
     
     @Test
-    public void getDirectionComment()
+    public void testGetDirectionComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getDirectionComment());
@@ -450,7 +450,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getDepartementComment()
+    public void testGetDepartementComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getDepartementComment());
@@ -461,7 +461,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getServiceComment()
+    public void testGetServiceComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getServiceComment());
@@ -472,7 +472,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getResponsableServiceComment()
+    public void testGetResponsableServiceComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getResponsableServiceComment());
@@ -483,7 +483,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getProjetClarityComment()
+    public void testGetProjetClarityComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getProjetClarityComment());
@@ -494,7 +494,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getLibelleProjetComment()
+    public void testGetLibelleProjetComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getLibelleProjetComment());
@@ -505,7 +505,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getCpiProjetComment()
+    public void testGetCpiProjetComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getCpiProjetComment());
@@ -516,7 +516,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getEditionComment()
+    public void testGetEditionComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getEditionComment());
@@ -527,7 +527,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getLotComment()
+    public void testGetLotComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getLotComment());
@@ -538,7 +538,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getLiensLotComment()
+    public void testGetLiensLotComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getLiensLotComment());
@@ -549,7 +549,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getEnvironnementComment()
+    public void testGetEnvironnementComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getEtatLotComment());
@@ -560,7 +560,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getNumeroAnomalieComment()
+    public void testGetNumeroAnomalieComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getNumeroAnomalieComment());
@@ -571,7 +571,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getLiensAnoComment()
+    public void testGetLiensAnoComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getLiensAnoComment());
@@ -582,7 +582,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getEtatComment()
+    public void testGetEtatComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getEtatComment());
@@ -593,7 +593,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getTypeAssemblageComment()
+    public void testGetTypeAssemblageComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getTypeAssemblageComment());
@@ -604,7 +604,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getSecuriteComment()
+    public void testGetSecuriteComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getSecuriteComment());
@@ -615,7 +615,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getRemarqueComment()
+    public void testGetRemarqueComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getRemarqueComment());
@@ -626,7 +626,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getVersionComment()
+    public void testGetVersionComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getVersionComment());
@@ -637,7 +637,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getDateCreationComment()
+    public void testGetDateCreationComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getDateCreationComment());
@@ -648,7 +648,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getDateDetectionComment()
+    public void testGetDateDetectionComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getDateDetectionComment());
@@ -659,7 +659,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getDateRelanceComment()
+    public void testGetDateRelanceComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getDateRelanceComment());
@@ -670,7 +670,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getMatieresComment()
+    public void testGetMatieresComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getMatieresComment());
@@ -681,7 +681,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getProjetRTCComment()
+    public void testGetProjetRTCComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getProjetRTCComment());
@@ -692,7 +692,7 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
-    public void getActionComment()
+    public void testGetActionComment()
     {
         // test valeur vide ou nulle
         assertEquals(null, ano.getActionComment());

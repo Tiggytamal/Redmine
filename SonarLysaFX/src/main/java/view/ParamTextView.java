@@ -80,7 +80,7 @@ public class ParamTextView extends VBox
 
     private void gestionHauteur()
     {
-        double nbreLignes = 1L;
+        nbreLignes = 1L;
         Matcher matcher = Pattern.compile("[\\n\\r]").matcher(textArea.getText());
         while (matcher.find())
         {

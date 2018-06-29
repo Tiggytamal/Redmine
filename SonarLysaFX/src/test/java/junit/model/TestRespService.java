@@ -25,7 +25,7 @@ public class TestRespService
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getDirection()
+    public void testGetDirection()
     {
         // test valeur vide ou nulle
         assertEquals("", respService.getDirection());
@@ -37,7 +37,7 @@ public class TestRespService
     }
     
     @Test
-    public void getFiliere()
+    public void testGetFiliere()
     {
         // test valeur vide ou nulle
         assertEquals("", respService.getFiliere());
@@ -49,7 +49,7 @@ public class TestRespService
     }
     
     @Test
-    public void getService()
+    public void testGetService()
     {
         // test valeur vide ou nulle
         assertEquals("", respService.getService());
@@ -61,7 +61,7 @@ public class TestRespService
     }
     
     @Test
-    public void getDepartement()
+    public void testGetDepartement()
     {
         // test valeur vide ou nulle
         assertEquals("", respService.getDepartement());
@@ -73,7 +73,7 @@ public class TestRespService
     }
     
     @Test
-    public void getNom()
+    public void testGetNom()
     {
         // test valeur vide ou nulle
         assertEquals("", respService.getNom());

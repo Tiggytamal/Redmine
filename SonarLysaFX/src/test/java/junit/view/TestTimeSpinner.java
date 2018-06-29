@@ -19,14 +19,15 @@ public class TestTimeSpinner
     {
         ts = new TimeSpinner();
     }
+    
     @Test
-    public void timmeSpinner()
+    public void testTimmeSpinner()
     {
         ts = new TimeSpinner(LocalTime.of(12, 12));
     }
     
     @Test
-    public void getMode()
+    public void testGetMode()
     {
         ts.getMode();
     }

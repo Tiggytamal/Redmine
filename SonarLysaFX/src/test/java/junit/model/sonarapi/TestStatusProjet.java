@@ -41,14 +41,14 @@ public class TestStatusProjet
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getStatus()
+    public void testGetStatus()
     {
         assertEquals(STATUS, modele.getStatus());
         assertNull(modeleNull.getStatus());
     }
     
     @Test
-    public void setStatus()
+    public void testSetStatus()
     {
         modele.setStatus(NEWVAL);
         assertEquals(NEWVAL, modele.getStatus());
@@ -57,7 +57,7 @@ public class TestStatusProjet
     }
     
     @Test
-    public void getConditions()
+    public void testGetConditions()
     {
         assertEquals(CONDITIONS, modele.getConditions());
         assertNotNull(modeleNull.getConditions());
@@ -65,7 +65,7 @@ public class TestStatusProjet
     }
     
     @Test
-    public void setConditions()
+    public void testSetConditions()
     {
         modele.setConditions(null);
         assertNull(modele.getConditions());
@@ -74,7 +74,7 @@ public class TestStatusProjet
     }
     
     @Test
-    public void getPeriodes()
+    public void testGetPeriodes()
     {
         assertEquals(PROJETS, modele.getPeriodes());
         assertNotNull(modeleNull.getPeriodes());
@@ -82,7 +82,7 @@ public class TestStatusProjet
     }
     
     @Test
-    public void setPeriodes()
+    public void testSetPeriodes()
     {
         modele.setPeriodes(null);
         assertNull(modele.getPeriodes());

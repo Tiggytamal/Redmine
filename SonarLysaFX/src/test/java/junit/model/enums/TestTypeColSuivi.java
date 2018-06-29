@@ -15,7 +15,7 @@ public class TestTypeColSuivi
     }
     
     @Test
-    public void getValeur()
+    public void testGetValeur()
     {
         assertEquals("Numéro du lot", TypeColSuivi.LOT.getValeur());
         assertEquals("Libellé projet", TypeColSuivi.LIBELLE.getValeur());
@@ -33,7 +33,7 @@ public class TestTypeColSuivi
     }
     
     @Test
-    public void getNomCol()
+    public void testGetNomCol()
     {
         assertEquals("colLot", TypeColSuivi.LOT.getNomCol());
         assertEquals("colLib", TypeColSuivi.LIBELLE.getNomCol());

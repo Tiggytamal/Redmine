@@ -30,14 +30,14 @@ public class TestQualityGate
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getId()
+    public void testGetId()
     {
         assertEquals(ID, modele.getId());
         assertNull(modeleNull.getId());
     }
     
     @Test
-    public void setId()
+    public void testSetId()
     {
         modele.setId(NEWVAL);
         assertEquals(NEWVAL, modele.getId());
@@ -46,14 +46,14 @@ public class TestQualityGate
     }
     
     @Test
-    public void getName()
+    public void testGetName()
     {
         assertEquals(NAME, modele.getName());
         assertNull(modeleNull.getName());
     }
     
     @Test
-    public void setName()
+    public void testSetName()
     {
         modele.setName(NEWVAL);
         assertEquals(NEWVAL, modele.getName());

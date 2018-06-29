@@ -30,7 +30,7 @@ public class TestInfo
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void controle()
+    public void testControle()
     {
         String valeur = "pasvide";
         // Test après initialisation
@@ -66,14 +66,14 @@ public class TestInfo
     }
     
     @Test
-    public void getFile()
+    public void testGetFile()
     {
         File file = info.getFile();       
         assertEquals(new File(Statics.JARPATH + Whitebox.getInternalState(Info.class, "NOMFICHIER")), file);
     }
     
     @Test
-    public void getRessource()
+    public void testGetRessource()
     {
         File resource = info.getResource();
         
@@ -81,7 +81,7 @@ public class TestInfo
     }
     
     @Test
-    public void controleDonnees()
+    public void testControleDonnees()
     {
         // Test mdp null
         info.setPseudo("a");
@@ -98,7 +98,7 @@ public class TestInfo
     }
     
     @Test
-    public void getMotDePasse()
+    public void testGetMotDePasse()
     {
         // test valeur vide ou nulle
         assertEquals("", info.getMotDePasse());
@@ -110,7 +110,7 @@ public class TestInfo
     }
     
     @Test
-    public void getPseudo()
+    public void testGetPseudo()
     {
         // test valeur vide ou nulle
         assertEquals("", info.getPseudo());

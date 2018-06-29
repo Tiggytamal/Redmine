@@ -1,7 +1,7 @@
 package control.task;
 
 import static utilities.Statics.fichiersXML;
-import static utilities.Statics.lognonlistee;
+import static utilities.Statics.LOGNONLISTEE;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
@@ -404,7 +404,7 @@ public class MajSuiviExcelTask extends SonarTask
                 LotSuiviRTC lot = lotsRTC.get(numeroLot);
                 if (lot == null)
                 {
-                    lognonlistee.warn("Un lot du fichier Excel n'est pas connu dans RTC : " + numeroLot);
+                    LOGNONLISTEE.warn("Un lot du fichier Excel n'est pas connu dans RTC : " + numeroLot);
                     continue;
                 }
 

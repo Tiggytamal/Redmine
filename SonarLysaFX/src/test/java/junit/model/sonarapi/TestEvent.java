@@ -33,14 +33,14 @@ public class TestEvent
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getId()
+    public void testGetId()
     {
         assertEquals(ID, modele.getId());
         assertNull(modeleNull.getId());
     }
     
     @Test
-    public void setId()
+    public void testSetId()
     {
         modele.setId(NEWVAL);
         assertEquals(NEWVAL, modele.getId());
@@ -49,14 +49,14 @@ public class TestEvent
     }
     
     @Test
-    public void getRk()
+    public void testGetRk()
     {
         assertEquals(RK, modele.getRk());
         assertNull(modeleNull.getRk());
     }
     
     @Test
-    public void setRk()
+    public void testSetRk()
     {
         modele.setRk(NEWVAL);
         assertEquals(NEWVAL, modele.getRk());
@@ -65,14 +65,14 @@ public class TestEvent
     }
     
     @Test
-    public void getN()
+    public void testGetN()
     {
         assertEquals(N, modele.getN());
         assertNull(modeleNull.getN());
     }
     
     @Test
-    public void setN()
+    public void testSetN()
     {
         modele.setN(NEWVAL);
         assertEquals(NEWVAL, modele.getN());
@@ -81,14 +81,14 @@ public class TestEvent
     }
     
     @Test
-    public void getC()
+    public void testGetC()
     {
         assertEquals(C, modele.getC());
         assertNull(modeleNull.getC());
     }
     
     @Test
-    public void setC()
+    public void testSetC()
     {
         modele.setC(NEWVAL);
         assertEquals(NEWVAL, modele.getC());
@@ -97,14 +97,14 @@ public class TestEvent
     }
     
     @Test
-    public void getDt()
+    public void testGetDt()
     {
         assertEquals(DT, modele.getDt());
         assertNull(modeleNull.getDt());
     }
     
     @Test
-    public void setDt()
+    public void testSetDt()
     {
         modele.setDt(NEWVAL);
         assertEquals(NEWVAL, modele.getDt());

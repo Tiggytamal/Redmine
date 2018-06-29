@@ -52,7 +52,7 @@ public class TestComposant
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getMapMetriques() throws IllegalAccessException
+    public void testGetMapMetriques() throws IllegalAccessException
     {
         // Test Liste vide
         Map<TypeMetrique, Metrique> mapVide = new EnumMap<>(TypeMetrique.class);
@@ -77,14 +77,14 @@ public class TestComposant
     }
     
     @Test
-    public void getId()
+    public void testGetId()
     {
         assertEquals(ID, modele.getId());
         assertNull(modeleNull.getId());
     }
     
     @Test
-    public void setId()
+    public void testSetId()
     {
         modele.setId(NEWVAL);
         assertEquals(NEWVAL, modele.getId());
@@ -93,14 +93,14 @@ public class TestComposant
     }
     
     @Test
-    public void getKey()
+    public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
         assertNull(modeleNull.getKey());
     }
     
     @Test
-    public void setKey()
+    public void testSetKey()
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
@@ -109,14 +109,14 @@ public class TestComposant
     }
       
     @Test
-    public void getNom()
+    public void testGetNom()
     {
         assertEquals(NOM, modele.getNom());
         assertNull(modeleNull.getNom());
     }
     
     @Test
-    public void setNom()
+    public void testSetNom()
     {
         modele.setNom(NEWVAL);
         assertEquals(NEWVAL, modele.getNom());
@@ -125,14 +125,14 @@ public class TestComposant
     }
     
     @Test
-    public void getDescritpion()
+    public void testGetDescritpion()
     {
         assertEquals(DESC, modele.getDescritpion());
         assertNull(modeleNull.getDescritpion());
     }
     
     @Test
-    public void setDescritpion()
+    public void testSetDescritpion()
     {
         modele.setDescritpion(NEWVAL);
         assertEquals(NEWVAL, modele.getDescritpion());
@@ -141,14 +141,14 @@ public class TestComposant
     }
     
     @Test
-    public void getQualifier()
+    public void testGetQualifier()
     {
         assertEquals(QUALIFIER, modele.getQualifier());
         assertNull(modeleNull.getQualifier());
     }
     
     @Test
-    public void setQualifier()
+    public void testSetQualifier()
     {
         modele.setQualifier(NEWVAL);
         assertEquals(NEWVAL, modele.getQualifier());
@@ -157,14 +157,14 @@ public class TestComposant
     }
     
     @Test
-    public void getLangage()
+    public void testGetLangage()
     {
         assertEquals(LANGUAGE, modele.getLangage());
         assertNull(modeleNull.getLangage());
     }
     
     @Test
-    public void setLangage()
+    public void testSetLangage()
     {
         modele.setLangage(NEWVAL);
         assertEquals(NEWVAL, modele.getLangage());
@@ -173,14 +173,14 @@ public class TestComposant
     }
     
     @Test
-    public void getPath()
+    public void testGetPath()
     {
         assertEquals(PATH, modele.getPath());
         assertNull(modeleNull.getPath());
     }
     
     @Test
-    public void setPath()
+    public void testSetPath()
     {
         modele.setPath(NEWVAL);
         assertEquals(NEWVAL, modele.getPath());
@@ -189,14 +189,14 @@ public class TestComposant
     }
     
     @Test
-    public void getMetriques()
+    public void testGetMetriques()
     {
         assertEquals(METRIQUE, modele.getMetriques());
         assertNotNull(modeleNull.getMetriques());
     }
     
     @Test
-    public void setMetriques()
+    public void testSetMetriques()
     {
         List<Metrique> liste = new ArrayList<>();
         modele.setMetriques(liste);
@@ -206,14 +206,14 @@ public class TestComposant
     }
     
     @Test
-    public void getUuid()
+    public void testGetUuid()
     {
         assertEquals(UUID, modele.getUuid());
         assertNull(modeleNull.getUuid());
     }
     
     @Test
-    public void setUuid()
+    public void testSetUuid()
     {
         modele.setUuid(NEWVAL);
         assertEquals(NEWVAL, modele.getUuid());
@@ -222,14 +222,14 @@ public class TestComposant
     }
         
     @Test
-    public void isEnabled()
+    public void testIsEnabled()
     {
         assertTrue(modele.isEnabled());
         assertFalse(modeleNull.isEnabled());
     }
     
     @Test
-    public void setEnabled()
+    public void testSetEnabled()
     {
         modele.setEnabled(false);
         assertFalse(modele.isEnabled());
@@ -238,14 +238,14 @@ public class TestComposant
     }
     
     @Test
-    public void getLongName()
+    public void testGetLongName()
     {
         assertEquals(LONGNAME, modele.getLongName());
         assertNull(modeleNull.getLongName());
     }
     
     @Test
-    public void setLongName()
+    public void testSetLongName()
     {
         modele.setLongName(NEWVAL);
         assertEquals(NEWVAL, modele.getLongName());
@@ -254,14 +254,14 @@ public class TestComposant
     }
     
     @Test
-    public void getProjectId()
+    public void testGetProjectId()
     {
         assertEquals(PROJECTID, modele.getProjectId());
         assertEquals(0, modeleNull.getProjectId());
     }
     
     @Test
-    public void setProjectId()
+    public void testSetProjectId()
     {
         modele.setProjectId(10);
         assertEquals(10, modele.getProjectId());
@@ -269,14 +269,14 @@ public class TestComposant
         assertEquals(10, modeleNull.getProjectId());
     }
     @Test
-    public void getSubProjectId()
+    public void testGetSubProjectId()
     {
         assertEquals(SUPROJECTID, modele.getSubProjectId());
         assertEquals(0, modeleNull.getSubProjectId());
     }
     
     @Test
-    public void setSubProjectId()
+    public void testSetSubProjectId()
     {
         modele.setSubProjectId(10);
         assertEquals(10, modele.getSubProjectId());

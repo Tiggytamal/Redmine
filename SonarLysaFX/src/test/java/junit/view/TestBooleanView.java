@@ -13,7 +13,7 @@ import view.ParamBoolView;
 public class TestBooleanView
 {
     @Test
-    public void booleanView()
+    public void testBooleanView()
     {
         ParamBoolView view = new ParamBoolView(ParamBool.VUESSUIVI, true);
         assertTrue(view.getType() == ParamBool.VUESSUIVI); 

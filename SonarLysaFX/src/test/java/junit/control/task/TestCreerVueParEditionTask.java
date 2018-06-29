@@ -11,7 +11,7 @@ import javafx.application.Platform;
 public class TestCreerVueParEditionTask
 {
     @Test
-    public void task()
+    public void testTask()
     {
         Platform.runLater( CreerVueParEditionTask::new);
     }

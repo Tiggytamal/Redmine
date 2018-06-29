@@ -13,7 +13,7 @@ import model.sonarapi.Status;
 public class TestStatus
 {
     @Test
-    public void from()
+    public void testFrom()
     {
         assertEquals(Status.OK, Status.from("OK"));
         assertEquals("OK", Status.OK.toString());
@@ -26,7 +26,7 @@ public class TestStatus
     }
     
     @Test (expected = IllegalArgumentException.class)
-    public void fromException()
+    public void testFromException()
     {
         Status.from("inconnu");
     }
@@ -38,7 +38,7 @@ public class TestStatus
     }
 
     @Test
-    public void valeurInstanciation() throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    public void testValeurInstanciation() throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         Class<Object> inner = Whitebox.getInnerClassType(Status.class, "Valeur");
         Constructor<Object> constructor = Whitebox.getConstructor(inner);

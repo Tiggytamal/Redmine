@@ -27,21 +27,21 @@ public class TestControlChefService extends TestControlExcel<TypeColChefServ, Co
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void calculIndiceColonnes() throws Exception
+    public void testCalculIndiceColonnes() throws Exception
     {
         // Test initialisation colonnes. Pour ce fichier, la première colonne est utilisée.
-        calculIndiceColonnes(1);
+        testCalculIndiceColonnes(1);
     }
     
     @Test
-    public void recupDonneesDepuisExcel()
+    public void testRecupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel(map -> map.size() == 28);
+        testRecupDonneesDepuisExcel(map -> map.size() == 28);
     }
     
     @Test
     @Override
-    public void initSheet() throws Exception
+    public void testInitSheet() throws Exception
     {
         // Test 1 - feuille ok
         Sheet sheet = Whitebox.invokeMethod(handler, "initSheet");
@@ -51,7 +51,7 @@ public class TestControlChefService extends TestControlExcel<TypeColChefServ, Co
     
     @Test(expected = FunctionalException.class)
     @Override
-    public void initSheetException() throws Exception
+    public void testInitSheetException() throws Exception
     {
         // Test 2 - feuille nulle
         wb.removeSheetAt(0);

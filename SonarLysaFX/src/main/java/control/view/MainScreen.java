@@ -22,6 +22,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import utilities.Statics;
 import utilities.TechnicalException;
 import view.TrayIconView;
 
@@ -58,7 +59,7 @@ public class MainScreen extends Application
 
         // Affichage de l'interface
         final Scene scene = new Scene(root, 640, 480);
-        scene.getStylesheets().add("application.css");
+        scene.getStylesheets().add(Statics.CSS);
         trayIcon.setStage(stage);
         stage.setTitle("Sonar Lysa");
         stage.setResizable(true);

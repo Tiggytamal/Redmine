@@ -32,14 +32,14 @@ public class TestUser
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getLogin()
+    public void testGetLogin()
     {
         assertEquals(LOGIN, modele.getLogin());
         assertNull(modeleNull.getLogin());
     }
     
     @Test
-    public void setLogin()
+    public void testSetLogin()
     {
         modele.setLogin(NEWVAL);
         assertEquals(NEWVAL, modele.getLogin());
@@ -48,14 +48,14 @@ public class TestUser
     }
     
     @Test
-    public void getName()
+    public void testGetName()
     {
         assertEquals(NAME, modele.getName());
         assertNull(modeleNull.getName());
     }
     
     @Test
-    public void setName()
+    public void testSetName()
     {
         modele.setName(NEWVAL);
         assertEquals(NEWVAL, modele.getName());
@@ -64,14 +64,14 @@ public class TestUser
     }
       
     @Test
-    public void getActive()
+    public void testGetActive()
     {
         assertEquals(ACTIVE, modele.getActive());
         assertNull(modeleNull.getActive());
     }
     
     @Test
-    public void setActive()
+    public void testSetActive()
     {
         modele.setActive(NEWVAL);
         assertEquals(NEWVAL, modele.getActive());
@@ -80,14 +80,14 @@ public class TestUser
     }
     
     @Test
-    public void getEmail()
+    public void testGetEmail()
     {
         assertEquals(EMAIL, modele.getEmail());
         assertNull(modeleNull.getEmail());
     }
     
     @Test
-    public void setEmail()
+    public void testSetEmail()
     {
         modele.setEmail(NEWVAL);
         assertEquals(NEWVAL, modele.getEmail());

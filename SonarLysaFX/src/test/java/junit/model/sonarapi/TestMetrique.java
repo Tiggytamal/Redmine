@@ -54,14 +54,14 @@ public class TestMetrique
     
     
     @Test
-    public void getValue()
+    public void testGetValue()
     {
         assertEquals(VALEUR, modele.getValue());
         assertNull(modeleNull.getValue());
     }
     
     @Test
-    public void setValue()
+    public void testSetValue()
     {
         modele.setValue(NEWVAL);
         assertEquals(NEWVAL, modele.getValue());
@@ -70,14 +70,14 @@ public class TestMetrique
     }
     
     @Test
-    public void getMetric()
+    public void testGetMetric()
     {
         assertEquals(TYPE, modele.getMetric());
         assertNull(modeleNull.getMetric());
     }
     
     @Test
-    public void setMetric()
+    public void testSetMetric()
     {
         modele.setMetric(null);
         assertNull(modele.getMetric());
@@ -86,7 +86,7 @@ public class TestMetrique
     }
     
     @Test
-    public void getListePeriodes()
+    public void testGetListePeriodes()
     {
         assertNotNull(modele.getListePeriodes());
         assertTrue(modele.getListePeriodes().isEmpty());
@@ -95,7 +95,7 @@ public class TestMetrique
     }
 
     @Test
-    public void setListePeriodes()
+    public void testSetListePeriodes()
     {
         modele.setListePeriodes(null);
         assertNotNull(modele.getListePeriodes());

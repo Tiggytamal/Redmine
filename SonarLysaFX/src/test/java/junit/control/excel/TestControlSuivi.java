@@ -57,13 +57,13 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
-    public void recupDonneesDepuisExcel()
+    public void testRecupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel(map -> map.size() == 79);
+        testRecupDonneesDepuisExcel(map -> map.size() == 79);
     }
 
     @Test
-    public void controleKey() throws Exception
+    public void testControleKey() throws Exception
     {
         String methode = "controleKey";
         assertTrue(Whitebox.invokeMethod(handler, methode, "a", "a"));
@@ -74,7 +74,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void createSheetError()
+    public void testCreateSheetError()
     {
         // Intialisation
         List<Anomalie> anoAcreer = new ArrayList<>();
@@ -115,14 +115,14 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = IOException.class)
-    public void sauvegardeFichierException1() throws IOException
+    public void testSauvegardeFichierException1() throws IOException
     {
         // Envoi d'une IOException avec un nom non compatible.
         handler.sauvegardeFichier("@|(['{");
     }
 
     @Test
-    public void sauvegardeFichier() throws IOException
+    public void testSauvegardeFichier() throws IOException
     {
         // Test 1 - On vérifie que la feuille renvoyée ne contient bien qu'une seule ligne.
         Sheet sheet = handler.sauvegardeFichier(file.getName());
@@ -135,7 +135,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void majFeuillePrincipale() throws Exception
+    public void testMajFeuillePrincipale() throws Exception
     {
         // Initialisation
         handler = PowerMockito.spy(handler);
@@ -165,14 +165,14 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = FunctionalException.class)
-    public void majMultiMatiereException()
+    public void testMajMultiMatiereException()
     {
         removeSheet(SQ);
         handler.majMultiMatiere(new ArrayList<>());
     }
 
     @Test
-    public void majMultiMatiere()
+    public void testMajMultiMatiere()
     {
         // intialisation
         List<String> anoMultiple = new ArrayList<>();
@@ -185,7 +185,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void calculerCouleurLigne() throws Exception
+    public void testCalculerCouleurLigne() throws Exception
     {
         // Vérification de al couleur de sortie de la méthode
 
@@ -225,7 +225,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void ajouterAnomaliesCloses() throws Exception
+    public void testAjouterAnomaliesCloses() throws Exception
     {
         // Vérification si une anomaie est bien rajoutée à la feuille des anomalies closes.
 
@@ -249,7 +249,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void creerLigneSQException1() throws IllegalAccessException
+    public void testCreerLigneSQException1() throws IllegalAccessException
     {
         Method method = Whitebox.getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
         try
@@ -264,7 +264,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void creerLigneSQException2() throws IllegalAccessException
+    public void testCreerLigneSQException2() throws IllegalAccessException
     {
         Method method = Whitebox.getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
         try
@@ -278,7 +278,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void creerLigneSQException3() throws IllegalAccessException
+    public void testCreerLigneSQException3() throws IllegalAccessException
     {
         Method method = Whitebox.getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
         try
@@ -293,7 +293,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void creerLigneSQException4() throws IllegalAccessException
+    public void testCreerLigneSQException4() throws IllegalAccessException
     {
         Method method = Whitebox.getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
         try
@@ -308,7 +308,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void creerLigneTitres() throws Exception
+    public void testCreerLigneTitres() throws Exception
     {
         Sheet sheet = wb.createSheet();
 
@@ -319,7 +319,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void ajouterLiensException1() throws Exception
+    public void testAjouterLiensException1() throws Exception
     {
         Cell cell = null;
         String baseAdresse = "adresse";
@@ -328,7 +328,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void ajouterLiensException2() throws Exception
+    public void testAjouterLiensException2() throws Exception
     {
         Cell cell = wb.createSheet().createRow(0).createCell(0);
         String baseAdresse = null;
@@ -337,7 +337,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void ajouterLiensException3() throws Exception
+    public void testAjouterLiensException3() throws Exception
     {
         Cell cell = wb.createSheet().createRow(0).createCell(0);
         String baseAdresse = "";
@@ -346,7 +346,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void ajouterLiens() throws Exception
+    public void testAjouterLiens() throws Exception
     {
         Cell cell = wb.createSheet().createRow(0).createCell(0);
         String baseAdresse = "adresse";
@@ -356,7 +356,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void ajouterNouvellesAnos() throws Exception
+    public void testAjouterNouvellesAnos() throws Exception
     {
         // Initialisation
         Sheet sheet = wb.createSheet();
@@ -407,7 +407,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void saveAnomaliesCloses() throws Exception
+    public void testSaveAnomaliesCloses() throws Exception
     {
         // Initialisation
         Map<String, Anomalie> anoClose = new HashMap<>();
@@ -426,7 +426,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void controleClarity() throws Exception
+    public void testControleClarity() throws Exception
     {
         // Intialisation
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
@@ -463,7 +463,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     }
 
     @Test
-    public void controleChefDeService() throws Exception
+    public void testControleChefDeService() throws Exception
     {
         // Initialisation
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
@@ -492,7 +492,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
 
     @Test
     @Override
-    public void initEnum() throws IllegalAccessException
+    public void testInitEnum() throws IllegalAccessException
     {
         // Test - énumération du bon type
         assertTrue(Whitebox.getField(ControlSuivi.class, "enumeration").get(handler).equals(TypeColSuivi.class));
@@ -500,7 +500,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
 
     @Test
     @Override
-    public void initSheet() throws Exception
+    public void testInitSheet() throws Exception
     {
         // Test 1 - feuille ok
         Sheet sheet = Whitebox.invokeMethod(handler, "initSheet");
@@ -510,7 +510,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
 
     @Test(expected = FunctionalException.class)
     @Override
-    public void initSheetException() throws Exception
+    public void testInitSheetException() throws Exception
     {
         // Test 2 - feuille nulle
         removeSheet(SQ);

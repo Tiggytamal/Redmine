@@ -1,8 +1,8 @@
 package control.excel;
 
 import static utilities.Statics.fichiersXML;
-import static utilities.Statics.logger;
-import static utilities.Statics.loginconnue;
+import static utilities.Statics.LOGGER;
+import static utilities.Statics.LOGINCONNUE;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
@@ -37,6 +37,7 @@ import com.ibm.team.repository.common.PermissionDeniedException;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IWorkItem;
 
+import control.mail.ControlMail;
 import control.rtc.ControlRTC;
 import model.Anomalie;
 import model.InfoClarity;
@@ -46,6 +47,7 @@ import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
+import model.enums.TypeInfoMail;
 import model.enums.Param;
 import utilities.CellHelper;
 import utilities.DateConvert;
@@ -98,6 +100,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     private String lienslots;
     private String liensAnos;
     private final LocalDate today = LocalDate.now();
+    
+    private ControlMail controlMail;
 
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
@@ -112,6 +116,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         Map<Param, String> proprietes = proprietesXML.getMapParams();
         lienslots = proprietes.get(Param.LIENSLOTS);
         liensAnos = proprietes.get(Param.LIENSANOS);
+        controlMail = new ControlMail();
         initContraintes();
     }
 
@@ -166,7 +171,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 Row row = iter.next();
                 Cell cellLot = row.getCell(Index.LOTI.ordinal());
                 Cell cellT = row.getCell(Index.TRAITEI.ordinal());
-                if (cellLot.getCellTypeEnum() == CellType.STRING && cellT.getCellTypeEnum() == CellType.STRING && cellT.getStringCellValue().equals("A"))
+                if (cellLot.getCellTypeEnum() == CellType.STRING && cellT.getCellTypeEnum() == CellType.STRING && "A".equals(cellT.getStringCellValue()))
                     lotsAbandon.add(row.getCell(Index.LOTI.ordinal()).getStringCellValue());
             }
             wb.removeSheetAt(wb.getSheetIndex(sheet));
@@ -201,6 +206,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             else
             {
                 creerLigneVersion(row, ano, IndexedColors.LIGHT_YELLOW, "N");
+                controlMail.addInfo(TypeInfoMail.ANONEW, ano.getLot());
                 retour.add(ano);
             }
         }
@@ -423,11 +429,13 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             {
                 Row row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
                 creerLigneSQ(row, ano, IndexedColors.WHITE);
+                controlMail.addInfo(TypeInfoMail.ANOABANDON, ano.getLot());
                 return false;
             }
             else
             {
-                logger.warn("L'anomalie " + ano.getNumeroAnomalie() + " n'a pas été clôturée. Impossible de la supprimer du fichier de suivi.");
+                LOGGER.warn("L'anomalie " + ano.getNumeroAnomalie() + " n'a pas été clôturée. Impossible de la supprimer du fichier de suivi.");
+                controlMail.addInfo(TypeInfoMail.ANOABANDONRATE, ano.getLot());
                 return true;
             }
         }
@@ -442,7 +450,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
                 ano.setNumeroAnomalie(numeroAno);
                 ano.setDateCreation(today);
                 ano.calculTraitee();
-                logger.info("Création anomalie " + numeroAno + " pour le lot " + anoLot);
+                LOGGER.info("Création anomalie " + numeroAno + " pour le lot " + anoLot);
+                controlMail.addInfo(TypeInfoMail.ANOSCREES, ano.getLot());
             }
         }
         return true;
@@ -504,7 +513,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             controleRTC(ano);
         } catch (PermissionDeniedException e)
         {
-            logger.error("Problème authorisation accès lot : " + ano.getLot());
+            LOGGER.error("Problème authorisation accès lot : " + ano.getLot());
+            Statics.LOGPLANTAGE.error(e);
 
         } catch (TeamRepositoryException e)
         {
@@ -763,7 +773,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             return ano.majDepuisClarity(map.get(temp));
 
         // Si on ne trouve pas, on renvoie juste l'anomalie avec le log d'erreur
-        loginconnue.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLot());
+        LOGINCONNUE.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLot());
+        controlMail.addInfo(TypeInfoMail.CLARITYINCONNU, ano.getLot());
         ano.setDepartement(Statics.INCONNU);
         ano.setService(Statics.INCONNU);
         ano.setDirection(Statics.INCONNUE);
@@ -795,7 +806,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             String newEtat = controlRTC.recupEtatElement(anoRTC);
             if (!newEtat.equals(ano.getEtat()))
             {
-                logger.info("Lot : " + anoLot + " - nouvel etat anomalie : " + newEtat);
+                LOGGER.info("Lot : " + anoLot + " - nouvel etat anomalie : " + newEtat);
+                controlMail.addMajAno(anoLot, newEtat);
                 ano.setEtat(newEtat);
             }
             ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
@@ -808,11 +820,15 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         EtatLot etatLot = EtatLot.from(controlRTC.recupEtatElement(lotRTC));
         if (ano.getEtatLot() != etatLot)
         {
-            logger.info("Lot : " + anoLot + " - nouvel etat Lot : " + etatLot);
+            LOGGER.info("Lot : " + anoLot + " - nouvel etat Lot : " + etatLot);
+            controlMail.addMajLot(anoLot, etatLot);
 
             // Si on arrive en VMOA ou que l'on passe à livré à l'édition directement, on met l'anomalie à relancer
             if (etatLot == EtatLot.VMOA || (etatLot != EtatLot.VMOA && etatLot == EtatLot.EDITION))
+            {
                 ano.setAction(TypeAction.RELANCER);
+                controlMail.addInfo(TypeInfoMail.ANOARELANCER, anoLot);
+            }
             ano.setEtatLot(etatLot);
         }
         ano.setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));
@@ -837,7 +853,10 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         if (mapRespService.keySet().contains(anoServ))
             ano.setResponsableService(mapRespService.get(anoServ).getNom());
         else
-            loginconnue.warn("Pas de responsable de service trouvé pour ce service : " + ano.getService());
+        {
+            LOGINCONNUE.warn("Pas de responsable de service trouvé pour ce service : " + ano.getService());
+            controlMail.addInfo(TypeInfoMail.SERVICESSANSRESP, ano.getLot());
+        }
     }
 
     /**
@@ -976,8 +995,12 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @author ETP8137 - Grégoire mathon
      * @since 1.0
      */
-    private enum Index {
-        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
+    private enum Index 
+    {
+        LOTI("Lot projet RTC"), 
+        EDITIONI("Edition"), 
+        ENVI("Etat du lot"), 
+        TRAITEI("Traitée");
 
         private String string;
 

@@ -30,14 +30,14 @@ public class TestAjouterProjet
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
-    public void getKey()
+    public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
         assertNull(modeleNull.getKey());
     }
     
     @Test
-    public void setKey()
+    public void testSetKey()
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
@@ -46,14 +46,14 @@ public class TestAjouterProjet
     }
     
     @Test
-    public void getProjectKey()
+    public void testGetProjectKey()
     {
         assertEquals(PROJECT, modele.getProjectKey());
         assertNull(modeleNull.getProjectKey());
     }
     
     @Test
-    public void setProjectKey()
+    public void testSetProjectKey()
     {
         modele.setProjectKey(NEWVAL);
         assertEquals(NEWVAL, modele.getProjectKey());

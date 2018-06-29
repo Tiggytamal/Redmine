@@ -26,7 +26,7 @@ public class TestInfoClarity
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void isActif()
+    public void testIsActif()
     {
         // test valeur vide ou nulle
         assertEquals(false, info.isActif());
@@ -37,7 +37,7 @@ public class TestInfoClarity
     }
     
     @Test
-    public void getCodeClarity()
+    public void testGetCodeClarity()
     {
         // test valeur vide ou nulle
         assertEquals("", info.getCodeClarity());
@@ -49,7 +49,7 @@ public class TestInfoClarity
     }
     
     @Test
-    public void getLibelleProjet()
+    public void testGetLibelleProjet()
     {
         // test valeur vide ou nulle
         assertEquals("", info.getLibelleProjet());
@@ -61,7 +61,7 @@ public class TestInfoClarity
     }
     
     @Test
-    public void getChefProjet()
+    public void testGetChefProjet()
     {
         // test valeur vide ou nulle
         assertEquals("", info.getChefProjet());
@@ -73,7 +73,7 @@ public class TestInfoClarity
     }
     
     @Test
-    public void getEdition()
+    public void testGetEdition()
     {
         // test valeur vide ou nulle
         assertEquals("", info.getEdition());
@@ -85,7 +85,7 @@ public class TestInfoClarity
     }
     
     @Test
-    public void getDirection()
+    public void testGetDirection()
     {
         // test valeur vide ou nulle
         assertEquals("", info.getDirection());
@@ -97,7 +97,7 @@ public class TestInfoClarity
     }
     
     @Test
-    public void getDepartement()
+    public void testGetDepartement()
     {
         // test valeur vide ou nulle
         assertEquals("", info.getDepartement());
@@ -109,7 +109,7 @@ public class TestInfoClarity
     }
     
     @Test
-    public void getService()
+    public void testGetService()
     {
         // test valeur vide ou nulle
         assertEquals("", info.getService());

@@ -274,6 +274,18 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>RTCLOTCHC</key>
             <value>E31.0.FDL</value>
         </entry>
+        <entry>
+        	<key>IPMAIL</key>
+        	<value>10.166.212.129</value>        
+        </entry>
+        <entry>
+        	<key>PORTMAIL</key>
+        	<value>25</value>        
+        </entry>
+        <entry>
+        	<key>AQPMAIL</key>
+        	<value>AQP.qualimetrie@ca-ts.fr</value>
+        </entry>
     </mapParams>
     <mapParamsBool>
         <entry>
@@ -313,7 +325,7 @@ Merci</value>
         </entry>
         <entry>
             <key>MEMBRESMAIL</key>
-            <value>BONORIS Jean-Louis;GREFFET Gaetan;MATHON Gregoire;TRICOT Nicolas</value>
+            <value>MATHON Gregoire;</value>
         </entry>
     </mapParamsSpec>
     <mapPlans>

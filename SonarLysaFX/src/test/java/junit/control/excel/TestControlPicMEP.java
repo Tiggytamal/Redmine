@@ -33,14 +33,14 @@ public class TestControlPicMEP extends TestControlExcel<TypeColPic, ControlPic, 
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
-    public void calculIndiceColonnes() throws Exception
+    public void testCalculIndiceColonnes() throws Exception
     {
         // Test initialisation colonnes. Pour ce fichier, la première colonne ne sert pas.
-        calculIndiceColonnes(0);
+        testCalculIndiceColonnes(0);
     }
 
     @Test
-    public void recupLotsExcelPourMEP()
+    public void testRecupLotsExcelPourMEP()
     {
         // Initialisation - récupérer vues depuis Sonar
         Map<String, Vue> mapQube = new HashMap<>();
@@ -58,7 +58,7 @@ public class TestControlPicMEP extends TestControlExcel<TypeColPic, ControlPic, 
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void recupLotsExcelPourMEPException1()
+    public void testRecupLotsExcelPourMEPException1()
     {
         // Appel avec map vide
         Map<String, Vue> mapQube = new HashMap<>();
@@ -66,7 +66,7 @@ public class TestControlPicMEP extends TestControlExcel<TypeColPic, ControlPic, 
     }
     
     @Test (expected = IllegalArgumentException.class)
-    public void recupLotsExcelPourMEPException2()
+    public void testRecupLotsExcelPourMEPException2()
     {
         // Appel avec map nulle
         handler.recupLotsExcelPourMEP(null);

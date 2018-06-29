@@ -30,14 +30,14 @@ public class TestTextRange
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getStartLine()
+    public void testGetStartLine()
     {
         assertEquals(STARTLINE, modele.getStartLine());
         assertEquals(0, modeleNull.getStartLine());
     }
     
     @Test
-    public void setStartLine()
+    public void testSetStartLine()
     {
         modele.setStartLine(10);
         assertEquals(10, modele.getStartLine());
@@ -46,14 +46,14 @@ public class TestTextRange
     }
     
     @Test
-    public void getEndLine()
+    public void testGetEndLine()
     {
         assertEquals(ENDLINE, modele.getEndLine());
         assertEquals(0, modeleNull.getEndLine());
     }
     
     @Test
-    public void setEndLine()
+    public void testSetEndLine()
     {
         modele.setEndLine(10);
         assertEquals(10, modele.getEndLine());
@@ -62,14 +62,14 @@ public class TestTextRange
     }
     
     @Test
-    public void getStartOffset()
+    public void testGetStartOffset()
     {
         assertEquals(STARTOFFSET, modele.getStartOffset());
         assertEquals(0, modeleNull.getStartOffset());
     }
     
     @Test
-    public void setStartOffset()
+    public void testSetStartOffset()
     {
         modele.setStartOffset(10);
         assertEquals(10, modele.getStartOffset());
@@ -78,14 +78,14 @@ public class TestTextRange
     }
     
     @Test
-    public void getEndOffset()
+    public void testGetEndOffset()
     {
         assertEquals(ENDOFFSET, modele.getEndOffset());
         assertEquals(0, modeleNull.getEndOffset());
     }
     
     @Test
-    public void setEndOffset()
+    public void testSetEndOffset()
     {
         modele.setEndOffset(10);
         assertEquals(10, modele.getEndOffset());

@@ -33,7 +33,7 @@ public class TestProprieteXML
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
-    public void proprieteXML() throws Exception
+    public void testProprieteXML() throws Exception
     {
         // Test initialisation des map à la construction       
         assertFalse(propriete.getMapParams() == null);
@@ -52,7 +52,7 @@ public class TestProprieteXML
     
     
     @Test
-    public void controleDonnees()
+    public void testControleDonnees()
     {
         // Initialisation. mock des méthode de contrôle
         
@@ -60,7 +60,7 @@ public class TestProprieteXML
     }
     
     @Test (expected = TechnicalException.class)
-    public void getMapException()
+    public void testGetMapException()
     {
         propriete.getMap(TypcColTest.class);
     }

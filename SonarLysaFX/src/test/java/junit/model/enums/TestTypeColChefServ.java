@@ -15,7 +15,7 @@ public class TestTypeColChefServ
     }
     
     @Test
-    public void getValeur()
+    public void testGetValeur()
     {
         assertEquals("Direction", TypeColChefServ.DIRECTION.getValeur());
         assertEquals("Département", TypeColChefServ.DEPARTEMENT.getValeur());
@@ -25,7 +25,7 @@ public class TestTypeColChefServ
     }
     
     @Test
-    public void getNomCol()
+    public void testGetNomCol()
     {
         assertEquals("colDir", TypeColChefServ.DIRECTION.getNomCol());
         assertEquals("colDepart", TypeColChefServ.DEPARTEMENT.getNomCol());

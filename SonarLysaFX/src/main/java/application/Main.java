@@ -74,7 +74,7 @@ public class Main extends Application
             gestionException(e.getCause());
         else
         {
-            Statics.logger.error(e);
+            Statics.LOGPLANTAGE.error(e);
             createAlert(Severity.ERROR, e, e.getClass().getSimpleName() + e.getMessage());
         }
     }
@@ -105,6 +105,7 @@ public class Main extends Application
             alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Information");
         }
+        alert.getDialogPane().getStylesheets().add(Statics.CSS);
         alert.setHeaderText(null);
         alert.setContentText(detail);
 
@@ -118,7 +119,7 @@ public class Main extends Application
             String exceptionText = sw.toString();
             
             // Logging de l'erreur
-            Statics.logPlantage.info(sw.toString());
+            Statics.LOGPLANTAGE.error(sw.toString());
 
             // Préparation de l'affichage dans al fenêtre
             Label label = new Label("Stacktrace :");

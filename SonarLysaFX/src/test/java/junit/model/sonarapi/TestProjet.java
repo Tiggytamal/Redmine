@@ -34,14 +34,14 @@ public class TestProjet
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getKey()
+    public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
         assertNull(modeleNull.getKey());
     }
     
     @Test
-    public void setKey()
+    public void testSetKey()
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
@@ -50,14 +50,14 @@ public class TestProjet
     }
     
     @Test
-    public void getId()
+    public void testGetId()
     {
         assertEquals(ID, modele.getId());
         assertNull(modeleNull.getId());
     }
     
     @Test
-    public void setId()
+    public void testSetId()
     {
         modele.setId(NEWVAL);
         assertEquals(NEWVAL, modele.getId());
@@ -66,14 +66,14 @@ public class TestProjet
     }
     
     @Test
-    public void getNom()
+    public void testGetNom()
     {
         assertEquals(NOM, modele.getNom());
         assertNull(modeleNull.getNom());
     }
     
     @Test
-    public void setNom()
+    public void testSetNom()
     {
         modele.setNom(NEWVAL);
         assertEquals(NEWVAL, modele.getNom());
@@ -82,14 +82,14 @@ public class TestProjet
     }
     
     @Test
-    public void getSc()
+    public void testGetSc()
     {
         assertEquals(SC, modele.getSc());
         assertNull(modeleNull.getSc());
     }
     
     @Test
-    public void setSc()
+    public void testSetSc()
     {
         modele.setSc(NEWVAL);
         assertEquals(NEWVAL, modele.getSc());
@@ -98,14 +98,14 @@ public class TestProjet
     }
     
     @Test
-    public void getQu()
+    public void testGetQu()
     {
         assertEquals(QU, modele.getQu());
         assertNull(modeleNull.getQu());
     }
     
     @Test
-    public void setQu()
+    public void testSetQu()
     {
         modele.setQu(NEWVAL);
         assertEquals(NEWVAL, modele.getQu());
@@ -114,14 +114,14 @@ public class TestProjet
     }
     
     @Test
-    public void getLot()
+    public void testGetLot()
     {
         assertEquals(LOT, modele.getLot());
         assertNull(modeleNull.getLot());
     }
     
     @Test
-    public void setLot()
+    public void testSetLot()
     {
         modele.setLot(NEWVAL);
         assertEquals(NEWVAL, modele.getLot());

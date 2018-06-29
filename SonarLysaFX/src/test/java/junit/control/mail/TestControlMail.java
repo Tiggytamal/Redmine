@@ -19,7 +19,7 @@ public class TestControlMail extends JunitBase
     }
 
     @Test
-    public void test() throws TeamRepositoryException
+    public void testEnvoyer() throws TeamRepositoryException
     {
         handler = new ControlMail();
         handler.envoyerMail();

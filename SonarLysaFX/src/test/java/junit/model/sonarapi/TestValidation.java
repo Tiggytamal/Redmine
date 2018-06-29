@@ -28,14 +28,14 @@ public class TestValidation
     /*---------- METHODES PUBLIQUES ----------*/
        
     @Test
-    public void isValid()
+    public void testIsValid()
     {
         assertTrue(modele.isValid());
         assertFalse(modeleNull.isValid());
     }
     
     @Test
-    public void setValid()
+    public void testSetValid()
     {
         modele.setValid(false);
         assertFalse(modele.isValid());

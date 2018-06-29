@@ -26,7 +26,7 @@ public class TestTypePlan
     }
     
     @Test
-    public void getClassJob()
+    public void testGetClassJob()
     {
         assertEquals(JobAnomaliesSonar.class, TypePlan.SUIVIHEBDO.getClassJob());
         assertEquals(JobVuesCHC.class, TypePlan.VUECHC.getClassJob());

@@ -52,7 +52,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test(expected = AssertException.class)
-    public void createReflexion() throws InstantiationException, IllegalAccessException
+    public void testCreateReflexion() throws InstantiationException, IllegalAccessException
     {
         // Contrôle que l'on ne peut pas instancier un deuxième controleur par réflexion
         try
@@ -66,7 +66,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void connexionFalse() throws IllegalAccessException, TeamRepositoryException
+    public void testConnexionFalse() throws IllegalAccessException, TeamRepositoryException
     {
         // Test d'un retour à false de la connexion suite à une exception de l'appel à login.
         // Création mock puis remplacement repo du handler.
@@ -81,10 +81,10 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void recupProjetRTCDepuisWiLot() throws TeamRepositoryException
+    public void testRecupProjetRTCDepuisWiLot() throws TeamRepositoryException
     {
         // Intialisation
-        Logger logger = TestUtils.getMockLogger("logger");
+        Logger logger = TestUtils.getMockLogger("LOGGER");
 
         // Test avec lot absent de RTC
         assertEquals("", handler.recupProjetRTCDepuisWiLot(10));
@@ -98,7 +98,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void recupEtatElement() throws TeamRepositoryException
+    public void testRecupEtatElement() throws TeamRepositoryException
     {
         IWorkItem item = handler.recupWorkItemDepuisId(298846);
         if (item != null)
@@ -111,7 +111,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void recupWorkItemDepuisId() throws TeamRepositoryException
+    public void testRecupWorkItemDepuisId() throws TeamRepositoryException
     {
         // Test sur la récupération des objets depuis RTC
         assertNull(handler.recupWorkItemDepuisId(10));
@@ -132,16 +132,9 @@ public class TestControlRTC extends JunitBase
         assertNotNull(item);
         assertEquals("defect", item.getWorkItemType());
     }
-    
-    @Test
-    public void test() throws TeamRepositoryException
-    {
-        IWorkItem item = handler.recupWorkItemDepuisId(301159);
-        handler.recupDatesEtatsLot(item);
-    }
 
     @Test
-    public void recupererTousLesProjets() throws Exception
+    public void testRecupererTousLesProjets() throws Exception
     {
         Whitebox.invokeMethod(handler, "recupererTousLesProjets");
 
@@ -152,7 +145,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void creerDefect()
+    public void testCreerDefect()
     {
         String projetTest = "PRJF_T300703";
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
@@ -165,7 +158,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void recupererValeurAttribut() throws TeamRepositoryException
+    public void testRecupererValeurAttribut() throws TeamRepositoryException
     {
         // Test sur la récupération des valeurs des attributs
         // Intialisation d'un item.
@@ -186,7 +179,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void recupContributorDepuisNom() throws TeamRepositoryException, IOException
+    public void testRecupContributorDepuisNom() throws TeamRepositoryException, IOException
     {
         // Appel du service pour récupérer le fichier de suivi.
         ControlSuivi control = ExcelFactory.getControlleur(TypeColSuivi.class, new File(getClass().getResource(Statics.RESOURCESTEST + "Suivi_Quality_GateTest.xlsx").getFile()));
@@ -220,7 +213,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void shutdown()
+    public void testShutdown()
     {
         // Véfie que la plateforme est bien fermée
         handler.shutdown();

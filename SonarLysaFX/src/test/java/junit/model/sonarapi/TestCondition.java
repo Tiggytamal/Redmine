@@ -34,14 +34,14 @@ public class TestCondition
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getStatus()
+    public void testGetStatus()
     {
         assertEquals(STATUS, modele.getStatus());
         assertNull(modeleNull.getStatus());
     }
     
     @Test
-    public void setStatus()
+    public void testSetStatus()
     {
         modele.setStatus(NEWVAL);
         assertEquals(NEWVAL, modele.getStatus());
@@ -50,14 +50,14 @@ public class TestCondition
     }
     
     @Test
-    public void getMetricKeys()
+    public void testGetMetricKeys()
     {
         assertEquals(METRICKEYS, modele.getMetricKeys());
         assertNull(modeleNull.getMetricKeys());
     }
     
     @Test
-    public void setMetricKeys()
+    public void testSetMetricKeys()
     {
         modele.setMetricKeys(NEWVAL);
         assertEquals(NEWVAL, modele.getMetricKeys());
@@ -66,14 +66,14 @@ public class TestCondition
     }
     
     @Test
-    public void getComparator()
+    public void testGetComparator()
     {
         assertEquals(COMPARATOR, modele.getComparator());
         assertNull(modeleNull.getComparator());
     }
     
     @Test
-    public void setComparator()
+    public void testSetComparator()
     {
         modele.setComparator(NEWVAL);
         assertEquals(NEWVAL, modele.getComparator());
@@ -82,14 +82,14 @@ public class TestCondition
     }
     
     @Test
-    public void getPeriodIndex()
+    public void testGetPeriodIndex()
     {
         assertEquals(PERIODEINDEX, modele.getPeriodIndex());
         assertEquals(0, modeleNull.getPeriodIndex());
     }
     
     @Test
-    public void setPeriodIndex()
+    public void testSetPeriodIndex()
     {
         modele.setPeriodIndex(10);
         assertEquals(10, modele.getPeriodIndex());
@@ -98,14 +98,14 @@ public class TestCondition
     }
     
     @Test
-    public void getErrorThreshold()
+    public void testGetErrorThreshold()
     {
         assertEquals(ERRORTHRESHOLD, modele.getErrorThreshold());
         assertNull(modeleNull.getErrorThreshold());
     }
     
     @Test
-    public void setErrorThreshold()
+    public void testSetErrorThreshold()
     {
         modele.setErrorThreshold(NEWVAL);
         assertEquals(NEWVAL, modele.getErrorThreshold());
@@ -114,14 +114,14 @@ public class TestCondition
     }
     
     @Test
-    public void getActualValue()
+    public void testGetActualValue()
     {
         assertEquals(VALUE, modele.getActualValue());
         assertNull(modeleNull.getActualValue());
     }
     
     @Test
-    public void setActualValue()
+    public void testSetActualValue()
     {
         modele.setActualValue(NEWVAL);
         assertEquals(NEWVAL, modele.getActualValue());

@@ -80,14 +80,14 @@ public class TestIssue
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
-    public void getKey()
+    public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
         assertNull(modeleNull.getKey());
     }
     
     @Test
-    public void setKey()
+    public void testSetKey()
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
@@ -96,14 +96,14 @@ public class TestIssue
     }
     
     @Test
-    public void getResolution()
+    public void testGetResolution()
     {
         assertEquals(RESOLUTION, modele.getResolution());
         assertNull(modeleNull.getResolution());
     }
     
     @Test
-    public void setResolution()
+    public void testSetResolution()
     {
         modele.setResolution(NEWVAL);
         assertEquals(NEWVAL, modele.getResolution());
@@ -112,14 +112,14 @@ public class TestIssue
     }
     
     @Test
-    public void getLine()
+    public void testGetLine()
     {
         assertEquals(LINE, modele.getLine());
         assertEquals(0, modeleNull.getLine());
     }
     
     @Test
-    public void setLine()
+    public void testSetLine()
     {
         modele.setLine(50);
         assertEquals(50, modele.getLine());
@@ -128,14 +128,14 @@ public class TestIssue
     }
     
     @Test
-    public void getTextRange()
+    public void testGetTextRange()
     {
         assertEquals(TEXTRANGE, modele.getTextRange());
         assertNull(modeleNull.getTextRange());
     }
     
     @Test
-    public void setTextRange()
+    public void testSetTextRange()
     {
         modele.setTextRange(TEXTRANGE);
         assertEquals(TEXTRANGE, modele.getTextRange());
@@ -144,14 +144,14 @@ public class TestIssue
     }
     
     @Test
-    public void getEffort()
+    public void testGetEffort()
     {
         assertEquals(EFFORT, modele.getEffort());
         assertNull(modeleNull.getEffort());
     }
     
     @Test
-    public void setEffort()
+    public void testSetEffort()
     {
         modele.setEffort(NEWVAL);
         assertEquals(NEWVAL, modele.getEffort());
@@ -160,14 +160,14 @@ public class TestIssue
     }
     
     @Test
-    public void getDebt()
+    public void testGetDebt()
     {
         assertEquals(DEBT, modele.getDebt());
         assertNull(modeleNull.getDebt());
     }
     
     @Test
-    public void setDebt()
+    public void testSetDebt()
     {
         modele.setDebt(NEWVAL);
         assertEquals(NEWVAL, modele.getDebt());
@@ -176,7 +176,7 @@ public class TestIssue
     }
     
     @Test
-    public void getCommentaires()
+    public void testGetCommentaires()
     {
         assertEquals(COMMENTAIRES, modele.getCommentaires());
         assertNotNull(modeleNull.getCommentaires());
@@ -184,7 +184,7 @@ public class TestIssue
     }
 
     @Test
-    public void setCommentaires()
+    public void testSetCommentaires()
     {
         modele.setCommentaires(null);
         assertNotNull(modele.getCommentaires());
@@ -193,14 +193,14 @@ public class TestIssue
     }
     
     @Test
-    public void getAttr()
+    public void testGetAttr()
     {
         assertEquals(ATTR, modele.getAttr());
         assertNull(modeleNull.getAttr());
     }
     
     @Test
-    public void setAttr()
+    public void testSetAttr()
     {
         modele.setAttr(NEWVAL);
         assertEquals(NEWVAL, modele.getAttr());
@@ -209,7 +209,7 @@ public class TestIssue
     }
     
     @Test
-    public void getTransitions()
+    public void testGetTransitions()
     {
         assertEquals(TRANSITIONS, modele.getTransitions());
         assertNotNull(modeleNull.getTransitions());
@@ -217,7 +217,7 @@ public class TestIssue
     }
 
     @Test
-    public void setTransitions()
+    public void testSetTransitions()
     {
         modele.setTransitions(null);
         assertNotNull(modele.getTransitions());
@@ -226,7 +226,7 @@ public class TestIssue
     }
     
     @Test
-    public void getActions()
+    public void testGetActions()
     {
         assertEquals(ACTIONS, modele.getActions());
         assertNotNull(modeleNull.getActions());
@@ -234,7 +234,7 @@ public class TestIssue
     }
 
     @Test
-    public void setActions()
+    public void testSetActions()
     {
         modele.setActions(null);
         assertNotNull(modele.getActions());
@@ -243,14 +243,14 @@ public class TestIssue
     }
     
     @Test
-    public void getRule()
+    public void testGetRule()
     {
         assertEquals(RULE, modele.getRule());
         assertNull(modeleNull.getRule());
     }
     
     @Test
-    public void setRule()
+    public void testSetRule()
     {
         modele.setRule(NEWVAL);
         assertEquals(NEWVAL, modele.getRule());
@@ -259,14 +259,14 @@ public class TestIssue
     }
     
     @Test
-    public void getSeverity()
+    public void testGetSeverity()
     {
         assertEquals(SEVERITY, modele.getSeverity());
         assertNull(modeleNull.getSeverity());
     }
     
     @Test
-    public void setSeverity()
+    public void testSetSeverity()
     {
         modele.setSeverity(NEWVAL);
         assertEquals(NEWVAL, modele.getSeverity());
@@ -275,14 +275,14 @@ public class TestIssue
     }
     
     @Test
-    public void getComposant()
+    public void testGetComposant()
     {
         assertEquals(COMPOSANT, modele.getComposant());
         assertNull(modeleNull.getRule());
     }
     
     @Test
-    public void setComposant()
+    public void testSetComposant()
     {
         modele.setComposant(NEWVAL);
         assertEquals(NEWVAL, modele.getComposant());
@@ -291,14 +291,14 @@ public class TestIssue
     }
     
     @Test
-    public void getComposantId()
+    public void testGetComposantId()
     {
         assertEquals(COMPOSANTID, modele.getComposantId());
         assertNull(modeleNull.getComposantId());
     }
     
     @Test
-    public void setComposantId()
+    public void testSetComposantId()
     {
         modele.setComposantId(NEWVAL);
         assertEquals(NEWVAL, modele.getComposantId());
@@ -307,14 +307,14 @@ public class TestIssue
     }
     
     @Test
-    public void getProjet()
+    public void testGetProjet()
     {
         assertEquals(PROJET, modele.getProjet());
         assertNull(modeleNull.getProjet());
     }
     
     @Test
-    public void setProjet()
+    public void testSetProjet()
     {
         modele.setProjet(NEWVAL);
         assertEquals(NEWVAL, modele.getProjet());
@@ -323,14 +323,14 @@ public class TestIssue
     }
     
     @Test
-    public void getSubProject()
+    public void testGetSubProject()
     {
         assertEquals(SUBPROJET, modele.getSubProject());
         assertNull(modeleNull.getSubProject());
     }
     
     @Test
-    public void setSubProject()
+    public void testSetSubProject()
     {
         modele.setSubProject(NEWVAL);
         assertEquals(NEWVAL, modele.getSubProject());
@@ -339,14 +339,14 @@ public class TestIssue
     }
     
     @Test
-    public void getStatus()
+    public void testGetStatus()
     {
         assertEquals(STATUS, modele.getStatus());
         assertNull(modeleNull.getStatus());
     }
     
     @Test
-    public void setStatus()
+    public void testSetStatus()
     {
         modele.setStatus(NEWVAL);
         assertEquals(NEWVAL, modele.getStatus());
@@ -355,14 +355,14 @@ public class TestIssue
     }
     
     @Test
-    public void getMessage()
+    public void testGetMessage()
     {
         assertEquals(MESSAGE, modele.getMessage());
         assertNull(modeleNull.getMessage());
     }
     
     @Test
-    public void setMessage()
+    public void testSetMessage()
     {
         modele.setMessage(NEWVAL);
         assertEquals(NEWVAL, modele.getMessage());
@@ -371,14 +371,14 @@ public class TestIssue
     }
     
     @Test
-    public void getAutheur()
+    public void testGetAutheur()
     {
         assertEquals(AUTHEUR, modele.getAutheur());
         assertNull(modeleNull.getAutheur());
     }
     
     @Test
-    public void setAutheur()
+    public void testSetAutheur()
     {
         modele.setAutheur(NEWVAL);
         assertEquals(NEWVAL, modele.getAutheur());
@@ -387,14 +387,14 @@ public class TestIssue
     }
     
     @Test
-    public void getTags()
+    public void testGetTags()
     {
         assertEquals(TAGS, modele.getTags());
         assertNotNull(modeleNull.getTags());
     }
 
     @Test
-    public void setTags()
+    public void testSetTags()
     {
         modele.setTags(null);
         assertNotNull(modele.getTags());
@@ -403,7 +403,7 @@ public class TestIssue
     }
     
     @Test
-    public void getFlows()
+    public void testGetFlows()
     {
         assertEquals(FLOWS, modele.getFlows());
         assertNotNull(modeleNull.getFlows());
@@ -411,7 +411,7 @@ public class TestIssue
     }
 
     @Test
-    public void setFlows()
+    public void testSetFlows()
     {
         modele.setFlows(null);
         assertNotNull(modele.getFlows());
@@ -420,14 +420,14 @@ public class TestIssue
     }
     
     @Test
-    public void getCreationDate()
+    public void testGetCreationDate()
     {
         assertEquals(CREATIONDATE, modele.getCreationDate());
         assertNull(modeleNull.getCreationDate());
     }
     
     @Test
-    public void setCreationDate()
+    public void testSetCreationDate()
     {
         modele.setCreationDate(NEWVAL);
         assertEquals(NEWVAL, modele.getCreationDate());
@@ -436,14 +436,14 @@ public class TestIssue
     }
     
     @Test
-    public void getUpdateDate()
+    public void testGetUpdateDate()
     {
         assertEquals(UPDATEDATE, modele.getUpdateDate());
         assertNull(modeleNull.getUpdateDate());
     }
     
     @Test
-    public void setUpdateDate()
+    public void testSetUpdateDate()
     {
         modele.setUpdateDate(NEWVAL);
         assertEquals(NEWVAL, modele.getUpdateDate());
@@ -452,14 +452,14 @@ public class TestIssue
     }
     
     @Test
-    public void getCloseDate()
+    public void testGetCloseDate()
     {
         assertEquals(CLOSEDATE, modele.getCloseDate());
         assertNull(modeleNull.getCloseDate());
     }
     
     @Test
-    public void setCloseDate()
+    public void testSetCloseDate()
     {
         modele.setCloseDate(NEWVAL);
         assertEquals(NEWVAL, modele.getCloseDate());
@@ -468,14 +468,14 @@ public class TestIssue
     }
     
     @Test
-    public void getType()
+    public void testGetType()
     {
         assertEquals(TYPE, modele.getType());
         assertNull(modeleNull.getType());
     }
     
     @Test
-    public void setType()
+    public void testSetType()
     {
         modele.setType(NEWVAL);
         assertEquals(NEWVAL, modele.getType());
@@ -484,7 +484,7 @@ public class TestIssue
     }
     
     @Test
-    public void getComposants()
+    public void testGetComposants()
     {
         assertEquals(COMPOSANTS, modele.getComposants());
         assertNotNull(modeleNull.getComposants());
@@ -492,7 +492,7 @@ public class TestIssue
     }
 
     @Test
-    public void setComposants()
+    public void testSetComposants()
     {
         modele.setComposants(null);
         assertNotNull(modele.getComposants());
@@ -501,7 +501,7 @@ public class TestIssue
     }
     
     @Test
-    public void getRules()
+    public void testGetRules()
     {
         assertEquals(RULES, modele.getRules());
         assertNotNull(modeleNull.getRules());
@@ -509,7 +509,7 @@ public class TestIssue
     }
 
     @Test
-    public void setRules()
+    public void testSetRules()
     {
         modele.setRules(null);
         assertNotNull(modele.getRules());
@@ -518,7 +518,7 @@ public class TestIssue
     }
     
     @Test
-    public void getUsers()
+    public void testGetUsers()
     {
         assertEquals(USERS, modele.getUsers());
         assertNotNull(modeleNull.getUsers());
@@ -526,7 +526,7 @@ public class TestIssue
     }
 
     @Test
-    public void setUsers()
+    public void testSetUsers()
     {
         modele.setUsers(null);
         assertNotNull(modele.getUsers());

@@ -30,14 +30,14 @@ public class TestParametre
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getClef()
+    public void testGetClef()
     {
         assertEquals(CLEF, modele.getClef());
         assertNull(modeleNull.getClef());
     }
     
     @Test
-    public void setClef()
+    public void testSetClef()
     {
         modele.setClef(NEWVAL);
         assertEquals(NEWVAL, modele.getClef());
@@ -46,14 +46,14 @@ public class TestParametre
     }
     
     @Test
-    public void getValeur()
+    public void testGetValeur()
     {
         assertEquals(VALEUR, modele.getValeur());
         assertNull(modeleNull.getValeur());
     }
     
     @Test
-    public void setValeur()
+    public void testSetValeur()
     {
         modele.setValeur(NEWVAL);
         assertEquals(NEWVAL, modele.getValeur());

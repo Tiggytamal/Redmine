@@ -22,16 +22,16 @@ public class TestControlClarity extends TestControlExcel<TypeColClarity, Control
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void calculIndiceColonnes() throws Exception
+    public void testCalculIndiceColonnes() throws Exception
     {
         // Test initialisation colonnes. Pour ce fichier, la première colonne n'est pas utilisée
-        calculIndiceColonnes(0);
+        testCalculIndiceColonnes(0);
     }
     
     @Test
-    public void recupDonneesDepuisExcel()
+    public void testRecupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel(map -> map.size() == 8277);
+        testRecupDonneesDepuisExcel(map -> map.size() == 8277);
     }
     
     /*---------- METHODES PRIVEES ----------*/

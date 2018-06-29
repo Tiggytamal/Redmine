@@ -41,15 +41,15 @@ public class Statics
     /* ----- loggers ----- */
     
     /** logger général */
-	public static final Logger logger = LogManager.getLogger("complet.log");
+	public static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger composants sans applications */
-    public static final Logger logSansApp = LogManager.getLogger("sansapp-log");
+    public static final Logger LOGSANSAPP = LogManager.getLogger("sansapp-log");
     /** logger composants avec application INCONNUE*/
-    public static final Logger loginconnue = LogManager.getLogger("inconnue-log");
+    public static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
     /** logger applications non listée dans le référentiel */
-    public static final Logger lognonlistee = LogManager.getLogger("nonlistee-log");
+    public static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
     /** logger plantages de l'application */
-    public static final Logger logPlantage = LogManager.getLogger("plantage-log"); 
+    public static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
     
     /* ----- String statiques ----- */
     
@@ -91,6 +91,8 @@ public class Statics
     public static final String INCONNUE = "INCONNUE";
     /** donnée inconnue */
     public static final String INCONNU = "INCONNU";
+    
+    public static final String CSS = "application.css";
 
     /* ----- Objets statiques ----- */
     

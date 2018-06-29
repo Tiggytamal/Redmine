@@ -25,6 +25,7 @@ import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
 import model.enums.TypeFichier;
+import utilities.Statics;
 import utilities.TechnicalException;
 
 /**
@@ -112,12 +113,19 @@ public class ControlXML
      *            Fichier à suvagarder, doit implémenter l'interface {@link model.XML}.
      * @throws JAXBException
      */
-    public void saveParam(XML fichier) throws JAXBException
+    public void saveParam(XML fichier)
     {
-        JAXBContext context = JAXBContext.newInstance(fichier.getClass());
-        Marshaller jaxbMarshaller = context.createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        jaxbMarshaller.marshal(fichier, fichier.getFile());
+        try
+        {
+            JAXBContext context = JAXBContext.newInstance(fichier.getClass());
+            Marshaller jaxbMarshaller = context.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxbMarshaller.marshal(fichier, fichier.getFile());
+        } catch (JAXBException e)
+        {
+            Statics.LOGPLANTAGE.error(e);
+            throw new TechnicalException("Impossible de sauvegarder le fichier de propriété", e);
+        }
     }
 
     /**
@@ -180,7 +188,7 @@ public class ControlXML
         {
             fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getControlleur(typeCol, file).recupDonneesDepuisExcel());
             saveParam(fichiersXML);
-        } catch (IOException | JAXBException e)
+        } catch (IOException e)
         {
             throw new TechnicalException(ERREUR, e);
         }

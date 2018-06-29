@@ -32,14 +32,14 @@ public class TestStatusPeriode
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getIndex()
+    public void testGetIndex()
     {
         assertEquals(INDEX, modele.getIndex());
         assertEquals(0, modeleNull.getIndex());
     }
     
     @Test
-    public void setIndex()
+    public void testSetIndex()
     {
         modele.setIndex(20);
         assertEquals(20, modele.getIndex());
@@ -48,14 +48,14 @@ public class TestStatusPeriode
     }
     
     @Test
-    public void getMode()
+    public void testGetMode()
     {
         assertEquals(MODE, modele.getMode());
         assertNull(modeleNull.getMode());
     }
     
     @Test
-    public void setMode()
+    public void testSetMode()
     {
         modele.setMode(NEWVAL);
         assertEquals(NEWVAL, modele.getMode());
@@ -64,14 +64,14 @@ public class TestStatusPeriode
     }
     
     @Test
-    public void getDate()
+    public void testGetDate()
     {
         assertEquals(DATE, modele.getDate());
         assertNull(modeleNull.getDate());
     }
     
     @Test
-    public void setDate()
+    public void testSetDate()
     {
         modele.setDate(NEWVAL);
         assertEquals(NEWVAL, modele.getDate());
@@ -80,14 +80,14 @@ public class TestStatusPeriode
     }
     
     @Test
-    public void getParameter()
+    public void testGetParameter()
     {
         assertEquals(PARAMETER, modele.getParameter());
         assertNull(modeleNull.getParameter());
     }
     
     @Test
-    public void setParameter()
+    public void testSetParameter()
     {
         modele.setParameter(NEWVAL);
         assertEquals(NEWVAL, modele.getParameter());

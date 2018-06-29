@@ -15,7 +15,7 @@ public class TestTypeColPic
     }
     
     @Test
-    public void getValeur()
+    public void testGetValeur()
     {
         assertEquals("Lot", TypeColPic.LOT.getValeur());
         assertEquals("Libellé", TypeColPic.LIBELLE.getValeur());
@@ -33,7 +33,7 @@ public class TestTypeColPic
     }
     
     @Test
-    public void getNomCol()
+    public void testGetNomCol()
     {
         assertEquals("colLot", TypeColPic.LOT.getNomCol());
         assertEquals("colLibelle", TypeColPic.LIBELLE.getNomCol());

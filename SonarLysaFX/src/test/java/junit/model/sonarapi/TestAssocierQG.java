@@ -30,14 +30,14 @@ public class TestAssocierQG
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getGateId()
+    public void testGetGateId()
     {
         assertEquals(GATEID, modele.getGateId());
         assertNull(modeleNull.getGateId());
     }
     
     @Test
-    public void setGateId()
+    public void testSetGateId()
     {
         modele.setGateId(NEWVAL);
         assertEquals(NEWVAL, modele.getGateId());
@@ -46,14 +46,14 @@ public class TestAssocierQG
     }
     
     @Test
-    public void getProjectId()
+    public void testGetProjectId()
     {
         assertEquals(PROJECTID, modele.getProjectId());
         assertNull(modeleNull.getProjectId());
     }
     
     @Test
-    public void setKey()
+    public void testSetKey()
     {
         modele.setProjectId(NEWVAL);
         assertEquals(NEWVAL, modele.getProjectId());

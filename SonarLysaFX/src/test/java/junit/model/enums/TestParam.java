@@ -12,7 +12,7 @@ public class TestParam
     @Test
     public void testSize()
     {
-        assertEquals(12, Param.values().length);
+        assertEquals(15, Param.values().length);
     }
     
     @Test
@@ -30,5 +30,8 @@ public class TestParam
         assertFalse(Param.URLRTC.toString().isEmpty());
         assertFalse(Param.RTCLOTCHC.toString().isEmpty());
         assertFalse(Param.NOMFICHIERCOBOL.toString().isEmpty());
+        assertFalse(Param.IPMAIL.toString().isEmpty());
+        assertFalse(Param.PORTMAIL.toString().isEmpty());
+        assertFalse(Param.AQPMAIL.toString().isEmpty());
     }
 }

@@ -47,7 +47,7 @@ public class TestControlJob extends JunitBase
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
-    public void creationJobsSonar() throws SchedulerException, IllegalAccessException
+    public void testCreationJobsSonar() throws SchedulerException, IllegalAccessException
     {
         // Initialisation
         Map<TypePlan, Planificateur> mapPlans = proprietes.getMapPlans();
@@ -81,7 +81,7 @@ public class TestControlJob extends JunitBase
     }
 
     @Test
-    public void creerTrigger() throws Exception
+    public void testCreerTrigger() throws Exception
     {
         // Parcours de tous les planificateur et vérification que les infos sont bonnes après création des triggers
         for (Map.Entry<TypePlan, Planificateur> entry : proprietes.getMapPlans().entrySet())
@@ -109,14 +109,14 @@ public class TestControlJob extends JunitBase
     }
 
     @Test
-    public void creationJobAnomaliesSonar() throws SchedulerException, IllegalAccessException
+    public void testCreationJobAnomaliesSonar() throws SchedulerException, IllegalAccessException
     {
         handler.creationJobsSonar();
         assertTrue(((Scheduler) Whitebox.getField(ControlJob.class, SCHEDULER).get(handler)).isStarted());
     }
 
     @Test
-    public void fermeturePlanificateur() throws IllegalAccessException, SchedulerException
+    public void testFermeturePlanificateur() throws IllegalAccessException, SchedulerException
     {
         // Test si le planificateur se ferme bien
         handler.fermeturePlanificateur();

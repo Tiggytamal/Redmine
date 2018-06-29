@@ -49,26 +49,26 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test (expected = FunctionalException.class)
-    public void creerVueCHCCDMTaskException1()
+    public void testCreerVueCHCCDMTaskException1()
     {
         new CreerVueCHCCDMTask(null, CHCouCDM.CDM);
     }
     
     @Test (expected = FunctionalException.class)
-    public void creerVueCHCCDMTaskException2()
+    public void testCreerVueCHCCDMTaskException2()
     {
         new CreerVueCHCCDMTask(new ArrayList<>(), CHCouCDM.CDM);
     }
     
     @Test
-    public void call() throws Exception
+    public void testCall() throws Exception
     {
         task = PowerMockito.spy(task);
         assertTrue(Whitebox.invokeMethod(task, "call"));
     }
     
     @Test
-    public void creerVueCHCouCDM() throws Exception
+    public void testCreerVueCHCouCDM() throws Exception
     {
         // test du retour avec les méthode mockées
         task = PowerMockito.spy(task);
@@ -76,7 +76,7 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     }
     
     @Test
-    public void suppressionVuesMaintenance() throws Exception
+    public void testSuppressionVuesMaintenance() throws Exception
     {
         Whitebox.invokeMethod(task, "suppressionVuesMaintenance", CHCouCDM.CHC, annees);
         Mockito.verify(mock, Mockito.times(52)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
@@ -85,7 +85,7 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     }
     
     @Test
-    public void creerVuesMaintenance() throws Exception
+    public void testCreerVuesMaintenance() throws Exception
     {
         PowerMockito.when(mock.getComposants()).thenCallRealMethod();
         PowerMockito.when(mock.appelWebserviceGET(Mockito.anyString(), Mockito.any())).thenCallRealMethod();
@@ -97,7 +97,7 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     }
     
     @Test
-    public void controle() throws Exception
+    public void testControle() throws Exception
     {
         String methode = "controle";
         assertTrue(Whitebox.invokeMethod(task, methode, CHCouCDM.CDM, "CDM2018"));
@@ -107,7 +107,7 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     }  
     
     @Test
-    public void recupererEditions() throws Exception
+    public void testRecupererEditions() throws Exception
     {
         Map<String, String> map = Whitebox.invokeMethod(task, "recupererEditions", annees);
         for (String string : map.values())

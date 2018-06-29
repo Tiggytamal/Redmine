@@ -24,7 +24,7 @@ public class TestLotSuiviPic extends JunitBase
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getLot()
+    public void testGetLot()
     {
         // test valeur vide ou nulle
         assertEquals("", lotSUiviPic.getLot());
@@ -36,7 +36,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getLibelle()
+    public void testGetLibelle()
     {
         // test valeur vide ou nulle
         assertEquals("", lotSUiviPic.getLibelle());
@@ -48,7 +48,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getProjetClarity()
+    public void testGetProjetClarity()
     {
         // test valeur vide ou nulle
         assertEquals("", lotSUiviPic.getProjetClarity());
@@ -60,7 +60,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getCpiProjet()
+    public void testGetCpiProjet()
     {
         // test valeur vide ou nulle
         assertEquals("", lotSUiviPic.getCpiProjet());
@@ -72,7 +72,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getEdition()
+    public void testGetEdition()
     {
         // test valeur vide ou nulle
         assertEquals("", lotSUiviPic.getEdition());
@@ -84,7 +84,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getNbreComposants()
+    public void testGetNbreComposants()
     {
         // test valeur vide ou nulle
         assertEquals(0, lotSUiviPic.getNbreComposants());
@@ -96,7 +96,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getNbrePaquets()
+    public void testGetNbrePaquets()
     {
         // test valeur vide ou nulle
         assertEquals(0, lotSUiviPic.getNbrePaquets());
@@ -108,7 +108,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getBuild()
+    public void testGetBuild()
     {
         // test valeur vide ou nulle
         assertEquals(null, lotSUiviPic.getBuild());
@@ -119,7 +119,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getDevtu()
+    public void testGetDevtu()
     {
         // test valeur vide ou nulle
         assertEquals(null, lotSUiviPic.getDevtu());
@@ -130,7 +130,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getTfon()
+    public void testGetTfon()
     {
         // test valeur vide ou nulle
         assertEquals(null, lotSUiviPic.getTfon());
@@ -141,7 +141,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getVmoe()
+    public void testGetVmoe()
     {
         // test valeur vide ou nulle
         assertEquals(null, lotSUiviPic.getVmoe());
@@ -152,7 +152,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getVmoa()
+    public void testGetVmoa()
     {
         // test valeur vide ou nulle
         assertEquals(null, lotSUiviPic.getVmoa());
@@ -163,7 +163,7 @@ public class TestLotSuiviPic extends JunitBase
     }
     
     @Test
-    public void getLivraison()
+    public void testGetLivraison()
     {
         // test valeur vide ou nulle
         assertEquals(null, lotSUiviPic.getLivraison());

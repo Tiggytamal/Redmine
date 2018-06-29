@@ -27,17 +27,17 @@ public class TestControlEdition extends TestControlExcel<TypeColEdition, Control
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void calculIndiceColonnes() throws Exception
+    public void testCalculIndiceColonnes() throws Exception
     {
         // Test initialisation colonnes. Pour ce fichier, la première colonne ne sert pas.
-        calculIndiceColonnes(0);
+        testCalculIndiceColonnes(0);
     }
     
     @Test
-    public void recupDonneesDepuisExcel()
+    public void testRecupDonneesDepuisExcel()
     {
         // Premiers test génériques
-        Map<String, String> map = recupDonneesDepuisExcel(a -> a.size() == 72);
+        Map<String, String> map = testRecupDonneesDepuisExcel(a -> a.size() == 72);
         
         // Test sur le format des clefs/valeurs dans la map
         for (Map.Entry<String, String> entry : map.entrySet())
@@ -48,14 +48,14 @@ public class TestControlEdition extends TestControlExcel<TypeColEdition, Control
     }
     
     @Test (expected = FunctionalException.class)
-    public void prepareLibelleException() throws Exception
+    public void testPrepareLibelleException() throws Exception
     {       
         // Test de remontée de l'erreur
         Whitebox.invokeMethod(handler, "prepareLibelle", "mauvais libelle");
     }
     
     @Test
-    public void prepareLibelle() throws Exception
+    public void testPrepareLibelle() throws Exception
     {       
         String methode = "prepareLibelle";
         // Tests des différents cas de la préparation du libellé
@@ -67,7 +67,7 @@ public class TestControlEdition extends TestControlExcel<TypeColEdition, Control
     
     @Test
     @Override
-    public void initSheet() throws Exception
+    public void testInitSheet() throws Exception
     {
         // Test 1 - feuille ok
         Sheet sheet = Whitebox.invokeMethod(handler, "initSheet");
@@ -77,7 +77,7 @@ public class TestControlEdition extends TestControlExcel<TypeColEdition, Control
     
     @Test(expected = FunctionalException.class)
     @Override
-    public void initSheetException() throws Exception
+    public void testInitSheetException() throws Exception
     {
         // Test 2 - feuille nulle
         wb.removeSheetAt(0);

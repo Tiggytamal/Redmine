@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<system-libraries>
-    <library path="G:/Dev/payara41/glassfish/modules/org.eclipse.persistence.core.jar" source="G:/Workspace/libraries/EclipseLink 2.5.2/eclipselink/eclipselink-src-2.6.4.v20160829-44060b6.zip"/>
-    <library path="G:/Dev/payara41/glassfish/modules/javax.persistence.jar" source="G:/Workspace/libraries/javax.persistence-master.zip"/>
-</system-libraries>

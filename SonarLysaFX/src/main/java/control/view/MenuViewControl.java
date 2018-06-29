@@ -5,11 +5,10 @@ import static utilities.Statics.info;
 import java.io.IOException;
 import java.util.Optional;
 
-import com.ibm.team.repository.common.TeamRepositoryException;
-
 import control.rtc.ControlRTC;
 import control.sonar.SonarAPI;
 import control.task.MajVuesTask;
+import control.task.PurgeSonarTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,6 +53,8 @@ public class MenuViewControl extends ViewControl
     @FXML
     private MenuItem aide;
     @FXML
+    private MenuItem purge;
+    @FXML
     private Button connexion;
     @FXML
     private Button deConnexion;
@@ -94,6 +95,7 @@ public class MenuViewControl extends ViewControl
     public void deco()
     {
         mensuel.setDisable(true);
+        purge.setDisable(true);
         majvues.setDisable(true);
         rtc.setDisable(true);
         planificateur.setDisable(true);
@@ -113,7 +115,7 @@ public class MenuViewControl extends ViewControl
         if (source instanceof MenuItem)
             id = ((MenuItem) source).getId();
         
-        if (!info.controle() && !id.equals("options"))
+        if (!info.controle() && !"options".equals(id))
             throw new FunctionalException(Severity.ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
 
         switch (id)
@@ -155,6 +157,7 @@ public class MenuViewControl extends ViewControl
     public void majVues()
     {
         Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.getDialogPane().getStylesheets().add(Statics.CSS);
         alert.setTitle(MajVuesTask.TITRE);
         alert.setHeaderText(null);
         alert.setContentText("Cela lancera la mise à jour de toutes les vues Sonar." + Statics.NL + "Etes-vous sur?");
@@ -165,21 +168,29 @@ public class MenuViewControl extends ViewControl
     }
 
     @FXML
-    public void aide() throws TeamRepositoryException
+    public void aide()
     {
-        Alert aide = new Alert(AlertType.NONE);
-        aide.initStyle(StageStyle.UTILITY);
-        aide.getDialogPane().getStylesheets().add("application.css");
-        aide.setTitle("Aide");
-        aide.setHeaderText(null);
-        aide.setContentText(null);
+        Alert aidePanel = new Alert(AlertType.NONE);
+        aidePanel.initStyle(StageStyle.UTILITY);
+        aidePanel.getDialogPane().getStylesheets().add(Statics.CSS);
+        aidePanel.setTitle("Aide");
+        aidePanel.setHeaderText(null);
+        aidePanel.setContentText(null);
         WebView webView = new WebView();
         webView.getEngine().load(getClass().getResource("/aide/menu.html").toString());
         webView.setPrefSize(640 , 480);
-        aide.setResizable(true);
-        aide.getDialogPane().setContent(webView);
-        aide.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
-        aide.show();
+        aidePanel.setResizable(true);
+        aidePanel.getDialogPane().setContent(webView);
+        aidePanel.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
+        aidePanel.show();
+    }
+    
+    @FXML
+    public void purger()
+    {
+        // Lancement de la task
+        PurgeSonarTask task = new PurgeSonarTask();
+        startTask(task, PurgeSonarTask.TITRE);
     }
 
     /* ---------- METHODES PRIVEES ---------- */
@@ -200,6 +211,7 @@ public class MenuViewControl extends ViewControl
         if (ControlRTC.INSTANCE.connexion() && SonarAPI.INSTANCE.verificationUtilisateur())
         {
             mensuel.setDisable(false);
+            purge.setDisable(false);
             majvues.setDisable(false);
             planificateur.setDisable(false);
             autres.setDisable(false);

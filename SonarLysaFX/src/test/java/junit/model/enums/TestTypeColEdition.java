@@ -15,14 +15,14 @@ public class TestTypeColEdition
     }
     
     @Test
-    public void getValeur()
+    public void testGetValeur()
     {
         assertEquals("Libellé", TypeColEdition.LIBELLE.getValeur());
         assertEquals("Numero de version", TypeColEdition.VERSION.getValeur());
     }
     
     @Test
-    public void getNomCol()
+    public void testGetNomCol()
     {
         assertEquals("colLib", TypeColEdition.LIBELLE.getNomCol());
         assertEquals("colVersion", TypeColEdition.VERSION.getNomCol());

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import model.enums.CHCouCDM;
+import model.enums.Matiere;
 import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
@@ -103,7 +104,7 @@ public class CreerVueCHCCDMTask extends SonarTask
     {
         Map<String, Set<String>> mapVuesACreer = new HashMap<>();
 
-        Map<String, List<Projet>> mapProjets = recupererComposantsSonarVersion(null);
+        Map<String, List<Projet>> mapProjets = recupererComposantsSonarVersion(Matiere.JAVA);
 
         // Transfert de la map en une liste avec tous les projets
         List<Projet> tousLesProjets = new ArrayList<>();

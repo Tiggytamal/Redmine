@@ -49,14 +49,14 @@ public class TestRetour
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getComponent()
+    public void testGetComponent()
     {
         assertEquals(COMPOSANT, modele.getComponent());
         assertNull(modeleNull.getComponent());
     }
     
     @Test
-    public void getListeVues()
+    public void testGetListeVues()
     {
         assertEquals(LISTEVUES, modele.getListeVues());
         assertTrue(modele.getListeVues() != null);
@@ -65,14 +65,14 @@ public class TestRetour
     }
     
     @Test
-    public void getStatusProjet()
+    public void testGetStatusProjet()
     {
         assertEquals(STATUSPROJET, modele.getStatusProjet());
         assertNull(modeleNull.getStatusProjet());
     }
     
     @Test
-    public void getResults()
+    public void testGetResults()
     {
         assertEquals(RESULTS, modele.getResults());
         assertTrue(modele.getResults() != null);
@@ -81,14 +81,14 @@ public class TestRetour
     }
     
     @Test
-    public void isMore()
+    public void testIsMore()
     {
         assertEquals(MORE, modele.isMore());
         assertFalse(modeleNull.isMore());
     }
     
     @Test
-    public void getErrors()
+    public void testGetErrors()
     {
         assertEquals(ERRORS, modele.getErrors());
         assertTrue(modele.getErrors() != null);
@@ -97,7 +97,7 @@ public class TestRetour
     }
     
     @Test
-    public void getQualityGates()
+    public void testGetQualityGates()
     {
         assertEquals(QGS, modele.getQualityGates());
         assertTrue(modele.getQualityGates() != null);
@@ -106,7 +106,7 @@ public class TestRetour
     }
     
     @Test
-    public void getDefaut()
+    public void testGetDefaut()
     {
         assertEquals(DEFAUT, modele.getDefaut());
         assertNull(modeleNull.getDefaut());

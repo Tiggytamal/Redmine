@@ -29,7 +29,7 @@ public class TestParamSpec
     }
     
     @Test
-    public void testgetType()
+    public void testGetType()
     {
         assertTrue(ParamSpec.VERSIONS.getType() == TypeParamSpec.LISTVIEWVERSION);
         assertTrue(ParamSpec.TEXTESECURITE.getType() == TypeParamSpec.TEXTAREA);

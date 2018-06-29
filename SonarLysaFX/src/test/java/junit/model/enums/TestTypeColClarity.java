@@ -15,7 +15,7 @@ public class TestTypeColClarity
     }
     
     @Test
-    public void getValeur()
+    public void testGetValeur()
     {
         assertEquals("Actif", TypeColClarity.ACTIF.getValeur());
         assertEquals("Code projet", TypeColClarity.CLARITY.getValeur());
@@ -28,7 +28,7 @@ public class TestTypeColClarity
     }
     
     @Test
-    public void getNomCol()
+    public void testGetNomCol()
     {
         assertEquals("colActif", TypeColClarity.ACTIF.getNomCol());
         assertEquals("colClarity", TypeColClarity.CLARITY.getNomCol());

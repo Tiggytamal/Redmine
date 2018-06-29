@@ -96,7 +96,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     }
     
     @Test
-    public void createWb() throws Exception
+    public void testCreateWb() throws Exception
     {
         // Appel méthode
         invokeMethod(handler, "createWb");
@@ -109,14 +109,14 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     }
 
     @Test
-    public void initEnum() throws IllegalAccessException
+    public void testInitEnum() throws IllegalAccessException
     {
         // test - énumération du bon Type
         assertTrue(getField(ControlSuivi.class, "enumeration").get(handler).equals(typeColClass));
     }
 
     @Test
-    public void majCouleurLigne() throws Exception
+    public void testMajCouleurLigne() throws Exception
     {
         // Initilisation
         Row row = wb.getSheetAt(0).getRow(0);
@@ -137,7 +137,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     }
 
     @Test
-    public void initSheet() throws Exception
+    public void testInitSheet() throws Exception
     {
         // Test 1 - feuille ok
         Sheet sheet = invokeMethod(handler, "initSheet");
@@ -146,7 +146,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     }
 
     @Test (expected = FunctionalException.class)
-    public void initSheetException() throws Exception
+    public void testInitSheetException() throws Exception
     {
         // Test 2 - feuille nulle
         wb.removeSheetAt(0);
@@ -154,7 +154,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     }
 
     @Test (expected = TechnicalException.class)
-    public void close() throws Exception
+    public void testClose() throws Exception
     {
         // Test - appel de la méthode close.
         invokeMethod(handler, "close");
@@ -164,7 +164,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     }
     
     @Test
-    public void autosizeColumns() throws Exception
+    public void testAutosizeColumns() throws Exception
     {
         // Initialisation - Mock Sheet
         Sheet mock = Mockito.mock(Sheet.class);
@@ -176,7 +176,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     }
     
     @Test
-    public void testMax() throws Exception
+    public void testTestMax() throws Exception
     {
         String methode = "testMax";
         
@@ -195,7 +195,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     }
     
     @Test
-    public void getCellValueNotNull() throws Exception
+    public void testGetCellValueNotNull() throws Exception
     {        
         for (Sheet sheet : wb)
         {
@@ -212,7 +212,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     }
         
     @Test
-    public void copierCelluleVide() throws Exception
+    public void testCopierCelluleVide() throws Exception
     {
         String methode = "copierCellule";
         // Initialisation
@@ -242,7 +242,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
      * 
      * @param tailleListe
      */
-    protected Y recupDonneesDepuisExcel(Function<Y, Boolean> tailleListe)
+    protected Y testRecupDonneesDepuisExcel(Function<Y, Boolean> tailleListe)
     {
         Y map = handler.recupDonneesDepuisExcel();
         assertTrue(map != null);
@@ -259,7 +259,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
      *          nombre de colonnes initilisées à zéro prévues
      * @throws Exception
      */
-    protected void calculIndiceColonnes(int nbre) throws Exception
+    protected void testCalculIndiceColonnes(int nbre) throws Exception
     {
         Sheet sheet = wb.getSheetAt(0);
         invokeMethod(handler, "calculIndiceColonnes", sheet);

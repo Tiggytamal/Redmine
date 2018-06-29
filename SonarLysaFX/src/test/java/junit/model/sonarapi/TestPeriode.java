@@ -30,14 +30,14 @@ public class TestPeriode
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getIndex()
+    public void testGetIndex()
     {
         assertEquals(INDEX, modele.getIndex());
         assertEquals(0, modeleNull.getIndex());
     }
     
     @Test
-    public void setIndex()
+    public void testSetIndex()
     {
         modele.setIndex(50);
         assertEquals(50, modele.getIndex());
@@ -46,14 +46,14 @@ public class TestPeriode
     }
     
     @Test
-    public void getValeur()
+    public void testGetValeur()
     {
         assertEquals(VALEUR, modele.getValeur());
         assertNull(modeleNull.getValeur());
     }
     
     @Test
-    public void setValeur()
+    public void testSetValeur()
     {
         modele.setValeur(NEWVAL);
         assertEquals(NEWVAL, modele.getValeur());

@@ -30,14 +30,14 @@ public class TestAjouterVueLocale
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getKey()
+    public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
         assertNull(modeleNull.getKey());
     }
     
     @Test
-    public void setKey()
+    public void testSetKey()
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
@@ -46,14 +46,14 @@ public class TestAjouterVueLocale
     }
     
     @Test
-    public void getRefKey()
+    public void testGetRefKey()
     {
         assertEquals(PROJECT, modele.getRefKey());
         assertNull(modeleNull.getRefKey());
     }
     
     @Test
-    public void setRefKey()
+    public void testSetRefKey()
     {
         modele.setRefKey(NEWVAL);
         assertEquals(NEWVAL, modele.getRefKey());

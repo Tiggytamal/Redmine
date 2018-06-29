@@ -1,6 +1,6 @@
 package control.sonar;
 
-import static utilities.Statics.logger;
+import static utilities.Statics.LOGGER;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -108,16 +108,17 @@ public class SonarAPI
 
         if (response.getStatus() == Status.OK.getStatusCode())
         {
-            logger.info("Liste des Vues retournées depuis Sonar");
+            LOGGER.info("Liste des Vues retournées depuis Sonar");
             return response.readEntity(Retour.class).getListeVues();
         }
         else
-            logger.error("Impossible de retourner les vues depuis Sonar = " + VIEWSLIST);
+            LOGGER.error("Impossible de retourner les vues depuis Sonar = " + VIEWSLIST);
 
         return new ArrayList<>();
     }
 
     /**
+     * Récupère une liste de projet Sonar depuis un nom donné.
      * 
      * @param nom
      * @return
@@ -134,12 +135,12 @@ public class SonarAPI
         // Contrôle de la réponse
         if (response.getStatus() == Status.OK.getStatusCode())
         {
-            logger.info("Liste des Vues triées retournées depuis Sonar");
+            LOGGER.info("Liste des Vues triées retournées depuis Sonar");
             return response.readEntity(new GenericType<List<Projet>>() {
             });
         }
         else
-            logger.error("Impossible de retourner les vues depuis Sonar = " + PROJECTSINDEX);
+            LOGGER.error("Impossible de retourner les vues depuis Sonar = " + PROJECTSINDEX);
 
         return new ArrayList<>();
     }
@@ -155,11 +156,11 @@ public class SonarAPI
 
         if (response.getStatus() == Status.OK.getStatusCode())
         {
-            logger.info("Utilisateur OK");
+            LOGGER.info("Utilisateur OK");
             return response.readEntity(Validation.class).isValid();
         }
         else
-            logger.info("Utilisateur KO");
+            LOGGER.info("Utilisateur KO");
 
         return false;
     }
@@ -197,7 +198,7 @@ public class SonarAPI
             return response.readEntity(Retour.class).getComponent();
         else
         {
-            logger.error(erreurAPI(MEASURESCOMPONENT) + paramComposant.getValeur());
+            LOGGER.error(erreurAPI(MEASURESCOMPONENT) + paramComposant.getValeur());
             return new Composant();
         }
     }
@@ -225,7 +226,7 @@ public class SonarAPI
             return response.readEntity(IssuesSimple.class).getTotal();
         else
         {
-            logger.error(erreurAPI(ISSUESSEARCH) + paramComposant.getValeur());
+            LOGGER.error(erreurAPI(ISSUESSEARCH) + paramComposant.getValeur());
             return 0;
         }
     }
@@ -267,7 +268,7 @@ public class SonarAPI
                 }
             else
             {
-                logger.error(erreurAPI(ISSUESSEARCH) + paramComposant.getValeur());
+                LOGGER.error(erreurAPI(ISSUESSEARCH) + paramComposant.getValeur());
                 return retour;
             }
         }
@@ -299,7 +300,7 @@ public class SonarAPI
                 return controleVersion(liste);
         }
         else
-            logger.error(erreurAPI(EVENTS) + paramResource.getValeur());
+            LOGGER.error(erreurAPI(EVENTS) + paramResource.getValeur());
 
         return "";
     }
@@ -316,13 +317,13 @@ public class SonarAPI
 
         if (response.getStatus() == Status.OK.getStatusCode())
         {
-            logger.info("Récupération de la liste des composants OK");
+            LOGGER.info("Récupération de la liste des composants OK");
             return response.readEntity(new GenericType<List<Projet>>() {});
         }
         else
         {
             String erreur = "Impossible de remonter tous les composants de Sonar - API : " + PROJECTSINDEX + "/search=composant ";
-            logger.error(erreur);
+            LOGGER.error(erreur);
             throw new FunctionalException(Severity.ERROR, erreur);
         }
     }
@@ -343,7 +344,7 @@ public class SonarAPI
         }
         
         String erreur = "impossible de trouver la Qualitygate avec le nom donné : " + nomQG;
-        logger.error(erreur);
+        LOGGER.error(erreur);
         throw new FunctionalException(Severity.ERROR, erreur);
     }
 
@@ -361,7 +362,7 @@ public class SonarAPI
         else
         {
             String erreur = "Impossible de remonter les QualityGate de Sonar - API : " + QGLIST;
-            logger.error(erreur);
+            LOGGER.error(erreur);
             throw new FunctionalException(Severity.ERROR, erreur);
         }
     }
@@ -385,7 +386,7 @@ public class SonarAPI
             return true;
         if (response.getStatus() == Status.NOT_FOUND.getStatusCode())
             return false;
-        logger.error(erreurAPI(VIEWSSHOW) + vueKey);
+        LOGGER.error(erreurAPI(VIEWSSHOW) + vueKey);
         return false;
     }
 
@@ -403,7 +404,7 @@ public class SonarAPI
             return Status.BAD_REQUEST;
 
         Response response = appelWebservicePOST(VIEWSCREATE, vue);
-        logger.info("Creation vue : " + vue.getKey() + " - nom : " + vue.getName() + HTTP + response.getStatus());
+        LOGGER.info("Creation vue : " + vue.getKey() + " - nom : " + vue.getName() + HTTP + response.getStatus());
         gestionErreur(response);
         return response.getStatusInfo().toEnum();
     }
@@ -445,7 +446,7 @@ public class SonarAPI
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerProjet a un argument nul");
 
         Response response = appelWebservicePOST("api/projects/delete", new Clef(vueKey));
-        logger.info("retour supprimer projet " + vueKey + " : " + HTTP + response.getStatus());
+        LOGGER.info("retour supprimer projet " + vueKey + " : " + HTTP + response.getStatus());
         if (erreur)
             gestionErreur(response);
         return response.getStatusInfo().toEnum();
@@ -487,7 +488,7 @@ public class SonarAPI
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerVue a son argument nul");
 
         Response response = appelWebservicePOST("api/views/delete", new Clef(vueKey));
-        logger.info("retour supprimer vue " + vueKey + " : " + HTTP + response.getStatus());
+        LOGGER.info("retour supprimer vue " + vueKey + " : " + HTTP + response.getStatus());
         if (erreur)
             gestionErreur(response);
         return response.getStatusInfo().toEnum();
@@ -518,7 +519,7 @@ public class SonarAPI
     {
         AjouterVueLocale localView = new AjouterVueLocale(parent.getKey(), vue.getKey());
         Response response = appelWebservicePOST("api/views/add_local_view", localView);
-        logger.info("Vue " + parent.getName() + " ajout sous-vue " + vue.getName() + HTTP + response.getStatus());
+        LOGGER.info("Vue " + parent.getName() + " ajout sous-vue " + vue.getName() + HTTP + response.getStatus());
         gestionErreur(response);
     }
 
@@ -546,7 +547,7 @@ public class SonarAPI
     {
         AjouterProjet addProjet = new AjouterProjet(parent.getKey(), projet.getKey());
         Response response = appelWebservicePOST("api/views/add_project", addProjet);
-        logger.info("Vue " + parent.getKey() + " ajout sous-projet " + projet.getNom() + HTTP + response.getStatus());
+        LOGGER.info("Vue " + parent.getKey() + " ajout sous-projet " + projet.getNom() + HTTP + response.getStatus());
         gestionErreur(response);
     }
 
@@ -569,7 +570,7 @@ public class SonarAPI
     {
         AssocierQG assQG = new AssocierQG(qg.getId(), projet.getId());
         Response response = appelWebservicePOST(QGSELECT, assQG);
-        logger.info("projet " + projet.getNom() + " association " + qg.getName() + HTTP + response.getStatus());
+        LOGGER.info("projet " + projet.getNom() + " association " + qg.getName() + HTTP + response.getStatus());
         gestionErreur(response);
     }
 
@@ -671,7 +672,7 @@ public class SonarAPI
             {
                 for (Message message : erreurs)
                 {
-                    logger.error(message.getMsg());
+                    Statics.LOGPLANTAGE.error(message.getMsg());
                 }
             }
             return false;

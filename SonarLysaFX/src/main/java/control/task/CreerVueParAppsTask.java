@@ -2,9 +2,9 @@ package control.task;
 
 import static utilities.Statics.NL;
 import static utilities.Statics.fichiersXML;
-import static utilities.Statics.logSansApp;
-import static utilities.Statics.loginconnue;
-import static utilities.Statics.lognonlistee;
+import static utilities.Statics.LOGSANSAPP;
+import static utilities.Statics.LOGINCONNUE;
+import static utilities.Statics.LOGNONLISTEE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +23,7 @@ public class CreerVueParAppsTask extends SonarTask
     /*---------- ATTRIBUTS ----------*/
     
     public static final String TITRE = "Vues par Application";
+    private int inconnues;
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -30,6 +31,7 @@ public class CreerVueParAppsTask extends SonarTask
     {
         super(3);
         annulable = false;
+        inconnues = 0;
     }
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -126,6 +128,7 @@ public class CreerVueParAppsTask extends SonarTask
         String base = "Traitements des composants :" + NL;
         updateMessage(base);
         int i = 0;
+        inconnues = 0;
         
         // Itération sur la liste des projets
         for (Projet projet : mapProjets.values())
@@ -158,8 +161,9 @@ public class CreerVueParAppsTask extends SonarTask
                 }
             }
             else
-                logSansApp.warn("Application non renseignée - Composant : " + projet.getNom());
+                LOGSANSAPP.warn("Application non renseignée - Composant : " + projet.getNom());
         }
+        LOGINCONNUE.info("Nombre d'applis inconnues : " + inconnues);
         return retour;
     }
     
@@ -170,13 +174,15 @@ public class CreerVueParAppsTask extends SonarTask
      *            Application enregistrée pour le composant dans Sonar.
      * @param nom
      *            Nom du composant Sonar.
+     * @param inconnues 
      */
     private boolean testAppli(String application, String nom)
     {
-        if (application.equals(Statics.INCONNUE))
+        if (application.equalsIgnoreCase(Statics.INCONNUE))
         {
-            loginconnue.warn("Application : INCONNUE - Composant : " + nom);
-            return false;
+            LOGINCONNUE.warn("Application : INCONNUE - Composant : " + nom);
+            inconnues++;
+            return true;
         }
 
         Map<String, Boolean> vraiesApplis = fichiersXML.getMapApplis();
@@ -186,10 +192,10 @@ public class CreerVueParAppsTask extends SonarTask
             if (vraiesApplis.get(application))
                 return true;
 
-            lognonlistee.warn("Application obsolète : " + application + " - composant : " + nom);
+            LOGNONLISTEE.warn("Application obsolète : " + application + " - composant : " + nom);
             return false;
         }
-        lognonlistee.warn("Application n'existant pas dans le référenciel : " + application + " - composant : " + nom);
+        LOGNONLISTEE.warn("Application n'existant pas dans le référenciel : " + application + " - composant : " + nom);
         return false;
     }
 }

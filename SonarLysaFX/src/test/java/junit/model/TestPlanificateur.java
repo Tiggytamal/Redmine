@@ -41,7 +41,7 @@ public class TestPlanificateur extends JunitBase
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void isLundi()
+    public void testIsLundi()
     {
         // Test valeur après initialisation
         assertEquals(false, plan.isLundi());
@@ -52,7 +52,7 @@ public class TestPlanificateur extends JunitBase
     }
     
     @Test
-    public void isMardi()
+    public void testIsMardi()
     {
         // Test valeur après initialisation
         assertEquals(false, plan.isMardi());
@@ -63,7 +63,7 @@ public class TestPlanificateur extends JunitBase
     }
     
     @Test
-    public void isMercredi()
+    public void testIsMercredi()
     {
         // Test valeur après initialisation
         assertEquals(false, plan.isMercredi());
@@ -74,7 +74,7 @@ public class TestPlanificateur extends JunitBase
     }
     
     @Test
-    public void isJeudi()
+    public void testIsJeudi()
     {
         // Test valeur après initialisation
         assertEquals(false, plan.isJeudi());
@@ -85,7 +85,7 @@ public class TestPlanificateur extends JunitBase
     }
     
     @Test
-    public void isVendredi()
+    public void testIsVendredi()
     {
         // Test valeur après initialisation
         assertEquals(false, plan.isVendredi());
@@ -96,7 +96,7 @@ public class TestPlanificateur extends JunitBase
     }
     
     @Test
-    public void getHeure()
+    public void testGetHeure()
     {
         // Test valeur après initialisation
         assertEquals(LocalTime.of(0, 0), plan.getHeure());
@@ -107,7 +107,7 @@ public class TestPlanificateur extends JunitBase
     }
     
     @Test
-    public void isActive()
+    public void testIsActive()
     {
         // Test valeur après initialisation
         assertEquals(false, plan.isActive());
@@ -118,7 +118,7 @@ public class TestPlanificateur extends JunitBase
     }
     
     @Test
-    public void getAnnees()
+    public void testGetAnnees()
     {       
         // Test valeur après initialisation
         assertEquals(anneeEnCours, plan.getAnnees().get(0));
@@ -151,7 +151,7 @@ public class TestPlanificateur extends JunitBase
     }
     
     @Test
-    public void addLastYear()
+    public void testAddLastYear()
     {
         // Test ajout annèe précedente
         plan.addLastYear();        
@@ -172,7 +172,7 @@ public class TestPlanificateur extends JunitBase
     }
     
     @Test
-    public void addNextYear()
+    public void testAddNextYear()
     {     
         // test ajout année suivante
         plan.addNextYear();

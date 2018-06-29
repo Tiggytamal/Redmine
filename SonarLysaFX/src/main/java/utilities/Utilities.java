@@ -20,7 +20,7 @@ import utilities.enums.Severity;
  * @since 1.0
  */
 public class Utilities
-{
+{   
     private Utilities()
     {
     }
@@ -52,9 +52,9 @@ public class Utilities
             {
                 return codeSourceLocation;
             }
-        } catch (final SecurityException | NullPointerException e)
+        } catch (final SecurityException e)
         {
-            // NB: Cannot access protection domain.
+            Statics.LOGPLANTAGE.error(e);
         }
 
         // NB: The easy way failed, so we try the hard way. We ask for the class
@@ -63,14 +63,14 @@ public class Utilities
 
         // get the class's raw resource path
         final URL classResource = c.getResource(c.getSimpleName() + ".class");
-        
+
         // cannot find class resource
         if (classResource == null)
-            return null;
+        return null;
 
         final String url = classResource.toString();
         final String suffix = c.getCanonicalName().replace('.', '/') + ".class";
-        
+
         // weird URL
         if (!url.endsWith(suffix))
             return null;
@@ -135,9 +135,9 @@ public class Utilities
             if (osName().startsWith("Win") && path.matches("file:[A-Za-z]:.*"))
                 path = "file:/" + path.substring(5);
             return new File(new URL(path).toURI());
-        } catch (final MalformedURLException | URISyntaxException e)
+        } catch (MalformedURLException | URISyntaxException e)
         {
-            // NB: URL is not completely well-formed.
+            Statics.LOGPLANTAGE.error(e);
         }
 
         if (path.startsWith("file:"))
@@ -228,7 +228,8 @@ public class Utilities
     }
 
     /**
-     * Permet de récupérer un objet soit par désiralisation, soit par une méthdoe en paramètre
+     * Permet de récupérer un objet soit par désiralisation, soit par une méthode en paramètre
+     * Le paramètrage de déserialisation est dans la classe Main. utilisée uniquement pour le dévelloppement.
      * 
      * @param deserialisation
      *            Choix entre sérialisation et désérialisation

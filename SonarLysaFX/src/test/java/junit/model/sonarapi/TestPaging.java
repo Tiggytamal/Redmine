@@ -29,14 +29,14 @@ public class TestPaging
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getTotal()
+    public void testGetTotal()
     {
         assertEquals(TOTAL, modele.getTotal());
         assertEquals(0, modeleNull.getTotal());
     }
     
     @Test
-    public void setTotal()
+    public void testSetTotal()
     {
         modele.setTotal(50);
         assertEquals(50, modele.getTotal());
@@ -45,14 +45,14 @@ public class TestPaging
     }
     
     @Test
-    public void getPageIndex()
+    public void testGetPageIndex()
     {
         assertEquals(PAGEINDEX, modele.getPageIndex());
         assertEquals(0, modeleNull.getPageIndex());
     }
     
     @Test
-    public void setPageIndex()
+    public void testSetPageIndex()
     {
         modele.setPageIndex(50);
         assertEquals(50, modele.getPageIndex());
@@ -61,14 +61,14 @@ public class TestPaging
     }
     
     @Test
-    public void getPageSize()
+    public void testGetPageSize()
     {
         assertEquals(PAGESIZE, modele.getPageSize());
         assertEquals(0, modeleNull.getPageSize());
     }
     
     @Test
-    public void setPageSize()
+    public void testSetPageSize()
     {
         modele.setPageSize(50);
         assertEquals(50, modele.getPageSize());

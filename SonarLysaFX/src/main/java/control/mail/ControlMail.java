@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -21,8 +19,10 @@ import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
 import model.enums.EtatLot;
+import model.enums.Param;
 import model.enums.ParamSpec;
 import model.enums.TypeInfoMail;
+import utilities.DateConvert;
 import utilities.Statics;
 import utilities.TechnicalException;
 
@@ -36,27 +36,37 @@ public class ControlMail
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private static final String SERVEUR = "muz10-e1smtp-IN-DC-INT.zres.ztech";
+    private static final String SERVEUR = Statics.proprietesXML.getMapParams().get(Param.IPMAIL);
+    private static final String PORT = Statics.proprietesXML.getMapParams().get(Param.PORTMAIL);
 
     private Message message;
     private String adresseConnecte;
     private String adressesEnvoi;
     private Properties props;
     private Map<String, EtatLot> lotsMaJ;
+    private Map<String, String> anoMaJ;
     private Map<TypeInfoMail, List<String>> mapInfos;
-    private final LocalDate today = LocalDate.now();
+    private final String today = DateConvert.dateFrancais(LocalDate.now(), "dd MMMM YYYY");
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ControlMail() throws TeamRepositoryException
+    public ControlMail()
     {
         lotsMaJ = new HashMap<>();
+        anoMaJ = new HashMap<>();
         mapInfos = new EnumMap<>(TypeInfoMail.class);
         for (TypeInfoMail type : TypeInfoMail.values())
         {
             mapInfos.put(type, new ArrayList<>());
         }
-        initInfosMail();
+        try
+        {
+            initInfosMail();
+        } catch (TeamRepositoryException e)
+        {
+            Statics.LOGPLANTAGE.error(e);
+            Statics.LOGGER.error("Plantage ua moment d'initialiser le controleur de mail. Voir log des plantages");
+        }
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -78,15 +88,15 @@ public class ControlMail
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adressesEnvoi));
 
             // ---- 5. Sujet du mail. -----
-            message.setSubject("Rapport MAJ fichier Qualimétrie" + today);
+            message.setSubject("Rapport MAJ fichier Qualimétrie du " + today);
 
             // ----- 6. Corps du mail. -----
-            message.setText("Mail test ");
+            message.setText(creerTexte());
 
             // ----- 7. Envoi du mail. -----
             Transport.send(message);
 
-            Statics.logger.info("Envoi du mail du rapport OK.");
+            Statics.LOGGER.info("Envoi du mail du rapport OK.");
 
         } catch (MessagingException e)
         {
@@ -96,16 +106,19 @@ public class ControlMail
 
     /*---------- METHODES PRIVEES ----------*/
     
+    /**
+     * Initialisation des informations de base pour envoyer le mail
+     * 
+     * @throws TeamRepositoryException
+     */
     private void initInfosMail() throws TeamRepositoryException
     {
         props = new Properties();
-        props.put("mail.smtp.auth", "off");
         props.put("mail.smtp.host", SERVEUR);
-        props.put("mail.smtp.port", "25");
-        props.put("mail.smtp.starttls.enable", "false");
+        props.put("mail.smtp.port", PORT);
 
         adresseConnecte = ControlRTC.INSTANCE.recupContributorDepuisId(Statics.info.getPseudo()).getEmailAddress();
-        
+
         // Création de la liste des adresses
         StringBuilder adressesBuilder = new StringBuilder();
         String[] noms = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.MEMBRESMAIL).split(";");
@@ -114,33 +127,66 @@ public class ControlMail
         for (int i = 0; i < noms.length; i++)
         {
             adressesBuilder.append(ControlRTC.INSTANCE.recupContributorDepuisNom(noms[i]).getEmailAddress());
-            if (i != noms.length - 1)
-                adressesBuilder.append(",");
+            adressesBuilder.append(",");
         }
+        
+        // Ajout de l'adresse AQP
+        adressesBuilder.append(Statics.proprietesXML.getMapParams().get(Param.AQPMAIL));
+        
         adressesEnvoi = adressesBuilder.toString();
+    }
+    
+    /**
+     * Créee le corps du mail
+     * 
+     * @return
+     */
+    private String creerTexte()
+    {
+        String retour = "";
+        
+        // Début
+        String debut = "Bonjour,\nVoici un résumé du traitement journalier du fichier de suivi des anomalies du " + today + Statics.NL;
+        
+        // Nouvelles anomalie
+        
+        return retour + debut;
     }
     
     /*---------- ACCESSEURS ----------*/
 
+    /**
+     * Enregistre une information dans le mail de rapport
+     * 
+     * @param type
+     * @param info
+     */
     public void addInfo(TypeInfoMail type, String info)
     {
         mapInfos.get(type).add(info);
     }
+    
+    /**
+     * Enregistre la mise à jour d'un lot dans le mail de rapport
+     * 
+     * @param lot
+     * @param EtatLot
+     */
+    public void addMajLot(String lot, EtatLot EtatLot)
+    {
+        lotsMaJ.put(lot, EtatLot);
+    }
+    
+    /**
+     * Enregistre la mise à jour d'un lot dans le mail de rapport
+     * 
+     * @param lot
+     * @param EtatLot
+     */
+    public void addMajAno(String lot, String EtatAno)
+    {
+        anoMaJ.put(lot, EtatAno);
+    }
 
     /*---------- CLASSES PRIVEES ----------*/
-
-    /**
-     * CLasse pour l'authentification du serveur mail.
-     * 
-     * @author ETP8137 - Grégoire Mathon
-     * @since 1.0
-     */
-    private static class MailAuthenticator extends Authenticator
-    {
-        @Override
-        protected PasswordAuthentication getPasswordAuthentication()
-        {
-            return new PasswordAuthentication(Statics.info.getPseudo(), Statics.info.getMotDePasse());
-        }
-    }
 }

@@ -1,5 +1,6 @@
 autoEnabled=true
 eclipse.preferences.version=1
 extraProperties=
-moduleKey=SonarLint_for_JavaKey
-serverId=SonarQube
+moduleKey=SonarLysaFX\:SonarLysaFX
+projectKey=SonarLysaFX\:SonarLysaFX
+serverId=Sonar 6.7

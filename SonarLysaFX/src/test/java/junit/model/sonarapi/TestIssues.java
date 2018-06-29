@@ -43,35 +43,35 @@ public class TestIssues
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getTotal()
+    public void testGetTotal()
     {
         assertEquals(TOTAL, modele.getTotal());
         assertEquals(0, modeleNull.getTotal());
     }
     
     @Test
-    public void getP()
+    public void testGetP()
     {
         assertEquals(P, modele.getP());
         assertEquals(0, modeleNull.getP());
     }
     
     @Test
-    public void getPs()
+    public void testGetPs()
     {
         assertEquals(PS, modele.getPs());
         assertEquals(0, modeleNull.getPs());
     }
     
     @Test
-    public void getPaging()
+    public void testGetPaging()
     {
         assertEquals(PAGING, modele.getPaging());
         assertNull(modeleNull.getPaging());
     }
     
     @Test
-    public void getComposants()
+    public void testGetComposants()
     {
         assertEquals(COMPOSANTS, modele.getComposants());
         assertNotNull(modeleNull.getComposants());
@@ -79,7 +79,7 @@ public class TestIssues
     }
     
     @Test
-    public void getListIssues()
+    public void testGetListIssues()
     {
         assertEquals(ISSUES, modele.getListIssues());
         assertNotNull(modeleNull.getListIssues());

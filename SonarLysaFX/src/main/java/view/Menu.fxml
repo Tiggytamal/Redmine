@@ -15,11 +15,13 @@
 			<menus>
 				<Menu text="Fonctions" >
 					<items>
-						<MenuItem fx:id="mensuel" text="Création Vue MEP/TEP" onAction="#afficher" styleClass="bar" disable="true" />
 						<MenuItem fx:id="suivi" text="Fichiers de Suivi" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="mensuel" text="Création Vue MEP/TEP" onAction="#afficher" styleClass="bar" disable="true" />
+						<MenuItem fx:id="autres" text="Création Autres Vues" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="maintenance" text="Création Vues Maintenance" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="rtc" text="Mise à jour lots RTC" onAction="#afficher" disable="true" />
-						<MenuItem fx:id="autres" text="Création Autres Vues" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="purge" text="Purge des composants" onAction="#purger" disable="true" />
+
 					</items>
 				</Menu>
 				<Menu text="Outils">

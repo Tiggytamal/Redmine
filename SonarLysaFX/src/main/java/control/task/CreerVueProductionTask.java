@@ -146,8 +146,8 @@ public class CreerVueProductionTask extends SonarTask
                 updateProgress(++i, size);
             } catch (TeamRepositoryException e)
             {
-                Statics.logger.error("Erreur au moment de l'appel RTC pour récupérer un lot : méthode control.task.CreerVueProductionTask.recupLotSonarPourMEP - " + entry.getKey());
-                Statics.logPlantage.error(e);
+                Statics.LOGGER.error("Erreur au moment de l'appel RTC pour récupérer un lot : méthode control.task.CreerVueProductionTask.recupLotSonarPourMEP - " + entry.getKey());
+                Statics.LOGPLANTAGE.error(e);
                 continue;
             }
 

@@ -36,14 +36,14 @@ public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, Cont
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
-    public void calculIndiceColonnes() throws Exception
+    public void testCalculIndiceColonnes() throws Exception
     {
         // Test initialisation colonnes. Pour ce fichier, la première colonne est utilisée
-        calculIndiceColonnes(2);
+        testCalculIndiceColonnes(2);
     }
 
     @Test
-    public void copierCellule() throws Exception
+    public void testCopierCellule() throws Exception
     {
         // Initialisation - création des deux lignes
         Row row1 = wb.getSheetAt(0).getRow(1);
@@ -67,7 +67,7 @@ public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, Cont
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void copieCommentException1() throws Exception
+    public void testCopieCommentException1() throws Exception
     {
         // Récupération première cellule avec un commentaire, et envoi d'une cellule nulle en paramètre
         Cell cell = wb.getSheetAt(0).getRow(1).getCell(2, MissingCellPolicy.CREATE_NULL_AS_BLANK);
@@ -75,14 +75,14 @@ public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, Cont
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void copieCommentException2() throws Exception
+    public void testCopieCommentException2() throws Exception
     {
         // Envoi des deux paramètres nuls
         invokeMethod(handler, COPIECOMMENT, new Class[] { Comment.class, Cell.class }, null, null);
     }
     
     @Test(expected = IllegalArgumentException.class)
-    public void copieCommentException3() throws Exception
+    public void testCopieCommentException3() throws Exception
     {
         // Envoi d'un commentaire vide en paramètre
         Cell cell = wb.getSheetAt(0).getRow(1).getCell(2, MissingCellPolicy.CREATE_NULL_AS_BLANK);
@@ -90,7 +90,7 @@ public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, Cont
     }
 
     @Test
-    public void copieComment1() throws Exception
+    public void testCopieComment1() throws Exception
     {
         // test avec drawing de base de la feuille
         // Initialisation - création de la ligne
@@ -120,7 +120,7 @@ public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, Cont
     }
     
     @Test
-    public void copieComment2() throws Exception
+    public void testCopieComment2() throws Exception
     {
         // test avec drawing de la feuille à nul
         // Initialisation - création de la ligne
@@ -157,14 +157,14 @@ public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, Cont
     
     
     @Test(expected = IllegalArgumentException.class)
-    public void valoriserCelluleException1() throws Exception
+    public void testValoriserCelluleException1() throws Exception
     {
         // Appel méthode avec ligne nulle       
         invokeMethod(handler, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, null, 1, null, "", null);        
     }
     
     @Test(expected = IllegalArgumentException.class)
-    public void valoriserCelluleException2() throws Exception
+    public void testValoriserCelluleException2() throws Exception
     {
         // Initialisation
         Row row = wb.getSheetAt(0).getRow(1);
@@ -174,7 +174,7 @@ public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, Cont
     }
     
     @Test(expected = IllegalArgumentException.class)
-    public void valoriserCelluleException3() throws Exception
+    public void testValoriserCelluleException3() throws Exception
     {
         // Initialisation
         Row row = wb.getSheetAt(0).getRow(1);

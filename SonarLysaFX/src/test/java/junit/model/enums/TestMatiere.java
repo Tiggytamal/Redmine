@@ -13,7 +13,7 @@ import model.enums.Matiere;
 public class TestMatiere
 {
     @Test
-    public void from()
+    public void testFrom()
     {
         assertEquals(Matiere.JAVA, Matiere.from("JAVA"));
         assertEquals("JAVA", Matiere.JAVA.toString());
@@ -26,7 +26,7 @@ public class TestMatiere
     }
     
     @Test (expected = IllegalArgumentException.class)
-    public void fromException()
+    public void testFromException()
     {
         Matiere.from("inconnu");
     }
@@ -38,7 +38,7 @@ public class TestMatiere
     }
 
     @Test
-    public void valeurInstanciation() throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    public void testValeurInstanciation() throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         Class<Object> inner = Whitebox.getInnerClassType(Matiere.class, "Valeur");
         Constructor<Object> constructor = Whitebox.getConstructor(inner);

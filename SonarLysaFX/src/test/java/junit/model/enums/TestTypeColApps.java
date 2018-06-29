@@ -15,14 +15,14 @@ public class TestTypeColApps
     }
     
     @Test
-    public void getValeur()
+    public void testGetValeur()
     {
         assertEquals("Code Application", TypeColApps.CODEAPPS.getValeur());
         assertEquals("Actif", TypeColApps.ACTIF.getValeur());
     }
     
     @Test
-    public void getNomCol()
+    public void testGetNomCol()
     {
         assertEquals("colApps", TypeColApps.CODEAPPS.getNomCol());
         assertEquals("colActif", TypeColApps.ACTIF.getNomCol());

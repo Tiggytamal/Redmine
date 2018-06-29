@@ -33,14 +33,14 @@ public class TestRule
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getKey()
+    public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
         assertNull(modeleNull.getKey());
     }
     
     @Test
-    public void setKey()
+    public void testSetKey()
     {
         modele.setKey(NEWVAL);
         assertEquals(NEWVAL, modele.getKey());
@@ -49,14 +49,14 @@ public class TestRule
     }
     
     @Test
-    public void getName()
+    public void testGetName()
     {
         assertEquals(NAME, modele.getName());
         assertNull(modeleNull.getName());
     }
     
     @Test
-    public void setName()
+    public void testSetName()
     {
         modele.setName(NEWVAL);
         assertEquals(NEWVAL, modele.getName());
@@ -65,14 +65,14 @@ public class TestRule
     }
     
     @Test
-    public void getStatus()
+    public void testGetStatus()
     {
         assertEquals(STATUS, modele.getStatus());
         assertNull(modeleNull.getStatus());
     }
     
     @Test
-    public void setStatus()
+    public void testSetStatus()
     {
         modele.setStatus(NEWVAL);
         assertEquals(NEWVAL, modele.getStatus());
@@ -81,14 +81,14 @@ public class TestRule
     }
     
     @Test
-    public void getLang()
+    public void testGetLang()
     {
         assertEquals(LANG, modele.getLang());
         assertNull(modeleNull.getLang());
     }
     
     @Test
-    public void setLang()
+    public void testSetLang()
     {
         modele.setLang(NEWVAL);
         assertEquals(NEWVAL, modele.getLang());
@@ -97,14 +97,14 @@ public class TestRule
     }
     
     @Test
-    public void getLangName()
+    public void testGetLangName()
     {
         assertEquals(LANGNAME, modele.getLangName());
         assertNull(modeleNull.getLangName());
     }
     
     @Test
-    public void setLangName()
+    public void testSetLangName()
     {
         modele.setLangName(NEWVAL);
         assertEquals(NEWVAL, modele.getLangName());

@@ -54,7 +54,7 @@ public class TestSonarAPI extends JunitBase
         PowerMockito.when(responseMock, "getStatus").thenReturn(Status.FORBIDDEN.getStatusCode());
         
         // Mock du logger pour vérifier les appels à celui-ci
-        logger = TestUtils.getMockLogger("logger");
+        logger = TestUtils.getMockLogger("LOGGER");
     }
 
     @Before
@@ -66,7 +66,7 @@ public class TestSonarAPI extends JunitBase
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test(expected = AssertException.class)
-    public void createReflexion() throws InstantiationException, IllegalAccessException
+    public void testCreateReflexion() throws InstantiationException, IllegalAccessException
     {
         // Contrôle que l'on ne peut pas instancier un deuxième controleur par réflexion
         try
@@ -80,7 +80,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test
-    public void getVues() throws Exception
+    public void testGetVues() throws Exception
     {
         // Appel classique
         List<Vue> vues = api.getVues();
@@ -97,7 +97,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test
-    public void getVuesParNom() throws Exception
+    public void testGetVuesParNom() throws Exception
     {
         // Appel classique
         List<Projet> projets = api.getVuesParNom("APPLI MASTER ");
@@ -115,7 +115,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test
-    public void verificationUtilisateur() throws Exception
+    public void testVerificationUtilisateur() throws Exception
     {
         // Appel classique
         boolean verif = api.verificationUtilisateur();
@@ -130,7 +130,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test
-    public void getMetriquesComposant()
+    public void testGetMetriquesComposant()
     {
         // Appel classique sans erreur
         Composant composant = api.getMetriquesComposant("fr.ca.cat.apimanager.resources:RESS_Dossiers_Epargne_Patrimoniale_Recapitulatif_entretien_Build:14",
@@ -148,7 +148,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test
-    public void getSecuriteComposant()
+    public void testGetSecuriteComposant()
     {
         // Appel sans erreur
         api.getSecuriteComposant("fr.ca.cat.apimanager.resources:RESS_Dossiers_Epargne_Patrimoniale_Recapitulatif_entretien_Build:14");
@@ -160,7 +160,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test
-    public void getIssuesComposant()
+    public void testGetIssuesComposant()
     {
         // Appel composant avec plus de 100 issues
         List<Issue> liste = api.getIssuesComposant("fr.ca.cat:BAM_Webapp_Standard_Build:14");
@@ -175,7 +175,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test
-    public void getVersionComposant()
+    public void testGetVersionComposant()
     {
         // Appel service avec composant existant
         String version = api.getVersionComposant("fr.ca.cat:BAM_Webapp_Standard_Build:14");
@@ -192,7 +192,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test(expected = FunctionalException.class)
-    public void getComposants() throws Exception
+    public void testGetComposants() throws Exception
     {
         // Appel du webservice
         List<Projet> liste = api.getComposants();
@@ -215,7 +215,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test(expected = FunctionalException.class)
-    public void gettQualityGate()
+    public void testGetQualityGate()
     {
         // Récupération nom QualityGate DataStage depuis paramètres
         String nomQG = Statics.proprietesXML.getMapParams().get(Param.NOMQGDATASTAGE);
@@ -233,7 +233,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test(expected = FunctionalException.class)
-    public void getListQualitygate() throws Exception
+    public void testGetListQualitygate() throws Exception
     {
         // Appel liste QualityGate
         List<QualityGate> liste = api.getListQualitygate();
@@ -246,7 +246,7 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test
-    public void testVueExiste() throws Exception
+    public void testTestVueExiste() throws Exception
     {
         // Test vue existante
         boolean test = api.testVueExiste("E31Key");
@@ -263,19 +263,19 @@ public class TestSonarAPI extends JunitBase
     }
     
     @Test (expected = IllegalArgumentException.class)
-    public void testVueExisteException1()
+    public void testTestVueExisteException1()
     {
         api.testVueExiste(null);
     }
     
     @Test (expected = IllegalArgumentException.class)
-    public void testVueExisteException2()
+    public void testTestVueExisteException2()
     {
         api.testVueExiste("");
     }
 
     @Test
-    public void creerVue()
+    public void testCreerVue()
     {
         Vue vue = new Vue();
         vue.setKey("APPLI_Master_5MPR");
@@ -285,13 +285,13 @@ public class TestSonarAPI extends JunitBase
     }
     
     @Test
-    public void creerVueException()
+    public void testCreerVueException()
     {
         
     }
 
     @Test
-    public void creerVueAsync()
+    public void testCreerVueAsync()
     {
         Vue vue = new Vue();
         vue.setKey("bueKey");
@@ -301,13 +301,13 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test
-    public void supprimerProjet()
+    public void testSupprimerProjet()
     {
 
     }
 
     @Test
-    public void supprimerVue()
+    public void testSupprimerVue()
     {
 
     }

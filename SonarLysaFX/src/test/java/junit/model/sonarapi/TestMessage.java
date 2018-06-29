@@ -29,14 +29,14 @@ public class TestMessage
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getMsg()
+    public void testGetMsg()
     {
         assertEquals(MSG, modele.getMsg());
         assertNull(modeleNull.getMsg());
     }
     
     @Test
-    public void setMsg()
+    public void testSetMsg()
     {
         modele.setMsg(NEWVAL);
         assertEquals(NEWVAL, modele.getMsg());

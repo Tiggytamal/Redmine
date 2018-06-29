@@ -31,14 +31,14 @@ public class TestLocation
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void getTextRange()
+    public void testGetTextRange()
     {
         assertEquals(TEXTRANGE, modele.getTextRange());
         assertNull(modeleNull.getTextRange());
     }
     
     @Test
-    public void setTotal()
+    public void testSetTotal()
     {
         modele.setTextRange(null);
         assertNull(modele.getTextRange());
@@ -47,14 +47,14 @@ public class TestLocation
     }
     
     @Test
-    public void getMsg()
+    public void testGetMsg()
     {
         assertEquals(MSG, modele.getMsg());
         assertNull(modeleNull.getMsg());
     }
     
     @Test
-    public void setMsg()
+    public void testSetMsg()
     {
         modele.setMsg(NEWVAL);
         assertEquals(NEWVAL, modele.getMsg());

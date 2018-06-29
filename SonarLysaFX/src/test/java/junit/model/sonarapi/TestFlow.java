@@ -35,20 +35,20 @@ public class TestFlow
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test (expected = IllegalArgumentException.class)
-    public void constructeurException()
+    public void testConstructeurException()
     {
         LOCATIONS.clear();
         new Flow(LOCATIONS);
     }
     
     @Test (expected = IllegalArgumentException.class)
-    public void constructeurException2()
+    public void testConstructeurException2()
     {
         new Flow(null);
     }
     
     @Test
-    public void getLocations()
+    public void testGetLocations()
     {
         assertEquals(LOCATIONS, modele.getLocations());
         assertNotNull(modeleNull.getLocations());
@@ -56,7 +56,7 @@ public class TestFlow
     }
     
     @Test
-    public void setLocations()
+    public void testSetLocations()
     {
         modele.setLocations(null);
         assertNull(modele.getLocations());

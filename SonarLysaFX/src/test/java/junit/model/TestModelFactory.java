@@ -20,14 +20,14 @@ import utilities.TechnicalException;
 public class TestModelFactory
 {
     @Test (expected = TechnicalException.class)
-    public void getModelException()
+    public void testGetModelException()
     {
         // Test exception lancé si le constructeur n'est pas accessible
         ModelFactory.getModel(ModeletTest.class);
     }
     
     @Test
-    public void getModel()
+    public void testGetModel()
     {
         // Création Modele depuis Factory
         LotSuiviPic lot = ModelFactory.getModel(LotSuiviPic.class);
@@ -35,7 +35,7 @@ public class TestModelFactory
     }
     
     @Test
-    public void getModelWithParams()
+    public void testGetModelWithParams()
     {
         // Test création objet depuis constructeur avec paramètres
         Anomalie ano = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotSuiviRTC.class));
@@ -43,7 +43,7 @@ public class TestModelFactory
     }
     
     @Test (expected = TechnicalException.class)
-    public void getModelWithParamsException()
+    public void testGetModelWithParamsException()
     {
         // Test exception lancée si le contructeur avec paramètres n'éxiste pas
         ModelFactory.getModelWithParams(ModeletTest.class, new Object());

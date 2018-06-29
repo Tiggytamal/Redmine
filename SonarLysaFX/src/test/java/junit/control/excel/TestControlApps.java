@@ -21,16 +21,16 @@ public class TestControlApps extends TestControlExcel<TypeColApps, ControlApps, 
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void calculIndiceColonnes() throws Exception
+    public void testCalculIndiceColonnes() throws Exception
     {
         // Test initialisation colonnes. Pour ce fichier, la première colonne est utilisée.
-        calculIndiceColonnes(1);
+        testCalculIndiceColonnes(1);
     }
     
     @Test
-    public void recupDonneesDepuisExcel()
+    public void testRecupDonneesDepuisExcel()
     {
-        recupDonneesDepuisExcel(map -> map.size() == 1842);
+        testRecupDonneesDepuisExcel(map -> map.size() == 1842);
     }
     
     /*---------- METHODES PRIVEES ----------*/

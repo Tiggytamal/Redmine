@@ -18,7 +18,7 @@ public class TestEnvironnement
         assertEquals(10, EtatLot.values().length);
     }
     @Test
-    public void from()
+    public void testFrom()
     {
         String inconnu = "INCONNU";
         assertEquals(EtatLot.ABANDONNE, EtatLot.from("Abandonné"));
@@ -50,7 +50,7 @@ public class TestEnvironnement
     }
 
     @Test
-    public void valeurInstanciation() throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    public void testValeurInstanciation() throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         Class<Object> inner = Whitebox.getInnerClassType(EtatLot.class, "Valeur");
         Constructor<Object> constructor = Whitebox.getConstructor(inner);

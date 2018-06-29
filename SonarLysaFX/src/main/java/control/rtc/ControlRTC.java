@@ -1,6 +1,7 @@
 package control.rtc;
 
-import static utilities.Statics.logger;
+import static utilities.Statics.LOGGER;
+import static utilities.Statics.LOGPLANTAGE;
 import static utilities.Statics.proprietesXML;
 
 import java.time.LocalDate;
@@ -131,6 +132,7 @@ public class ControlRTC
                 recupererTousLesProjets();
         } catch (TeamRepositoryException e)
         {
+            LOGPLANTAGE.error(e);
             return false;
         }
         return true;
@@ -153,7 +155,7 @@ public class ControlRTC
         IWorkItem workItem = workItemClient.findWorkItemById(lot, IWorkItem.FULL_PROFILE, progressMonitor);
         if (workItem == null)
         {
-            logger.warn("Récupération projetRTC - Lot introuvable : " + lot);
+            LOGGER.warn("Récupération projetRTC - Lot introuvable : " + lot);
             return "";
         }
         IProjectArea area = (IProjectArea) repo.itemManager().fetchCompleteItem(workItem.getProjectArea(), IItemManager.DEFAULT, progressMonitor);
@@ -233,7 +235,7 @@ public class ControlRTC
             ICategory cat = null;
             for (ICategory iCategory : liste2)
             {
-                if (iCategory.getName().equals("Projet"))
+                if ("Projet".equals(iCategory.getName()))
                     cat = iCategory;
             }
 
@@ -244,12 +246,13 @@ public class ControlRTC
 
         } catch (TeamRepositoryException e)
         {
-            logger.error("Erreur traitement RTC création de Defect. Lot : " + ano.getLot());
+            LOGGER.error("Erreur traitement RTC création de Defect. Lot : " + ano.getLot());
+            LOGPLANTAGE.error(e);
         }
 
         if (workItem != null)
         {
-            logger.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + ano.getLot());
+            LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + ano.getLot());
             return workItem.getId();
         }
         return 0;
@@ -334,13 +337,13 @@ public class ControlRTC
     /**
      * Retourne un Contributor depuis le nom d'une personne
      * 
-     * @param Id
+     * @param id
      * @return
      * @throws TeamRepositoryException
      */
-    public IContributor recupContributorDepuisId(String Id) throws TeamRepositoryException
+    public IContributor recupContributorDepuisId(String id) throws TeamRepositoryException
     {
-        if (Id == null)
+        if (id == null)
             return null;
 
         // Creation Query depuis ContributorQueryModel
@@ -356,7 +359,7 @@ public class ControlRTC
         final IQueryService qs = ((TeamRepository) repo).getQueryService();
 
         // Appel de la reqête avec le filtre
-        final IItemQueryPage page = qs.queryItems(filtered, new Object[] { Id }, 1);
+        final IItemQueryPage page = qs.queryItems(filtered, new Object[] { id }, 1);
 
         // Retour de l'objet
         final List<?> handles = page.getItemHandles();
@@ -531,7 +534,7 @@ public class ControlRTC
             return "Close".equals(etat) || "Abandonnée".equals(etat);
         } catch (TeamRepositoryException e)
         {
-            Statics.logPlantage.error(e);
+            Statics.LOGPLANTAGE.error(e);
             return false;
         }
     }

@@ -4,8 +4,6 @@ import static utilities.Statics.proprietesXML;
 
 import java.time.LocalDate;
 
-import javax.xml.bind.JAXBException;
-
 import org.quartz.SchedulerException;
 
 import control.quartz.ControlJob;
@@ -93,7 +91,7 @@ public class PlanificateurViewControl extends ViewControl
     /*---------- METHODES PUBLIQUES ----------*/
 
     @FXML
-    public void demarrer() throws SchedulerException, JAXBException
+    public void demarrer() throws SchedulerException
     {
         MainScreen.changeImageTray(TrayIconView.imageRed);
         sauvegarder();
@@ -108,7 +106,7 @@ public class PlanificateurViewControl extends ViewControl
     }
 
     @FXML
-    public void sauvegarder() throws JAXBException
+    public void sauvegarder()
     {
         planificateur.getAnnees().clear();
         planificateur.setHeure(spinner.getValue());

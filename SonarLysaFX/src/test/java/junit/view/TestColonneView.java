@@ -13,7 +13,7 @@ import view.ColonneView;
 public class TestColonneView
 {
     @Test
-    public void colonneView()
+    public void testColonneView()
     {
         String texte = "a";
         ColonneView<TypeColSuivi> view = new ColonneView<>(TypeColSuivi.ACTION, texte);
