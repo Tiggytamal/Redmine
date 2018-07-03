@@ -22,6 +22,7 @@ import utilities.TechnicalException;
 import utilities.enums.Severity;
 
 /**
+ * Classe pour afficher un paramètre de type LISTVIEW. Voir {@link model.enums.TypeParamSpec}
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
@@ -203,7 +204,12 @@ public class ParamListView extends VBox
 
             case LISTVIEWVERSION:
                 if (!valeur.matches("^E[0-9][0-9]"))
-                    throw new FunctionalException(Severity.ERROR, "La version doit être de la forme ^E[0-9][0-9]");
+                    throw new FunctionalException(Severity.ERROR, "L'édition doit être de la forme ^E[0-9][0-9]");
+                break;
+                
+            case LISTVIEWCOMPO:
+                if (!valeur.matches("^[0-9][0-9]"))
+                    throw new FunctionalException(Severity.ERROR, "La version doit être de la forme ^[0-9][0-9]");
                 break;
 
             default:

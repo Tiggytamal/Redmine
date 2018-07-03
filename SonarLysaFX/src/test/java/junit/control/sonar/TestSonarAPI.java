@@ -342,7 +342,7 @@ public class TestSonarAPI extends JunitBase
     }
     
     /**
-     * Teste sir le logger n'a pas été appelé pour récupérer uen erreur
+     * Teste sir le logger n'a pas été appelé pour récupérer une erreur
      */
     private void testNoLogger()
     {

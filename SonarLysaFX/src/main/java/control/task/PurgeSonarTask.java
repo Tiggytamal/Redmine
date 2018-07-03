@@ -1,13 +1,22 @@
 package control.task;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.omg.CORBA.PRIVATE_MEMBER;
+
 import application.Main;
+import model.ProprietesXML;
+import model.enums.Param;
+import model.enums.ParamBool;
+import model.enums.ParamSpec;
 import model.sonarapi.Projet;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -17,7 +26,7 @@ public class PurgeSonarTask extends SonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    public static final String TITRE = "Prge des composants SonarQube";
+    public static final String TITRE = "Purge des composants SonarQube";
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -49,6 +58,10 @@ public class PurgeSonarTask extends SonarTask
         return true;
     }
 
+    /**
+     * Création de a liste des composants à supprimer dans SonarQube
+     * @return
+     */
     private List<Projet> calculPurge()
     {
         // Variables
@@ -65,34 +78,58 @@ public class PurgeSonarTask extends SonarTask
         Map<String, List<Projet>> mapProjets = compileMap(projets);
 
         // Itération sur la map pour calcul des composants à supprimer. On ne garde les deux dernières versions de chaque composant récent,
-        // ou la dernière pour les composant plus ancients.
+        // ou la dernière pour les composant plus ancients, ou les 3 dernière pour la version la plus récente selon le paramètrage.
         for (Map.Entry<String, List<Projet>> entry : mapProjets.entrySet())
         {
+            // ----- 1. Variables -----
             List<Projet> liste = entry.getValue();
+            
+            // Premier élément
+            Projet premier = liste.get(0);
             
             // Calcul nombre total de composants
             int size = liste.size();
             total += size;
             
-            // Suppression des composants 9999 pour ne pas les prendre ne compte
-            if (Pattern.compile("9999$").matcher(entry.getValue().get(0).getKey()).find())
-                liste.remove(entry.getValue().get(0));
+            // Récupération de la liste des versions des composants à garder et rangement de la plus recente à la plus ancienne.
+            List<String> listeVersion = Arrays.asList(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONSCOMPOSANTS).split(";"));
+            Collections.sort(listeVersion, (s1,s2) -> Integer.valueOf(s2).compareTo(Integer.valueOf(s1)));
             
             
-            // Incrémentaiotn indice pour les composants qui n'ont qu'une seule version
+            // ----- 2. Suppression des composants 9999 pour ne pas les prendre en compte -----
+            if (Pattern.compile("9999$").matcher(premier.getKey()).find())
+                liste.remove(premier);        
+            
+            // Incrémentation indice pour les composants qui n'ont qu'une seule version
             if (size == 1)
                 solo++;
             
-            // Suppression de toutes les versions après les deux dernières
+            // ----- 3. Boucle de purge pour les composants qui ont plus d'une version -----
             if (size > 1)
             {
-                // On ne garde que les deux dernières versions de chaque composant
+                // ----- a. On ne garde que les 2 dernières versions de chaque composant -----
                 int i = 2;
                 
-                // On ne garde qu'une version pour les composants plus vieux que 14
-                if (!Pattern.compile("[(14)|(15)]$").matcher(entry.getValue().get(0).getKey()).find())
+                // ----- b. On ne garde qu'une version pour les composants qui ne sont pas paramétrés -----
+                
+                // Calcul du pattern à partir du paramètrage
+                StringBuilder pattern = new StringBuilder("[");
+                for (String string : listeVersion)
+                {
+                    pattern.append("(").append(string).append(")|");                   
+                }
+                pattern.replace(pattern.length() - 1, pattern.length(), "");
+                pattern.append("]$");
+                
+                // Compilation et matching
+                if (!Pattern.compile(pattern.toString()).matcher(premier.getKey()).find())
                     i = 1;
                 
+                // ----- c. Selon paramétrage, on va garder les 3 versions des composants les plus récents
+                if (Pattern.compile("[(" + listeVersion.get(0) + ")]$").matcher(premier.getKey()).find() && Statics.proprietesXML.getMapParamsBool().get(ParamBool.SUPPSONAR))
+                    i = 3;
+                
+                // ----- d. boucle pour créer la liste des composants à supprimer
                 // De fait que le remove reduit la taille de la liste, il ne faut pas incrémenter l'indice
                 while (i < liste.size())
                 {
@@ -105,6 +142,8 @@ public class PurgeSonarTask extends SonarTask
             }
         }
         
+        
+        // ----- 5. Logs des résultats -----
         Statics.LOGGER.info("Composants uniques : " + mapProjets.size());
         Statics.LOGGER.info("composants solo : " + solo);
         Statics.LOGGER.info("total composants sonar : " + total);

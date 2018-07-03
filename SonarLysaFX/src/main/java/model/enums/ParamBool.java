@@ -6,7 +6,8 @@ public enum ParamBool implements Serializable,TypeKey
 {
     /*---------- ATTRIBUTS ----------*/
 
-    VUESSUIVI("Création des vues de suivi");
+    VUESSUIVI("Création des vues de suivi"),
+    SUPPSONAR("Non purge des 3 dernières versions des composants récents");
 
     private final String string;
 

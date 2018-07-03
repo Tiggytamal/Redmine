@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import application.Main;
+import control.mail.ControlMail;
+import model.enums.TypeInfoMail;
+import model.enums.TypeMail;
 import model.sonarapi.Composant;
 import model.sonarapi.Projet;
 import model.sonarapi.Vue;
@@ -24,6 +27,7 @@ public class CreerVueParAppsTask extends SonarTask
     
     public static final String TITRE = "Vues par Application";
     private int inconnues;
+    private ControlMail controlMail;
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -32,6 +36,7 @@ public class CreerVueParAppsTask extends SonarTask
         super(3);
         annulable = false;
         inconnues = 0;
+        controlMail = new ControlMail();
     }
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -98,6 +103,8 @@ public class CreerVueParAppsTask extends SonarTask
                 api.ajouterProjet(projet, vue);
             }
         }
+
+        controlMail.envoyerMail(TypeMail.VUEAPPS);
         return true;
     }
     
@@ -161,7 +168,10 @@ public class CreerVueParAppsTask extends SonarTask
                 }
             }
             else
+            {
                 LOGSANSAPP.warn("Application non renseignée - Composant : " + projet.getNom());
+                controlMail.addInfo(TypeInfoMail.COMPOSANSAPP, projet.getNom(), null);
+            }
         }
         LOGINCONNUE.info("Nombre d'applis inconnues : " + inconnues);
         return retour;
@@ -193,9 +203,11 @@ public class CreerVueParAppsTask extends SonarTask
                 return true;
 
             LOGNONLISTEE.warn("Application obsolète : " + application + " - composant : " + nom);
+            controlMail.addInfo(TypeInfoMail.APPLIOBSOLETE, nom, application);
             return false;
         }
         LOGNONLISTEE.warn("Application n'existant pas dans le référenciel : " + application + " - composant : " + nom);
+        controlMail.addInfo(TypeInfoMail.APPLINONREF, nom, application);
         return false;
     }
 }

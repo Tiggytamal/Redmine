@@ -25,7 +25,8 @@ public enum Param implements Serializable, TypeKey
     RTCLOTCHC("Edition RTC pour lots CHC"), 
     IPMAIL("Adresse IP du serveur mail"),
     PORTMAIL("Port du serveur mail"),
-    AQPMAIL("Adresse mail groupe AQP");
+    AQPMAIL("Adresse mail groupe AQP"),
+    NBREPURGE("Nombre de versions à garder pour la purge");
 
     private final String string;
 

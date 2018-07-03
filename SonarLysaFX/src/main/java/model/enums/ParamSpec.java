@@ -15,12 +15,16 @@ public enum ParamSpec implements Serializable, TypeKey
     RECAPDEFECT("Récapitulatif Defect RTC", TypeParamSpec.TEXTAREA),
     TEXTEDEFECT("Description Defect RTC", TypeParamSpec.TEXTAREA),
     TEXTESECURITE("Texte Sécurité RTC", TypeParamSpec.TEXTAREA),
-    VERSIONS("Version", TypeParamSpec.LISTVIEWVERSION),
+    VERSIONS("Versions", TypeParamSpec.LISTVIEWVERSION),
+    VERSIONSCOMPOSANTS("Versions des composants pour la purge", TypeParamSpec.LISTVIEWCOMPO),
     MEMBRESJAVA("Responsables  JAVA", TypeParamSpec.LISTVIEWNOM),
     MEMBRESDATASTAGE("Responsables DATASTAGE", TypeParamSpec.LISTVIEWNOM),
     MEMBRESMAIL("Groupe de reception des rapports", TypeParamSpec.LISTVIEWNOM);
-        
+    
+    // Nom du paramètre
     private final String string;
+    
+    // Type de paramètre
     private final TypeParamSpec type;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -32,6 +36,8 @@ public enum ParamSpec implements Serializable, TypeKey
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
     
     @Override
     public String toString()
@@ -43,7 +49,4 @@ public enum ParamSpec implements Serializable, TypeKey
     {
         return type;
     }
-    
-    /*---------- METHODES PRIVEES ----------*/
-    /*---------- ACCESSEURS ----------*/
 }

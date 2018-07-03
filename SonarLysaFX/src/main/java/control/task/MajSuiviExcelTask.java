@@ -121,7 +121,7 @@ public class MajSuiviExcelTask extends SonarTask
      * @throws TeamRepositoryException
      * @throws JAXBException
      */
-    private void majFichierRTC() throws TeamRepositoryException, JAXBException
+    private void majFichierRTC() throws TeamRepositoryException
     {
         ControlRTC control = ControlRTC.INSTANCE;
         Map<String, LotSuiviRTC> map = new HashMap<>();

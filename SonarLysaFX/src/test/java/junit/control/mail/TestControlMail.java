@@ -7,6 +7,7 @@ import com.ibm.team.repository.common.TeamRepositoryException;
 import control.mail.ControlMail;
 import control.rtc.ControlRTC;
 import junit.JunitBase;
+import model.enums.TypeMail;
 
 public class TestControlMail extends JunitBase
 {
@@ -22,6 +23,6 @@ public class TestControlMail extends JunitBase
     public void testEnvoyer() throws TeamRepositoryException
     {
         handler = new ControlMail();
-        handler.envoyerMail();
+        handler.envoyerMail(TypeMail.SUIVI);
     }
 }

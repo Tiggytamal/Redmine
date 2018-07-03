@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IWorkItemHandle;
 
@@ -44,7 +42,7 @@ public class MajFichierRTCTask extends SonarTask
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private boolean majFichierRTC() throws TeamRepositoryException, JAXBException
+    private boolean majFichierRTC() throws TeamRepositoryException
     {
         ControlRTC control = ControlRTC.INSTANCE;
         Map<String, LotSuiviRTC> map = new HashMap<>();

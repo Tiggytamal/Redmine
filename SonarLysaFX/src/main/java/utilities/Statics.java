@@ -91,9 +91,13 @@ public class Statics
     public static final String INCONNUE = "INCONNUE";
     /** donnée inconnue */
     public static final String INCONNU = "INCONNU";
-    
+    /** Nom fichier css */
     public static final String CSS = "application.css";
-
+    /** liens texte vers anomalie */
+    public static final String LIENANO = " - Anomalie : ";
+    /** liens texte vers application */    
+    public static final String LIENAPP = " - Application : ";
+    
     /* ----- Objets statiques ----- */
     
     /** Wrapper des informations générales de fonctionnement de l'application*/

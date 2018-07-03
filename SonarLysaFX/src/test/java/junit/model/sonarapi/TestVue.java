@@ -39,6 +39,23 @@ public class TestVue
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
+    public void testControleVue()
+    {
+        Vue vue = null;
+        assertFalse(Vue.controleVue(vue));
+        vue = new Vue(null, null);
+        assertFalse(Vue.controleVue(vue));
+        vue.setKey("");
+        assertFalse(Vue.controleVue(vue));
+        vue.setKey("key");
+        assertFalse(Vue.controleVue(vue));
+        vue.setName("");
+        assertFalse(Vue.controleVue(vue));
+        vue.setName("Name");
+        assertTrue(Vue.controleVue(vue));
+    }
+    
+    @Test
     public void testToString()
     {
         modele = new Vue(KEY, NAME);

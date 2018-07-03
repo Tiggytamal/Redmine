@@ -26,6 +26,7 @@ import utilities.enums.Severity;
  */
 public class Main extends Application
 {
+    /** Boolean pour gérer la désrialisation ou non des objets JAVA  - A ACTIVER UNIQUEMENT EN TEST*/
     public static final boolean DESER = false;
 
     public static void main(final String[] args)

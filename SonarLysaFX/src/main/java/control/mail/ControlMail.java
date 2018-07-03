@@ -3,7 +3,6 @@ package control.mail;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -18,13 +17,13 @@ import javax.mail.internet.MimeMessage;
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
-import model.enums.EtatLot;
+import model.InfoMail;
 import model.enums.Param;
 import model.enums.ParamSpec;
 import model.enums.TypeInfoMail;
+import model.enums.TypeMail;
 import utilities.DateConvert;
 import utilities.Statics;
-import utilities.TechnicalException;
 
 /**
  * Classe de contrôle pour l'envoi des mails
@@ -43,25 +42,23 @@ public class ControlMail
     private String adresseConnecte;
     private String adressesEnvoi;
     private Properties props;
-    private Map<String, EtatLot> lotsMaJ;
-    private Map<String, String> anoMaJ;
-    private Map<TypeInfoMail, List<String>> mapInfos;
+    private Map<TypeInfoMail, List<InfoMail>> mapInfos;
     private final String today = DateConvert.dateFrancais(LocalDate.now(), "dd MMMM YYYY");
+    private static final String TIRET = "- ";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public ControlMail()
     {
-        lotsMaJ = new HashMap<>();
-        anoMaJ = new HashMap<>();
         mapInfos = new EnumMap<>(TypeInfoMail.class);
         for (TypeInfoMail type : TypeInfoMail.values())
         {
             mapInfos.put(type, new ArrayList<>());
         }
+
         try
         {
-            initInfosMail();
+            initMail();
         } catch (TeamRepositoryException e)
         {
             Statics.LOGPLANTAGE.error(e);
@@ -71,7 +68,13 @@ public class ControlMail
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public void envoyerMail()
+    /**
+     * Permet d'envoyer un mail, selon son type
+     * 
+     * @param typeMail
+     *            Enumération du type de mail
+     */
+    public void envoyerMail(TypeMail typeMail)
     {
         try
         {
@@ -84,34 +87,34 @@ public class ControlMail
             message.setFrom(new InternetAddress(adresseConnecte));
 
             // ----- 4. Récupération des adresses pour envoyer les mails de rapport. -----
-
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adressesEnvoi));
 
-            // ---- 5. Sujet du mail. -----
-            message.setSubject("Rapport MAJ fichier Qualimétrie du " + today);
+            // ----- 5. Sitre du mail. -----
+            message.setSubject(typeMail.getTitre() + today);
 
             // ----- 6. Corps du mail. -----
-            message.setText(creerTexte());
+            message.setText(creerTexte(typeMail.getDebut()));
 
             // ----- 7. Envoi du mail. -----
             Transport.send(message);
 
-            Statics.LOGGER.info("Envoi du mail du rapport OK.");
+            Statics.LOGGER.info("Envoi du mail de rapport OK.");
 
         } catch (MessagingException e)
         {
-            throw new TechnicalException("Erreur Mail", e);
+            Statics.LOGPLANTAGE.error(e);
+            Statics.LOGGER.error("Erreur lors de la création du mail. Voir log plantage");
         }
     }
 
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Initialisation des informations de base pour envoyer le mail
      * 
      * @throws TeamRepositoryException
      */
-    private void initInfosMail() throws TeamRepositoryException
+    private void initMail() throws TeamRepositoryException
     {
         props = new Properties();
         props.put("mail.smtp.host", SERVEUR);
@@ -129,30 +132,41 @@ public class ControlMail
             adressesBuilder.append(ControlRTC.INSTANCE.recupContributorDepuisNom(noms[i]).getEmailAddress());
             adressesBuilder.append(",");
         }
-        
+
         // Ajout de l'adresse AQP
         adressesBuilder.append(Statics.proprietesXML.getMapParams().get(Param.AQPMAIL));
-        
+
         adressesEnvoi = adressesBuilder.toString();
     }
-    
-    /**
-     * Créee le corps du mail
-     * 
-     * @return
-     */
-    private String creerTexte()
+
+    private String creerTexte(String debut)
     {
-        String retour = "";
-        
+
         // Début
-        String debut = "Bonjour,\nVoici un résumé du traitement journalier du fichier de suivi des anomalies du " + today + Statics.NL;
-        
-        // Nouvelles anomalie
-        
-        return retour + debut;
+        StringBuilder builder = new StringBuilder(debut).append(today).append(Statics.NL).append(Statics.NL);
+
+        // Gestion des infos
+        for (TypeInfoMail type : TypeInfoMail.values())
+        {
+            List<InfoMail> lots = mapInfos.computeIfAbsent(type, (n) -> new ArrayList<>());
+            if (lots.isEmpty())
+                continue;
+
+            builder.append(type.getTitre());
+            for (InfoMail info : lots)
+            {
+                builder.append(TIRET).append(info.getLot());
+                if (info.getInfoSupp() != null && !type.getLiens().isEmpty())
+                    builder.append(type.getLiens()).append(info.getInfoSupp());
+
+                builder.append(Statics.NL);
+            }
+            builder.append(Statics.NL);
+        }
+
+        return builder.toString();
     }
-    
+
     /*---------- ACCESSEURS ----------*/
 
     /**
@@ -161,31 +175,10 @@ public class ControlMail
      * @param type
      * @param info
      */
-    public void addInfo(TypeInfoMail type, String info)
+    public void addInfo(TypeInfoMail type, String lot, String infoSupp)
     {
-        mapInfos.get(type).add(info);
-    }
-    
-    /**
-     * Enregistre la mise à jour d'un lot dans le mail de rapport
-     * 
-     * @param lot
-     * @param EtatLot
-     */
-    public void addMajLot(String lot, EtatLot EtatLot)
-    {
-        lotsMaJ.put(lot, EtatLot);
-    }
-    
-    /**
-     * Enregistre la mise à jour d'un lot dans le mail de rapport
-     * 
-     * @param lot
-     * @param EtatLot
-     */
-    public void addMajAno(String lot, String EtatAno)
-    {
-        anoMaJ.put(lot, EtatAno);
+
+        mapInfos.get(type).add(new InfoMail(lot, infoSupp));
     }
 
     /*---------- CLASSES PRIVEES ----------*/
