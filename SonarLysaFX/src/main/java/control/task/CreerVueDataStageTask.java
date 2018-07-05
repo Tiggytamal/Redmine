@@ -54,7 +54,7 @@ public class CreerVueDataStageTask extends SonarTask
         updateMessage(RECUPCOMPOSANTS);
         
         @SuppressWarnings("unchecked")
-        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "d:\\composants.ser", () -> api.getComposants());
+        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
         
         if (isCancelled())
             return false;

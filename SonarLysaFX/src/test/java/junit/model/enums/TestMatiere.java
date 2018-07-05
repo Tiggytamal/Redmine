@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import model.enums.Matiere;
+import model.enums.TypeMail;
 
 public class TestMatiere
 {
@@ -21,8 +22,6 @@ public class TestMatiere
         assertEquals("DATASTAGE", Matiere.DATASTAGE.toString());
         assertEquals(Matiere.COBOL, Matiere.from("COBOL"));
         assertEquals("COBOL", Matiere.COBOL.toString());
-        assertEquals(Matiere.PHP, Matiere.from("PHP"));
-        assertEquals("PHP", Matiere.PHP.toString());
     }
     
     @Test (expected = IllegalArgumentException.class)
@@ -31,10 +30,17 @@ public class TestMatiere
         Matiere.from("inconnu");
     }
     
+    public void testGetTypeMail()
+    {
+        assertEquals(TypeMail.SUIVIJAVA, Matiere.JAVA.getTypeMail());
+        assertEquals(TypeMail.SUIVIDATASTAGE, Matiere.DATASTAGE.getTypeMail());
+        assertEquals(TypeMail.SUIVICOBOL, Matiere.COBOL.getTypeMail());
+    }
+    
     @Test
     public void testSize()
     {
-        assertEquals(4, Matiere.values().length);
+        assertEquals(3, Matiere.values().length);
     }
 
     @Test

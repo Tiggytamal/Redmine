@@ -40,7 +40,7 @@ public class LotSuiviRTC implements Modele
     @XmlAttribute(required = false)
     public String getLot()
     {
-        return lot;
+        return getString(lot);
     }
 
     public void setLot(String lot)
@@ -51,7 +51,7 @@ public class LotSuiviRTC implements Modele
     @XmlAttribute(required = false)
     public String getLibelle()
     {
-        return libelle;
+        return getString(libelle);
     }
 
     public void setLibelle(String libelle)
@@ -62,7 +62,7 @@ public class LotSuiviRTC implements Modele
     @XmlAttribute(required = false)
     public String getProjetClarity()
     {
-        return projetClarity;
+        return getString(projetClarity);
     }
 
     public void setProjetClarity(String projetClarity)
@@ -73,7 +73,7 @@ public class LotSuiviRTC implements Modele
     @XmlAttribute(required = false)
     public String getCpiProjet()
     {
-        return cpiProjet;
+        return getString(cpiProjet);
     }
 
     public void setCpiProjet(String cpiProjet)
@@ -84,7 +84,7 @@ public class LotSuiviRTC implements Modele
     @XmlAttribute(required = false)
     public String getEdition()
     {
-        return edition;
+        return getString(edition);
     }
 
     public void setEdition(String edition)
@@ -106,7 +106,7 @@ public class LotSuiviRTC implements Modele
     @XmlAttribute(required = false)
     public String getProjetRTC()
     {
-        return projetRTC;
+        return getString(projetRTC);
     }
 
     public void setProjetRTC(String projetRTC)

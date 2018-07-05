@@ -11,6 +11,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.function.Supplier;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import utilities.enums.Severity;
 
 /**
@@ -21,6 +24,9 @@ import utilities.enums.Severity;
  */
 public class Utilities
 {   
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    
     private Utilities()
     {
     }
@@ -54,7 +60,7 @@ public class Utilities
             }
         } catch (final SecurityException e)
         {
-            Statics.LOGPLANTAGE.error(e);
+            LOGPLANTAGE.error(e);
         }
 
         // NB: The easy way failed, so we try the hard way. We ask for the class
@@ -66,7 +72,7 @@ public class Utilities
 
         // cannot find class resource
         if (classResource == null)
-        return null;
+            return null;
 
         final String url = classResource.toString();
         final String suffix = c.getCanonicalName().replace('.', '/') + ".class";
@@ -137,7 +143,7 @@ public class Utilities
             return new File(new URL(path).toURI());
         } catch (MalformedURLException | URISyntaxException e)
         {
-            Statics.LOGPLANTAGE.error(e);
+            LOGPLANTAGE.error(e);
         }
 
         if (path.startsWith("file:"))
@@ -246,12 +252,12 @@ public class Utilities
         T retour;
         if (deserialisation)
         {
-            retour = Utilities.deserialisation(nomSer, classRetour);
+            retour = Utilities.deserialisation(Statics.ADRESSEDESER + nomSer, classRetour);
         }
         else
         {
             retour = fonction.get();
-            Utilities.serialisation(nomSer, retour);
+            Utilities.serialisation(Statics.ADRESSEDESER + nomSer, retour);
         }
         return retour;
     }

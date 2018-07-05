@@ -14,6 +14,9 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
@@ -37,11 +40,17 @@ public class ControlMail
 
     private static final String SERVEUR = Statics.proprietesXML.getMapParams().get(Param.IPMAIL);
     private static final String PORT = Statics.proprietesXML.getMapParams().get(Param.PORTMAIL);
+    
+    /** logger général */
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
 
     private Message message;
     private String adresseConnecte;
     private String adressesEnvoi;
     private Properties props;
+    private String extra;
     private Map<TypeInfoMail, List<InfoMail>> mapInfos;
     private final String today = DateConvert.dateFrancais(LocalDate.now(), "dd MMMM YYYY");
     private static final String TIRET = "- ";
@@ -51,6 +60,7 @@ public class ControlMail
     public ControlMail()
     {
         mapInfos = new EnumMap<>(TypeInfoMail.class);
+        extra = "";
         for (TypeInfoMail type : TypeInfoMail.values())
         {
             mapInfos.put(type, new ArrayList<>());
@@ -61,8 +71,8 @@ public class ControlMail
             initMail();
         } catch (TeamRepositoryException e)
         {
-            Statics.LOGPLANTAGE.error(e);
-            Statics.LOGGER.error("Plantage ua moment d'initialiser le controleur de mail. Voir log des plantages");
+            LOGPLANTAGE.error(e);
+            LOGGER.error("Plantage au moment d'initialiser le controleur de mail. Voir log des plantages");
         }
     }
 
@@ -98,12 +108,12 @@ public class ControlMail
             // ----- 7. Envoi du mail. -----
             Transport.send(message);
 
-            Statics.LOGGER.info("Envoi du mail de rapport OK.");
+            LOGGER.info("Envoi du mail de rapport OK.");
 
         } catch (MessagingException e)
         {
-            Statics.LOGPLANTAGE.error(e);
-            Statics.LOGGER.error("Erreur lors de la création du mail. Voir log plantage");
+            LOGPLANTAGE.error(e);
+            LOGGER.error("Erreur lors de la création du mail. Voir log plantage");
         }
     }
 
@@ -164,6 +174,9 @@ public class ControlMail
             builder.append(Statics.NL);
         }
 
+        // Ajout de données extra
+        builder.append(extra);
+        
         return builder.toString();
     }
 
@@ -179,6 +192,16 @@ public class ControlMail
     {
 
         mapInfos.get(type).add(new InfoMail(lot, infoSupp));
+    }
+    
+    /**
+     * Ajoute des données sous forme d'une chaîne de caratères au mail.
+     * 
+     * @param extra
+     */
+    public void addExtra(String extra)
+    {
+        this.extra += extra;
     }
 
     /*---------- CLASSES PRIVEES ----------*/

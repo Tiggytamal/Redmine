@@ -52,7 +52,8 @@ public class Vue implements ModeleSonar
     public static boolean controleVue(Vue vue)
     {
         return (vue != null && vue.getKey() != null && !vue.getKey().isEmpty() && vue.getName() != null && !vue.getName().isEmpty());
-    }
+    }  
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 

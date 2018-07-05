@@ -11,6 +11,6 @@ public class TestTypeBool
     @Test
     public void testSize()
     {
-        assertEquals(1, ParamBool.values().length);
+        assertEquals(2, ParamBool.values().length);
     }
 }

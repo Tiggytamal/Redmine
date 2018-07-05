@@ -10,11 +10,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
+import junit.JunitBase;
 import model.Info;
 import model.ModelFactory;
 import utilities.Statics;
 
-public class TestInfo
+public class TestInfo extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 

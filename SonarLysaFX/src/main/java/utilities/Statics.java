@@ -1,8 +1,5 @@
 package utilities;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import application.Main;
 import control.xml.ControlXML;
 import javafx.stage.FileChooser;
@@ -37,19 +34,6 @@ public class Statics
     public static final double CARAC_WIDTH = 7;
     
     public static final String RESOURCESTEST = "/";
-    
-    /* ----- loggers ----- */
-    
-    /** logger général */
-	public static final Logger LOGGER = LogManager.getLogger("complet-log");
-    /** logger composants sans applications */
-    public static final Logger LOGSANSAPP = LogManager.getLogger("sansapp-log");
-    /** logger composants avec application INCONNUE*/
-    public static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
-    /** logger applications non listée dans le référentiel */
-    public static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
-    /** logger plantages de l'application */
-    public static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
     
     /* ----- String statiques ----- */
     
@@ -97,6 +81,8 @@ public class Statics
     public static final String LIENANO = " - Anomalie : ";
     /** liens texte vers application */    
     public static final String LIENAPP = " - Application : ";
+    
+    public static final String ADRESSEDESER = "d:\\";
     
     /* ----- Objets statiques ----- */
     

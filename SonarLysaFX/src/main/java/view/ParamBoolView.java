@@ -34,7 +34,7 @@ public class ParamBoolView extends VBox implements ViewXML<ParamBool, CheckBox>
 
         // Label
         Label label = new Label(typeBool.toString() + POINT);
-        label.setPrefWidth(200);
+        label.setPrefWidth(300);
         box.getChildren().add(label);
 
         // TextField

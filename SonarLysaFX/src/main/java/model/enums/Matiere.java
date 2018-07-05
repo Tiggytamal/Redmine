@@ -8,23 +8,24 @@ package model.enums;
  */
 public enum Matiere 
 {
-    JAVA(Valeur.JAVA),
-    DATASTAGE(Valeur.DATASTAGE),
-    COBOL(Valeur.COBOL),
-    PHP(Valeur.PHP);
+    /*---------- ATTRIBUTS ----------*/
+
+    JAVA(Valeur.JAVA, TypeMail.SUIVIJAVA),
+    DATASTAGE(Valeur.DATASTAGE, TypeMail.SUIVIDATASTAGE),
+    COBOL(Valeur.COBOL, TypeMail.SUIVICOBOL);
     
     private final String string;
+    private final TypeMail typeMail;
     
-    private Matiere(String string)
+    /*---------- CONSTRUCTEURS ----------*/
+
+    private Matiere(String string, TypeMail typeMail)
     {
         this.string = string;
+        this.typeMail = typeMail;
     }
     
-    @Override
-    public String toString()
-    {
-        return string;
-    }
+    /*---------- METHODES PUBLIQUES ----------*/
     
     public static Matiere from(String matiere)
     {
@@ -36,12 +37,26 @@ public enum Matiere
                 return DATASTAGE;
             case Valeur.COBOL :
                 return COBOL;
-            case Valeur.PHP :
-                return PHP;
             default :
                 throw new IllegalArgumentException("Matière inconnue :" + matiere);
         }        
     }
+    
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
+    
+    @Override
+    public String toString()
+    {
+        return string;
+    }
+    
+    public TypeMail getTypeMail()
+    {
+        return typeMail;
+    }
+    
+    /*---------- CLASSES PRIVEES ----------*/
     
     private static class Valeur
     {        
@@ -53,6 +68,5 @@ public enum Matiere
         public static final String JAVA = "JAVA";
         public static final String DATASTAGE = "DATASTAGE";
         public static final String COBOL = "COBOL";
-        public static final String PHP = "PHP";
     }
 }

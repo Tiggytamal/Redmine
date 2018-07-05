@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import junit.JunitBase;
 import model.Anomalie;
 import model.LotSuiviPic;
 import model.LotSuiviRTC;
@@ -17,7 +18,7 @@ import utilities.TechnicalException;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class TestModelFactory
+public class TestModelFactory extends JunitBase
 {
     @Test (expected = TechnicalException.class)
     public void testGetModelException()

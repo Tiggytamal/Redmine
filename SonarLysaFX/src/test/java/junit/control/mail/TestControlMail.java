@@ -1,5 +1,6 @@
 package junit.control.mail;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
@@ -13,16 +14,16 @@ public class TestControlMail extends JunitBase
 {
     private ControlMail handler;
     
-    public TestControlMail()
+    @Before
+    public void init()
     {
         ControlRTC.INSTANCE.connexion();
-
     }
 
     @Test
     public void testEnvoyer() throws TeamRepositoryException
     {
         handler = new ControlMail();
-        handler.envoyerMail(TypeMail.SUIVI);
+        handler.envoyerMail(TypeMail.SUIVIJAVA);
     }
 }

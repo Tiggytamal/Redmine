@@ -5,10 +5,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.JunitBase;
 import model.ModelFactory;
 import model.RespService;
 
-public class TestRespService
+public class TestRespService extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 

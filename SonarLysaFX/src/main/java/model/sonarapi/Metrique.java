@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import model.Modele;
 import model.enums.TypeMetrique;
 import utilities.adapter.TypeMetriqueAdapter;
 
@@ -19,7 +20,7 @@ import utilities.adapter.TypeMetriqueAdapter;
  * @since 1.0
  */
 @XmlRootElement
-public class Metrique
+public class Metrique implements Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -68,7 +69,7 @@ public class Metrique
     @XmlAttribute(name = "value")
     public String getValue()
     {
-        return valeur;
+        return getString(valeur);
     }
     
     public void setValue(String value)

@@ -85,7 +85,7 @@
 		<Logger name="inconnue-log" level="debug" additivity="false">
 			<appender-ref ref="inconnue-log" level="info" />
 			<appender-ref ref="console-log" level="debug" />
-			<appender-ref ref="complet-log" level="debug" />
+			<appender-ref ref="complet-log" level="info" />
 		</Logger>
 		<Logger name="nonlistee-log" level="debug" additivity="false">
 			<appender-ref ref="nonlistee-log" level="info" />

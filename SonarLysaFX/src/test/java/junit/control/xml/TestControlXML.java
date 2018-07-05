@@ -10,6 +10,7 @@ import org.powermock.reflect.Whitebox;
 import control.xml.ControlXML;
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.javafx.test.TestInJfxThread;
+import junit.JunitBase;
 import model.FichiersXML;
 import model.ProprietesXML;
 import model.enums.TypeColChefServ;
@@ -18,7 +19,7 @@ import utilities.Statics;
 import utilities.TechnicalException;
 
 @RunWith (JfxRunner.class)
-public class TestControlXML
+public class TestControlXML extends JunitBase
 {
     private ControlXML handler;
 

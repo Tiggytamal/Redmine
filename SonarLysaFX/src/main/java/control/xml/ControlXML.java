@@ -11,6 +11,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import control.excel.ExcelFactory;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -25,7 +28,6 @@ import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
 import model.enums.TypeFichier;
-import utilities.Statics;
 import utilities.TechnicalException;
 
 /**
@@ -39,6 +41,9 @@ public class ControlXML
     /*---------- ATTRIBUTS ----------*/
 
     private static final String ERREUR = "Erreur au moment de sauvegarder le fichier Excel";
+    
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -123,7 +128,7 @@ public class ControlXML
             jaxbMarshaller.marshal(fichier, fichier.getFile());
         } catch (JAXBException e)
         {
-            Statics.LOGPLANTAGE.error(e);
+            LOGPLANTAGE.error(e);
             throw new TechnicalException("Impossible de sauvegarder le fichier de propriété", e);
         }
     }

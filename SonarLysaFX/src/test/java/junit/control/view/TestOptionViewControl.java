@@ -5,9 +5,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.saxsys.javafx.test.JfxRunner;
+import junit.JunitBase;
 
 @RunWith(JfxRunner.class)
-public class TestOptionViewControl
+public class TestOptionViewControl extends JunitBase
 {
 
     @Before

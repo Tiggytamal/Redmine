@@ -114,7 +114,7 @@ public class MenuViewControl extends ViewControl
         Object source = event.getSource();
         if (source instanceof MenuItem)
             id = ((MenuItem) source).getId();
-        
+
         if (!info.controle() && !"options".equals(id))
             throw new FunctionalException(Severity.ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
 
@@ -178,19 +178,28 @@ public class MenuViewControl extends ViewControl
         aidePanel.setContentText(null);
         WebView webView = new WebView();
         webView.getEngine().load(getClass().getResource("/aide/menu.html").toString());
-        webView.setPrefSize(640 , 480);
+        webView.setPrefSize(640, 480);
         aidePanel.setResizable(true);
         aidePanel.getDialogPane().setContent(webView);
         aidePanel.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
         aidePanel.show();
     }
-    
+
     @FXML
     public void purger()
     {
-        // Lancement de la task
-        PurgeSonarTask task = new PurgeSonarTask();
-        startTask(task, PurgeSonarTask.TITRE);
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.getDialogPane().getStylesheets().add(Statics.CSS);
+        alert.setTitle(PurgeSonarTask.TITRE);
+        alert.setHeaderText(null);
+        alert.setContentText("Cela lancera la purge des composants Sonar." + Statics.NL + "Etes-vous sur?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get().equals(ButtonType.OK))
+        {
+            PurgeSonarTask task = new PurgeSonarTask();
+            startTask(task, PurgeSonarTask.TITRE);
+        }
     }
 
     /* ---------- METHODES PRIVEES ---------- */

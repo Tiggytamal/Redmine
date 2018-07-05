@@ -4,7 +4,6 @@ import static utilities.Statics.proprietesXML;
 
 import java.io.File;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import javax.xml.bind.JAXBException;
@@ -194,7 +193,7 @@ public class OptionViewControl extends ViewControl
      * 
      * @throws JAXBException
      */
-    public void saveParams() throws JAXBException
+    public void saveParams()
     {
         // Sauvegarde des autres paramètres
         for (Node node : paramsBox.getChildren())
@@ -225,7 +224,7 @@ public class OptionViewControl extends ViewControl
      * 
      * @throws JAXBException
      */
-    public void saveParamsSpec() throws JAXBException
+    public void saveParamsSpec()
     {
         for (Node node : paramsBox2.getChildren())
         {
@@ -242,7 +241,7 @@ public class OptionViewControl extends ViewControl
     /**
      * @throws JAXBException
      */
-    public <T extends Enum<T> & TypeCol> void saveCols() throws JAXBException
+    public <T extends Enum<T> & TypeCol> void saveCols()
     {
         for (Node node : colonnesBox.getChildren())
         {
@@ -291,17 +290,17 @@ public class OptionViewControl extends ViewControl
         paramsBox.getChildren().clear();
         booleanBox.getChildren().clear();
 
-        // Récupération de la map correspondante au type de fichier et affichage des colonnes.
-        for (Map.Entry<Param, String> entry : mapParams.entrySet())
+        // Affichage de la liste des paramètres
+        for (Param param : Param.values())
         {
-            ParamView pv = new ParamView(entry.getKey(), entry.getValue());
+            ParamView pv = new ParamView(param, mapParams.computeIfAbsent(param, p -> ""));
             paramsBox.getChildren().add(pv);
         }
 
         // Affichage de tous les paramètres de type booléens
-        for (Entry<ParamBool, Boolean> entry : mapParamsBool.entrySet())
+        for (ParamBool param : ParamBool.values())
         {
-            ParamBoolView pv = new ParamBoolView(entry.getKey(), entry.getValue());
+            ParamBoolView pv = new ParamBoolView(param, mapParamsBool.computeIfAbsent(param, p -> false));
             booleanBox.getChildren().add(pv);
         }
     }
@@ -316,7 +315,7 @@ public class OptionViewControl extends ViewControl
         {
             if (param.getType() == TypeParamSpec.TEXTAREA)
                 paramsBox2.getChildren().add(new ParamTextView(param));
-            else if (param.getType() == TypeParamSpec.LISTVIEWNOM || param.getType() == TypeParamSpec.LISTVIEWVERSION)
+            else if (param.getType() == TypeParamSpec.LISTVIEWNOM || param.getType() == TypeParamSpec.LISTVIEWVERSION || param.getType() == TypeParamSpec.LISTVIEWCOMPO)
                 paramsBox2.getChildren().add(new ParamListView(param));
             else
                 throw new TechnicalException("control.view.OptionViewControl.afficherParamsAutres - TypeParamSpec non géré : " + param.getType(), null);

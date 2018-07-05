@@ -2,14 +2,14 @@ package control.task;
 
 import static utilities.Statics.NL;
 import static utilities.Statics.fichiersXML;
-import static utilities.Statics.LOGSANSAPP;
-import static utilities.Statics.LOGINCONNUE;
-import static utilities.Statics.LOGNONLISTEE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import application.Main;
 import control.mail.ControlMail;
@@ -28,6 +28,13 @@ public class CreerVueParAppsTask extends SonarTask
     public static final String TITRE = "Vues par Application";
     private int inconnues;
     private ControlMail controlMail;
+    
+    /** logger composants sans applications */
+    private static final Logger LOGSANSAPP = LogManager.getLogger("sansapp-log");
+    /** logger composants avec application INCONNUE*/
+    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
+    /** logger applications non listée dans le référentiel */
+    private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -54,7 +61,7 @@ public class CreerVueParAppsTask extends SonarTask
     {
         // 1 .Création de la liste des composants par application
         @SuppressWarnings ("unchecked")
-        Map<String, List<Projet>> mapApplication = Utilities.recuperation(Main.DESER, Map.class, "d:\\mapApplis.ser", this::controlerSonarQube);
+        Map<String, List<Projet>> mapApplication = Utilities.recuperation(Main.DESER, Map.class, "mapApplis.ser", this::controlerSonarQube);
 
         // 2. Suppression des vues existantes
         

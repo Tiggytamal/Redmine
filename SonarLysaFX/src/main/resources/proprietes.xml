@@ -284,8 +284,12 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
         </entry>
         <entry>
         	<key>AQPMAIL</key>
-        	<value>AQP.qualimetrie@ca-ts.fr</value>
+        	<value>Gregoire.MATHON-ext@ca-ts.fr</value>
         </entry>
+        <entry>
+            <key>NBREPURGE</key>
+            <value>2</value>
+        </entry> 
     </mapParams>
     <mapParamsBool>
         <entry>
@@ -294,8 +298,8 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
         </entry>
         <entry>
             <key>SUPPSONAR</key>
-            <value>true</value>
-        </entry>
+            <value>false</value>
+        </entry>       
     </mapParamsBool>
     <mapParamsSpec>
         <entry>

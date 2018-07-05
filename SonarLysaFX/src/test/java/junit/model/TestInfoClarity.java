@@ -6,10 +6,11 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.JunitBase;
 import model.InfoClarity;
 import model.ModelFactory;
 
-public class TestInfoClarity
+public class TestInfoClarity extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 

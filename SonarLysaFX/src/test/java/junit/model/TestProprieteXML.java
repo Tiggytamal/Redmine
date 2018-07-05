@@ -10,12 +10,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
+import junit.JunitBase;
 import model.ModelFactory;
 import model.ProprietesXML;
 import model.enums.TypeCol;
 import utilities.TechnicalException;
 
-public class TestProprieteXML
+public class TestProprieteXML extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 

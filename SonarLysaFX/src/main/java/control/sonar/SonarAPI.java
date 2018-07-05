@@ -1,7 +1,5 @@
 package control.sonar;
 
-import static utilities.Statics.LOGGER;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -20,6 +18,9 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.mchange.util.AssertException;
 
@@ -67,6 +68,11 @@ public class SonarAPI
     private static final String VIEWSCREATE = "api/views/create";
     private static final String QGSELECT = "api/qualitygates/select";
     private static final String AUTHVALID = "api/authentication/validate";
+    
+    /** logger général */
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -229,6 +235,52 @@ public class SonarAPI
             LOGGER.error(erreurAPI(ISSUESSEARCH) + paramComposant.getValeur());
             return 0;
         }
+    }
+    
+    /**
+     * Appel une rehcerche d'Issues avec les paramètres choisis sans prédéfinition
+     * 
+     * @param parametres
+     * @return
+     */
+    public List<Issue> getIssuesGenerique(List<Parametre> parametres)
+    {        
+        // Variables
+        List<Issue> retour = new ArrayList<>();
+        int page = 1;
+        Issues issues;
+        
+        // Mise ne place du paramètre de pagination
+        Parametre paramPage = new Parametre("p", String.valueOf(page));
+        parametres.add(paramPage);
+        
+        // Création array des paramètres
+        Parametre[] paramsArray = parametres.toArray(new Parametre[0]);
+
+        // Boucle pour récupérer toutes les erreurs en paginant la requête
+        do
+        {
+            // MAJ Paramètre de pagination
+            paramPage.setValeur(String.valueOf(page));
+            
+            // 2. appel du webservices
+            Response response = appelWebserviceGET(ISSUESSEARCH, paramsArray);
+
+            // 3. Test du retour et renvoie du composant si ok.
+            if (response.getStatus() == Status.OK.getStatusCode())
+                {
+                    issues = response.readEntity(Issues.class);
+                    retour.addAll(issues.getListIssues());
+                }
+            else
+            {
+                LOGGER.error(erreurAPI(ISSUESSEARCH));
+                return retour;
+            }
+        }
+        while (page++ * issues.getPs() <issues.getTotal());
+
+        return retour;
     }
 
     /**
@@ -672,7 +724,7 @@ public class SonarAPI
             {
                 for (Message message : erreurs)
                 {
-                    Statics.LOGPLANTAGE.error(message.getMsg());
+                    LOGPLANTAGE.error(message.getMsg());
                 }
             }
             return false;

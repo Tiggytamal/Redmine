@@ -37,6 +37,13 @@ public class Projet implements ModeleSonar, Serializable
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
+    
+    @Override
+    public String toString()
+    {
+        return "Projet [nom=" + nom + "]";
+    }
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 

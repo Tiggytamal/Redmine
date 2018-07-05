@@ -1,15 +1,11 @@
 package junit;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
-
-import model.enums.ParamSpec;
-import utilities.Statics;
 
 /**
  * Calsse permetant de faire des tests directement avec une entrée JAVA classique

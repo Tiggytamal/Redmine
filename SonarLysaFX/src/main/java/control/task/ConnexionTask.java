@@ -2,6 +2,8 @@ package control.task;
 
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.team.process.common.IProjectArea;
@@ -21,6 +23,9 @@ public class ConnexionTask extends Task<Boolean>
     private IProgressMonitor progressMonitor;
     private Map<String, IProjectArea> pareas;
     private ControlRTC control = ControlRTC.INSTANCE;
+    
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -50,7 +55,7 @@ public class ConnexionTask extends Task<Boolean>
                 control.recupererTousLesProjets();
         } catch (TeamRepositoryException e)
         {
-            Statics.LOGPLANTAGE.error(e);
+            LOGPLANTAGE.error(e);
             return Boolean.FALSE;
         }
         return Boolean.TRUE;

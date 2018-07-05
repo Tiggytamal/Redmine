@@ -9,6 +9,8 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -32,7 +34,6 @@ import model.enums.TypeCol;
 import utilities.CellHelper;
 import utilities.DateConvert;
 import utilities.FunctionalException;
-import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
 
@@ -62,6 +63,9 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
     protected ClientAnchor ca;
     /** Classe de l'énumération des classes filles */
     protected Class<T> enumeration;
+    
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -110,7 +114,7 @@ public abstract class ControlExcel<T extends Enum<T> & TypeCol, R>
             sheet = wb.getSheetAt(0);
         } catch (IllegalArgumentException e)
         {
-            Statics.LOGPLANTAGE.error(e);
+            LOGPLANTAGE.error(e);
             throw new FunctionalException(Severity.ERROR, "Le fichier est vide");
         }
         return sheet;

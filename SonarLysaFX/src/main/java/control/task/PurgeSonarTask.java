@@ -2,7 +2,6 @@ package control.task;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,13 +9,16 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import application.Main;
-import model.ProprietesXML;
+import control.mail.ControlMail;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
+import model.enums.TypeInfoMail;
+import model.enums.TypeMail;
 import model.sonarapi.Projet;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -27,12 +29,18 @@ public class PurgeSonarTask extends SonarTask
     /*---------- ATTRIBUTS ----------*/
 
     public static final String TITRE = "Purge des composants SonarQube";
+    private ControlMail controlMail;
+    
+    /** logger général */
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
     
     /*---------- CONSTRUCTEURS ----------*/
     
     public PurgeSonarTask()
     {
-        super(1);
+        super(2);
+        annulable = true;
+        controlMail = new ControlMail();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -47,14 +55,30 @@ public class PurgeSonarTask extends SonarTask
     
     private Boolean purgeVieuxComposants()
     {
+        updateMessage("Calcul des composants à purger.");
         List<Projet> suppression = calculPurge();
                
+        etapePlus();
+        
+        String base = "Purge en cours :\n";
+        int size = suppression.size();
+        int i = 0;
+        
         // Suppression de tous les composants de la liste
         for (Projet projet : suppression)
         {
+            i++;
+            updateMessage(base + projet.getNom() + "\n" + i + " sur" + size);
+            updateProgress(i, size);
             api.supprimerProjet(projet.getKey(), true);
             api.supprimerVue(projet.getKey(), true);
+            controlMail.addInfo(TypeInfoMail.COMPOPURGE, projet.getNom(), null);
         }
+        
+        updateMessage("Fin du traitement.");
+        updateProgress(1, 1);
+        
+        controlMail.envoyerMail(TypeMail.PURGESONAR);
         return true;
     }
 
@@ -70,9 +94,16 @@ public class PurgeSonarTask extends SonarTask
         int solo = 0;
         int total = 0;
         
+        // Nombre de versions de chaque composant à garder.
+        int nbreVersion = Integer.parseInt(Statics.proprietesXML.getMapParams().get(Param.NBREPURGE));
+        
+        // Récupération de la liste des versions des composants à garder et rangement de la plus recente à la plus ancienne.
+        List<String> listeVersion = Arrays.asList(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONSCOMPOSANTS).split(";"));
+        Collections.sort(listeVersion, (s1,s2) -> Integer.valueOf(s2).compareTo(Integer.valueOf(s1)));
+        
         // Récupération des composants Sonar
         @SuppressWarnings("unchecked")
-        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "d:\\composants.ser", () -> api.getComposants());
+        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
         
         // Préparation map
         Map<String, List<Projet>> mapProjets = compileMap(projets);
@@ -91,14 +122,12 @@ public class PurgeSonarTask extends SonarTask
             int size = liste.size();
             total += size;
             
-            // Récupération de la liste des versions des composants à garder et rangement de la plus recente à la plus ancienne.
-            List<String> listeVersion = Arrays.asList(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONSCOMPOSANTS).split(";"));
-            Collections.sort(listeVersion, (s1,s2) -> Integer.valueOf(s2).compareTo(Integer.valueOf(s1)));
-            
-            
             // ----- 2. Suppression des composants 9999 pour ne pas les prendre en compte -----
-            if (Pattern.compile("9999$").matcher(premier.getKey()).find())
-                liste.remove(premier);        
+            if (premier.getKey().endsWith("9999") && liste.size() > 1)
+            {
+                liste.remove(premier);
+                premier = liste.get(0);
+            }
             
             // Incrémentation indice pour les composants qui n'ont qu'une seule version
             if (size == 1)
@@ -107,17 +136,16 @@ public class PurgeSonarTask extends SonarTask
             // ----- 3. Boucle de purge pour les composants qui ont plus d'une version -----
             if (size > 1)
             {
-                // ----- a. On ne garde que les 2 dernières versions de chaque composant -----
-                int i = 2;
+                // ----- a. On ne garde que les x dernières versions de chaque composant selon le paramétrage -----
+                int i = nbreVersion;
                 
-                // ----- b. On ne garde qu'une version pour les composants qui ne sont pas paramétrés -----
-                
-                // Calcul du pattern à partir du paramètrage
+                // Calcul du pattern à partir du paramètrage pour obtenir : [(X)|...|(Z)]$
                 StringBuilder pattern = new StringBuilder("[");
                 for (String string : listeVersion)
                 {
                     pattern.append("(").append(string).append(")|");                   
                 }
+                // On enlève la dernière |
                 pattern.replace(pattern.length() - 1, pattern.length(), "");
                 pattern.append("]$");
                 
@@ -134,20 +162,17 @@ public class PurgeSonarTask extends SonarTask
                 while (i < liste.size())
                 {
                     Projet projet = entry.getValue().get(i);
-                    Statics.LOGGER.info("SUPPRESSION : " + projet.getNom());
+                    LOGGER.info("SUPPRESSION : " + projet.getNom());
                     retour.add(projet);
                     entry.getValue().remove(projet);
                     supp++;
                 }
             }
         }
-        
-        
+                
         // ----- 5. Logs des résultats -----
-        Statics.LOGGER.info("Composants uniques : " + mapProjets.size());
-        Statics.LOGGER.info("composants solo : " + solo);
-        Statics.LOGGER.info("total composants sonar : " + total);
-        Statics.LOGGER.info("suppressions : " + supp);
+        String extraDonnees = "Composants uniques (hors versions) : " + mapProjets.size() + "\nComposants solo (une seule version) : " + solo + "\nTotal composants sonar (toutes versions comprises) : " + total + "\nSuppressions : " + supp + "\n";
+        controlMail.addExtra(extraDonnees);
 
         return retour;
     }

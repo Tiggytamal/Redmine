@@ -1,7 +1,5 @@
 package control.rtc;
 
-import static utilities.Statics.LOGGER;
-import static utilities.Statics.LOGPLANTAGE;
 import static utilities.Statics.proprietesXML;
 
 import java.time.LocalDate;
@@ -16,6 +14,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
@@ -92,6 +92,12 @@ public class ControlRTC
     private IAuditableClient auditableClient;
     private IAuditableCommon auditableCommon;
     private final LocalDate today = LocalDate.now();
+    
+    /** logger général */
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -123,11 +129,16 @@ public class ControlRTC
      */
     public boolean connexion()
     {
-        repo.registerLoginHandler((ITeamRepository repository) -> new UsernameAndPasswordLoginInfo(Statics.info.getPseudo(), Statics.info.getMotDePasse()));
         try
         {
-            // Un erreur de login renvoie une erreur fonctionnelle
-            repo.login(progressMonitor);
+            // Un erreur de login est envoyée dans les logs de plantage
+            if (!repo.loggedIn())
+            {
+                repo.registerLoginHandler((ITeamRepository repository) -> new UsernameAndPasswordLoginInfo(Statics.info.getPseudo(), Statics.info.getMotDePasse()));
+                repo.login(progressMonitor);
+            }
+            
+            // Récupérationd e tous les projets si la iste est vide. Effectuée normalemetn une seule fois par instance.
             if (pareas.isEmpty())
                 recupererTousLesProjets();
         } catch (TeamRepositoryException e)
@@ -223,7 +234,7 @@ public class ControlRTC
     public int creerDefect(Anomalie ano)
     {
         IWorkItem workItem = null;
-        
+
         try
         {
             IProjectArea projet = pareas.get(ano.getProjetRTC());
@@ -290,13 +301,14 @@ public class ControlRTC
 
     /**
      * Retourne le nom de la personne connecté à RTC.
+     * 
      * @return
      */
     public String recupNomContributorConnecte()
     {
         return repo.loggedInContributor().getName();
     }
-    
+
     /**
      * Retourne un Contributor depuis le nom d'une personne
      * 
@@ -527,18 +539,18 @@ public class ControlRTC
     {
         if (numeroAno == 0)
             return true;
-        
+
         try
         {
             String etat = recupEtatElement(recupWorkItemDepuisId(numeroAno)).trim();
             return "Close".equals(etat) || "Abandonnée".equals(etat);
         } catch (TeamRepositoryException e)
         {
-            Statics.LOGPLANTAGE.error(e);
+            LOGPLANTAGE.error(e);
             return false;
         }
     }
-    
+
     /**
      * Récupération de tous les projets RTC
      * 

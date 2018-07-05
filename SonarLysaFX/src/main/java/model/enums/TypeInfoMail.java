@@ -1,7 +1,7 @@
 package model.enums;
 
 import static utilities.Statics.LIENANO;
-import static utilities.Statics.LIENAPP;;
+import static utilities.Statics.LIENAPP;
 /**
  * Enumération regroupant toutes les informations possibles sur l'éxecution du traitement du fichier de suivi.
  * 
@@ -23,7 +23,8 @@ public enum TypeInfoMail
     SERVICESSANSRESP("Lots avec services sans responsable :\n", "- Service : "),
     APPLIOBSOLETE("Liste des composants avec un code application obsolète :\n", LIENAPP),
     APPLINONREF("Liste des composants avec une application non listée dans le référentiel :\n", LIENAPP),
-    COMPOSANSAPP("Liste des composants sans application :\n", "");   
+    COMPOSANSAPP("Liste des composants sans application :\n", ""),
+    COMPOPURGE("Liste des composants purgés :\n", "");   
     
     private String titre;
     private String liens;

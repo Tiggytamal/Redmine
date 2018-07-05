@@ -1,7 +1,6 @@
 package control.task;
 
 import static utilities.Statics.fichiersXML;
-import static utilities.Statics.LOGNONLISTEE;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
@@ -18,6 +17,8 @@ import java.util.TreeSet;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -59,6 +60,9 @@ public class MajSuiviExcelTask extends SonarTask
     /*---------- ATTRIBUTS ----------*/
 
     private TypeMaj typeMaj;
+    
+    /** logger applications non listée dans le référentiel */
+    private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -263,16 +267,16 @@ public class MajSuiviExcelTask extends SonarTask
         etapePlus();
         if (Main.DESER)
         {
-            mapLotsSonar = Utilities.deserialisation("d:\\lotsSonar" + matiere.toString() + ".ser", HashMap.class);
-            lotsSecurite = Utilities.deserialisation("d:\\lotsSecurite" + matiere.toString() + ".ser", HashSet.class);
-            lotRelease = Utilities.deserialisation("d:\\lotsRelease" + matiere.toString() + ".ser", HashSet.class);
+            mapLotsSonar = Utilities.deserialisation("lotsSonar" + matiere.toString() + ".ser", HashMap.class);
+            lotsSecurite = Utilities.deserialisation("lotsSecurite" + matiere.toString() + ".ser", HashSet.class);
+            lotRelease = Utilities.deserialisation("lotsRelease" + matiere.toString() + ".ser", HashSet.class);
         }
         else
         {
             mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotRelease);
-            Utilities.serialisation("d:\\lotsSecurite" + matiere.toString() + ".ser", lotsSecurite);
-            Utilities.serialisation("d:\\lotsSonar" + matiere.toString() + ".ser", mapLotsSonar);
-            Utilities.serialisation("d:\\lotsRelease" + matiere.toString() + ".ser", lotRelease);
+            Utilities.serialisation("lotsSecurite" + matiere.toString() + ".ser", lotsSecurite);
+            Utilities.serialisation("lotsSonar" + matiere.toString() + ".ser", mapLotsSonar);
+            Utilities.serialisation("lotsRelease" + matiere.toString() + ".ser", lotRelease);
         }
 
         etapePlus();

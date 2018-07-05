@@ -13,7 +13,7 @@ public class TestTypeInfoMail
     @Test
     public void testSize()
     {
-        assertEquals(12, TypeInfoMail.values().length);
+        assertEquals(13, TypeInfoMail.values().length);
     }
     
     @Test
@@ -31,6 +31,7 @@ public class TestTypeInfoMail
         assertEquals("Liste des composants avec un code application obsolète :\n", TypeInfoMail.APPLIOBSOLETE.getTitre());
         assertEquals("Liste des composants avec une application non listée dans le référentiel :\n", TypeInfoMail.APPLINONREF.getTitre());
         assertEquals("Liste des composants sans application :\n", TypeInfoMail.COMPOSANSAPP.getTitre());
+        assertEquals("Liste des composants purgés :\n", TypeInfoMail.COMPOPURGE.getTitre());
     }
     
     @Test
@@ -48,5 +49,6 @@ public class TestTypeInfoMail
         assertEquals(LIENAPP, TypeInfoMail.APPLIOBSOLETE.getLiens());
         assertEquals(LIENAPP, TypeInfoMail.APPLINONREF.getLiens());
         assertEquals("", TypeInfoMail.COMPOSANSAPP.getLiens());
+        assertEquals("", TypeInfoMail.COMPOPURGE.getLiens());
     }
 }

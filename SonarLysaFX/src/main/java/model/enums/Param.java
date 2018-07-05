@@ -26,7 +26,7 @@ public enum Param implements Serializable, TypeKey
     IPMAIL("Adresse IP du serveur mail"),
     PORTMAIL("Port du serveur mail"),
     AQPMAIL("Adresse mail groupe AQP"),
-    NBREPURGE("Nombre de versions à garder pour la purge");
+    NBREPURGE("Nbre de versions à garder purge");
 
     private final String string;
 

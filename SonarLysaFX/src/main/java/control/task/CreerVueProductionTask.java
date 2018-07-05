@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
@@ -36,6 +38,12 @@ public class CreerVueProductionTask extends SonarTask
     private LocalDate dateDebut;
     private LocalDate dateFin;
     public static final String TITRE = "Vue MEP/TEP";
+    
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    
+    /** logger général */
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -146,8 +154,8 @@ public class CreerVueProductionTask extends SonarTask
                 updateProgress(++i, size);
             } catch (TeamRepositoryException e)
             {
-                Statics.LOGGER.error("Erreur au moment de l'appel RTC pour récupérer un lot : méthode control.task.CreerVueProductionTask.recupLotSonarPourMEP - " + entry.getKey());
-                Statics.LOGPLANTAGE.error(e);
+                LOGGER.error("Erreur au moment de l'appel RTC pour récupérer un lot : méthode control.task.CreerVueProductionTask.recupLotSonarPourMEP - " + entry.getKey());
+                LOGPLANTAGE.error(e);
                 continue;
             }
 

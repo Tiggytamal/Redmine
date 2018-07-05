@@ -14,7 +14,7 @@ public class TestParamSpec
     @Test
     public void testSize()
     {
-        assertEquals(7, ParamSpec.values().length);
+        assertEquals(8, ParamSpec.values().length);
     }
     
     @Test
@@ -26,6 +26,7 @@ public class TestParamSpec
         assertFalse(ParamSpec.MEMBRESJAVA.toString().isEmpty());
         assertFalse(ParamSpec.MEMBRESDATASTAGE.toString().isEmpty());
         assertFalse(ParamSpec.RECAPDEFECT.toString().isEmpty());
+        assertFalse(ParamSpec.VERSIONSCOMPOSANTS.toString().isEmpty());
     }
     
     @Test
@@ -38,5 +39,6 @@ public class TestParamSpec
         assertTrue(ParamSpec.MEMBRESJAVA.getType() == TypeParamSpec.LISTVIEWNOM);
         assertTrue(ParamSpec.MEMBRESDATASTAGE.getType() == TypeParamSpec.LISTVIEWNOM);
         assertTrue(ParamSpec.MEMBRESMAIL.getType() == TypeParamSpec.LISTVIEWNOM);
+        assertTrue(ParamSpec.VERSIONSCOMPOSANTS.getType() == TypeParamSpec.LISTVIEWCOMPO);
     }
 }

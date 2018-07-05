@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import control.view.MainScreen;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
@@ -28,6 +31,9 @@ public class Main extends Application
 {
     /** Boolean pour gérer la désrialisation ou non des objets JAVA  - A ACTIVER UNIQUEMENT EN TEST*/
     public static final boolean DESER = false;
+    
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
 
     public static void main(final String[] args)
     {
@@ -75,7 +81,7 @@ public class Main extends Application
             gestionException(e.getCause());
         else
         {
-            Statics.LOGPLANTAGE.error(e);
+            LOGPLANTAGE.error(e);
             createAlert(Severity.ERROR, e, e.getClass().getSimpleName() + e.getMessage());
         }
     }
@@ -120,7 +126,7 @@ public class Main extends Application
             String exceptionText = sw.toString();
             
             // Logging de l'erreur
-            Statics.LOGPLANTAGE.error(sw.toString());
+            LOGPLANTAGE.error(sw.toString());
 
             // Préparation de l'affichage dans al fenêtre
             Label label = new Label("Stacktrace :");

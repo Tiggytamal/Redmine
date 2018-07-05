@@ -12,7 +12,7 @@ public class TestParam
     @Test
     public void testSize()
     {
-        assertEquals(15, Param.values().length);
+        assertEquals(16, Param.values().length);
     }
     
     @Test
@@ -33,5 +33,6 @@ public class TestParam
         assertFalse(Param.IPMAIL.toString().isEmpty());
         assertFalse(Param.PORTMAIL.toString().isEmpty());
         assertFalse(Param.AQPMAIL.toString().isEmpty());
+        assertFalse(Param.NBREPURGE.toString().isEmpty());
     }
 }

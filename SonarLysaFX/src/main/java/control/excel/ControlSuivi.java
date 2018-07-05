@@ -1,8 +1,6 @@
 package control.excel;
 
 import static utilities.Statics.fichiersXML;
-import static utilities.Statics.LOGGER;
-import static utilities.Statics.LOGINCONNUE;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
@@ -16,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -45,11 +45,10 @@ import model.ModelFactory;
 import model.RespService;
 import model.enums.EtatLot;
 import model.enums.Matiere;
+import model.enums.Param;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import model.enums.TypeInfoMail;
-import model.enums.TypeMail;
-import model.enums.Param;
 import utilities.CellHelper;
 import utilities.DateConvert;
 import utilities.FunctionalException;
@@ -106,6 +105,13 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
+    
+    /** logger général */
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    /** logger composants avec application INCONNUE*/
+    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -299,7 +305,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         autosizeColumns(sheetClose);
 
         wb.setActiveSheet(wb.getSheetIndex(sheet));
-        controlMail.envoyerMail(TypeMail.SUIVI);
+        controlMail.envoyerMail(matiere.getTypeMail());
         write();
     }
 
@@ -516,7 +522,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         } catch (PermissionDeniedException e)
         {
             LOGGER.error("Problème authorisation accès lot : " + ano.getLot());
-            Statics.LOGPLANTAGE.error(e);
+            LOGPLANTAGE.error(e);
 
         } catch (TeamRepositoryException e)
         {
