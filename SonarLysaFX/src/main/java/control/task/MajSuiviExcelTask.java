@@ -473,7 +473,7 @@ public class MajSuiviExcelTask extends SonarTask
     }
 
     /**
-     * Controle si le QG est en erreur, et vérifie qu'il y a bine au moins une erreur bloquante, critique, ou une duplication de code.
+     * Controle si le QG est en erreur, et vérifie qu'il y a bien au moins une erreur bloquante, critique, ou une duplication de code.
      * 
      * @param metriques
      * @return

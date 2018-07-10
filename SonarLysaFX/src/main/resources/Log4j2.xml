@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="info">
 
 	<Properties>
 		<Property name="log-path">s:/SER_ASSURANCE_QUALITE/COMMUN/Qualimétrie/Suivi des anomalies qualimétriques/logs</Property>
@@ -79,24 +79,24 @@
 	<Loggers>
 		<Logger name="sansapp-log" level="debug" additivity="false">
 			<appender-ref ref="sansapp-log" level="info" />
-			<appender-ref ref="console-log" level="debug" />
+			<appender-ref ref="console-log" />
 			<appender-ref ref="complet-log" level="info" />
 		</Logger>
 		<Logger name="inconnue-log" level="debug" additivity="false">
 			<appender-ref ref="inconnue-log" level="info" />
-			<appender-ref ref="console-log" level="debug" />
+			<appender-ref ref="console-log" />
 			<appender-ref ref="complet-log" level="info" />
 		</Logger>
 		<Logger name="nonlistee-log" level="debug" additivity="false">
 			<appender-ref ref="nonlistee-log" level="info" />
-			<appender-ref ref="console-log" level="debug" />
+			<appender-ref ref="console-log" />
 			<appender-ref ref="complet-log" level="info" />
 		</Logger>
 		<Logger name="plantage-log" level="debug" additivity="false">
 			<appender-ref ref="plantage-log" level="info" />
 		</Logger>
 		<Logger name="complet-log" level="debug" additivity="false">
-			<appender-ref ref="console-log" level="debug" />
+			<appender-ref ref="console-log" />
 			<appender-ref ref="complet-log" level="info" />
 		</Logger>
 		<Root level="debug" additivity="false">

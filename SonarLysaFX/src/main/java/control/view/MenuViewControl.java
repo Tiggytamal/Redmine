@@ -45,6 +45,8 @@ public class MenuViewControl extends ViewControl
     @FXML
     private MenuItem autres;
     @FXML
+    private MenuItem extraction;
+    @FXML
     private MenuItem majvues;
     @FXML
     private MenuItem maintenance;
@@ -98,6 +100,7 @@ public class MenuViewControl extends ViewControl
         purge.setDisable(true);
         majvues.setDisable(true);
         rtc.setDisable(true);
+        extraction.setDisable(true);
         planificateur.setDisable(true);
         autres.setDisable(true);
         info.setPseudo(null);
@@ -146,6 +149,10 @@ public class MenuViewControl extends ViewControl
 
             case "rtc":
                 load("/view/FichierRTC.fxml");
+                break;
+                
+            case "extraction":
+                load("/view/Extraction.fxml");
                 break;
 
             default:
@@ -224,6 +231,7 @@ public class MenuViewControl extends ViewControl
             majvues.setDisable(false);
             planificateur.setDisable(false);
             autres.setDisable(false);
+            extraction.setDisable(false);
             suivi.setDisable(false);
             maintenance.setDisable(false);
             rtc.setDisable(false);

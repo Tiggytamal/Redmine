@@ -50,6 +50,24 @@ public abstract class ViewControl extends LaunchTask
             throw new FunctionalException(Severity.INFO, "Impossible de récupérer le fichier.");
         return file;
     }
+    
+    /**
+     * Initialise la fenêtre de l'explorateur de fichier, et retourne le fichier selectionné.
+     * 
+     * @param titre
+     *            Titre de la fenêtre de l'explorateur
+     * @return
+     */
+    protected File saveFileFromFileChooser(String titre)
+    {
+        FileChooser fc = new FileChooser();
+        fc.setTitle(titre);
+        fc.getExtensionFilters().add(Statics.FILTEREXCEL);
+        File file = fc.showSaveDialog(MainScreen.getRoot().getScene().getWindow());
+        if (file == null)
+            throw new FunctionalException(Severity.INFO, "Impossible de récupérer le fichier.");
+        return file;
+    }
 
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

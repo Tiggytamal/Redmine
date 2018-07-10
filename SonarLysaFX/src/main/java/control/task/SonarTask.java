@@ -10,15 +10,24 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import application.Main;
 import control.sonar.SonarAPI;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
+import model.LotSuiviRTC;
+import model.ModelFactory;
+import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamSpec;
+import model.enums.TypeMetrique;
+import model.sonarapi.Composant;
+import model.sonarapi.Metrique;
 import model.sonarapi.Projet;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
@@ -37,6 +46,7 @@ public abstract class SonarTask extends Task<Boolean>
     protected int debut;
     protected int fin;
     protected boolean annulable;
+    private static final Logger LOGGER = LogManager.getLogger("console-log");
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -63,14 +73,15 @@ public abstract class SonarTask extends Task<Boolean>
     }
 
     /**
-     * Permet de récupérer la dernière version de chaque composants créés dans Sonar
+     * Permet de récupérer la dernière version de chaque composants créés dans Sonar qui a été au moins envoyé à l'édition.
+     * Rajoute les plus anciennes versions des composants qui n'ont pas de version livrèe à l'édition dûe à la purge.
      *
      * @return
      */
-    protected Map<String, Projet> recupererComposantsSonar()
+    protected final Map<String, Projet> recupererComposantsSonar()
     {
         updateMessage(RECUPCOMPOSANTS);
-        updateProgress(-1, 1);
+        updateProgress(0, 1);
         // Appel du webservice pour remonter tous les composants
 
         @SuppressWarnings("unchecked")
@@ -80,7 +91,11 @@ public abstract class SonarTask extends Task<Boolean>
         projets.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
 
         // Création de la regex pour retirer les numéros de version des composants
-        Pattern pattern = Pattern.compile("^\\D*");
+        Pattern pattern = Pattern.compile("^\\D+(\\d+\\D+){0,1}");
+
+        // Message
+        int size = projets.size();
+        int i = 0;
 
         // Création de la map de retour et parcours de la liste des projets pour remplir celle-ci. On utilise la chaine
         // de caractères créées par la regex comme clef dans la map.
@@ -88,14 +103,58 @@ public abstract class SonarTask extends Task<Boolean>
         // version obsolète.
         Map<String, Projet> retour = new HashMap<>();
 
+        // Liste temporaire des composants qui n'ont pas une version en production
+        Map<String, List<Projet>> temp = new HashMap<>();
+
         for (Projet projet : projets)
         {
             Matcher matcher = pattern.matcher(projet.getNom());
+
+            // Message
+            updateMessage(RECUPCOMPOSANTS + "\n Traitement : " + projet.getKey() + "\n" + i++ + "sur" + size);
+            updateProgress(i, size);
+            LOGGER.debug(i + " - " + size);
+
             if (matcher.find())
             {
-                retour.put(matcher.group(0), projet);
+                // On récupère l'état du lot et si l'etat est au moins à envoyer à l'édition, on prend la nouvelle version
+                Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { TypeMetrique.LOT.toString() });
+                String lot = composant.getMapMetriques().computeIfAbsent(TypeMetrique.LOT, (m) -> new Metrique(TypeMetrique.LOT)).getValue();
+                EtatLot etatLot = Statics.fichiersXML.getLotsRTC().computeIfAbsent(lot, (l) -> ModelFactory.getModel(LotSuiviRTC.class)).getEtatLot();
+
+                if (etatLot == EtatLot.TERMINE || etatLot == EtatLot.EDITION)
+                {
+                    LOGGER.debug("add : " + composant.getNom());
+                    retour.put(matcher.group(0), projet);
+                }
+                // Sinon on rajoute dans la map temporaire les projets qui n'ont pas au moins une version dans la map de retour
+                else if (!retour.containsKey(matcher.group(0)))
+                {
+                    LOGGER.debug("lot : " + etatLot + " - " + composant.getNom());
+                    
+                    // Création de la liste si la clef n'est pas encore présente dans la map
+                    if (!temp.containsKey(matcher.group(0)))
+                        temp.put(matcher.group(0), new ArrayList<>());
+                    
+                    // Ajout du projet
+                    List<Projet> liste = temp.get(matcher.group(0));
+                    liste.add(projet);
+                }
             }
         }
+        
+
+        // Comparaison des deux maps pour rajouter les composants qui ne sont pas dans la map de retour, pour être sûr d'avoir tous les composants.
+        // En effet certains composants n'ont plus la dernière version mise en production dans SonarQube
+        for (Map.Entry<String, List<Projet>> entry : temp.entrySet())
+        {
+            if (!retour.containsKey(entry.getKey()))
+            {
+                retour.put(entry.getKey(), entry.getValue().get(0));
+                LOGGER.debug("rajout : " + entry.getValue().get(0).getNom());
+            }
+        }
+
         updateMessage(RECUPCOMPOSANTS + " OK");
         return retour;
     }
@@ -105,7 +164,7 @@ public abstract class SonarTask extends Task<Boolean>
      *
      * @return
      */
-    protected Map<String, List<Projet>> recupererComposantsSonarVersion(Matiere matiere)
+    protected final Map<String, List<Projet>> recupererComposantsSonarVersion(Matiere matiere)
     {
         updateMessage(RECUPCOMPOSANTS);
 
@@ -146,7 +205,7 @@ public abstract class SonarTask extends Task<Boolean>
                             if (!projet.getNom().startsWith(filtreDataStage))
                                 retour.get(version).add(projet);
                             break;
-                            
+
                         case COBOL:
                             throw new FunctionalException(Severity.ERROR, "COBOL pas pris en compte!");
 
@@ -170,7 +229,7 @@ public abstract class SonarTask extends Task<Boolean>
      * @param suppression
      * @return
      */
-    protected Vue creerVue(String key, String name, String description, boolean suppression)
+    protected final Vue creerVue(String key, String name, String description, boolean suppression)
     {
         // Contrôle
         if (key == null || key.isEmpty() || name == null || name.isEmpty())
@@ -198,7 +257,7 @@ public abstract class SonarTask extends Task<Boolean>
         return vue;
     }
 
-    protected void updateMessage(String message, int etape, int nbreEtapes)
+    protected final void updateMessage(String message, int etape, int nbreEtapes)
     {
         StringBuilder base = new StringBuilder("Etape ").append(etape).append("/").append(nbreEtapes).append(Statics.NL);
         updateMessage(base.append(message).toString());

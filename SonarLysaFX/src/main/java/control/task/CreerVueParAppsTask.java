@@ -71,7 +71,7 @@ public class CreerVueParAppsTask extends SonarTask
         updateMessage(base);
         updateProgress(0, 1);
         
-        // Traitement
+        // SUpression anciennes vues
         List<Projet> listeVuesExistantes = api.getVuesParNom("APPLI MASTER ");
         for (int i = 0; i < listeVuesExistantes.size(); i++)
         {           

@@ -21,11 +21,22 @@ public class Vulnerabilite implements Serializable
     private String lot;
     private String Clarity;
     private String appli;
+    private String lib;
 
     /*---------- CONSTRUCTEURS ----------*/
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
+
+    public String getLib()
+    {
+        return lib;
+    }
+
+    public void setLib(String lib)
+    {
+        this.lib = lib;
+    }
 
     public String getAppli()
     {
