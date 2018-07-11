@@ -90,7 +90,7 @@ public class Anomalie implements Modele
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public Anomalie majDepuisRTC(LotSuiviRTC lotRTC)
+    public final Anomalie majDepuisRTC(LotSuiviRTC lotRTC)
     {
         setCpiProjet(lotRTC.getCpiProjet());
         setEdition(lotRTC.getEdition());

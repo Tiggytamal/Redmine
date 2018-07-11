@@ -28,6 +28,7 @@ public class FichiersXML implements XML, Modele
     private Map<TypeFichier, String> dateMaj;
     private Map<String, String> mapEditions;
     private Map<String, LotSuiviRTC> lotsRTC;
+    private Map<String, ComposantSonar> composantsSonar;
     private boolean controleOK;
     private static final String NOMFICHIER = "\\fichiers.xml";
     private static final String RESOURCE = "/fichiers.xml";
@@ -40,6 +41,7 @@ public class FichiersXML implements XML, Modele
         lotsRTC = new HashMap<>();
         mapApplis = new HashMap<>();
         mapRespService = new HashMap<>();
+        composantsSonar = new HashMap<>();
         dateMaj = new EnumMap<>(TypeFichier.class);
         mapEditions = new HashMap<>();
         controleOK = true;
@@ -60,7 +62,7 @@ public class FichiersXML implements XML, Modele
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public void majMapDonnees(TypeFichier typeFichier, Map map)
+    public FichiersXML majMapDonnees(TypeFichier typeFichier, Map map)
     {
         switch (typeFichier)
         {
@@ -93,10 +95,18 @@ public class FichiersXML implements XML, Modele
                 lotsRTC.putAll(map);
                 setDateFichier(typeFichier);
                 break;
+                
+            case SONAR:
+                composantsSonar.clear();
+                composantsSonar.putAll(map);
+                setDateFichier(typeFichier);
+                break;
 
             default:
                 throw new TechnicalException("FichiersXML.majMapDonnees - Type de fichier non géré :" + typeFichier.toString(), null);
         }
+        
+        return this;
     }
 
     @Override
@@ -118,6 +128,9 @@ public class FichiersXML implements XML, Modele
         
         // Contrôle Lots RTC
         controleMap(lotsRTC, builder, "lots RTC", TypeFichier.LOTSRTC);
+        
+        // Contrôle Composants Sonar
+        controleMap(composantsSonar, builder, "Composants Sonar", TypeFichier.SONAR);
 
         if (!controleOK)
             builder.append("Merci de recharger le(s) fichier(s) de paramétrage.").append(NL);

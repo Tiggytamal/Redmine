@@ -13,5 +13,6 @@ public enum TypeFichier implements Serializable , TypeKey
     CLARITY, 
     RESPSERVICE, 
     EDITION,
-    LOTSRTC;
+    LOTSRTC,
+    SONAR;
 }

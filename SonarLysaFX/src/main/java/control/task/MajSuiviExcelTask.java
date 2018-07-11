@@ -90,7 +90,7 @@ public class MajSuiviExcelTask extends SonarTask
      * @throws TeamRepositoryException
      * @throws JAXBException
      */
-    private boolean majSuiviExcel() throws IOException, TeamRepositoryException, JAXBException
+    private boolean majSuiviExcel() throws IOException, TeamRepositoryException
     {
         // Mise à jour du fichier RTC à la date du jour.
         majFichierRTC();

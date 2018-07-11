@@ -83,6 +83,12 @@ public class ControlRTC
 {
     /*---------- ATTRIBUTS ----------*/
 
+    /** logger général */
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    
+    /** Instance du controleur */
     public static final ControlRTC INSTANCE = new ControlRTC();
 
     private ITeamRepository repo;
@@ -93,12 +99,6 @@ public class ControlRTC
     private IAuditableCommon auditableCommon;
     private final LocalDate today = LocalDate.now();
     
-    /** logger général */
-    private static final Logger LOGGER = LogManager.getLogger("complet-log");
-    /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
-    
-
     /*---------- CONSTRUCTEURS ----------*/
 
     /**

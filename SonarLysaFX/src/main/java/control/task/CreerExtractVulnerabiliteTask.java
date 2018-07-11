@@ -1,13 +1,10 @@
 package control.task;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import application.Main;
 import control.excel.ControlExtract;
@@ -49,7 +46,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private boolean creerExtract() throws InvalidFormatException, IOException
+    private boolean creerExtract()
     {
         ControlExtract control = new ControlExtract(new File(file.getPath()));
         

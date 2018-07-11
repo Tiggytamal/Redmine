@@ -82,8 +82,8 @@ public abstract class SonarTask extends Task<Boolean>
     {
         updateMessage(RECUPCOMPOSANTS);
         updateProgress(0, 1);
+        
         // Appel du webservice pour remonter tous les composants
-
         @SuppressWarnings("unchecked")
         List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
 
@@ -160,7 +160,7 @@ public abstract class SonarTask extends Task<Boolean>
     }
 
     /**
-     * Permet de récupérer les composants de Sonar triés par version avec sépration des composants datastage
+     * Permet de récupérer les composants de Sonar triés par version avec séparation des composants datastage
      *
      * @return
      */
@@ -263,7 +263,7 @@ public abstract class SonarTask extends Task<Boolean>
         updateMessage(base.append(message).toString());
     }
 
-    protected void initEtape(int fin)
+    protected final void initEtape(int fin)
     {
         debut = 1;
         this.fin = fin;

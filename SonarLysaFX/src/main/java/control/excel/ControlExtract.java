@@ -5,13 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import model.Vulnerabilite;
@@ -34,8 +32,6 @@ public class ControlExtract extends ControlExcel<TypeColExtract, List<Vulnerabil
     private int colAppli;
     private int colComp;
     private int colLib;
-    private Workbook wb;
-    private CellHelper helper;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -47,7 +43,7 @@ public class ControlExtract extends ControlExcel<TypeColExtract, List<Vulnerabil
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public void ajouterExtraction(List<Vulnerabilite> liste, TypeVulnerabilite type) throws IOException, InvalidFormatException
+    public void ajouterExtraction(List<Vulnerabilite> liste, TypeVulnerabilite type)
     {
         Sheet sheet = wb.getSheet(type.getNomSheet());
         Row row;       
