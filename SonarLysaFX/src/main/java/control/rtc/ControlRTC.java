@@ -340,7 +340,7 @@ public class ControlRTC
         final List<?> handles = page.getItemHandles();
         if (!handles.isEmpty())
         {
-            return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, progressMonitor);
+            return recupererItemDepuisHandle(IContributor.class, (IContributorHandle) handles.get(0));
         }
 
         return null;
@@ -377,7 +377,7 @@ public class ControlRTC
         final List<?> handles = page.getItemHandles();
         if (!handles.isEmpty())
         {
-            return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, progressMonitor);
+            return (IContributor)  repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, progressMonitor);
         }
 
         return null;
@@ -483,7 +483,7 @@ public class ControlRTC
     {
         if (item instanceof IWorkItemHandle)
         {
-            IWorkItem workItem = (IWorkItem) repo.itemManager().fetchCompleteItem((IWorkItemHandle) item, IItemManager.DEFAULT, progressMonitor);
+            IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, (IWorkItemHandle) item);
             LotSuiviRTC retour = ModelFactory.getModel(LotSuiviRTC.class);
             retour.setLot(String.valueOf(workItem.getId()));
             retour.setLibelle(workItem.getHTMLSummary().getPlainText());

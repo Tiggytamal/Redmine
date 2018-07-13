@@ -81,8 +81,9 @@ public class Statics
     public static final String LIENANO = " - Anomalie : ";
     /** liens texte vers application */    
     public static final String LIENAPP = " - Application : ";
-    
+    /** Adresse générique de déserialisation */
     public static final String ADRESSEDESER = "d:\\";
+    public static final String TIRET = "- ";
     
     /* ----- Objets statiques ----- */
     

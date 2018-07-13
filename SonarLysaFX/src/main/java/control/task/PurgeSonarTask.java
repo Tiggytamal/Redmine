@@ -12,16 +12,15 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import application.Main;
 import control.mail.ControlMail;
+import model.ComposantSonar;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
 import model.enums.TypeInfoMail;
 import model.enums.TypeMail;
-import model.sonarapi.Projet;
 import utilities.Statics;
-import utilities.Utilities;
+import utilities.TechnicalException;
 
 public class PurgeSonarTask extends SonarTask
 {
@@ -55,7 +54,7 @@ public class PurgeSonarTask extends SonarTask
     private Boolean purgeVieuxComposants()
     {
         updateMessage("Calcul des composants à purger.");
-        List<Projet> suppression = calculPurge();
+        List<ComposantSonar> suppression = calculPurge();
 
         etapePlus();
 
@@ -64,14 +63,14 @@ public class PurgeSonarTask extends SonarTask
         int i = 0;
 
         // Suppression de tous les composants de la liste
-        for (Projet projet : suppression)
+        for (ComposantSonar compo : suppression)
         {
             i++;
-            updateMessage(base + projet.getNom() + "\n" + i + " sur" + size);
+            updateMessage(base + compo.getNom() + "\n" + i + " sur" + size);
             updateProgress(i, size);
-            api.supprimerProjet(projet.getKey(), true);
-            api.supprimerVue(projet.getKey(), true);
-            controlMail.addInfo(TypeInfoMail.COMPOPURGE, projet.getNom(), null);
+            api.supprimerProjet(compo.getKey(), true);
+            api.supprimerVue(compo.getKey(), true);
+            controlMail.addInfo(TypeInfoMail.COMPOPURGE, compo.getNom(), null);
         }
 
         updateMessage("Fin du traitement.");
@@ -86,10 +85,10 @@ public class PurgeSonarTask extends SonarTask
      * 
      * @return
      */
-    private List<Projet> calculPurge()
+    private List<ComposantSonar> calculPurge()
     {
         // Variables
-        List<Projet> retour = new ArrayList<>();
+        List<ComposantSonar> retour = new ArrayList<>();
         int supp = 0;
         int solo = 0;
         int total = 0;
@@ -102,17 +101,17 @@ public class PurgeSonarTask extends SonarTask
         Collections.sort(listeVersion, (s1, s2) -> Integer.valueOf(s2).compareTo(Integer.valueOf(s1)));
 
         // Préparation map
-        Map<String, List<Projet>> mapProjets = compileMap();
+        Map<String, List<ComposantSonar>> mapCompos = compileMap();
 
         // Itération sur la map pour calcul des composants à supprimer. On ne garde les deux dernières versions de chaque composant récent,
         // ou la dernière pour les composant plus ancients, ou les 3 dernière pour la version la plus récente selon le paramètrage.
-        for (Map.Entry<String, List<Projet>> entry : mapProjets.entrySet())
+        for (Map.Entry<String, List<ComposantSonar>> entry : mapCompos.entrySet())
         {
             // ----- 1. Variables -----
-            List<Projet> liste = entry.getValue();
+            List<ComposantSonar> liste = entry.getValue();
 
             // Premier élément
-            Projet premier = liste.get(0);
+            ComposantSonar premier = liste.get(0);
 
             // Calcul nombre total de composants
             int size = liste.size();
@@ -141,6 +140,7 @@ public class PurgeSonarTask extends SonarTask
                 {
                     pattern.append("(").append(string).append(")|");
                 }
+                
                 // On enlève la dernière |
                 pattern.replace(pattern.length() - 1, pattern.length(), "");
                 pattern.append("]$");
@@ -157,7 +157,7 @@ public class PurgeSonarTask extends SonarTask
                 // De fait que le remove reduit la taille de la liste, il ne faut pas incrémenter l'indice
                 while (i < liste.size())
                 {
-                    Projet projet = entry.getValue().get(i);
+                    ComposantSonar projet = entry.getValue().get(i);
                     LOGGER.info("SUPPRESSION : " + projet.getNom());
                     retour.add(projet);
                     entry.getValue().remove(projet);
@@ -167,20 +167,24 @@ public class PurgeSonarTask extends SonarTask
         }
 
         // ----- 5. Logs des résultats -----
-        String extraDonnees = "Composants uniques (hors versions) : " + mapProjets.size() + "\nComposants solo (une seule version) : " + solo
+        String extraDonnees = "Composants uniques (hors versions) : " + mapCompos.size() + "\nComposants solo (une seule version) : " + solo
                 + "\nTotal composants sonar (toutes versions comprises) : " + total + "\nSuppressions : " + supp + "\n";
         controlMail.addExtra(extraDonnees);
 
         return retour;
     }
 
-    private Map<String, List<Projet>> compileMap()
-    {
-        @SuppressWarnings("unchecked")
-        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
+    private Map<String, List<ComposantSonar>> compileMap()
+    {       
+        // Récupération composants depuis fichier XML
+        List<ComposantSonar> compos = Statics.fichiersXML.getListComposants();
+        
+        // Contrôle si la liste des composants est vide.
+        if (compos.isEmpty())
+            throw new TechnicalException("Attention la liste des composants est vide - control.task.PurgeSonarTask.compileMap", null);
 
         // Triage ascendant de la liste par nom de projet décroissants
-        projets.sort((o1, o2) -> o2.getKey().compareTo(o1.getKey()));
+        compos.sort((o1, o2) -> o2.getKey().compareTo(o1.getKey()));
 
         // Création de la regex pour retirer les numéros de version des composants
         Pattern pattern = Pattern.compile("^\\D+(\\d+\\D+){0,1}");
@@ -189,17 +193,17 @@ public class PurgeSonarTask extends SonarTask
         // de caractères créées par la regex comme clef dans la map.
         // Les compossant étant triès par ordre alphabétique, on va écraser tous les composants qui ont un numéro de
         // version obsolète.
-        Map<String, List<Projet>> retour = new HashMap<>();
+        Map<String, List<ComposantSonar>> retour = new HashMap<>();
 
-        for (Projet projet : projets)
+        for (ComposantSonar compo : compos)
         {
-            Matcher matcher = pattern.matcher(projet.getKey());
+            Matcher matcher = pattern.matcher(compo.getKey());
             if (matcher.find())
             {
                 if (retour.get(matcher.group(0)) == null)
                     retour.put(matcher.group(0), new ArrayList<>());
 
-                retour.get(matcher.group(0)).add(projet);
+                retour.get(matcher.group(0)).add(compo);
             }
         }
 

@@ -4,8 +4,6 @@ import org.apache.logging.log4j.Logger;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
-import utilities.Statics;
-
 public class TestUtils
 {
     /*---------- ATTRIBUTS ----------*/
@@ -15,7 +13,10 @@ public class TestUtils
     
     /*---------- CONSTRUCTEURS ----------*/
     
-    private TestUtils() {}
+    private TestUtils() 
+    {
+        throw new AssertionError();
+    }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -25,10 +26,10 @@ public class TestUtils
      *          non du logger (ils sont déclarès dans la classe {@code utilities.Statics}
      * @return
      */
-    public static Logger getMockLogger(String loggerName)
+    public static <T> Logger getMockLogger(Class<T> clazz, String loggerName)
     {
         Logger logger = PowerMockito.mock(Logger.class);
-        Whitebox.setInternalState(Statics.class, loggerName, logger);
+        Whitebox.setInternalState(clazz, loggerName, logger);
         return logger;
     }
     

@@ -107,6 +107,16 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
         assertNotNull(getField(handler.getClass(), "createHelper").get(handler));
         assertNotNull(getField(handler.getClass(), "ca").get(handler));
     }
+    
+    @Test (expected = TechnicalException.class)
+    public void testCreateWebException() throws Exception
+    {
+        // Initialisation handler avec mauvais format de fichier
+        handler = ExcelFactory.getControlleur(typeColClass, new File("12:;"));
+        
+        // Appel méthode
+        invokeMethod(handler, "createWb");
+    }
 
     @Test
     public void testInitEnum() throws IllegalAccessException
@@ -159,8 +169,18 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
         // Test - appel de la méthode close.
         invokeMethod(handler, "close");
         
-        // Appel méthode write  pour voir si le Workbook est bine fermé
+        // Appel méthode write  pour voir si le Workbook est bien fermé
         invokeMethod(handler, "write");
+    }
+    
+    @Test (expected = TechnicalException.class)
+    public void testCloseException() throws Exception
+    {
+        // Initialisation handler avec mauvais format de fichier
+        handler = ExcelFactory.getControlleur(typeColClass, new File("12:;"));
+        
+        // Test - appel de la méthode close.
+        invokeMethod(handler, "close");
     }
     
     @Test

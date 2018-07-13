@@ -11,12 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import model.ComposantSonar;
 import model.enums.CHCouCDM;
 import model.enums.Matiere;
-import model.enums.TypeMetrique;
-import model.sonarapi.Composant;
-import model.sonarapi.Metrique;
-import model.sonarapi.Projet;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
@@ -104,37 +101,29 @@ public class CreerVueCHCCDMTask extends SonarTask
     {
         Map<String, Set<String>> mapVuesACreer = new HashMap<>();
 
-        Map<String, List<Projet>> mapProjets = recupererComposantsSonarVersion(Matiere.JAVA);
+        Map<String, List<ComposantSonar>> mapProjets = recupererComposantsSonarVersion(Matiere.JAVA);
 
         // Transfert de la map en une liste avec tous les projets
-        List<Projet> tousLesProjets = new ArrayList<>();
-        for (List<Projet> projets : mapProjets.values())
+        List<ComposantSonar> tousLesProjets = new ArrayList<>();
+        for (List<ComposantSonar> compos : mapProjets.values())
         {
-            tousLesProjets.addAll(projets);
+            tousLesProjets.addAll(compos);
         }
 
         etapePlus();
 
         for (int i = 0; i < tousLesProjets.size(); i++)
         {
-            Projet projet = tousLesProjets.get(i);
-
-            // Récupération de l'édition du composant sous forme numérique xx.yy.zz.tt et du numéro de lot
-            Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { TypeMetrique.EDITION.toString(), TypeMetrique.LOT.toString() });
+            ComposantSonar compo = tousLesProjets.get(i);
 
             // MAJ progression
-            updateMessage("Traitement des composants :" + NL + composant.getNom());
+            updateMessage("Traitement des composants :" + NL + compo.getNom());
             updateProgress(i, tousLesProjets.size());
 
-            // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
-            Map<TypeMetrique, Metrique> metriques = composant.getMapMetriques();
-            String lot = metriques.computeIfAbsent(TypeMetrique.LOT, t -> new Metrique(TypeMetrique.LOT, null)).getValue();            
-            String edition = metriques.computeIfAbsent(TypeMetrique.EDITION, t -> new Metrique(TypeMetrique.EDITION, null)).getValue();
-
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
-            if (lot != null && !lot.isEmpty() && edition != null && mapEditions.keySet().contains(edition))
+            if (compo.getLot().isEmpty() && mapEditions.keySet().contains(compo.getEdition()))
             {
-                String keyCHC = mapEditions.get(edition);
+                String keyCHC = mapEditions.get(compo.getEdition());
 
                 // Contrôle pour ne prendre que les CHC ou CDM selon le booléen
                 if (!controle(chccdm, keyCHC))
@@ -143,7 +132,7 @@ public class CreerVueCHCCDMTask extends SonarTask
                 // AJout à la map et création de la clef au besoin
                 if (!mapVuesACreer.keySet().contains(keyCHC))
                     mapVuesACreer.put(keyCHC, new HashSet<>());
-                mapVuesACreer.get(keyCHC).add(lot);
+                mapVuesACreer.get(keyCHC).add(compo.getLot());
             }
         }
 

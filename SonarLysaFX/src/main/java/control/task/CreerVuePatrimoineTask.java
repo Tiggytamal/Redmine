@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import model.sonarapi.Projet;
+import model.ComposantSonar;
 import model.sonarapi.Vue;
 import utilities.Statics;
 
@@ -63,7 +63,7 @@ public class CreerVuePatrimoineTask extends SonarTask
         String nom = "Vue patrimoine " + today.getYear() + " S" + today.get(woy);
         
         // Récupération des composants
-        List<Projet> composants = new ArrayList<>(recupererComposantsSonar().values());
+        List<ComposantSonar> composants = new ArrayList<>(recupererComposantsSonar().values());
        
         if (isCancelled())
             return false;
@@ -82,7 +82,7 @@ public class CreerVuePatrimoineTask extends SonarTask
         {
             if (isCancelled())
                 return false;
-            Projet projet = composants.get(i);
+            ComposantSonar projet = composants.get(i);
             api.ajouterProjet(projet, vue);
             updateProgress(i, size);
             updateMessage(baseMessage + projet.getNom());

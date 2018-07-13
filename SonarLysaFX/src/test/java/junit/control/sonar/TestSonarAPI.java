@@ -54,7 +54,7 @@ public class TestSonarAPI extends JunitBase
         PowerMockito.when(responseMock, "getStatus").thenReturn(Status.FORBIDDEN.getStatusCode());
         
         // Mock du logger pour vérifier les appels à celui-ci
-        logger = TestUtils.getMockLogger("LOGGER");
+        logger = TestUtils.getMockLogger(SonarAPI.class, "LOGGER");
     }
 
     @Before

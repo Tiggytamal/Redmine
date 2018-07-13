@@ -13,22 +13,18 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import application.Main;
 import control.sonar.SonarAPI;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
+import model.ComposantSonar;
 import model.LotSuiviRTC;
 import model.ModelFactory;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamSpec;
-import model.enums.TypeMetrique;
-import model.sonarapi.Composant;
-import model.sonarapi.Metrique;
-import model.sonarapi.Projet;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
 import utilities.Statics;
@@ -78,67 +74,55 @@ public abstract class SonarTask extends Task<Boolean>
      *
      * @return
      */
-    protected final Map<String, Projet> recupererComposantsSonar()
+    protected final Map<String, ComposantSonar> recupererComposantsSonar()
     {
         updateMessage(RECUPCOMPOSANTS);
-        updateProgress(0, 1);
+        updateProgress(-1, -1);
         
-        // Appel du webservice pour remonter tous les composants
-        @SuppressWarnings("unchecked")
-        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
-
+        // Récupération des composants Sonar depuis le fichier XML       
+        List<ComposantSonar> composantsSonar =  new ArrayList<>();
+        composantsSonar.addAll(Statics.fichiersXML.getMapComposSonar().values());
+        
         // Triage ascendant de la liste par nom de projet
-        projets.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
+        composantsSonar.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
 
         // Création de la regex pour retirer les numéros de version des composants
         Pattern pattern = Pattern.compile("^\\D+(\\d+\\D+){0,1}");
 
-        // Message
-        int size = projets.size();
-        int i = 0;
 
         // Création de la map de retour et parcours de la liste des projets pour remplir celle-ci. On utilise la chaine
         // de caractères créées par la regex comme clef dans la map.
-        // Les compossant étant triès par ordre alphabétique, on va écraser tous les composants qui ont un numéro de
-        // version obsolète.
-        Map<String, Projet> retour = new HashMap<>();
+        // Les compossant étant triès par ordre alphabétique, on va écraser tous les composants qui ont un numéro de version obsolète.
+        Map<String, ComposantSonar> retour = new HashMap<>();
 
         // Liste temporaire des composants qui n'ont pas une version en production
-        Map<String, List<Projet>> temp = new HashMap<>();
+        Map<String, List<ComposantSonar>> temp = new HashMap<>();
 
-        for (Projet projet : projets)
+        for (ComposantSonar compo : composantsSonar)
         {
-            Matcher matcher = pattern.matcher(projet.getNom());
-
-            // Message
-            updateMessage(RECUPCOMPOSANTS + "\n Traitement : " + projet.getKey() + "\n" + i++ + "sur" + size);
-            updateProgress(i, size);
-            LOGGER.debug(i + " - " + size);
+            Matcher matcher = pattern.matcher(compo.getNom());
 
             if (matcher.find())
             {
-                // On récupère l'état du lot et si l'etat est au moins à envoyer à l'édition, on prend la nouvelle version
-                Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { TypeMetrique.LOT.toString() });
-                String lot = composant.getMapMetriques().computeIfAbsent(TypeMetrique.LOT, (m) -> new Metrique(TypeMetrique.LOT)).getValue();
-                EtatLot etatLot = Statics.fichiersXML.getLotsRTC().computeIfAbsent(lot, (l) -> ModelFactory.getModel(LotSuiviRTC.class)).getEtatLot();
+                EtatLot etatLot = Statics.fichiersXML.getLotsRTC().computeIfAbsent(compo.getLot(), (l) -> ModelFactory.getModel(LotSuiviRTC.class)).getEtatLot();
 
                 if (etatLot == EtatLot.TERMINE || etatLot == EtatLot.EDITION)
                 {
-                    LOGGER.debug("add : " + composant.getNom());
-                    retour.put(matcher.group(0), projet);
+                    LOGGER.debug("add : " + compo.getNom());
+                    retour.put(matcher.group(0), compo);
                 }
                 // Sinon on rajoute dans la map temporaire les projets qui n'ont pas au moins une version dans la map de retour
                 else if (!retour.containsKey(matcher.group(0)))
                 {
-                    LOGGER.debug("lot : " + etatLot + " - " + composant.getNom());
+                    LOGGER.debug("lot : " + etatLot + " - " + compo.getNom());
                     
                     // Création de la liste si la clef n'est pas encore présente dans la map
                     if (!temp.containsKey(matcher.group(0)))
                         temp.put(matcher.group(0), new ArrayList<>());
                     
                     // Ajout du projet
-                    List<Projet> liste = temp.get(matcher.group(0));
-                    liste.add(projet);
+                    List<ComposantSonar> liste = temp.get(matcher.group(0));
+                    liste.add(compo);
                 }
             }
         }
@@ -146,7 +130,7 @@ public abstract class SonarTask extends Task<Boolean>
 
         // Comparaison des deux maps pour rajouter les composants qui ne sont pas dans la map de retour, pour être sûr d'avoir tous les composants.
         // En effet certains composants n'ont plus la dernière version mise en production dans SonarQube
-        for (Map.Entry<String, List<Projet>> entry : temp.entrySet())
+        for (Map.Entry<String, List<ComposantSonar>> entry : temp.entrySet())
         {
             if (!retour.containsKey(entry.getKey()))
             {
@@ -155,7 +139,8 @@ public abstract class SonarTask extends Task<Boolean>
             }
         }
 
-        updateMessage(RECUPCOMPOSANTS + " OK");
+        updateMessage(RECUPCOMPOSANTS + " OK" );
+        
         return retour;
     }
 
@@ -164,19 +149,18 @@ public abstract class SonarTask extends Task<Boolean>
      *
      * @return
      */
-    protected final Map<String, List<Projet>> recupererComposantsSonarVersion(Matiere matiere)
+    protected final Map<String, List<ComposantSonar>> recupererComposantsSonarVersion(Matiere matiere)
     {
         updateMessage(RECUPCOMPOSANTS);
 
         // Récupération des versions en paramètre
         String[] versions = proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONS).split(";");
 
-        // Appel du webservice pour remonter tous les composants
-        @SuppressWarnings("unchecked")
-        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
+        // Récupération composants depuis fichier XML
+        List<ComposantSonar> compos = Statics.fichiersXML.getListComposants();
 
         // Création de la map de retour en utilisant les versions données
-        Map<String, List<Projet>> retour = new HashMap<>();
+        Map<String, List<ComposantSonar>> retour = new HashMap<>();
 
         for (String version : versions)
         {
@@ -184,12 +168,12 @@ public abstract class SonarTask extends Task<Boolean>
         }
 
         // Itération sur les projets pour remplir la liste de retour
-        for (Projet projet : projets)
+        for (ComposantSonar compo : compos)
         {
             for (String version : versions)
             {
                 // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans version E32
-                if (projet.getNom().endsWith(Utilities.transcoEdition(version)))
+                if (compo.getNom().endsWith(Utilities.transcoEdition(version)))
                 {
                     // Switch de contrôle selon la type de matière
                     // utilisant le filtre en paramètre. Si le Boolean est nul, on prend tous les composants
@@ -197,13 +181,13 @@ public abstract class SonarTask extends Task<Boolean>
                     switch (matiere)
                     {
                         case DATASTAGE:
-                            if (projet.getNom().startsWith(filtreDataStage))
-                                retour.get(version).add(projet);
+                            if (compo.getNom().startsWith(filtreDataStage))
+                                retour.get(version).add(compo);
                             break;
 
                         case JAVA:
-                            if (!projet.getNom().startsWith(filtreDataStage))
-                                retour.get(version).add(projet);
+                            if (!compo.getNom().startsWith(filtreDataStage))
+                                retour.get(version).add(compo);
                             break;
 
                         case COBOL:

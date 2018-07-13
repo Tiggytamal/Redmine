@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mchange.util.AssertException;
 
+import model.ComposantSonar;
 import model.enums.Param;
 import model.sonarapi.AjouterProjet;
 import model.sonarapi.AjouterVueLocale;
@@ -605,6 +606,20 @@ public class SonarAPI
         LOGGER.info("Vue " + parent.getKey() + " ajout sous-projet " + projet.getNom() + HTTP + response.getStatus());
         gestionErreur(response);
     }
+    
+    /**
+     * Ajoute un projet déjà existant à une vue donnée
+     * 
+     * @param parent
+     * @param compo
+     */
+    public void ajouterProjet(ComposantSonar compo, Vue parent)
+    {
+        AjouterProjet addProjet = new AjouterProjet(parent.getKey(), compo.getKey());
+        Response response = appelWebservicePOST("api/views/add_project", addProjet);
+        LOGGER.info("Vue " + parent.getKey() + " ajout sous-projet " + compo.getNom() + HTTP + response.getStatus());
+        gestionErreur(response);
+    }
 
     /**
      * Force la mise à jour de toutes les vues dans SonarQube.
@@ -618,14 +633,14 @@ public class SonarAPI
     /**
      * Permet d'associer un QualityGate à un composant donné.
      * 
-     * @param projet
+     * @param compo
      * @param qg
      */
-    public void associerQualitygate(Projet projet, QualityGate qg)
+    public void associerQualitygate(ComposantSonar compo, QualityGate qg)
     {
-        AssocierQG assQG = new AssocierQG(qg.getId(), projet.getId());
+        AssocierQG assQG = new AssocierQG(qg.getId(), compo.getId());
         Response response = appelWebservicePOST(QGSELECT, assQG);
-        LOGGER.info("projet " + projet.getNom() + " association " + qg.getName() + HTTP + response.getStatus());
+        LOGGER.info("projet " + compo.getNom() + " association " + qg.getName() + HTTP + response.getStatus());
         gestionErreur(response);
     }
 

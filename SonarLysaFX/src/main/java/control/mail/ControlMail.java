@@ -53,12 +53,12 @@ public class ControlMail
     private String extra;
     private Map<TypeInfoMail, List<InfoMail>> mapInfos;
     private final String today = DateConvert.dateFrancais(LocalDate.now(), "dd MMMM YYYY");
-    private static final String TIRET = "- ";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public ControlMail()
     {
+        // Initialisation variables
         mapInfos = new EnumMap<>(TypeInfoMail.class);
         extra = "";
         for (TypeInfoMail type : TypeInfoMail.values())
@@ -66,6 +66,7 @@ public class ControlMail
             mapInfos.put(type, new ArrayList<>());
         }
 
+        // Données génériques du mail
         try
         {
             initMail();
@@ -106,7 +107,7 @@ public class ControlMail
             message.setText(creerTexte(typeMail.getDebut()));
 
             // ----- 7. Envoi du mail. -----
-            Transport.send(message);
+            transportMail();
 
             LOGGER.info("Envoi du mail de rapport OK.");
 
@@ -151,7 +152,6 @@ public class ControlMail
 
     private String creerTexte(String debut)
     {
-
         // Début
         StringBuilder builder = new StringBuilder(debut).append(today).append(Statics.NL).append(Statics.NL);
 
@@ -165,8 +165,8 @@ public class ControlMail
             builder.append(type.getTitre());
             for (InfoMail info : lots)
             {
-                builder.append(TIRET).append(info.getLot());
-                if (info.getInfoSupp() != null && !type.getLiens().isEmpty())
+                builder.append(Statics.TIRET).append(info.getLot());
+                if (!info.getInfoSupp().isEmpty() && !type.getLiens().isEmpty())
                     builder.append(type.getLiens()).append(info.getInfoSupp());
 
                 builder.append(Statics.NL);
@@ -179,6 +179,11 @@ public class ControlMail
         
         return builder.toString();
     }
+    
+    protected void transportMail() throws MessagingException
+    {
+        Transport.send(message);
+    }
 
     /*---------- ACCESSEURS ----------*/
 
@@ -190,7 +195,6 @@ public class ControlMail
      */
     public void addInfo(TypeInfoMail type, String lot, String infoSupp)
     {
-
         mapInfos.get(type).add(new InfoMail(lot, infoSupp));
     }
     

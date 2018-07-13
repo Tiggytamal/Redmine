@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +24,13 @@ import org.powermock.reflect.Whitebox;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.repository.client.TeamPlatform;
 import com.ibm.team.repository.client.internal.TeamRepository;
+import com.ibm.team.repository.common.IContributor;
+import com.ibm.team.repository.common.IItemHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IAttribute;
 import com.ibm.team.workitem.common.model.IAttributeHandle;
 import com.ibm.team.workitem.common.model.IWorkItem;
+import com.ibm.team.workitem.common.model.IWorkItemHandle;
 import com.mchange.util.AssertException;
 
 import control.excel.ControlSuivi;
@@ -35,11 +39,14 @@ import control.rtc.ControlRTC;
 import junit.JunitBase;
 import junit.TestUtils;
 import model.Anomalie;
+import model.LotSuiviRTC;
 import model.ModelFactory;
+import model.enums.EtatLot;
 import model.enums.Param;
 import model.enums.TypeColSuivi;
 import model.enums.TypeEnumRTC;
 import utilities.Statics;
+import utilities.TechnicalException;
 
 public class TestControlRTC extends JunitBase
 {
@@ -84,7 +91,7 @@ public class TestControlRTC extends JunitBase
     public void testRecupProjetRTCDepuisWiLot() throws TeamRepositoryException
     {
         // Intialisation
-        Logger logger = TestUtils.getMockLogger("LOGGER");
+        Logger logger = TestUtils.getMockLogger(ControlRTC.class, "LOGGER");
 
         // Test avec lot absent de RTC
         assertEquals("", handler.recupProjetRTCDepuisWiLot(10));
@@ -177,6 +184,13 @@ public class TestControlRTC extends JunitBase
                 assertEquals("Qualimétrie", handler.recupererValeurAttribut(attrb, item));
         }
     }
+    
+    @Test
+    public void testRecupNomContributorConnecte()
+    {
+        String nom = handler.recupNomContributorConnecte();
+        assertEquals("MATHON Gregoire", nom);
+    }
 
     @Test
     public void testRecupContributorDepuisNom() throws TeamRepositoryException, IOException
@@ -195,6 +209,49 @@ public class TestControlRTC extends JunitBase
         // Test sur les retour null
         assertNull(handler.recupContributorDepuisNom(""));
         assertNull(handler.recupContributorDepuisNom(null));
+    }
+    
+    @Test
+    public void testRecupContributorDepuisId() throws TeamRepositoryException
+    {
+        assertNull(handler.recupContributorDepuisId(null));
+        assertNull(handler.recupContributorDepuisId("000001"));
+    }
+    
+    @Test
+    public void testRecupLotsRTC() throws TeamRepositoryException
+    {
+        List<IItemHandle> liste = handler.recupLotsRTC(true, LocalDate.of(2016, 01, 01));
+        assertNotNull(liste);
+        assertFalse(liste.isEmpty());
+        
+        List<IItemHandle> liste2 = handler.recupLotsRTC(false, null);
+        assertNotNull(liste2);
+        assertFalse(liste2.isEmpty());
+        
+    }
+    
+    @Test (expected = TechnicalException.class)
+    public void testRecupLotsRTCException() throws TeamRepositoryException
+    {
+        handler.recupLotsRTC(true, null);
+    }
+    
+    @Test
+    public void testCreerLotSuiviRTCDepuisHandle() throws TeamRepositoryException
+    {
+        List<IItemHandle> liste = handler.recupLotsRTC(false, null);
+        LotSuiviRTC lot =  handler.creerLotSuiviRTCDepuisHandle(liste.get(0));
+        IWorkItem workItem = handler.recupererItemDepuisHandle(IWorkItem.class, (IWorkItemHandle)liste.get(0));
+        assertEquals(String.valueOf(workItem.getId()), lot.getLot());
+        assertEquals(workItem.getHTMLSummary().getPlainText(), lot.getLibelle());
+        assertEquals(handler.recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName(), lot.getCpiProjet());
+        assertEquals(EtatLot.from(handler.recupEtatElement(workItem)), lot.getEtatLot());
+        assertEquals(handler.recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName(), lot.getProjetRTC());
+        assertNotNull(lot.getEdition());
+        assertFalse(lot.getEdition().isEmpty());       
+        assertNotNull(lot.getProjetClarity());
+        assertFalse(lot.getProjetClarity().isEmpty());        
     }
 
     @Test

@@ -13,9 +13,9 @@ import org.apache.logging.log4j.Logger;
 
 import application.Main;
 import control.mail.ControlMail;
+import model.ComposantSonar;
 import model.enums.TypeInfoMail;
 import model.enums.TypeMail;
-import model.sonarapi.Composant;
 import model.sonarapi.Projet;
 import model.sonarapi.Vue;
 import utilities.Statics;
@@ -61,7 +61,7 @@ public class CreerVueParAppsTask extends SonarTask
     {
         // 1 .Création de la liste des composants par application
         @SuppressWarnings ("unchecked")
-        Map<String, List<Projet>> mapApplication = Utilities.recuperation(Main.DESER, Map.class, "mapApplis.ser", this::controlerSonarQube);
+        Map<String, List<ComposantSonar>> mapApplication = Utilities.recuperation(Main.DESER, Map.class, "mapApplis.ser", this::controlerSonarQube);
 
         // 2. Suppression des vues existantes
         
@@ -95,7 +95,7 @@ public class CreerVueParAppsTask extends SonarTask
         updateProgress(0, size);
         
         // Parcours de la liste pour créer chaque vue applicative avec ses composants
-        for (Map.Entry<String, List<Projet>> entry : mapApplication.entrySet())
+        for (Map.Entry<String, List<ComposantSonar>> entry : mapApplication.entrySet())
         {            
             // Création de la vue principale
             Vue vue = creerVue("APPMASTERAPP" + entry.getKey(), "APPLI MASTER " + entry.getKey(), "Liste des composants de l'application " + entry.getKey(), false);
@@ -104,10 +104,10 @@ public class CreerVueParAppsTask extends SonarTask
             String baseVue = base + "traitement : " + vue.getName() + NL;
             updateMessage(baseVue);
             updateProgress(++i, size);
-            for (Projet projet : entry.getValue())
+            for (ComposantSonar composantSonar : entry.getValue())
             {
-                updateMessage(baseVue + "Ajout : " + projet.getNom());
-                api.ajouterProjet(projet, vue);
+                updateMessage(baseVue + "Ajout : " + composantSonar.getNom());
+                api.ajouterProjet(composantSonar, vue);
             }
         }
 
@@ -120,23 +120,23 @@ public class CreerVueParAppsTask extends SonarTask
      *
      * @return map des composants SonarQube par application
      */
-    private Map<String, List<Projet>> controlerSonarQube()
+    private Map<String, List<ComposantSonar>> controlerSonarQube()
     {
         // Récupération des composants Sonar
-        Map<String, Projet> mapProjets = recupererComposantsSonar();
-        return creerMapApplication(mapProjets);
+        Map<String, ComposantSonar> mapCompos = recupererComposantsSonar();
+        return creerMapApplication(mapCompos);
     }
     
     /**
      * Crée une map de toutes les apllications dans Sonar avec pour chacunes la liste des composants liés.
      *
-     * @param mapProjets
+     * @param mapCompos
      * @return
      */
-    private HashMap<String, List<Projet>> creerMapApplication(Map<String, Projet> mapProjets)
+    private HashMap<String, List<ComposantSonar>> creerMapApplication(Map<String, ComposantSonar> mapCompos)
     {
         // Initialisation de la map
-        HashMap<String, List<Projet>> retour  = new HashMap<>();
+        HashMap<String, List<ComposantSonar>> retour  = new HashMap<>();
         
         // Message
         String base = "Traitements des composants :" + NL;
@@ -145,39 +145,35 @@ public class CreerVueParAppsTask extends SonarTask
         inconnues = 0;
         
         // Itération sur la liste des projets
-        for (Projet projet : mapProjets.values())
+        for (ComposantSonar compo : mapCompos.values())
         {            
             // Message
-            updateMessage(base + projet.getNom());
-            updateProgress(++i, mapProjets.size());
-            
-            // Récupération du code application
-            Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { "application" });
+            updateMessage(base + compo.getNom());
+            updateProgress(++i, mapCompos.size());
             
             // Test si la liste est vide, cela veut dire que le projet n'a pas de code application.
-            if (!composant.getMetriques().isEmpty())
+            if (!compo.getAppli().isEmpty())
             {
-                String application = composant.getMetriques().get(0).getValue().trim().toUpperCase();
+                String application = compo.getAppli().trim().toUpperCase();
 
                 // Si l'application n'est pas dans la PIC, on continue au projet suivant.
-                if (!testAppli(application, projet.getNom()))
+                if (!testAppli(application, compo.getNom()))
                     continue;
 
-                // Mise à jour de la map de retour avec en clef, le code application et en valeur : la liste des projets
-                // liés.
-                if (retour.keySet().contains(application))
-                    retour.get(application).add(projet);
+                // Mise à jour de la map de retour avec en clef, le code application et en valeur : la liste des projets liés.
+                if (retour.containsKey(application))
+                    retour.get(application).add(compo);
                 else
                 {
-                    List<Projet> liste = new ArrayList<>();
-                    liste.add(projet);
+                    List<ComposantSonar> liste = new ArrayList<>();
+                    liste.add(compo);
                     retour.put(application, liste);
                 }
             }
             else
             {
-                LOGSANSAPP.warn("Application non renseignée - Composant : " + projet.getNom());
-                controlMail.addInfo(TypeInfoMail.COMPOSANSAPP, projet.getNom(), null);
+                LOGSANSAPP.warn("Application non renseignée - Composant : " + compo.getNom());
+                controlMail.addInfo(TypeInfoMail.COMPOSANSAPP, compo.getNom(), null);
             }
         }
         LOGINCONNUE.info("Nombre d'applis inconnues : " + inconnues);

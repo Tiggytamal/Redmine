@@ -3,11 +3,9 @@ package control.task;
 import java.util.ArrayList;
 import java.util.List;
 
-import application.Main;
-import model.sonarapi.Projet;
+import model.ComposantSonar;
 import model.sonarapi.Vue;
 import utilities.Statics;
-import utilities.Utilities;
 
 public class CreerVueDataStageTask extends SonarTask
 {
@@ -53,8 +51,8 @@ public class CreerVueDataStageTask extends SonarTask
         // Appel du webservice pour remonter tous les composants
         updateMessage(RECUPCOMPOSANTS);
         
-        @SuppressWarnings("unchecked")
-        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
+        // Récupération composants depuis fichier XML
+        List<ComposantSonar> compos = Statics.fichiersXML.getListComposants();
         
         if (isCancelled())
             return false;
@@ -68,24 +66,24 @@ public class CreerVueDataStageTask extends SonarTask
         String baseMessage =  builder.append(" OK.").append(Statics.NL).append("Ajout : ").toString();
         
         // Itération sur les projets pour ajouter tous les composants DataStage, puis itération sur la nouvelle liste pour traitement et affichage progression
-        List<Projet> listeDS = new ArrayList<>();
-        for (Projet projet : projets)
+        List<ComposantSonar> listeDS = new ArrayList<>();
+        for (ComposantSonar compo : compos)
         {
-            if (projet.getNom().startsWith("Composant DS_"))
-                listeDS.add(projet);
+            if (compo.getNom().startsWith("Composant DS_"))
+                listeDS.add(compo);
         }
         
         int i = 0;
         int size = listeDS.size();
 
-        for (Projet projet : listeDS)
+        for (ComposantSonar compo : listeDS)
         {
             if (isCancelled())
                 return false;
             
-            api.ajouterProjet(projet, vue);
+            api.ajouterProjet(compo, vue);
             updateProgress(++i, size);
-            updateMessage(baseMessage + projet.getNom());
+            updateMessage(baseMessage + compo.getNom());
         }
         return true;
     }

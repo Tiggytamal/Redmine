@@ -4,13 +4,16 @@ import static utilities.Statics.NL;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import model.enums.TypeFichier;
 import utilities.DateConvert;
@@ -28,7 +31,8 @@ public class FichiersXML implements XML, Modele
     private Map<TypeFichier, String> dateMaj;
     private Map<String, String> mapEditions;
     private Map<String, LotSuiviRTC> lotsRTC;
-    private Map<String, ComposantSonar> composantsSonar;
+    private Map<String, ComposantSonar> mapComposSonar;
+
     private boolean controleOK;
     private static final String NOMFICHIER = "\\fichiers.xml";
     private static final String RESOURCE = "/fichiers.xml";
@@ -41,7 +45,7 @@ public class FichiersXML implements XML, Modele
         lotsRTC = new HashMap<>();
         mapApplis = new HashMap<>();
         mapRespService = new HashMap<>();
-        composantsSonar = new HashMap<>();
+        mapComposSonar = new HashMap<>();
         dateMaj = new EnumMap<>(TypeFichier.class);
         mapEditions = new HashMap<>();
         controleOK = true;
@@ -97,8 +101,8 @@ public class FichiersXML implements XML, Modele
                 break;
                 
             case SONAR:
-                composantsSonar.clear();
-                composantsSonar.putAll(map);
+                mapComposSonar.clear();
+                mapComposSonar.putAll(map);
                 setDateFichier(typeFichier);
                 break;
 
@@ -130,7 +134,7 @@ public class FichiersXML implements XML, Modele
         controleMap(lotsRTC, builder, "lots RTC", TypeFichier.LOTSRTC);
         
         // Contrôle Composants Sonar
-        controleMap(composantsSonar, builder, "Composants Sonar", TypeFichier.SONAR);
+        controleMap(mapComposSonar, builder, "Composants Sonar", TypeFichier.SONAR);
 
         if (!controleOK)
             builder.append("Merci de recharger le(s) fichier(s) de paramétrage.").append(NL);
@@ -212,5 +216,24 @@ public class FichiersXML implements XML, Modele
     public Map<String, LotSuiviRTC> getLotsRTC()
     {
         return lotsRTC;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapComposSonar", required = false)
+    public Map<String, ComposantSonar> getMapComposSonar()
+    {
+        return mapComposSonar;
+    }
+    
+    /**
+     * Retourne la map des composants Sonar sous forme de liste
+     * @return
+     */
+    @XmlTransient
+    public List<ComposantSonar> getListComposants()
+    {
+        List<ComposantSonar> retour = new ArrayList<>();
+        retour.addAll(mapComposSonar.values());
+        return retour;
     }
 }

@@ -23,13 +23,14 @@ public class CreerListeComposantsTask extends SonarTask
 {
     /*---------- ATTRIBUTS ----------*/
     
-    private static final Logger console = LogManager.getLogger("console-log");
+    private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
     
     /*---------- CONSTRUCTEURS ----------*/
 
     public CreerListeComposantsTask()
     {
         super(2);
+        annulable = false;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -37,12 +38,12 @@ public class CreerListeComposantsTask extends SonarTask
     @Override
     protected Boolean call() throws Exception
     {       
-        return creerListe();
+        return creerListeComposants();
     }
 
     /*---------- METHODES PRIVEES ----------*/
     
-    private boolean creerListe()
+    private boolean creerListeComposants()
     {
         // Affichage
         String base = "Création de la liste des composants :%n";
@@ -56,6 +57,7 @@ public class CreerListeComposantsTask extends SonarTask
         
         // Affichage
         updateMessage(base + "Récupération OK.");
+        etapePlus();
         String base2 = base + "Traitement : ";
         int i = 0;
         int size = projets.size();
@@ -65,16 +67,17 @@ public class CreerListeComposantsTask extends SonarTask
             // Affichage
             updateMessage(base2 + projet.getNom());
             updateProgress(++i, size);
-            console.debug("Traitement composants Sonar : " + i + " - " + size);
+            LOGCONSOLE.debug("Traitement composants Sonar : " + i + " - " + size);
             
             // Récupération du numéro de lot et de l'applicaitond e chaque composant.
-            Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { TypeMetrique.LOT.toString(), TypeMetrique.APPLI.toString() });
+            Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { TypeMetrique.LOT.toString(), TypeMetrique.APPLI.toString(), TypeMetrique.EDITION.toString() });
             ComposantSonar composantSonar = ModelFactory.getModel(ComposantSonar.class);
             composantSonar.setKey(projet.getKey());
             composantSonar.setNom(projet.getNom());
             composantSonar.setLot(composant.getMapMetriques().computeIfAbsent(TypeMetrique.LOT, t -> new Metrique(TypeMetrique.LOT, null)).getValue());
             composantSonar.setAppli(composant.getMapMetriques().computeIfAbsent(TypeMetrique.APPLI, t -> new Metrique(TypeMetrique.APPLI, null)).getValue());
-            mapSonar.put(composantSonar.getNom(), composantSonar);
+            composantSonar.setEdition(composant.getMapMetriques().computeIfAbsent(TypeMetrique.EDITION, t -> new Metrique(TypeMetrique.EDITION, null)).getValue());
+            mapSonar.put(composantSonar.getKey(), composantSonar);
         }
         
         // Sauvegarde des données

@@ -6,7 +6,7 @@ package model;
  * @author ETP8137 - Grégoire Mathon
  *
  */
-public class InfoMail
+public class InfoMail implements Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -23,12 +23,50 @@ public class InfoMail
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
+    
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((infoSupp == null) ? 0 : infoSupp.hashCode());
+        result = prime * result + ((lot == null) ? 0 : lot.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        InfoMail other = (InfoMail) obj;
+        if (infoSupp == null)
+        {
+            if (other.infoSupp != null)
+                return false;
+        }
+        else if (!infoSupp.equals(other.infoSupp))
+            return false;
+        if (lot == null)
+        {
+            if (other.lot != null)
+                return false;
+        }
+        else if (!lot.equals(other.lot))
+            return false;
+        return true;
+    }
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
     
     public String getLot()
     {
-        return lot;
+        return getString(lot);
     }
 
     public void setLot(String lot)
@@ -37,7 +75,7 @@ public class InfoMail
     }
     public String getInfoSupp()
     {
-        return infoSupp;
+        return getString(infoSupp);
     }
     public void setInfoSupp(String infoSupp)
     {

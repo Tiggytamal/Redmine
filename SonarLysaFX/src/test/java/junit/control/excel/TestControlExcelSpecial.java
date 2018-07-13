@@ -25,7 +25,8 @@ public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, Cont
     /*---------- ATTRIBUTS ----------*/
     
     private static final String COPIECOMMENT = "copieComment";
-    private static final String VALORISERCELLULE = "valoriserCellule";    
+    private static final String VALORISERCELLULE = "valoriserCellule";   
+    
     /*---------- CONSTRUCTEURS ----------*/
 
     public TestControlExcelSpecial()

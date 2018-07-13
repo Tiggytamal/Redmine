@@ -11,18 +11,29 @@ public class ComposantSonar implements Modele
     private String nom;
     private String lot;
     private String key;
+    private String id;
     private String appli;
+    private String edition;
     
     /*---------- CONSTRUCTEURS ----------*/
-    
+
     ComposantSonar() {}
     
+    ComposantSonar(String id, String key, String nom)
+    {
+        this.id = id;
+        this.key = key;
+        this.nom = nom;
+    }
+  
     /*---------- METHODES PUBLIQUES ----------*/  
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
     
     @XmlAttribute (name = "nom", required = true)
     public String getNom()
     {
-        return nom;
+        return getString(nom);
     }
 
     public void setNom(String nom)
@@ -33,7 +44,7 @@ public class ComposantSonar implements Modele
     @XmlAttribute (name = "lot", required = false)
     public String getLot()
     {
-        return lot;
+        return getString(lot);
     }
 
     public void setLot(String lot)
@@ -44,7 +55,7 @@ public class ComposantSonar implements Modele
     @XmlAttribute (name = "key", required = true)
     public String getKey()
     {
-        return key;
+        return getString(key);
     }
 
     public void setKey(String key)
@@ -55,7 +66,7 @@ public class ComposantSonar implements Modele
     @XmlAttribute (name = "appli", required = false)
     public String getAppli()
     {
-        return appli;
+        return getString(appli);
     }
 
     public void setAppli(String appli)
@@ -63,7 +74,25 @@ public class ComposantSonar implements Modele
         this.appli = appli;
     }
     
-    /*---------- METHODES PRIVEES ----------*/
-    /*---------- ACCESSEURS ----------*/
+    @XmlAttribute (name = "edition", required = false)
+    public String getEdition()
+    {
+        return getString(edition);
+    }
 
+    public void setEdition(String edition)
+    {
+        this.edition = edition;
+    }
+    
+    @XmlAttribute (name = "id", required = true)
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
 }

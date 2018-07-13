@@ -2,22 +2,21 @@ package control.task;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import application.Main;
 import control.excel.ControlExtract;
+import model.ComposantSonar;
 import model.LotSuiviRTC;
 import model.ModelFactory;
 import model.Vulnerabilite;
-import model.enums.TypeMetrique;
 import model.enums.TypeVulnerabilite;
-import model.sonarapi.Composant;
 import model.sonarapi.Issue;
-import model.sonarapi.Metrique;
 import model.sonarapi.Parametre;
-import model.sonarapi.Projet;
 import utilities.Statics;
 import utilities.Utilities;
 
@@ -27,6 +26,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
     /*---------- ATTRIBUTS ----------*/
     
     private File file;
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -52,9 +52,9 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
         
         // Création liste des noms des composants du patrimoine
         List<String> nomsComposPatrimoine = new ArrayList<>();       
-        for (Projet projet : recupererComposantsSonar().values())
+        for (ComposantSonar compo : recupererComposantsSonar().values())
         {
-            nomsComposPatrimoine.add(projet.getNom());
+            nomsComposPatrimoine.add(compo.getNom());
         }
 
         for (TypeVulnerabilite type : TypeVulnerabilite.values())
@@ -82,7 +82,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
      * @param composant
      * @return
      */
-    private Vulnerabilite convertIssueToVul(Issue issue, Composant composant)
+    private Vulnerabilite convertIssueToVul(Issue issue, ComposantSonar composant)
     {
         Vulnerabilite retour = new Vulnerabilite();
         retour.setComposant(composant.getNom());
@@ -90,8 +90,8 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
         retour.setDateCreation(issue.getCreationDate());
         retour.setSeverite(issue.getSeverity());
         retour.setMessage(issue.getMessage());
-        retour.setLot(composant.getMapMetriques().computeIfAbsent(TypeMetrique.LOT, t -> new Metrique(TypeMetrique.LOT, null)).getValue());
-        retour.setAppli(composant.getMapMetriques().computeIfAbsent(TypeMetrique.APPLI, t -> new Metrique(TypeMetrique.APPLI, null)).getValue());
+        retour.setLot(composant.getLot());
+        retour.setAppli(composant.getAppli());
         retour.setClarity(Statics.fichiersXML.getLotsRTC().computeIfAbsent(retour.getLot(), s -> ModelFactory.getModel(LotSuiviRTC.class)).getProjetClarity());
         retour.setLib(extractLib(retour.getMessage()));
         return retour;
@@ -114,10 +114,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
         // Variables
         List<Vulnerabilite> retour = new ArrayList<>();
         int i = 0;
-        Map<String, Composant> cacheComposants = new HashMap<>();
-        Composant composant;
-        
-
+        Map<String, ComposantSonar> composants = Statics.fichiersXML.getMapComposSonar();      
 
         // Paramètres
         List<Parametre> params = new ArrayList<>();
@@ -141,13 +138,12 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
             updateMessage(basetype + base + clefProjet);
             updateProgress(i++, size);
             
-            // recherche si le composant est déjà dans le cache, sinon on fait un appel au webService Sonar puis on l'ajoute au cache. 
-            if (cacheComposants.keySet().contains(clefProjet))
-                composant = cacheComposants.get(clefProjet);
-            else
+            ComposantSonar composant = composants.get(clefProjet);
+            
+            if (composant == null)
             {
-                composant = api.getMetriquesComposant(issue.getProjet(), new String[] { TypeMetrique.LOT.toString(), TypeMetrique.APPLI.toString() });
-                cacheComposants.put(clefProjet, composant);
+                LOGGER.warn(clefProjet + " n'existe pas dans la liste des composants.");
+                continue;
             }
 
             // Vérification que le lot est bien dans les composants du patrimoine puis conversion dans le format pour créer le fichier Excel

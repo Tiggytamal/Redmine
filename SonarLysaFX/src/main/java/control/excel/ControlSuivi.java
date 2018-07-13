@@ -100,18 +100,18 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     private String lienslots;
     private String liensAnos;
     private final LocalDate today = LocalDate.now();
-    
+
     private ControlMail controlMail;
 
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
-    
+
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
-    /** logger composants avec application INCONNUE*/
+    /** logger composants avec application INCONNUE */
     private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
     /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -145,7 +145,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             // Création anomalie si la ligne n'est pas vide : lot vide.
             Anomalie ano = creerAnodepuisExcel(row);
             if (!ano.getLot().isEmpty())
-            retour.add(ano);
+                retour.add(ano);
         }
         return retour;
     }
@@ -1003,12 +1003,8 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
      * @author ETP8137 - Grégoire mathon
      * @since 1.0
      */
-    private enum Index 
-    {
-        LOTI("Lot projet RTC"), 
-        EDITIONI("Edition"), 
-        ENVI("Etat du lot"), 
-        TRAITEI("Traitée");
+    private enum Index {
+        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
 
         private String string;
 

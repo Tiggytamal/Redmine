@@ -31,6 +31,7 @@ import control.excel.ExcelFactory;
 import control.rtc.ControlRTC;
 import control.xml.ControlXML;
 import model.Anomalie;
+import model.ComposantSonar;
 import model.LotSuiviRTC;
 import model.ModelFactory;
 import model.enums.Matiere;
@@ -42,7 +43,6 @@ import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Periode;
-import model.sonarapi.Projet;
 import model.sonarapi.QualityGate;
 import model.sonarapi.Status;
 import model.sonarapi.Vue;
@@ -60,9 +60,11 @@ public class MajSuiviExcelTask extends SonarTask
     /*---------- ATTRIBUTS ----------*/
 
     private TypeMaj typeMaj;
-    
+
     /** logger applications non listée dans le référentiel */
     private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
+    /** logger plantage */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -94,10 +96,10 @@ public class MajSuiviExcelTask extends SonarTask
     {
         // Mise à jour du fichier RTC à la date du jour.
         majFichierRTC();
-        
+
         updateProgress(-1, 0);
         etapePlus();
-        
+
         // Mise à jour d'un fichier ou des deux , selon le type de mise à jour.
         switch (typeMaj)
         {
@@ -108,12 +110,22 @@ public class MajSuiviExcelTask extends SonarTask
             case DATASTAGE:
                 majFichierSuiviExcelDataStage();
                 break;
-                
+
             case COBOL:
                 majFichierSuiviExcelCOBOL();
                 break;
 
             case MULTI:
+                // Appel de la mise à jour des composants Sonar
+                CreerListeComposantsTask majListeCompos = new CreerListeComposantsTask();
+                try
+                {
+                    majListeCompos.call();
+                } catch (Exception e)
+                {
+                    LOGPLANTAGE.error(e);
+                    throw new TechnicalException("Plantage mise à jour des composants Sonar", e);
+                }
                 traitementSuiviExcelToutFichiers();
                 break;
         }
@@ -133,7 +145,7 @@ public class MajSuiviExcelTask extends SonarTask
         List<IItemHandle> handles = control.recupLotsRTC(false, null);
         if (handles.isEmpty())
             throw new TechnicalException("La liste des lots RTC est vide!", null);
-        
+
         int i = 0;
         int size = handles.size();
         String base = "Récupération RTC - Traitement lot : ";
@@ -148,7 +160,7 @@ public class MajSuiviExcelTask extends SonarTask
         }
 
         Statics.fichiersXML.majMapDonnees(TypeFichier.LOTSRTC, map);
-        new ControlXML().saveParam(Statics.fichiersXML);       
+        new ControlXML().saveParam(Statics.fichiersXML);
     }
 
     /**
@@ -176,8 +188,10 @@ public class MajSuiviExcelTask extends SonarTask
         }
 
         // Mise à jour des fichiers Excel
-        ControlSuivi controlAnoJava =   ExcelFactory.getControlleur(TypeColSuivi.class, new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIER)));
-        ControlSuivi controlAnoDataStage = ExcelFactory.getControlleur(TypeColSuivi.class, new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE)));
+        ControlSuivi controlAnoJava = ExcelFactory.getControlleur(TypeColSuivi.class,
+                new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIER)));
+        ControlSuivi controlAnoDataStage = ExcelFactory.getControlleur(TypeColSuivi.class,
+                new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE)));
         controlAnoJava.majMultiMatiere(anoMultiple);
         controlAnoDataStage.majMultiMatiere(anoMultiple);
         controlAnoJava.close();
@@ -194,7 +208,7 @@ public class MajSuiviExcelTask extends SonarTask
     private List<String> majFichierSuiviExcelDataStage() throws IOException
     {
         // Appel de la récupération des composants datastage avec les vesions en paramètre
-        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(Matiere.DATASTAGE);
+        Map<String, List<ComposantSonar>> composants = recupererComposantsSonarVersion(Matiere.DATASTAGE);
 
         // Mise à jour des liens des composants datastage avec le bon QG
         etapePlus();
@@ -214,13 +228,13 @@ public class MajSuiviExcelTask extends SonarTask
     private List<String> majFichierSuiviExcelCOBOL() throws IOException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
-        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(Matiere.COBOL);
+        Map<String, List<ComposantSonar>> composants = recupererComposantsSonarVersion(Matiere.COBOL);
         etapePlus();
 
         // Traitement du fichier de suivi
         return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIERCOBOL), Matiere.COBOL);
     }
-    
+
     /**
      * Mise à jour du fichier Excel des suivis d'anomalies pour tous les composants non Datastage
      *
@@ -231,7 +245,7 @@ public class MajSuiviExcelTask extends SonarTask
     private List<String> majFichierSuiviExcel() throws IOException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
-        Map<String, List<Projet>> composants = recupererComposantsSonarVersion(Matiere.JAVA);
+        Map<String, List<ComposantSonar>> composants = recupererComposantsSonarVersion(Matiere.JAVA);
         etapePlus();
 
         // Traitement du fichier de suivi
@@ -251,11 +265,11 @@ public class MajSuiviExcelTask extends SonarTask
      */
 
     @SuppressWarnings("unchecked")
-    private List<String> traitementFichierSuivi(Map<String, List<Projet>> composants, String fichier, Matiere matiere) throws IOException
+    private List<String> traitementFichierSuivi(Map<String, List<ComposantSonar>> composants, String fichier, Matiere matiere) throws IOException
     {
         // 1. Récupération des données depuis les fichiers Excel.
 
-        // Fichier des lots édition        
+        // Fichier des lots édition
         Map<String, LotSuiviRTC> lotsRTC = fichiersXML.getLotsRTC();
 
         // 2. Récupération des lots Sonar en erreur.
@@ -331,13 +345,13 @@ public class MajSuiviExcelTask extends SonarTask
      * @param versions
      * @return
      */
-    private Map<String, Set<String>> lotSonarQGError(Map<String, List<Projet>> composants, Set<String> lotSecurite, Set<String> lotRelease)
+    private Map<String, Set<String>> lotSonarQGError(Map<String, List<ComposantSonar>> composants, Set<String> lotSecurite, Set<String> lotRelease)
     {
         // Création de la map de retour
         HashMap<String, Set<String>> retour = new HashMap<>();
 
         // Itération sur les composants pour remplir la map de retour avec les lot en erreur par version
-        for (Map.Entry<String, List<Projet>> entry : composants.entrySet())
+        for (Map.Entry<String, List<ComposantSonar>> entry : composants.entrySet())
         {
             String entryKey = entry.getKey();
             retour.put(entryKey, new TreeSet<>());
@@ -348,9 +362,9 @@ public class MajSuiviExcelTask extends SonarTask
             int size = entry.getValue().size();
 
             // Iteration sur la liste des projets
-            for (Projet projet : entry.getValue())
+            for (ComposantSonar compo : entry.getValue())
             {
-                traitementProjet(projet, retour, entryKey, lotSecurite, lotRelease, base);
+                traitementProjet(compo, retour, entryKey, lotSecurite, lotRelease, base);
                 updateProgress(++i, size);
             }
         }
@@ -436,28 +450,29 @@ public class MajSuiviExcelTask extends SonarTask
     /**
      * Traitement Sonar d'un projet
      *
-     * @param projet
+     * @param compo
      * @param retour
      * @param entryKey
      * @param lotSecurite
      * @param lotRelease
      * @param base
      */
-    private void traitementProjet(Projet projet, HashMap<String, Set<String>> retour, String entryKey, Set<String> lotSecurite, Set<String> lotRelease, String base)
+    private void traitementProjet(ComposantSonar compo, HashMap<String, Set<String>> retour, String entryKey, Set<String> lotSecurite, Set<String> lotRelease, String base)
     {
-        String key = projet.getKey();
+        String key = compo.getKey();
+        String lot = compo.getLot();
 
-        updateMessage(base + projet.getNom());
+        updateMessage(base + compo.getNom());
+
         // Récupération du composant
         Composant composant = api.getMetriquesComposant(key,
-                new String[] { TypeMetrique.LOT.toString(), TypeMetrique.QG.toString(), TypeMetrique.DUPLICATION.toString(), TypeMetrique.BLOQUANT.toString(), TypeMetrique.CRITIQUE.toString() });
+                new String[] { TypeMetrique.QG.toString(), TypeMetrique.DUPLICATION.toString(), TypeMetrique.BLOQUANT.toString(), TypeMetrique.CRITIQUE.toString() });
 
-        // Récupération depuis la map des métriques du numéro de lot et du status de la Quality Gate
+        // Récupération depuis la map des métriques
         Map<TypeMetrique, Metrique> metriques = composant.getMapMetriques();
-        String lot = metriques.computeIfAbsent(TypeMetrique.LOT, t -> new Metrique(TypeMetrique.LOT, null)).getValue();
 
         // Vérification que le lot est bien valorisé et controle le QG
-        if (lot != null && !lot.isEmpty() && controleMetriques(metriques))
+        if (!lot.isEmpty() && controleMetriques(metriques))
         {
             // Ajout du lot à la liste de retour s'il y a des défaults critiques ou bloquants ou de duplication de code
             retour.get(entryKey).add(lot);
@@ -484,7 +499,7 @@ public class MajSuiviExcelTask extends SonarTask
         List<Periode> bloquants = getListPeriode(metriques, TypeMetrique.BLOQUANT);
         List<Periode> critiques = getListPeriode(metriques, TypeMetrique.CRITIQUE);
         List<Periode> duplication = getListPeriode(metriques, TypeMetrique.DUPLICATION);
-        return alert != null && Status.from(alert) == Status.ERROR && (recupLeakPeriod(bloquants) > 0 || recupLeakPeriod(critiques) > 0 || recupLeakPeriod(duplication) > 3);
+        return !alert.isEmpty() && Status.from(alert) == Status.ERROR && (recupLeakPeriod(bloquants) > 0 || recupLeakPeriod(critiques) > 0 || recupLeakPeriod(duplication) > 3);
     }
 
     /**
@@ -568,7 +583,7 @@ public class MajSuiviExcelTask extends SonarTask
      * @param composants
      * @param nomQG
      */
-    private void liensQG(Collection<List<Projet>> composants, String nomQG)
+    private void liensQG(Collection<List<ComposantSonar>> composants, String nomQG)
     {
         // Récupération de l'Id de la QualityGate
         QualityGate qg = api.getQualityGate(nomQG);
@@ -577,33 +592,29 @@ public class MajSuiviExcelTask extends SonarTask
         String base = "Association avec le QG DataStage :" + Statics.NL;
         int i = 0;
         int size = 0;
-        for (List<Projet> liste : composants)
+        for (List<ComposantSonar> liste : composants)
         {
             size += liste.size();
         }
 
         // Iteration sur tous les composants pour les associer au QualityGate
-        for (List<Projet> liste : composants)
+        for (List<ComposantSonar> liste : composants)
         {
-            for (Projet projet : liste)
+            for (ComposantSonar compo : liste)
             {
                 // Message
-                updateMessage(base + projet.getNom());
+                updateMessage(base + compo.getNom());
                 updateProgress(++i, size);
 
-                api.associerQualitygate(projet, qg);
+                api.associerQualitygate(compo, qg);
             }
         }
     }
 
     /*---------- ACCESSEURS ----------*/
 
-    public enum TypeMaj 
-    {
-        SUIVI("Maj Fichier de Suivi JAVA"), 
-        DATASTAGE("Maj Fichier de Suivi DataStage"), 
-        MULTI("Maj Fichiers de Suivi"),
-        COBOL("Maj Fichier de Suivi COBOL");
+    public enum TypeMaj {
+        SUIVI("Maj Fichier de Suivi JAVA"), DATASTAGE("Maj Fichier de Suivi DataStage"), MULTI("Maj Fichiers de Suivi"), COBOL("Maj Fichier de Suivi COBOL");
 
         private String string;
 
