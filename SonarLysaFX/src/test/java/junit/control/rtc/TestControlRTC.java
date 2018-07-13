@@ -255,6 +255,19 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
+    public void testRecupDatesEtatsLot()
+    {
+        
+    }
+    
+    @Test
+    public void testTestSiAnomalieClose()
+    {
+        
+    }
+    
+    
+    @Test
     public void testAttibutsItem() throws TeamRepositoryException
     {
         IWorkItem item = handler.recupWorkItemDepuisId(322706);
