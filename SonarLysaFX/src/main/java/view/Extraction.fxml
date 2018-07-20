@@ -21,7 +21,7 @@
 			<ToggleGroup fx:id="toggleGroup" />
 		</fx:define>
 		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
-			<RadioButton fx:id="radioVuln" text="Vulnérabilités" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioVuln" text="Vulnérabilités patrimoine" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 		</VBox>
 
 		<!-- VBox -->

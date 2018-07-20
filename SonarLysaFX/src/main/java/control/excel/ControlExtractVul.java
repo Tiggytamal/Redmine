@@ -14,7 +14,7 @@ import model.enums.TypeColVul;
 import model.enums.TypeVulnerabilite;
 import utilities.enums.Bordure;
 
-public final class ControlExtractVul extends ControlExcelWrite<TypeColVul, List<Vulnerabilite>>
+public class ControlExtractVul extends ControlExcelWrite<TypeColVul, List<Vulnerabilite>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -35,7 +35,6 @@ public final class ControlExtractVul extends ControlExcelWrite<TypeColVul, List<
         super(file);
         calculIndiceColonnes();
         initTitres();
-        initEnum();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -49,7 +48,7 @@ public final class ControlExtractVul extends ControlExcelWrite<TypeColVul, List<
     /*---------- METHODES PRIVEES ----------*/
 
     @Override
-    protected void initTitres()
+    protected final void initTitres()
     {
         CellStyle centre = helper.getStyle(IndexedColors.AQUA, Bordure.BAS, HorizontalAlignment.CENTER);
 
@@ -71,7 +70,7 @@ public final class ControlExtractVul extends ControlExcelWrite<TypeColVul, List<
     }
 
     @Override
-    protected void calculIndiceColonnes()
+    protected final void calculIndiceColonnes()
     {
         colSeverity = 7;
         colStatus = 5;
@@ -83,12 +82,6 @@ public final class ControlExtractVul extends ControlExcelWrite<TypeColVul, List<
         colComp = 0;
         colLib = 1;
         maxIndice = 7;
-    }
-
-    @Override
-    protected void initEnum()
-    {
-        enumeration = TypeColVul.class;
     }
 
     @Override

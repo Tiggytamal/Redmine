@@ -188,11 +188,6 @@ public final class ControlPic extends ControlExcelRead<TypeColPic, Map<String, L
         else if (getCellNumericValue(row, colNbCompos) > 0)
             majCouleurLigne(row, IndexedColors.LIGHT_YELLOW);
     }
+    
     /*---------- ACCESSEURS ----------*/
-
-    @Override
-    protected void initEnum()
-    {
-        enumeration = TypeColPic.class;
-    }
 }

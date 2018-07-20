@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -57,15 +58,13 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
      * pour calculer l'indice de chaque colonne de la feuille. Ne pas oublier d'utiliser la méthode {@code close} lorsque les traitements sont finis.
      * 
      * @param file
-     * @throws InvalidFormatException
-     * @throws IOException
      */
     protected ControlExcelRead(File file) 
     {
         super(file);
         createWb();
         initEnum();
-        calculIndiceColonnes(initSheet());
+        calculIndiceColonnes();
 
     }
 
@@ -78,13 +77,28 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
      */
     public abstract R recupDonneesDepuisExcel();
 
-    /**
-     * Initialise la classe de l'énumération
-     */
-    protected abstract void initEnum();
-
     /*---------- METHODES PRIVEES ----------*/
 
+    @SuppressWarnings("unchecked")
+    private void initEnum()
+    {
+        // Permet de récuperer la classe sous forme de type paramétré
+        ParameterizedType pt = (ParameterizedType) getClass().getGenericSuperclass();
+        
+        // On récupère les paramètres de classe (ici T et R), on prend le premier (T), et le split permet d'enlever le "classe" devant le nom
+        String parameterClassName = pt.getActualTypeArguments()[0].toString().split("\\s")[1];
+        
+        // Instantiate the Parameter and initialize it.
+        try
+        {
+            enumeration = (Class<T>) Class.forName(parameterClassName);
+        } catch (ClassNotFoundException e)
+        {
+            LOGPLANTAGE.error(e);
+            throw new TechnicalException("Impossible d'instancier l'énumération - control.excel.ControlExcelRead", e);
+        }
+    }
+    
     /**
      * Récupération de la feuille Excel pour le traitement. Remonte de base la première feuille. Surcharge possible si besoin d'un traitement différent.
      */
@@ -105,9 +119,10 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
     /**
      * Initialise les numéro des colonnes du fichier Excel venant de la PIC.
      */
-    protected final void calculIndiceColonnes(Sheet sheet)
+    @Override
+    protected final void calculIndiceColonnes()
     {
-        titres = sheet.getRow(0);
+        titres = initSheet().getRow(0);
         int nbreCol = 0;
 
         // Récupération de l'énumération depuis les paramètres XML

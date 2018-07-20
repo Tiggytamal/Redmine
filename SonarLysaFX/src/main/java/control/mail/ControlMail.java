@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -89,7 +91,7 @@ public class ControlMail
     {
         try
         {
-            Session session = Session.getInstance(props);
+            Session session = Session.getInstance(props, new MailAuthenticator());
 
             // ----- 2. Création du message depuis la session -----
             message = new MimeMessage(session);
@@ -128,6 +130,7 @@ public class ControlMail
     private void initMail() throws TeamRepositoryException
     {
         props = new Properties();
+        props.put("mail.smtp.auth", "false");
         props.put("mail.smtp.host", SERVEUR);
         props.put("mail.smtp.port", PORT);
 
@@ -209,4 +212,19 @@ public class ControlMail
     }
 
     /*---------- CLASSES PRIVEES ----------*/
+
+    /**
+     * CLasse pour l'authentification du serveur mail.
+     * 
+     * @author ETP8137 - Grégoire Mathon
+     * @since 1.0
+     */
+    private static class MailAuthenticator extends Authenticator
+    {
+        @Override
+        protected PasswordAuthentication getPasswordAuthentication()
+        {
+            return new PasswordAuthentication(Statics.info.getPseudo(), Statics.info.getMotDePasse());
+        }
+    }
 }

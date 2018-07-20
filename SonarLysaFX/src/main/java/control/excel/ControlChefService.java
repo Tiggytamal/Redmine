@@ -76,12 +76,5 @@ public class ControlChefService extends ControlExcelRead<TypeColChefServ, Map<St
     }
 
     /*---------- METHODES PRIVEES ----------*/
-
-    @Override
-    protected void initEnum()
-    {
-        enumeration = TypeColChefServ.class;
-    }
-
     /*---------- ACCESSEURS ----------*/
 }

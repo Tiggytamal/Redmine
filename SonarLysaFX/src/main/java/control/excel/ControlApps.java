@@ -91,10 +91,4 @@ public class ControlApps extends ControlExcelRead<TypeColApps, Map<String, Appli
 
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
-
-    @Override
-    protected void initEnum()
-    {
-        enumeration = TypeColApps.class;
-    }
 }

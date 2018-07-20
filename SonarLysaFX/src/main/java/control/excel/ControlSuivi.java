@@ -958,12 +958,6 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
     }
 
     @Override
-    protected void initEnum()
-    {
-        enumeration = TypeColSuivi.class;
-    }
-
-    @Override
     protected Sheet initSheet()
     {
         // Récupération de la feuille principale

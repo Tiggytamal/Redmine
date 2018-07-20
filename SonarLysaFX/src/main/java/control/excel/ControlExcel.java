@@ -46,11 +46,14 @@ public abstract class ControlExcel
     /*---------- METHODES ABSTRAITES ----------*/
     
     /**
-     * Initialise la classe de l'énumération
+     * Initialise le WorkBook
      */
-    protected abstract void initEnum();
-    
     protected abstract void createWb();
+    
+    /**
+     * Initialisa les indices des colonnes
+     */
+    protected abstract void calculIndiceColonnes();
     
     /*---------- METHODES PRIVEES ----------*/
     

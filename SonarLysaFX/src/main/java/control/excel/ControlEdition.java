@@ -105,11 +105,5 @@ public class ControlEdition extends ControlExcelRead<TypeColEdition, Map<String,
         throw new FunctionalException(Severity.ERROR, "Mauvais format d'une edition du fichier Excel - libelle " + libelle);
     }
 
-    @Override
-    protected void initEnum()
-    {
-        enumeration = TypeColEdition.class;
-    }
-
     /*---------- ACCESSEURS ----------*/
 }

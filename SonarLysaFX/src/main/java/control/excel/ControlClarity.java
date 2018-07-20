@@ -98,12 +98,6 @@ public class ControlClarity extends ControlExcelRead<TypeColClarity, Map<String,
         return retour;
     }
 
-    @Override
-    protected void initEnum()
-    {
-        enumeration = TypeColClarity.class;
-    }
-
     /*---------- ACCESSEURS ----------*/
 
 }

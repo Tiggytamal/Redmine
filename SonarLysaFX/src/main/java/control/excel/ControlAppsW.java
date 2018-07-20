@@ -16,6 +16,13 @@ import model.Application;
 import model.enums.TypeColApps;
 import utilities.enums.Bordure;
 
+/**
+ * Classe de controle des applications en écriture
+ * 
+ * @author ETP8137 - Grégoier Mathon
+ * @since 1.0
+ *
+ */
 public class ControlAppsW extends ControlExcelWrite<TypeColApps, Collection<Application>>
 {
     /*---------- ATTRIBUTS ----------*/
@@ -34,7 +41,6 @@ public class ControlAppsW extends ControlExcelWrite<TypeColApps, Collection<Appl
         super(file);
         calculIndiceColonnes();
         initTitres();
-        initEnum();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -54,7 +60,7 @@ public class ControlAppsW extends ControlExcelWrite<TypeColApps, Collection<Appl
     /*---------- METHODES PRIVEES ----------*/
     
     @Override
-    protected void calculIndiceColonnes()
+    protected final void calculIndiceColonnes()
     {
         colCode = 0;
         colActif = 1;
@@ -64,7 +70,7 @@ public class ControlAppsW extends ControlExcelWrite<TypeColApps, Collection<Appl
     }
 
     @Override
-    protected void initTitres()
+    protected final void initTitres()
     {
         CellStyle centre = helper.getStyle(IndexedColors.AQUA, Bordure.BAS, HorizontalAlignment.CENTER);
         
@@ -85,13 +91,6 @@ public class ControlAppsW extends ControlExcelWrite<TypeColApps, Collection<Appl
     }
 
     @Override
-    protected void initEnum()
-    {
-        enumeration = TypeColApps.class;
-
-    }
-
-    @Override
     protected void enregistrerDonnees(Collection<Application> donnees, Sheet sheet)
     {
         CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.VIDE, HorizontalAlignment.CENTER);
@@ -109,8 +108,6 @@ public class ControlAppsW extends ControlExcelWrite<TypeColApps, Collection<Appl
         }
         autosizeColumns(sheet);
     }
-
-
 
     /*---------- ACCESSEURS ----------*/
 }

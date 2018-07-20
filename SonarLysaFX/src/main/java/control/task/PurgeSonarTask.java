@@ -99,14 +99,14 @@ public class PurgeSonarTask extends SonarTask
         // Récupération de la liste des versions des composants à garder et rangement de la plus recente à la plus ancienne.
         List<String> listeVersion = Arrays.asList(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONSCOMPOSANTS).split(";"));
         Collections.sort(listeVersion, (s1, s2) -> Integer.valueOf(s2).compareTo(Integer.valueOf(s1)));
-        
+
         // Calcul du pattern à partir du paramètrage pour obtenir : [(X)|...|(Z)]$
         StringBuilder builder = new StringBuilder("[");
         for (String string : listeVersion)
         {
             builder.append("(").append(string).append(")|");
         }
-        
+
         // On enlève la dernière |
         builder.replace(builder.length() - 1, builder.length(), "");
         builder.append("]$");
@@ -136,50 +136,51 @@ public class PurgeSonarTask extends SonarTask
                 premier = liste.get(0);
             }
 
-            // Incrémentation indice pour les composants qui n'ont qu'une seule version
+            // Incrémentation indice pour les composants qui n'ont qu'une seule version et sortie du traitement
             if (size == 1)
-                solo++;
-
-            // ----- 3. Boucle de purge pour les composants qui ont plus d'une version -----
-            if (size > 1)
             {
-                // ----- a. On ne garde que les x dernières versions de chaque composant selon le paramétrage -----
-                int i = nbreVersion;
-
-                // Compilation et matching
-                if (!Pattern.compile(pattern).matcher(premier.getKey()).find())
-                    i = 1;
-
-                // ----- c. Selon paramétrage, on va garder les 3 versions des composants les plus récents
-                if (Pattern.compile("[(" + listeVersion.get(0) + ")]$").matcher(premier.getKey()).find() && Statics.proprietesXML.getMapParamsBool().get(ParamBool.SUPPSONAR))
-                    i = 3;
-
-                // ----- d. boucle pour créer la liste des composants à supprimer
-                // De fait que le remove reduit la taille de la liste, il ne faut pas incrémenter l'indice
-                while (i < liste.size())
-                {
-                    ComposantSonar projet = entry.getValue().get(i);
-                    LOGGER.info("SUPPRESSION : " + projet.getNom());
-                    retour.add(projet);
-                    entry.getValue().remove(projet);
-                    supp++;
-                }
+                solo++;
+                continue;
             }
+
+            // ----- 3. Composants qui ont plus d'une version -----
+            // ----- a. On ne garde que les x dernières versions de chaque composant selon le paramétrage -----
+            int i = nbreVersion;
+
+            // Compilation et matching
+            if (!Pattern.compile(pattern).matcher(premier.getKey()).find())
+                i = 1;
+
+            // ----- c. Selon paramétrage, on va garder les 3 versions des composants les plus récents
+            if (Pattern.compile("[(" + listeVersion.get(0) + ")]$").matcher(premier.getKey()).find() && Statics.proprietesXML.getMapParamsBool().get(ParamBool.SUPPSONAR))
+                i = 3;
+
+            // ----- d. boucle pour créer la liste des composants à supprimer
+            // De fait que le remove reduit la taille de la liste, il ne faut pas incrémenter l'indice
+            while (i < liste.size())
+            {
+                ComposantSonar projet = entry.getValue().get(i);
+                LOGGER.info("SUPPRESSION : " + projet.getNom());
+                retour.add(projet);
+                entry.getValue().remove(projet);
+                supp++;
+            }
+
         }
 
         // ----- 5. Logs des résultats -----
-        String extraDonnees = "Composants uniques (hors versions) : " + mapCompos.size() + "\nComposants solo (une seule version) : " + solo
-                + "\nTotal composants sonar (toutes versions comprises) : " + total + "\nSuppressions : " + supp + "\n";
+        String extraDonnees = "Composants uniques (hors versions) : " + mapCompos.size() + "\nComposants solo (une seule version) : " + solo + "\nTotal composants sonar (toutes versions comprises) : "
+                + total + "\nSuppressions : " + supp + "\n";
         controlMail.addExtra(extraDonnees);
 
         return retour;
     }
 
     private Map<String, List<ComposantSonar>> compileMap()
-    {       
+    {
         // Récupération composants depuis fichier XML
         List<ComposantSonar> compos = Statics.fichiersXML.getListComposants();
-        
+
         // Contrôle si la liste des composants est vide.
         if (compos.isEmpty())
             throw new TechnicalException("Attention la liste des composants est vide - control.task.PurgeSonarTask.compileMap", null);
