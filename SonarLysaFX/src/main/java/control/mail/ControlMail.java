@@ -158,7 +158,7 @@ public class ControlMail
         // Gestion des infos
         for (TypeInfoMail type : TypeInfoMail.values())
         {
-            List<InfoMail> lots = mapInfos.computeIfAbsent(type, (n) -> new ArrayList<>());
+            List<InfoMail> lots = mapInfos.computeIfAbsent(type, n -> new ArrayList<>());
             if (lots.isEmpty())
                 continue;
 

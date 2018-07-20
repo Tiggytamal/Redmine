@@ -3,17 +3,24 @@ package control.task;
 import static utilities.Statics.NL;
 import static utilities.Statics.fichiersXML;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import application.Main;
+import control.excel.ControlAppsW;
+import control.excel.ExcelFactory;
 import control.mail.ControlMail;
+import model.Application;
 import model.ComposantSonar;
+import model.enums.TypeColApps;
 import model.enums.TypeInfoMail;
 import model.enums.TypeMail;
 import model.sonarapi.Projet;
@@ -28,6 +35,9 @@ public class CreerVueParAppsTask extends SonarTask
     public static final String TITRE = "Vues par Application";
     private int inconnues;
     private ControlMail controlMail;
+    private Set<Application> applisOpenSonar;
+    private List<Application> applisOpenNonSonar;
+    private Map<String, Application> applications;
     
     /** logger composants sans applications */
     private static final Logger LOGSANSAPP = LogManager.getLogger("sansapp-log");
@@ -43,8 +53,14 @@ public class CreerVueParAppsTask extends SonarTask
         super(3);
         annulable = false;
         inconnues = 0;
+        applications = fichiersXML.getMapApplis();
         controlMail = new ControlMail();
+        applisOpenNonSonar = initApplisOpen();
+        applisOpenSonar = new HashSet<>();
+
+        
     }
+    
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
@@ -53,9 +69,7 @@ public class CreerVueParAppsTask extends SonarTask
         return creerVueParApplication();
     }
 
-    /*---------- METHODES PRIVEES ----------*/
-    /*---------- ACCESSEURS ----------*/
-    
+    /*---------- METHODES PRIVEES ----------*/    
 
     private boolean creerVueParApplication()
     {
@@ -124,9 +138,12 @@ public class CreerVueParAppsTask extends SonarTask
     {
         // Récupération des composants Sonar
         Map<String, ComposantSonar> mapCompos = recupererComposantsSonar();
-        return creerMapApplication(mapCompos);
+        HashMap<String, List<ComposantSonar>> retour = creerMapApplication(mapCompos);
+        creerFichierExtraction();
+        
+        return retour;
     }
-    
+
     /**
      * Crée une map de toutes les apllications dans Sonar avec pour chacunes la liste des composants liés.
      *
@@ -151,7 +168,7 @@ public class CreerVueParAppsTask extends SonarTask
             updateMessage(base + compo.getNom());
             updateProgress(++i, mapCompos.size());
             
-            // Test si la liste est vide, cela veut dire que le projet n'a pas de code application.
+            // Test si le code application est vide, cela veut dire que le projet n'a pas de code application.
             if (!compo.getAppli().isEmpty())
             {
                 String application = compo.getAppli().trim().toUpperCase();
@@ -198,12 +215,15 @@ public class CreerVueParAppsTask extends SonarTask
             return true;
         }
 
-        Map<String, Boolean> vraiesApplis = fichiersXML.getMapApplis();
-
-        if (vraiesApplis.keySet().contains(application))
+        if (applications.containsKey(application))
         {
-            if (vraiesApplis.get(application))
+            Application app = applications.get(application);
+            if (app.isActif())
+            {
+                applisOpenNonSonar.remove(app);
+                applisOpenSonar.add(app);
                 return true;
+            }
 
             LOGNONLISTEE.warn("Application obsolète : " + application + " - composant : " + nom);
             controlMail.addInfo(TypeInfoMail.APPLIOBSOLETE, nom, application);
@@ -213,4 +233,35 @@ public class CreerVueParAppsTask extends SonarTask
         controlMail.addInfo(TypeInfoMail.APPLINONREF, nom, application);
         return false;
     }
+    
+    /**
+     * 
+     * @return
+     */
+    private List<Application> initApplisOpen()
+    {
+        List<Application> retour = new ArrayList<>();
+        
+        for (Application app : applications.values())
+        {
+            if (app.isActif() && app.isOpen())
+                retour.add(app);
+        }
+        
+        return retour;
+    }
+    
+    /**
+     * Permet d'enregistrer la liste des applications dans le fichier excel.
+     */
+    private void creerFichierExtraction()
+    {
+        ControlAppsW control = ExcelFactory.getWriter(TypeColApps.class, new File("d:\\testExtractApps.xlsx"));
+        
+        control.creerfeuilleSonar(applisOpenSonar);
+        control.creerfeuilleNonSonar(applisOpenNonSonar);       
+        control.write();
+    }
+    
+    /*---------- ACCESSEURS ----------*/
 }

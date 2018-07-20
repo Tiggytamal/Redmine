@@ -29,8 +29,7 @@ public class TestCreerVueCHCCDMTask extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
-
-    private CreerVueCHCCDMTask task;
+    private CreerVueCHCCDMTask handler;
     private List<String> annees;
     private SonarAPI mock;
     
@@ -41,9 +40,9 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     {
         annees = new ArrayList<>();
         annees.add("2018");
-        task = new CreerVueCHCCDMTask(annees, CHCouCDM.CDM);
+        handler = new CreerVueCHCCDMTask(annees, CHCouCDM.CDM);
         mock = Mockito.mock(SonarAPI.class);
-        Whitebox.getField(CreerVueCHCCDMTask.class, "api").set(task, mock);
+        Whitebox.getField(CreerVueCHCCDMTask.class, "api").set(handler, mock);
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -63,53 +62,47 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     @Test
     public void testCall() throws Exception
     {
-        task = PowerMockito.spy(task);
-        assertTrue(Whitebox.invokeMethod(task, "call"));
+        assertTrue(Whitebox.invokeMethod(handler, "call"));
     }
     
     @Test
     public void testCreerVueCHCouCDM() throws Exception
     {
         // test du retour avec les méthode mockées
-        task = PowerMockito.spy(task);
-        assertTrue(Whitebox.invokeMethod(task, "creerVueCHCouCDM"));
+        assertTrue(Whitebox.invokeMethod(handler, "creerVueCHCouCDM"));
     }
     
     @Test
     public void testSuppressionVuesMaintenance() throws Exception
     {
-        Whitebox.invokeMethod(task, "suppressionVuesMaintenance", CHCouCDM.CHC, annees);
+        Whitebox.invokeMethod(handler, "suppressionVuesMaintenance", CHCouCDM.CHC, annees);
         Mockito.verify(mock, Mockito.times(52)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
-        Whitebox.invokeMethod(task, "suppressionVuesMaintenance", CHCouCDM.CDM, annees);
+        Whitebox.invokeMethod(handler, "suppressionVuesMaintenance", CHCouCDM.CDM, annees);
         Mockito.verify(mock, Mockito.times(104)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
     }
     
     @Test
     public void testCreerVuesMaintenance() throws Exception
     {
-        PowerMockito.when(mock.getComposants()).thenCallRealMethod();
-        PowerMockito.when(mock.appelWebserviceGET(Mockito.anyString(), Mockito.any())).thenCallRealMethod();
         PowerMockito.when(mock.creerVue(Mockito.any(Vue.class))).thenReturn(Status.OK);    
-        PowerMockito.doNothing().when(mock).ajouterSousVue(Mockito.any(Vue.class), Mockito.any(Vue.class));  
-        @SuppressWarnings("unused")
-        Map<String, String> map = Whitebox.invokeMethod(task, "recupererEditions", annees);
-//        Whitebox.invokeMethod(task, "creerVueMaintenance", map);
+        Map<String, String> map = Whitebox.invokeMethod(handler, "recupererEditions", annees);
+        Whitebox.invokeMethod(handler, "creerVueMaintenance", map);
     }
     
     @Test
     public void testControle() throws Exception
     {
         String methode = "controle";
-        assertTrue(Whitebox.invokeMethod(task, methode, CHCouCDM.CDM, "CDM2018"));
-        assertFalse(Whitebox.invokeMethod(task, methode, CHCouCDM.CDM, "CHC2018"));
-        assertTrue(Whitebox.invokeMethod(task, methode, CHCouCDM.CHC, "CHC2018"));
-        assertFalse(Whitebox.invokeMethod(task, methode, CHCouCDM.CHC, "CDM2018"));
+        assertTrue(Whitebox.invokeMethod(handler, methode, CHCouCDM.CDM, "CDM2018"));
+        assertFalse(Whitebox.invokeMethod(handler, methode, CHCouCDM.CDM, "CHC2018"));
+        assertTrue(Whitebox.invokeMethod(handler, methode, CHCouCDM.CHC, "CHC2018"));
+        assertFalse(Whitebox.invokeMethod(handler, methode, CHCouCDM.CHC, "CDM2018"));
     }  
     
     @Test
     public void testRecupererEditions() throws Exception
     {
-        Map<String, String> map = Whitebox.invokeMethod(task, "recupererEditions", annees);
+        Map<String, String> map = Whitebox.invokeMethod(handler, "recupererEditions", annees);
         for (String string : map.values())
         {
             assertTrue(string.contains(annees.get(0)));
@@ -118,6 +111,5 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     }
     
     /*---------- METHODES PRIVEES ----------*/
-    /*---------- ACCESSEURS ----------*/
-    
+    /*---------- ACCESSEURS ----------*/   
 }

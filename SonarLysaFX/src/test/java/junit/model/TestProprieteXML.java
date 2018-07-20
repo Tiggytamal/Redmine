@@ -13,7 +13,7 @@ import org.powermock.reflect.Whitebox;
 import junit.JunitBase;
 import model.ModelFactory;
 import model.ProprietesXML;
-import model.enums.TypeCol;
+import model.enums.TypeColR;
 import utilities.TechnicalException;
 
 public class TestProprieteXML extends JunitBase
@@ -78,7 +78,7 @@ public class TestProprieteXML extends JunitBase
     
     /*---------- CLASSES PRIVEES ----------*/
     
-    private enum TypcColTest implements Serializable, TypeCol
+    private enum TypcColTest implements Serializable, TypeColR
     {
         VIDE;
 

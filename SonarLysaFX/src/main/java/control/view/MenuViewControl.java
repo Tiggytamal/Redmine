@@ -7,8 +7,10 @@ import java.util.Optional;
 
 import control.rtc.ControlRTC;
 import control.sonar.SonarAPI;
+import control.task.CreerListeComposantsTask;
 import control.task.MajVuesTask;
 import control.task.PurgeSonarTask;
+import control.task.SonarTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,7 +49,7 @@ public class MenuViewControl extends ViewControl
     @FXML
     private MenuItem extraction;
     @FXML
-    private MenuItem majvues;
+    private MenuItem majVues;
     @FXML
     private MenuItem maintenance;
     @FXML
@@ -56,6 +58,8 @@ public class MenuViewControl extends ViewControl
     private MenuItem aide;
     @FXML
     private MenuItem purge;
+    @FXML
+    private MenuItem majCompos;
     @FXML
     private Button connexion;
     @FXML
@@ -98,7 +102,8 @@ public class MenuViewControl extends ViewControl
     {
         mensuel.setDisable(true);
         purge.setDisable(true);
-        majvues.setDisable(true);
+        majVues.setDisable(true);
+        majCompos.setDisable(true);
         rtc.setDisable(true);
         extraction.setDisable(true);
         planificateur.setDisable(true);
@@ -110,6 +115,9 @@ public class MenuViewControl extends ViewControl
         border.setCenter(null);
     }
 
+    /**
+     * Permet d'afficher les nouveaux écrans ou de lancer les traitements après confirmation.
+     */
     @Override
     public void afficher(ActionEvent event) throws IOException
     {
@@ -123,6 +131,7 @@ public class MenuViewControl extends ViewControl
 
         switch (id)
         {
+            // Chargement des écrans
             case "mensuel":
                 load("/view/Mensuel.fxml");
                 break;
@@ -154,24 +163,23 @@ public class MenuViewControl extends ViewControl
             case "extraction":
                 load("/view/Extraction.fxml");
                 break;
+                
+            // Demande confirmations pour traitements
+            case "majVues":
+                alertConfirmation(new MajVuesTask(), "Cela lancera la mise à jour de toutes les vues Sonar.");
+                break;
+                
+            case "majCompos":
+                alertConfirmation(new CreerListeComposantsTask(), "Cela lancera la mise à jour de tous les composants Sonar."); 
+                break;
+                
+            case "purger":
+                alertConfirmation(new PurgeSonarTask(), "Cela lancera la purge des composants Sonar.");
+                break;
 
             default:
                 throw new TechnicalException("MenuItem pas géré" + id, null);
         }
-    }
-
-    @FXML
-    public void majVues()
-    {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.getDialogPane().getStylesheets().add(Statics.CSS);
-        alert.setTitle(MajVuesTask.TITRE);
-        alert.setHeaderText(null);
-        alert.setContentText("Cela lancera la mise à jour de toutes les vues Sonar." + Statics.NL + "Etes-vous sur?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get().equals(ButtonType.OK))
-            new Thread(new MajVuesTask()).start();
     }
 
     @FXML
@@ -190,23 +198,6 @@ public class MenuViewControl extends ViewControl
         aidePanel.getDialogPane().setContent(webView);
         aidePanel.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
         aidePanel.show();
-    }
-
-    @FXML
-    public void purger()
-    {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.getDialogPane().getStylesheets().add(Statics.CSS);
-        alert.setTitle(PurgeSonarTask.TITRE);
-        alert.setHeaderText(null);
-        alert.setContentText("Cela lancera la purge des composants Sonar." + Statics.NL + "Etes-vous sur?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get().equals(ButtonType.OK))
-        {
-            PurgeSonarTask task = new PurgeSonarTask();
-            startTask(task, PurgeSonarTask.TITRE);
-        }
     }
 
     /* ---------- METHODES PRIVEES ---------- */
@@ -228,9 +219,11 @@ public class MenuViewControl extends ViewControl
         {
             mensuel.setDisable(false);
             purge.setDisable(false);
-            majvues.setDisable(false);
+            majVues.setDisable(false);
             planificateur.setDisable(false);
             autres.setDisable(false);
+            majVues.setDisable(false);
+            majCompos.setDisable(false);
             extraction.setDisable(false);
             suivi.setDisable(false);
             maintenance.setDisable(false);
@@ -255,6 +248,27 @@ public class MenuViewControl extends ViewControl
     {
         Node pane = FXMLLoader.load(getClass().getResource(ressource));
         border.setCenter(pane);
+    }
+    
+    /**
+     * Affichage message de confirmation avant le lancement du traitement.
+     * 
+     * @param task
+     * @param confirmation
+     */
+    private <T extends SonarTask> void alertConfirmation(T task, String confirmation)
+    {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.getDialogPane().getStylesheets().add(Statics.CSS);
+        alert.setTitle(T.TITRE);
+        alert.setHeaderText(null);
+        alert.setContentText(confirmation + Statics.NL + "Etes-vous sur?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get().equals(ButtonType.OK))
+        {
+            startTask(task, T.TITRE);
+        }
     }
 
     /* ---------- ACCESSEURS ---------- */

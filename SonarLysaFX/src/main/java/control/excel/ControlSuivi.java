@@ -62,7 +62,7 @@ import utilities.enums.Severity;
  * 
  * @author ETP137 - Grégoire Mathon
  */
-public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
+public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -115,7 +115,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    ControlSuivi(File file) throws IOException
+    ControlSuivi(File file)
     {
         super(file);
 
@@ -236,6 +236,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         Sheet retour = wb.getSheet(SQ);
         if (retour != null)
         {
+            
             // Création du fichier de sauvegarde et effacement de la feuille
             wb.write(new FileOutputStream(new StringBuilder(proprietesXML.getMapParams().get(Param.ABSOLUTEPATHHISTO)).append(LocalDate.now().toString()).append("-").append(fichier).toString()));
             wb.removeSheetAt(wb.getSheetIndex(retour));
@@ -327,7 +328,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
             Row row = sheet.getRow(i);
             String lot = getCellStringValue(row, colLot);
             if (anoMultiple.contains(lot.length() < 4 ? lot : lot.substring(4)))
-                row.getCell(colMatiere, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(Matiere.JAVA.toString() + " - " + Matiere.DATASTAGE.toString());
+                row.getCell(colMatiere, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(Matiere.JAVA + " - " + Matiere.DATASTAGE);
         }
         write();
     }
@@ -369,7 +370,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
                     break;
 
                 default:
-                    throw new TechnicalException("Nouvel index non géré : " + index.toString(), null);
+                    throw new TechnicalException("Nouvel index non géré : " + index, null);
             }
         }
     }
@@ -757,20 +758,23 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         // Récupération infox Clarity depuis fichier Excel
         Map<String, InfoClarity> map = fichiersXML.getMapClarity();
         String anoClarity = ano.getProjetClarity();
-        Set<String> keyset = map.keySet();
+        if (anoClarity.isEmpty())
+            return ano;
 
         // Vérification si le code Clarity de l'anomalie est bien dans la map
-        if (keyset.contains(anoClarity))
+        if (map.containsKey(anoClarity))
             return ano.majDepuisClarity(map.get(anoClarity));
 
         String temp = "";
 
         // Sinon on itère sur les clefs en supprimant les indices de lot, et on prend la première clef correspondante
-        for (String key : keyset)
+        for (Map.Entry<String, InfoClarity>  entry: map.entrySet())
         {
+            String key = entry.getKey();
+            
             // On retire les deux dernières lettres pour les clefs de plus de 6 caractères finissants par 0[1-9]
             if (controleKey(anoClarity, key))
-                return ano.majDepuisClarity(map.get(key));
+                return ano.majDepuisClarity(entry.getValue());
 
             // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
             if (anoClarity.startsWith("T") && anoClarity.length() == 7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
@@ -786,6 +790,7 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         ano.setDepartement(Statics.INCONNU);
         ano.setService(Statics.INCONNU);
         ano.setDirection(Statics.INCONNUE);
+        ano.setResponsableService(Statics.INCONNU);
         return ano;
     }
 
@@ -926,6 +931,12 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
         return retour;
     }
 
+    /**
+     * Contrôle les valeurs du code Clarity en prenant en compte les différentes erreurs possibles
+     * @param anoClarity
+     * @param key
+     * @return
+     */
     private boolean controleKey(String anoClarity, String key)
     {
         // Retourne une clef avec 6 caractères maximum si celle-ci finie par un numéro de lot
@@ -939,8 +950,11 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
 
         // Contrôle si la clef est de type T* ou P*.
         String newClarity = anoClarity.length() == 9 && (anoClarity.startsWith("T") || anoClarity.startsWith("P")) ? anoClarity.substring(0, 8) : smallClarity;
+        
+        // remplace le dernier du coade Clarity par 0.
+        String lastClarity = anoClarity.replace(anoClarity.charAt(anoClarity.length()-1), '0');
 
-        return anoClarity.equalsIgnoreCase(newKey) || newClarity.equalsIgnoreCase(key);
+        return anoClarity.equalsIgnoreCase(newKey) || newClarity.equalsIgnoreCase(key) || lastClarity.equalsIgnoreCase(key);
     }
 
     @Override
@@ -996,6 +1010,16 @@ public class ControlSuivi extends ControlExcel<TypeColSuivi, List<Anomalie>>
     }
 
     /*---------- ACCESSEURS ----------*/
+    
+    /**
+     * Accesseur du controleur de mails
+     * 
+     * @return
+     */
+    public ControlMail getControlMail()
+    {
+        return controlMail;
+    }
 
     /**
      * Liste des numéros de colonnes des feuilles d'environnement

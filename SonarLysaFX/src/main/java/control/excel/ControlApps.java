@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import model.Application;
 import model.enums.TypeColApps;
 
 /**
@@ -19,13 +20,18 @@ import model.enums.TypeColApps;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlApps extends ControlExcel<TypeColApps, Map<String, Boolean>>
+public class ControlApps extends ControlExcelRead<TypeColApps, Map<String, Application>>
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private int colApps;
+    private int colCode;
     private int colActif;
+    private int colLib;
+    private int colOpen;
+    private int colMainFrame;
+    
     private static final String ACTIF = "Actif";
+    private static final String OUI = "Oui";
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -37,7 +43,7 @@ public class ControlApps extends ControlExcel<TypeColApps, Map<String, Boolean>>
      * @throws IOException
      *             Exception lors des accès lecture/écriture
      */
-    ControlApps(File file) throws IOException
+    ControlApps(File file)
     {
         super(file);
     }
@@ -45,30 +51,40 @@ public class ControlApps extends ControlExcel<TypeColApps, Map<String, Boolean>>
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public Map<String, Boolean> recupDonneesDepuisExcel()
+    public Map<String, Application> recupDonneesDepuisExcel()
     {
         Sheet sheet = wb.getSheetAt(0);
-        Map<String, Boolean> retour = new HashMap<>();
+        Map<String, Application> retour = new HashMap<>();
 
         // Iterateur depuis la ligne 1 - sans les titres
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
             Row row = sheet.getRow(i);
-            Boolean bool;
+            Application app = new Application();
 
-            // taritement application active ou non
-            String actif = getCellStringValue(row, colActif);
-            if (ACTIF.equals(actif))
-                bool = Boolean.TRUE;
-            else
-                bool = Boolean.FALSE;
+            // Application active ou non
+            if (ACTIF.equals(getCellStringValue(row, colActif)))
+                app.setActif(true);
 
-            // Traitement nom d'application
-            Cell cell = row.getCell(colApps, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+            // Code application
+            Cell cell = row.getCell(colCode, MissingCellPolicy.CREATE_NULL_AS_BLANK);
             if (cell.getCellTypeEnum() == CellType.STRING)
-                retour.put(getCellStringValue(row, colApps), bool);
+                app.setCode(getCellStringValue(row, colCode));
             else if (cell.getCellTypeEnum() == CellType.NUMERIC)
-                retour.put(String.format("%04d", getCellNumericValue(row, colApps)), bool);
+                app.setCode(String.format("%04d", getCellNumericValue(row, colCode)));
+            
+            // Libelle application
+            app.setLibelle(getCellStringValue(row, colLib));
+            
+            // Indicateur application open
+            if (OUI.equals(getCellStringValue(row, colOpen)))
+                app.setOpen(true);
+            
+            // Indicateur application mainframe
+            if (OUI.equals(getCellStringValue(row, colMainFrame)))
+                app.setMainFrame(true);
+            
+            retour.put(app.getCode(), app);
         }
         return retour;
     }

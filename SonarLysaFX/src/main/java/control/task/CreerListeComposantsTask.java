@@ -46,8 +46,8 @@ public class CreerListeComposantsTask extends SonarTask
     private boolean creerListeComposants()
     {
         // Affichage
-        String base = "Création de la liste des composants :%n";
-        updateMessage(base + "Récupération des composants depuis Sonar...%n");
+        String base = "Création de la liste des composants :\n";
+        updateMessage(base + "Récupération des composants depuis Sonar...\n");
         updateProgress(0, -1);
         
         // Récupération des composants Sonar
@@ -58,22 +58,24 @@ public class CreerListeComposantsTask extends SonarTask
         // Affichage
         updateMessage(base + "Récupération OK.");
         etapePlus();
-        String base2 = base + "Traitement : ";
         int i = 0;
         int size = projets.size();
         
         for (Projet projet : projets)
         {
             // Affichage
-            updateMessage(base2 + projet.getNom());
+            updateMessage(base + projet.getNom());
             updateProgress(++i, size);
             LOGCONSOLE.debug("Traitement composants Sonar : " + i + " - " + size);
             
             // Récupération du numéro de lot et de l'applicaitond e chaque composant.
             Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { TypeMetrique.LOT.toString(), TypeMetrique.APPLI.toString(), TypeMetrique.EDITION.toString() });
+            if (composant == null)
+                continue;
             ComposantSonar composantSonar = ModelFactory.getModel(ComposantSonar.class);
             composantSonar.setKey(projet.getKey());
             composantSonar.setNom(projet.getNom());
+            composantSonar.setId(projet.getId());
             composantSonar.setLot(composant.getMapMetriques().computeIfAbsent(TypeMetrique.LOT, t -> new Metrique(TypeMetrique.LOT, null)).getValue());
             composantSonar.setAppli(composant.getMapMetriques().computeIfAbsent(TypeMetrique.APPLI, t -> new Metrique(TypeMetrique.APPLI, null)).getValue());
             composantSonar.setEdition(composant.getMapMetriques().computeIfAbsent(TypeMetrique.EDITION, t -> new Metrique(TypeMetrique.EDITION, null)).getValue());

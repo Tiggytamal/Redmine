@@ -58,8 +58,7 @@ public abstract class SonarTask extends Task<Boolean>
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-    /*---------- METHODES PRIVEES ----------*/
-
+    
     /**
      * Utilisée pour permettre le retour arrière si possible du traitement
      */
@@ -67,10 +66,12 @@ public abstract class SonarTask extends Task<Boolean>
     {
         // Pas de traitement par default
     }
+    
+    /*---------- METHODES PRIVEES ----------*/
 
     /**
-     * Permet de récupérer la dernière version de chaque composants créés dans Sonar qui a été au moins envoyé à l'édition.
-     * Rajoute les plus anciennes versions des composants qui n'ont pas de version livrèe à l'édition dûe à la purge.
+     * Permet de récupérer la dernière version de chaque composants créés dans Sonar qui a été au moins envoyé à l'édition. Rajoute les plus anciennes versions des
+     * composants qui n'ont pas de version livrèe à l'édition (dûe à la purge).
      *
      * @return
      */
@@ -78,17 +79,16 @@ public abstract class SonarTask extends Task<Boolean>
     {
         updateMessage(RECUPCOMPOSANTS);
         updateProgress(-1, -1);
-        
-        // Récupération des composants Sonar depuis le fichier XML       
-        List<ComposantSonar> composantsSonar =  new ArrayList<>();
+
+        // Récupération des composants Sonar depuis le fichier XML
+        List<ComposantSonar> composantsSonar = new ArrayList<>();
         composantsSonar.addAll(Statics.fichiersXML.getMapComposSonar().values());
-        
+
         // Triage ascendant de la liste par nom de projet
         composantsSonar.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
 
         // Création de la regex pour retirer les numéros de version des composants
         Pattern pattern = Pattern.compile("^\\D+(\\d+\\D+){0,1}");
-
 
         // Création de la map de retour et parcours de la liste des projets pour remplir celle-ci. On utilise la chaine
         // de caractères créées par la regex comme clef dans la map.
@@ -104,7 +104,7 @@ public abstract class SonarTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                EtatLot etatLot = Statics.fichiersXML.getLotsRTC().computeIfAbsent(compo.getLot(), (l) -> ModelFactory.getModel(LotSuiviRTC.class)).getEtatLot();
+                EtatLot etatLot = Statics.fichiersXML.getLotsRTC().computeIfAbsent(compo.getLot(), l -> ModelFactory.getModel(LotSuiviRTC.class)).getEtatLot();
 
                 if (etatLot == EtatLot.TERMINE || etatLot == EtatLot.EDITION)
                 {
@@ -115,18 +115,17 @@ public abstract class SonarTask extends Task<Boolean>
                 else if (!retour.containsKey(matcher.group(0)))
                 {
                     LOGGER.debug("lot : " + etatLot + " - " + compo.getNom());
-                    
+
                     // Création de la liste si la clef n'est pas encore présente dans la map
                     if (!temp.containsKey(matcher.group(0)))
                         temp.put(matcher.group(0), new ArrayList<>());
-                    
+
                     // Ajout du projet
                     List<ComposantSonar> liste = temp.get(matcher.group(0));
                     liste.add(compo);
                 }
             }
         }
-        
 
         // Comparaison des deux maps pour rajouter les composants qui ne sont pas dans la map de retour, pour être sûr d'avoir tous les composants.
         // En effet certains composants n'ont plus la dernière version mise en production dans SonarQube
@@ -135,12 +134,11 @@ public abstract class SonarTask extends Task<Boolean>
             if (!retour.containsKey(entry.getKey()))
             {
                 retour.put(entry.getKey(), entry.getValue().get(0));
-                LOGGER.debug("rajout : " + entry.getValue().get(0).getNom());
             }
         }
 
-        updateMessage(RECUPCOMPOSANTS + " OK" );
-        
+        updateMessage(RECUPCOMPOSANTS + " OK");
+
         return retour;
     }
 
@@ -170,38 +168,55 @@ public abstract class SonarTask extends Task<Boolean>
         // Itération sur les projets pour remplir la liste de retour
         for (ComposantSonar compo : compos)
         {
+            String versionCompo = "";
             for (String version : versions)
             {
                 // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans version E32
                 if (compo.getNom().endsWith(Utilities.transcoEdition(version)))
-                {
-                    // Switch de contrôle selon la type de matière
-                    // utilisant le filtre en paramètre. Si le Boolean est nul, on prend tous les composants
-                    String filtreDataStage = proprietesXML.getMapParams().get(Param.FILTREDATASTAGE);
-                    switch (matiere)
-                    {
-                        case DATASTAGE:
-                            if (compo.getNom().startsWith(filtreDataStage))
-                                retour.get(version).add(compo);
-                            break;
-
-                        case JAVA:
-                            if (!compo.getNom().startsWith(filtreDataStage))
-                                retour.get(version).add(compo);
-                            break;
-
-                        case COBOL:
-                            throw new FunctionalException(Severity.ERROR, "COBOL pas pris en compte!");
-
-                        default:
-                            throw new FunctionalException(Severity.ERROR, "Nouvelle matière pas prise en compte");
-                    }
-                }
+                    versionCompo = version;
             }
+
+            // Si le composant ne fait pas partie des versions paramétrée, on passe au suivant.
+            if (versionCompo.isEmpty())
+                continue;
+
+            // Test de la matiere du composant et des filtres des composants pour rajouter à la map de retour.
+            if (testFiltreEtMatiere(matiere, compo))
+                retour.get(versionCompo).add(compo);
+
         }
 
         updateMessage(RECUPCOMPOSANTS + "OK");
         return retour;
+    }
+    
+    /**
+     * Contrôle la matière et les filtres paramétrés
+     * 
+     * @param matiere
+     * @param compo
+     * @return
+     */
+    private boolean testFiltreEtMatiere(Matiere matiere, ComposantSonar compo)
+    {
+        String filtreDataStage = proprietesXML.getMapParams().get(Param.FILTREDATASTAGE);
+        String filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
+
+        // Switch de contrôle selon la type de matière en utilisant les filtres
+        switch (matiere)
+        {
+            case DATASTAGE:
+                return compo.getNom().startsWith(filtreDataStage);
+
+            case JAVA:
+                return !compo.getNom().startsWith(filtreDataStage) && !compo.getNom().startsWith(filtreCobol);
+
+            case COBOL:
+                throw new FunctionalException(Severity.ERROR, "COBOL pas pris en compte!");
+
+            default:
+                throw new FunctionalException(Severity.ERROR, "Nouvelle matière pas prise en compte");
+        }
     }
 
     /**
@@ -258,7 +273,7 @@ public abstract class SonarTask extends Task<Boolean>
     {
         setEtape(++debut, fin);
     }
-
+    
     /*---------- ACCESSEURS ----------*/
 
     public String getEtape()

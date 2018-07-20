@@ -40,7 +40,7 @@ public class TestControlXML extends JunitBase
     @Test
     public void testRecupListeAppsDepuisExcel()
     {
-        handler.recupListeAppsDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "liste_applis.xlsx").getFile()));       
+        handler.recupListeAppsDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "liste_applis.xlsx").getFile()));
     }
 
     @Test

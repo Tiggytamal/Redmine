@@ -56,8 +56,6 @@ public class SonarAPI
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
-    /**Instance du controleur */
-    public static final SonarAPI INSTANCE = new SonarAPI();
     
     private final WebTarget webTarget;
     private final String codeUser;
@@ -76,7 +74,8 @@ public class SonarAPI
     private static final String QGSELECT = "api/qualitygates/select";
     private static final String AUTHVALID = "api/authentication/validate";
     
-
+    /**Instance du controleur */
+    public static final SonarAPI INSTANCE = new SonarAPI();
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -209,7 +208,7 @@ public class SonarAPI
         else
         {
             LOGGER.error(erreurAPI(MEASURESCOMPONENT) + paramComposant.getValeur());
-            return new Composant();
+            return null;
         }
     }
 
@@ -457,7 +456,7 @@ public class SonarAPI
     public Status creerVue(Vue vue)
     {
         if (!Vue.controleVue(vue))
-            return Status.BAD_REQUEST;
+            return Status.BAD_REQUEST; 
 
         Response response = appelWebservicePOST(VIEWSCREATE, vue);
         LOGGER.info("Creation vue : " + vue.getKey() + " - nom : " + vue.getName() + HTTP + response.getStatus());
@@ -764,6 +763,7 @@ public class SonarAPI
 
         LocalDateTime date = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
         String retour = "";
+        
         // Itération sur la liste pour récupérer la date la plus récente.
         for (Event event : liste)
         {

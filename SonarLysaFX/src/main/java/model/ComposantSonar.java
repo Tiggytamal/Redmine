@@ -1,13 +1,16 @@
 package model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ComposantSonar implements Modele
+public class ComposantSonar implements Modele, Serializable
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
+    private static final long serialVersionUID = 1L;
     private String nom;
     private String lot;
     private String key;

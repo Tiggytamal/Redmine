@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 import model.ComposantSonar;
+import model.enums.Param;
 import model.sonarapi.Vue;
 import utilities.Statics;
 
@@ -83,6 +84,11 @@ public class CreerVuePatrimoineTask extends SonarTask
             if (isCancelled())
                 return false;
             ComposantSonar projet = composants.get(i);
+            
+            // Suppression composants COBOL
+            if (projet.getNom().startsWith(Statics.proprietesXML.getMapParams().get(Param.FILTRECOBOL)))
+                continue;
+            
             api.ajouterProjet(projet, vue);
             updateProgress(i, size);
             updateMessage(baseMessage + projet.getNom());

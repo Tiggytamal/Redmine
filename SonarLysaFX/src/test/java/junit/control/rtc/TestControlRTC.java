@@ -196,7 +196,7 @@ public class TestControlRTC extends JunitBase
     public void testRecupContributorDepuisNom() throws TeamRepositoryException, IOException
     {
         // Appel du service pour récupérer le fichier de suivi.
-        ControlSuivi control = ExcelFactory.getControlleur(TypeColSuivi.class, new File(getClass().getResource(Statics.RESOURCESTEST + "Suivi_Quality_GateTest.xlsx").getFile()));
+        ControlSuivi control = ExcelFactory.getReader(TypeColSuivi.class, new File(getClass().getResource(Statics.RESOURCESTEST + "Suivi_Quality_GateTest.xlsx").getFile()));
         List<Anomalie> liste = control.recupDonneesDepuisExcel();
 
         // Itération sur le fichier de suivi pour vérifier que l'on remonte bien tous les contributeurs des anomalies
@@ -255,15 +255,45 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void testRecupDatesEtatsLot()
+    public void testRecupDatesEtatsLot() throws TeamRepositoryException
     {
+        // Appel dates pour le lot 309138
+        Map<EtatLot, LocalDate> dates = handler.recupDatesEtatsLot(handler.recupWorkItemDepuisId(309138));
         
+        // test de chaque date avec celles trouvées dans RTC
+        assertEquals(LocalDate.of(2018, 2, 20), dates.get(EtatLot.NOUVEAU));
+        assertEquals(LocalDate.of(2018, 3, 9), dates.get(EtatLot.DEVTU));
+        assertEquals(LocalDate.of(2018, 5, 16), dates.get(EtatLot.VMOE));
+        assertEquals(LocalDate.of(2018, 6, 6), dates.get(EtatLot.MOA));
+        assertEquals(LocalDate.of(2018, 6, 6), dates.get(EtatLot.VMOA));
+        assertEquals(LocalDate.of(2018, 6, 21), dates.get(EtatLot.EDITION));
     }
     
     @Test
-    public void testTestSiAnomalieClose()
+    public void testTestSiAnomalieClose() throws TeamRepositoryException
     {
+        // Initialisation. On mock le recupererEtatElement qui renvoit les 3 valeurs possibles
+        handler = PowerMockito.spy(handler);
+        PowerMockito.when(handler.recupEtatElement(Mockito.any(IWorkItem.class))).thenReturn("Close").thenReturn("Abandonnée").thenReturn("");
+        Logger logMock = TestUtils.getMockLogger(ControlRTC.class, "LOGPLANTAGE");
         
+       // Test de la méthode
+        
+       // Test avec anomalie à zéro
+       assertTrue(handler.testSiAnomalieClose(0)); 
+        
+       // test close et abandonnée
+       assertTrue(handler.testSiAnomalieClose(335943));
+       assertTrue(handler.testSiAnomalieClose(335943));
+       Mockito.verify(logMock, Mockito.never()).error(Mockito.any(TeamRepositoryException.class));
+       
+       //test autre retour
+       assertFalse(handler.testSiAnomalieClose(335943));
+       Mockito.verify(logMock, Mockito.never()).error(Mockito.any(TeamRepositoryException.class));
+       
+       // Test exception
+       assertFalse(handler.testSiAnomalieClose(241392));
+       Mockito.verify(logMock, Mockito.times(1)).error(Mockito.any(TeamRepositoryException.class));
     }
     
     
@@ -289,5 +319,17 @@ public class TestControlRTC extends JunitBase
         handler.shutdown();
         assertTrue(!TeamPlatform.isStarted());
         TeamPlatform.startup();
+    }
+    
+    @Test
+    public void testGetRepo() throws IllegalArgumentException, IllegalAccessException, Exception
+    {
+        assertEquals(Whitebox.getField(ControlRTC.class, "repo").get(handler), Whitebox.invokeMethod(handler, "getRepo"));
+    }
+    
+    @Test
+    public void testGetClient() throws IllegalArgumentException, IllegalAccessException, Exception
+    {
+        assertEquals(Whitebox.getField(ControlRTC.class, "workItemClient").get(handler), Whitebox.invokeMethod(handler, "getClient"));
     }
 }

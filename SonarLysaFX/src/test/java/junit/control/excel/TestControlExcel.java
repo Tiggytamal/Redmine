@@ -22,11 +22,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import control.excel.ControlExcel;
+import control.excel.ControlExcelRead;
 import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
 import junit.JunitBase;
-import model.enums.TypeCol;
+import model.enums.TypeColR;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -43,7 +43,7 @@ import utilities.TechnicalException;
  * @param <Y>
  *            Le type de l'objet en valeur de la map
  */
-public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends ControlExcel<T, Y>, Y> extends JunitBase
+public abstract class TestControlExcel<T extends Enum<T> & TypeColR, C extends ControlExcelRead<T, Y>, Y> extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -91,7 +91,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     public void init() throws IOException, IllegalAccessException
     {
         file = new File(getClass().getResource(Statics.RESOURCESTEST + fichier).getFile());
-        handler = ExcelFactory.getControlleur(typeColClass, file);
+        handler = ExcelFactory.getReader(typeColClass, file);
         wb = (Workbook) getField(handler.getClass(), "wb").get(handler);
     }
     
@@ -112,7 +112,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     public void testCreateWebException() throws Exception
     {
         // Initialisation handler avec mauvais format de fichier
-        handler = ExcelFactory.getControlleur(typeColClass, new File("12:;"));
+        handler = ExcelFactory.getReader(typeColClass, new File("12:;"));
         
         // Appel méthode
         invokeMethod(handler, "createWb");
@@ -177,7 +177,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeCol, C extends Co
     public void testCloseException() throws Exception
     {
         // Initialisation handler avec mauvais format de fichier
-        handler = ExcelFactory.getControlleur(typeColClass, new File("12:;"));
+        handler = ExcelFactory.getReader(typeColClass, new File("12:;"));
         
         // Test - appel de la méthode close.
         invokeMethod(handler, "close");

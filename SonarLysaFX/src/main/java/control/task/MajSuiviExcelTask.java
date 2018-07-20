@@ -39,6 +39,7 @@ import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.TypeColSuivi;
 import model.enums.TypeFichier;
+import model.enums.TypeInfoMail;
 import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
@@ -188,9 +189,9 @@ public class MajSuiviExcelTask extends SonarTask
         }
 
         // Mise à jour des fichiers Excel
-        ControlSuivi controlAnoJava = ExcelFactory.getControlleur(TypeColSuivi.class,
+        ControlSuivi controlAnoJava = ExcelFactory.getReader(TypeColSuivi.class,
                 new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIER)));
-        ControlSuivi controlAnoDataStage = ExcelFactory.getControlleur(TypeColSuivi.class,
+        ControlSuivi controlAnoDataStage = ExcelFactory.getReader(TypeColSuivi.class,
                 new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE)));
         controlAnoJava.majMultiMatiere(anoMultiple);
         controlAnoDataStage.majMultiMatiere(anoMultiple);
@@ -269,9 +270,6 @@ public class MajSuiviExcelTask extends SonarTask
     {
         // 1. Récupération des données depuis les fichiers Excel.
 
-        // Fichier des lots édition
-        Map<String, LotSuiviRTC> lotsRTC = fichiersXML.getLotsRTC();
-
         // 2. Récupération des lots Sonar en erreur.
         Map<String, Set<String>> mapLotsSonar;
 
@@ -298,7 +296,7 @@ public class MajSuiviExcelTask extends SonarTask
         updateProgress(-1, 1);
 
         // 3. Supression des lots déjà créés et création des feuille Excel avec les nouvelles erreurs
-        majFichierAnomalies(lotsRTC, mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);
+        majFichierAnomalies(mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);
 
         updateProgress(1, 1);
         etapePlus();
@@ -374,8 +372,6 @@ public class MajSuiviExcelTask extends SonarTask
     /**
      * Permet de mettre à jour le fichier des anomalies Sonar, en allant chercher les nouvelles dans Sonar et en vérifiant celles qui ne sont plus d'actualité.
      *
-     * @param lotsRTC
-     *            Fichier excel d'extraction de la PIC de tous les lots.
      * @param mapLotsSonar
      *            map des lots Sonar avec une quality Gate en erreur
      * @param lotsSecurite
@@ -385,12 +381,14 @@ public class MajSuiviExcelTask extends SonarTask
      * @throws IOException
      * @throws TeamRepositoryException
      */
-    private void majFichierAnomalies(Map<String, LotSuiviRTC> lotsRTC, Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere)
-            throws IOException
+    private void majFichierAnomalies(Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere) throws IOException
     {
+        // Fichier des lots édition
+        Map<String, LotSuiviRTC> lotsRTC = fichiersXML.getLotsRTC();
+
         // Controleur
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;
-        ControlSuivi controlAno = ExcelFactory.getControlleur(TypeColSuivi.class, new File(name));
+        ControlSuivi controlAno = ExcelFactory.getReader(TypeColSuivi.class, new File(name));
 
         // Lecture du fichier pour remonter les anomalies en cours.
         List<Anomalie> listeLotenAno = controlAno.recupDonneesDepuisExcel();
@@ -422,7 +420,8 @@ public class MajSuiviExcelTask extends SonarTask
                 LotSuiviRTC lot = lotsRTC.get(numeroLot);
                 if (lot == null)
                 {
-                    LOGNONLISTEE.warn("Un lot du fichier Excel n'est pas connu dans RTC : " + numeroLot);
+                    LOGNONLISTEE.warn("Un lot du fichier Excel n'est pas connu : " + numeroLot);
+                    controlAno.getControlMail().addInfo(TypeInfoMail.LOTNONRTC, numeroLot, null);
                     continue;
                 }
 
@@ -613,8 +612,12 @@ public class MajSuiviExcelTask extends SonarTask
 
     /*---------- ACCESSEURS ----------*/
 
-    public enum TypeMaj {
-        SUIVI("Maj Fichier de Suivi JAVA"), DATASTAGE("Maj Fichier de Suivi DataStage"), MULTI("Maj Fichiers de Suivi"), COBOL("Maj Fichier de Suivi COBOL");
+    public enum TypeMaj 
+    {
+        SUIVI("Maj Fichier de Suivi JAVA"), 
+        DATASTAGE("Maj Fichier de Suivi DataStage"), 
+        MULTI("Maj Fichiers de Suivi"), 
+        COBOL("Maj Fichier de Suivi COBOL");
 
         private String string;
 

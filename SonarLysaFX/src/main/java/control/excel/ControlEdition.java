@@ -21,7 +21,7 @@ import utilities.enums.Severity;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, String>>
+public class ControlEdition extends ControlExcelRead<TypeColEdition, Map<String, String>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -42,7 +42,7 @@ public class ControlEdition extends ControlExcel<TypeColEdition, Map<String, Str
      * @throws IOException
      *             Exception lors des accès lecture/écriture
      */
-    ControlEdition(File file) throws IOException
+    ControlEdition(File file)
     {
         super(file);
     }

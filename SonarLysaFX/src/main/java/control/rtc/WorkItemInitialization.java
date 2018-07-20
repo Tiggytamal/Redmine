@@ -38,7 +38,7 @@ import utilities.Statics;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class WorkItemInitialization extends WorkItemOperation
+public final class WorkItemInitialization extends WorkItemOperation
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -65,6 +65,7 @@ public class WorkItemInitialization extends WorkItemOperation
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
 
     @Override
     protected void execute(WorkItemWorkingCopy workingCopy, IProgressMonitor monitor) throws TeamRepositoryException
@@ -76,7 +77,7 @@ public class WorkItemInitialization extends WorkItemOperation
 
         // Environnement
         IAttribute attribut = client.findAttribute(projet, TypeEnumRTC.ENVIRONNEMENT.toString(), null);
-        if (calculPariteVersion(ano.getVersion()))
+        if (calculPariteEdition(ano.getVersion()) || calculPariteEdition(proprietesXML.getMapParams().get(Param.RTCLOTCHC)))
             workItem.setValue(attribut, recupLiteralDepuisString("Br A VMOE", attribut));
         else
             workItem.setValue(attribut, recupLiteralDepuisString("Br B VMOE", attribut));
@@ -166,14 +167,16 @@ public class WorkItemInitialization extends WorkItemOperation
         return retour;
     }
 
-    private boolean calculPariteVersion(String version)
+    private boolean calculPariteEdition(String edition)
     {
-        Matcher matcher = Pattern.compile("^E[2-9][0-9]").matcher(version);
+        Matcher matcher = Pattern.compile("^E[2-9][0-9]").matcher(edition);
         int i = 0;
         if (matcher.find())
+        {
             i = Integer.parseInt(matcher.group(0).substring(1));
-        return (i % 2 == 0);
-
+            return (i % 2 == 0);
+        }
+        return false;
     }
 
     private void creerTags(IWorkItem workItem)
@@ -185,7 +188,6 @@ public class WorkItemInitialization extends WorkItemOperation
         workItem.setTags2(tags);
     }
 
-    /*---------- METHODES PRIVEES ----------*/
 
     /**
      * 

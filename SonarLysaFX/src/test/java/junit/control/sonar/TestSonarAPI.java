@@ -3,11 +3,20 @@ package junit.control.sonar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -39,7 +48,7 @@ public class TestSonarAPI extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private SonarAPI api;
+    private SonarAPI handler;
     private Response responseMock;
     private Logger logger;
 
@@ -51,7 +60,7 @@ public class TestSonarAPI extends JunitBase
     {
         // Mock de la réponse pour forcer les retours en erreur des webservices
         responseMock = Mockito.mock(Response.class);
-        PowerMockito.when(responseMock, "getStatus").thenReturn(Status.FORBIDDEN.getStatusCode());
+        when(responseMock, "getStatus").thenReturn(Status.FORBIDDEN.getStatusCode());
         
         // Mock du logger pour vérifier les appels à celui-ci
         logger = TestUtils.getMockLogger(SonarAPI.class, "LOGGER");
@@ -60,7 +69,7 @@ public class TestSonarAPI extends JunitBase
     @Before
     public void init()
     {
-        api = PowerMockito.spy(SonarAPI.INSTANCE);
+        handler = PowerMockito.spy(SonarAPI.INSTANCE);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -83,14 +92,14 @@ public class TestSonarAPI extends JunitBase
     public void testGetVues() throws Exception
     {
         // Appel classique
-        List<Vue> vues = api.getVues();
+        List<Vue> vues = handler.getVues();
         assertTrue(vues != null);
         assertFalse(vues.isEmpty());
 
         appelGetMock();
 
         // nouvel appel et contrôle que la liste est vide et que le logger a bine été utilisé.
-        vues = api.getVues();
+        vues = handler.getVues();
         assertTrue(vues != null);
         assertTrue(vues.isEmpty());
         testLogger();
@@ -100,7 +109,7 @@ public class TestSonarAPI extends JunitBase
     public void testGetVuesParNom() throws Exception
     {
         // Appel classique
-        List<Projet> projets = api.getVuesParNom("APPLI MASTER ");
+        List<Projet> projets = handler.getVuesParNom("APPLI MASTER ");
         assertTrue(projets != null);
         assertFalse(projets.isEmpty());
 
@@ -108,7 +117,7 @@ public class TestSonarAPI extends JunitBase
         appelGetMockWithParam();
 
         // nouvel appel et contrôle que la liste est vide et que le logger a bien été utilisé.
-        projets = api.getVuesParNom("APPLI MASTER ");
+        projets = handler.getVuesParNom("APPLI MASTER ");
         assertTrue(projets != null);
         assertTrue(projets.isEmpty());
         testLogger();
@@ -118,32 +127,30 @@ public class TestSonarAPI extends JunitBase
     public void testVerificationUtilisateur() throws Exception
     {
         // Appel classique
-        boolean verif = api.verificationUtilisateur();
+        boolean verif = handler.verificationUtilisateur();
         assertTrue(verif);
-        Mockito.verify(logger, Mockito.times(1)).info("Utilisateur OK");
+        verify(logger, times(1)).info("Utilisateur OK");
         
         appelGetMock();
 
-        verif = api.verificationUtilisateur();
+        verif = handler.verificationUtilisateur();
         assertFalse(verif);
-        Mockito.verify(logger, Mockito.times(1)).info("Utilisateur KO");
+        verify(logger, times(1)).info("Utilisateur KO");
     }
 
     @Test
     public void testGetMetriquesComposant()
     {
         // Appel classique sans erreur
-        Composant composant = api.getMetriquesComposant("fr.ca.cat.apimanager.resources:RESS_Dossiers_Epargne_Patrimoniale_Recapitulatif_entretien_Build:14",
+        Composant composant = handler.getMetriquesComposant("fr.ca.cat.apimanager.resources:RESS_Dossiers_Epargne_Patrimoniale_Recapitulatif_entretien_Build:14",
                 new String[] { TypeMetrique.VULNERABILITIES.toString(), TypeMetrique.BUGS.toString() });
         assertNotNull(composant);
         assertNotNull(composant.getMetriques());
         assertFalse(composant.getMetriques().isEmpty());
 
         // Appel avec un mauvais composant. Contrôle du log de l'erreur
-        composant = api.getMetriquesComposant("a", new String[] { TypeMetrique.BUGS.toString() });
-        assertNotNull(composant);
-        assertNotNull(composant.getMetriques());
-        assertTrue(composant.getMetriques().isEmpty());
+        composant = handler.getMetriquesComposant("a", new String[] { TypeMetrique.BUGS.toString() });
+        assertNull(composant);
         testLogger();
     }
 
@@ -151,11 +158,11 @@ public class TestSonarAPI extends JunitBase
     public void testGetSecuriteComposant()
     {
         // Appel sans erreur
-        api.getSecuriteComposant("fr.ca.cat.apimanager.resources:RESS_Dossiers_Epargne_Patrimoniale_Recapitulatif_entretien_Build:14");
+        handler.getSecuriteComposant("fr.ca.cat.apimanager.resources:RESS_Dossiers_Epargne_Patrimoniale_Recapitulatif_entretien_Build:14");
         testNoLogger();
 
         // Appel avec retour d'une erreur
-        assertEquals(0, api.getSecuriteComposant("fa"));
+        assertEquals(0, handler.getSecuriteComposant("fa"));
         testLogger();
     }
 
@@ -163,29 +170,55 @@ public class TestSonarAPI extends JunitBase
     public void testGetIssuesComposant()
     {
         // Appel composant avec plus de 100 issues
-        List<Issue> liste = api.getIssuesComposant("fr.ca.cat:BAM_Webapp_Standard_Build:14");
-        assertFalse(liste == null);
+        List<Issue> liste = handler.getIssuesComposant("fr.ca.cat:BAM_Webapp_Standard_Build:14");
+        assertNotNull(liste);
         assertTrue(liste.size() > 100);
 
         // Appel avec retour d'une erreur
-        List<Issue> listeErreur = api.getIssuesComposant("fa");
-        assertFalse(listeErreur == null);
+        List<Issue> listeErreur = handler.getIssuesComposant("fa");
+        assertNotNull(listeErreur);
         assertTrue(listeErreur.isEmpty());
         testLogger();
+    }
+    
+    @Test
+    public void testGetIssuesGenerique() throws Exception
+    {
+        // Paramètres
+        List<Parametre> params = new ArrayList<>();
+        params.add(new Parametre("severities", "CRITICAL, BLOCKER"));
+        params.add(new Parametre("resolved", "false"));
+        params.add(new Parametre("tags", "cve"));
+        params.add(new Parametre("types", "VULNERABILITY"));
+        
+        // Appel de la méthode et contrôle sans bouchon
+        List<Issue> liste = handler.getIssuesGenerique(params);
+        assertNotNull(liste);
+        assertTrue(liste.size() > 100);
+        
+        // Bouchonnnage pour retour appel en erreur.
+        PowerMockito.doReturn(responseMock).when(handler).appelWebserviceGET(Mockito.anyString(), Mockito.any());       
+        PowerMockito.when(responseMock, "getStatus").thenReturn(Status.BAD_REQUEST.getStatusCode());
+        
+        // Appel
+        liste = handler.getIssuesGenerique(params);
+        assertNotNull(liste);
+        assertTrue(liste.isEmpty());
+        verify(logger, Mockito.timeout(1)).error("Erreur API : api/issues/search - Composant : ");
     }
 
     @Test
     public void testGetVersionComposant()
     {
         // Appel service avec composant existant
-        String version = api.getVersionComposant("fr.ca.cat:BAM_Webapp_Standard_Build:14");
+        String version = handler.getVersionComposant("fr.ca.cat:BAM_Webapp_Standard_Build:14");
         assertTrue(version != null);
         assertFalse(version.isEmpty());
         assertEquals("31.0.4", version);
         testNoLogger();
 
         // Appel avec composant non existant
-        version = api.getVersionComposant("ab");
+        version = handler.getVersionComposant("ab");
         assertTrue(version != null);
         assertTrue(version.isEmpty());
         testLogger();
@@ -195,7 +228,7 @@ public class TestSonarAPI extends JunitBase
     public void testGetComposants() throws Exception
     {
         // Appel du webservice
-        List<Projet> liste = api.getComposants();
+        List<Projet> liste = handler.getComposants();
         assertFalse(liste == null);
         assertFalse(liste.isEmpty());
         testNoLogger();
@@ -206,7 +239,7 @@ public class TestSonarAPI extends JunitBase
         // Appel de la méthode, avec catch de l'erreur pour tester le logger, puis renvoie de celle-ci pour contrôle
         try
         {
-            api.getComposants();
+            handler.getComposants();
         } catch (FunctionalException e)
         {
             testLogger();
@@ -222,82 +255,125 @@ public class TestSonarAPI extends JunitBase
         assertFalse(nomQG.isEmpty());
 
         // Appel webservice de récupération de la QualityGate Sonar
-        QualityGate qg = api.getQualityGate(nomQG);
+        QualityGate qg = handler.getQualityGate(nomQG);
         assertFalse(qg.getId() == null);
         assertFalse(qg.getId().isEmpty());
         assertFalse(qg.getName() == null);
         assertFalse(qg.getName().isEmpty());
 
         // Appel avec QG non existante et retour exception
-        api.getQualityGate("a");
+        handler.getQualityGate("a");
     }
 
     @Test(expected = FunctionalException.class)
     public void testGetListQualitygate() throws Exception
     {
         // Appel liste QualityGate
-        List<QualityGate> liste = api.getListQualitygate();
+        List<QualityGate> liste = handler.getListQualitygate();
         assertFalse(liste == null);
         assertFalse(liste.isEmpty());
 
         // Appel avec retour en erreur
         appelGetMock();
-        api.getListQualitygate();
+        handler.getListQualitygate();
     }
 
     @Test
     public void testTestVueExiste() throws Exception
     {
         // Test vue existante
-        boolean test = api.testVueExiste("E31Key");
+        boolean test = handler.testVueExiste("E31Key");
         assertTrue(test);
         
         // Test vue inconnue
-        test = api.testVueExiste("abc");
+        test = handler.testVueExiste("abc");
         assertFalse(test);
         
         // Test erreur appel  + log
         appelGetMockWithParam();
-        api.testVueExiste("E31Key");
+        handler.testVueExiste("E31Key");
         testLogger();
     }
     
     @Test (expected = IllegalArgumentException.class)
     public void testTestVueExisteException1()
     {
-        api.testVueExiste(null);
+        handler.testVueExiste(null);
     }
     
     @Test (expected = IllegalArgumentException.class)
     public void testTestVueExisteException2()
     {
-        api.testVueExiste("");
+        handler.testVueExiste("");
     }
 
     @Test
-    public void testCreerVue()
+    public void testCreerVue() throws Exception
     {
+        // Initialisation vue
         Vue vue = new Vue();
+        
+        // Test avec vue vide
+        assertEquals(Status.BAD_REQUEST, handler.creerVue(vue));
+        
+        // Initialisation vue avec données
         vue.setKey("APPLI_Master_5MPR");
         vue.setName("APPLI_Master_5MPR");
         vue.setDescription("vue description");
-        api.creerVue(vue);
-    }
-    
-    @Test
-    public void testCreerVueException()
-    {
         
+        // Mock de l'appel webservice pour ne pas créer dans SonarQube
+        PowerMockito.doReturn(responseMock).when(handler).appelWebservicePOST(Mockito.anyString(), Mockito.any());       
+        when(responseMock, "getStatus").thenReturn(Status.OK.getStatusCode());
+        when(responseMock, "getStatusInfo").thenReturn(Status.OK);
+        
+        // Contrôle de la méthode
+        assertEquals(Status.OK, handler.creerVue(vue));
+        verify(logger, times(1)).info("Creation vue : " + vue.getKey() + " - nom : " + vue.getName() + ": HTTP " + Status.OK.getStatusCode());
     }
 
     @Test
     public void testCreerVueAsync()
     {
         Vue vue = new Vue();
+        
         vue.setKey("bueKey");
         vue.setName("Vue Name sdfs df");
         vue.setDescription("vue description");
-        api.creerVueAsync(vue);
+        Future<Response> future = new Future<Response>() {
+            
+            @Override
+            public boolean isDone()
+            {
+                return false;
+            }
+            
+            @Override
+            public boolean isCancelled()
+            {
+                return false;
+            }
+            
+            @Override
+            public Response get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException
+            {
+                return responseMock;
+            }
+            
+            @Override
+            public Response get() throws InterruptedException, ExecutionException
+            {
+                return responseMock;
+            }
+            
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning)
+            {
+                return false;
+            }
+        };
+        
+        PowerMockito.doReturn(future).when(handler).appelWebserviceAsyncPOST(Mockito.anyString(), Mockito.any());  
+        handler.creerVueAsync(vue);
     }
 
     @Test
@@ -320,7 +396,7 @@ public class TestSonarAPI extends JunitBase
      */
     private void appelGetMock() throws Exception
     {
-        PowerMockito.when(api, APPELGET, Mockito.anyString()).thenReturn(responseMock);
+        when(handler, APPELGET, Mockito.anyString()).thenReturn(responseMock);
     }
     
     /**
@@ -330,7 +406,7 @@ public class TestSonarAPI extends JunitBase
     private void appelGetMockWithParam() throws Exception
     {
         Method methode = Whitebox.getMethod(SonarAPI.class, APPELGET, String.class, Parametre[].class);
-        PowerMockito.when(api, methode).withArguments(Mockito.anyString(), Mockito.any(Parametre.class)).thenReturn(responseMock);
+        when(handler, methode).withArguments(Mockito.anyString(), Mockito.any(Parametre.class)).thenReturn(responseMock);
     }
     
     /**
@@ -338,7 +414,7 @@ public class TestSonarAPI extends JunitBase
      */
     private void testLogger()
     {
-        Mockito.verify(logger, Mockito.times(1)).error(Mockito.anyString());
+        verify(logger, times(1)).error(Mockito.anyString());
     }
     
     /**
@@ -346,7 +422,7 @@ public class TestSonarAPI extends JunitBase
      */
     private void testNoLogger()
     {
-        Mockito.verify(logger, Mockito.never()).error(Mockito.anyString());
+        verify(logger, Mockito.never()).error(Mockito.anyString());
     }
     /*---------- ACCESSEURS ----------*/
 }

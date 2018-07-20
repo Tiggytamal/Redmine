@@ -27,7 +27,7 @@ import utilities.enums.Severity;
  * @author ETP137 - Grégoire Mathon
  * @since 1.0
  */
-public class Main extends Application
+public final class Main extends Application
 {
     /** Boolean pour gérer la désrialisation ou non des objets JAVA  - A ACTIVER UNIQUEMENT EN TEST*/
     public static final boolean DESER = false;

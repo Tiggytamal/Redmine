@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import model.enums.TypeCol;
+import model.enums.TypeColR;
 
 /**
  * Bloc d'affichage pour paramétrer le nom d'une colonne
@@ -18,7 +18,7 @@ import model.enums.TypeCol;
  *
  * @param <T>
  */
-public class ColonneView<T extends Enum<T> & TypeCol> extends VBox implements ViewXML<T, TextField>
+public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements ViewXML<T, TextField>
 {
     private T typeCol;
     private TextField field;

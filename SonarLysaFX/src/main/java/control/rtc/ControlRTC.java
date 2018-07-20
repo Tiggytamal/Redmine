@@ -71,6 +71,8 @@ public class ControlRTC
 {
     /*---------- ATTRIBUTS ----------*/
 
+    private final LocalDate today = LocalDate.now();
+    
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger plantages de l'application */
@@ -85,7 +87,6 @@ public class ControlRTC
     private IWorkItemClient workItemClient;
     private IAuditableClient auditableClient;
     private IAuditableCommon auditableCommon;
-    private final LocalDate today = LocalDate.now();
     
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -230,11 +231,11 @@ public class ControlRTC
             // Type de l'objet
             IWorkItemType itemType = workItemClient.findWorkItemType(projet, "defect", progressMonitor);
 
-            List<ICategory> liste2 = workItemClient.findCategories(projet, ICategory.FULL_PROFILE, progressMonitor);
+            List<ICategory> categories = workItemClient.findCategories(projet, ICategory.FULL_PROFILE, progressMonitor);
             ICategory cat = null;
-            for (ICategory iCategory : liste2)
+            for (ICategory iCategory : categories)
             {
-                if ("Projet".equals(iCategory.getName()))
+                if ("Projet".equals(iCategory.getName()) || iCategory.getName().startsWith("Anomalie"))
                     cat = iCategory;
             }
 

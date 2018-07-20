@@ -8,18 +8,18 @@ import java.io.Serializable;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class Vulnerabilite implements Serializable
+public class Vulnerabilite implements Serializable, Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
-    private String Severite;
+    private String severite;
     private String composant;
     private String status;
     private String message;
     private String dateCreation;
     private String lot;
-    private String Clarity;
+    private String clarity;
     private String appli;
     private String lib;
 
@@ -30,7 +30,7 @@ public class Vulnerabilite implements Serializable
 
     public String getLib()
     {
-        return lib;
+        return getString(lib);
     }
 
     public void setLib(String lib)
@@ -40,7 +40,7 @@ public class Vulnerabilite implements Serializable
 
     public String getAppli()
     {
-        return appli;
+        return getString(appli);
     }
 
     public void setAppli(String appli)
@@ -50,17 +50,17 @@ public class Vulnerabilite implements Serializable
 
     public String getSeverite()
     {
-        return Severite;
+        return getString(severite);
     }
 
     public void setSeverite(String severite)
     {
-        Severite = severite;
+        this.severite = severite;
     }
 
     public String getComposant()
     {
-        return composant;
+        return getString(composant);
     }
 
     public void setComposant(String composant)
@@ -70,7 +70,7 @@ public class Vulnerabilite implements Serializable
 
     public String getStatus()
     {
-        return status;
+        return getString(status);
     }
 
     public void setStatus(String status)
@@ -80,7 +80,7 @@ public class Vulnerabilite implements Serializable
 
     public String getMessage()
     {
-        return message;
+        return getString(message);
     }
 
     public void setMessage(String message)
@@ -90,7 +90,7 @@ public class Vulnerabilite implements Serializable
 
     public String getDateCreation()
     {
-        return dateCreation;
+        return getString(dateCreation);
     }
 
     public void setDateCreation(String dateCreation)
@@ -100,7 +100,7 @@ public class Vulnerabilite implements Serializable
 
     public String getLot()
     {
-        return lot;
+        return getString(lot);
     }
 
     public void setLot(String lot)
@@ -110,12 +110,11 @@ public class Vulnerabilite implements Serializable
 
     public String getClarity()
     {
-        return Clarity;
+        return getString(clarity);
     }
 
     public void setClarity(String clarity)
     {
-        Clarity = clarity;
+        this.clarity = clarity;
     }
-
 }

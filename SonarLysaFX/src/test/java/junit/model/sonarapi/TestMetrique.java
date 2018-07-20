@@ -43,7 +43,8 @@ public class TestMetrique
     {
         modele = new Metrique(TYPE);
         assertNotNull(modele.getListePeriodes());
-        assertNull(modele.getValue());
+        assertNotNull(modeleNull.getValue());
+        assertTrue(modeleNull.getValue().isEmpty());
     }
     
     @Test (expected = IllegalArgumentException.class)
@@ -57,7 +58,8 @@ public class TestMetrique
     public void testGetValue()
     {
         assertEquals(VALEUR, modele.getValue());
-        assertNull(modeleNull.getValue());
+        assertNotNull(modeleNull.getValue());
+        assertTrue(modeleNull.getValue().isEmpty());
     }
     
     @Test

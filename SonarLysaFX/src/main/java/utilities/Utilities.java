@@ -200,9 +200,8 @@ public class Utilities
      */
     public static void serialisation(String adresseFichier, Object objet)
     {
-        try (FileOutputStream fichier = new FileOutputStream(adresseFichier);)
-        {
-            ObjectOutputStream oos = new ObjectOutputStream(fichier);
+        try (FileOutputStream fichier = new FileOutputStream(adresseFichier);ObjectOutputStream oos = new ObjectOutputStream(fichier);)
+        {           
             oos.writeObject(objet);
             oos.flush();
         } catch (IOException e)

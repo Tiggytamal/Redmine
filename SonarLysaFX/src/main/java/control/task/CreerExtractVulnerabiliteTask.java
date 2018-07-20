@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import application.Main;
-import control.excel.ControlExtract;
+import control.excel.ControlExtractVul;
 import model.ComposantSonar;
 import model.LotSuiviRTC;
 import model.ModelFactory;
@@ -26,7 +26,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
     /*---------- ATTRIBUTS ----------*/
     
     private File file;
-    private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    private static final Logger LOGGER = LogManager.getLogger("complet-log"); 
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -48,7 +48,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
 
     private boolean creerExtract()
     {
-        ControlExtract control = new ControlExtract(new File(file.getPath()));
+        ControlExtractVul control =  new ControlExtractVul(file);
         
         // Création liste des noms des composants du patrimoine
         List<String> nomsComposPatrimoine = new ArrayList<>();       

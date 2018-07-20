@@ -9,6 +9,18 @@
             <key>ACTIF</key>
             <value>Actif</value>
         </entry>
+        <entry>
+            <key>LIB</key>
+            <value>Libellé</value>
+        </entry>
+        <entry>
+            <key>OPEN</key>
+            <value>Open</value>
+        </entry>
+        <entry>
+            <key>MAINFRAME</key>
+            <value>MainFrame</value>
+        </entry>
     </mapColsApps>
     <mapColsChefServ>
         <entry>
@@ -231,6 +243,10 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <value>Composant DS_</value>
         </entry>
         <entry>
+            <key>FILTRECOBOL</key>
+            <value>Composant COBMF</value>
+        </entry>
+        <entry>
             <key>ABSOLUTEPATH</key>
             <value>S:\\SER_ASSURANCE_QUALITE\\COMMUN\\Qualimétrie\\Suivi des anomalies qualimétriques\\</value>
         </entry>
@@ -276,7 +292,7 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
         </entry>
         <entry>
         	<key>IPMAIL</key>
-        	<value>10.166.212.129</value>        
+        	<value>10.166.212.122</value>        
         </entry>
         <entry>
         	<key>PORTMAIL</key>

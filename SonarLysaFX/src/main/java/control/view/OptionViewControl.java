@@ -27,7 +27,7 @@ import javafx.stage.StageStyle;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
-import model.enums.TypeCol;
+import model.enums.TypeColR;
 import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
@@ -241,7 +241,7 @@ public class OptionViewControl extends ViewControl
     /**
      * @throws JAXBException
      */
-    public <T extends Enum<T> & TypeCol> void saveCols()
+    public <T extends Enum<T> & TypeColR> void saveCols()
     {
         for (Node node : colonnesBox.getChildren())
         {
@@ -266,12 +266,12 @@ public class OptionViewControl extends ViewControl
      * @param typeCol
      * @param root
      */
-    private <T extends Enum<T> & TypeCol> void afficherColonnes(Class<T> typeCol, ObservableList<Node> root)
+    private <T extends Enum<T> & TypeColR> void afficherColonnes(Class<T> typeCol, ObservableList<Node> root)
     {
         // Nettoyage de l'affichage
         colonnesBox.getChildren().clear();
 
-        // Récupération de la map correspondante au type de fichier et affichage des colonnes
+        // Récupération de la map correspondante au type de fichier et affichage des colonnes       
         for (Object objet : proprietesXML.getMap(typeCol).entrySet())
         {
             @SuppressWarnings ({ "rawtypes", "unchecked" })

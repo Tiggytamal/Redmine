@@ -5,9 +5,10 @@ import java.util.Map;
 import org.junit.Test;
 
 import control.excel.ControlApps;
+import model.Application;
 import model.enums.TypeColApps;
 
-public class TestControlApps extends TestControlExcel<TypeColApps, ControlApps, Map<String, Boolean>>
+public class TestControlApps extends TestControlExcel<TypeColApps, ControlApps, Map<String, Application>>
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -30,7 +31,7 @@ public class TestControlApps extends TestControlExcel<TypeColApps, ControlApps, 
     @Test
     public void testRecupDonneesDepuisExcel()
     {
-        testRecupDonneesDepuisExcel(map -> map.size() == 1842);
+        testRecupDonneesDepuisExcel(map -> map.size() == 1897);
     }
     
     /*---------- METHODES PRIVEES ----------*/

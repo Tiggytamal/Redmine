@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum TypeColEdition implements Serializable, TypeCol  
+public enum TypeColEdition implements Serializable, TypeColR  
 {
     LIBELLE ("Libellé", "colLib"),
     VERSION ("Numero de version", "colVersion");

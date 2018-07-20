@@ -5,7 +5,8 @@ import java.io.IOException;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import model.enums.TypeCol;
+import model.enums.TypeColR;
+import model.enums.TypeColW;
 import utilities.TechnicalException;
 
 public interface ExcelFactory
@@ -19,7 +20,7 @@ public interface ExcelFactory
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Enum<T> & TypeCol, R extends ControlExcel<T, Y>, Y> R getControlleur(Class<T> type, File file) throws IOException
+    public static <T extends Enum<T> & TypeColR, R extends ControlExcelRead<T, Y>, Y> R getReader(Class<T> type, File file)
     {
         switch (type.getName())
         {           
@@ -42,7 +43,31 @@ public interface ExcelFactory
                 return (R) new ControlSuivi(file);
                 
             default:
-                throw new TechnicalException("ExcelFactory.getControlleur - type non géré : " + type.toString(), null);
+                throw new TechnicalException("ExcelFactory.getReader - type non géré : " + type.toString(), null);
+        }
+    }
+    
+    /**
+     * Retourne une instance d'un controleur Excel en fonction du type d'énumération
+     * @param type
+     * @param file
+     * @return
+     * @throws InvalidFormatException
+     * @throws IOException
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Enum<T> & TypeColW, R extends ControlExcelWrite<T, Y>, Y> R getWriter(Class<T> type, File file)
+    {
+        switch (type.getName())
+        {           
+            case "model.enums.TypeColVul" :                
+                return (R) new ControlExtractVul(file);
+                
+            case "model.enums.TypeColApps" :
+                return (R) new ControlAppsW(file);
+                
+            default:
+                throw new TechnicalException("ExcelFactory.getXriter - type non géré : " + type.toString(), null);
         }
     }
 }

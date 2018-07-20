@@ -87,7 +87,7 @@ public class CreerVueProductionTask extends SonarTask
      * @throws IOException
      * @throws InvalidFormatException
      */
-    private boolean creerVueProduction() throws IOException
+    private boolean creerVueProduction()
     {
         Map<LocalDate, List<Vue>> mapLot;
         etapePlus();
@@ -97,7 +97,7 @@ public class CreerVueProductionTask extends SonarTask
         if (file != null)
         {
             // Traitement données fichier Excel
-            ControlPic excel = ExcelFactory.getControlleur(TypeColPic.class, file);
+            ControlPic excel = ExcelFactory.getReader(TypeColPic.class, file);
 
             // Message
             if (isCancelled())
@@ -149,7 +149,7 @@ public class CreerVueProductionTask extends SonarTask
             try
             {
                 // Récupération des états du lot depuis RTC
-                map = ControlRTC.INSTANCE.recupDatesEtatsLot(ControlRTC.INSTANCE.recupWorkItemDepuisId(Integer.valueOf(entry.getKey())));
+                map = ControlRTC.INSTANCE.recupDatesEtatsLot(ControlRTC.INSTANCE.recupWorkItemDepuisId(Integer.parseInt(entry.getKey())));
                 updateMessage(base + Statics.NL + "Lot " + entry.getKey());
                 updateProgress(++i, size);
             } catch (TeamRepositoryException e)

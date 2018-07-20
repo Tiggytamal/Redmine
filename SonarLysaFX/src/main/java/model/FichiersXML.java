@@ -26,7 +26,7 @@ public class FichiersXML implements XML, Modele
     /*---------- ATTRIBUTS ----------*/
 
     private Map<String, InfoClarity> mapClarity;
-    private Map<String, Boolean> mapApplis;
+    private Map<String, Application> mapApplis;
     private Map<String, RespService> mapRespService;
     private Map<TypeFichier, String> dateMaj;
     private Map<String, String> mapEditions;
@@ -178,7 +178,7 @@ public class FichiersXML implements XML, Modele
 
     @XmlElementWrapper
     @XmlElement(name = "mapApplis", required = false)
-    public Map<String, Boolean> getMapApplis()
+    public Map<String, Application> getMapApplis()
     {
         return mapApplis;
     }

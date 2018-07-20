@@ -121,7 +121,7 @@ public class CreerVueCHCCDMTask extends SonarTask
             updateProgress(i, tousLesProjets.size());
 
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
-            if (compo.getLot().isEmpty() && mapEditions.keySet().contains(compo.getEdition()))
+            if (!compo.getLot().isEmpty() && mapEditions.keySet().contains(compo.getEdition()))
             {
                 String keyCHC = mapEditions.get(compo.getEdition());
 

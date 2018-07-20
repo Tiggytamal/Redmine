@@ -18,7 +18,7 @@ import model.enums.TypeColClarity;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, InfoClarity>>
+public class ControlClarity extends ControlExcelRead<TypeColClarity, Map<String, InfoClarity>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -43,7 +43,7 @@ public class ControlClarity extends ControlExcel<TypeColClarity, Map<String, Inf
      * @throws IOException
      *             Exception lors des accès lecture/écriture
      */
-    ControlClarity(File file) throws IOException
+    ControlClarity(File file)
     {
         super(file);
     }

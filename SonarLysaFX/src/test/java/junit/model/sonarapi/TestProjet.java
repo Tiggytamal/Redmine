@@ -34,6 +34,15 @@ public class TestProjet
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
+    public void testToString()
+    {
+        Projet projet = new Projet();
+        projet.setNom(NOM);
+        assertEquals("Projet [nom=" + projet.getNom() + "]", projet.toString());
+        ;
+    }
+    
+    @Test
     public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());

@@ -4,7 +4,6 @@ import static utilities.Statics.fichiersXML;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -22,7 +21,7 @@ import javafx.stage.StageStyle;
 import model.ModelFactory;
 import model.Modele;
 import model.XML;
-import model.enums.TypeCol;
+import model.enums.TypeColR;
 import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
@@ -40,10 +39,8 @@ public class ControlXML
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private static final String ERREUR = "Erreur au moment de sauvegarder le fichier Excel";
-    
     /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -187,16 +184,10 @@ public class ControlXML
      * @param file
      */
     @SuppressWarnings("rawtypes")
-    private <T extends Enum<T> & TypeCol> void saveInfos(TypeFichier typeFichier, Class<T> typeCol, File file)
+    private <T extends Enum<T> & TypeColR> void saveInfos(TypeFichier typeFichier, Class<T> typeCol, File file)
     {
-        try
-        {
-            fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getControlleur(typeCol, file).recupDonneesDepuisExcel());
-            saveParam(fichiersXML);
-        } catch (IOException e)
-        {
-            throw new TechnicalException(ERREUR, e);
-        }
+        fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getReader(typeCol, file).recupDonneesDepuisExcel());
+        saveParam(fichiersXML);
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -48,7 +48,7 @@ public class TestControlMail extends JunitBase
         
         // Mock pour éviter le départ des mails tout en testant tout le reste.
         handler = PowerMockito.spy(handler);      
-        PowerMockito.doNothing().when(handler, "transportMail");
+//        PowerMockito.doNothing().when(handler, "transportMail");
     }
 
     /*---------- METHODES PUBLIQUES ----------*/ 

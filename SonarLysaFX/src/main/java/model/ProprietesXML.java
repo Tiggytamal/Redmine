@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import model.enums.ParamBool;
-import model.enums.TypeCol;
+import model.enums.TypeColR;
 import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
@@ -89,7 +89,7 @@ public class ProprietesXML implements XML, Modele
      * @return
      */
     @SuppressWarnings ("rawtypes")
-    public <T extends Enum<T> & TypeCol> Map getMap(Class<T> typeColClass)
+    public <T extends Enum<T> & TypeColR> Map getMap(Class<T> typeColClass)
     {
         switch (typeColClass.getName())
         {
@@ -120,7 +120,7 @@ public class ProprietesXML implements XML, Modele
      * Retourne la liste des colonnes avec clefs et valeurs inversées
      * @return
      */
-    public <T extends Enum<T> & TypeCol> Map<String, T> getMapColsInvert(Class<T> typeColClass)
+    public <T extends Enum<T> & TypeColR> Map<String, T> getMapColsInvert(Class<T> typeColClass)
     {
         Map<String, T> retour = new HashMap<>();
         for (Object entry : getMap(typeColClass).entrySet())
@@ -250,7 +250,7 @@ public class ProprietesXML implements XML, Modele
      * @param typeCol
      * @param mapCols
      */
-    private <T extends Enum<T> & TypeCol> void controleMap(StringBuilder builderErreurs, Class<T> typeCol, Map<T, String> mapCols)
+    private <T extends Enum<T> & TypeColR> void controleMap(StringBuilder builderErreurs, Class<T> typeCol, Map<T, String> mapCols)
     {
         for (T type : typeCol.getEnumConstants())
         {            

@@ -71,6 +71,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
         assertFalse(Whitebox.invokeMethod(handler, methode, "A", "b"));
         assertTrue(Whitebox.invokeMethod(handler, methode, "BEF000", "BEF0009"));
         assertTrue(Whitebox.invokeMethod(handler, methode, "T7004360", "T7004360E"));
+        assertTrue(Whitebox.invokeMethod(handler, methode, "BF046502", "BF046500"));
     }
 
     @Test
@@ -448,11 +449,11 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
 
         // test 3 - correspondance trouvé avec algo de recherche du projet T le plus récent
         // On doit trouver les informations du projet T3004736E
-        ano.setProjetClarity("T300473");
+        ano.setProjetClarity("BF051501");
         Whitebox.invokeMethod(handler, methode, ano);
-        assertEquals("Distribution Ouest et Marches specialises", ano.getDepartement());
-        assertEquals("Distribution Ouest", ano.getService());
-        assertEquals("DOMAINE DISTRIBUTION ET OUTILS SOCLES", ano.getDirection());
+        assertEquals("Moyens de paiement", ano.getDepartement());
+        assertEquals("Echanges et Flux", ano.getService());
+        assertEquals("BANQUE AU QUOTIDIEN", ano.getDirection());
 
         // test 4 - Correspondance avec les deux derniers caratères manquants
         ano.setProjetClarity("P00839");

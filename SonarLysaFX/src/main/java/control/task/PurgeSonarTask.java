@@ -99,6 +99,18 @@ public class PurgeSonarTask extends SonarTask
         // Récupération de la liste des versions des composants à garder et rangement de la plus recente à la plus ancienne.
         List<String> listeVersion = Arrays.asList(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONSCOMPOSANTS).split(";"));
         Collections.sort(listeVersion, (s1, s2) -> Integer.valueOf(s2).compareTo(Integer.valueOf(s1)));
+        
+        // Calcul du pattern à partir du paramètrage pour obtenir : [(X)|...|(Z)]$
+        StringBuilder builder = new StringBuilder("[");
+        for (String string : listeVersion)
+        {
+            builder.append("(").append(string).append(")|");
+        }
+        
+        // On enlève la dernière |
+        builder.replace(builder.length() - 1, builder.length(), "");
+        builder.append("]$");
+        String pattern = builder.toString();
 
         // Préparation map
         Map<String, List<ComposantSonar>> mapCompos = compileMap();
@@ -134,19 +146,8 @@ public class PurgeSonarTask extends SonarTask
                 // ----- a. On ne garde que les x dernières versions de chaque composant selon le paramétrage -----
                 int i = nbreVersion;
 
-                // Calcul du pattern à partir du paramètrage pour obtenir : [(X)|...|(Z)]$
-                StringBuilder pattern = new StringBuilder("[");
-                for (String string : listeVersion)
-                {
-                    pattern.append("(").append(string).append(")|");
-                }
-                
-                // On enlève la dernière |
-                pattern.replace(pattern.length() - 1, pattern.length(), "");
-                pattern.append("]$");
-
                 // Compilation et matching
-                if (!Pattern.compile(pattern.toString()).matcher(premier.getKey()).find())
+                if (!Pattern.compile(pattern).matcher(premier.getKey()).find())
                     i = 1;
 
                 // ----- c. Selon paramétrage, on va garder les 3 versions des composants les plus récents

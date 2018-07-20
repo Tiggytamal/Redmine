@@ -18,7 +18,7 @@ import model.enums.TypeColChefServ;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String, RespService>>
+public class ControlChefService extends ControlExcelRead<TypeColChefServ, Map<String, RespService>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -42,7 +42,7 @@ public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String
      * @throws IOException
      *             Exception lors des accès lecture/écriture
      */
-    ControlChefService(File file) throws IOException
+    ControlChefService(File file)
     {
         super(file);
     }
@@ -51,11 +51,11 @@ public class ControlChefService extends ControlExcel<TypeColChefServ, Map<String
 
     public Map<String, RespService> recupDonneesDepuisExcel()
     {
-        // Liste de retour
-        Map<String, RespService> retour = new HashMap<>();
-
         // Itération sur toutes les feuilles du fichier Excel
         Sheet sheet = wb.getSheetAt(0);
+        
+        // Liste de retour
+        Map<String, RespService> retour = new HashMap<>(sheet.getLastRowNum());
 
         // Itération sur chaque ligne pour récupérer les données
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)

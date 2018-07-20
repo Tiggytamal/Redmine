@@ -21,7 +21,7 @@ import model.enums.TypeColPic;
 import model.sonarapi.Vue;
 import utilities.DateConvert;
 
-public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic>>
+public final class ControlPic extends ControlExcelRead<TypeColPic, Map<String, LotSuiviPic>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -42,7 +42,7 @@ public class ControlPic extends ControlExcel<TypeColPic, Map<String, LotSuiviPic
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    ControlPic(File file) throws IOException
+    ControlPic(File file)
     {
         super(file);
     }

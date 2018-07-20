@@ -20,7 +20,6 @@
 						<MenuItem fx:id="autres" text="Création Autres Vues" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="maintenance" text="Création Vues Maintenance" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="rtc" text="Mise à jour lots RTC" onAction="#afficher" disable="true" />
-						<MenuItem fx:id="purge" text="Purge des composants" onAction="#purger" disable="true" />
 						<MenuItem fx:id="extraction" text="Extraction" onAction="#afficher" disable="true" />
 
 					</items>
@@ -29,7 +28,9 @@
 					<items>
 						<MenuItem fx:id="options" text="Options" onAction="#afficher" disable="false" />
 						<MenuItem fx:id="planificateur" text="Planificateur" onAction="#afficher" disable="true" />
-						<MenuItem fx:id="majvues" text="Mise à jour vues" onAction="#majVues" disable="true" />
+						<MenuItem fx:id="majVues" text="Mise à jour vues" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="majCompos" text="Mise à jour composants" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="purge" text="Purge des composants" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="aide" text="Aide" onAction="#aide" disable="false" />
 					</items>
 				</Menu>

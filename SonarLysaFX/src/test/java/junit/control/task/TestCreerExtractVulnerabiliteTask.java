@@ -16,15 +16,15 @@ import org.powermock.reflect.Whitebox;
 import control.task.CreerExtractVulnerabiliteTask;
 import de.saxsys.javafx.test.JfxRunner;
 import junit.JunitBase;
+import model.ComposantSonar;
+import model.ModelFactory;
 import model.Vulnerabilite;
-import model.enums.TypeMetrique;
 import model.enums.TypeVulnerabilite;
-import model.sonarapi.Composant;
 import model.sonarapi.Issue;
-import model.sonarapi.Metrique;
+import utilities.Statics;
 
 @RunWith(JfxRunner.class)
-public class TestCreerExtractVulnerabiliteTask extends JunitBase
+public class TestCreerExtractVulnerabiliteTask extends JunitBase 
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -35,7 +35,7 @@ public class TestCreerExtractVulnerabiliteTask extends JunitBase
     @Before
     public void init()
     {
-        handler = new CreerExtractVulnerabiliteTask(new File("d:\\testExtract.xlsx"));
+        handler = new CreerExtractVulnerabiliteTask(new File("d:\\testExtract.xlsx")); 
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -54,26 +54,37 @@ public class TestCreerExtractVulnerabiliteTask extends JunitBase
         issue.setCreationDate("date");
         issue.setSeverity("severity");
         issue.setMessage("javajaf.jar");
-        Composant composant = new Composant();
-        composant.setNom("nom");
-        List<Metrique> metriques = new ArrayList<>();
-        metriques.add(new Metrique(TypeMetrique.LOT, "lot"));
-        metriques.add(new Metrique(TypeMetrique.APPLI, "appli"));       
-        composant.setMetriques(metriques);
+        ComposantSonar composant = ModelFactory.getModel(ComposantSonar.class);
+        composant.setNom("nom");      
+        composant.setAppli("appli");
+        composant.setLot("123456");
         Vulnerabilite retour = Whitebox.invokeMethod(handler, "convertIssueToVul", issue, composant);
+        
+        assertEquals("appli", retour.getAppli());
+        assertEquals("123456", retour.getLot());
+        assertEquals("nom", retour.getComposant());
+        assertEquals("status", retour.getStatus());
+        assertEquals("severity", retour.getSeverite());
+        assertEquals("javajaf.jar", retour.getMessage());
         
     }
     
     @Test
     public void testRecupVulnerabilitesSonar() throws Exception
     {
-        List<Vulnerabilite> result = Whitebox.invokeMethod(handler, "recupVulnerabilitesSonar", TypeVulnerabilite.OUVERTE);
+        List<String> nomsComposPatrimoine = new ArrayList<>();
+        for (ComposantSonar compo : Statics.fichiersXML.getListComposants())
+        {
+            nomsComposPatrimoine.add(compo.getNom());
+        }
+        
+        List<Vulnerabilite> result = Whitebox.invokeMethod(handler, "recupVulnerabilitesSonar", TypeVulnerabilite.OUVERTE, nomsComposPatrimoine);
         for (Vulnerabilite vulnerabilite : result)
         {
             assertFalse(vulnerabilite.getStatus().equals("RESOLVED") || vulnerabilite.getStatus().equals("CLOSED"));
         }
         
-        result = Whitebox.invokeMethod(handler, "recupVulnerabilitesSonar", TypeVulnerabilite.RESOLUE);
+        result = Whitebox.invokeMethod(handler, "recupVulnerabilitesSonar", TypeVulnerabilite.RESOLUE, nomsComposPatrimoine);
         for (Vulnerabilite vulnerabilite : result)
         {
             assertTrue(vulnerabilite.getStatus().equals("RESOLVED") || vulnerabilite.getStatus().equals("CLOSED"));

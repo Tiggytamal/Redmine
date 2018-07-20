@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum TypeColPic implements Serializable, TypeCol
+public enum TypeColPic implements Serializable, TypeColR
 {
 
     LOT ("Lot", "colLot"),

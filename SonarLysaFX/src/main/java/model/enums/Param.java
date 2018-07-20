@@ -12,6 +12,7 @@ public enum Param implements Serializable, TypeKey
     /*---------- ATTRIBUTS ----------*/
 
     FILTREDATASTAGE("Filtre DataStage"), 
+    FILTRECOBOL("Filtre COBOL"),
     ABSOLUTEPATH("Chemin des fichiers"), 
     NOMFICHIER("Nom fichier de suivi"), 
     NOMFICHIERDATASTAGE("Nom fichier de suivi DataStage"),

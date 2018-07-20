@@ -12,13 +12,14 @@ public class TestParam
     @Test
     public void testSize()
     {
-        assertEquals(16, Param.values().length);
+        assertEquals(17, Param.values().length);
     }
     
     @Test
     public void testToString()
     {
         assertFalse(Param.FILTREDATASTAGE.toString().isEmpty());
+        assertFalse(Param.FILTRECOBOL.toString().isEmpty());
         assertFalse(Param.ABSOLUTEPATH.toString().isEmpty());
         assertFalse(Param.NOMFICHIER.toString().isEmpty());
         assertFalse(Param.NOMFICHIERDATASTAGE.toString().isEmpty());

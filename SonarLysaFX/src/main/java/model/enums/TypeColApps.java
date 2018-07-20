@@ -8,10 +8,13 @@ import java.io.Serializable;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum TypeColApps implements Serializable, TypeCol 
+public enum TypeColApps implements Serializable, TypeColR, TypeColW
 {
-    CODEAPPS("Code Application", "colApps"),
-    ACTIF("Actif", "colActif");
+    CODEAPPS("Code Application", "colCode"),
+    ACTIF("Actif", "colActif"),
+    LIB("Libellé", "colLib"),
+    OPEN("Top appli open", "colOpen"),
+    MAINFRAME("Top appli MainFrame", "colMainFrame");
     
     private final String valeur;
     private final String nomCol;
