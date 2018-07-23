@@ -20,7 +20,7 @@ import control.excel.ControlSuivi;
 import model.Anomalie;
 import model.enums.TypeColSuivi;
 
-public class TestControlExcelSpecial extends TestControlExcel<TypeColSuivi, ControlSuivi, List<Anomalie>>
+public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
     

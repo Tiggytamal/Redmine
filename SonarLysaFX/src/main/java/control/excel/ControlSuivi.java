@@ -448,9 +448,8 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
                 return true;
             }
         }
-
         // Contrôle si besoin de créer une anomalie Sonar
-        if (TypeAction.CREER == ano.getAction())
+        else if (TypeAction.CREER == ano.getAction())
         {
             int numeroAno = ControlRTC.INSTANCE.creerDefect(ano);
             if (numeroAno != 0)

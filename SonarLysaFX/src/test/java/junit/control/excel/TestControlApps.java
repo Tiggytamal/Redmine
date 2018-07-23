@@ -8,7 +8,7 @@ import control.excel.ControlApps;
 import model.Application;
 import model.enums.TypeColApps;
 
-public class TestControlApps extends TestControlExcel<TypeColApps, ControlApps, Map<String, Application>>
+public class TestControlApps extends TestControlExcelRead<TypeColApps, ControlApps, Map<String, Application>>
 {
     /*---------- ATTRIBUTS ----------*/
     

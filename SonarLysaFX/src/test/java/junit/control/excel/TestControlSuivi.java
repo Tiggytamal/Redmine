@@ -34,7 +34,7 @@ import model.enums.TypeColSuivi;
 import utilities.FunctionalException;
 import utilities.Statics;
 
-public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuivi, List<Anomalie>>
+public class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -59,7 +59,7 @@ public class TestControlSuivi extends TestControlExcel<TypeColSuivi, ControlSuiv
     @Test
     public void testRecupDonneesDepuisExcel()
     {
-        testRecupDonneesDepuisExcel(map -> map.size() == 46);
+        testRecupDonneesDepuisExcel(map -> map.size() == 39);
     }
 
     @Test

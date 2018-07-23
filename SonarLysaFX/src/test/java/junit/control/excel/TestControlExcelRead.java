@@ -43,7 +43,7 @@ import utilities.TechnicalException;
  * @param <Y>
  *            Le type de l'objet en valeur de la map
  */
-public abstract class TestControlExcel<T extends Enum<T> & TypeColR, C extends ControlExcelRead<T, Y>, Y> extends JunitBase
+public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C extends ControlExcelRead<T, Y>, Y> extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -70,7 +70,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeColR, C extends C
      * @param fichier
      *            Nom du fichier dans les resources de test
      */
-    public TestControlExcel(Class<T> typeColClass, String fichier)
+    public TestControlExcelRead(Class<T> typeColClass, String fichier)
     {
         super();
         this.typeColClass = typeColClass;
@@ -281,8 +281,7 @@ public abstract class TestControlExcel<T extends Enum<T> & TypeColR, C extends C
      */
     protected void testCalculIndiceColonnes(int nbre) throws Exception
     {
-        Sheet sheet = wb.getSheetAt(0);
-        invokeMethod(handler, "calculIndiceColonnes", sheet);
+        invokeMethod(handler, "calculIndiceColonnes");
         int nbrecolA0 = 0;
         for (Field field : handler.getClass().getDeclaredFields())
         {

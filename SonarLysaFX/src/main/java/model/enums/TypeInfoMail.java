@@ -14,8 +14,8 @@ public enum TypeInfoMail
 
     ANOSRTCCREES("Lots avec anomalies RTC créées :\n", LIENANO),
     ANONEW("Lots avec nouvelles anomalies :\n", ""),
-    ANOABANDON("Lotas avec anomalies abandonnées :\n", LIENANO),
-    ANOABANDONRATE("Lots avec anomalies non abandonnées :\n", LIENANO),
+    ANOABANDON("Lotas avec anomalies fermées (abandonnées ou cloturées) :\n", LIENANO),
+    ANOABANDONRATE("Lots avec anomalies non fermèess :\n", LIENANO),
     ANOARELANCER("Lots avec anomalies à relancer :\n", LIENANO),
     ANOMAJ("Anomalies RTC mises à jour :\n", " - Nouvel état : "),
     LOTMAJ("Lots mis à jour :\n", " - Nouvel état : "),

@@ -65,7 +65,6 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
         createWb();
         initEnum();
         calculIndiceColonnes();
-
     }
 
     /*---------- METHODES ABSTRAITES ----------*/
@@ -122,10 +121,10 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
     @Override
     protected final void calculIndiceColonnes()
     {
-        titres = initSheet().getRow(0);
+        titres = initSheet().getRow(0); 
         int nbreCol = 0;
 
-        // Récupération de l'énumération depuis les paramètres XML
+        // Récupération de l'énumération depuis les paramètres XML, sauf que l'on inverse la map. le noms des colonnes passe en clef, et la valeur de l'énumération en valeur.
         Map<String, T> mapColonnesInvert = proprietesXML.getMapColsInvert(enumeration);
 
         for (Cell cell : titres)

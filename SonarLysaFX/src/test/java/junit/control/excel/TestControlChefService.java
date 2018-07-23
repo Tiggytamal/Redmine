@@ -13,7 +13,7 @@ import model.RespService;
 import model.enums.TypeColChefServ;
 import utilities.FunctionalException;
 
-public class TestControlChefService extends TestControlExcel<TypeColChefServ, ControlChefService, Map<String, RespService>>
+public class TestControlChefService extends TestControlExcelRead<TypeColChefServ, ControlChefService, Map<String, RespService>>
 {
     /*---------- ATTRIBUTS ----------*/
     

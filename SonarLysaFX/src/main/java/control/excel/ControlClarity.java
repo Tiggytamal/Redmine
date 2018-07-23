@@ -61,7 +61,9 @@ public class ControlClarity extends ControlExcelRead<TypeColClarity, Map<String,
         for (int i = 1; i < sheet.getLastRowNum(); i++)
         {
             Row row = sheet.getRow(i);
-            if (row.getCell(colClarity) != null)
+            
+            // On contrôle que la cellule avec le code Clarity existe bien et est bien valorisée.
+            if (!getCellStringValue(row, colClarity).isEmpty())
             {
                 InfoClarity info = creerInfoClarityDepuisExcel(row);
                 retour.put(info.getCodeClarity(), info);

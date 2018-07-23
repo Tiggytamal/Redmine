@@ -16,7 +16,7 @@ import model.LotSuiviPic;
 import model.enums.TypeColPic;
 import model.sonarapi.Vue;
 
-public class TestControlPicMEP extends TestControlExcel<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
+public class TestControlPicMEP extends TestControlExcelRead<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
 {
     /*---------- ATTRIBUTS ----------*/
     

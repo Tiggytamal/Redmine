@@ -13,7 +13,7 @@ import control.excel.ControlEdition;
 import model.enums.TypeColEdition;
 import utilities.FunctionalException;
 
-public class TestControlEdition extends TestControlExcel<TypeColEdition, ControlEdition, Map<String, String>>
+public class TestControlEdition extends TestControlExcelRead<TypeColEdition, ControlEdition, Map<String, String>>
 {
     /*---------- ATTRIBUTS ----------*/
 

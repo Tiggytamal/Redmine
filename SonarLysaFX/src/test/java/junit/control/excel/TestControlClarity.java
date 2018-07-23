@@ -8,7 +8,7 @@ import control.excel.ControlClarity;
 import model.InfoClarity;
 import model.enums.TypeColClarity;
 
-public class TestControlClarity extends TestControlExcel<TypeColClarity, ControlClarity, Map<String, InfoClarity>>
+public class TestControlClarity extends TestControlExcelRead<TypeColClarity, ControlClarity, Map<String, InfoClarity>>
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -31,7 +31,7 @@ public class TestControlClarity extends TestControlExcel<TypeColClarity, Control
     @Test
     public void testRecupDonneesDepuisExcel()
     {
-        testRecupDonneesDepuisExcel(map -> map.size() == 5878);
+        testRecupDonneesDepuisExcel(map -> map.size() == 2428);
     }
     
     /*---------- METHODES PRIVEES ----------*/

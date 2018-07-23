@@ -93,7 +93,7 @@ public final class ControlPic extends ControlExcelRead<TypeColPic, Map<String, L
             Sheet sheet = iter.next();
 
             // Itération sur chaque ligne pour récupérer les données
-            for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
+            for (int i = 1; i < sheet.getLastRowNum() + 1; i++) 
             {
                 Row row = sheet.getRow(i);
 
@@ -163,7 +163,7 @@ public final class ControlPic extends ControlExcelRead<TypeColPic, Map<String, L
         Cell cellDate = row.getCell(colLiv);
 
         // Sortie si le numéro de lot ou la date de livraison ne sont pas remplis.
-        if (cellLot.getCellTypeEnum() != CellType.NUMERIC && cellDate.getCellTypeEnum() != CellType.NUMERIC)
+        if (cellLot.getCellTypeEnum() != CellType.NUMERIC || cellDate.getCellTypeEnum() != CellType.NUMERIC)
             return;
 
         String lot = String.valueOf((int) cellLot.getNumericCellValue());

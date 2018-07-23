@@ -16,7 +16,7 @@ import utilities.FunctionalException;
  * @since 1.0
  *
  */
-public class TestControlPic extends TestControlExcel<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
+public class TestControlPic extends TestControlExcelRead<TypeColPic, ControlPic, Map<String, LotSuiviPic>>
 {
     /*---------- ATTRIBUTS ----------*/
 

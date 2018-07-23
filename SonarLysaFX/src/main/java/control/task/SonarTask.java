@@ -42,7 +42,6 @@ public abstract class SonarTask extends Task<Boolean>
     protected int debut;
     protected int fin;
     protected boolean annulable;
-    private static final Logger LOGGER = LogManager.getLogger("console-log");
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -107,15 +106,11 @@ public abstract class SonarTask extends Task<Boolean>
                 EtatLot etatLot = Statics.fichiersXML.getLotsRTC().computeIfAbsent(compo.getLot(), l -> ModelFactory.getModel(LotSuiviRTC.class)).getEtatLot();
 
                 if (etatLot == EtatLot.TERMINE || etatLot == EtatLot.EDITION)
-                {
-                    LOGGER.debug("add : " + compo.getNom());
                     retour.put(matcher.group(0), compo);
-                }
+
                 // Sinon on rajoute dans la map temporaire les projets qui n'ont pas au moins une version dans la map de retour
                 else if (!retour.containsKey(matcher.group(0)))
                 {
-                    LOGGER.debug("lot : " + etatLot + " - " + compo.getNom());
-
                     // Création de la liste si la clef n'est pas encore présente dans la map
                     if (!temp.containsKey(matcher.group(0)))
                         temp.put(matcher.group(0), new ArrayList<>());
