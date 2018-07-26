@@ -1,6 +1,5 @@
 package control.view;
 
-import java.io.File;
 import java.time.LocalDate;
 
 import control.task.CreerVueProductionTask;
@@ -33,11 +32,7 @@ public class MensuelViewControl extends ViewControl
     @FXML
     private HBox dateFinHBox;
     @FXML
-    private Button charger;
-    @FXML
     private Button creer;
-    @FXML
-    private RadioButton radioExcel;
     @FXML
     private RadioButton radioDate;
     @FXML
@@ -57,17 +52,6 @@ public class MensuelViewControl extends ViewControl
     /* ---------- METHODES PUBLIQUES ---------- */
 
     /**
-     * Création de la vue depuis un fichier Excel
-     */
-    @FXML
-    public void chargerExcel()
-    {
-        File file = getFileFromFileChooser(TITRE);
-        CreerVueProductionTask task = new CreerVueProductionTask(file);
-        startTask(task, null);
-    }
-
-    /**
      * Switch entre les radioButtons
      * 
      * @param event
@@ -80,23 +64,16 @@ public class MensuelViewControl extends ViewControl
         if (source instanceof RadioButton)
             id = ((RadioButton) source).getId();
 
-        switch (id)
+        if ("radioDate".equals(id))
         {
-            case "radioExcel" :
-                selectPane.getChildren().clear();
-                selectPane.getChildren().add(charger);
-                break;
-
-            case "radioDate" :
-                selectPane.getChildren().clear();
-                selectPane.getChildren().add(dateDebutHBox);
-                selectPane.getChildren().add(dateFinHBox);
-                selectPane.getChildren().add(creer);
-                break;
-                
-            default :
-                throw new TechnicalException("RadioButton pas géré" + id, null);
+            selectPane.getChildren().clear();
+            selectPane.getChildren().add(dateDebutHBox);
+            selectPane.getChildren().add(dateFinHBox);
+            selectPane.getChildren().add(creer);
         }
+        else
+            throw new TechnicalException("RadioButton pas géré" + id, null);
+
     }
 
     /**
@@ -112,6 +89,6 @@ public class MensuelViewControl extends ViewControl
             throw new FunctionalException(Severity.ERROR, "Les dates sont mal renseignées");
 
         // Traitement
-        startTask(new CreerVueProductionTask(dateDebut, dateFin), null);
+        startTask(new CreerVueProductionTask(dateDebut, dateFin), CreerVueProductionTask.TITRE);
     }
 }

@@ -25,7 +25,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
 
     /*---------- ATTRIBUTS ----------*/
     
-    private File file;
+    private ControlExtractVul control;
     private static final Logger LOGGER = LogManager.getLogger("complet-log"); 
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -33,7 +33,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
     public CreerExtractVulnerabiliteTask(File file)
     {
         super(TypeVulnerabilite.values().length);
-        this.file = file;
+        control =  new ControlExtractVul(file);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -47,9 +47,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
     /*---------- METHODES PRIVEES ----------*/
 
     private boolean creerExtract()
-    {
-        ControlExtractVul control =  new ControlExtractVul(file);
-        
+    {       
         // Création liste des noms des composants du patrimoine
         List<String> nomsComposPatrimoine = new ArrayList<>();       
         for (ComposantSonar compo : recupererComposantsSonar().values())

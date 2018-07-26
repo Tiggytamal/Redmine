@@ -29,7 +29,6 @@
 		</fx:define>
 
 		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
-			<RadioButton fx:id="radioExcel" text="Par Excel" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 			<RadioButton fx:id="radioDate" text="Par Date" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 		</VBox>
 
@@ -51,9 +50,6 @@
 					<Region prefWidth="10" HBox.hgrow="ALWAYS" />
 					<DatePicker fx:id="dateFinPicker" />
 				</HBox>
-
-				<!-- Bouton pour sélectionner le fichier Excel -->
-				<Button text="Charger un fichier excel" fx:id="charger" onAction="#chargerExcel" alignment="CENTER" />
 
 				<!-- Bouton pour créer la nouvelle vue dans Sonar -->
 				<Button text="Créer la vue" fx:id="creer" onAction="#creerVue" alignment="CENTER" />

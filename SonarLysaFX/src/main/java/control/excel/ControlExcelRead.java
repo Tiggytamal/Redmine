@@ -129,7 +129,7 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
 
         for (Cell cell : titres)
         {
-            T typeCol = mapColonnesInvert.get(cell.getStringCellValue());
+            T typeCol = mapColonnesInvert.get(cell.getStringCellValue()); 
 
             if (cell.getCellTypeEnum() != CellType.STRING || typeCol == null)
                 continue;
@@ -319,54 +319,6 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
     {
         Cell cell = row.getCell(cellIndex, MissingCellPolicy.CREATE_NULL_AS_BLANK);
         return cell.getCellComment();
-    }
-
-    /**
-     * Copie d'une cellule
-     * 
-     * @param newCell
-     *            Nouvelle cellule
-     * @param oldCell
-     *            Cellule copiée
-     */
-    protected void copierCellule(Cell newCell, Cell oldCell)
-    {
-        // On sort si la cellule est nulle
-        if (oldCell == null || newCell == null)
-            return;
-
-        // Copie du style des cellules
-        CellStyle newCellStyle = wb.createCellStyle();
-        newCellStyle.cloneStyleFrom(oldCell.getCellStyle());
-        newCell.setCellStyle(newCellStyle);
-
-        // Copie des valeurs
-        switch (oldCell.getCellTypeEnum())
-        {
-            case BOOLEAN:
-                newCell.setCellValue(oldCell.getBooleanCellValue());
-                break;
-
-            case FORMULA:
-                newCell.setCellFormula(oldCell.getCellFormula());
-                break;
-
-            case NUMERIC:
-                newCell.setCellValue(oldCell.getNumericCellValue());
-                break;
-
-            case STRING:
-                newCell.setCellValue(oldCell.getRichStringCellValue());
-                break;
-
-            default:
-                break;
-        }
-
-        // Commentaire
-        Comment commentaire = oldCell.getCellComment();
-        if (commentaire != null)
-            copieComment(commentaire, newCell);
     }
 
     /*---------- ACCESSEURS ----------*/

@@ -4,42 +4,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.powermock.reflect.Whitebox.getField;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlExtractVul;
-import junit.JunitBase;
 import model.Vulnerabilite;
+import model.enums.TypeColVul;
 import model.enums.TypeVulnerabilite;
-import utilities.Statics;
 
-public class TestControlExtractVul extends JunitBase
+public class TestControlExtractVul extends TestControlExcelWrite<TypeColVul, ControlExtractVul, List<Vulnerabilite>>
 {
-    /*---------- ATTRIBUTS ----------*/
-    
-    private ControlExtractVul handler;
-    private Workbook wb;
-    
+    /*---------- ATTRIBUTS ----------*/    
     /*---------- CONSTRUCTEURS ----------*/
 
     public TestControlExtractVul() throws Exception
     {
-        handler = new ControlExtractVul(new File(Statics.RESOURCESTEST + "extract.xlsx"));
-    }
-    
-    @Before
-    public void init() throws IOException, IllegalArgumentException, IllegalAccessException
-    {
-
-        wb = (Workbook) getField(handler.getClass(), "wb").get(handler);
+        super(TypeColVul.class, "extract.xlsx");
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -64,8 +48,7 @@ public class TestControlExtractVul extends JunitBase
 
         liste.add(vul2);
         handler.ajouterExtraction(liste, TypeVulnerabilite.RESOLUE);
-        
-        
+               
         // Controle de la taille des feuilles
         assertEquals(1, wb.getSheet(TypeVulnerabilite.OUVERTE.getNomSheet()).getLastRowNum());
         assertEquals(2, wb.getSheet(TypeVulnerabilite.RESOLUE.getNomSheet()).getLastRowNum());
@@ -98,7 +81,13 @@ public class TestControlExtractVul extends JunitBase
         Whitebox.invokeMethod(handler, "calculIndiceColonnes");
     }
     
+    @Test
+    public void testInitEnum() throws IllegalAccessException
+    {
+        // test - énumération du bon Type
+        assertEquals(TypeColVul.class, getField(ControlExtractVul.class, "enumeration").get(handler)); 
+    }
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
-
 }

@@ -33,6 +33,10 @@ public class TestTypeMetrique
         assertEquals("bugs", TypeMetrique.BUGS.toString());
         assertEquals(TypeMetrique.VULNERABILITIES, TypeMetrique.from("vulnerabilities"));
         assertEquals("vulnerabilities", TypeMetrique.VULNERABILITIES.toString());
+        assertEquals(TypeMetrique.LDC, TypeMetrique.from("ncloc"));
+        assertEquals("ncloc", TypeMetrique.LDC.toString());
+        assertEquals(TypeMetrique.SECURITY, TypeMetrique.from("security_rating"));
+        assertEquals("security_rating", TypeMetrique.SECURITY.toString());
     }
     
     @Test (expected = IllegalArgumentException.class)
@@ -44,7 +48,7 @@ public class TestTypeMetrique
     @Test
     public void testSize()
     {
-        assertEquals(9, TypeMetrique.values().length);
+        assertEquals(11, TypeMetrique.values().length);
     }
 
     @Test

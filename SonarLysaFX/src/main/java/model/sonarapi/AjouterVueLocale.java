@@ -3,6 +3,12 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Classe de modèle 
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 @XmlRootElement
 public class AjouterVueLocale implements ModeleSonar
 {

@@ -24,7 +24,7 @@ import model.sonarapi.Issue;
 import utilities.Statics;
 
 @RunWith(JfxRunner.class)
-public class TestCreerExtractVulnerabiliteTask extends JunitBase 
+public class TestCreerExtractVulnerabiliteTask extends JunitBase  
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -35,20 +35,23 @@ public class TestCreerExtractVulnerabiliteTask extends JunitBase
     @Before
     public void init()
     {
-        handler = new CreerExtractVulnerabiliteTask(new File("d:\\testExtract.xlsx")); 
+        handler = new CreerExtractVulnerabiliteTask(new File("src/test/resources/testExtract.xlsx"));
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
     public void testCreerExtract() throws Exception
-    {
-        Whitebox.invokeMethod(handler, "creerExtract");
+    {   
+        // Appel de la méthode call qui ne sert qu'à appeler la méthode privée.
+        // Controle du bon retour à true puis possiblilité de vérifier le fichier Excel créé.
+        assertTrue(Whitebox.invokeMethod(handler, "call"));
     }
     
     @Test
     public void testConvertIssueToVul() throws Exception
     {
+        // Initialisation
         Issue issue = new Issue();
         issue.setStatus("status");
         issue.setCreationDate("date");
@@ -60,6 +63,7 @@ public class TestCreerExtractVulnerabiliteTask extends JunitBase
         composant.setLot("123456");
         Vulnerabilite retour = Whitebox.invokeMethod(handler, "convertIssueToVul", issue, composant);
         
+        // Controleur que les valeurs sont bonnes après conversion
         assertEquals("appli", retour.getAppli());
         assertEquals("123456", retour.getLot());
         assertEquals("nom", retour.getComposant());
@@ -73,17 +77,24 @@ public class TestCreerExtractVulnerabiliteTask extends JunitBase
     public void testRecupVulnerabilitesSonar() throws Exception
     {
         List<String> nomsComposPatrimoine = new ArrayList<>();
+        
+        // Compteur pour limiter la taille de la liste et le temps de traitement.
+        int i = 0;
         for (ComposantSonar compo : Statics.fichiersXML.getListComposants())
         {
             nomsComposPatrimoine.add(compo.getNom());
+            if (++i == 20)
+                break;
         }
         
+        // Test que la liste des vulnérabilités ouvertes ne contient pas de résolue ou close.
         List<Vulnerabilite> result = Whitebox.invokeMethod(handler, "recupVulnerabilitesSonar", TypeVulnerabilite.OUVERTE, nomsComposPatrimoine);
         for (Vulnerabilite vulnerabilite : result)
         {
             assertFalse(vulnerabilite.getStatus().equals("RESOLVED") || vulnerabilite.getStatus().equals("CLOSED"));
         }
         
+        // Test que la liste des vulnérabilités résolues ne contient que des résolues ou closes.
         result = Whitebox.invokeMethod(handler, "recupVulnerabilitesSonar", TypeVulnerabilite.RESOLUE, nomsComposPatrimoine);
         for (Vulnerabilite vulnerabilite : result)
         {

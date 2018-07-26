@@ -66,14 +66,14 @@ public class TestComposant
         modele.getMetriques().add(metrique);
         
         // Contrôle que l'on récupère bien le métrique dans la map
-        assertTrue(!modele.getMapMetriques().isEmpty());
+        assertFalse(modele.getMapMetriques().isEmpty());
         assertEquals(metrique, modele.getMapMetriques().get(TypeMetrique.APPLI));    
         
         // Contrôle que le map est vide si on rajoute un metrique sans clef d'énumération
         modele.getMetriques().clear();
         Whitebox.getField(Metrique.class, "type").set(metrique, null);
         modele.getMetriques().add(metrique);
-        assertTrue(modele.getMapMetriques().isEmpty());
+        assertEquals(0, modele.getMapMetriques().size());
     }
     
     @Test

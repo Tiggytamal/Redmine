@@ -1,6 +1,6 @@
 package junit.view;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +17,11 @@ public class TestParamView
     {
         String texte = "a";
         ParamView view = new ParamView(Param.ABSOLUTEPATH, texte);
-        assertTrue(view.getType() == Param.ABSOLUTEPATH);
-        assertTrue(view.getField().getText().equals(texte));   
+        assertEquals(Param.ABSOLUTEPATH, view.getType());
+        assertEquals(texte, view.getField().getText());   
         
         view = new ParamView(Param.NOMFICHIER, null);
-        assertTrue(view.getType() == Param.NOMFICHIER);
-        assertTrue(view.getField().getText().equals("")); 
+        assertEquals(Param.NOMFICHIER, view.getType());
+        assertEquals(0, view.getField().getText().length()); 
     }
 }

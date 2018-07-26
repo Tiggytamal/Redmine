@@ -1,12 +1,12 @@
 package control.view;
 
 import control.task.CreerVueDataStageTask;
-import control.task.CreerVueParAppsTask;
 import control.task.CreerVueParEditionTask;
 import control.task.CreerVuePatrimoineTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
@@ -35,6 +35,8 @@ public class AutresVuesViewControl extends ViewControl
     @FXML
     private VBox selectPane;
     @FXML
+    private CheckBox excelSeul;
+    @FXML
     private ToggleGroup toggleGroup;
     
     /*---------- CONSTRUCTEURS ----------*/   
@@ -44,13 +46,8 @@ public class AutresVuesViewControl extends ViewControl
     {
         selectPane.getChildren().clear();
     }
+    
     /*---------- METHODES PUBLIQUES ----------*/
-
-    @FXML
-    public void creerApps()
-    {
-        startTask(new CreerVueParAppsTask(), null);
-    }
     
     @FXML
     public void creerPat()
@@ -89,10 +86,6 @@ public class AutresVuesViewControl extends ViewControl
                     
                 case "radioPat" :
                     selectPane.getChildren().add(creerPat);
-                    break;
-                    
-                case "radioApps" :
-                    selectPane.getChildren().add(creerApps);
                     break;
                     
                 case "radioEditions" :

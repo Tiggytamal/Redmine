@@ -86,16 +86,16 @@ public class TestInfo extends JunitBase
     {
         // Test mdp null
         info.setPseudo("a");
-        assertTrue(!info.controleDonnees().isEmpty());
+        assertFalse(info.controleDonnees().isEmpty());
         
         // Test pseudo null
         info.setPseudo(null);
         info.setMotDePasse("b");
-        assertTrue(!info.controleDonnees().isEmpty());
+        assertFalse(info.controleDonnees().isEmpty());
         
         // test ok
         info.setPseudo("a");
-        assertTrue(info.controleDonnees().isEmpty());
+        assertEquals(0, info.controleDonnees().length());
     }
     
     @Test

@@ -426,7 +426,7 @@ public class MajSuiviExcelTask extends SonarTask
                 }
 
                 // On ajoute, soit le lot dans la liste des anos déjà créées soit, on ajoute une nouvelle anomalie dans la liste des anoACeer.
-                if (lotsDejaDansFichier.keySet().contains(numeroLot))
+                if (lotsDejaDansFichier.containsKey(numeroLot))
                     anoDejacrees.add(lotsDejaDansFichier.get(numeroLot));
                 else
                     anoACreer.add(ModelFactory.getModelWithParams(Anomalie.class, lot));

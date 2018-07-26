@@ -10,15 +10,17 @@ import utilities.Statics;
 public class CreerVueDataStageTask extends SonarTask
 {
     /*---------- ATTRIBUTS ----------*/
+
     public static final String TITRE = "Vue Datastage";
-    
-    /*---------- CONSTRUCTEURS ----------*/
-    
+    private static final int ETAPES = 2;
+
     private Vue vue;
+
+    /*---------- CONSTRUCTEURS ----------*/
 
     public CreerVueDataStageTask()
     {
-        super(2);
+        super(ETAPES);
         annulable = true;
     }
 
@@ -51,19 +53,19 @@ public class CreerVueDataStageTask extends SonarTask
         // Appel du webservice pour remonter tous les composants
         updateMessage(RECUPCOMPOSANTS);
         
-        // Récupération composants depuis fichier XML
-        List<ComposantSonar> compos = Statics.fichiersXML.getListComposants();
-        
         if (isCancelled())
             return false;
-        
+
         // Création de la vue avec maj du message
         etapePlus();
         String nom = "Composants Datastage";
         StringBuilder builder = new StringBuilder("Création vue ");
         updateMessage(builder.append(nom).toString());
         vue = creerVue("DSDataStageListeKey", nom, "Vue regroupant tous les composants Datastage", true);
-        String baseMessage =  builder.append(" OK.").append(Statics.NL).append("Ajout : ").toString();
+        String baseMessage = builder.append(" OK.").append(Statics.NL).append("Ajout : ").toString();
+
+        // Récupération composants depuis fichier XML
+        List<ComposantSonar> compos = Statics.fichiersXML.getListComposants();
         
         // Itération sur les projets pour ajouter tous les composants DataStage, puis itération sur la nouvelle liste pour traitement et affichage progression
         List<ComposantSonar> listeDS = new ArrayList<>();
@@ -72,7 +74,7 @@ public class CreerVueDataStageTask extends SonarTask
             if (compo.getNom().startsWith("Composant DS_"))
                 listeDS.add(compo);
         }
-        
+
         int i = 0;
         int size = listeDS.size();
 
@@ -80,9 +82,10 @@ public class CreerVueDataStageTask extends SonarTask
         {
             if (isCancelled())
                 return false;
-            
+
             api.ajouterProjet(compo, vue);
-            updateProgress(++i, size);
+            i++;
+            updateProgress(i, size);
             updateMessage(baseMessage + compo.getNom());
         }
         return true;

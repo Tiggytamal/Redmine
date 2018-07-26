@@ -2,7 +2,6 @@ package junit.model.enums;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -32,13 +31,13 @@ public class TestParamSpec
     @Test
     public void testGetType()
     {
-        assertTrue(ParamSpec.VERSIONS.getType() == TypeParamSpec.LISTVIEWVERSION);
-        assertTrue(ParamSpec.TEXTESECURITE.getType() == TypeParamSpec.TEXTAREA);
-        assertTrue(ParamSpec.TEXTEDEFECT.getType() == TypeParamSpec.TEXTAREA);
-        assertTrue(ParamSpec.RECAPDEFECT.getType() == TypeParamSpec.TEXTAREA);
-        assertTrue(ParamSpec.MEMBRESJAVA.getType() == TypeParamSpec.LISTVIEWNOM);
-        assertTrue(ParamSpec.MEMBRESDATASTAGE.getType() == TypeParamSpec.LISTVIEWNOM);
-        assertTrue(ParamSpec.MEMBRESMAIL.getType() == TypeParamSpec.LISTVIEWNOM);
-        assertTrue(ParamSpec.VERSIONSCOMPOSANTS.getType() == TypeParamSpec.LISTVIEWCOMPO);
+        assertEquals(TypeParamSpec.LISTVIEWVERSION, ParamSpec.VERSIONS.getType());
+        assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTESECURITE.getType());
+        assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTEDEFECT.getType());
+        assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.RECAPDEFECT.getType());
+        assertEquals(TypeParamSpec.LISTVIEWNOM, ParamSpec.MEMBRESJAVA.getType());
+        assertEquals(TypeParamSpec.LISTVIEWNOM, ParamSpec.MEMBRESDATASTAGE.getType());
+        assertEquals(TypeParamSpec.LISTVIEWNOM, ParamSpec.MEMBRESMAIL.getType());
+        assertEquals(TypeParamSpec.LISTVIEWCOMPO, ParamSpec.VERSIONSCOMPOSANTS.getType());
     }
 }

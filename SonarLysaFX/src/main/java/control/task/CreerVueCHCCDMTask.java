@@ -121,7 +121,7 @@ public class CreerVueCHCCDMTask extends SonarTask
             updateProgress(i, tousLesProjets.size());
 
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
-            if (!compo.getLot().isEmpty() && mapEditions.keySet().contains(compo.getEdition()))
+            if (!compo.getLot().isEmpty() && mapEditions.containsKey(compo.getEdition()))
             {
                 String keyCHC = mapEditions.get(compo.getEdition());
 
@@ -130,7 +130,7 @@ public class CreerVueCHCCDMTask extends SonarTask
                     continue;
 
                 // AJout à la map et création de la clef au besoin
-                if (!mapVuesACreer.keySet().contains(keyCHC))
+                if (!mapVuesACreer.containsKey(keyCHC))
                     mapVuesACreer.put(keyCHC, new HashSet<>());
                 mapVuesACreer.get(keyCHC).add(compo.getLot());
             }

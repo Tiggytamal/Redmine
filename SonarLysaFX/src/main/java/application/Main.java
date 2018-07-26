@@ -64,21 +64,23 @@ public final class Main extends Application
             // Affichage informations de l'erreur fonctionnelle
             FunctionalException ex1 = (FunctionalException) e;
             createAlert(ex1.getSeverity(), null, ex1.getMessage());
-        }
+        } 
         else if (e instanceof TechnicalException)
         {
             // Affichage informations de l'erreur technique
             TechnicalException ex1 = (TechnicalException) e;
             createAlert(ex1.getSeverity(), ex1.getCause(), ex1.getMessage());
-        }
+        } 
         else if (e instanceof FileNotFoundException && e.getMessage().contains("Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus"))
         {
             // gestion des fichiers utilisès par un autre utilisateur
             createAlert(Severity.ERROR, null, "Fichier utilisé par un autre utilisateur : \n" + e.getMessage().split("\\(")[0]);
-        }
+        } 
         else if (e.getCause() != null)
+        {
             // Récursivité pour tester la cause de cette exception
             gestionException(e.getCause());
+        }
         else
         {
             LOGPLANTAGE.error(e);
@@ -106,7 +108,7 @@ public final class Main extends Application
         {
             alert = new Alert(AlertType.ERROR);
             alert.setTitle("Erreur");
-        }
+        } 
         else
         {
             alert = new Alert(AlertType.INFORMATION);

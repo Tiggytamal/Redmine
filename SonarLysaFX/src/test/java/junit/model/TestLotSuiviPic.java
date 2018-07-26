@@ -2,7 +2,6 @@ package junit.model;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import junit.JunitBase;
@@ -16,7 +15,7 @@ public class TestLotSuiviPic extends JunitBase
     private LotSuiviPic lotSUiviPic;
     /*---------- CONSTRUCTEURS ----------*/
     
-    @Before
+    @Override
     public void init()
     {
         lotSUiviPic = ModelFactory.getModel(LotSuiviPic.class);

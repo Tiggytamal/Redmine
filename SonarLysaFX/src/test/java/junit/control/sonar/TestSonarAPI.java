@@ -93,15 +93,15 @@ public class TestSonarAPI extends JunitBase
     {
         // Appel classique
         List<Vue> vues = handler.getVues();
-        assertTrue(vues != null);
+        assertNotNull(vues);
         assertFalse(vues.isEmpty());
 
         appelGetMock();
 
         // nouvel appel et contrôle que la liste est vide et que le logger a bine été utilisé.
         vues = handler.getVues();
-        assertTrue(vues != null);
-        assertTrue(vues.isEmpty());
+        assertNotNull(vues);
+        assertEquals(0, vues.size());
         testLogger();
     }
 
@@ -110,7 +110,7 @@ public class TestSonarAPI extends JunitBase
     {
         // Appel classique
         List<Projet> projets = handler.getVuesParNom("APPLI MASTER ");
-        assertTrue(projets != null);
+        assertNotNull(projets);
         assertFalse(projets.isEmpty());
 
         // Mock de la réponse pour renvoyer un status non OK et passer dans le logger
@@ -118,8 +118,8 @@ public class TestSonarAPI extends JunitBase
 
         // nouvel appel et contrôle que la liste est vide et que le logger a bien été utilisé.
         projets = handler.getVuesParNom("APPLI MASTER ");
-        assertTrue(projets != null);
-        assertTrue(projets.isEmpty());
+        assertNotNull(projets);
+        assertEquals(0, projets.size());
         testLogger();
     }
 
@@ -177,7 +177,7 @@ public class TestSonarAPI extends JunitBase
         // Appel avec retour d'une erreur
         List<Issue> listeErreur = handler.getIssuesComposant("fa");
         assertNotNull(listeErreur);
-        assertTrue(listeErreur.isEmpty());
+        assertEquals(0, listeErreur.size());
         testLogger();
     }
     
@@ -203,7 +203,7 @@ public class TestSonarAPI extends JunitBase
         // Appel
         liste = handler.getIssuesGenerique(params);
         assertNotNull(liste);
-        assertTrue(liste.isEmpty());
+        assertEquals(0, liste.size());
         verify(logger, Mockito.timeout(1)).error("Erreur API : api/issues/search - Composant : ");
     }
 
@@ -212,15 +212,15 @@ public class TestSonarAPI extends JunitBase
     {
         // Appel service avec composant existant
         String version = handler.getVersionComposant("fr.ca.cat:BAM_Webapp_Standard_Build:14");
-        assertTrue(version != null);
+        assertNotNull(version);
         assertFalse(version.isEmpty());
         assertEquals("31.0.4", version);
         testNoLogger();
 
         // Appel avec composant non existant
         version = handler.getVersionComposant("ab");
-        assertTrue(version != null);
-        assertTrue(version.isEmpty());
+        assertNotNull(version);
+        assertEquals(0, version.length());
         testLogger();
     }
 

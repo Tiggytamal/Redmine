@@ -1,5 +1,6 @@
 package junit.view;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -16,11 +17,11 @@ public class TestBooleanView
     public void testBooleanView()
     {
         ParamBoolView view = new ParamBoolView(ParamBool.VUESSUIVI, true);
-        assertTrue(view.getType() == ParamBool.VUESSUIVI); 
+        assertEquals(ParamBool.VUESSUIVI, view.getType()); 
         assertTrue(view.getField().isSelected()); 
 
         view = new ParamBoolView(ParamBool.VUESSUIVI, null);
-        assertTrue(view.getType() == ParamBool.VUESSUIVI); 
+        assertEquals(ParamBool.VUESSUIVI, view.getType()); 
         assertTrue(!view.getField().isSelected());
     }
 }

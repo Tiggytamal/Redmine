@@ -1,6 +1,6 @@
 package junit.view;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,10 +17,10 @@ public class TestColonneView
     {
         String texte = "a";
         ColonneView<TypeColSuivi> view = new ColonneView<>(TypeColSuivi.ACTION, texte);
-        assertTrue(view.getField().getText().equals(texte));
-        assertTrue(view.getType() == TypeColSuivi.ACTION);
+        assertEquals(texte, view.getField().getText());
+        assertEquals(TypeColSuivi.ACTION, view.getType());
         view = new ColonneView<>(TypeColSuivi.ANOMALIE, null);
-        assertTrue(view.getField().getText().equals(""));
-        assertTrue(view.getType() == TypeColSuivi.ANOMALIE);
+        assertEquals(0, view.getField().getText().length());
+        assertEquals(TypeColSuivi.ANOMALIE, view.getType());
     }
 }

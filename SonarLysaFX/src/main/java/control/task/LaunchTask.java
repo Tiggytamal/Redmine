@@ -6,8 +6,17 @@ import application.Main;
 import javafx.application.Platform;
 import view.ProgressDialog;
 
-public abstract class LaunchTask
+public class LaunchTask
 {
+    /*---------- ATTRIBUTS ----------*/
+    /*---------- CONSTRUCTEURS ----------*/    
+    
+    protected LaunchTask() {}
+    
+    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
+
     protected void startTask(SonarTask task, String titre)
     {
         ProgressDialog dialog;
@@ -20,7 +29,8 @@ public abstract class LaunchTask
             try
             {
                 task.get();
-            } catch (InterruptedException | ExecutionException e)
+            } 
+            catch (InterruptedException | ExecutionException e)
             {
                 Platform.runLater(() -> {
                     dialog.close();

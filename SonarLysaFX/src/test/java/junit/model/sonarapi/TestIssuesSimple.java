@@ -3,7 +3,6 @@ package junit.model.sonarapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +74,7 @@ public class TestIssuesSimple
     {
         assertEquals(COMPOSANTS, modele.getComposants());
         assertNotNull(modeleNull.getComposants());
-        assertTrue(modeleNull.getComposants().isEmpty());
+        assertEquals(0, modeleNull.getComposants().size());
     }
     
     @Test
@@ -83,7 +82,7 @@ public class TestIssuesSimple
     {
         assertEquals(ISSUES, modele.getListIssues());
         assertNotNull(modeleNull.getListIssues());
-        assertTrue(modeleNull.getListIssues().isEmpty());
+        assertEquals(0, modeleNull.getListIssues().size());
     }
     
     /*---------- METHODES PRIVEES ----------*/

@@ -20,6 +20,17 @@ import utilities.TechnicalException;
  */
 public class TestModelFactory extends JunitBase
 {
+    /*---------- ATTRIBUTS ----------*/
+    /*---------- CONSTRUCTEURS ----------*/
+    
+    @Override
+    public void init()
+    {
+        // Pas d'initialisation particulière       
+    }
+    
+    /*---------- METHODES PUBLIQUES ----------*/
+
     @Test (expected = TechnicalException.class)
     public void testGetModelException()
     {
@@ -50,6 +61,9 @@ public class TestModelFactory extends JunitBase
         ModelFactory.getModelWithParams(ModeletTest.class, new Object());
     }
     
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
+    /*---------- CLASSES PRIVEES ----------*/
     
     /**
      * Classe de Modele pour tester les constructeurs non accessibles

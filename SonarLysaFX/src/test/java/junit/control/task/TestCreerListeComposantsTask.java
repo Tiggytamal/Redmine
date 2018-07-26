@@ -1,8 +1,10 @@
 package junit.control.task;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.reflect.Whitebox;
 
 import control.task.CreerListeComposantsTask;
 import de.saxsys.javafx.test.JfxRunner;
@@ -21,16 +23,15 @@ public class TestCreerListeComposantsTask extends JunitBase
     public void init()
     {
         handler = new CreerListeComposantsTask();
-        handler.annuler();
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
+    @Ignore ("Utilisé seulement pour les tests manuels. Trop long en automatique (30 mins).")
     public void testCreerListe() throws Exception
     {   
-        // Utiliser seulement pour les tests manuels. trop de temspe n automatique.
-//        Whitebox.invokeMethod(handler, "creerListeComposants");
+       Whitebox.invokeMethod(handler, "creerListeComposants");
     }
     
     /*---------- METHODES PRIVEES ----------*/

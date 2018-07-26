@@ -12,7 +12,7 @@ public enum TypeColClarity implements Serializable, TypeColR
     /*---------- ATTRIBUTS ----------*/
 
     ACTIF("Actif","colActif"),
-    CLARITY("Code projet","colClarity"),
+    CLARITY("Code projet","colClarity"), 
     LIBELLE("Libellé projet","colLib"),
     CPI("Chef de projet","colCpi"),
     EDITION("Edition","colEdition"),

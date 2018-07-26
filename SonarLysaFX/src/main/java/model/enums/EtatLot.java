@@ -68,11 +68,10 @@ public enum EtatLot
                 
             default :
                 return INCONNU;
-        }
-        
+        }      
     }
     
-    private static class Valeur
+    private static final class Valeur
     {
         // Contructeur privé empéchant l'instanciation
         private Valeur() 

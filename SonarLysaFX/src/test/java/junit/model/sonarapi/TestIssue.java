@@ -4,7 +4,6 @@ import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,7 +179,7 @@ public class TestIssue
     {
         assertEquals(COMMENTAIRES, modele.getCommentaires());
         assertNotNull(modeleNull.getCommentaires());
-        assertTrue(modeleNull.getCommentaires().isEmpty());
+        assertEquals(0, modeleNull.getCommentaires().size());
     }
 
     @Test
@@ -213,7 +212,7 @@ public class TestIssue
     {
         assertEquals(TRANSITIONS, modele.getTransitions());
         assertNotNull(modeleNull.getTransitions());
-        assertTrue(modeleNull.getTransitions().isEmpty());
+        assertEquals(0, modeleNull.getTransitions().size());
     }
 
     @Test
@@ -230,7 +229,7 @@ public class TestIssue
     {
         assertEquals(ACTIONS, modele.getActions());
         assertNotNull(modeleNull.getActions());
-        assertTrue(modeleNull.getActions().isEmpty());
+        assertEquals(0, modeleNull.getActions().size());
     }
 
     @Test
@@ -407,7 +406,7 @@ public class TestIssue
     {
         assertEquals(FLOWS, modele.getFlows());
         assertNotNull(modeleNull.getFlows());
-        assertTrue(modeleNull.getFlows().isEmpty());
+        assertEquals(0, modeleNull.getFlows().size());
     }
 
     @Test
@@ -488,7 +487,7 @@ public class TestIssue
     {
         assertEquals(COMPOSANTS, modele.getComposants());
         assertNotNull(modeleNull.getComposants());
-        assertTrue(modeleNull.getComposants().isEmpty());
+        assertEquals(0, modeleNull.getComposants().size());
     }
 
     @Test
@@ -505,7 +504,7 @@ public class TestIssue
     {
         assertEquals(RULES, modele.getRules());
         assertNotNull(modeleNull.getRules());
-        assertTrue(modeleNull.getRules().isEmpty());
+        assertEquals(0, modeleNull.getRules().size());
     }
 
     @Test
@@ -522,7 +521,7 @@ public class TestIssue
     {
         assertEquals(USERS, modele.getUsers());
         assertNotNull(modeleNull.getUsers());
-        assertTrue(modeleNull.getUsers().isEmpty());
+        assertEquals(0, modeleNull.getUsers().size());
     }
 
     @Test

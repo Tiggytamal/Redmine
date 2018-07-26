@@ -146,9 +146,9 @@ public class TestAnomalie extends JunitBase
     {
         // Test avec string vide ou null
         ano.setMatieresString(null);
-        assertTrue(ano.getMatieres().isEmpty());
+        assertEquals(0, ano.getMatieres().size());
         ano.setMatieresString("");
-        assertTrue(ano.getMatieres().isEmpty());
+        assertEquals(0, ano.getMatieres().size());
         
         
         // Test avec une matière

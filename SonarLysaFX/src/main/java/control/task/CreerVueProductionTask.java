@@ -1,6 +1,5 @@
 package control.task;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -8,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,13 +16,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
 
-import java.util.Map.Entry;
-
-import control.excel.ControlPic;
-import control.excel.ExcelFactory;
 import control.rtc.ControlRTC;
 import model.enums.EtatLot;
-import model.enums.TypeColPic;
 import model.sonarapi.Vue;
 import utilities.DateConvert;
 import utilities.FunctionalException;
@@ -33,7 +28,6 @@ public class CreerVueProductionTask extends SonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private File file;
     private String vueKey;
     private LocalDate dateDebut;
     private LocalDate dateFin;
@@ -47,10 +41,9 @@ public class CreerVueProductionTask extends SonarTask
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public CreerVueProductionTask(File file)
+    public CreerVueProductionTask()
     {
         super(3);
-        this.file = file;
         annulable = true;
     }
 
@@ -94,23 +87,7 @@ public class CreerVueProductionTask extends SonarTask
 
         // Récupération des données
         Map<String, Vue> mapSonar = recupererLotsSonarQube();
-        if (file != null)
-        {
-            // Traitement données fichier Excel
-            ControlPic excel = ExcelFactory.getReader(TypeColPic.class, file);
-
-            // Message
-            if (isCancelled())
-                return false;
-            updateMessage("Traitement Fichier Excel...");
-
-            mapLot = excel.recupLotsExcelPourMEP(mapSonar);
-
-            updateMessage("Traitement Fichier Excel OK");
-            excel.close();
-        }
-        else
-            mapLot = recupLotRTCPourMEP(dateDebut, dateFin, mapSonar);
+        mapLot = recupLotRTCPourMEP(dateDebut, dateFin, mapSonar);
 
         // Création des vues mensuelles ou trimestrielles
         if (mapLot.size() == 1)
@@ -165,7 +142,7 @@ public class CreerVueProductionTask extends SonarTask
             {
                 // Création d'une nouvelle date au 1er du mois qui servira du clef à la map.
                 LocalDate clef = LocalDate.of(date.getYear(), date.getMonth(), 1);
-                if (!retour.keySet().contains(clef))
+                if (!retour.containsKey(clef))
                     retour.put(clef, new ArrayList<>());
                 retour.get(clef).add(entry.getValue());
             }

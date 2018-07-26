@@ -138,7 +138,7 @@ public class TestVue
     public void testSetListeClefsComposants()
     {
         modele.setListeClefsComposants(new ArrayList<>());
-        assertTrue(modele.getListeClefsComposants().isEmpty());
+        assertEquals(0, modele.getListeClefsComposants().size());
         modeleNull.setListeClefsComposants(LISTECLEFSCOMPOSANTS);
         assertEquals(LISTECLEFSCOMPOSANTS, modeleNull.getListeClefsComposants());
     }

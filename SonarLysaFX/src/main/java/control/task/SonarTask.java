@@ -10,9 +10,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import control.sonar.SonarAPI;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;

@@ -1,7 +1,9 @@
 package junit.control.task;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.fichiersXML;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response.Status;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -35,7 +36,7 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     
     /*---------- CONSTRUCTEURS ----------*/
 
-    @Before
+    @Override
     public void init() throws IllegalAccessException
     {
         annees = new ArrayList<>();
@@ -50,7 +51,7 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     @Test (expected = FunctionalException.class)
     public void testCreerVueCHCCDMTaskException1()
     {
-        new CreerVueCHCCDMTask(null, CHCouCDM.CDM);
+        new CreerVueCHCCDMTask(null, CHCouCDM.CDM); 
     }
     
     @Test (expected = FunctionalException.class)
@@ -102,12 +103,23 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     @Test
     public void testRecupererEditions() throws Exception
     {
+        // Apple méthode normale et vérification que l'on a bien que des édition 2018 aevc CHC ou CDM
         Map<String, String> map = Whitebox.invokeMethod(handler, "recupererEditions", annees);
         for (String string : map.values())
         {
             assertTrue(string.contains(annees.get(0)));
             assertTrue(string.contains("CHC") || string.contains("CDM"));
-        }        
+        }       
+        
+        // rajout d'une nouvelle valeur dans la map
+        Map<String, String> mapTest = fichiersXML.getMapEditions();
+        mapTest.put("2019", "2019");
+        
+        // Appel méthode et controle qu'on a bien supprimé la nouvelle valeur.
+        map = Whitebox.invokeMethod(handler, "recupererEditions", annees);
+        assertNull(map.get("2019"));
+        
+        
     }
     
     /*---------- METHODES PRIVEES ----------*/

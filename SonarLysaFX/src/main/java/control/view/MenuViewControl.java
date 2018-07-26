@@ -55,6 +55,8 @@ public class MenuViewControl extends ViewControl
     @FXML
     private MenuItem suivi;
     @FXML
+    private MenuItem appli;
+    @FXML
     private MenuItem aide;
     @FXML
     private MenuItem purge;
@@ -107,6 +109,7 @@ public class MenuViewControl extends ViewControl
         rtc.setDisable(true);
         extraction.setDisable(true);
         planificateur.setDisable(true);
+        appli.setDisable(true);
         autres.setDisable(true);
         info.setPseudo(null);
         info.setMotDePasse(null);
@@ -154,6 +157,10 @@ public class MenuViewControl extends ViewControl
 
             case "suivi":
                 load("/view/Suivi.fxml");
+                break;
+                
+            case "appli":
+                load("/view/Applications.fxml");
                 break;
 
             case "rtc":
@@ -222,6 +229,7 @@ public class MenuViewControl extends ViewControl
             majVues.setDisable(false);
             planificateur.setDisable(false);
             autres.setDisable(false);
+            appli.setDisable(false);
             majVues.setDisable(false);
             majCompos.setDisable(false);
             extraction.setDisable(false);

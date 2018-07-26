@@ -17,6 +17,9 @@ public class ComposantSonar implements Modele, Serializable
     private String id;
     private String appli;
     private String edition;
+    private int ldc;
+    private int security;
+    private int vulnerabilites;
     
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -97,5 +100,38 @@ public class ComposantSonar implements Modele, Serializable
     public void setId(String id)
     {
         this.id = id;
+    }
+    
+    @XmlAttribute (name = "ldc", required = true)
+    public int getLdc()
+    {
+        return ldc;
+    }
+
+    public void setLdc(int ldc)
+    {
+        this.ldc = ldc;
+    }
+    
+    @XmlAttribute (name = "security", required = true)
+    public int getSecurity()
+    {
+        return security;
+    }
+
+    public void setSecurity(int security)
+    {
+        this.security = security;
+    }
+    
+    @XmlAttribute (name = "vulnerabilities", required = true)   
+    public int getVulnerabilites()
+    {
+        return vulnerabilites;
+    }
+
+    public void setVulnerabilites(int vulnerabilites)
+    {
+        this.vulnerabilites = vulnerabilites;
     }
 }

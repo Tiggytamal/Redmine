@@ -2,6 +2,7 @@ package junit;
 
 import java.time.LocalDate;
 
+import org.junit.Before;
 import org.powermock.reflect.Whitebox;
 
 import control.xml.ControlXML;
@@ -30,4 +31,7 @@ public abstract class JunitBase
         Whitebox.setInternalState(Statics.class, fichiers);
         Whitebox.setInternalState(Statics.class, info);
     }
+    
+    @Before
+    public abstract void init() throws Exception;
 }

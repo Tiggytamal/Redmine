@@ -134,6 +134,53 @@ public abstract class ControlExcel
     }
     
     /**
+     * Permet de créer et de valoriser une cellule sans commentaire. Seul le style et le texte. Le texte peut-être de type {@link String},
+     * {@linkplain model.enum.Environnement}, {@link LocalDate}.
+     * 
+     * @param row
+     *            Ligne dans laquelle on veut créer la cellule
+     * @param indexCol
+     *            Index de colonne pour créer la cellule
+     * @param style
+     *            Style utilisé pour la cellule
+     * @param texte
+     *            Texte de la cellule
+     * @param commentaire
+     *            Commentaire de la cellule
+     * @return
+     */
+    protected Cell valoriserCellule(Row row, Integer indexCol, CellStyle style, Object texte)
+    {
+        // Contrôle
+        if (row == null || indexCol == null)
+            throw new IllegalArgumentException("row null pour la méthode control.parent.ControlExcel.valoriserCellule.");
+
+        // Création cellule
+        Cell cell = row.createCell(indexCol);
+
+        // Style
+        if (style != null)
+            cell.setCellStyle(style);
+
+        // Ajout du texte non null dans le bon format
+        if (texte == null)
+            return cell;
+
+        if (texte instanceof String)
+            cell.setCellValue((String) texte);
+        else if (texte instanceof EtatLot)
+            cell.setCellValue(((EtatLot) texte).toString());
+        else if (texte instanceof TypeAction)
+            cell.setCellValue(((TypeAction) texte).toString());
+        else if (texte instanceof LocalDate)
+            cell.setCellValue(DateConvert.convertToOldDate(texte));
+        else
+            throw new IllegalArgumentException("Le texte n'est pas d'un type supporté par la méthode control.parent.ControlExcel.valoriserCellule.");
+
+        return cell;
+    }
+    
+    /**
      * Copie un commentaire dans une cellule
      * 
      * @param commentaire
@@ -162,6 +209,54 @@ public abstract class ControlExcel
         retour.setAuthor(commentaire.getAuthor());
         retour.setString(commentaire.getString());
         return retour;
+    }
+    
+    /**
+     * Copie d'une cellule
+     * 
+     * @param newCell
+     *            Nouvelle cellule
+     * @param oldCell
+     *            Cellule copiée
+     */
+    protected void copierCellule(Cell newCell, Cell oldCell)
+    {
+        // On sort si la cellule est nulle
+        if (oldCell == null || newCell == null)
+            return;
+
+        // Copie du style des cellules
+        CellStyle newCellStyle = wb.createCellStyle();
+        newCellStyle.cloneStyleFrom(oldCell.getCellStyle());
+        newCell.setCellStyle(newCellStyle);
+
+        // Copie des valeurs
+        switch (oldCell.getCellTypeEnum())
+        {
+            case BOOLEAN:
+                newCell.setCellValue(oldCell.getBooleanCellValue());
+                break;
+
+            case FORMULA:
+                newCell.setCellFormula(oldCell.getCellFormula());
+                break;
+
+            case NUMERIC:
+                newCell.setCellValue(oldCell.getNumericCellValue());
+                break;
+
+            case STRING:
+                newCell.setCellValue(oldCell.getRichStringCellValue());
+                break;
+
+            default:
+                break;
+        }
+
+        // Commentaire
+        Comment commentaire = oldCell.getCellComment();
+        if (commentaire != null)
+            copieComment(commentaire, newCell);
     }
     
     /*---------- ACCESSEURS ----------*/

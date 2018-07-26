@@ -102,6 +102,7 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
     private final LocalDate today = LocalDate.now();
 
     private ControlMail controlMail;
+    private ControlRTC controlRTC;
 
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
@@ -124,6 +125,7 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
         lienslots = proprietes.get(Param.LIENSLOTS);
         liensAnos = proprietes.get(Param.LIENSANOS);
         controlMail = new ControlMail();
+        controlRTC = ControlRTC.INSTANCE;
         initContraintes();
     }
 
@@ -434,7 +436,7 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
         // Si on doit clôturer ou abandonner l'anomalie, on la recopie dans la feuille des anomalies closes
         if (TypeAction.CLOTURER == ano.getAction() || TypeAction.ABANDONNER == ano.getAction())
         {
-            if (ControlRTC.INSTANCE.testSiAnomalieClose(ano.getNumeroAnomalie()))
+            if (controlRTC.testSiAnomalieClose(ano.getNumeroAnomalie())) 
             {
                 Row row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
                 creerLigneSQ(row, ano, IndexedColors.WHITE);
@@ -451,7 +453,7 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
         // Contrôle si besoin de créer une anomalie Sonar
         else if (TypeAction.CREER == ano.getAction())
         {
-            int numeroAno = ControlRTC.INSTANCE.creerDefect(ano);
+            int numeroAno = controlRTC.creerDefect(ano);
             if (numeroAno != 0)
             {
                 ano.setAction(null);
@@ -702,8 +704,8 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
             // Ajout de la date de détection à la date du jour
             ano.setDateDetection(LocalDate.now());
 
-            // Création de la ligne
-            if (mapAnoCloses.keySet().contains(ano.getLot()) && ano.getEtatLot() != EtatLot.EDITION && ano.getEtatLot() != EtatLot.TERMINE)
+            // Ajout ligne à vérifier si l'anomalie était déjà dans les closes et qu'elle n'est ni à l'édition, ni terminée
+            if (mapAnoCloses.containsKey(ano.getLot()) && ano.getEtatLot() != EtatLot.EDITION && ano.getEtatLot() != EtatLot.TERMINE)
             {
                 Anomalie anoClose = mapAnoCloses.get(ano.getLot());
                 ano.setDateDetection(today);
@@ -715,7 +717,8 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
                 creerLigneSQ(row, ano, IndexedColors.GREY_25_PERCENT);
                 mapAnoCloses.remove(ano.getLot());
             }
-            else
+            // Ajoute une ligne orange si la ligne ne provient pas des anomalies closes
+            else if (!mapAnoCloses.containsKey(ano.getLot()))
                 creerLigneSQ(row, ano, IndexedColors.LIGHT_ORANGE);
         }
     }
@@ -765,6 +768,7 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
             return ano.majDepuisClarity(map.get(anoClarity));
 
         String temp = "";
+        boolean testT7 = anoClarity.startsWith("T") && anoClarity.length() == 7;
 
         // Sinon on itère sur les clefs en supprimant les indices de lot, et on prend la première clef correspondante
         for (Map.Entry<String, InfoClarity>  entry: map.entrySet())
@@ -776,7 +780,7 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
                 return ano.majDepuisClarity(entry.getValue());
 
             // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
-            if (anoClarity.startsWith("T") && anoClarity.length() == 7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
+            if (testT7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
                 temp = key;
         }
 
@@ -800,9 +804,6 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
      */
     private Anomalie controleRTC(Anomalie ano) throws TeamRepositoryException
     {
-        // Controleur RTC
-        ControlRTC controlRTC = ControlRTC.INSTANCE;
-
         // Controle sur l'état de l'anomalie (projet Clarity, lot et numéro anomalie renseignée
         String anoLot = ano.getLot().substring(4);
         int anoLotInt = Integer.parseInt(anoLot);
@@ -862,7 +863,7 @@ public class ControlSuivi extends ControlExcelRead<TypeColSuivi, List<Anomalie>>
         if (anoServ.isEmpty())
             return;
 
-        if (mapRespService.keySet().contains(anoServ))
+        if (mapRespService.containsKey(anoServ))
             ano.setResponsableService(mapRespService.get(anoServ).getNom());
         else
         {

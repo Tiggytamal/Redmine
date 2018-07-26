@@ -1,12 +1,8 @@
 package junit;
 
-import static utilities.Statics.fichiersXML;
-
-import java.util.Map;
+import java.util.Base64;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
-
-import model.InfoClarity;
 
 /**
  * Calsse permetant de faire des tests directement avec une entrée JAVA classique
@@ -18,14 +14,11 @@ public class TesteurMain
     
     public static void main(String[] args) throws TeamRepositoryException, IllegalArgumentException, IllegalAccessException
     {
-        Map<String, InfoClarity> map = fichiersXML.getMapClarity();
-        System.out.println(map.size());
-        System.out.println(map.containsKey("RE005701"));
-        for (String string : map.keySet())
-        {
-            if (string.contains("RE00"))
-                System.out.println(string);
-        }
+        StringBuilder builder = new StringBuilder("ETP8137");
+        builder.append(":");
+        builder.append("28H02m8903,;:!");
+        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
+        System.out.println("A".compareTo("B"));
        
     }
 }

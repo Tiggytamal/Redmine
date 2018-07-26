@@ -2,6 +2,7 @@ package junit.control.task;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -184,22 +185,22 @@ public class TestPurgeSonarTask extends JunitBase
         Map<String, List<ComposantSonar>> map = Whitebox.invokeMethod(handler, "compileMap");
 
         // 3. Contrôle map
-        assertFalse(map == null);
+        assertNotNull(map);
         assertFalse(map.isEmpty());
-        assertTrue(map.size() == 2);
+        assertEquals(2, map.size());
 
         // 4. Contrôle des listes de la map
         List<ComposantSonar> liste1 = map.get("azerty");
-        assertTrue(liste1 != null);
+        assertNotNull(liste1);
         assertFalse(liste1.isEmpty());
-        assertTrue(liste1.size() == 2);
+        assertEquals(2, liste1.size());
         assertTrue(liste1.contains(a));
         assertTrue(liste1.contains(b));
 
         List<ComposantSonar> liste2 = map.get("azerty01azeert");
-        assertTrue(liste2 != null);
+        assertNotNull(liste2);
         assertFalse(liste2.isEmpty());
-        assertTrue(liste2.size() == 2);
+        assertEquals(2, liste2.size());
         assertTrue(liste2.contains(c));
         assertTrue(liste2.contains(d));
 

@@ -20,9 +20,15 @@ import model.enums.TypeColR;
  */
 public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements ViewXML<T, TextField>
 {
+    /*---------- ATTRIBUTS ----------*/
+
     private T typeCol;
     private TextField field;
     private static final String POINT = " : ";
+    private static final int WIDTH = 150;
+    private static final int PADDING = 5;
+
+    /*---------- CONSTRUCTEURS ----------*/
 
     public ColonneView(T typeCol, String texte)
     {
@@ -34,7 +40,7 @@ public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements V
 
         // Label
         Label label = new Label(typeCol.getValeur() + POINT);
-        label.setPrefWidth(150);
+        label.setPrefWidth(WIDTH);
         box.getChildren().add(label);
 
         // TextField
@@ -46,10 +52,14 @@ public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements V
 
         // Séparateur
         Separator separ = new Separator();
-        separ.setPadding(new Insets(5, 5, 5, 5));
+        separ.setPadding(new Insets(PADDING, PADDING, PADDING, PADDING));
         children.add(separ);
     }
 
+    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
+    
     /**
      * @return the typeCol
      */

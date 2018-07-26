@@ -76,7 +76,7 @@ public class ControlRTC
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");  
     
     /** Instance du controleur */
     public static final ControlRTC INSTANCE = new ControlRTC();
@@ -130,7 +130,8 @@ public class ControlRTC
             // Récupérationd e tous les projets si la iste est vide. Effectuée normalemetn une seule fois par instance.
             if (pareas.isEmpty())
                 recupererTousLesProjets();
-        } catch (TeamRepositoryException e)
+        } 
+        catch (TeamRepositoryException e)
         {
             LOGPLANTAGE.error(e);
             return false;
@@ -235,7 +236,7 @@ public class ControlRTC
             ICategory cat = null;
             for (ICategory iCategory : categories)
             {
-                if ("Projet".equals(iCategory.getName()) || iCategory.getName().startsWith("Anomalie"))
+                if ("Projet".equals(iCategory.getName()) || iCategory.getName().contains("Anomalie"))
                     cat = iCategory;
             }
 
@@ -244,7 +245,8 @@ public class ControlRTC
             IWorkItemHandle handle = init.run(itemType, progressMonitor);
             workItem = auditableClient.fetchCurrentAuditable(handle, WorkItem.FULL_PROFILE, progressMonitor);
 
-        } catch (TeamRepositoryException e)
+        } 
+        catch (TeamRepositoryException e)
         {
             LOGGER.error("Erreur traitement RTC création de Defect. Lot : " + ano.getLot());
             LOGPLANTAGE.error(e);
@@ -533,7 +535,8 @@ public class ControlRTC
         {
             String etat = recupEtatElement(recupWorkItemDepuisId(numeroAno)).trim();
             return "Close".equals(etat) || "Abandonnée".equals(etat);
-        } catch (TeamRepositoryException e)
+        } 
+        catch (TeamRepositoryException e)
         {
             LOGPLANTAGE.error(e);
             return false;

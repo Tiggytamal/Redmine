@@ -1,7 +1,6 @@
 package junit.model.enums;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static utilities.Statics.LIENANO;
 import static utilities.Statics.LIENAPP;
 
@@ -22,8 +21,8 @@ public class TestTypeInfoMail
     {
         assertEquals("Lots avec anomalies RTC créées :\n", TypeInfoMail.ANOSRTCCREES.getTitre());
         assertEquals("Lots avec nouvelles anomalies :\n", TypeInfoMail.ANONEW.getTitre());
-        assertEquals("Lotas avec anomalies abandonnées :\n", TypeInfoMail.ANOABANDON.getTitre());
-        assertEquals("Lots avec anomalies non abandonnées :\n", TypeInfoMail.ANOABANDONRATE.getTitre());
+        assertEquals("Lots avec anomalies fermées (abandonnées ou cloturées) :\n", TypeInfoMail.ANOABANDON.getTitre());
+        assertEquals("Lots avec anomalies non fermèess :\n", TypeInfoMail.ANOABANDONRATE.getTitre());
         assertEquals("Lots avec anomalies à relancer :\n", TypeInfoMail.ANOARELANCER.getTitre());
         assertEquals("Anomalies RTC mises à jour :\n", TypeInfoMail.ANOMAJ.getTitre());
         assertEquals("Lots mis à jour :\n", TypeInfoMail.LOTMAJ.getTitre());
@@ -40,18 +39,18 @@ public class TestTypeInfoMail
     public void testGetLiens()
     {
         assertEquals(LIENANO, TypeInfoMail.ANOSRTCCREES.getLiens());
-        assertTrue(TypeInfoMail.ANONEW.getLiens().isEmpty());
+        assertEquals("", TypeInfoMail.ANONEW.getLiens());
         assertEquals(LIENANO, TypeInfoMail.ANOABANDON.getLiens());
         assertEquals(LIENANO, TypeInfoMail.ANOABANDONRATE.getLiens());
         assertEquals(LIENANO, TypeInfoMail.ANOARELANCER.getLiens());
         assertEquals(" - Nouvel état : ", TypeInfoMail.ANOMAJ.getLiens());
         assertEquals(" - Nouvel état : ", TypeInfoMail.LOTMAJ.getLiens());
-        assertTrue(TypeInfoMail.LOTNONRTC.getLiens().isEmpty());
+        assertEquals("", TypeInfoMail.LOTNONRTC.getLiens());
         assertEquals("- Clarity : ", TypeInfoMail.CLARITYINCONNU.getLiens());
         assertEquals("- Service : ", TypeInfoMail.SERVICESSANSRESP.getLiens());
         assertEquals(LIENAPP, TypeInfoMail.APPLIOBSOLETE.getLiens());
         assertEquals(LIENAPP, TypeInfoMail.APPLINONREF.getLiens());
-        assertTrue(TypeInfoMail.COMPOSANSAPP.getLiens().isEmpty());
-        assertTrue(TypeInfoMail.COMPOPURGE.getLiens().isEmpty());
+        assertEquals("", TypeInfoMail.COMPOSANSAPP.getLiens());
+        assertEquals("", TypeInfoMail.COMPOPURGE.getLiens());
     }
 }

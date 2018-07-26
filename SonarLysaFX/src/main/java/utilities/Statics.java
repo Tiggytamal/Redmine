@@ -13,14 +13,10 @@ import model.ProprietesXML;
  * 
  * @author ETP8137 - Grégoire Mathon
  */
-public class Statics
-{
-    // Supression instanciation de la classe
-    private Statics() 
-    {
-        throw new AssertionError();
-    }
-
+public final class Statics
+{   
+    /*---------- ATTRIBUTS ----------*/
+    
     /* ----- Paramètres fixes ----- */
     /** jarPath */
     public static final String JARPATH = Utilities.urlToFile(Utilities.getLocation(Main.class)).getParentFile().getPath();
@@ -95,4 +91,16 @@ public class Statics
     public static final FichiersXML fichiersXML = controlXML.recupererXML(FichiersXML.class);
     /** Sauvegarde des fichiers Excel de paramètre */
     public static final ProprietesXML proprietesXML = controlXML.recupererXML(ProprietesXML.class);
+    
+    /*---------- CONSTRUCTEURS ----------*/
+    
+    // Supression instanciation de la classe
+    private Statics() 
+    {
+        throw new AssertionError();
+    }
+    
+    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
 }

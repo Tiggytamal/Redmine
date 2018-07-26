@@ -16,7 +16,9 @@ public enum TypeMetrique
     APPLI(Valeur.APPLI), 
     EDITION(Valeur.EDITION),
     VULNERABILITIES(Valeur.VULNERABILITIES),
-    BUGS(Valeur.BUGS);
+    BUGS(Valeur.BUGS),
+    LDC(Valeur.LDC),
+    SECURITY(Valeur.SECURITY);
 
     private final String valeur;
 
@@ -61,6 +63,12 @@ public enum TypeMetrique
                 
             case Valeur.BUGS:
                 return BUGS;
+                
+            case Valeur.LDC:
+                return LDC;
+                
+            case Valeur.SECURITY:
+                return SECURITY;
 
             default:
                 throw new IllegalArgumentException("model.enums.TypeMetrique inconnu : " + string, null);
@@ -84,5 +92,7 @@ public enum TypeMetrique
         private static final String EDITION = "edition";
         private static final String VULNERABILITIES = "vulnerabilities";
         private static final String BUGS = "bugs";
+        private static final String LDC = "ncloc";
+        private static final String SECURITY = "security_rating";
     }
 }

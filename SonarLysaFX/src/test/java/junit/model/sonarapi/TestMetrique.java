@@ -4,7 +4,6 @@ import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,7 @@ public class TestMetrique
         modele = new Metrique(TYPE);
         assertNotNull(modele.getListePeriodes());
         assertNotNull(modeleNull.getValue());
-        assertTrue(modeleNull.getValue().isEmpty());
+        assertEquals(0, modeleNull.getValue().length());
     }
     
     @Test (expected = IllegalArgumentException.class)
@@ -59,7 +58,7 @@ public class TestMetrique
     {
         assertEquals(VALEUR, modele.getValue());
         assertNotNull(modeleNull.getValue());
-        assertTrue(modeleNull.getValue().isEmpty());
+        assertEquals(0, modeleNull.getValue().length());
     }
     
     @Test
@@ -91,9 +90,9 @@ public class TestMetrique
     public void testGetListePeriodes()
     {
         assertNotNull(modele.getListePeriodes());
-        assertTrue(modele.getListePeriodes().isEmpty());
+        assertEquals(0, modele.getListePeriodes().size());
         assertNotNull(modeleNull.getListePeriodes());
-        assertTrue(modeleNull.getListePeriodes().isEmpty());
+        assertEquals(0, modeleNull.getListePeriodes().size());
     }
 
     @Test

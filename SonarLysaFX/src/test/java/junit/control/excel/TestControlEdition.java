@@ -1,6 +1,7 @@
 package junit.control.excel;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
@@ -71,8 +72,8 @@ public class TestControlEdition extends TestControlExcelRead<TypeColEdition, Con
     {
         // Test 1 - feuille ok
         Sheet sheet = Whitebox.invokeMethod(handler, "initSheet");
-        assertTrue(sheet != null);
-        assertTrue(sheet == wb.getSheetAt(0));
+        assertNotNull(sheet);
+        assertEquals(wb.getSheetAt(0), sheet);
     }
     
     @Test(expected = FunctionalException.class)

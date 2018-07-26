@@ -2,6 +2,7 @@ package junit.control.mail;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -61,7 +62,7 @@ public class TestControlMail extends JunitBase
         
         // Contrôle que les infos du mail sont bine remplies.
          Message message = ((Message) Whitebox.getField(ControlMail.class, "message").get(handler));
-         assertTrue(message.getAllRecipients().length > 0);
+         assertNotEquals(0, message.getAllRecipients().length);
          assertTrue(message.getSubject().contains(TypeMail.SUIVIJAVA.getTitre()));
          assertNotNull(message.getFrom());
     }

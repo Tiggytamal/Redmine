@@ -19,6 +19,7 @@
 						<MenuItem fx:id="mensuel" text="Création Vue MEP/TEP" onAction="#afficher" styleClass="bar" disable="true" />
 						<MenuItem fx:id="autres" text="Création Autres Vues" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="maintenance" text="Création Vues Maintenance" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="appli" text="Création Vues par Application" onAction="#afficher" disable = "true" />
 						<MenuItem fx:id="rtc" text="Mise à jour lots RTC" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="extraction" text="Extraction" onAction="#afficher" disable="true" />
 

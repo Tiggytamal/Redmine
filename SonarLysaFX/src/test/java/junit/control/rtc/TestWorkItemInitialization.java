@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
@@ -23,7 +22,7 @@ public class TestWorkItemInitialization extends JunitBase
     
     /*---------- CONSTRUCTEURS ----------*/
     
-    @Before
+    @Override
     public void init()
     {
         Anomalie ano = ModelFactory.getModel(Anomalie.class);

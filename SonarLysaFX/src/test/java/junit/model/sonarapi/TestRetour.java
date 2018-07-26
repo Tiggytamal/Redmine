@@ -2,8 +2,8 @@ package junit.model.sonarapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class TestRetour
     public void testGetListeVues()
     {
         assertEquals(LISTEVUES, modele.getListeVues());
-        assertTrue(modele.getListeVues() != null);
+        assertNotNull(modele.getListeVues());
         assertFalse(modele.getListeVues().isEmpty());
         assertNull(modeleNull.getListeVues());
     }
@@ -75,7 +75,7 @@ public class TestRetour
     public void testGetResults()
     {
         assertEquals(RESULTS, modele.getResults());
-        assertTrue(modele.getResults() != null);
+        assertNotNull(modele.getResults());
         assertFalse(modele.getResults().isEmpty());
         assertNull(modeleNull.getResults());
     }
@@ -91,7 +91,7 @@ public class TestRetour
     public void testGetErrors()
     {
         assertEquals(ERRORS, modele.getErrors());
-        assertTrue(modele.getErrors() != null);
+        assertNotNull(modele.getErrors());
         assertFalse(modele.getErrors().isEmpty());
         assertNull(modeleNull.getErrors());
     }
@@ -100,7 +100,7 @@ public class TestRetour
     public void testGetQualityGates()
     {
         assertEquals(QGS, modele.getQualityGates());
-        assertTrue(modele.getQualityGates() != null);
+        assertNotNull(modele.getQualityGates());
         assertFalse(modele.getQualityGates().isEmpty());
         assertNull(modeleNull.getQualityGates());
     }

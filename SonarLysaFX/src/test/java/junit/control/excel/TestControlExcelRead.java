@@ -95,6 +95,13 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
         wb = (Workbook) getField(handler.getClass(), "wb").get(handler);
     }
     
+    @Test (expected = TechnicalException.class)
+    public void testInitException() throws Exception
+    {
+        // Initialisation handler avec mauvais format de fichier
+        handler = ExcelFactory.getReader(typeColClass, new File("12:;"));
+    }
+    
     @Test
     public void testCreateWb() throws Exception
     {
@@ -107,22 +114,12 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
         assertNotNull(getField(handler.getClass(), "createHelper").get(handler));
         assertNotNull(getField(handler.getClass(), "ca").get(handler));
     }
-    
-    @Test (expected = TechnicalException.class)
-    public void testCreateWebException() throws Exception
-    {
-        // Initialisation handler avec mauvais format de fichier
-        handler = ExcelFactory.getReader(typeColClass, new File("12:;"));
-        
-        // Appel méthode
-        invokeMethod(handler, "createWb");
-    }
 
     @Test
     public void testInitEnum() throws IllegalAccessException
     {
         // test - énumération du bon Type
-        assertTrue(getField(ControlSuivi.class, "enumeration").get(handler).equals(typeColClass));
+        assertEquals(typeColClass, getField(ControlSuivi.class, "enumeration").get(handler)); 
     }
 
     @Test
@@ -135,14 +132,14 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
         invokeMethod(handler, "majCouleurLigne", row, IndexedColors.AQUA);
         for (Cell cell : row)
         {
-            assertTrue(cell.getCellStyle().getFillForegroundColor() == IndexedColors.AQUA.index);
+            assertEquals(IndexedColors.AQUA.index, cell.getCellStyle().getFillForegroundColor());
         }
 
         // Test 2 - autre couleur
         invokeMethod(handler, "majCouleurLigne", row, IndexedColors.BROWN);
         for (Cell cell : row)
         {
-            assertTrue(cell.getCellStyle().getFillForegroundColor() == IndexedColors.BROWN.index);
+            assertEquals(IndexedColors.BROWN.index, cell.getCellStyle().getFillForegroundColor());
         }
     }
 
@@ -151,8 +148,8 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
     {
         // Test 1 - feuille ok
         Sheet sheet = invokeMethod(handler, "initSheet");
-        assertTrue(sheet != null);
-        assertTrue(sheet == wb.getSheetAt(0));
+        assertNotNull(sheet);
+        assertEquals(wb.getSheetAt(0), sheet);
     }
 
     @Test (expected = FunctionalException.class)
@@ -171,16 +168,6 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
         
         // Appel méthode write  pour voir si le Workbook est bien fermé
         invokeMethod(handler, "write");
-    }
-    
-    @Test (expected = TechnicalException.class)
-    public void testCloseException() throws Exception
-    {
-        // Initialisation handler avec mauvais format de fichier
-        handler = ExcelFactory.getReader(typeColClass, new File("12:;"));
-        
-        // Test - appel de la méthode close.
-        invokeMethod(handler, "close");
     }
     
     @Test
@@ -265,7 +252,7 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
     protected Y testRecupDonneesDepuisExcel(Function<Y, Boolean> tailleListe)
     {
         Y map = handler.recupDonneesDepuisExcel();
-        assertTrue(map != null);
+        assertNotNull(map);
         assertTrue(tailleListe.apply(map));
         return map;
     }

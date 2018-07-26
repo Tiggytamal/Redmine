@@ -3,7 +3,6 @@ package junit.model.sonarapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +51,7 @@ public class TestFlow
     {
         assertEquals(LOCATIONS, modele.getLocations());
         assertNotNull(modeleNull.getLocations());
-        assertTrue(modeleNull.getLocations().isEmpty());
+        assertEquals(0, modeleNull.getLocations().size());
     }
     
     @Test

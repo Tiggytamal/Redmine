@@ -200,12 +200,15 @@ public class ControlXML
         String texte = fichiersXML.controleDonnees() + proprietesXML.controleDonnees();
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.getDialogPane().getStylesheets().add("application.css");
+
         alert.initStyle(StageStyle.UTILITY);
         alert.initModality(Modality.NONE);
         alert.setResizable(true);
         alert.setContentText(texte);
         alert.setHeaderText(null);
         alert.show();
+        alert.setWidth(600);
+        alert.setHeight(360);
     }
 
     /*---------- ACCESSEURS ----------*/

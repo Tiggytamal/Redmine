@@ -28,7 +28,7 @@ public abstract class ControlExcelWrite<T extends Enum<T> & TypeColW, R> extends
     
     protected ControlExcelWrite(File file)
     {
-        super(file);
+        super(file); 
         createWb();
         initEnum();
     }
@@ -37,7 +37,7 @@ public abstract class ControlExcelWrite<T extends Enum<T> & TypeColW, R> extends
     
     public void write()
     {
-        try(FileOutputStream stream = new FileOutputStream(file.getName()))
+        try(FileOutputStream stream = new FileOutputStream(file.getPath()))
         {
             wb.write(stream);
             wb.close();

@@ -1,7 +1,8 @@
 package junit.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -37,12 +38,12 @@ public class TestProprieteXML extends JunitBase
     public void testProprieteXML() throws Exception
     {
         // Test initialisation des map à la construction       
-        assertFalse(propriete.getMapParams() == null);
-        assertTrue(propriete.getMapParams().isEmpty());
-        assertFalse(propriete.getMapParamsBool() == null);
-        assertTrue(propriete.getMapParamsBool().isEmpty());
-        assertFalse(propriete.getMapPlans() == null);
-        assertTrue(propriete.getMapPlans().isEmpty());
+        assertNotNull(propriete.getMapParams());
+        assertEquals(0, propriete.getMapParams().size());
+        assertNotNull(propriete.getMapParamsBool());
+        assertEquals(0, propriete.getMapParamsBool().size());
+        assertNotNull(propriete.getMapPlans());
+        assertEquals(0, propriete.getMapPlans().size());
         testMap("getMapColsSuivi");
         testMap("getMapColsClarity");
         testMap("getMapColsChefServ");
@@ -72,7 +73,7 @@ public class TestProprieteXML extends JunitBase
     {
         Map<T, String> map = Whitebox.invokeMethod(propriete, methode);
         assertFalse(map == null);
-        assertTrue(map.isEmpty());
+        assertEquals(0, map.size());
     }
     /*---------- ACCESSEURS ----------*/
     

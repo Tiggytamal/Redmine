@@ -54,7 +54,7 @@ public final class WorkItemInitialization extends WorkItemOperation
 
     public WorkItemInitialization(IWorkItemType type, ICategory cat, IProjectArea projet, Anomalie ano)
     {
-        super("Initializing Work Item");
+        super("Initializing Work Item"); 
         this.type = type;
         this.cat = cat;
         this.projet = projet;
