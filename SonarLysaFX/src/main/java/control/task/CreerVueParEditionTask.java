@@ -50,7 +50,8 @@ public class CreerVueParEditionTask extends AbstractSonarTask
             int size = entry.getValue().size();
             for (ComposantSonar compo : entry.getValue())
             {
-                updateProgress(++i, size);
+                i++;
+                updateProgress(i, size);
                 updateMessage(base + "Ajout : " + compo.getNom());
                 api.ajouterProjet(compo, vueParent);
             }

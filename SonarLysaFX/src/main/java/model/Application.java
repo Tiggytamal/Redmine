@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Classe de modèle pour les applications CATS
@@ -141,7 +142,7 @@ public class Application implements Modele, Serializable
         this.mainFrame = mainFrame;
     }
 
-    @XmlAttribute (name = "valSecurite", required = false)
+    @XmlTransient
     public String getValSecurite()
     {
         return getString(valSecurite);
@@ -152,7 +153,7 @@ public class Application implements Modele, Serializable
         this.valSecurite = valSecurite;
     }
 
-    @XmlAttribute (name = "vulnerabilite", required = false)
+    @XmlTransient
     public int getNbreVulnerabilites()
     {
         return nbreVulnerabilites;
@@ -163,7 +164,7 @@ public class Application implements Modele, Serializable
         this.nbreVulnerabilites = nbreVulnerabilites;
     }
 
-    @XmlAttribute (name = "ldcSonar", required = false)
+    @XmlTransient
     public int getLDCSonar()
     {
         return ldcSonar;
@@ -174,7 +175,7 @@ public class Application implements Modele, Serializable
         this.ldcSonar = ldcSonar;
     }
 
-    @XmlAttribute (name = "ldcMainFrame", required = false)
+    @XmlTransient
     public int getLDCMainframe()
     {
         return ldcMainframe;

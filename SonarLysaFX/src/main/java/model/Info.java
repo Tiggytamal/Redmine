@@ -26,9 +26,8 @@ public class Info implements Modele, XML
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    Info()
-    {
-    }
+    Info() { }
+    
     /*---------- METHODES PUBLIQUES ----------*/
 
     public boolean controle()
@@ -80,7 +79,7 @@ public class Info implements Modele, XML
     {
         this.motDePasse = motDePasse;
     }
-    
+
     public String getNom()
     {
         return nom;

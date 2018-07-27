@@ -31,8 +31,9 @@ public final class Statics
     /** Taille du substring pour les lots */
     public static final short SBTRINGLOT = 4;
     
-    /** Adresse générale pour les resosurces */
-    public static final String RESOURCESTEST = "/";
+    /** Adresse générale pour les resources */
+    public static final String ROOT = "/";
+    public static final String RESSTEST = "src/test/resources/";
     
     /* ----- String statiques ----- */
     

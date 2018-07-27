@@ -21,6 +21,8 @@ public class ParamBoolView extends VBox implements ViewXML<ParamBool, CheckBox>
     private ParamBool typeBool;
     private CheckBox checkBox;
     private static final String POINT = " : ";
+    private static final short LABELWIDTH = 300;
+    private static final short BASEPADDING = 5;
 
     public ParamBoolView(ParamBool typeBool, Boolean bool)
     {
@@ -33,8 +35,8 @@ public class ParamBoolView extends VBox implements ViewXML<ParamBool, CheckBox>
         HBox box = new HBox();
 
         // Label
-        Label label = new Label(typeBool.toString() + POINT);
-        label.setPrefWidth(300);
+        Label label = new Label(typeBool.toString() + POINT); 
+        label.setPrefWidth(LABELWIDTH);
         box.getChildren().add(label);
 
         // TextField
@@ -46,7 +48,7 @@ public class ParamBoolView extends VBox implements ViewXML<ParamBool, CheckBox>
 
         // Séparateur
         Separator separ = new Separator();
-        separ.setPadding(new Insets(5, 5, 5, 5));
+        separ.setPadding(new Insets(BASEPADDING, BASEPADDING, BASEPADDING, BASEPADDING));
         rootChildren.add(separ);
     }
 

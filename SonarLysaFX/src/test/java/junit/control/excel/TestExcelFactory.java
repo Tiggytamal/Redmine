@@ -87,7 +87,7 @@ public class TestExcelFactory extends JunitBase
     
     private File createFile(String fichier)
     {
-        return new File(getClass().getResource(Statics.RESOURCESTEST + fichier).getFile());
+        return new File(getClass().getResource(Statics.ROOT + fichier).getFile());
     }
 
     /*---------- ACCESSEURS ----------*/

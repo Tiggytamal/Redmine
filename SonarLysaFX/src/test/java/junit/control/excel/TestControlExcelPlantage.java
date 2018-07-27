@@ -28,7 +28,7 @@ public class TestControlExcelPlantage
     {
         try
         {
-            ExcelFactory.getReader(TypeColSuivi.class, new File(getClass().getResource(Statics.RESOURCESTEST + "Plantage.xlsx").getFile()));
+            ExcelFactory.getReader(TypeColSuivi.class, new File(getClass().getResource(Statics.ROOT + "Plantage.xlsx").getFile()));
 
         } catch (FunctionalException e)
         {

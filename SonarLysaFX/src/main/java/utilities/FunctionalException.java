@@ -10,26 +10,24 @@ import utilities.enums.Severity;
  */
 public class FunctionalException extends RuntimeException
 {
-    private static final long serialVersionUID = 1L;    
-    private final Severity severity;  
+    private static final long serialVersionUID = 1L;
+    private final Severity severity;
 
-    /**
-
-     */
     /**
      * Constructeur des erreurs fonctionnelles.<br>
      * Choix de la sévérité (INFO ou ERROR), du message afficher, ainsi que de l'affichage ou non de la fenêtre du stacktrace
+     * 
      * @param severity
-     *          Sévérité de l'exception
+     *            Sévérité de l'exception
      * @param message
-     *          Message à afficher dan sla boîte de dialogue
+     *            Message à afficher dan sla boîte de dialogue
      */
     public FunctionalException(Severity severity, String message)
     {
         super(message);
         this.severity = severity;
     }
-    
+
     /**
      * @return the severity
      */

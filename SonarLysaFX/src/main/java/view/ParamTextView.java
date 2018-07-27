@@ -24,6 +24,7 @@ public class ParamTextView extends VBox
     private ParamSpec param;
     private TextArea textArea;
     private double nbreLignes;
+    private static final short BASEPADDING = 10;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -41,7 +42,7 @@ public class ParamTextView extends VBox
 
         // ----- 2.Region -----
         Region region = new Region();
-        region.setPrefHeight(10);
+        region.setPrefHeight(BASEPADDING);
         rootChildren.add(region);
 
         // ----- 3. TextArea -----
@@ -65,7 +66,7 @@ public class ParamTextView extends VBox
 
         // ----- 4. Séparateur -----
         Separator separ = new Separator();
-        separ.setPadding(new Insets(10, 5, 10, 5));
+        separ.setPadding(new Insets(BASEPADDING, BASEPADDING/2, BASEPADDING, BASEPADDING/2));
         rootChildren.add(separ);
     }
 

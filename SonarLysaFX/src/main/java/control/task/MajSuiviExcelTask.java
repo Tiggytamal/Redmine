@@ -192,7 +192,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         }
 
         // Mise à jour des fichiers Excel
-        ControlSuivi controlAnoJava = ExcelFactory.getReader(TypeColSuivi.class, new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIER)));
+        ControlSuivi controlAnoJava = ExcelFactory.getReader(TypeColSuivi.class, new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA)));
         ControlSuivi controlAnoDataStage = ExcelFactory.getReader(TypeColSuivi.class,
                 new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE)));
         controlAnoJava.majMultiMatiere(anoMultiple);
@@ -252,7 +252,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         etapePlus();
 
         // Traitement du fichier de suivi
-        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIER), Matiere.JAVA);
+        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA), Matiere.JAVA);
     }
 
     /**

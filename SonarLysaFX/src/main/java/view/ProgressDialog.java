@@ -66,7 +66,7 @@ public class ProgressDialog extends Dialog<Boolean>
         grid.setPadding(new Insets(BASEINSET, BASEINSET, BASEINSET, BASEINSET));
         grid.widthProperty().addListener((observable, oldValue, newValue) -> {
             label.setPrefWidth(newValue.doubleValue());
-            bar.setPrefWidth(newValue.doubleValue() - BARWIDTH);
+            bar.setPrefWidth(newValue.doubleValue() - BARWIDTH); 
         });
         getDialogPane().setContent(grid);
 

@@ -60,13 +60,13 @@ public enum Matiere
     
     private static class Valeur
     {        
+        public static final String JAVA = "JAVA";
+        public static final String DATASTAGE = "DATASTAGE";
+        public static final String COBOL = "COBOL";
+        
         private Valeur() 
         {
             throw new AssertionError("Classe non instanciable : model.enums.Matiere$Valeur");
         }
-        
-        public static final String JAVA = "JAVA";
-        public static final String DATASTAGE = "DATASTAGE";
-        public static final String COBOL = "COBOL";
     }
 }

@@ -26,6 +26,7 @@ public final class Utilities
 {
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+    private static final short BASEVERSION = 17;
 
     private Utilities() { }
 
@@ -130,6 +131,7 @@ public final class Utilities
     public static File urlToFile(final String url)
     {
         String path = url;
+        final short CUTFILE = 5;
         if (path.startsWith("jar:"))
         {
             // remove "jar:" prefix and "!/" suffix
@@ -139,7 +141,7 @@ public final class Utilities
         try
         {
             if (osName().startsWith("Win") && path.matches("file:[A-Za-z]:.*"))
-                path = "file:/" + path.substring(5);
+                path = "file:/" + path.substring(CUTFILE);
             return new File(new URL(path).toURI());
         }
         catch (MalformedURLException | URISyntaxException e)
@@ -150,7 +152,7 @@ public final class Utilities
         if (path.startsWith("file:"))
         {
             // pass through the URL as-is, minus "file:" prefix
-            path = path.substring(5);
+            path = path.substring(CUTFILE);
             return new File(path);
         }
         throw new IllegalArgumentException("Invalid URL: " + url);
@@ -174,7 +176,7 @@ public final class Utilities
     {
         if (versionComposant == null)
             return null;
-        return "E" + (Integer.parseInt(versionComposant) + 17);
+        return "E" + (Integer.parseInt(versionComposant) + BASEVERSION);
     }
 
     /**
@@ -187,7 +189,7 @@ public final class Utilities
     public static String transcoEdition(String versionEdition)
     {
         if (versionEdition != null && versionEdition.matches("E[0-9][0-9]"))
-            return String.valueOf((Integer.parseInt(versionEdition.substring(1)) - 17));
+            return String.valueOf((Integer.parseInt(versionEdition.substring(1)) - BASEVERSION));
         throw new FunctionalException(Severity.ERROR, "Transcodification version Edition impossible - " + versionEdition);
     }
 

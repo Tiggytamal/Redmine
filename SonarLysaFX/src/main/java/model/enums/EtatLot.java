@@ -73,12 +73,6 @@ public enum EtatLot
     
     private static final class Valeur
     {
-        // Contructeur privé empéchant l'instanciation
-        private Valeur() 
-        {
-            throw new AssertionError("Classe non instanciable : model.enums.Environnement$Valeur");
-        }
-        
         private static final String NOUVEAU = "Nouveau";
         private static final String DEVTU = "En DEV-TU";
         private static final String TFON = "TFON";
@@ -88,6 +82,12 @@ public enum EtatLot
         private static final String EDITION = "Livré à l'Edition";
         private static final String ABANDONNE = "Abandonné";
         private static final String TERMINE = "Terminé";
-        private static final String INCONNU = "INCONNU";
+        private static final String INCONNU = "INCONNU"; 
+        
+        // Contructeur privé empéchant l'instanciation
+        private Valeur() 
+        {
+            throw new AssertionError("Classe non instanciable : model.enums.Environnement$Valeur");
+        }
     }
 }

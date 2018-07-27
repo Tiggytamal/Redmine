@@ -16,16 +16,16 @@ public class InfoClarity implements Modele
     private String direction;
     private String departement;
     private String service;
-    
+
     /*---------- CONSTRUCTEURS ----------*/
-    
-    InfoClarity() {}
-    
+
+    InfoClarity() { }
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
-    
-    @XmlAttribute (name = "actif", required = false)
+
+    @XmlAttribute(name = "actif", required = false)
     public boolean isActif()
     {
         return actif;
@@ -36,7 +36,7 @@ public class InfoClarity implements Modele
         this.actif = actif;
     }
 
-    @XmlAttribute (name = "codeClarity", required = false)
+    @XmlAttribute(name = "codeClarity", required = false)
     public String getCodeClarity()
     {
         return getString(codeClarity);
@@ -47,7 +47,7 @@ public class InfoClarity implements Modele
         this.codeClarity = codeClarity;
     }
 
-    @XmlAttribute (name = "libelleProjet", required = false)
+    @XmlAttribute(name = "libelleProjet", required = false)
     public String getLibelleProjet()
     {
         return getString(libelleProjet);
@@ -58,7 +58,7 @@ public class InfoClarity implements Modele
         this.libelleProjet = libelleProjet;
     }
 
-    @XmlAttribute (name = "chefProjet", required = false)
+    @XmlAttribute(name = "chefProjet", required = false)
     public String getChefProjet()
     {
         return getString(chefProjet);
@@ -69,7 +69,7 @@ public class InfoClarity implements Modele
         this.chefProjet = chefProjet;
     }
 
-    @XmlAttribute (name = "edition", required = false)
+    @XmlAttribute(name = "edition", required = false)
     public String getEdition()
     {
         return getString(edition);
@@ -79,10 +79,11 @@ public class InfoClarity implements Modele
     {
         this.edition = edition;
     }
+
     /**
      * @return the direction
      */
-    @XmlAttribute (name = "direction", required = false)
+    @XmlAttribute(name = "direction", required = false)
     public String getDirection()
     {
         return getString(direction);
@@ -93,7 +94,7 @@ public class InfoClarity implements Modele
         this.direction = direction;
     }
 
-    @XmlAttribute (name = "departement", required = false)
+    @XmlAttribute(name = "departement", required = false)
     public String getDepartement()
     {
         return getString(departement);
@@ -104,7 +105,7 @@ public class InfoClarity implements Modele
         this.departement = departement;
     }
 
-    @XmlAttribute (name = "service", required = false)
+    @XmlAttribute(name = "service", required = false)
     public String getService()
     {
         return getString(service);

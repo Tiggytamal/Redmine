@@ -27,10 +27,10 @@ public class InfoMail implements Modele
     @Override
     public int hashCode()
     {
-        final int prime = 31;
+        final int PRIME = 31;
         int result = 1;
-        result = prime * result + ((infoSupp == null) ? 0 : infoSupp.hashCode());
-        result = prime * result + ((lot == null) ? 0 : lot.hashCode());
+        result = PRIME * result + ((infoSupp == null) ? 0 : infoSupp.hashCode());
+        result = PRIME * result + ((lot == null) ? 0 : lot.hashCode());
         return result;
     }
 

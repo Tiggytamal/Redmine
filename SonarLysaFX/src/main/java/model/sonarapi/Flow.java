@@ -19,15 +19,15 @@ public class Flow
     {
         if (locations == null || locations.isEmpty())
             throw new IllegalArgumentException("Création model.sonarapi.Flow - locations nulle ou vide.");
-        
+
         this.locations = locations;
     }
-    
+
     public Flow()
     {
         locations = new ArrayList<>();
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

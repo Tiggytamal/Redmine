@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -87,11 +88,15 @@ public class CreerVueParAppsTask extends AbstractSonarTask
 
     private boolean creerVueParApplication()
     {
+        // 1 .Création de la liste des composants par application
+        @SuppressWarnings("unchecked")
+        Map<String, List<ComposantSonar>> mapApplication = Utilities.recuperation(Main.DESER, Map.class, "mapApplis.ser", this::controlerSonarQube);
+        
         // On ne crée pas les vues avec l'option fichier
         if (option == CreerVueParAppsTaskOption.FICHIER)
             return false;
 
-        // 1. Suppression des vues existantes
+        // 2. Suppression des vues existantes
 
         // Message
         String base = "Suppression des vues existantes :" + NL;
@@ -112,10 +117,6 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             updateProgress(i, listeVuesExistantes.size());
         }
         
-        // 2 .Création de la liste des composants par application
-        @SuppressWarnings("unchecked")
-        Map<String, List<ComposantSonar>> mapApplication = Utilities.recuperation(Main.DESER, Map.class, "mapApplis.ser", this::controlerSonarQube);
-
         // 3. Creation des nouvelles vues
 
         // Message
@@ -194,7 +195,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             // Test si le code application est vide, cela veut dire que le projet n'a pas de code application.
             if (!compo.getAppli().isEmpty())
             {
-                String application = compo.getAppli().trim().toUpperCase();
+                String application = compo.getAppli().trim().toUpperCase(Locale.FRANCE);
 
                 // Si l'application n'est pas dans la PIC, on continue au projet suivant.
                 if (!testAppli(application, compo))

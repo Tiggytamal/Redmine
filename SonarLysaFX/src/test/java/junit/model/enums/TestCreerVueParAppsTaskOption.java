@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import model.enums.CHCouCDM;
+import model.enums.CreerVueParAppsTaskOption;
 
 public class TestCreerVueParAppsTaskOption
 {
     @Test
     public void testSize()
     {
-        assertEquals(3, CHCouCDM.values().length);
+        assertEquals(3, CreerVueParAppsTaskOption.values().length);
     }
 }

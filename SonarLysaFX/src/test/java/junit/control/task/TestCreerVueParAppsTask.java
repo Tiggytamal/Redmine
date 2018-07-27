@@ -1,5 +1,7 @@
 package junit.control.task;
 
+import static org.junit.Assert.assertFalse;
+
 import java.io.File;
 
 import org.junit.Before;
@@ -33,7 +35,7 @@ public class TestCreerVueParAppsTask extends JunitBase
     public void testCreerVueParApplicationExcelSeul() throws Exception
     {
         handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIER, new File("d:\\testExtract1.xlsx")); 
-        Whitebox.invokeMethod(handler, "creerVueParApplication");
+        assertFalse(Whitebox.invokeMethod(handler, "call"));
     }
     
     /*---------- METHODES PRIVEES ----------*/

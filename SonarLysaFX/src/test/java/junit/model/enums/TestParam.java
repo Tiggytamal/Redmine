@@ -12,7 +12,7 @@ public class TestParam
     @Test
     public void testSize()
     {
-        assertEquals(17, Param.values().length);
+        assertEquals(18, Param.values().length);
     }
     
     @Test
@@ -21,8 +21,9 @@ public class TestParam
         assertFalse(Param.FILTREDATASTAGE.toString().isEmpty());
         assertFalse(Param.FILTRECOBOL.toString().isEmpty());
         assertFalse(Param.ABSOLUTEPATH.toString().isEmpty());
-        assertFalse(Param.NOMFICHIER.toString().isEmpty());
+        assertFalse(Param.NOMFICHIERJAVA.toString().isEmpty());
         assertFalse(Param.NOMFICHIERDATASTAGE.toString().isEmpty());
+        assertFalse(Param.NOMFICHIERAPPLI.toString().isEmpty());
         assertFalse(Param.ABSOLUTEPATHHISTO.toString().isEmpty());
         assertFalse(Param.LIENSLOTS.toString().isEmpty());
         assertFalse(Param.LIENSANOS.toString().isEmpty());

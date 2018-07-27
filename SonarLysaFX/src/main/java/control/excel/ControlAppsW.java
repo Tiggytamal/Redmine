@@ -20,7 +20,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import model.Application;
+import model.enums.Param;
 import model.enums.TypeColApps;
+import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Bordure;
 
@@ -46,13 +48,16 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     private int colLDCMain;
     private static final String APPLIGEREES = "Périmètre Couverts SonarQbe";
     private static final String REFAPPLIS = "Ref CodeApps detaillés";
-    private static final String NOMFICHIERAUTRE = "d:\\fichier analyse SonarQube périmètre - V0.1.xlsx";
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    ControlAppsW(File file)
+    ControlAppsW(File sortie)
     {
-        super(file);
+        super(sortie);
+        
+        // Création des deux feuilles ud fichier Excel
+        wb.createSheet(APPLIGEREES);
+        wb.createSheet(REFAPPLIS);
         calculIndiceColonnes();
         initTitres();
     }
@@ -61,7 +66,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
 
     public void creerfeuilleSonar(Set<Application> applisOpenSonar)
     {
-        Sheet sheet = wb.createSheet(APPLIGEREES);
+        Sheet sheet = wb.getSheet(APPLIGEREES);
         enregistrerDonnees(applisOpenSonar, sheet);
     }
 
@@ -85,24 +90,23 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     protected final void initTitres()
     {
         CellStyle centre = helper.getStyle(IndexedColors.AQUA, Bordure.BAS, HorizontalAlignment.CENTER);
+        centre.setWrapText(false);
 
-        wb.getSheet(APPLIGEREES);
+        // Création de la ligne de titre
+        Sheet sheet = wb.getSheet(APPLIGEREES);
 
-        // Création des feuilles pour chaque type de vulnérabilité
-        for (Iterator<Sheet> iter = wb.sheetIterator(); iter.hasNext();)
-        {
-            Sheet sheet = iter.next();
-            Row row = sheet.createRow(0);
-            valoriserCellule(row, colCode, centre, "Code Application");
-            valoriserCellule(row, colActif, centre, "Actif");
-            valoriserCellule(row, colLib, centre, "Libellé");
-            valoriserCellule(row, colOpen, centre, "Open");
-            valoriserCellule(row, colMainFrame, centre, "MainFrame");
-            valoriserCellule(row, colCrit, centre, "Valeur Sécurité");
-            valoriserCellule(row, colVuln, centre, "Vulnérabilitès");
-            valoriserCellule(row, colLDCSonar, centre, "LDC SonarQube");
-            valoriserCellule(row, colLDCMain, centre, "LDC MainFrame");
-        }
+        Row row = sheet.createRow(0);
+        valoriserCellule(row, colCode, centre, "Code Application");
+        valoriserCellule(row, colActif, centre, "Actif");
+        valoriserCellule(row, colLib, centre, "Libellé");
+        valoriserCellule(row, colOpen, centre, "Open");
+        valoriserCellule(row, colMainFrame, centre, "MainFrame");
+        valoriserCellule(row, colCrit, centre, "Valeur Sécurité");
+        valoriserCellule(row, colVuln, centre, "Vulnérabilitès");
+        valoriserCellule(row, colLDCSonar, centre, "LDC SonarQube");
+        valoriserCellule(row, colLDCMain, centre, "LDC MainFrame");
+        autosizeColumns(sheet);
+
     }
 
     @Override
@@ -135,17 +139,18 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     {
         // Récupération de la feuille venant du fichier fourni.
         Sheet sheetbase = null;
-        try (Workbook wb2 = WorkbookFactory.create(new File(NOMFICHIERAUTRE)))
+        File file = new File (Statics.proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + Statics.proprietesXML.getMapParams().get(Param.NOMFICHIERAPPLI));
+        try (Workbook wb2 = WorkbookFactory.create(file))
         {
             sheetbase = wb2.getSheet(REFAPPLIS);
 
-        } 
+        }
         catch (InvalidFormatException | IOException e)
         {
-            throw new TechnicalException("Impossible de récupérer la feuille excel - fichier : " + NOMFICHIERAUTRE, e);
+            throw new TechnicalException("Impossible de récupérer la feuille excel - fichier : " + file, e);
         }
-        
-        Sheet sheetFinale = wb.createSheet(REFAPPLIS);
+
+        Sheet sheetFinale = wb.getSheet(REFAPPLIS);
 
         for (Iterator<Row> iter = sheetbase.iterator(); iter.hasNext();)
         {

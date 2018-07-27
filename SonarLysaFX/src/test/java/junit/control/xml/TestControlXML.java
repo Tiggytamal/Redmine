@@ -40,25 +40,25 @@ public class TestControlXML extends JunitBase
     @Test
     public void testRecupListeAppsDepuisExcel()
     {
-        handler.recupListeAppsDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "liste_applis.xlsx").getFile()));
+        handler.recupListeAppsDepuisExcel(new File(getClass().getResource(Statics.ROOT + "liste_applis.xlsx").getFile()));
     }
 
     @Test
     public void testRecupInfosClarityDepuisExcel()
     {
-        handler.recupInfosClarityDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "Referentiel_Projets.xlsm").getFile()));
+        handler.recupInfosClarityDepuisExcel(new File(getClass().getResource(Statics.ROOT + "Referentiel_Projets.xlsm").getFile()));
     }
 
     @Test
     public void testRecupChefServiceDepuisExcel()
     {
-        handler.recupChefServiceDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "Reorg_managers.xlsx").getFile()));
+        handler.recupChefServiceDepuisExcel(new File(getClass().getResource(Statics.ROOT + "Reorg_managers.xlsx").getFile()));
     }
 
     @Test
     public void testRecupEditionDepuisExcel()
     {
-        handler.recupEditionDepuisExcel(new File(getClass().getResource(Statics.RESOURCESTEST + "Codification_des_Editions.xlsx").getFile()));
+        handler.recupEditionDepuisExcel(new File(getClass().getResource(Statics.ROOT + "Codification_des_Editions.xlsx").getFile()));
     }
     
     @Test (expected = TechnicalException.class)

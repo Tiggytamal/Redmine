@@ -25,13 +25,14 @@ public class TimeSpinner extends Spinner<LocalTime>
 
     // Propriété de l'objet contenant le mode d'edition
     private final ObjectProperty<Mode> mode = new SimpleObjectProperty<>(Mode.HOURS);
+    private static final short WIDTH = 80;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public TimeSpinner(LocalTime time)
     {
         setEditable(true);
-        setPrefWidth(80);
+        setPrefWidth(WIDTH);
         // Convertisseur entre les String et LocalTime
         LocalTimeConverter localTimeConverter = new LocalTimeConverter();
 

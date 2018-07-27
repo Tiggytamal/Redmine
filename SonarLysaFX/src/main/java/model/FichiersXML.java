@@ -93,13 +93,13 @@ public class FichiersXML implements XML, Modele
                 mapRespService.putAll(map);
                 setDateFichier(typeFichier);
                 break;
-                
+
             case LOTSRTC:
                 lotsRTC.clear();
                 lotsRTC.putAll(map);
                 setDateFichier(typeFichier);
                 break;
-                
+
             case SONAR:
                 mapComposSonar.clear();
                 mapComposSonar.putAll(map);
@@ -109,7 +109,7 @@ public class FichiersXML implements XML, Modele
             default:
                 throw new TechnicalException("FichiersXML.majMapDonnees - Type de fichier non géré :" + typeFichier.toString(), null);
         }
-        
+
         return this;
     }
 
@@ -129,10 +129,10 @@ public class FichiersXML implements XML, Modele
 
         // Contrôle Editions
         controleMap(mapEditions, builder, "Editions Pic", TypeFichier.EDITION);
-        
+
         // Contrôle Lots RTC
         controleMap(lotsRTC, builder, "lots RTC", TypeFichier.LOTSRTC);
-        
+
         // Contrôle Composants Sonar
         controleMap(mapComposSonar, builder, "Composants Sonar", TypeFichier.SONAR);
 
@@ -154,7 +154,7 @@ public class FichiersXML implements XML, Modele
     {
         dateMaj.put(fichier, LocalDate.now().format(DateConvert.FORMATTER));
     }
-    
+
     /**
      * Permet de controler si une map est vide ou non, et met à jour le message.
      * 
@@ -210,23 +210,24 @@ public class FichiersXML implements XML, Modele
     {
         return mapEditions;
     }
-    
+
     @XmlElementWrapper
     @XmlElement(name = "mapLotsRTC", required = false)
     public Map<String, LotSuiviRTC> getLotsRTC()
     {
         return lotsRTC;
     }
-    
+
     @XmlElementWrapper
     @XmlElement(name = "mapComposSonar", required = false)
     public Map<String, ComposantSonar> getMapComposSonar()
     {
         return mapComposSonar;
     }
-    
+
     /**
      * Retourne la map des composants Sonar sous forme de liste
+     * 
      * @return
      */
     @XmlTransient

@@ -90,7 +90,7 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
     @Before
     public void init() throws IOException, IllegalAccessException
     {
-        file = new File(getClass().getResource(Statics.RESOURCESTEST + fichier).getFile());
+        file = new File(getClass().getResource(Statics.ROOT + fichier).getFile());
         handler = ExcelFactory.getReader(typeColClass, file);
         wb = (Workbook) getField(handler.getClass(), "wb").get(handler);
     }

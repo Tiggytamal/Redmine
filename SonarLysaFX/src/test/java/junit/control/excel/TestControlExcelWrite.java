@@ -53,7 +53,7 @@ public class TestControlExcelWrite<T extends Enum<T> & TypeColW, C extends Abstr
     @Override
     public void init() throws IOException, IllegalAccessException
     {
-        file = new File(Statics.RESOURCESTEST + fichier);
+        file = new File(Statics.ROOT + fichier);
         handler = ExcelFactory.getWriter(typeColClass, file);
         wb = (Workbook) getField(handler.getClass(), "wb").get(handler);
     }

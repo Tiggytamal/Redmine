@@ -35,7 +35,7 @@ public class TestCreerExtractVulnerabiliteTask extends JunitBase
     @Before
     public void init()
     {
-        handler = new CreerExtractVulnerabiliteTask(new File("src/test/resources/testExtract.xlsx"));
+        handler = new CreerExtractVulnerabiliteTask(new File(Statics.RESSTEST + "testExtract.xlsx"));
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

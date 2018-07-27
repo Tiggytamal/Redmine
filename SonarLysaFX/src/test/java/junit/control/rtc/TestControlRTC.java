@@ -208,7 +208,7 @@ public class TestControlRTC extends JunitBase
     public void testRecupContributorDepuisNom() throws TeamRepositoryException, IOException
     {
         // Appel du service pour récupérer le fichier de suivi.
-        ControlSuivi control = ExcelFactory.getReader(TypeColSuivi.class, new File(getClass().getResource(Statics.RESOURCESTEST + "Suivi_Quality_GateTest.xlsx").getFile()));
+        ControlSuivi control = ExcelFactory.getReader(TypeColSuivi.class, new File(getClass().getResource(Statics.ROOT + "Suivi_Quality_GateTest.xlsx").getFile()));
         List<Anomalie> liste = control.recupDonneesDepuisExcel();
 
         // Itération sur le fichier de suivi pour vérifier que l'on remonte bien tous les contributeurs des anomalies

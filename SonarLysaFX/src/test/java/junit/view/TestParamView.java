@@ -20,8 +20,8 @@ public class TestParamView
         assertEquals(Param.ABSOLUTEPATH, view.getType());
         assertEquals(texte, view.getField().getText());   
         
-        view = new ParamView(Param.NOMFICHIER, null);
-        assertEquals(Param.NOMFICHIER, view.getType());
+        view = new ParamView(Param.NOMFICHIERJAVA, null);
+        assertEquals(Param.NOMFICHIERJAVA, view.getType());
         assertEquals(0, view.getField().getText().length()); 
     }
 }
