@@ -17,7 +17,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
-import control.task.JobForTask;
+import control.task.AbstractJobForTask;
 import model.Planificateur;
 import model.enums.TypePlan;
 import utilities.TechnicalException;
@@ -61,7 +61,7 @@ public class ControlJob
             JobDetail job = creerJob(entry.getKey());
             
             //Rajout dans la DataMap de la liste des annèes
-            job.getJobDataMap().put(JobForTask.CLEFANNEES + entry.getKey().toString(), entry.getValue().getAnnees());
+            job.getJobDataMap().put(AbstractJobForTask.CLEFANNEES + entry.getKey().toString(), entry.getValue().getAnnees());
             
             // Enregistrement des jobs
             scheduler.deleteJob(job.getKey());

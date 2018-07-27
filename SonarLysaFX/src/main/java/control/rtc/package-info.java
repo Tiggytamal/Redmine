@@ -1,7 +1,7 @@
 /**
- * Vues et classes concrètes d'affichage
+ * Controleurs pour RTC Jazz
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-package view;
+package control.rtc;

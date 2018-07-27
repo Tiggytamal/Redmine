@@ -16,13 +16,13 @@ import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
 
-public class MajFichierRTCTask extends SonarTask
+public class MajFichierRTCTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
     private LocalDate date;
     private boolean remiseAZero;
-    
+
     /*---------- CONSTRUCTEURS ----------*/
 
     public MajFichierRTCTask(LocalDate date, boolean remiseAZero)
@@ -45,21 +45,22 @@ public class MajFichierRTCTask extends SonarTask
     private boolean majFichierRTC() throws TeamRepositoryException
     {
         ControlRTC control = ControlRTC.INSTANCE;
-        Map<String, LotSuiviRTC> map = new HashMap<>();
         List<?> handles = control.recupLotsRTC(remiseAZero, date);
         if (handles.isEmpty())
             throw new FunctionalException(Severity.ERROR, "La liste des lots RTC est vide!");
-        
+
         int i = 0;
         int size = handles.size();
         String base = "Récupération RTC - Traitement lot : ";
         String fin = "Nbre de lots traités : ";
         String sur = " sur ";
+        Map<String, LotSuiviRTC> map = new HashMap<>();
         for (Object handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête
             LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle((IWorkItemHandle) handle);
-            updateProgress(++i, size);
+            i++;
+            updateProgress(i, size);
             updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).append(sur).append(size).toString());
             map.put(lot.getLot(), lot);
         }

@@ -28,7 +28,10 @@ public final class Statics
     public static final int ROW_HEIGHT = 24;
     /** Largeur d'un caractère */
     public static final double CARAC_WIDTH = 7;
+    /** Taille du substring pour les lots */
+    public static final short SBTRINGLOT = 4;
     
+    /** Adresse générale pour les resosurces */
     public static final String RESOURCESTEST = "/";
     
     /* ----- String statiques ----- */

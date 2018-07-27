@@ -38,15 +38,15 @@ public class ProprietesXML implements XML, Modele
     private Map<Param, String> mapParams;
     private Map<ParamBool, Boolean> mapParamsBool;
     private Map<ParamSpec, String> mapParamsSpec;
-    
+
     // Map des colonnes
-    private Map<TypeColSuivi, String> mapColsSuivi;    
-    private Map<TypeColClarity, String> mapColsClarity;   
+    private Map<TypeColSuivi, String> mapColsSuivi;
+    private Map<TypeColClarity, String> mapColsClarity;
     private Map<TypeColChefServ, String> mapColsChefServ;
     private Map<TypeColPic, String> mapColsPic;
-    private Map<TypeColEdition, String> mapColsEdition;   
-    private Map<TypeColApps, String> mapColsApps;  
-    
+    private Map<TypeColEdition, String> mapColsEdition;
+    private Map<TypeColApps, String> mapColsApps;
+
     // Map planificateurs
     private Map<TypePlan, Planificateur> mapPlans;
 
@@ -85,39 +85,41 @@ public class ProprietesXML implements XML, Modele
 
     /**
      * Retourne toutes les map de gestions des colonnes
+     * 
      * @param typeColClass
      * @return
      */
-    @SuppressWarnings ("rawtypes")
+    @SuppressWarnings("rawtypes")
     public <T extends Enum<T> & TypeColR> Map getMap(Class<T> typeColClass)
     {
         switch (typeColClass.getName())
         {
-            case "model.enums.TypeColSuivi" :
+            case "model.enums.TypeColSuivi":
                 return mapColsSuivi;
-            
-            case "model.enums.TypeColClarity" :
+
+            case "model.enums.TypeColClarity":
                 return mapColsClarity;
-                
-            case "model.enums.TypeColChefServ" :
+
+            case "model.enums.TypeColChefServ":
                 return mapColsChefServ;
-            
-            case "model.enums.TypeColPic" :
+
+            case "model.enums.TypeColPic":
                 return mapColsPic;
-                
-            case "model.enums.TypeColEdition" :
+
+            case "model.enums.TypeColEdition":
                 return mapColsEdition;
-                
-            case "model.enums.TypeColApps" :
+
+            case "model.enums.TypeColApps":
                 return mapColsApps;
-                
-            default :
+
+            default:
                 throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);
-        }        
+        }
     }
-    
+
     /**
      * Retourne la liste des colonnes avec clefs et valeurs inversées
+     * 
      * @return
      */
     public <T extends Enum<T> & TypeColR> Map<String, T> getMapColsInvert(Class<T> typeColClass)
@@ -125,80 +127,80 @@ public class ProprietesXML implements XML, Modele
         Map<String, T> retour = new HashMap<>();
         for (Object entry : getMap(typeColClass).entrySet())
         {
-            @SuppressWarnings ({ "unchecked", "rawtypes" })
+            @SuppressWarnings({ "unchecked", "rawtypes" })
             Map.Entry<T, String> test = (Map.Entry) entry;
-            retour.put((String)test.getValue(), (T)test.getKey());
+            retour.put((String) test.getValue(), (T) test.getKey());
         }
         return retour;
     }
-    
+
     /*---------- ACCESSEURS ----------*/
 
     @XmlElementWrapper
-    @XmlElement (name = "mapParams", required = false)
+    @XmlElement(name = "mapParams", required = false)
     public Map<Param, String> getMapParams()
     {
         return mapParams;
     }
 
     @XmlElementWrapper
-    @XmlElement (name = "mapParamsBool", required = false)
+    @XmlElement(name = "mapParamsBool", required = false)
     public Map<ParamBool, Boolean> getMapParamsBool()
     {
         return mapParamsBool;
     }
-    
+
     @XmlElementWrapper
-    @XmlElement (name = "mapPlans", required = false)
+    @XmlElement(name = "mapPlans", required = false)
     public Map<TypePlan, Planificateur> getMapPlans()
     {
         return mapPlans;
     }
-    
+
     @XmlElementWrapper
-    @XmlElement (name = "mapColsSuivi", required = false)
+    @XmlElement(name = "mapColsSuivi", required = false)
     private Map<TypeColSuivi, String> getMapColsSuivi()
     {
         return mapColsSuivi;
-    }    
-    
+    }
+
     @XmlElementWrapper
-    @XmlElement (name = "mapColsClarity", required = false)
+    @XmlElement(name = "mapColsClarity", required = false)
     private Map<TypeColClarity, String> getMapColsClarity()
     {
         return mapColsClarity;
     }
-    
+
     @XmlElementWrapper
-    @XmlElement (name = "mapColsChefServ", required = false)
+    @XmlElement(name = "mapColsChefServ", required = false)
     private Map<TypeColChefServ, String> getMapColsChefServ()
     {
         return mapColsChefServ;
     }
-    
+
     @XmlElementWrapper
-    @XmlElement (name = "mapColsPic", required = false)
+    @XmlElement(name = "mapColsPic", required = false)
     private Map<TypeColPic, String> getMapColsPic()
     {
         return mapColsPic;
     }
-    
+
     @XmlElementWrapper
-    @XmlElement (name = "mapColsEdition", required = false)
+    @XmlElement(name = "mapColsEdition", required = false)
     private Map<TypeColEdition, String> getMapColsEdition()
     {
         return mapColsEdition;
     }
-    
+
     @XmlElementWrapper
-    @XmlElement (name = "mapColsApps", required = false)
+    @XmlElement(name = "mapColsApps", required = false)
     private Map<TypeColApps, String> getMapColsApps()
     {
         return mapColsApps;
     }
-    
+
     @XmlElementWrapper
-    @XmlElement (name = "mapParamsSpec", required = false)
+    @XmlElement(name = "mapParamsSpec", required = false)
     public Map<ParamSpec, String> getMapParamsSpec()
     {
         return mapParamsSpec;
@@ -209,7 +211,6 @@ public class ProprietesXML implements XML, Modele
     {
         return new File(Statics.JARPATH + NOMFICHIER);
     }
-    
 
     @Override
     public File getResource()
@@ -230,7 +231,6 @@ public class ProprietesXML implements XML, Modele
         controleMap(builderErreurs, TypeColPic.class, mapColsPic);
         controleMap(builderErreurs, TypeColEdition.class, mapColsEdition);
 
-
         // Renvoi du booleen
         if (builderErreurs.length() == 0)
         {
@@ -243,9 +243,10 @@ public class ProprietesXML implements XML, Modele
             return false;
         }
     }
-    
+
     /**
      * Méthodes générique pour controler les valeur d'une map
+     * 
      * @param builderErreurs
      * @param typeCol
      * @param mapCols
@@ -253,7 +254,7 @@ public class ProprietesXML implements XML, Modele
     private <T extends Enum<T> & TypeColR> void controleMap(StringBuilder builderErreurs, Class<T> typeCol, Map<T, String> mapCols)
     {
         for (T type : typeCol.getEnumConstants())
-        {            
+        {
             if (mapCols.get(type) == null || mapCols.get(type).isEmpty())
                 builderErreurs.append(type.getValeur()).append(Statics.NL);
         }
@@ -268,21 +269,21 @@ public class ProprietesXML implements XML, Modele
     {
         // Contrôle des paramètres
         StringBuilder builderErreurs = new StringBuilder();
-        
+
         // Paramètres classiques
         for (Param typeParam : Param.values())
         {
             if (mapParams.get(typeParam) == null || mapParams.get(typeParam).isEmpty())
                 builderErreurs.append(typeParam.toString()).append(Statics.NL);
         }
-        
+
         // Paramètres spéciaux
         for (ParamSpec typeParam : ParamSpec.values())
         {
             if (mapParamsSpec.get(typeParam) == null || mapParamsSpec.get(typeParam).isEmpty())
                 builderErreurs.append(typeParam.toString()).append(Statics.NL);
         }
-        
+
         if (builderErreurs.length() == 0)
         {
             builder.append("Paramètres OK").append(Statics.NL);
@@ -294,7 +295,7 @@ public class ProprietesXML implements XML, Modele
             return false;
         }
     }
-    
+
     /**
      * 
      * @param

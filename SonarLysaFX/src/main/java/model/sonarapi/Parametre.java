@@ -17,7 +17,7 @@ public class Parametre
 
     public Parametre()
     {
-        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML  
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

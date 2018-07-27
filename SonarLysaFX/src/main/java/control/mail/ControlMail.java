@@ -72,7 +72,8 @@ public class ControlMail
         try
         {
             initMail();
-        } catch (TeamRepositoryException e)
+        } 
+        catch (TeamRepositoryException e)
         {
             LOGPLANTAGE.error(e);
             LOGGER.error("Plantage au moment d'initialiser le controleur de mail. Voir log des plantages");
@@ -112,8 +113,8 @@ public class ControlMail
             transportMail();
 
             LOGGER.info("Envoi du mail de rapport OK.");
-
-        } catch (MessagingException e)
+        } 
+        catch (MessagingException e)
         {
             LOGPLANTAGE.error(e);
             LOGGER.error("Erreur lors de la création du mail. Voir log plantage");

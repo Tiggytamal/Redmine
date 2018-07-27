@@ -36,8 +36,8 @@ public class TimeSpinner extends Spinner<LocalTime>
         LocalTimeConverter localTimeConverter = new LocalTimeConverter();
 
         // Contrôle le texte édité pour vérifer le format 00:00
-        TextFormatter<LocalTime> textFormatter = new TextFormatter<>(localTimeConverter, time, c -> c.getControlNewText().matches("[0-9]{0,2}:[0-9]{0,2}") ? c : null );
-        
+        TextFormatter<LocalTime> textFormatter = new TextFormatter<>(localTimeConverter, time, c -> c.getControlNewText().matches("[0-9]{0,2}:[0-9]{0,2}") ? c : null);
+
         LocalTimeSpinnerValueFactory valueFactory = new LocalTimeSpinnerValueFactory();
         valueFactory.setConverter(localTimeConverter);
         valueFactory.setValue(time);
@@ -53,7 +53,7 @@ public class TimeSpinner extends Spinner<LocalTime>
             else
                 mode.set(Mode.MINUTES);
         });
-        
+
         // Selection du nouveau mode
         mode.addListener((obs, oldMode, newMode) -> newMode.select(this));
     }
@@ -62,7 +62,7 @@ public class TimeSpinner extends Spinner<LocalTime>
     {
         this(LocalTime.now());
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
 
@@ -84,12 +84,13 @@ public class TimeSpinner extends Spinner<LocalTime>
     }
 
     /*---------- CLASSES INTERNES ----------*/
-    
+
     // Mode represents the unit that is currently being edited.
     // For convenience expose methods for incrementing and decrementing that unit, and for selecting the appropriate portion in a spinner's editor
     private enum Mode 
     {
-        HOURS {
+        HOURS 
+        {
             @Override
             LocalTime increment(LocalTime time, int steps)
             {
@@ -103,7 +104,8 @@ public class TimeSpinner extends Spinner<LocalTime>
                 spinner.getEditor().selectRange(0, index);
             }
         },
-        MINUTES {
+        MINUTES 
+        {
             @Override
             LocalTime increment(LocalTime time, int steps)
             {
@@ -117,7 +119,7 @@ public class TimeSpinner extends Spinner<LocalTime>
                 spinner.getEditor().selectRange(hrIndex + 1, hrIndex + 3);
             }
         };
-        
+
         abstract LocalTime increment(LocalTime time, int steps);
 
         abstract void select(TimeSpinner spinner);

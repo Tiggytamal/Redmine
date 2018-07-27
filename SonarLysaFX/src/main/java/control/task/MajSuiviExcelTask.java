@@ -56,11 +56,13 @@ import utilities.Utilities;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class MajSuiviExcelTask extends SonarTask
+public class MajSuiviExcelTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
     private TypeMaj typeMaj;
+    private static final short ETAPES = 6;
+    private static final short DUPLI = 3;
 
     /** logger applications non listée dans le référentiel */
     private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
@@ -71,7 +73,7 @@ public class MajSuiviExcelTask extends SonarTask
 
     public MajSuiviExcelTask(TypeMaj typeMaj)
     {
-        super(6);
+        super(ETAPES);
         this.typeMaj = typeMaj;
         annulable = false;
     }
@@ -118,11 +120,11 @@ public class MajSuiviExcelTask extends SonarTask
 
             case MULTI:
                 // Appel de la mise à jour des composants Sonar
-                CreerListeComposantsTask majListeCompos = new CreerListeComposantsTask();
                 try
                 {
-                    majListeCompos.call();
-                } catch (Exception e)
+                    new CreerListeComposantsTask().call();
+                }
+                catch (Exception e)
                 {
                     LOGPLANTAGE.error(e);
                     throw new TechnicalException("Plantage mise à jour des composants Sonar", e);
@@ -155,7 +157,8 @@ public class MajSuiviExcelTask extends SonarTask
         {
             // Récupération de l'objet complet depuis l'handle de la requête
             LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle(handle);
-            updateProgress(++i, size);
+            i++;
+            updateProgress(i, size);
             updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).toString());
             map.put(lot.getLot(), lot);
         }
@@ -177,7 +180,7 @@ public class MajSuiviExcelTask extends SonarTask
         List<String> anoDatastage = majFichierSuiviExcelDataStage();
 
         // Récupération anomalies Java
-        initEtape(5);
+        initEtape(ETAPES - 1);
         List<String> anoJava = majFichierSuiviExcel();
 
         // Liste des anomalies sur plusieures matières
@@ -189,8 +192,7 @@ public class MajSuiviExcelTask extends SonarTask
         }
 
         // Mise à jour des fichiers Excel
-        ControlSuivi controlAnoJava = ExcelFactory.getReader(TypeColSuivi.class,
-                new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIER)));
+        ControlSuivi controlAnoJava = ExcelFactory.getReader(TypeColSuivi.class, new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIER)));
         ControlSuivi controlAnoDataStage = ExcelFactory.getReader(TypeColSuivi.class,
                 new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE)));
         controlAnoJava.majMultiMatiere(anoMultiple);
@@ -321,7 +323,8 @@ public class MajSuiviExcelTask extends SonarTask
                     // Traitement + message
                     String nomLot = "Lot " + lot;
                     updateMessage(base + "Ajout : " + nomLot);
-                    updateProgress(++i, size);
+                    i++;
+                    updateProgress(i, size);
                     api.ajouterSousVue(new Vue("view_lot_" + lot, nomLot), vueParent);
                 }
             }
@@ -363,7 +366,8 @@ public class MajSuiviExcelTask extends SonarTask
             for (ComposantSonar compo : entry.getValue())
             {
                 traitementProjet(compo, retour, entryKey, lotSecurite, lotRelease, base);
-                updateProgress(++i, size);
+                i++;
+                updateProgress(i, size);
             }
         }
         return retour;
@@ -498,7 +502,7 @@ public class MajSuiviExcelTask extends SonarTask
         List<Periode> bloquants = getListPeriode(metriques, TypeMetrique.BLOQUANT);
         List<Periode> critiques = getListPeriode(metriques, TypeMetrique.CRITIQUE);
         List<Periode> duplication = getListPeriode(metriques, TypeMetrique.DUPLICATION);
-        return !alert.isEmpty() && Status.from(alert) == Status.ERROR && (recupLeakPeriod(bloquants) > 0 || recupLeakPeriod(critiques) > 0 || recupLeakPeriod(duplication) > 3);
+        return !alert.isEmpty() && Status.from(alert) == Status.ERROR && (recupLeakPeriod(bloquants) > 0 || recupLeakPeriod(critiques) > 0 || recupLeakPeriod(duplication) > DUPLI);
     }
 
     /**
@@ -522,14 +526,14 @@ public class MajSuiviExcelTask extends SonarTask
     private float recupLeakPeriod(List<Periode> periodes)
     {
         if (periodes == null)
-            return 0f;
+            return 0F;
 
         for (Periode periode : periodes)
         {
             if (periode.getIndex() == 1)
                 return Float.valueOf(periode.getValeur());
         }
-        return 0f;
+        return 0F;
     }
 
     /**
@@ -551,7 +555,7 @@ public class MajSuiviExcelTask extends SonarTask
             String anoLot = ano.getLot();
 
             if (anoLot.startsWith("Lot "))
-                anoLot = anoLot.substring(4);
+                anoLot = anoLot.substring(Statics.SBTRINGLOT);
 
             // Mise à jour des données depuis la PIC
             LotSuiviRTC lotRTC = lotsRTC.get(anoLot);
@@ -603,7 +607,8 @@ public class MajSuiviExcelTask extends SonarTask
             {
                 // Message
                 updateMessage(base + compo.getNom());
-                updateProgress(++i, size);
+                i++;
+                updateProgress(i, size);
 
                 api.associerQualitygate(compo, qg);
             }

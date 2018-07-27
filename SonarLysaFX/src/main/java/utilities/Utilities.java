@@ -22,14 +22,12 @@ import utilities.enums.Severity;
  * @author Tiggy Tamal
  * @since 1.0
  */
-public class Utilities
-{   
+public final class Utilities
+{
     /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
-    
-    private Utilities()
-    {
-    }
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+
+    private Utilities() { }
 
     /**
      * Gets the base location of the given class.
@@ -58,7 +56,8 @@ public class Utilities
             {
                 return codeSourceLocation;
             }
-        } catch (final SecurityException e)
+        }
+        catch (final SecurityException e)
         {
             LOGPLANTAGE.error(e);
         }
@@ -95,7 +94,8 @@ public class Utilities
         try
         {
             return new URL(path);
-        } catch (final MalformedURLException e)
+        }
+        catch (final MalformedURLException e)
         {
             return null;
         }
@@ -141,7 +141,8 @@ public class Utilities
             if (osName().startsWith("Win") && path.matches("file:[A-Za-z]:.*"))
                 path = "file:/" + path.substring(5);
             return new File(new URL(path).toURI());
-        } catch (MalformedURLException | URISyntaxException e)
+        }
+        catch (MalformedURLException | URISyntaxException e)
         {
             LOGPLANTAGE.error(e);
         }
@@ -200,11 +201,12 @@ public class Utilities
      */
     public static void serialisation(String adresseFichier, Object objet)
     {
-        try (FileOutputStream fichier = new FileOutputStream(adresseFichier);ObjectOutputStream oos = new ObjectOutputStream(fichier);)
-        {           
+        try (FileOutputStream fichier = new FileOutputStream(adresseFichier); ObjectOutputStream oos = new ObjectOutputStream(fichier))
+        {
             oos.writeObject(objet);
             oos.flush();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new TechnicalException("Erreur sérialisation", e);
         }
@@ -222,10 +224,11 @@ public class Utilities
     public static <T> T deserialisation(String adresseFichier, Class<T> classeObjet)
     {
         Object objet = null;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(adresseFichier));)
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(adresseFichier)))
         {
             objet = ois.readObject();
-        } catch (IOException | ClassNotFoundException e)
+        }
+        catch (IOException | ClassNotFoundException e)
         {
             throw new TechnicalException("Erreur desérialisation", e);
         }
@@ -233,8 +236,8 @@ public class Utilities
     }
 
     /**
-     * Permet de récupérer un objet soit par désiralisation, soit par une méthode en paramètre
-     * Le paramètrage de déserialisation est dans la classe Main. utilisée uniquement pour le dévelloppement.
+     * Permet de récupérer un objet soit par désiralisation, soit par une méthode en paramètre Le paramètrage de déserialisation est dans la classe Main. utilisée
+     * uniquement pour le dévelloppement.
      * 
      * @param deserialisation
      *            Choix entre sérialisation et désérialisation

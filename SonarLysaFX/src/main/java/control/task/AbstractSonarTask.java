@@ -28,7 +28,7 @@ import utilities.Statics;
 import utilities.Utilities;
 import utilities.enums.Severity;
 
-public abstract class SonarTask extends Task<Boolean>
+public abstract class AbstractSonarTask extends Task<Boolean>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -45,7 +45,7 @@ public abstract class SonarTask extends Task<Boolean>
     /**
      * Constructeur utilisant les données de l'utilisateur. Initialisation des étapes de traitement
      */
-    protected SonarTask(int fin)
+    protected AbstractSonarTask(int fin)
     {
         if (!info.controle())
             throw new FunctionalException(Severity.ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
@@ -54,7 +54,7 @@ public abstract class SonarTask extends Task<Boolean>
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     /**
      * Utilisée pour permettre le retour arrière si possible du traitement
      */
@@ -62,7 +62,7 @@ public abstract class SonarTask extends Task<Boolean>
     {
         // Pas de traitement par default
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
 
     /**
@@ -181,7 +181,7 @@ public abstract class SonarTask extends Task<Boolean>
         updateMessage(RECUPCOMPOSANTS + "OK");
         return retour;
     }
-    
+
     /**
      * Contrôle la matière et les filtres paramétrés
      * 
@@ -263,9 +263,10 @@ public abstract class SonarTask extends Task<Boolean>
 
     protected void etapePlus()
     {
-        setEtape(++debut, fin);
+        debut++;
+        setEtape(debut, fin);
     }
-    
+
     /*---------- ACCESSEURS ----------*/
 
     public String getEtape()

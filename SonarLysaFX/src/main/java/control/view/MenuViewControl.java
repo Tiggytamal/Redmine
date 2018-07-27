@@ -10,7 +10,7 @@ import control.sonar.SonarAPI;
 import control.task.CreerListeComposantsTask;
 import control.task.MajVuesTask;
 import control.task.PurgeSonarTask;
-import control.task.SonarTask;
+import control.task.AbstractSonarTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +31,7 @@ import utilities.TechnicalException;
 import utilities.enums.Severity;
 import view.ConnexionDialog;
 
-public class MenuViewControl extends ViewControl
+public class MenuViewControl extends AbstractViewControl
 {
     /* ---------- ATTIBUTS ---------- */
 
@@ -264,7 +264,7 @@ public class MenuViewControl extends ViewControl
      * @param task
      * @param confirmation
      */
-    private <T extends SonarTask> void alertConfirmation(T task, String confirmation)
+    private <T extends AbstractSonarTask> void alertConfirmation(T task, String confirmation)
     {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.getDialogPane().getStylesheets().add(Statics.CSS);

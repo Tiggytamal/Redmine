@@ -31,7 +31,7 @@ import utilities.enums.Bordure;
  * @since 1.0
  *
  */
-public class ControlAppsW extends ControlExcelWrite<TypeColApps, Collection<Application>>
+public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collection<Application>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -133,23 +133,25 @@ public class ControlAppsW extends ControlExcelWrite<TypeColApps, Collection<Appl
 
     private void calculDeuxiemeFeuille(List<String> codeApps)
     {
-        Sheet finale = wb.createSheet(REFAPPLIS);
-        Sheet sheet = null;
-
-        try (Workbook wb2 = WorkbookFactory.create(new File(NOMFICHIERAUTRE));)
+        // Récupération de la feuille venant du fichier fourni.
+        Sheet sheetbase = null;
+        try (Workbook wb2 = WorkbookFactory.create(new File(NOMFICHIERAUTRE)))
         {
-            sheet = wb2.getSheet(REFAPPLIS);
+            sheetbase = wb2.getSheet(REFAPPLIS);
 
-        } catch (InvalidFormatException | IOException e)
+        } 
+        catch (InvalidFormatException | IOException e)
         {
-            throw new TechnicalException("", e);
+            throw new TechnicalException("Impossible de récupérer la feuille excel - fichier : " + NOMFICHIERAUTRE, e);
         }
+        
+        Sheet sheetFinale = wb.createSheet(REFAPPLIS);
 
-        for (Iterator<Row> iter = sheet.iterator(); iter.hasNext();)
+        for (Iterator<Row> iter = sheetbase.iterator(); iter.hasNext();)
         {
             // Initialisation des deux lignes
             Row base = iter.next();
-            Row row = finale.createRow(finale.getLastRowNum() + 1);
+            Row row = sheetFinale.createRow(sheetFinale.getLastRowNum() + 1);
 
             // On itère sur la ligne de titres
             for (int i = 0; i < base.getLastCellNum(); i++)

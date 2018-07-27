@@ -76,13 +76,8 @@ public enum TypeMetrique
 
     }
 
-    private static class Valeur
+    private static final class Valeur
     {
-        private Valeur()
-        {
-            throw new AssertionError("Classe non instanciable : model.enums.TypeMetrique$Valeur");
-        }
-
         private static final String LOT = "lot";
         private static final String QG = "alert_status";
         private static final String DUPLICATION = "duplicated_lines_density";
@@ -94,5 +89,10 @@ public enum TypeMetrique
         private static final String BUGS = "bugs";
         private static final String LDC = "ncloc";
         private static final String SECURITY = "security_rating";
+        
+        private Valeur()
+        {
+            throw new AssertionError("Classe non instanciable : model.enums.TypeMetrique$Valeur");
+        }
     }
 }

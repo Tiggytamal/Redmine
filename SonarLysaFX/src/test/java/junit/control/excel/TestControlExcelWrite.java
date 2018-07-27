@@ -9,13 +9,13 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Before;
 
-import control.excel.ControlExcelWrite;
+import control.excel.AbstractControlExcelWrite;
 import control.excel.ExcelFactory;
 import junit.JunitBase;
 import model.enums.TypeColW;
 import utilities.Statics;
 
-public class TestControlExcelWrite<T extends Enum<T> & TypeColW, C extends ControlExcelWrite<T, Y>, Y> extends JunitBase
+public class TestControlExcelWrite<T extends Enum<T> & TypeColW, C extends AbstractControlExcelWrite<T, Y>, Y> extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
     

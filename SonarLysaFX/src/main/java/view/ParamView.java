@@ -20,8 +20,14 @@ import utilities.Statics;
  */
 public class ParamView extends VBox implements ViewXML<Param, TextField>
 {
+    /*---------- ATTRIBUTS ----------*/
+
     private Param typeParam;
     private TextField field;
+    private static final short LABELWIDTH = 250;
+    private static final short BASEPADDING = 5;
+    
+    /*---------- CONSTRUCTEURS ----------*/
 
     public ParamView(Param typeParam, String texte)
     {
@@ -35,7 +41,7 @@ public class ParamView extends VBox implements ViewXML<Param, TextField>
 
         // Label
         Label label = new Label(typeParam.toString() + Statics.DEUXPOINTS);
-        label.setPrefWidth(250);
+        label.setPrefWidth(LABELWIDTH);
         box.getChildren().add(label);
 
         // TextField
@@ -47,9 +53,13 @@ public class ParamView extends VBox implements ViewXML<Param, TextField>
 
         // Séparateur
         Separator separ = new Separator();
-        separ.setPadding(new Insets(5, 5, 5, 5));
+        separ.setPadding(new Insets(BASEPADDING, BASEPADDING, BASEPADDING, BASEPADDING));
         rootChildren.add(separ);
     }
+    
+    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
 
     /**
      * @return the typeCol

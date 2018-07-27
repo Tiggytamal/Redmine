@@ -12,7 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import utilities.TechnicalException;
 
-public class AutresVuesViewControl extends ViewControl
+public class AutresVuesViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 

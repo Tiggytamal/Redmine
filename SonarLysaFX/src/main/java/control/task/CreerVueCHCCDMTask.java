@@ -22,20 +22,22 @@ import utilities.enums.Severity;
  * Tâche permettant de créer les vues CHC et CDM depuis Sonar
  * 
  * @author ETP8137 - Grégoire MAthon
- * @since  1.0
+ * @since 1.0
  */
-public class CreerVueCHCCDMTask extends SonarTask
+public class CreerVueCHCCDMTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
     private List<String> annees;
     private CHCouCDM chccdm;
+    private static final short ETAPES = 3;
+    private static final long NBRESEMAINES = 52;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public CreerVueCHCCDMTask(List<String> annees, CHCouCDM chccdm)
     {
-        super(3);
+        super(ETAPES);
         annulable = false;
         if (annees == null || annees.isEmpty())
             throw new FunctionalException(Severity.ERROR, "Création task CreerVueCHCCDMTask sans liste d'années");
@@ -81,13 +83,14 @@ public class CreerVueCHCCDMTask extends SonarTask
                 base = "CHC" + annee;
 
             // Suprression des vues existantes possibles
-            for (int i = 1; i < 53; i++)
+            for (int i = 1; i <= NBRESEMAINES; i++)
             {
                 StringBuilder builder = new StringBuilder(base).append("-S").append(String.format("%02d", i));
                 String message = builder.toString();
                 api.supprimerProjet(builder.append("Key").toString(), false);
                 updateMessage(baseMessage + message);
-                updateProgress(j++, 52l * annees.size());
+                updateProgress(j, NBRESEMAINES * annees.size());
+                j++;
             }
         }
     }
@@ -141,7 +144,7 @@ public class CreerVueCHCCDMTask extends SonarTask
 
     private boolean controle(CHCouCDM chccdm, String keyCHC)
     {
-        return chccdm == CHCouCDM.CDM && keyCHC.contains("CDM") || chccdm == CHCouCDM.CHC  && !keyCHC.contains("CDM");
+        return (chccdm == CHCouCDM.CDM && keyCHC.contains("CDM")) || (chccdm == CHCouCDM.CHC && !keyCHC.contains("CDM"));
     }
 
     private void creerVues(Map<String, Set<String>> mapVuesACreer)

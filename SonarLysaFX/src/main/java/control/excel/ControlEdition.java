@@ -21,7 +21,7 @@ import utilities.enums.Severity;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlEdition extends ControlExcelRead<TypeColEdition, Map<String, String>>
+public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map<String, String>>
 {
     /*---------- ATTRIBUTS ----------*/
 

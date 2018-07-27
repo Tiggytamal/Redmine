@@ -8,7 +8,8 @@ import java.io.File;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public interface XML{
+public interface XML
+{
     /**
      * Retourne le fichier de sauvegarde de l'objet
      * 
@@ -28,4 +29,5 @@ public interface XML{
      * 
      * @return le contrôle des données
      */
-    public String controleDonnees();}
+    public String controleDonnees();
+}

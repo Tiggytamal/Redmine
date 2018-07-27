@@ -10,7 +10,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import utilities.TechnicalException;
 
-public class SuiviViewControl extends ViewControl
+public class SuiviViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -28,11 +28,11 @@ public class SuiviViewControl extends ViewControl
     private VBox selectPane;
     @FXML
     private Button executer;
-    
+
     private TypeMaj typeMaj;
-    
-    /*---------- CONSTRUCTEURS ----------*/   
-    
+
+    /*---------- CONSTRUCTEURS ----------*/
+
     /*---------- METHODES PUBLIQUES ----------*/
 
     @FXML
@@ -51,31 +51,31 @@ public class SuiviViewControl extends ViewControl
 
         switch (id)
         {
-            case "radioSuivi" :
+            case "radioSuivi":
                 executer.setDisable(false);
                 typeMaj = TypeMaj.SUIVI;
                 break;
 
-            case "radioDataStage" :
+            case "radioDataStage":
                 executer.setDisable(false);
                 typeMaj = TypeMaj.DATASTAGE;
                 break;
-                
-            case "radioCobol" :
+
+            case "radioCobol":
                 executer.setDisable(false);
                 typeMaj = TypeMaj.COBOL;
                 break;
-                
-            case "radioMulti" :
+
+            case "radioMulti":
                 executer.setDisable(false);
                 typeMaj = TypeMaj.MULTI;
                 break;
-                
-            default :
+
+            default:
                 throw new TechnicalException("RadioButton pas géré" + id, null);
         }
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

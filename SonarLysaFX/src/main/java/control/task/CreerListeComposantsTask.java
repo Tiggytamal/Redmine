@@ -19,17 +19,18 @@ import model.sonarapi.Projet;
 import utilities.Statics;
 import utilities.Utilities;
 
-public class CreerListeComposantsTask extends SonarTask
+public class CreerListeComposantsTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
     private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
+    private static final short ETAPES = 2;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public CreerListeComposantsTask()
     {
-        super(2);
+        super(ETAPES);
         annulable = false;
     }
 
@@ -65,7 +66,9 @@ public class CreerListeComposantsTask extends SonarTask
         {
             // Affichage
             updateMessage(base + projet.getNom());
-            updateProgress(++i, size);
+            i++;
+            updateProgress(i, size);
+            
             LOGCONSOLE.debug("Traitement composants Sonar : " + i + " - " + size);
 
             // Récupération du numéro de lot et de l'applicaitond e chaque composant.
@@ -82,7 +85,8 @@ public class CreerListeComposantsTask extends SonarTask
             composantSonar.setEdition(composant.getMapMetriques().computeIfAbsent(TypeMetrique.EDITION, t -> new Metrique(TypeMetrique.EDITION, null)).getValue());
             composantSonar.setLdc(Integer.parseInt(composant.getMapMetriques().computeIfAbsent(TypeMetrique.LDC, t -> new Metrique(TypeMetrique.LDC, "0")).getValue()));
             composantSonar.setSecurity((int) Float.parseFloat(composant.getMapMetriques().computeIfAbsent(TypeMetrique.SECURITY, t -> new Metrique(TypeMetrique.LDC, "0")).getValue()));
-            composantSonar.setVulnerabilites(Integer.parseInt(composant.getMapMetriques().computeIfAbsent(TypeMetrique.VULNERABILITIES, t -> new Metrique(TypeMetrique.VULNERABILITIES, "0")).getValue()));
+            composantSonar
+                    .setVulnerabilites(Integer.parseInt(composant.getMapMetriques().computeIfAbsent(TypeMetrique.VULNERABILITIES, t -> new Metrique(TypeMetrique.VULNERABILITIES, "0")).getValue()));
             mapSonar.put(composantSonar.getKey(), composantSonar);
         }
 

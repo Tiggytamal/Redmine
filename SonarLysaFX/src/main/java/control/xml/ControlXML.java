@@ -69,7 +69,8 @@ public class ControlXML
             if (file.exists())
                 retour = (T) context.createUnmarshaller().unmarshal(file);
 
-        } catch (JAXBException e)
+        }
+        catch (JAXBException e)
         {
             throw new TechnicalException("Impossible de récupérer le fichier de paramètre, erreur JAXB", e);
         }
@@ -100,7 +101,8 @@ public class ControlXML
             if (file.exists())
                 retour = (T) context.createUnmarshaller().unmarshal(file);
 
-        } catch (JAXBException e)
+        }
+        catch (JAXBException e)
         {
             throw new TechnicalException("Impossible de récupérer le fichier de paramètre, erreur JAXB", e);
         }
@@ -123,7 +125,8 @@ public class ControlXML
             Marshaller jaxbMarshaller = context.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.marshal(fichier, fichier.getFile());
-        } catch (JAXBException e)
+        }
+        catch (JAXBException e)
         {
             LOGPLANTAGE.error(e);
             throw new TechnicalException("Impossible de sauvegarder le fichier de propriété", e);

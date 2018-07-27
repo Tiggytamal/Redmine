@@ -22,21 +22,22 @@ import model.enums.TypeMail;
 import utilities.Statics;
 import utilities.TechnicalException;
 
-public class PurgeSonarTask extends SonarTask
+public class PurgeSonarTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    public static final String TITRE = "Purge des composants SonarQube";
-    private ControlMail controlMail;
-
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    public static final String TITRE = "Purge des composants SonarQube";
+    private static final short ETAPES = 2;
+    private static final short MAXVERSION = 3;
+    private ControlMail controlMail;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public PurgeSonarTask()
     {
-        super(2);
+        super(ETAPES);
         annulable = true;
         controlMail = new ControlMail();
     }
@@ -153,7 +154,7 @@ public class PurgeSonarTask extends SonarTask
 
             // ----- c. Selon paramétrage, on va garder les 3 versions des composants les plus récents
             if (Pattern.compile("[(" + listeVersion.get(0) + ")]$").matcher(premier.getKey()).find() && Statics.proprietesXML.getMapParamsBool().get(ParamBool.SUPPSONAR))
-                i = 3;
+                i = MAXVERSION;
 
             // ----- d. boucle pour créer la liste des composants à supprimer
             // De fait que le remove reduit la taille de la liste, il ne faut pas incrémenter l'indice

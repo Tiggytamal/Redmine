@@ -17,7 +17,7 @@ public class LaunchTask
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
-    protected void startTask(SonarTask task, String titre)
+    protected void startTask(AbstractSonarTask task, String titre)
     {
         ProgressDialog dialog;
         if (titre != null)

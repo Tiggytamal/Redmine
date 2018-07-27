@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Calsse de modèle du fichier Excel des responsables de services
+ * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
@@ -19,9 +20,9 @@ public class RespService implements Modele, Serializable
     private String nom;
 
     /*---------- CONSTRUCTEURS ----------*/
-    
+
     RespService() {}
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

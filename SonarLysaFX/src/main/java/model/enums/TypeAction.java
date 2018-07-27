@@ -64,13 +64,8 @@ public enum TypeAction
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
     
-    private static class Valeur
+    private static final class Valeur
     {
-        private Valeur() 
-        {
-            throw new AssertionError("Classe non instanciable : model.enums.TypeAction$Valeur.");
-        }
-
         private static final String CREER = "A créer";
         private static final String VERIFIER = "A vérifier";
         private static final String ASSEMBLER = "A assembler";
@@ -78,5 +73,10 @@ public enum TypeAction
         private static final String ABANDONNER = "A abandonner";
         private static final String RELANCER = "A relancer";
         private static final String VIDE = "";
+        
+        private Valeur() 
+        {
+            throw new AssertionError("Classe non instanciable : model.enums.TypeAction$Valeur.");
+        }
     }
 }

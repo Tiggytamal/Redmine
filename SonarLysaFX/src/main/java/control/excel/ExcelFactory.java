@@ -20,7 +20,7 @@ public interface ExcelFactory
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Enum<T> & TypeColR, R extends ControlExcelRead<T, Y>, Y> R getReader(Class<T> type, File file)
+    public static <T extends Enum<T> & TypeColR, R extends AbstractControlExcelRead<T, Y>, Y> R getReader(Class<T> type, File file)
     {
         switch (type.getName())
         {           
@@ -56,7 +56,7 @@ public interface ExcelFactory
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Enum<T> & TypeColW, R extends ControlExcelWrite<T, Y>, Y> R getWriter(Class<T> type, File file)
+    public static <T extends Enum<T> & TypeColW, R extends AbstractControlExcelWrite<T, Y>, Y> R getWriter(Class<T> type, File file)
     {
         switch (type.getName())
         {           

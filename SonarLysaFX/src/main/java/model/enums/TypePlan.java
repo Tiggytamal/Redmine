@@ -5,7 +5,7 @@ import java.io.Serializable;
 import control.quartz.JobAnomaliesSonar;
 import control.quartz.JobVuesCDM;
 import control.quartz.JobVuesCHC;
-import control.task.JobForTask;
+import control.task.AbstractJobForTask;
 
 /**
  * Enumération des types de planificateurs. Chaque Enumération contient le nom et la classe du Job traitée par le planificateur
@@ -23,11 +23,11 @@ public enum TypePlan implements Serializable, TypeKey
     VUECDM("Vues CHC_CDM", JobVuesCDM.class);
 
     private String string;
-    private Class<? extends JobForTask> classJob;
+    private Class<? extends AbstractJobForTask> classJob;
 
     /*---------- CONSTRUCTEURS ----------*/
     
-    private TypePlan(String string, Class<? extends JobForTask> classJob)
+    private TypePlan(String string, Class<? extends AbstractJobForTask> classJob)
     {
         this.string = string;
         this.classJob = classJob;
@@ -41,7 +41,7 @@ public enum TypePlan implements Serializable, TypeKey
         return string;
     }
 
-    public Class<? extends JobForTask> getClassJob()
+    public Class<? extends AbstractJobForTask> getClassJob()
     {
         return classJob;
     }

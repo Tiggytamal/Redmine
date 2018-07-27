@@ -30,6 +30,7 @@ public class CellHelper
     
     private Workbook wb;
     private CreationHelper ch;
+    private static final short SIZEFONT = 12;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -81,7 +82,7 @@ public class CellHelper
         Font font = wb.createFont();
         font.setColor(color.index);
         font.setFontName("Comic Sans MS");
-        font.setFontHeightInPoints((short) 12);
+        font.setFontHeightInPoints(SIZEFONT);
         style.setFont(font);
         cell.setCellStyle(style);
         return cell;
@@ -130,12 +131,12 @@ public class CellHelper
      */
     public CellStyle getStyle(IndexedColors couleur, Bordure bordure)
     {
-        // Initialisation du style
-        CellStyle style = wb.createCellStyle();
-
         // Renvoie un style vide sans statut d'incident
         if (couleur == null || bordure == null)
             throw new IllegalArgumentException("La couleur ou la bordure ne peuvent être nulles");
+        
+        // Initialisation du style
+        CellStyle style = wb.createCellStyle();
 
         // Création du style
         prepareStyle(style, couleur, bordure);

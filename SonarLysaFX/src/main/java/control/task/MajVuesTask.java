@@ -7,7 +7,7 @@ package control.task;
  * @since 1.0
  *
  */
-public class MajVuesTask extends SonarTask
+public class MajVuesTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
     

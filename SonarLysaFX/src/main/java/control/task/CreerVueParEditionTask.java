@@ -8,14 +8,21 @@ import model.enums.Matiere;
 import model.sonarapi.Vue;
 import utilities.Statics;
 
-public class CreerVueParEditionTask extends SonarTask
+public class CreerVueParEditionTask extends AbstractSonarTask
 {
+    /*---------- ATTRIBUTS ----------*/
+    
+    private static final short ETAPES = 2;
+    
+    /*---------- CONSTRUCTEURS ----------*/
 
     public CreerVueParEditionTask()
     {
-        super(2);
+        super(ETAPES);
         annulable = false;
     }
+    
+    /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
     protected Boolean call() throws Exception
@@ -51,4 +58,6 @@ public class CreerVueParEditionTask extends SonarTask
         return true;
     }
 
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
 }

@@ -29,7 +29,7 @@ import view.TrayIconView;
  * 
  * @author ETP8137 - Grégoire Mathon
  */
-public class PlanificateurViewControl extends ViewControl
+public class PlanificateurViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -72,6 +72,7 @@ public class PlanificateurViewControl extends ViewControl
     private TimeSpinner spinner;
     private Planificateur planificateur;
     private final LocalDate today = LocalDate.now();
+    private static final short COL2 = 2;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -137,21 +138,21 @@ public class PlanificateurViewControl extends ViewControl
 
         switch (id)
         {
-            case "radioSuivi" :
+            case "radioSuivi":
                 planificateur = initPlan(TypePlan.SUIVIHEBDO);
                 break;
 
-            case "radioChc" :
+            case "radioChc":
                 planificateur = initPlan(TypePlan.VUECHC);
-                vboxPane.getChildren().add(2, anneePane);
+                vboxPane.getChildren().add(COL2, anneePane);
                 break;
 
-            case "radioCdm" :
+            case "radioCdm":
                 planificateur = initPlan(TypePlan.VUECDM);
-                vboxPane.getChildren().add(2, anneePane);
+                vboxPane.getChildren().add(COL2, anneePane);
                 break;
 
-            default :
+            default:
                 throw new TechnicalException("RadioButton pas géré" + id, null);
         }
         setInfos(planificateur);
@@ -163,30 +164,30 @@ public class PlanificateurViewControl extends ViewControl
     {
         if (planificateur == null)
             return;
-        
+
         lundiBox.setSelected(planificateur.isLundi());
         mardiBox.setSelected(planificateur.isMardi());
         mercrediBox.setSelected(planificateur.isMercredi());
         jeudiBox.setSelected(planificateur.isJeudi());
         vendrediBox.setSelected(planificateur.isVendredi());
         activeBox.setSelected(planificateur.isActive());
-        
+
         // Gestion de l'heure de déclenchement
         hboxPane.getChildren().remove(spinner);
         spinner = new TimeSpinner(planificateur.getHeure());
         hboxPane.getChildren().add(spinner);
-        
+
         // Gestion des cases à cocher
         if (planificateur.getAnnees().contains(String.valueOf(today.getYear() + 1)))
-                suivanteBox.setSelected(true);
+            suivanteBox.setSelected(true);
         else
             suivanteBox.setSelected(false);
-        
+
         if (planificateur.getAnnees().contains(String.valueOf(today.getYear() - 1)))
-                precedenteBox.setSelected(true);
+            precedenteBox.setSelected(true);
         else
             precedenteBox.setSelected(false);
-        
+
     }
 
     private Planificateur initPlan(TypePlan typePlan)

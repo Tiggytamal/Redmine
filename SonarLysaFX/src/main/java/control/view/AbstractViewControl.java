@@ -12,7 +12,7 @@ import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
 
-public abstract class ViewControl extends LaunchTask
+public abstract class AbstractViewControl extends LaunchTask
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -50,7 +50,7 @@ public abstract class ViewControl extends LaunchTask
             throw new FunctionalException(Severity.INFO, "Impossible de récupérer le fichier.");
         return file;
     }
-    
+
     /**
      * Initialise la fenêtre de l'explorateur de fichier, et retourne le fichier selectionné.
      * 

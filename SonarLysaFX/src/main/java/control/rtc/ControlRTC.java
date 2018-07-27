@@ -72,22 +72,24 @@ public class ControlRTC
     /*---------- ATTRIBUTS ----------*/
 
     private final LocalDate today = LocalDate.now();
-    
+
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");  
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+    /** Taille de la pagination */
+    private static final int PAGESIZE = 512;
     
-    /** Instance du controleur */
-    public static final ControlRTC INSTANCE = new ControlRTC();
-
     private ITeamRepository repo;
     private IProgressMonitor progressMonitor;
     private Map<String, IProjectArea> pareas;
     private IWorkItemClient workItemClient;
     private IAuditableClient auditableClient;
     private IAuditableCommon auditableCommon;
-    
+
+    /** Instance du controleur */
+    public static final ControlRTC INSTANCE = new ControlRTC();
+
     /*---------- CONSTRUCTEURS ----------*/
 
     /**
@@ -126,7 +128,7 @@ public class ControlRTC
                 repo.registerLoginHandler((ITeamRepository repository) -> new UsernameAndPasswordLoginInfo(Statics.info.getPseudo(), Statics.info.getMotDePasse()));
                 repo.login(progressMonitor);
             }
-            
+
             // Récupérationd e tous les projets si la iste est vide. Effectuée normalemetn une seule fois par instance.
             if (pareas.isEmpty())
                 recupererTousLesProjets();
@@ -244,7 +246,6 @@ public class ControlRTC
             WorkItemInitialization init = new WorkItemInitialization(itemType, cat, projet, ano);
             IWorkItemHandle handle = init.run(itemType, progressMonitor);
             workItem = auditableClient.fetchCurrentAuditable(handle, WorkItem.FULL_PROFILE, progressMonitor);
-
         } 
         catch (TeamRepositoryException e)
         {
@@ -368,7 +369,7 @@ public class ControlRTC
         final List<?> handles = page.getItemHandles();
         if (!handles.isEmpty())
         {
-            return (IContributor)  repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, progressMonitor);
+            return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, progressMonitor);
         }
 
         return null;
@@ -401,7 +402,8 @@ public class ControlRTC
         IItemQuery query = IItemQuery.FACTORY.newInstance(WorkItemQueryModel.ROOT);
 
         // Predicate avec un paramètre poru chercher depuis le nom avec un paramètre de type String
-        IPredicate predicatFinal = WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotprojet")._or(WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotfonctionnement"));
+        IPredicate predicatFinal = WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotprojet")
+                ._or(WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotfonctionnement"));
 
         // Prise en compte de la date de création si elle est fournie
         if (dateCreation != null)
@@ -442,7 +444,7 @@ public class ControlRTC
         IQueryService qs = ((TeamRepository) repo).getQueryService();
 
         // Appel de la reqête avec le filtre
-        int pageSize = 512;
+        int pageSize = PAGESIZE;
         IItemQueryPage page = qs.queryItems(filtered, new Object[] {}, pageSize);
 
         // Liste de tous les lots trouvés.
@@ -561,12 +563,12 @@ public class ControlRTC
     /*---------- METHODES PRIVEES ----------*/
 
     /*---------- ACCESSEURS ----------*/
-    
+
     ITeamRepository getRepo()
     {
         return repo;
     }
-    
+
     IWorkItemClient getClient()
     {
         return workItemClient;

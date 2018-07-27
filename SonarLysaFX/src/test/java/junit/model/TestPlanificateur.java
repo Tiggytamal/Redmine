@@ -1,6 +1,7 @@
 package junit.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
@@ -44,7 +45,7 @@ public class TestPlanificateur extends JunitBase
     public void testIsLundi()
     {
         // Test valeur après initialisation
-        assertEquals(false, plan.isLundi());
+        assertFalse(plan.isLundi());
         
         // Test setter et getter
         plan.setLundi(true);
@@ -55,7 +56,7 @@ public class TestPlanificateur extends JunitBase
     public void testIsMardi()
     {
         // Test valeur après initialisation
-        assertEquals(false, plan.isMardi());
+        assertFalse(plan.isMardi());
         
         // Test setter et getter
         plan.setMardi(true);
@@ -66,7 +67,7 @@ public class TestPlanificateur extends JunitBase
     public void testIsMercredi()
     {
         // Test valeur après initialisation
-        assertEquals(false, plan.isMercredi());
+        assertFalse(plan.isMercredi());
         
         // Test setter et getter
         plan.setMercredi(true);
@@ -77,7 +78,7 @@ public class TestPlanificateur extends JunitBase
     public void testIsJeudi()
     {
         // Test valeur après initialisation
-        assertEquals(false, plan.isJeudi());
+        assertFalse(plan.isJeudi());
         
         // Test setter et getter
         plan.setJeudi(true);
@@ -88,7 +89,7 @@ public class TestPlanificateur extends JunitBase
     public void testIsVendredi()
     {
         // Test valeur après initialisation
-        assertEquals(false, plan.isVendredi());
+        assertFalse(plan.isVendredi());
         
         // Test setter et getter
         plan.setVendredi(true);
@@ -110,7 +111,7 @@ public class TestPlanificateur extends JunitBase
     public void testIsActive()
     {
         // Test valeur après initialisation
-        assertEquals(false, plan.isActive());
+        assertFalse(plan.isActive());
         
         // Test setter et getter
         plan.setActive(true);

@@ -20,20 +20,20 @@ import model.sonarapi.Parametre;
 import utilities.Statics;
 import utilities.Utilities;
 
-public class CreerExtractVulnerabiliteTask extends SonarTask
+public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
 {
 
     /*---------- ATTRIBUTS ----------*/
-    
+
     private ControlExtractVul control;
-    private static final Logger LOGGER = LogManager.getLogger("complet-log"); 
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public CreerExtractVulnerabiliteTask(File file)
     {
         super(TypeVulnerabilite.values().length);
-        control =  new ControlExtractVul(file);
+        control = new ControlExtractVul(file);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -47,9 +47,9 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
     /*---------- METHODES PRIVEES ----------*/
 
     private boolean creerExtract()
-    {       
+    {
         // Création liste des noms des composants du patrimoine
-        List<String> nomsComposPatrimoine = new ArrayList<>();       
+        List<String> nomsComposPatrimoine = new ArrayList<>();
         for (ComposantSonar compo : recupererComposantsSonar().values())
         {
             nomsComposPatrimoine.add(compo.getNom());
@@ -58,8 +58,9 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
         for (TypeVulnerabilite type : TypeVulnerabilite.values())
         {
             @SuppressWarnings("unchecked")
-            List<Vulnerabilite> vulnerabilites = Utilities.recuperation(Main.DESER, List.class, "vulnera" + type.toString() + ".ser", () -> recupVulnerabilitesSonar(type, nomsComposPatrimoine));
-            
+            List<Vulnerabilite> vulnerabilites = Utilities.recuperation(Main.DESER, List.class, "vulnera" + type.toString() + ".ser",
+                    () -> recupVulnerabilitesSonar(type, nomsComposPatrimoine));
+
             // Création de la feuille excel
             updateMessage("Traitement fichier Excel");
             updateProgress(-1, -1);
@@ -99,7 +100,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
      * Récupère toutes les vulnérabilitès du patrimoine depuis Sonar pour un type particulier
      * 
      * @param type
-     * @param nomsComposPatrimoine 
+     * @param nomsComposPatrimoine
      * @return
      */
     private List<Vulnerabilite> recupVulnerabilitesSonar(TypeVulnerabilite type, List<String> nomsComposPatrimoine)
@@ -108,11 +109,11 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
         String basetype = "Vulnérabilitès " + type.getNomSheet() + Statics.NL;
         updateMessage(basetype + "récupération des vulnérabilités dans SonarQube.");
         updateProgress(-1, -1);
-        
+
         // Variables
         List<Vulnerabilite> retour = new ArrayList<>();
         int i = 0;
-        Map<String, ComposantSonar> composants = Statics.fichiersXML.getMapComposSonar();      
+        Map<String, ComposantSonar> composants = Statics.fichiersXML.getMapComposSonar();
 
         // Paramètres
         List<Parametre> params = new ArrayList<>();
@@ -131,13 +132,14 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
         {
             // Nom du projet
             String clefProjet = issue.getProjet();
-            
+
             // Affichage avancée
             updateMessage(basetype + base + clefProjet);
-            updateProgress(i++, size);
-            
+            updateProgress(i, size);
+            i++;
+
             ComposantSonar composant = composants.get(clefProjet);
-            
+
             if (composant == null)
             {
                 LOGGER.warn(clefProjet + " n'existe pas dans la liste des composants.");
@@ -160,7 +162,7 @@ public class CreerExtractVulnerabiliteTask extends SonarTask
      */
     private String extractLib(String message)
     {
-        String retour =  message.split(" \\||/")[0].replace("Filename: ", "");
+        String retour = message.split(" \\||/")[0].replace("Filename: ", "");
         if (retour.contains(":"))
             return retour.split(":")[1];
         return retour;

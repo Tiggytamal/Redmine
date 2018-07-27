@@ -14,7 +14,7 @@ import model.enums.TypeColVul;
 import model.enums.TypeVulnerabilite;
 import utilities.enums.Bordure;
 
-public class ControlExtractVul extends ControlExcelWrite<TypeColVul, List<Vulnerabilite>>
+public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, List<Vulnerabilite>>
 {
     /*---------- ATTRIBUTS ----------*/
 

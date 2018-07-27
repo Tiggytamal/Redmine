@@ -12,7 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import utilities.TechnicalException;
 
-public class ExtractionViewControl extends ViewControl
+public class ExtractionViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -36,7 +36,7 @@ public class ExtractionViewControl extends ViewControl
     }
 
     /*---------- METHODES PRIVEES ----------*/
-    
+
     @Override
     protected void afficher(ActionEvent event) throws IOException
     {
@@ -59,7 +59,7 @@ public class ExtractionViewControl extends ViewControl
             }
         }
     }
-    
+
     /*---------- ACCESSEURS ----------*/
 
 }

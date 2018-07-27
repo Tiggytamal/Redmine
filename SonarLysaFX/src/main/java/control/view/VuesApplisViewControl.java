@@ -11,7 +11,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import model.enums.CreerVueParAppsTaskOption;
 
-public class VuesApplisViewControl extends ViewControl
+public class VuesApplisViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
     @FXML

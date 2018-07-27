@@ -18,7 +18,7 @@ import model.enums.TypeColClarity;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlClarity extends ControlExcelRead<TypeColClarity, Map<String, InfoClarity>>
+public class ControlClarity extends AbstractControlExcelRead<TypeColClarity, Map<String, InfoClarity>>
 {
     /*---------- ATTRIBUTS ----------*/
 

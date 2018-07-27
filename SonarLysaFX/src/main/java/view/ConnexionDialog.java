@@ -25,6 +25,9 @@ public class ConnexionDialog extends Dialog<Pair<String, String>>
     /*---------- ATTRIBUTS ----------*/
 
     private Node loginButton;
+    private static final int BASEGAP = 10;
+    private static final int TOPINSET = 20;
+    private static final int RIGHTINSET = 80;
     
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -40,9 +43,9 @@ public class ConnexionDialog extends Dialog<Pair<String, String>>
 
         // Gridpane
         GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 80, 10, 10));
+        grid.setHgap(BASEGAP);
+        grid.setVgap(BASEGAP);
+        grid.setPadding(new Insets(TOPINSET, RIGHTINSET, BASEGAP, BASEGAP));
 
         // TextField
         TextField username = new TextField();

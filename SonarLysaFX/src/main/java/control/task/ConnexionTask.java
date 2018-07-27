@@ -53,7 +53,8 @@ public class ConnexionTask extends Task<Boolean>
             repo.login(progressMonitor);
             if (pareas.isEmpty())
                 control.recupererTousLesProjets();
-        } catch (TeamRepositoryException e)
+        } 
+        catch (TeamRepositoryException e)
         {
             LOGPLANTAGE.error(e);
             return Boolean.FALSE;

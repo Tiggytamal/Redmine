@@ -1,4 +1,4 @@
-package control.task;
+package junit.model.enums;
 
 import static org.junit.Assert.assertEquals;
 

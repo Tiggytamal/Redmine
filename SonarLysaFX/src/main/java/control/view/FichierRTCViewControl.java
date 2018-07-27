@@ -10,22 +10,22 @@ import utilities.enums.Severity;
 public class FichierRTCViewControl extends LaunchTask
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     @FXML
     private DatePicker datePicker;
-    
+
     /*---------- CONSTRUCTEURS ----------*/
-    /*---------- METHODES PUBLIQUES ----------*/    
-    
+    /*---------- METHODES PUBLIQUES ----------*/
+
     @FXML
     public void majFichierRTC()
     {
         if (datePicker.getValue() != null)
-            startTask(new MajFichierRTCTask(datePicker.getValue(), true), "Initialisation fichier lots RTC");    
+            startTask(new MajFichierRTCTask(datePicker.getValue(), true), "Initialisation fichier lots RTC");
         else
             throw new FunctionalException(Severity.ERROR, "La date limite de création des lots doit être renseignée.");
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

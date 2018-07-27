@@ -55,8 +55,8 @@ public class SonarAPI
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
-    
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+
     private final WebTarget webTarget;
     private final String codeUser;
     private static final String AUTHORIZATION = "Authorization";
@@ -73,8 +73,8 @@ public class SonarAPI
     private static final String VIEWSCREATE = "api/views/create";
     private static final String QGSELECT = "api/qualitygates/select";
     private static final String AUTHVALID = "api/authentication/validate";
-    
-    /**Instance du controleur */
+
+    /** Instance du controleur */
     public static final SonarAPI INSTANCE = new SonarAPI();
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -145,8 +145,7 @@ public class SonarAPI
         if (response.getStatus() == Status.OK.getStatusCode())
         {
             LOGGER.info("Liste des Vues triées retournées depuis Sonar");
-            return response.readEntity(new GenericType<List<Projet>>() {
-            });
+            return response.readEntity(new GenericType<List<Projet>>() { });
         }
         else
             LOGGER.error("Impossible de retourner les vues depuis Sonar = " + PROJECTSINDEX);
@@ -226,7 +225,7 @@ public class SonarAPI
         Parametre paramSinceLeakPeriod = new Parametre("sinceLeakPeriod", "true");
         Parametre paramTypes = new Parametre("types", "VULNERABILITY");
         Parametre paramResolved = new Parametre("resolved", "false");
-        
+
         // 2. appel du webservices
         Response response = appelWebserviceGET(ISSUESSEARCH, paramComposant, paramSeverities, paramSinceLeakPeriod, paramTypes, paramResolved);
 
@@ -239,49 +238,50 @@ public class SonarAPI
             return 0;
         }
     }
-    
+
     /**
      * Appel une rehcerche d'Issues avec les paramètres choisis sans prédéfinition
      * 
      * @param parametres
      * @return
      */
-    public List<Issue> getIssuesGenerique(List<Parametre> parametres)
-    {        
+    public List<Issue> getIssuesGenerique(Collection<Parametre> parametres)
+    {
         // Variables
         List<Issue> retour = new ArrayList<>();
-        int page = 1;
+        int page = 0;
         Issues issues;
-        
+
         // Mise ne place du paramètre de pagination
         Parametre paramPage = new Parametre("p", String.valueOf(page));
         parametres.add(paramPage);
-        
+
         // Création array des paramètres
         Parametre[] paramsArray = parametres.toArray(new Parametre[0]);
 
         // Boucle pour récupérer toutes les erreurs en paginant la requête
         do
         {
+            page++;
             // MAJ Paramètre de pagination
             paramPage.setValeur(String.valueOf(page));
-            
+
             // 2. appel du webservices
             Response response = appelWebserviceGET(ISSUESSEARCH, paramsArray);
 
             // 3. Test du retour et renvoie du composant si ok.
             if (response.getStatus() == Status.OK.getStatusCode())
-                {
-                    issues = response.readEntity(Issues.class);
-                    retour.addAll(issues.getListIssues());
-                }
+            {
+                issues = response.readEntity(Issues.class);
+                retour.addAll(issues.getListIssues());
+            }
             else
             {
                 LOGGER.error(erreurAPI(ISSUESSEARCH));
                 return retour;
             }
         }
-        while (page++ * issues.getPs() <issues.getTotal());
+        while (page * issues.getPs() < issues.getTotal());
 
         return retour;
     }
@@ -303,31 +303,32 @@ public class SonarAPI
 
         // Liste de retour
         List<Issue> retour = new ArrayList<>();
-        int page = 1;
+        int page = 0;
         Issues issues;
 
         // Boucle pour récupérer toutes les erreurs en paginant la requête
         do
         {
+            page++;
             // Paramètre de pagination
             paramPage = new Parametre("p", String.valueOf(page));
-            
+
             // 2. appel du webservices
             Response response = appelWebserviceGET(ISSUESSEARCH, paramComposant, paramSeverities, paramSinceLeakPeriod, paramResolved, paramPage);
 
             // 3. Test du retour et renvoie du composant si ok.
             if (response.getStatus() == Status.OK.getStatusCode())
-                {
-                    issues = response.readEntity(Issues.class);
-                    retour.addAll(issues.getListIssues());
-                }
+            {
+                issues = response.readEntity(Issues.class);
+                retour.addAll(issues.getListIssues());
+            }
             else
             {
                 LOGGER.error(erreurAPI(ISSUESSEARCH) + paramComposant.getValeur());
                 return retour;
             }
         }
-        while (page++ * issues.getPs() <issues.getTotal());
+        while (page * issues.getPs() < issues.getTotal());
 
         return retour;
     }
@@ -349,8 +350,7 @@ public class SonarAPI
         // 3. Test du retour et renvoie de la dernière version si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
         {
-            List<Event> liste = response.readEntity(new GenericType<List<Event>>() {
-            });
+            List<Event> liste = response.readEntity(new GenericType<List<Event>>() { });
             if (liste != null && !liste.isEmpty())
                 return controleVersion(liste);
         }
@@ -373,7 +373,7 @@ public class SonarAPI
         if (response.getStatus() == Status.OK.getStatusCode())
         {
             LOGGER.info("Récupération de la liste des composants OK");
-            return response.readEntity(new GenericType<List<Projet>>() {});
+            return response.readEntity(new GenericType<List<Projet>>() { });
         }
         else
         {
@@ -397,7 +397,7 @@ public class SonarAPI
             if (qualityGate.getName().equals(nomQG))
                 return qualityGate;
         }
-        
+
         String erreur = "impossible de trouver la Qualitygate avec le nom donné : " + nomQG;
         LOGGER.error(erreur);
         throw new FunctionalException(Severity.ERROR, erreur);
@@ -456,7 +456,7 @@ public class SonarAPI
     public Status creerVue(Vue vue)
     {
         if (!Vue.controleVue(vue))
-            return Status.BAD_REQUEST; 
+            return Status.BAD_REQUEST;
 
         Response response = appelWebservicePOST(VIEWSCREATE, vue);
         LOGGER.info("Creation vue : " + vue.getKey() + " - nom : " + vue.getName() + HTTP + response.getStatus());
@@ -555,7 +555,7 @@ public class SonarAPI
      * @param listeViews
      * @param parent
      */
-    public void ajouterSousVues(Collection<Vue> listeViews, Vue parent)
+    public void ajouterSousVues(Iterable<Vue> listeViews, Vue parent)
     {
         for (Vue vue : listeViews)
         {
@@ -584,7 +584,7 @@ public class SonarAPI
      * @param listeProjets
      * @param parent
      */
-    public void ajouterSousProjets(List<Projet> listeProjets, Vue parent)
+    public void ajouterSousProjets(Iterable<Projet> listeProjets, Vue parent)
     {
         for (Projet projet : listeProjets)
         {
@@ -605,7 +605,7 @@ public class SonarAPI
         LOGGER.info("Vue " + parent.getKey() + " ajout sous-projet " + projet.getNom() + HTTP + response.getStatus());
         gestionErreur(response);
     }
-    
+
     /**
      * Ajoute un projet déjà existant à une vue donnée
      * 
@@ -658,7 +658,7 @@ public class SonarAPI
 
         return requete.request(MediaType.APPLICATION_JSON).header(AUTHORIZATION, codeUser).get();
     }
-    
+
     /**
      * Appel des webservices en GET
      * 
@@ -763,7 +763,7 @@ public class SonarAPI
 
         LocalDateTime date = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
         String retour = "";
-        
+
         // Itération sur la liste pour récupérer la date la plus récente.
         for (Event event : liste)
         {

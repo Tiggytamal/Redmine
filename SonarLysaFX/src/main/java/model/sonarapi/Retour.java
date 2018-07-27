@@ -24,9 +24,9 @@ public class Retour implements ModeleSonar
     private List<Message> errors;
     private List<QualityGate> qualityGates;
     private String defaut;
-    
+
     /*---------- CONSTRUCTEURS ----------*/
-    
+
     public Retour(Composant component, List<Vue> listeVues, StatusProjet statusProjet, List<Vue> results, boolean more, List<Message> errors, List<QualityGate> qualityGates, String defaut)
     {
         super();
@@ -39,12 +39,12 @@ public class Retour implements ModeleSonar
         this.qualityGates = qualityGates;
         this.defaut = defaut;
     }
-    
+
     public Retour()
     {
-        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML   
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
@@ -90,7 +90,7 @@ public class Retour implements ModeleSonar
     {
         return qualityGates;
     }
-    
+
     @XmlAttribute(name = "default", required = false)
     public String getDefaut()
     {

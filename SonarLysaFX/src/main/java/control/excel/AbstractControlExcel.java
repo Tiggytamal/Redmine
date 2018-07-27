@@ -18,7 +18,7 @@ import model.enums.TypeAction;
 import utilities.CellHelper;
 import utilities.DateConvert;
 
-public abstract class ControlExcel
+public abstract class AbstractControlExcel
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -37,7 +37,7 @@ public abstract class ControlExcel
     
     /*---------- CONSTRUCTEURS ----------*/
     
-    protected ControlExcel(File file)
+    protected AbstractControlExcel(File file)
     {
         this.file = file;
     }

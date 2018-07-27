@@ -20,7 +20,7 @@ import model.enums.TypeColApps;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlApps extends ControlExcelRead<TypeColApps, Map<String, Application>>
+public class ControlApps extends AbstractControlExcelRead<TypeColApps, Map<String, Application>>
 {
     /*---------- ATTRIBUTS ----------*/
 

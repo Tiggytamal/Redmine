@@ -59,7 +59,7 @@ public final class WorkItemInitialization extends WorkItemOperation
         this.cat = cat;
         this.projet = projet;
         this.ano = ano;
-        lotAno = Integer.parseInt(this.ano.getLot().substring(4));
+        lotAno = Integer.parseInt(this.ano.getLot().substring(Statics.SBTRINGLOT));
         controlRTC = ControlRTC.INSTANCE;
         client = controlRTC.getClient();
     }

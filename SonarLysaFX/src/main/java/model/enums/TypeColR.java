@@ -8,7 +8,7 @@ package model.enums;
  */
 public interface TypeColR extends TypeKey
 {
- public abstract String getValeur();
- 
- public abstract String getNomCol();
+    public abstract String getValeur();
+
+    public abstract String getNomCol();
 }

@@ -189,8 +189,9 @@ public class Planificateur implements Modele
     {
         if (annees == null)
             annees = new ArrayList<>();
-        if (!annees.contains(String.valueOf(today.getYear() - 1)))
-            annees.add(String.valueOf(today.getYear() - 1));
+        String annee = String.valueOf(today.getYear() - 1);
+        if (!annees.contains(annee))
+            annees.add(annee);
         return annees;
     }
 
@@ -203,8 +204,9 @@ public class Planificateur implements Modele
     {
         if (annees == null)
             annees = new ArrayList<>();
-        if (!annees.contains(String.valueOf(today.getYear() + 1)))
-            annees.add(String.valueOf(today.getYear() + 1));
+        String annee = String.valueOf(today.getYear() + 1);
+        if (!annees.contains(annee))
+            annees.add(annee);
         return annees;
     }
 }

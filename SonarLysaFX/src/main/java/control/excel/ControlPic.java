@@ -12,7 +12,7 @@ import model.LotSuiviPic;
 import model.ModelFactory;
 import model.enums.TypeColPic;
 
-public final class ControlPic extends ControlExcelRead<TypeColPic, Map<String, LotSuiviPic>>
+public final class ControlPic extends AbstractControlExcelRead<TypeColPic, Map<String, LotSuiviPic>>
 {
     /*---------- ATTRIBUTS ----------*/
 

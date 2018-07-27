@@ -29,11 +29,11 @@ import utilities.enums.Severity;
  */
 public final class Main extends Application
 {
-    /** Boolean pour gérer la désrialisation ou non des objets JAVA  - A ACTIVER UNIQUEMENT EN TEST*/
+    /** Boolean pour gérer la désrialisation ou non des objets JAVA - A ACTIVER UNIQUEMENT EN TEST */
     public static final boolean DESER = false;
-    
+
     /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
     public static void main(final String[] args)
     {
@@ -64,18 +64,18 @@ public final class Main extends Application
             // Affichage informations de l'erreur fonctionnelle
             FunctionalException ex1 = (FunctionalException) e;
             createAlert(ex1.getSeverity(), null, ex1.getMessage());
-        } 
+        }
         else if (e instanceof TechnicalException)
         {
             // Affichage informations de l'erreur technique
             TechnicalException ex1 = (TechnicalException) e;
             createAlert(ex1.getSeverity(), ex1.getCause(), ex1.getMessage());
-        } 
+        }
         else if (e instanceof FileNotFoundException && e.getMessage().contains("Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus"))
         {
             // gestion des fichiers utilisès par un autre utilisateur
             createAlert(Severity.ERROR, null, "Fichier utilisé par un autre utilisateur : \n" + e.getMessage().split("\\(")[0]);
-        } 
+        }
         else if (e.getCause() != null)
         {
             // Récursivité pour tester la cause de cette exception
@@ -100,7 +100,7 @@ public final class Main extends Application
      */
     private static void createAlert(Severity severity, Throwable ex, String detail)
     {
-        
+
         Alert alert;
 
         // Switch sur les sévérités pour récupérer le type d'alerte
@@ -108,7 +108,7 @@ public final class Main extends Application
         {
             alert = new Alert(AlertType.ERROR);
             alert.setTitle("Erreur");
-        } 
+        }
         else
         {
             alert = new Alert(AlertType.INFORMATION);
@@ -126,7 +126,7 @@ public final class Main extends Application
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
             String exceptionText = sw.toString();
-            
+
             // Logging de l'erreur
             LOGPLANTAGE.error(sw.toString());
 
@@ -144,7 +144,7 @@ public final class Main extends Application
             expContent.add(label, 0, 0);
             expContent.add(textArea, 0, 1);
 
-            // Ajout de la fenêtre au Dialog 
+            // Ajout de la fenêtre au Dialog
             alert.getDialogPane().setExpandableContent(expContent);
         }
         alert.showAndWait();

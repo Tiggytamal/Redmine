@@ -7,7 +7,7 @@ import model.ComposantSonar;
 import model.sonarapi.Vue;
 import utilities.Statics;
 
-public class CreerVueDataStageTask extends SonarTask
+public class CreerVueDataStageTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 

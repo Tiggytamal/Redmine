@@ -14,7 +14,7 @@ import model.enums.TypeColW;
 import utilities.CellHelper;
 import utilities.TechnicalException;
 
-public abstract class ControlExcelWrite<T extends Enum<T> & TypeColW, R> extends ControlExcel
+public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R> extends AbstractControlExcel
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -26,7 +26,7 @@ public abstract class ControlExcelWrite<T extends Enum<T> & TypeColW, R> extends
     
     /*---------- CONSTRUCTEURS ----------*/
     
-    protected ControlExcelWrite(File file)
+    protected AbstractControlExcelWrite(File file)
     {
         super(file); 
         createWb();
@@ -41,7 +41,8 @@ public abstract class ControlExcelWrite<T extends Enum<T> & TypeColW, R> extends
         {
             wb.write(stream);
             wb.close();
-        } catch (IOException e)
+        } 
+        catch (IOException e)
         {
             throw new TechnicalException("Erreur au moment de sauvegarder le fichier Excel :" + file.getName(), e);
         }
@@ -86,7 +87,8 @@ public abstract class ControlExcelWrite<T extends Enum<T> & TypeColW, R> extends
         try
         {
             enumeration = (Class<T>) Class.forName(parameterClassName);
-        } catch (ClassNotFoundException e)
+        } 
+        catch (ClassNotFoundException e)
         {
             LOGPLANTAGE.error(e);
             throw new TechnicalException("Impossible d'instancier l'énumération - control.excel.ControlExcelRead", e);

@@ -34,6 +34,9 @@ public class ParamListView extends VBox
     private ParamSpec param;
     private ListView<String> listView;
     private TextField valeurField;
+    private static final short VIEWMINI = 20;
+    private static final short BASEPADDING = 10;
+    private static final short FIELDWIDTH = 150;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -48,7 +51,7 @@ public class ParamListView extends VBox
         // ----- 1. Box1 -----
 
         HBox box = new HBox();
-        box.setPadding(new Insets(10, 10, 10, 10));
+        box.setPadding(new Insets(BASEPADDING, BASEPADDING, BASEPADDING, BASEPADDING));
 
         // Label
         Label label = new Label(param.toString() + Statics.DEUXPOINTS);
@@ -56,8 +59,8 @@ public class ParamListView extends VBox
 
         // Region
         Region region = new Region();
-        region.setPrefWidth(10);
-        region.setPrefHeight(10);
+        region.setPrefWidth(BASEPADDING);
+        region.setPrefHeight(BASEPADDING);
         box.getChildren().add(region);
 
         // ListView
@@ -81,7 +84,7 @@ public class ParamListView extends VBox
 
         // Region
         region = new Region();
-        region.setPrefWidth(10);
+        region.setPrefWidth(BASEPADDING);
         box.getChildren().add(region);
 
         // Bouton supprimer
@@ -92,8 +95,8 @@ public class ParamListView extends VBox
         rootChildren.add(box);
 
         region = new Region();
-        region.setPrefWidth(10);
-        region.setPrefHeight(10);
+        region.setPrefWidth(BASEPADDING);
+        region.setPrefHeight(BASEPADDING);
         rootChildren.add(region);
 
         // ----- 2. Box2 -----
@@ -101,7 +104,7 @@ public class ParamListView extends VBox
 
         // TextField
         valeurField = new TextField();
-        valeurField.setPrefWidth(150);
+        valeurField.setPrefWidth(FIELDWIDTH);
         box.getChildren().add(valeurField);
 
         // Bouton ajouter
@@ -111,15 +114,15 @@ public class ParamListView extends VBox
 
         // Region
         region = new Region();
-        region.setPrefWidth(10);
-        region.setPrefHeight(10);
+        region.setPrefWidth(BASEPADDING);
+        region.setPrefHeight(BASEPADDING);
         box.getChildren().add(region);
 
         rootChildren.add(box);
 
         // ----- 3. Séparateur -----
         Separator separ = new Separator();
-        separ.setPadding(new Insets(10, 5, 10, 5));
+        separ.setPadding(new Insets(BASEPADDING, BASEPADDING/2, BASEPADDING, BASEPADDING/2));
         rootChildren.add(separ);
     }
 
@@ -171,7 +174,7 @@ public class ParamListView extends VBox
 
         if (liste.contains(valeur))
             throw new FunctionalException(Severity.ERROR, "La valeur est déjà contenu dans la liste.");
-        
+
         // Controôle de la valeur rentrée et ajout à la liste
         ajouterValeur(valeur, liste);
 
@@ -187,7 +190,7 @@ public class ParamListView extends VBox
      */
     private void ajouterValeur(String valeur, ObservableList<String> liste)
     {
-        
+
         switch (param.getType())
         {
             case LISTVIEWNOM:
@@ -195,8 +198,8 @@ public class ParamListView extends VBox
                 {
                     if (ControlRTC.INSTANCE.recupContributorDepuisNom(valeur) == null)
                         throw new FunctionalException(Severity.ERROR, "Le nom n'est pas reconnu dans RTC. Essayez [NOM] [Prenom] sans accent.");
-
-                } catch (TeamRepositoryException e)
+                }
+                catch (TeamRepositoryException e)
                 {
                     throw new TechnicalException("Erreur appel RTC depuis viw.ParamListView.testNom - " + valeur, e);
                 }
@@ -206,7 +209,7 @@ public class ParamListView extends VBox
                 if (!valeur.matches("^E[0-9][0-9]"))
                     throw new FunctionalException(Severity.ERROR, "L'édition doit être de la forme ^E[0-9][0-9]");
                 break;
-                
+
             case LISTVIEWCOMPO:
                 if (!valeur.matches("^[0-9][0-9]"))
                     throw new FunctionalException(Severity.ERROR, "La version doit être de la forme ^[0-9][0-9]");
@@ -235,7 +238,7 @@ public class ParamListView extends VBox
             if (temp > retour)
                 retour = temp;
         }
-        return retour + 20;
+        return retour + VIEWMINI;
     }
 
     /*---------- ACCESSEURS ----------*/

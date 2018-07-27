@@ -38,7 +38,7 @@ import utilities.enums.Severity;
  * @author ETP137 - Grégoire Mathon
  *
  */
-public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends ControlExcel
+public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> extends AbstractControlExcel
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -59,7 +59,7 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
      * 
      * @param file
      */
-    protected ControlExcelRead(File file) 
+    protected AbstractControlExcelRead(File file) 
     {
         super(file);
         createWb();
@@ -91,7 +91,8 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
         try
         {
             enumeration = (Class<T>) Class.forName(parameterClassName);
-        } catch (ClassNotFoundException e)
+        } 
+        catch (ClassNotFoundException e)
         {
             LOGPLANTAGE.error(e);
             throw new TechnicalException("Impossible d'instancier l'énumération - control.excel.ControlExcelRead", e);
@@ -107,7 +108,8 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
         try
         {
             sheet = wb.getSheetAt(0);
-        } catch (IllegalArgumentException e)
+        } 
+        catch (IllegalArgumentException e)
         {
             LOGPLANTAGE.error(e);
             throw new FunctionalException(Severity.ERROR, "Le fichier est vide");
@@ -143,7 +145,8 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
                 field.set(this, cell.getColumnIndex());
                 testMax((int) field.get(this));
                 nbreCol++;
-            } catch (NoSuchFieldException | IllegalAccessException e)
+            } 
+            catch (NoSuchFieldException | IllegalAccessException e)
             {
                 throw new TechnicalException("Erreur à l'affectation d'une variable lors de l'initialisation d'une colonne : " + cell.getStringCellValue(), e);
             }
@@ -168,7 +171,8 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
         try
         {
             wb = WorkbookFactory.create(file);
-        } catch (IOException | InvalidFormatException e)
+        } 
+        catch (IOException | InvalidFormatException e)
         {
             throw new TechnicalException("Impossible de creer le Workbook pour " + file.getName(), e);
         }
@@ -188,7 +192,8 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
         try
         {
             wb.close();
-        } catch (IOException e)
+        } 
+        catch (IOException e)
         {
             throw new TechnicalException("Impossible de clôturer le workbook du fichier : " + file.getName(), e);
         }
@@ -206,7 +211,8 @@ public abstract class ControlExcelRead<T extends Enum<T> & TypeColR, R> extends 
         try(FileOutputStream stream = new FileOutputStream(file.getName()))
         {
             wb.write(stream);
-        } catch (IOException e)
+        } 
+        catch (IOException e)
         {
             throw new TechnicalException("Erreur au moment de sauvegarder le fichier Excel :" + file.getName(), e);
         }

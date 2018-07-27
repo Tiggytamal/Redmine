@@ -18,7 +18,7 @@ import model.enums.TypeColChefServ;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlChefService extends ControlExcelRead<TypeColChefServ, Map<String, RespService>>
+public class ControlChefService extends AbstractControlExcelRead<TypeColChefServ, Map<String, RespService>>
 {
     /*---------- ATTRIBUTS ----------*/
 

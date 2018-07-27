@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import control.excel.ControlExcelRead;
+import control.excel.AbstractControlExcelRead;
 import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
 import junit.JunitBase;
@@ -43,7 +43,7 @@ import utilities.TechnicalException;
  * @param <Y>
  *            Le type de l'objet en valeur de la map
  */
-public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C extends ControlExcelRead<T, Y>, Y> extends JunitBase
+public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C extends AbstractControlExcelRead<T, Y>, Y> extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 

@@ -20,7 +20,7 @@ import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 
 import control.quartz.ControlJob;
-import control.task.JobForTask;
+import control.task.AbstractJobForTask;
 import junit.JunitBase;
 import model.Planificateur;
 import model.enums.TypePlan;
@@ -76,7 +76,7 @@ public class TestControlJob extends JunitBase
             assertNotNull(trigger);
 
             // Vérification que la map est bien remplie
-            assertNotNull(job.getJobDataMap().get(JobForTask.CLEFANNEES + clef));
+            assertNotNull(job.getJobDataMap().get(AbstractJobForTask.CLEFANNEES + clef));
         }
     }
 

@@ -1,6 +1,6 @@
 package view;
 
-import control.task.SonarTask;
+import control.task.AbstractSonarTask;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -29,7 +29,12 @@ public class ProgressDialog extends Dialog<Boolean>
     private ProgressIndicator indicator;
     private Label label;
     private Label stage;
-    private SonarTask task;
+    private AbstractSonarTask task;
+    
+    // Constantes d'affichage
+    private static final short GRIDWIDTH = 350;
+    private static final short BASEINSET = 10;
+    private static final short BARWIDTH = 100;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -38,12 +43,12 @@ public class ProgressDialog extends Dialog<Boolean>
      * 
      * @param task
      */
-    public <T extends SonarTask> ProgressDialog(T task)
+    public <T extends AbstractSonarTask> ProgressDialog(T task)
     {
         this(task, T.TITRE);
     }
 
-    public ProgressDialog(SonarTask task, String titre)
+    public ProgressDialog(AbstractSonarTask task, String titre)
     {
         // Initialisation
         this.task = task;
@@ -55,13 +60,13 @@ public class ProgressDialog extends Dialog<Boolean>
 
         // Gridpane
         GridPane grid = new GridPane();
-        grid.setPrefWidth(350);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setPrefWidth(GRIDWIDTH);
+        grid.setHgap(BASEINSET);
+        grid.setVgap(BASEINSET);
+        grid.setPadding(new Insets(BASEINSET, BASEINSET, BASEINSET, BASEINSET));
         grid.widthProperty().addListener((observable, oldValue, newValue) -> {
             label.setPrefWidth(newValue.doubleValue());
-            bar.setPrefWidth(newValue.doubleValue() - 100);
+            bar.setPrefWidth(newValue.doubleValue() - BARWIDTH);
         });
         getDialogPane().setContent(grid);
 
@@ -70,10 +75,10 @@ public class ProgressDialog extends Dialog<Boolean>
         stage.setPrefWidth(grid.getPrefWidth());
         stage.textProperty().bind(task.etapeProperty());
         grid.add(stage, 0, 0, GridPane.REMAINING, 1);
-        
+
         // ProgressBar
         bar = new ProgressBar(0);
-        bar.setPrefWidth(grid.getPrefWidth() - 100);
+        bar.setPrefWidth(grid.getPrefWidth() - BARWIDTH);
         bar.progressProperty().unbind();
         bar.progressProperty().bind(task.progressProperty());
         grid.add(bar, 0, 1);
@@ -99,7 +104,7 @@ public class ProgressDialog extends Dialog<Boolean>
             cancel.setDisable(true);
             cancel.setTooltip(new Tooltip("Cette tâche ne peut pas être annulée"));
         }
-        
+
         // Ajout d'un bouton close caché pour permettre la fermeture du dialog en cas de plantage de la tâche
         getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         Node closeButton = getDialogPane().lookupButton(ButtonType.CLOSE);

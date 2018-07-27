@@ -50,10 +50,10 @@ public class MainScreen extends Application
     public void start(final Stage primaryStage) throws IOException, InterruptedException, JAXBException, AWTException
     {
         stage = primaryStage;
-        
+
         // Menu de l'application
         final HBox menu = FXMLLoader.load(getClass().getResource("/view/Menu.fxml"));
-        
+
         // Ajout au panneau principal
         root.setTop(menu);
 
@@ -108,7 +108,7 @@ public class MainScreen extends Application
             }
         }
     }
-    
+
     /**
      * EventHandler privé pour la gestion de la fermeture du programme.<br>
      * Supression Icône de la barre de notification, fermeture des planificateurs et de l'accès RTC
@@ -133,7 +133,7 @@ public class MainScreen extends Application
                 {
                     throw new TechnicalException("Impossible de fermer le planificateur", e);
                 }
-            }           
-        }       
+            }
+        }
     }
 }

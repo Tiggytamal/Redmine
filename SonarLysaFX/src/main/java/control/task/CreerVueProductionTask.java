@@ -24,7 +24,7 @@ import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
 
-public class CreerVueProductionTask extends SonarTask
+public class CreerVueProductionTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -32,10 +32,14 @@ public class CreerVueProductionTask extends SonarTask
     private LocalDate dateDebut;
     private LocalDate dateFin;
     public static final String TITRE = "Vue MEP/TEP";
+    private static final short ETAPES = 3;
+    private static final short TRIMESTRIEL = 3;
+    private static final short MENSUEL = 1;
     
+
     /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
-    
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
 
@@ -43,13 +47,13 @@ public class CreerVueProductionTask extends SonarTask
 
     public CreerVueProductionTask()
     {
-        super(3);
+        super(ETAPES);
         annulable = true;
     }
 
     public CreerVueProductionTask(LocalDate dateDebut, LocalDate dateFin)
     {
-        super(4);
+        super(ETAPES + 1);
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         annulable = true;
@@ -90,9 +94,9 @@ public class CreerVueProductionTask extends SonarTask
         mapLot = recupLotRTCPourMEP(dateDebut, dateFin, mapSonar);
 
         // Création des vues mensuelles ou trimestrielles
-        if (mapLot.size() == 1)
+        if (mapLot.size() == MENSUEL)
             creerVueMensuelle(mapLot);
-        else if (mapLot.size() == 3)
+        else if (mapLot.size() == TRIMESTRIEL)
             creerVueTrimestrielle(mapLot);
         else
             throw new FunctionalException(Severity.ERROR, "Le fichier Excel donné ou les dates fournies ne sont ni mensuels ni trimetriels.");
@@ -128,8 +132,10 @@ public class CreerVueProductionTask extends SonarTask
                 // Récupération des états du lot depuis RTC
                 map = ControlRTC.INSTANCE.recupDatesEtatsLot(ControlRTC.INSTANCE.recupWorkItemDepuisId(Integer.parseInt(entry.getKey())));
                 updateMessage(base + Statics.NL + "Lot " + entry.getKey());
-                updateProgress(++i, size);
-            } catch (TeamRepositoryException e)
+                i++;
+                updateProgress(i, size);
+            }
+            catch (TeamRepositoryException e)
             {
                 LOGGER.error("Erreur au moment de l'appel RTC pour récupérer un lot : méthode control.task.CreerVueProductionTask.recupLotSonarPourMEP - " + entry.getKey());
                 LOGPLANTAGE.error(e);
@@ -164,7 +170,7 @@ public class CreerVueProductionTask extends SonarTask
         for (Vue view : views)
         {
             if (view.getName().startsWith("Lot "))
-                map.put(view.getName().substring(4), view);
+                map.put(view.getName().substring(Statics.SBTRINGLOT), view);
             updateMessage("Récupérations des lots dans Sonar OK");
         }
         return map;
@@ -204,7 +210,8 @@ public class CreerVueProductionTask extends SonarTask
                 return;
 
             updateMessage(base + "ajout : " + vue.getName());
-            updateProgress(++i, size);
+            i++;
+            updateProgress(i, size);
             api.ajouterSousVue(vue, vueParent);
         }
     }
@@ -274,7 +281,8 @@ public class CreerVueProductionTask extends SonarTask
                 return;
 
             updateMessage(base + "ajout : " + vue.getName());
-            updateProgress(++i, size);
+            i++;
+            updateProgress(i, size);
             api.ajouterSousVue(vue, vueParent);
         }
     }

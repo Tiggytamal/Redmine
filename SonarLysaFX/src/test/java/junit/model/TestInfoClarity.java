@@ -1,6 +1,7 @@
 package junit.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class TestInfoClarity extends JunitBase
     public void testIsActif()
     {
         // test valeur vide ou nulle
-        assertEquals(false, info.isActif());
+        assertFalse(info.isActif());
         
         // Test setter et getter
         info.setActif(true);
