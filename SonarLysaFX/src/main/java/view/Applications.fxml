@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.CheckBox?>
+
+<GridPane fx:id="backgroundPane" fx:controller="control.view.VuesApplisViewControl" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10"
+	vgap="10" prefHeight="500" prefWidth="500">
+	<padding>
+		<Insets top="25" right="25" bottom="10" left="25" />
+	</padding>
+	<children>
+
+		<!-- RadioButton -->
+		<fx:define>
+			<ToggleGroup fx:id="toggleGroup" />
+		</fx:define>
+		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
+			<RadioButton fx:id="radioVue" text="Création des Vues Sonar" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT"/>
+			<RadioButton fx:id="radioFichier" text="Création du fichier d'extraction" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT"/>
+			<RadioButton fx:id="radioAll" text="Traitement complet" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT"/>
+		</VBox>
+
+		<!-- VBox -->
+		<VBox GridPane.columnIndex="1" alignment="CENTER" minWidth="250" minHeight="200">
+			<children>
+				<Button text="OK" fx:id="traiter" onAction="#traiter" alignment="CENTER" />
+			</children>
+		</VBox>
+	</children>
+</GridPane>

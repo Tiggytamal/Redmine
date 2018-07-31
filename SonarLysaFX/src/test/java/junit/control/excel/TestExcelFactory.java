@@ -73,7 +73,7 @@ public class TestExcelFactory extends JunitBase
     {
         // Appel de toutes les énumérations, et vérification de la bonne instanciation des controleurs
         assertEquals(ControlExtractVul.class, ExcelFactory.getWriter(TypeColVul.class, new File("testExtract.xlsx")).getClass());
-       assertEquals(ControlAppsW.class, ExcelFactory.getWriter(TypeColApps.class, new File("testAppsW.xlsx")).getClass());
+        assertEquals(ControlAppsW.class, ExcelFactory.getWriter(TypeColApps.class, new File("testAppsW.xlsx")).getClass());
     }
     
     @Test (expected = TechnicalException.class)

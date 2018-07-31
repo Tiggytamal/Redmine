@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+
+<GridPane fx:controller="control.view.FichierRTCViewControl" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10" prefHeight="500"
+	prefWidth="500">
+	<padding>
+		<Insets top="25" right="25" bottom="10" left="25" />
+	</padding>
+	<children>
+		<!-- VBox -->
+		<HBox alignment="CENTER" minWidth="250" minHeight="200">
+			<Label text="Date limite de Création des lots : " />
+			<Region prefWidth="20" />
+			<DatePicker fx:id="datePicker" />
+			<Region prefWidth="20" />
+			<Button text="Lancer Maj" onAction="#majFichierRTC" />
+		</HBox>
+	</children>
+</GridPane>

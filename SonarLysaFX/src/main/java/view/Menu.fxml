@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.DialogPane?>
+
+<HBox fx:id="box" fx:controller="control.view.MenuViewControl" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml">
+	<children>
+		<MenuBar HBox.hgrow="ALWAYS" styleClass="bar">
+			<menus>
+				<Menu text="Fonctions" >
+					<items>
+						<MenuItem fx:id="suivi" text="Fichiers de Suivi" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="mensuel" text="Création Vue MEP/TEP" onAction="#afficher" styleClass="bar" disable="true" />
+						<MenuItem fx:id="autres" text="Création Autres Vues" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="maintenance" text="Création Vues Maintenance" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="appli" text="Création Vues par Application" onAction="#afficher" disable = "true" />
+						<MenuItem fx:id="rtc" text="Mise à jour lots RTC" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="extraction" text="Extraction" onAction="#afficher" disable="true" />
+
+					</items>
+				</Menu>
+				<Menu text="Outils">
+					<items>
+						<MenuItem fx:id="options" text="Options" onAction="#afficher" disable="false" />
+						<MenuItem fx:id="planificateur" text="Planificateur" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="majVues" text="Mise à jour vues" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="majCompos" text="Mise à jour composants" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="purge" text="Purge des composants" onAction="#afficher" disable="true" />
+						<MenuItem fx:id="aide" text="Aide" onAction="#aide" disable="false" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+		<Button fx:id="connexion" text="Connexion" styleClass="connexion" onAction="#openPopup"/>
+		<Button fx:id="deConnexion" text="Deconnexion" styleClass="connexion" onAction="#deco"/>
+	</children>
+</HBox>
+

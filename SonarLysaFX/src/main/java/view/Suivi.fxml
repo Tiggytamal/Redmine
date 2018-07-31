@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane fx:id="backgroundPane" fx:controller="control.view.SuiviViewControl" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
+	prefHeight="500" prefWidth="500">
+	<padding>
+		<Insets top="25" right="25" bottom="10" left="25" />
+	</padding>
+	<children>
+	
+		<!-- RadioBoutons -->
+		<fx:define>
+			<ToggleGroup fx:id="toggleGroup" />
+		</fx:define>
+
+		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
+			<RadioButton fx:id="radioSuivi" text="Suivi JAVA" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioDataStage" text="Suivi DataStage" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioCobol" text="Suivi COBOL" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioMulti" text="Suivi complet" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+		</VBox>
+
+
+		<!-- VBox -->
+		<VBox fx:id="selectPane" GridPane.columnIndex="1" alignment="CENTER" minWidth="250" minHeight="200">
+			<children>
+
+				<!-- Bouton pour lancer le traitement -->
+				<Button text="Executer" fx:id="executer" onAction="#executer" alignment="CENTER" disable="true"/>
+			</children>
+		</VBox>
+	</children>
+</GridPane>
