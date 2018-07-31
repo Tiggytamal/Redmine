@@ -1,13 +1,11 @@
 package model.enums;
 
-import java.io.Serializable;
-
 /**
  * Enumération des différents paramètres de l'application
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum Param implements Serializable, TypeKey
+public enum Param implements TypeKey
 {
     /*---------- ATTRIBUTS ----------*/
 

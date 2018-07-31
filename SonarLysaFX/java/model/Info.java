@@ -5,6 +5,7 @@ import java.io.File;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import junit.JunitBase;
 import utilities.Statics;
 
 /**
@@ -46,7 +47,7 @@ public class Info implements Modele, XML
     @Override
     public File getResource()
     {
-        return new File(getClass().getResource(RESOURCE).getFile());
+        return new File(JunitBase.class.getResource(RESOURCE).getFile());
     }
 
     @Override

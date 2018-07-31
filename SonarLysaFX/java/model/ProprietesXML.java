@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import junit.JunitBase;
 import model.enums.ParamBool;
 import model.enums.TypeColR;
 import model.enums.TypeColApps;
@@ -215,7 +216,7 @@ public class ProprietesXML implements XML, Modele
     @Override
     public File getResource()
     {
-        return new File(getClass().getResource(RESOURCE).getFile());
+        return new File(JunitBase.class.getResource(RESOURCE).getFile());
     }
 
     /*---------- METHODES PRIVEES ----------*/

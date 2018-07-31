@@ -22,9 +22,11 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import model.Application;
 import model.enums.Param;
 import model.enums.TypeColApps;
+import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Bordure;
+import utilities.enums.Severity;
 
 /**
  * Classe de controle des applications en écriture
@@ -46,6 +48,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     private int colVuln;
     private int colLDCSonar;
     private int colLDCMain;
+    private File fileIn;
     private static final String APPLIGEREES = "Périmètre Couverts SonarQbe";
     private static final String REFAPPLIS = "Ref CodeApps detaillés";
 
@@ -60,6 +63,9 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
         wb.createSheet(REFAPPLIS);
         calculIndiceColonnes();
         initTitres();
+        fileIn = new File (Statics.proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + Statics.proprietesXML.getMapParams().get(Param.NOMFICHIERAPPLI));
+        if (!fileIn.exists())
+            throw new FunctionalException(Severity.ERROR, "Le fichier des applicaitons est introuvables. merci de vérifier le paramétrage.");
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -106,7 +112,6 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
         valoriserCellule(row, colLDCSonar, centre, "LDC SonarQube");
         valoriserCellule(row, colLDCMain, centre, "LDC MainFrame");
         autosizeColumns(sheet);
-
     }
 
     @Override
@@ -139,26 +144,35 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     {
         // Récupération de la feuille venant du fichier fourni.
         Sheet sheetbase = null;
-        File file = new File (Statics.proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + Statics.proprietesXML.getMapParams().get(Param.NOMFICHIERAPPLI));
-        try (Workbook wb2 = WorkbookFactory.create(file))
+        int colCodeBis = 0;
+        try (Workbook wb2 = WorkbookFactory.create(fileIn))
         {
             sheetbase = wb2.getSheet(REFAPPLIS);
 
         }
         catch (InvalidFormatException | IOException e)
         {
-            throw new TechnicalException("Impossible de récupérer la feuille excel - fichier : " + file, e);
+            throw new TechnicalException("Impossible de récupérer la feuille excel - fichier : " + fileIn, e);
         }
 
+        // Récupération de la feuille
         Sheet sheetFinale = wb.getSheet(REFAPPLIS);
+        
+        // Test de la valeur de la colonne code pour retrouver les codes applications
+        Row row = sheetbase.getRow(0);
+        for (Cell cell : row)
+        {
+            if ("Code".equals(cell.getStringCellValue()))
+                colCodeBis = cell.getColumnIndex();                
+        }
 
         for (Iterator<Row> iter = sheetbase.iterator(); iter.hasNext();)
         {
             // Initialisation des deux lignes
             Row base = iter.next();
-            Row row = sheetFinale.createRow(sheetFinale.getLastRowNum() + 1);
+            row = sheetFinale.createRow(sheetFinale.getLastRowNum() + 1);
 
-            // On itère sur la ligne de titres
+            // Copie de chaque ligne
             for (int i = 0; i < base.getLastCellNum(); i++)
             {
                 Cell newCell = row.createCell(i);
@@ -168,7 +182,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
             }
 
             // Test si l'application est présente dans les applications SonarQube. On protège si le nom de l'application est une valeur numérique
-            Cell cell = base.getCell(1);
+            Cell cell = base.getCell(colCodeBis);
             String value = "";
             if (cell.getCellTypeEnum() == CellType.STRING)
                 value = cell.getStringCellValue();
@@ -176,9 +190,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
                 value = String.valueOf(cell.getNumericCellValue());
 
             if (codeApps.contains(value))
-            {
                 row.getCell(0).setCellValue("X");
-            }
         }
     }
 

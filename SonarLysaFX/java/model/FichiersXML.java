@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import junit.JunitBase;
 import model.enums.TypeFichier;
 import utilities.DateConvert;
 import utilities.Statics;
@@ -62,7 +63,7 @@ public class FichiersXML implements XML, Modele
     @Override
     public File getResource()
     {
-        return new File(getClass().getResource(RESOURCE).getFile());
+        return new File(JunitBase.class.getResource(RESOURCE).getFile());
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

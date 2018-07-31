@@ -152,6 +152,10 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         for (int i = 1; i <= sheet.getLastRowNum(); i++)
         {
             Row row = sheet.getRow(i);
+            
+            // protection si la ligne ets nulle
+            if (row == null)
+                continue;
 
             // Création anomalie si la ligne n'est pas vide : lot vide.
             Anomalie ano = creerAnodepuisExcel(row);
@@ -752,6 +756,10 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             for (int i = 1; i < retour.getLastRowNum() + 1; i++)
             {
                 Row row = retour.getRow(i);
+                
+                // Protection si la ligne est nulle
+                if (row == null)
+                    continue;
 
                 Anomalie ano = creerAnodepuisExcel(row);
                 anoClose.put(ano.getLot(), ano);
