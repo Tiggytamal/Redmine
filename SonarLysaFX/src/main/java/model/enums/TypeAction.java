@@ -28,15 +28,14 @@ public enum TypeAction
 
     /*---------- METHODES PUBLIQUES ----------*/
     
-    @Override
-    public String toString()
+    public String getValeur()
     {
         return valeur;
     }
 
-    public static TypeAction from(String typeActionString)
+    public static TypeAction from(String typeAction)
     {
-        switch (typeActionString)
+        switch (typeAction)
         {
             case Valeur.CREER :
                 return CREER;
@@ -54,7 +53,7 @@ public enum TypeAction
                 return ABANDONNER;
                 
             case Valeur.RELANCER :
-                return RELANCER;   
+                return RELANCER;  
 
             default :
                 return VIDE;

@@ -1,8 +1,6 @@
 package model.enums;
 
-import java.io.Serializable;
-
-public enum TypeColVul implements Serializable, TypeColW 
+public enum TypeColVul implements TypeColW 
 {
     SEVERITE("Severité", "colSeverity"), 
     STATUS("Status", "colStatus"),

@@ -19,6 +19,8 @@ public class TesteurMain
         builder.append("28H02m8903,;:!");
         System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
         System.out.println("A".compareTo("B"));
+        System.out.println("\0");
+        System.out.println("\0".hashCode());
        
     }
 }

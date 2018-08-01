@@ -23,7 +23,7 @@ public class TypeMetriqueAdapter extends XmlAdapter<String, TypeMetrique>
     public String marshal(TypeMetrique v) throws Exception
     {
         if (v != null)
-            return v.toString();
+            return v.getValeur();
         return null;
     }
 }

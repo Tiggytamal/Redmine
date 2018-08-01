@@ -10,9 +10,17 @@ import org.powermock.reflect.Whitebox;
 
 import model.enums.TypeAction;
 
-public class TestTypeAction
+public class TestTypeAction implements TestEnums
 {   
     @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(TypeAction.CREER, TypeAction.valueOf(TypeAction.CREER.toString()));          
+    }
+    
+    @Test
+    @Override
     public void testSize()
     {
         assertEquals(7, TypeAction.values().length);
@@ -22,19 +30,27 @@ public class TestTypeAction
     public void testFrom()
     {
         assertEquals(TypeAction.CREER, TypeAction.from("A créer"));
-        assertEquals("A créer", TypeAction.CREER.toString());
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0A créer"));
+        assertEquals("A créer", TypeAction.CREER.getValeur());
         assertEquals(TypeAction.VERIFIER, TypeAction.from("A vérifier"));
-        assertEquals("A vérifier", TypeAction.VERIFIER.toString());
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0A vérifier"));
+        assertEquals("A vérifier", TypeAction.VERIFIER.getValeur());
         assertEquals(TypeAction.ASSEMBLER, TypeAction.from("A assembler"));
-        assertEquals("A assembler", TypeAction.ASSEMBLER.toString());
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0A assembler"));
+        assertEquals("A assembler", TypeAction.ASSEMBLER.getValeur());
         assertEquals(TypeAction.CLOTURER, TypeAction.from("A clôturer"));
-        assertEquals("A clôturer", TypeAction.CLOTURER.toString());
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0A clôturer"));
+        assertEquals("A clôturer", TypeAction.CLOTURER.getValeur());
         assertEquals(TypeAction.ABANDONNER, TypeAction.from("A abandonner"));
-        assertEquals("A abandonner", TypeAction.ABANDONNER.toString());
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0A abandonner"));
+        assertEquals("A abandonner", TypeAction.ABANDONNER.getValeur());
+        assertEquals(TypeAction.RELANCER, TypeAction.from("A relancer"));
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0A relancer"));
+        assertEquals("A relancer", TypeAction.RELANCER.getValeur());
         assertEquals(TypeAction.VIDE, TypeAction.from("inconnu"));
-        assertEquals("", TypeAction.VIDE.toString());
-        assertEquals(TypeAction.VERIFIER, TypeAction.from("A vérifier"));
-        assertEquals("A vérifier", TypeAction.VERIFIER.toString());
+        assertEquals("", TypeAction.VIDE.getValeur());
+
+        assertEquals(TypeAction.VIDE, TypeAction.from(""));
     }
 
     @Test

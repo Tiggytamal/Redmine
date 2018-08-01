@@ -19,17 +19,16 @@ public enum EtatLot
     ABANDONNE(Valeur.ABANDONNE),
     INCONNU(Valeur.INCONNU);
     
-    private final String string;
+    private final String valeur;
     
-    private EtatLot(String string)
+    private EtatLot(String valeur)
     {
-        this.string = string;
+        this.valeur = valeur;
     }
     
-    @Override
-    public String toString()
+    public String getValeur()
     {
-        return string;
+        return valeur;
     }
     
     public static EtatLot from(String envString)

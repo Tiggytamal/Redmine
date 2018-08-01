@@ -1,7 +1,5 @@
 package model.enums;
 
-import java.io.Serializable;
-
 import control.quartz.JobAnomaliesSonar;
 import control.quartz.JobVuesCDM;
 import control.quartz.JobVuesCHC;
@@ -14,7 +12,7 @@ import control.task.AbstractJobForTask;
  * @since 1.0
  *
  */
-public enum TypePlan implements Serializable, TypeKey 
+public enum TypePlan implements TypeKey 
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -22,23 +20,22 @@ public enum TypePlan implements Serializable, TypeKey
     VUECHC("Vues CHC", JobVuesCHC.class), 
     VUECDM("Vues CHC_CDM", JobVuesCDM.class);
 
-    private String string;
+    private String valeur;
     private Class<? extends AbstractJobForTask> classJob;
 
     /*---------- CONSTRUCTEURS ----------*/
     
-    private TypePlan(String string, Class<? extends AbstractJobForTask> classJob)
+    private TypePlan(String valeur, Class<? extends AbstractJobForTask> classJob)
     {
-        this.string = string;
+        this.valeur = valeur;
         this.classJob = classJob;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
     
-    @Override
-    public String toString()
+    public String getValeur()
     {
-        return string;
+        return valeur;
     }
 
     public Class<? extends AbstractJobForTask> getClassJob()

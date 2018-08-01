@@ -98,6 +98,14 @@ public class TestAnomalie extends JunitBase
     }
     
     @Test
+    public void testToString()
+    {
+        ano.setLot("123456");
+        ano.setNumeroAnomalie(12);
+        assertEquals("Anomalie du lot 123456 - RTC = 12", ano.toString());
+    }
+    
+    @Test
     public void testCalculTraitee()
     {
         // Avec une objet juste initialisé, le booleén doit être à faux.
@@ -436,6 +444,28 @@ public class TestAnomalie extends JunitBase
         assertEquals(today, ano.getDateRelance());       
     }
     
+    @Test
+    public void testGetDateReso()
+    {
+        // test valeur vide ou nulle
+        assertEquals(null, ano.getDateReso());
+        
+        // Test setter et getter
+        ano.setDateReso(today);
+        assertEquals(today, ano.getDateReso());       
+    }
+    
+    @Test
+    public void testGetDateMajEtat()
+    {
+        // test valeur vide ou nulle
+        assertEquals(null, ano.getDateMajEtat());
+        
+        // Test setter et getter
+        ano.setDateMajEtat(today);
+        assertEquals(today, ano.getDateMajEtat());       
+    }
+    
     /* TEST COMMENTAIRES */
     
     @Test
@@ -656,6 +686,28 @@ public class TestAnomalie extends JunitBase
         // Test setter et getter
         ano.setDateDetectionComment(comment);
         assertEquals(comment, ano.getDateDetectionComment());   
+    }
+    
+    @Test
+    public void testGetDateResoComment()
+    {
+        // test valeur vide ou nulle
+        assertEquals(null, ano.getDateResoComment());
+        
+        // Test setter et getter
+        ano.setDateResoComment(comment);
+        assertEquals(comment, ano.getDateResoComment());   
+    }
+    
+    @Test
+    public void testGetDateMajEtatComment()
+    {
+        // test valeur vide ou nulle
+        assertEquals(null, ano.getDateMajEtatComment());
+        
+        // Test setter et getter
+        ano.setDateMajEtatComment(comment);
+        assertEquals(comment, ano.getDateMajEtatComment());   
     }
     
     @Test

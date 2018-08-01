@@ -6,9 +6,17 @@ import org.junit.Test;
 
 import model.enums.TypeColSuivi;
 
-public class TestTypeColSuivi
+public class TestTypeColSuivi implements TestEnums
 {
     @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(TypeColSuivi.ACTION, TypeColSuivi.valueOf(TypeColSuivi.ACTION.toString()));
+    }
+    
+    @Test
+    @Override
     public void testSize()
     {
         assertEquals(23, TypeColSuivi.values().length);

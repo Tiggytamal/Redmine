@@ -6,9 +6,10 @@ import org.junit.Test;
 
 import model.enums.TypeColPic;
 
-public class TestTypeColPic
+public class TestTypeColPic implements TestEnums
 {
     @Test
+    @Override
     public void testSize()
     {
         assertEquals(13, TypeColPic.values().length);
@@ -48,5 +49,12 @@ public class TestTypeColPic
         assertEquals("colVmoe", TypeColPic.VMOE.getNomCol());
         assertEquals("colVmoa", TypeColPic.VMOA.getNomCol());
         assertEquals("colLiv", TypeColPic.LIV.getNomCol());
+    }
+
+    @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(TypeColPic.VMOA, TypeColPic.valueOf(TypeColPic.VMOA.toString()));    
     }
 }

@@ -6,7 +6,7 @@ package model.enums;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum TypeParamSpec 
+public enum TypeParamSpec
 {
     // affichage des éditions
     LISTVIEWVERSION, 

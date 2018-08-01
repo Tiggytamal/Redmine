@@ -40,7 +40,7 @@ public class ParamView extends VBox implements ViewXML<Param, TextField>
         HBox box = new HBox();
 
         // Label
-        Label label = new Label(typeParam.toString() + Statics.DEUXPOINTS);
+        Label label = new Label(typeParam.getNom() + Statics.DEUXPOINTS);
         label.setPrefWidth(LABELWIDTH);
         box.getChildren().add(label);
 

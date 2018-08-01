@@ -1,14 +1,12 @@
 package model.enums;
 
-import java.io.Serializable;
-
 /**
  * Colonnes du fichier des applications
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum TypeColApps implements Serializable, TypeColR, TypeColW
+public enum TypeColApps implements TypeColR, TypeColW
 {
     CODEAPPS("Code Application", "colCode"),
     ACTIF("Actif", "colActif"),

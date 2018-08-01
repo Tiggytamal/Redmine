@@ -6,9 +6,10 @@ import org.junit.Test;
 
 import model.enums.TypeColClarity;
 
-public class TestTypeColClarity
+public class TestTypeColClarity implements TestEnums
 {
     @Test
+    @Override
     public void testSize()
     {
         assertEquals(8, TypeColClarity.values().length);
@@ -38,5 +39,12 @@ public class TestTypeColClarity
         assertEquals("colDir", TypeColClarity.DIRECTION.getNomCol());
         assertEquals("colDepart", TypeColClarity.DEPARTEMENT.getNomCol());
         assertEquals("colService", TypeColClarity.SERVICE.getNomCol());
+    }
+
+    @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(TypeColClarity.SERVICE, TypeColClarity.valueOf(TypeColClarity.SERVICE.toString()));    
     }
 }

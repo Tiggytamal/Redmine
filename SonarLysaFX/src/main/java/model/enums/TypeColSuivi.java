@@ -1,13 +1,11 @@
 package model.enums;
 
-import java.io.Serializable;
-
 /**
  * Colonnes du fichier de Suivi des anomalies
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum TypeColSuivi  implements Serializable, TypeColR
+public enum TypeColSuivi  implements TypeColR
 {
     /*---------- ATTRIBUTS ----------*/
 

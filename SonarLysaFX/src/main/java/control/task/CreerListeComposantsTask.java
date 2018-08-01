@@ -72,8 +72,8 @@ public class CreerListeComposantsTask extends AbstractSonarTask
             LOGCONSOLE.debug("Traitement composants Sonar : " + i + " - " + size);
 
             // Récupération du numéro de lot et de l'applicaitond e chaque composant.
-            Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { TypeMetrique.LOT.toString(), TypeMetrique.APPLI.toString(), TypeMetrique.EDITION.toString(),
-                    TypeMetrique.LDC.toString(), TypeMetrique.SECURITY.toString(), TypeMetrique.VULNERABILITIES.toString() });
+            Composant composant = api.getMetriquesComposant(projet.getKey(), new String[] { TypeMetrique.LOT.getValeur(), TypeMetrique.APPLI.getValeur(), TypeMetrique.EDITION.getValeur(),
+                    TypeMetrique.LDC.getValeur(), TypeMetrique.SECURITY.getValeur(), TypeMetrique.VULNERABILITIES.getValeur() });
             if (composant == null)
                 continue;
             ComposantSonar composantSonar = ModelFactory.getModel(ComposantSonar.class);
@@ -83,8 +83,8 @@ public class CreerListeComposantsTask extends AbstractSonarTask
             composantSonar.setLot(composant.getMapMetriques().computeIfAbsent(TypeMetrique.LOT, t -> new Metrique(TypeMetrique.LOT, null)).getValue());
             composantSonar.setAppli(composant.getMapMetriques().computeIfAbsent(TypeMetrique.APPLI, t -> new Metrique(TypeMetrique.APPLI, null)).getValue());
             composantSonar.setEdition(composant.getMapMetriques().computeIfAbsent(TypeMetrique.EDITION, t -> new Metrique(TypeMetrique.EDITION, null)).getValue());
-            composantSonar.setLdc(Integer.parseInt(composant.getMapMetriques().computeIfAbsent(TypeMetrique.LDC, t -> new Metrique(TypeMetrique.LDC, "0")).getValue()));
-            composantSonar.setSecurity((int) Float.parseFloat(composant.getMapMetriques().computeIfAbsent(TypeMetrique.SECURITY, t -> new Metrique(TypeMetrique.LDC, "0")).getValue()));
+            composantSonar.setLdc(Integer.parseInt(composant.getMapMetriques().computeIfAbsent(TypeMetrique.LDC, t -> new Metrique(TypeMetrique.LDC, "0")).getValue())); 
+            composantSonar.setSecurity((int) Float.parseFloat(composant.getMapMetriques().computeIfAbsent(TypeMetrique.SECURITY, t -> new Metrique(TypeMetrique.SECURITY, "0")).getValue()));
             composantSonar
                     .setVulnerabilites(Integer.parseInt(composant.getMapMetriques().computeIfAbsent(TypeMetrique.VULNERABILITIES, t -> new Metrique(TypeMetrique.VULNERABILITIES, "0")).getValue()));
             mapSonar.put(composantSonar.getKey(), composantSonar);

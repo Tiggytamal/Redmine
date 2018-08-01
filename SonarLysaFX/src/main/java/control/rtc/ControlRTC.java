@@ -481,8 +481,8 @@ public class ControlRTC
             retour.setLot(String.valueOf(workItem.getId()));
             retour.setLibelle(workItem.getHTMLSummary().getPlainText());
             retour.setCpiProjet(recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
-            retour.setProjetClarity(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.toString(), null), workItem));
-            retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.toString(), null), workItem));
+            retour.setProjetClarity(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem));
+            retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem));
             retour.setEtatLot(EtatLot.from(recupEtatElement(workItem)));
             retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
             return retour;

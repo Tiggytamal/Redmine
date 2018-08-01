@@ -6,9 +6,10 @@ import org.junit.Test;
 
 import model.enums.TypeColChefServ;
 
-public class TestTypeColChefServ
+public class TestTypeColChefServ implements TestEnums
 {
     @Test
+    @Override
     public void testSize()
     {
         assertEquals(5, TypeColChefServ.values().length);
@@ -32,5 +33,12 @@ public class TestTypeColChefServ
         assertEquals("colService", TypeColChefServ.SERVICE.getNomCol());
         assertEquals("colFil", TypeColChefServ.FILIERE.getNomCol());
         assertEquals("colManager", TypeColChefServ.MANAGER.getNomCol());
+    }
+
+    @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(TypeColChefServ.DEPARTEMENT, TypeColChefServ.valueOf(TypeColChefServ.DEPARTEMENT.toString()));    
     }
 }

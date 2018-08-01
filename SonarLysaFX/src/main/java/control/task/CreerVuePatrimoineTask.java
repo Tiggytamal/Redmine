@@ -20,12 +20,13 @@ public class CreerVuePatrimoineTask extends AbstractSonarTask
     private String key;
     public static final String TITRE = "Vue Patrimoine";
     private final LocalDate today = LocalDate.now();
+    private static final int ETAPES = 3;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public CreerVuePatrimoineTask()
     {
-        super(3);
+        super(ETAPES);
         annulable = true;
     }
 

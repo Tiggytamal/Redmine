@@ -1,13 +1,11 @@
 package model.enums;
 
-import java.io.Serializable;
-
 /**
  * Colonnes du fichier des projets Clarity
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum TypeColClarity implements Serializable, TypeColR
+public enum TypeColClarity implements TypeColR
 {
     /*---------- ATTRIBUTS ----------*/
 

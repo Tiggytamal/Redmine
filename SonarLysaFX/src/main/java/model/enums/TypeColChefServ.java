@@ -1,13 +1,11 @@
 package model.enums;
 
-import java.io.Serializable;
-
 /**
  * Colonnes du fichier des chefs de services
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum TypeColChefServ implements Serializable, TypeColR 
+public enum TypeColChefServ implements TypeColR 
 {
     /*---------- ATTRIBUTS ----------*/
     

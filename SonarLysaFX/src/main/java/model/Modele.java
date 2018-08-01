@@ -13,16 +13,4 @@ public interface Modele
     {
         return val == null ? "" : val;
     }
-
-    public default boolean compare(Object objet, Object autre)
-    {
-        if (objet == null)
-        {
-            if (autre != null)
-                return false;
-        }
-        else if (!objet.equals(autre))
-            return false;
-        return true;
-    }
 }

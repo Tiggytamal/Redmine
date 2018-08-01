@@ -10,7 +10,7 @@ public enum TypeMetrique
 {
     LOT(Valeur.LOT), 
     QG(Valeur.QG), 
-    DUPLICATION(Valeur.DUPLICATION), 
+    DUPLICATION(Valeur.DUPLICATION),
     BLOQUANT(Valeur.BLOQUANT), 
     CRITIQUE(Valeur.CRITIQUE), 
     APPLI(Valeur.APPLI), 
@@ -27,8 +27,7 @@ public enum TypeMetrique
         this.valeur = valeur;
     }
 
-    @Override
-    public String toString()
+    public String getValeur()
     {
         return valeur;
     }

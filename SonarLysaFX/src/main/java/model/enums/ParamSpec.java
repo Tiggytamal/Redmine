@@ -1,14 +1,12 @@
 package model.enums;
 
-import java.io.Serializable;
-
 /**
  * Liste des paramètres spéciaux de l'application
  * 
  * @author ETP8137 - Grégoire mathon
  * @since 1.0
  */
-public enum ParamSpec implements Serializable, TypeKey 
+public enum ParamSpec implements TypeKey 
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -22,16 +20,16 @@ public enum ParamSpec implements Serializable, TypeKey
     MEMBRESMAIL("Groupe de reception des rapports", TypeParamSpec.LISTVIEWNOM);
     
     // Nom du paramètre
-    private final String string;
+    private final String nom;
     
     // Type de paramètre
     private final TypeParamSpec type;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private ParamSpec(String string, TypeParamSpec type)
+    private ParamSpec(String nom, TypeParamSpec type)
     {
-        this.string = string;
+        this.nom = nom;
         this.type = type;
     }
 
@@ -39,10 +37,9 @@ public enum ParamSpec implements Serializable, TypeKey
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
     
-    @Override
-    public String toString()
+    public String getNom()
     {
-        return string;
+        return nom;
     }
     
     public TypeParamSpec getType()

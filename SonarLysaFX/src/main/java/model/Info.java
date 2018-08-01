@@ -83,7 +83,7 @@ public class Info implements Modele, XML
 
     public String getNom()
     {
-        return nom;
+        return getString(nom);
     }
 
     public void setNom(String nom)

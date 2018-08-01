@@ -121,6 +121,18 @@ public class TestInfo extends JunitBase
         info.setPseudo(pseudo);
         assertEquals(pseudo, info.getPseudo());  
     }
+    
+    @Test
+    public void testGetNom()
+    {
+        // test valeur vide ou nulle
+        assertEquals("", info.getNom());
+        
+        // Test setter et getter
+        String pseudo = "pseudo";
+        info.setNom(pseudo);
+        assertEquals(pseudo, info.getNom());  
+    }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

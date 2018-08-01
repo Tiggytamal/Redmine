@@ -5,7 +5,7 @@ package model.enums;
  * @author ETP8137 - Grégoire Mathon
  *
  */
-public enum TypeMail 
+public enum TypeMail
 {
     /*---------- ATTRIBUTS ----------*/
 

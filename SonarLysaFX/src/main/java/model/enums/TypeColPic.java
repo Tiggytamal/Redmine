@@ -1,13 +1,11 @@
 package model.enums;
 
-import java.io.Serializable;
-
 /**
  * Colonnes des extractions de la Pic
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum TypeColPic implements Serializable, TypeColR
+public enum TypeColPic implements TypeColR
 {
 
     LOT ("Lot", "colLot"),

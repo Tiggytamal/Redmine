@@ -6,9 +6,10 @@ import org.junit.Test;
 
 import model.enums.TypeColApps;
 
-public class TestTypeColApps
+public class TestTypeColApps implements TestEnums
 {
     @Test
+    @Override
     public void testSize()
     {
         assertEquals(5, TypeColApps.values().length);
@@ -32,5 +33,12 @@ public class TestTypeColApps
         assertEquals("colLib", TypeColApps.LIB.getNomCol());
         assertEquals("colOpen", TypeColApps.OPEN.getNomCol());
         assertEquals("colMainFrame", TypeColApps.MAINFRAME.getNomCol());
+    }
+
+    @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(TypeColApps.CODEAPPS, TypeColApps.valueOf(TypeColApps.CODEAPPS.toString()));    
     }
 }

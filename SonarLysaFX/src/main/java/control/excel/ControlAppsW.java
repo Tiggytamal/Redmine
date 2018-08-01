@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -48,12 +50,16 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     private int colLDCMain;
     private static final String APPLIGEREES = "Périmètre Couverts SonarQbe";
     private static final String REFAPPLIS = "Ref CodeApps detaillés";
+    private static final double MININFLATERATIO = 0.005;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     ControlAppsW(File sortie)
     {
         super(sortie);
+        
+        // Changement de paramétrage pour éviter les zip bombs
+        ZipSecureFile.setMinInflateRatio(MININFLATERATIO);
         
         // Création des deux feuilles ud fichier Excel
         wb.createSheet(APPLIGEREES);
@@ -151,12 +157,26 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
         }
 
         Sheet sheetFinale = wb.getSheet(REFAPPLIS);
+        
+        // Récupération index de la colonne des code appli du fichier de base
+        Row row = sheetbase.getRow(0);
+        int colCodeBase = 0;
+        // Parcours de la première ligne, calcul de l'index et arrêt de la boucle.
+        for (int i =0; i < row.getLastCellNum(); i++)
+        {
+            Cell cell = row.getCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+            if ("Code".equals(cell.getStringCellValue()))
+            {
+                colCodeBase = cell.getColumnIndex();
+                break;
+            }               
+        }
 
         for (Iterator<Row> iter = sheetbase.iterator(); iter.hasNext();)
         {
             // Initialisation des deux lignes
             Row base = iter.next();
-            Row row = sheetFinale.createRow(sheetFinale.getLastRowNum() + 1);
+            row = sheetFinale.createRow(sheetFinale.getLastRowNum() + 1);
 
             // On itère sur la ligne de titres
             for (int i = 0; i < base.getLastCellNum(); i++)
@@ -168,7 +188,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
             }
 
             // Test si l'application est présente dans les applications SonarQube. On protège si le nom de l'application est une valeur numérique
-            Cell cell = base.getCell(1);
+            Cell cell = base.getCell(colCodeBase, MissingCellPolicy.CREATE_NULL_AS_BLANK);
             String value = "";
             if (cell.getCellTypeEnum() == CellType.STRING)
                 value = cell.getStringCellValue();

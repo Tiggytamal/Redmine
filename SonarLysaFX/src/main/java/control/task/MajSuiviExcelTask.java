@@ -469,7 +469,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
 
         // Récupération du composant
         Composant composant = api.getMetriquesComposant(key,
-                new String[] { TypeMetrique.QG.toString(), TypeMetrique.DUPLICATION.toString(), TypeMetrique.BLOQUANT.toString(), TypeMetrique.CRITIQUE.toString() });
+                new String[] { TypeMetrique.QG.getValeur(), TypeMetrique.DUPLICATION.getValeur(), TypeMetrique.BLOQUANT.getValeur(), TypeMetrique.CRITIQUE.getValeur() });
 
         // Récupération depuis la map des métriques
         Map<TypeMetrique, Metrique> metriques = composant.getMapMetriques();

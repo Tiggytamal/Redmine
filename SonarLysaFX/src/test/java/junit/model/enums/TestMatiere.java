@@ -6,22 +6,33 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.reflect.Whitebox;
 
 import model.enums.Matiere;
 import model.enums.TypeMail;
 
-public class TestMatiere
+@PrepareForTest(String.class)
+public class TestMatiere implements TestEnums
 {
+    
+    @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(Matiere.JAVA, Matiere.valueOf(Matiere.JAVA.toString()));        
+        
+    }
+    
     @Test
     public void testFrom()
     {
         assertEquals(Matiere.JAVA, Matiere.from("JAVA"));
-        assertEquals("JAVA", Matiere.JAVA.toString());
+        assertEquals("JAVA", Matiere.JAVA.getValeur());
         assertEquals(Matiere.DATASTAGE, Matiere.from("DATASTAGE"));
-        assertEquals("DATASTAGE", Matiere.DATASTAGE.toString());
+        assertEquals("DATASTAGE", Matiere.DATASTAGE.getValeur());
         assertEquals(Matiere.COBOL, Matiere.from("COBOL"));
-        assertEquals("COBOL", Matiere.COBOL.toString());
+        assertEquals("COBOL", Matiere.COBOL.getValeur());
     }
     
     @Test (expected = IllegalArgumentException.class)
@@ -30,6 +41,7 @@ public class TestMatiere
         Matiere.from("inconnu");
     }
     
+    @Test
     public void testGetTypeMail()
     {
         assertEquals(TypeMail.SUIVIJAVA, Matiere.JAVA.getTypeMail());
@@ -38,6 +50,7 @@ public class TestMatiere
     }
     
     @Test
+    @Override
     public void testSize()
     {
         assertEquals(3, Matiere.values().length);

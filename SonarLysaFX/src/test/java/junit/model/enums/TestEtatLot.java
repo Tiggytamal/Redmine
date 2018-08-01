@@ -10,9 +10,10 @@ import org.powermock.reflect.Whitebox;
 
 import model.enums.EtatLot;
 
-public class TestEnvironnement
+public class TestEtatLot implements TestEnums
 {
     @Test
+    @Override
     public void testSize()
     {
         assertEquals(10, EtatLot.values().length);
@@ -22,31 +23,41 @@ public class TestEnvironnement
     {
         String inconnu = "INCONNU";
         assertEquals(EtatLot.ABANDONNE, EtatLot.from("Abandonné"));
-        assertEquals("Abandonné", EtatLot.ABANDONNE.toString());
+        assertEquals(EtatLot.INCONNU, EtatLot.from("\0Abandonné"));
+        assertEquals("Abandonné", EtatLot.ABANDONNE.getValeur());
         assertEquals(EtatLot.NOUVEAU, EtatLot.from("Nouveau"));
-        assertEquals("Nouveau", EtatLot.NOUVEAU.toString());
+        assertEquals(EtatLot.INCONNU, EtatLot.from("\0Nouveau"));
+        assertEquals("Nouveau", EtatLot.NOUVEAU.getValeur());
         assertEquals(EtatLot.DEVTU, EtatLot.from("En DEV-TU"));
-        assertEquals("En DEV-TU", EtatLot.DEVTU.toString());
+        assertEquals(EtatLot.INCONNU, EtatLot.from("\0En DEV-TU"));
+        assertEquals("En DEV-TU", EtatLot.DEVTU.getValeur());
         assertEquals(EtatLot.TFON, EtatLot.from("TFON"));
-        assertEquals("TFON", EtatLot.TFON.toString());
+        assertEquals(EtatLot.INCONNU, EtatLot.from("\0TFON"));
+        assertEquals("TFON", EtatLot.TFON.getValeur());
         assertEquals(EtatLot.VMOE, EtatLot.from("En Vérification MOE"));
-        assertEquals("En Vérification MOE", EtatLot.VMOE.toString());
+        assertEquals(EtatLot.INCONNU, EtatLot.from("\0En Vérification MOE"));
+        assertEquals("En Vérification MOE", EtatLot.VMOE.getValeur());
         assertEquals(EtatLot.VMOA, EtatLot.from("En Validation MOA"));
-        assertEquals("En Validation MOA", EtatLot.VMOA.toString());
+        assertEquals(EtatLot.INCONNU, EtatLot.from("\0En Validation MOA"));
+        assertEquals("En Validation MOA", EtatLot.VMOA.getValeur());
         assertEquals(EtatLot.EDITION, EtatLot.from("Livré à l'Edition"));
-        assertEquals("Livré à l'Edition", EtatLot.EDITION.toString());
+        assertEquals(EtatLot.INCONNU, EtatLot.from("\0Livré à l'Edition"));
+        assertEquals("Livré à l'Edition", EtatLot.EDITION.getValeur());
         assertEquals(EtatLot.TERMINE, EtatLot.from("Terminé"));
-        assertEquals("Terminé", EtatLot.TERMINE.toString());
+        assertEquals(EtatLot.INCONNU, EtatLot.from("\0Terminé"));
+        assertEquals("Terminé", EtatLot.TERMINE.getValeur());
         assertEquals(EtatLot.MOA, EtatLot.from("Candidat pour la Validation MOA"));
-        assertEquals("Candidat pour la Validation MOA", EtatLot.MOA.toString());
+        assertEquals(EtatLot.INCONNU, EtatLot.from("\0Candidat pour la Validation MOA"));
+        assertEquals("Candidat pour la Validation MOA", EtatLot.MOA.getValeur());
         assertEquals(EtatLot.INCONNU, EtatLot.from("inconnu"));
-        assertEquals(inconnu, EtatLot.INCONNU.toString());
+        assertEquals(EtatLot.INCONNU, EtatLot.from("\0inconnu"));
+        assertEquals(inconnu, EtatLot.INCONNU.getValeur());
         assertEquals(EtatLot.INCONNU, EtatLot.from("autre"));
-        assertEquals(inconnu, EtatLot.INCONNU.toString());
+        assertEquals(inconnu, EtatLot.INCONNU.getValeur());
         assertEquals(EtatLot.INCONNU, EtatLot.from(null));
-        assertEquals(inconnu, EtatLot.INCONNU.toString());
+        assertEquals(inconnu, EtatLot.INCONNU.getValeur());
         assertEquals(EtatLot.INCONNU, EtatLot.from(""));
-        assertEquals(inconnu, EtatLot.INCONNU.toString());
+        assertEquals(inconnu, EtatLot.INCONNU.getValeur());
     }
 
     @Test
@@ -62,5 +73,12 @@ public class TestEnvironnement
         {
             assertEquals(AssertionError.class, e.getCause().getClass());
         }
+    }
+    
+    @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(EtatLot.ABANDONNE, EtatLot.valueOf(EtatLot.ABANDONNE.toString()));        
     }
 }

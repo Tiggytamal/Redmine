@@ -22,13 +22,17 @@ import java.util.Locale;
 public class DateConvert
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRANCE);
+    
+    private static final short MINPERHOUR = 60;
+    private static final short SECSPERMIN = 60;
+    private static final short HOURSPERDAY = 24;
 
     private DateConvert()
     {
     }
-    
+
     /*---------- CONSTRUCTEURS ----------*/
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -76,8 +80,7 @@ public class DateConvert
     public static <T extends Temporal> T convert(Class<T> classeRetour, Object date, ZoneId zone)
     {
         if (classeRetour == null || date == null || zone == null)
-            throw new IllegalArgumentException(
-                    "Méthode DateConvert.convert(Class<? extends Temporal> classe , Object date, ZoneId zone) : une donnée est nulle.");
+            throw new IllegalArgumentException("Méthode DateConvert.convert(Class<? extends Temporal> classe , Object date, ZoneId zone) : une donnée est nulle.");
 
         // Conversion de l'objet en Instant selon sa classe
         Instant temp = convertToInstant(date, zone);
@@ -124,8 +127,8 @@ public class DateConvert
         if (date == null)
             return null;
 
-        if (date instanceof java.sql.Timestamp)
-            return ((java.sql.Timestamp) date).toLocalDateTime();
+        if (date instanceof Timestamp)
+            return ((Timestamp) date).toLocalDateTime();
         else
             return Instant.ofEpochMilli(date.getTime()).atZone(zone).toLocalDateTime();
     }
@@ -219,11 +222,12 @@ public class DateConvert
             throw new IllegalArgumentException("La date et le pattern ne peuvent être nuls");
         return date.format(DateTimeFormatter.ofPattern(pattern, Locale.FRANCE)).replace("é", "e").replace("û", "u").replace(".", "");
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Transforme un {@code Object} en {@code Instant}
+     * 
      * @param date
      * @param zone
      * @return
@@ -234,44 +238,44 @@ public class DateConvert
         switch (date.getClass().getName())
         {
             case "java.lang.Long":
-                retour = Instant.ofEpochSecond((Long) date * 24 * 60 * 60);
+                retour = Instant.ofEpochSecond((Long) date * HOURSPERDAY * MINPERHOUR * SECSPERMIN);
                 break;
-                
+
             case "java.time.Instant":
                 retour = (Instant) date;
                 break;
-                
+
             case "java.time.ZonedDateTime":
                 retour = ((ZonedDateTime) date).toInstant();
                 break;
-                
+
             case "java.time.LocalDateTime":
                 retour = ((LocalDateTime) date).atZone(zone).toInstant();
                 break;
-                
+
             case "java.time.LocalDate":
                 retour = ((LocalDate) date).atStartOfDay(zone).toInstant();
                 break;
-                
+
             case "java.sql.Timestamp":
                 retour = ((Timestamp) date).toInstant();
                 break;
-                
+
             case "java.sql.Date":
                 retour = ((java.sql.Date) date).toInstant();
                 break;
-                
+
             case "java.util.Date":
-                retour = ((java.util.Date) date).toInstant();
+                retour = ((Date) date).toInstant();
                 break;
-                
+
             default:
                 throw new UnsupportedOperationException("Classe de l'objet non supportée : " + date.getClass().getName());
         }
-        
+
         return retour;
     }
-    
+
     @SuppressWarnings("unchecked")
     private static <T extends Temporal> T intantToClasseRetour(Class<T> classeRetour, Instant temp, ZoneId zone)
     {

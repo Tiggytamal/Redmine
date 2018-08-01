@@ -1,29 +1,26 @@
 package model.enums;
 
-import java.io.Serializable;
-
-public enum ParamBool implements Serializable,TypeKey 
+public enum ParamBool implements TypeKey 
 {
     /*---------- ATTRIBUTS ----------*/
 
     VUESSUIVI("Création des vues de suivi"),
     SUPPSONAR("Protection composants récents purge");
 
-    private final String string;
+    private final String nom;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private ParamBool(String string)
+    private ParamBool(String nom)
     {
-        this.string = string;
+        this.nom = nom;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
     
-    @Override
-    public String toString()
+    public String getNom()
     {
-        return string;
+        return nom;
     }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/    

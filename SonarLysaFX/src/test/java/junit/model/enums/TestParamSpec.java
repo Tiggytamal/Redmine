@@ -8,24 +8,32 @@ import org.junit.Test;
 import model.enums.ParamSpec;
 import model.enums.TypeParamSpec;
 
-public class TestParamSpec
+public class TestParamSpec implements TestEnums 
 {
     @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(ParamSpec.VERSIONS, ParamSpec.valueOf(ParamSpec.VERSIONS.toString()));        
+    }
+    
+    @Test
+    @Override
     public void testSize()
     {
         assertEquals(8, ParamSpec.values().length);
     }
     
     @Test
-    public void testToString()
+    public void testGetNom()
     {
-        assertFalse(ParamSpec.VERSIONS.toString().isEmpty());
-        assertFalse(ParamSpec.TEXTEDEFECT.toString().isEmpty());
-        assertFalse(ParamSpec.TEXTESECURITE.toString().isEmpty());
-        assertFalse(ParamSpec.MEMBRESJAVA.toString().isEmpty());
-        assertFalse(ParamSpec.MEMBRESDATASTAGE.toString().isEmpty());
-        assertFalse(ParamSpec.RECAPDEFECT.toString().isEmpty());
-        assertFalse(ParamSpec.VERSIONSCOMPOSANTS.toString().isEmpty());
+        assertFalse(ParamSpec.VERSIONS.getNom().isEmpty());
+        assertFalse(ParamSpec.TEXTEDEFECT.getNom().isEmpty());
+        assertFalse(ParamSpec.TEXTESECURITE.getNom().isEmpty());
+        assertFalse(ParamSpec.MEMBRESJAVA.getNom().isEmpty());
+        assertFalse(ParamSpec.MEMBRESDATASTAGE.getNom().isEmpty());
+        assertFalse(ParamSpec.RECAPDEFECT.getNom().isEmpty());
+        assertFalse(ParamSpec.VERSIONSCOMPOSANTS.getNom().isEmpty());
     }
     
     @Test

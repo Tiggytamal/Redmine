@@ -14,14 +14,14 @@ public enum Matiere
     DATASTAGE(Valeur.DATASTAGE, TypeMail.SUIVIDATASTAGE),
     COBOL(Valeur.COBOL, TypeMail.SUIVICOBOL);
     
-    private final String string;
+    private final String valeur;
     private final TypeMail typeMail;
     
     /*---------- CONSTRUCTEURS ----------*/
 
-    private Matiere(String string, TypeMail typeMail)
+    private Matiere(String valeur, TypeMail typeMail)
     {
-        this.string = string;
+        this.valeur = valeur;
         this.typeMail = typeMail;
     }
     
@@ -33,10 +33,13 @@ public enum Matiere
         {
             case Valeur.JAVA :
                 return JAVA;
+                
             case Valeur.DATASTAGE :
                 return DATASTAGE;
+                
             case Valeur.COBOL :
                 return COBOL;
+                
             default :
                 throw new IllegalArgumentException("Matière inconnue :" + matiere);
         }        
@@ -45,10 +48,9 @@ public enum Matiere
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
     
-    @Override
-    public String toString()
+    public String getValeur()
     {
-        return string;
+        return valeur;
     }
     
     public TypeMail getTypeMail()
@@ -58,7 +60,7 @@ public enum Matiere
     
     /*---------- CLASSES PRIVEES ----------*/
     
-    private static class Valeur
+    private static final class Valeur
     {        
         public static final String JAVA = "JAVA";
         public static final String DATASTAGE = "DATASTAGE";

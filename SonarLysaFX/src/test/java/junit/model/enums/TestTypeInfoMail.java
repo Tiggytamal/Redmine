@@ -8,9 +8,10 @@ import org.junit.Test;
 
 import model.enums.TypeInfoMail;
 
-public class TestTypeInfoMail
+public class TestTypeInfoMail implements TestEnums
 {
     @Test
+    @Override
     public void testSize()
     {
         assertEquals(14, TypeInfoMail.values().length);
@@ -52,5 +53,12 @@ public class TestTypeInfoMail
         assertEquals(LIENAPP, TypeInfoMail.APPLINONREF.getLiens());
         assertEquals("", TypeInfoMail.COMPOSANSAPP.getLiens());
         assertEquals("", TypeInfoMail.COMPOPURGE.getLiens());
+    }
+
+    @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(TypeInfoMail.COMPOSANSAPP, TypeInfoMail.valueOf(TypeInfoMail.COMPOSANSAPP.toString()));    
     }
 }

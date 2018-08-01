@@ -70,6 +70,9 @@ public class MenuViewControl extends AbstractViewControl
     private HBox box;
 
     private BorderPane border;
+    
+    private static final short WIDTHALERT = 640;
+    private static final short HEIGHTALERT = 480;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -158,7 +161,7 @@ public class MenuViewControl extends AbstractViewControl
             case "suivi":
                 load("/view/Suivi.fxml");
                 break;
-                
+
             case "appli":
                 load("/view/Applications.fxml");
                 break;
@@ -166,20 +169,20 @@ public class MenuViewControl extends AbstractViewControl
             case "rtc":
                 load("/view/FichierRTC.fxml");
                 break;
-                
+
             case "extraction":
                 load("/view/Extraction.fxml");
                 break;
-                
+
             // Demande confirmations pour traitements
             case "majVues":
                 alertConfirmation(new MajVuesTask(), "Cela lancera la mise à jour de toutes les vues Sonar.");
                 break;
-                
+
             case "majCompos":
-                alertConfirmation(new CreerListeComposantsTask(), "Cela lancera la mise à jour de tous les composants Sonar."); 
+                alertConfirmation(new CreerListeComposantsTask(), "Cela lancera la mise à jour de tous les composants Sonar.");
                 break;
-                
+
             case "purger":
                 alertConfirmation(new PurgeSonarTask(), "Cela lancera la purge des composants Sonar.");
                 break;
@@ -200,7 +203,7 @@ public class MenuViewControl extends AbstractViewControl
         aidePanel.setContentText(null);
         WebView webView = new WebView();
         webView.getEngine().load(getClass().getResource("/aide/menu.html").toString());
-        webView.setPrefSize(640, 480);
+        webView.setPrefSize(WIDTHALERT, HEIGHTALERT);
         aidePanel.setResizable(true);
         aidePanel.getDialogPane().setContent(webView);
         aidePanel.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
@@ -257,7 +260,7 @@ public class MenuViewControl extends AbstractViewControl
         Node pane = FXMLLoader.load(getClass().getResource(ressource));
         border.setCenter(pane);
     }
-    
+
     /**
      * Affichage message de confirmation avant le lancement du traitement.
      * 

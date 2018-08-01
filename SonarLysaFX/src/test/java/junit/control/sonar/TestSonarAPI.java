@@ -143,13 +143,13 @@ public class TestSonarAPI extends JunitBase
     {
         // Appel classique sans erreur
         Composant composant = handler.getMetriquesComposant("fr.ca.cat.apimanager.resources:RESS_Dossiers_Epargne_Patrimoniale_Recapitulatif_entretien_Build:14",
-                new String[] { TypeMetrique.VULNERABILITIES.toString(), TypeMetrique.BUGS.toString() });
+                new String[] { TypeMetrique.VULNERABILITIES.getValeur(), TypeMetrique.BUGS.getValeur() });
         assertNotNull(composant);
         assertNotNull(composant.getMetriques());
         assertFalse(composant.getMetriques().isEmpty());
 
         // Appel avec un mauvais composant. Contrôle du log de l'erreur
-        composant = handler.getMetriquesComposant("a", new String[] { TypeMetrique.BUGS.toString() });
+        composant = handler.getMetriquesComposant("a", new String[] { TypeMetrique.BUGS.getValeur() });
         assertNull(composant);
         testLogger();
     }

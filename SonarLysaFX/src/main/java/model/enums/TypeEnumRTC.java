@@ -18,8 +18,7 @@ public enum TypeEnumRTC
         this.valeur = valeur;
     }
     
-    @Override
-    public String toString()
+    public String getValeur()
     {
         return valeur;
     }

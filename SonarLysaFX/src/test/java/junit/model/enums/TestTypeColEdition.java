@@ -6,9 +6,10 @@ import org.junit.Test;
 
 import model.enums.TypeColEdition;
 
-public class TestTypeColEdition
+public class TestTypeColEdition implements TestEnums
 {
     @Test
+    @Override
     public void testSize()
     {
         assertEquals(2, TypeColEdition.values().length);
@@ -26,5 +27,12 @@ public class TestTypeColEdition
     {
         assertEquals("colLib", TypeColEdition.LIBELLE.getNomCol());
         assertEquals("colVersion", TypeColEdition.VERSION.getNomCol());
+    }
+
+    @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(TypeColEdition.VERSION, TypeColEdition.valueOf(TypeColEdition.VERSION.toString()));    
     }
 }

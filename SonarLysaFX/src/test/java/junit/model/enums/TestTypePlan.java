@@ -9,9 +9,10 @@ import control.quartz.JobVuesCDM;
 import control.quartz.JobVuesCHC;
 import model.enums.TypePlan;
 
-public class TestTypePlan
+public class TestTypePlan implements TestEnums
 {
     @Test
+    @Override
     public void testSize()
     {
         assertEquals(3, TypePlan.values().length);
@@ -20,9 +21,9 @@ public class TestTypePlan
     @Test
     public void testToString()
     {
-        assertEquals("Suivi Hebdo", TypePlan.SUIVIHEBDO.toString());
-        assertEquals("Vues CHC", TypePlan.VUECHC.toString());
-        assertEquals("Vues CHC_CDM", TypePlan.VUECDM.toString());
+        assertEquals("Suivi Hebdo", TypePlan.SUIVIHEBDO.getValeur());
+        assertEquals("Vues CHC", TypePlan.VUECHC.getValeur());
+        assertEquals("Vues CHC_CDM", TypePlan.VUECDM.getValeur());
     }
     
     @Test
@@ -31,5 +32,12 @@ public class TestTypePlan
         assertEquals(JobAnomaliesSonar.class, TypePlan.SUIVIHEBDO.getClassJob());
         assertEquals(JobVuesCHC.class, TypePlan.VUECHC.getClassJob());
         assertEquals(JobVuesCDM.class, TypePlan.VUECDM.getClassJob());
+    }
+
+    @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(TypePlan.VUECDM, TypePlan.valueOf(TypePlan.VUECDM.toString()));    
     }
 }

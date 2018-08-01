@@ -6,9 +6,10 @@ import org.junit.Test;
 
 import model.enums.TypeColVul;
 
-public class TestTypeColVul
+public class TestTypeColVul implements TestEnums
 {
     @Test
+    @Override
     public void testSize()
     {
         assertEquals(8, TypeColVul.values().length);
@@ -38,5 +39,12 @@ public class TestTypeColVul
         assertEquals("colDateCrea", TypeColVul.DATECREA.getNomCol());
         assertEquals("colAppli", TypeColVul.APPLI.getNomCol());
         assertEquals("colComp", TypeColVul.COMPOSANT.getNomCol());
+    }
+
+    @Test
+    @Override
+    public void testConstructeur()
+    {
+        assertEquals(TypeColVul.DATECREA, TypeColVul.valueOf(TypeColVul.DATECREA.toString()));    
     }
 }

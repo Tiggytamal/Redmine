@@ -1,13 +1,11 @@
 package model.enums;
 
-import java.io.Serializable;
-
 /**
  * Enumération des différents paramètres de l'application
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public enum Param implements Serializable, TypeKey
+public enum Param implements TypeKey
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -30,21 +28,20 @@ public enum Param implements Serializable, TypeKey
     AQPMAIL("Adresse mail groupe AQP"),
     NBREPURGE("Nbre de versions à garder purge");
 
-    private final String string;
+    private final String nom;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private Param(String string)
+    private Param(String nom)
     {
-        this.string = string;
+        this.nom = nom;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
     
-    @Override
-    public String toString()
+    public String getNom()
     {
-        return string;
+        return nom;
     }
     
     /*---------- METHODES PRIVEES ----------*/

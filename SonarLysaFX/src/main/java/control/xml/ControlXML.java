@@ -41,6 +41,8 @@ public class ControlXML
 
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+    private static final short WIDTHALERT = 600;
+    private static final short HEIGHTALERT = 360;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -210,8 +212,8 @@ public class ControlXML
         alert.setContentText(texte);
         alert.setHeaderText(null);
         alert.show();
-        alert.setWidth(600);
-        alert.setHeight(360);
+        alert.setWidth(WIDTHALERT);
+        alert.setHeight(HEIGHTALERT);
     }
 
     /*---------- ACCESSEURS ----------*/

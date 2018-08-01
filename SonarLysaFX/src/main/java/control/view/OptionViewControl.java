@@ -118,7 +118,7 @@ public class OptionViewControl extends AbstractViewControl
                 afficherParams();
                 root.add(optionsPane);
                 break;
-            
+
             case "Autres Paramètres":
                 afficherParamsAutres();
                 root.add(optionsPane2);
@@ -187,7 +187,6 @@ public class OptionViewControl extends AbstractViewControl
         }
     }
 
-
     /**
      * Sauvegarde les paramètres String et booléens
      * 
@@ -218,7 +217,7 @@ public class OptionViewControl extends AbstractViewControl
         // Enregistrement paramètres
         new ControlXML().saveParam(proprietesXML);
     }
-    
+
     /**
      * Sauvegarde les paramètres spéciaux
      * 
@@ -229,9 +228,9 @@ public class OptionViewControl extends AbstractViewControl
         for (Node node : paramsBox2.getChildren())
         {
             if (node instanceof ParamListView)
-                ((ParamListView)node).sauverValeurs();
+                ((ParamListView) node).sauverValeurs();
             else if (node instanceof ParamTextView)
-                ((ParamTextView)node).sauverValeurs();
+                ((ParamTextView) node).sauverValeurs();
         }
 
         // Enregistrement paramètres
@@ -247,9 +246,9 @@ public class OptionViewControl extends AbstractViewControl
         {
             if (node instanceof ColonneView)
             {
-                @SuppressWarnings ("unchecked")
+                @SuppressWarnings("unchecked")
                 ColonneView<T> view = (ColonneView<T>) node;
-                @SuppressWarnings ("unchecked")
+                @SuppressWarnings("unchecked")
                 Map<T, String> mapCols = proprietesXML.getMap(view.getType().getDeclaringClass());
                 saveText(view.getField(), mapCols, view.getType());
             }
@@ -271,10 +270,10 @@ public class OptionViewControl extends AbstractViewControl
         // Nettoyage de l'affichage
         colonnesBox.getChildren().clear();
 
-        // Récupération de la map correspondante au type de fichier et affichage des colonnes       
+        // Récupération de la map correspondante au type de fichier et affichage des colonnes
         for (Object objet : proprietesXML.getMap(typeCol).entrySet())
         {
-            @SuppressWarnings ({ "rawtypes", "unchecked" })
+            @SuppressWarnings({ "rawtypes", "unchecked" })
             Map.Entry<T, String> entry = (Map.Entry) objet;
             ColonneView<T> cv = new ColonneView<>(entry.getKey(), entry.getValue());
             colonnesBox.getChildren().add(cv);
@@ -304,12 +303,12 @@ public class OptionViewControl extends AbstractViewControl
             booleanBox.getChildren().add(pv);
         }
     }
-    
+
     /**
      * Affichage des paramètres autres
      */
     private void afficherParamsAutres()
-    {      
+    {
         paramsBox2.getChildren().clear();
         for (ParamSpec param : ParamSpec.values())
         {

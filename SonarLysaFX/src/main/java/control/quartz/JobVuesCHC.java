@@ -18,7 +18,7 @@ public class JobVuesCHC extends AbstractJobForTask
     public void execute(JobExecutionContext context)
     {
         Platform.runLater(() -> {
-            List<String> liste = getObjectFromJobMap(List.class, CLEFANNEES + TypePlan.VUECHC.toString(), context);
+            List<String> liste = getObjectFromJobMap(List.class, CLEFANNEES + TypePlan.VUECHC.getValeur(), context);
             startTask(new CreerVueCHCCDMTask(liste, CHCouCDM.CHC), context.getJobDetail().getKey().getName());
         });
     }
