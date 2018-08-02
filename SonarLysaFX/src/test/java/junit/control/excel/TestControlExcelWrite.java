@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.junit.Before;
 
 import control.excel.AbstractControlExcelWrite;
 import control.excel.ExcelFactory;

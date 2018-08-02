@@ -26,6 +26,7 @@ import control.rtc.ControlRTC;
 import junit.JunitBase;
 import junit.TestUtils;
 import model.InfoMail;
+import model.ModelFactory;
 import model.enums.ParamSpec;
 import model.enums.TypeInfoMail;
 import model.enums.TypeMail;
@@ -44,7 +45,7 @@ public class TestControlMail extends JunitBase
     public void init() throws Exception
     {
         // Connexion RTC et instanciation controleur
-        ControlRTC.INSTANCE.connexion();       
+        ControlRTC.INSTANCE.connexion();        
         handler = new ControlMail();
         
         // Mock pour éviter le départ des mails tout en testant tout le reste.
@@ -112,14 +113,14 @@ public class TestControlMail extends JunitBase
         // Contrôle
         assertFalse(mapInfos.isEmpty());
         assertFalse(mapInfos.get(TypeInfoMail.ANOABANDON).isEmpty());
-        assertEquals(new InfoMail("123456", null), mapInfos.get(TypeInfoMail.ANOABANDON).get(0));
-        assertEquals(new InfoMail("654321", "000001"), mapInfos.get(TypeInfoMail.ANOABANDON).get(1));
+        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "123456", null), mapInfos.get(TypeInfoMail.ANOABANDON).get(0));
+        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "654321", "000001"), mapInfos.get(TypeInfoMail.ANOABANDON).get(1));
         assertFalse(mapInfos.get(TypeInfoMail.ANONEW).isEmpty());
-        assertEquals(new InfoMail("234567", "infoSupp"), mapInfos.get(TypeInfoMail.ANONEW).get(0));
+        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "234567", "infoSupp"), mapInfos.get(TypeInfoMail.ANONEW).get(0));
         assertFalse(mapInfos.get(TypeInfoMail.APPLIOBSOLETE).isEmpty());
-        assertEquals(new InfoMail("345678", "application"), mapInfos.get(TypeInfoMail.APPLIOBSOLETE).get(0));
+        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "345678", "application"), mapInfos.get(TypeInfoMail.APPLIOBSOLETE).get(0));
         assertFalse(mapInfos.get(TypeInfoMail.LOTMAJ).isEmpty());
-        assertEquals(new InfoMail("123456", null), mapInfos.get(TypeInfoMail.LOTMAJ).get(0));
+        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "123456", null), mapInfos.get(TypeInfoMail.LOTMAJ).get(0));
     }
     
     @Test

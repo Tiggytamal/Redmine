@@ -144,7 +144,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
     {
         ControlRTC control = ControlRTC.INSTANCE;
         Map<String, LotSuiviRTC> map = new HashMap<>();
-        map.putAll(fichiersXML.getLotsRTC());
+        map.putAll(fichiersXML.getMapLotsRTC());
         List<IItemHandle> handles = control.recupLotsRTC(false, null);
         if (handles.isEmpty())
             throw new TechnicalException("La liste des lots RTC est vide!", null);
@@ -388,7 +388,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
     private void majFichierAnomalies(Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere) throws IOException
     {
         // Fichier des lots édition
-        Map<String, LotSuiviRTC> lotsRTC = fichiersXML.getLotsRTC();
+        Map<String, LotSuiviRTC> lotsRTC = fichiersXML.getMapLotsRTC();
 
         // Controleur
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;

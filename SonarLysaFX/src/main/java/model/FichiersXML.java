@@ -31,7 +31,7 @@ public class FichiersXML implements XML, Modele
     private Map<String, RespService> mapRespService;
     private Map<TypeFichier, String> dateMaj;
     private Map<String, String> mapEditions;
-    private Map<String, LotSuiviRTC> lotsRTC;
+    private Map<String, LotSuiviRTC> mapLotsRTC;
     private Map<String, ComposantSonar> mapComposSonar;
 
     private boolean controleOK;
@@ -43,7 +43,7 @@ public class FichiersXML implements XML, Modele
     FichiersXML()
     {
         mapClarity = new HashMap<>();
-        lotsRTC = new HashMap<>();
+        mapLotsRTC = new HashMap<>();
         mapApplis = new HashMap<>();
         mapRespService = new HashMap<>();
         mapComposSonar = new HashMap<>();
@@ -96,8 +96,8 @@ public class FichiersXML implements XML, Modele
                 break;
 
             case LOTSRTC:
-                lotsRTC.clear();
-                lotsRTC.putAll(map);
+                mapLotsRTC.clear();
+                mapLotsRTC.putAll(map);
                 setDateFichier(typeFichier);
                 break;
 
@@ -118,6 +118,7 @@ public class FichiersXML implements XML, Modele
     public String controleDonnees()
     {
         StringBuilder builder = new StringBuilder("Chargement fichiers Excel :").append(NL);
+        controleOK = true;
 
         // Contrôle liste application
         controleMap(mapApplis, builder, "Liste des applications", TypeFichier.APPS);
@@ -132,7 +133,7 @@ public class FichiersXML implements XML, Modele
         controleMap(mapEditions, builder, "Editions Pic", TypeFichier.EDITION);
 
         // Contrôle Lots RTC
-        controleMap(lotsRTC, builder, "lots RTC", TypeFichier.LOTSRTC);
+        controleMap(mapLotsRTC, builder, "lots RTC", TypeFichier.LOTSRTC);
 
         // Contrôle Composants Sonar
         controleMap(mapComposSonar, builder, "Composants Sonar", TypeFichier.SONAR);
@@ -168,7 +169,7 @@ public class FichiersXML implements XML, Modele
     {
         if (map.isEmpty())
         {
-            builder.append(texte).append(" non chargé(e)s.").append(NL);
+            builder.append(texte).append(" non chargé(e).").append(NL);
             controleOK = false;
         }
         else
@@ -214,9 +215,9 @@ public class FichiersXML implements XML, Modele
 
     @XmlElementWrapper
     @XmlElement(name = "mapLotsRTC", required = false)
-    public Map<String, LotSuiviRTC> getLotsRTC()
+    public Map<String, LotSuiviRTC> getMapLotsRTC()
     {
-        return lotsRTC;
+        return mapLotsRTC;
     }
 
     @XmlElementWrapper

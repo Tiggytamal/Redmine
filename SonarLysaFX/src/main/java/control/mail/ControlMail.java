@@ -23,6 +23,7 @@ import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
 import model.InfoMail;
+import model.ModelFactory;
 import model.enums.Param;
 import model.enums.ParamSpec;
 import model.enums.TypeInfoMail;
@@ -40,7 +41,7 @@ public class ControlMail
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private static final String SERVEUR = Statics.proprietesXML.getMapParams().get(Param.IPMAIL);
+    private static final String SERVEUR = Statics.proprietesXML.getMapParams().get(Param.IPMAIL); 
     private static final String PORT = Statics.proprietesXML.getMapParams().get(Param.PORTMAIL);
     
     /** logger général */
@@ -199,7 +200,7 @@ public class ControlMail
      */
     public void addInfo(TypeInfoMail type, String lot, String infoSupp)
     {
-        mapInfos.get(type).add(new InfoMail(lot, infoSupp));
+        mapInfos.get(type).add(ModelFactory.getModelWithParams(InfoMail.class, lot, infoSupp));
     }
     
     /**

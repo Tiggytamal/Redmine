@@ -91,7 +91,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
         retour.setMessage(issue.getMessage());
         retour.setLot(composant.getLot());
         retour.setAppli(composant.getAppli());
-        retour.setClarity(Statics.fichiersXML.getLotsRTC().computeIfAbsent(retour.getLot(), s -> ModelFactory.getModel(LotSuiviRTC.class)).getProjetClarity());
+        retour.setClarity(Statics.fichiersXML.getMapLotsRTC().computeIfAbsent(retour.getLot(), s -> ModelFactory.getModel(LotSuiviRTC.class)).getProjetClarity());
         retour.setLib(extractLib(retour.getMessage()));
         return retour;
     }

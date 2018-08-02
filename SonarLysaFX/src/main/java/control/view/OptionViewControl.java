@@ -248,8 +248,7 @@ public class OptionViewControl extends AbstractViewControl
             {
                 @SuppressWarnings("unchecked")
                 ColonneView<T> view = (ColonneView<T>) node;
-                @SuppressWarnings("unchecked")
-                Map<T, String> mapCols = proprietesXML.getMap(view.getType().getDeclaringClass());
+                Map<T, String> mapCols = proprietesXML.getEnumMap(view.getType().getDeclaringClass());
                 saveText(view.getField(), mapCols, view.getType());
             }
         }
@@ -271,7 +270,7 @@ public class OptionViewControl extends AbstractViewControl
         colonnesBox.getChildren().clear();
 
         // Récupération de la map correspondante au type de fichier et affichage des colonnes
-        for (Object objet : proprietesXML.getMap(typeCol).entrySet())
+        for (Object objet : proprietesXML.getEnumMap(typeCol).entrySet())
         {
             @SuppressWarnings({ "rawtypes", "unchecked" })
             Map.Entry<T, String> entry = (Map.Entry) objet;

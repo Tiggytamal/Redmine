@@ -94,7 +94,7 @@ public class ComposantSonar implements Modele, Serializable
     @XmlAttribute (name = "id", required = true)
     public String getId()
     {
-        return id;
+        return getString(id);
     }
 
     public void setId(String id)

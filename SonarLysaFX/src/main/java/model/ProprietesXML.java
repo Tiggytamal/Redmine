@@ -90,28 +90,28 @@ public class ProprietesXML implements XML, Modele
      * @param typeColClass
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    public <T extends Enum<T> & TypeColR> Map getMap(Class<T> typeColClass)
+    @SuppressWarnings({ "unchecked" })
+    public <T extends Enum<T>> Map<T, String> getEnumMap(Class<T> typeColClass)
     {
         switch (typeColClass.getName())
         {
             case "model.enums.TypeColSuivi":
-                return mapColsSuivi;
+                return (Map<T, String>) mapColsSuivi;
 
             case "model.enums.TypeColClarity":
-                return mapColsClarity;
+                return (Map<T, String>) mapColsClarity;
 
             case "model.enums.TypeColChefServ":
-                return mapColsChefServ;
+                return (Map<T, String>) mapColsChefServ;
 
             case "model.enums.TypeColPic":
-                return mapColsPic;
+                return (Map<T, String>) mapColsPic;
 
             case "model.enums.TypeColEdition":
-                return mapColsEdition;
+                return (Map<T, String>) mapColsEdition;
 
             case "model.enums.TypeColApps":
-                return mapColsApps;
+                return (Map<T, String>) mapColsApps;
 
             default:
                 throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);
@@ -126,7 +126,7 @@ public class ProprietesXML implements XML, Modele
     public <T extends Enum<T> & TypeColR> Map<String, T> getMapColsInvert(Class<T> typeColClass)
     {
         Map<String, T> retour = new HashMap<>();
-        for (Object entry : getMap(typeColClass).entrySet())
+        for (Object entry : getEnumMap(typeColClass).entrySet())
         {
             @SuppressWarnings({ "unchecked", "rawtypes" })
             Map.Entry<T, String> test = (Map.Entry) entry;
@@ -149,6 +149,13 @@ public class ProprietesXML implements XML, Modele
     public Map<ParamBool, Boolean> getMapParamsBool()
     {
         return mapParamsBool;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapParamsSpec", required = false)
+    public Map<ParamSpec, String> getMapParamsSpec()
+    {
+        return mapParamsSpec;
     }
 
     @XmlElementWrapper
@@ -198,13 +205,6 @@ public class ProprietesXML implements XML, Modele
     private Map<TypeColApps, String> getMapColsApps()
     {
         return mapColsApps;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapParamsSpec", required = false)
-    public Map<ParamSpec, String> getMapParamsSpec()
-    {
-        return mapParamsSpec;
     }
 
     @Override

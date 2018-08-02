@@ -100,7 +100,7 @@ public abstract class AbstractSonarTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                EtatLot etatLot = Statics.fichiersXML.getLotsRTC().computeIfAbsent(compo.getLot(), l -> ModelFactory.getModel(LotSuiviRTC.class)).getEtatLot();
+                EtatLot etatLot = Statics.fichiersXML.getMapLotsRTC().computeIfAbsent(compo.getLot(), l -> ModelFactory.getModel(LotSuiviRTC.class)).getEtatLot();
 
                 if (etatLot == EtatLot.TERMINE || etatLot == EtatLot.EDITION)
                     retour.put(matcher.group(0), compo);
