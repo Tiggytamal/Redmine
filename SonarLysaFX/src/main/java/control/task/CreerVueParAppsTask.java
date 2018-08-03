@@ -83,6 +83,12 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     {
         return creerVueParApplication();
     }
+    
+    @Override
+    public void annuler()
+    {
+        // Pas de traitement d'annulation        
+    }
 
     /*---------- METHODES PRIVEES ----------*/
 

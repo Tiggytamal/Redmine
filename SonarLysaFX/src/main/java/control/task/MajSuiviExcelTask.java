@@ -85,6 +85,12 @@ public class MajSuiviExcelTask extends AbstractSonarTask
     {
         return majSuiviExcel();
     }
+    
+    @Override
+    public void annuler()
+    {
+        // Pas de traitement d'annulation        
+    }
 
     /*---------- METHODES PRIVEES ----------*/
 

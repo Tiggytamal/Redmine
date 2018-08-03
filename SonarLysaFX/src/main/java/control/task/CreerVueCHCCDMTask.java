@@ -52,6 +52,12 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
     {
         return creerVueCHCouCDM();
     }
+    
+    @Override
+    public void annuler()
+    {
+        // Pas de traitement d'annulation        
+    }
 
     /*---------- METHODES PRIVEES ----------*/
 

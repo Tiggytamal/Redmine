@@ -6,15 +6,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.junit.Test;
 
 import junit.JunitBase;
+import junit.TestXML;
 import model.Application;
 import model.ComposantSonar;
 import model.FichiersXML;
@@ -25,11 +26,12 @@ import model.RespService;
 import model.enums.TypeFichier;
 import utilities.Statics;
 
-public class TestFichierXML extends JunitBase
+public class TestFichierXML extends JunitBase implements TestXML
 {
     /*---------- ATTRIBUTS ----------*/
 
     private FichiersXML handler;
+    private String date;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -37,11 +39,13 @@ public class TestFichierXML extends JunitBase
     public void init() throws Exception
     {
         handler = ModelFactory.getModel(FichiersXML.class);
+        date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
+    @Override
     public void testGetFile()
     {
         // Test si le fichier n'est pas nul et bien initialisé.
@@ -53,6 +57,7 @@ public class TestFichierXML extends JunitBase
     }
 
     @Test
+    @Override
     public void testGetResource()
     {
         // Test si le fichier n'est pas nul et bien initialisé.
@@ -85,27 +90,27 @@ public class TestFichierXML extends JunitBase
 
         // Test mapClarity
         assertEquals(1, handler.getMapClarity().size());
-        assertEquals("02/08/2018", handler.getDateMaj().get(TypeFichier.CLARITY));
+        assertEquals(date, handler.getDateMaj().get(TypeFichier.CLARITY));
 
         // Test mapApplis
         assertEquals(2, handler.getMapApplis().size());
-        assertEquals("02/08/2018", handler.getDateMaj().get(TypeFichier.APPS));
+        assertEquals(date, handler.getDateMaj().get(TypeFichier.APPS));
 
         // Test mapRespService
         assertEquals(3, handler.getMapRespService().size());
-        assertEquals("02/08/2018", handler.getDateMaj().get(TypeFichier.RESPSERVICE));
+        assertEquals(date, handler.getDateMaj().get(TypeFichier.RESPSERVICE));
 
         // Test mapEditions
         assertEquals(4, handler.getMapEditions().size());
-        assertEquals("02/08/2018", handler.getDateMaj().get(TypeFichier.EDITION));
+        assertEquals(date, handler.getDateMaj().get(TypeFichier.EDITION));
 
         // Test mapLotsRTC
         assertEquals(5, handler.getMapLotsRTC().size());
-        assertEquals("02/08/2018", handler.getDateMaj().get(TypeFichier.LOTSRTC));
+        assertEquals(date, handler.getDateMaj().get(TypeFichier.LOTSRTC));
 
         // Test mapClarity
         assertEquals(6, handler.getMapComposSonar().size());
-        assertEquals("02/08/2018", handler.getDateMaj().get(TypeFichier.SONAR));
+        assertEquals(date, handler.getDateMaj().get(TypeFichier.SONAR));
     }
 
     @Test
@@ -115,37 +120,35 @@ public class TestFichierXML extends JunitBase
         String controle = handler.controleDonnees();
 
         // Affichage des données de chaque map
-        regexControle("Liste des applications", 1, controle);
-        regexControle("Referentiel Clarity", 1, controle);
-        regexControle("Responsables de services", 1, controle);
-        regexControle("Editions Pic", 1, controle);
-        regexControle("lots RTC", 1, controle);
-        regexControle("Composants Sonar", 1, controle);
+        regexControleEquals("Liste des applications", 1, controle);
+        regexControleEquals("Referentiel Clarity", 1, controle);
+        regexControleEquals("Responsables de services", 1, controle);
+        regexControleEquals("Editions Pic", 1, controle);
+        regexControleEquals("lots RTC", 1, controle);
+        regexControleEquals("Composants Sonar", 1, controle);
 
         // les 6 fichiers ne doivent pas être chargés
-        regexControle(" non chargé(e).", 6, controle);
+        regexControleEquals(" non chargé(e).", 6, controle);
 
         // On doit afficher la demande de rechargement
-        regexControle("Merci de recharger le(s) fichier(s) de paramétrage.", 1, controle);
+        regexControleEquals("Merci de recharger le(s) fichier(s) de paramétrage.", 1, controle);
 
         // Chargement des maps
         initMaps();
 
         // Nouveau test du contrôle
         controle = handler.controleDonnees();
-        
-        System.out.println(controle);
 
         // Test sur la maj de chaque map
-        regexControle("Referentiel Clarity chargé(e)s. Dernière Maj : 02/08/2018", 1, controle);
-        regexControle("Liste des applications chargé(e)s. Dernière Maj : 02/08/2018", 1, controle);
-        regexControle("Responsables de services chargé(e)s. Dernière Maj : 02/08/2018", 1, controle);
-        regexControle("Editions Pic chargé(e)s. Dernière Maj : 02/08/2018", 1, controle);
-        regexControle("lots RTC chargé(e)s. Dernière Maj : 02/08/2018", 1, controle);
-        regexControle("Composants Sonar chargé(e)s. Dernière Maj : 02/08/2018", 1, controle);
+        regexControleEquals("Referentiel Clarity chargé(e)s. Dernière Maj : " + date, 1, controle);
+        regexControleEquals("Liste des applications chargé(e)s. Dernière Maj : " + date, 1, controle);
+        regexControleEquals("Responsables de services chargé(e)s. Dernière Maj : " + date, 1, controle);
+        regexControleEquals("Editions Pic chargé(e)s. Dernière Maj : " + date, 1, controle);
+        regexControleEquals("lots RTC chargé(e)s. Dernière Maj : " + date, 1, controle);
+        regexControleEquals("Composants Sonar chargé(e)s. Dernière Maj : " + date, 1, controle);
         
         // On ne doit plus afficher la demande de rechargement
-        regexControle("Merci de recharger le(s) fichier(s) de paramétrage.", 0, controle);
+        regexControleEquals("Merci de recharger le(s) fichier(s) de paramétrage.", 0, controle);
 
     }
     
@@ -166,27 +169,6 @@ public class TestFichierXML extends JunitBase
     }
 
     /*---------- METHODES PRIVEES ----------*/
-
-    /**
-     * Test la présence d'une chaîne dans le retour du contrôle des map
-     * 
-     * @param regex
-     *            Chaîne de caractère à tester
-     * @param nbre
-     *            Nombre d'occurences attendues pour la chaîne
-     * @param retourControle
-     *            String de retour de la méthode de contrôle
-     */
-    private void regexControle(String regex, int nbre, String retourControle)
-    {
-        Matcher matcher = Pattern.compile(regex.replace("(", "\\(").replace(")", "\\)").replace(".", "\\.")).matcher(retourControle);
-        int i = 0;
-        while (matcher.find())
-        {
-            i++;
-        }
-        assertEquals(nbre, i);
-    }
     
     /**
      * Initialisation des maps du fichier pour les tests

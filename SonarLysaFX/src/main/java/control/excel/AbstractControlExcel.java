@@ -3,6 +3,7 @@ package control.excel;
 import java.io.File;
 import java.time.LocalDate;
 
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -34,12 +35,16 @@ public abstract class AbstractControlExcel
     protected CreationHelper createHelper;
     /** Ancre pour les commentaire */
     protected ClientAnchor ca;
+    /** Paramétrage pour éviter les Zip Bomb */
+    private static final double MININFLATERATIO = 0;
     
     /*---------- CONSTRUCTEURS ----------*/
     
     protected AbstractControlExcel(File file)
     {
         this.file = file;
+        // Changement de paramétrage pour éviter les zip bombs
+        ZipSecureFile.setMinInflateRatio(MININFLATERATIO);
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -122,9 +127,9 @@ public abstract class AbstractControlExcel
         if (texte instanceof String)
             cell.setCellValue((String) texte);
         else if (texte instanceof EtatLot)
-            cell.setCellValue(((EtatLot) texte).toString());
+            cell.setCellValue(((EtatLot) texte).getValeur());
         else if (texte instanceof TypeAction)
-            cell.setCellValue(((TypeAction) texte).toString());
+            cell.setCellValue(((TypeAction) texte).getValeur());
         else if (texte instanceof LocalDate)
             cell.setCellValue(DateConvert.convertToOldDate(texte));
         else

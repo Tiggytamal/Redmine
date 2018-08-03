@@ -1,5 +1,7 @@
 package junit;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
@@ -17,10 +19,7 @@ public class TesteurMain
         StringBuilder builder = new StringBuilder("ETP8137");
         builder.append(":");
         builder.append("28H02m8903,;:!");
-        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
-        System.out.println("A".compareTo("B"));
-        System.out.println("\0");
-        System.out.println("\0".hashCode());
-       
+        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));     
+        System.out.println(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
     }
 }

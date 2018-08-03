@@ -29,6 +29,12 @@ public class MajVuesTask extends AbstractSonarTask
         return majVues();
     }
     
+    @Override
+    public void annuler()
+    {
+        // Pas de traitement d'annulation        
+    }
+    
     /*---------- METHODES PRIVEES ----------*/
     
     /**

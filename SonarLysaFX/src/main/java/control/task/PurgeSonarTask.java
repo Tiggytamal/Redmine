@@ -49,6 +49,12 @@ public class PurgeSonarTask extends AbstractSonarTask
     {
         return purgeVieuxComposants();
     }
+    
+    @Override
+    public void annuler()
+    {
+        // Pas de traitement d'annulation        
+    }
 
     /*---------- METHODES PRIVEES ----------*/
 

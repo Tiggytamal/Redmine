@@ -41,7 +41,7 @@ public class ControlMail
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private static final String SERVEUR = Statics.proprietesXML.getMapParams().get(Param.IPMAIL); 
+    private static final String SERVEUR = Statics.proprietesXML.getMapParams().get(Param.IPMAIL);
     private static final String PORT = Statics.proprietesXML.getMapParams().get(Param.PORTMAIL);
     
     /** logger général */

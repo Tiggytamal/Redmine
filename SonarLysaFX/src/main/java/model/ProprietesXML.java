@@ -77,9 +77,13 @@ public class ProprietesXML implements XML, Modele
     {
         StringBuilder builder = new StringBuilder("Chargement paramètres :").append(Statics.NL);
 
+        boolean bool1 = controleCols(builder);
+        boolean bool2 = controleParams(builder);
+        boolean bool3 = controlePlanificateurs(builder);
+        
         // Message OK
-        if (!controleCols(builder) || !controleParams(builder) || !controlePlanificateurs(builder))
-            builder.append("Merci de changer les paramètres en option ou de recharger le fichier par défaut.");
+        if (!bool1 || !bool2 || !bool3)
+            builder.append("Merci de changer les paramètres en option ou de recharger les fichiers de paramétrage.");
 
         return builder.toString();
     }
@@ -231,6 +235,7 @@ public class ProprietesXML implements XML, Modele
         controleMap(builderErreurs, TypeColChefServ.class, mapColsChefServ);
         controleMap(builderErreurs, TypeColPic.class, mapColsPic);
         controleMap(builderErreurs, TypeColEdition.class, mapColsEdition);
+        controleMap(builderErreurs, TypeColApps.class, mapColsApps);
 
         // Renvoi du booleen
         if (builderErreurs.length() == 0)
@@ -272,17 +277,24 @@ public class ProprietesXML implements XML, Modele
         StringBuilder builderErreurs = new StringBuilder();
 
         // Paramètres classiques
-        for (Param typeParam : Param.values())
+        for (Param param : Param.values())
         {
-            if (mapParams.get(typeParam) == null || mapParams.get(typeParam).isEmpty())
-                builderErreurs.append(typeParam.toString()).append(Statics.NL);
+            if (mapParams.get(param) == null || mapParams.get(param).isEmpty())
+                builderErreurs.append(param.getNom()).append(Statics.NL);
         }
 
         // Paramètres spéciaux
-        for (ParamSpec typeParam : ParamSpec.values())
+        for (ParamSpec param : ParamSpec.values())
         {
-            if (mapParamsSpec.get(typeParam) == null || mapParamsSpec.get(typeParam).isEmpty())
-                builderErreurs.append(typeParam.toString()).append(Statics.NL);
+            if (mapParamsSpec.get(param) == null || mapParamsSpec.get(param).isEmpty())
+                builderErreurs.append(param.getNom()).append(Statics.NL);
+        }
+        
+        // Paramètres booléens
+        for (ParamBool param : ParamBool.values())
+        {
+            if (mapParamsBool.get(param) == null)
+                builderErreurs.append(param.getNom()).append(Statics.NL);
         }
 
         if (builderErreurs.length() == 0)
@@ -309,7 +321,7 @@ public class ProprietesXML implements XML, Modele
         for (TypePlan typePlan : TypePlan.values())
         {
             if (mapPlans.get(typePlan) == null)
-                builderErreurs.append(typePlan.toString()).append(Statics.NL);
+                builderErreurs.append(typePlan.getValeur()).append(Statics.NL);
         }
         if (builderErreurs.length() == 0)
         {

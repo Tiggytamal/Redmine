@@ -152,7 +152,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         for (int i = 1; i <= sheet.getLastRowNum(); i++)
         {
             Row row = sheet.getRow(i);
-            
+
             // protection poru les lignes vides
             if (row == null)
                 continue;
@@ -251,10 +251,11 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         Sheet retour = wb.getSheet(SQ);
         if (retour != null)
         {
-
             // Création du fichier de sauvegarde et effacement de la feuille
-            wb.write(new FileOutputStream(
-                    new StringBuilder(proprietesXML.getMapParams().get(Param.ABSOLUTEPATHHISTO)).append(LocalDate.now().toString()).append("-").append(fichier).toString()));
+            FileOutputStream output = new FileOutputStream(
+                    new StringBuilder(proprietesXML.getMapParams().get(Param.ABSOLUTEPATHHISTO)).append(LocalDate.now().toString()).append("-").append(fichier).toString());
+            wb.write(output);
+            output.close();
             wb.removeSheetAt(wb.getSheetIndex(retour));
         }
 
@@ -276,8 +277,8 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param matiere
      * @throws IOException
      */
-    public void majFeuillePrincipale(Iterable<Anomalie> lotsEnAno, List<Anomalie> anoAajouter, Set<String> lotsEnErreurSonar, Set<String> lotsSecurite, Set<String> lotsRelease,
-            Sheet sheet, Matiere matiere)
+    public void majFeuillePrincipale(Iterable<Anomalie> lotsEnAno, List<Anomalie> anoAajouter, Set<String> lotsEnErreurSonar, Set<String> lotsSecurite, Set<String> lotsRelease, Sheet sheet,
+            Matiere matiere)
     {
         // Récupération feuille et liste des anomalies closes
         Map<String, Anomalie> anoClose = new HashMap<>();
@@ -525,13 +526,13 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         try
         {
             controleRTC(ano);
-        } 
+        }
         catch (PermissionDeniedException e)
         {
             LOGGER.error("Problème authorisation accès lot : " + ano.getLot());
             LOGPLANTAGE.error(e);
 
-        } 
+        }
         catch (TeamRepositoryException e)
         {
             throw new TechnicalException("Erreur RTC depuis mise à jour anomalie : " + ano.getLot(), e);
@@ -698,8 +699,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param lotsRelease
      * @param matiere
      */
-    private void ajouterNouvellesAnos(Sheet sheet, List<Anomalie> anoAajouter, Map<String, Anomalie> mapAnoCloses, Set<String> lotsSecurite, Set<String> lotsRelease,
-            Matiere matiere)
+    private void ajouterNouvellesAnos(Sheet sheet, List<Anomalie> anoAajouter, Map<String, Anomalie> mapAnoCloses, Set<String> lotsSecurite, Set<String> lotsRelease, Matiere matiere)
     {
         for (Anomalie ano : anoAajouter)
         {
@@ -772,17 +772,20 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * 
      * @param ano
      */
-    private Anomalie controleClarity(Anomalie ano)
+    private void controleClarity(Anomalie ano)
     {
         // Récupération infox Clarity depuis fichier Excel
         String anoClarity = ano.getProjetClarity();
         if (anoClarity.isEmpty())
-            return ano;
+            return;
         Map<String, InfoClarity> map = fichiersXML.getMapClarity();
 
         // Vérification si le code Clarity de l'anomalie est bien dans la map
         if (map.containsKey(anoClarity))
-            return ano.majDepuisClarity(map.get(anoClarity));
+        {
+            ano.majDepuisClarity(map.get(anoClarity));
+            return;
+        }
 
         String temp = "";
         boolean testT7 = anoClarity.startsWith("T") && anoClarity.length() == CLARITY7;
@@ -794,7 +797,10 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
             // On retire les deux dernières lettres pour les clefs de plus de 6 caractères finissants par 0[1-9]
             if (controleKey(anoClarity, key))
-                return ano.majDepuisClarity(entry.getValue());
+            {
+                ano.majDepuisClarity(entry.getValue());
+                return;
+            }
 
             // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
             if (testT7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
@@ -802,7 +808,10 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         }
 
         if (!temp.isEmpty())
-            return ano.majDepuisClarity(map.get(temp));
+        {
+            ano.majDepuisClarity(map.get(temp));
+            return;
+        }
 
         // Si on ne trouve pas, on renvoie juste l'anomalie avec le log d'erreur
         LOGINCONNUE.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLot());
@@ -811,7 +820,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         ano.setService(Statics.INCONNU);
         ano.setDirection(Statics.INCONNUE);
         ano.setResponsableService(Statics.INCONNU);
-        return ano;
     }
 
     /**
@@ -819,7 +827,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @return
      * @throws TeamRepositoryException
      */
-    private Anomalie controleRTC(Anomalie ano) throws TeamRepositoryException
+    private void controleRTC(Anomalie ano) throws TeamRepositoryException
     {
         // Controle sur l'état de l'anomalie (projet Clarity, lot et numéro anomalie renseignée
         String anoLot = ano.getLot().substring(Statics.SBTRINGLOT);
@@ -862,7 +870,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             ano.setEtatLot(etatLot);
         }
         ano.setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));
-        return ano;
     }
 
     /**
@@ -968,8 +975,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         String smallClarity = anoClarity.length() > CLARITYMINI && anoClarity.matches(".*0[0-9E]$") ? anoClarity.substring(0, CLARITYMINI + 1) : anoClarity;
 
         // Contrôle si la clef est de type T* ou P*.
-        String newClarity = anoClarity.length() == CLARITYMAX && (anoClarity.startsWith("T") 
-                || anoClarity.startsWith("P")) ? anoClarity.substring(0, CLARITYMAX - 1) : smallClarity;
+        String newClarity = anoClarity.length() == CLARITYMAX && (anoClarity.startsWith("T") || anoClarity.startsWith("P")) ? anoClarity.substring(0, CLARITYMAX - 1) : smallClarity;
 
         // remplace le dernier du coade Clarity par 0.
         String lastClarity = anoClarity.replace(anoClarity.charAt(anoClarity.length() - 1), '0');
@@ -1041,12 +1047,8 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @author ETP8137 - Grégoire mathon
      * @since 1.0
      */
-    private enum Index 
-    {
-        LOTI("Lot projet RTC"), 
-        EDITIONI("Edition"), 
-        ENVI("Etat du lot"), 
-        TRAITEI("Traitée");
+    private enum Index {
+        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
 
         private String string;
 

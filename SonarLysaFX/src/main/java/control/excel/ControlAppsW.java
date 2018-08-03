@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -50,7 +49,6 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     private int colLDCMain;
     private static final String APPLIGEREES = "Périmètre Couverts SonarQbe";
     private static final String REFAPPLIS = "Ref CodeApps detaillés";
-    private static final double MININFLATERATIO = 0.005;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -58,10 +56,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     {
         super(sortie);
         
-        // Changement de paramétrage pour éviter les zip bombs
-        ZipSecureFile.setMinInflateRatio(MININFLATERATIO);
-        
-        // Création des deux feuilles ud fichier Excel
+        // Création des deux feuilles du fichier Excel
         wb.createSheet(APPLIGEREES);
         wb.createSheet(REFAPPLIS);
         calculIndiceColonnes();
@@ -161,6 +156,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
         // Récupération index de la colonne des code appli du fichier de base
         Row row = sheetbase.getRow(0);
         int colCodeBase = 0;
+        
         // Parcours de la première ligne, calcul de l'index et arrêt de la boucle.
         for (int i =0; i < row.getLastCellNum(); i++)
         {

@@ -27,6 +27,8 @@ public interface ModelFactory
     
     /**
      * Retourne une instance de la classe de modèle avec un constructeur utilisant des paramètres
+     * Attention il n'est asp possible de retrouver un constructeur avec un varaible nulle.
+     * Si c'est le cas, un test sera fait avec un {@code String}.
      * 
      * @param modelClass
      * @param params
@@ -39,7 +41,10 @@ public interface ModelFactory
             Class<?>[] classParams = new Class<?>[params.length];
             for (int i = 0; i < params.length; i++)
             {
-                classParams[i] = params[i].getClass();
+                if (params[i] != null)
+                    classParams[i] = params[i].getClass();
+                else
+                    classParams[i] = String.class;
             }
             Constructor<T> constructor = modelClass.getDeclaredConstructor(classParams);
             constructor.setAccessible(true);

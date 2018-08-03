@@ -67,7 +67,7 @@ public class Application implements Modele, Serializable
         switch (securite)
         {
             case 0:
-                return "";
+                return "A";
             case 1:
                 return "A";
             case 2:

@@ -1,6 +1,8 @@
 package junit.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -32,11 +34,46 @@ public class TestInfoMail extends JunitBase
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
+    public void testHashCode()
+    {
+        assertEquals(961, handler.hashCode());
+        handler.setInfoSupp("Infosupp2");
+        assertTrue(handler.hashCode() > 961*2);
+        handler.setLot("lot2");
+        assertTrue(handler.hashCode() > 961*3);
+    }
+    
+    @Test
+    public void testEquals()
+    {
+        // Passage par tous les tests de la méthode Equals
+        assertTrue(handler.equals(handler));
+        assertFalse(handler.equals(null));
+        assertFalse(handler.equals(""));
+        InfoMail objet = ModelFactory.getModelWithParams(InfoMail.class, "lot", "infoSupp");
+        assertFalse(handler.equals(objet));
+        handler.setInfoSupp("Infosupp2");
+        assertFalse(handler.equals(objet));
+        handler.setInfoSupp("infoSupp");
+        assertFalse(handler.equals(objet));
+        handler.setLot("lot2");
+        assertFalse(handler.equals(objet));
+        handler.setLot("lot");
+        assertTrue(handler.equals(objet));
+        handler.setLot(null);
+        objet.setLot(null);
+        assertTrue(handler.equals(objet));
+        handler.setInfoSupp(null);
+        objet.setInfoSupp(null);
+        assertTrue(handler.equals(objet));
+    }
+    
+    @Test
     public void testConstructeur()
     {
         handler = ModelFactory.getModelWithParams(InfoMail.class, "Lot", "InfoSupp");
         assertEquals("Lot", handler.getLot());
-        assertEquals("InfoSupp", handler.getInfoSupp());
+        assertEquals("InfoSupp", handler.getInfoSupp());        
     }
     
     @Test

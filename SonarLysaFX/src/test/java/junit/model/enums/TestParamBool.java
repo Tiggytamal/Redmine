@@ -24,7 +24,7 @@ public class TestParamBool implements TestEnums
     }
     
     @Test
-    public void getNom()
+    public void testGetNom()
     {
         assertFalse(ParamBool.VUESSUIVI.getNom().isEmpty());      
         assertFalse(ParamBool.SUPPSONAR.getNom().isEmpty());   

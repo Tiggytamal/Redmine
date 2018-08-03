@@ -3,6 +3,8 @@ package junit.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.proprietesXML;
+import static utilities.Statics.NL;
 
 import java.io.File;
 import java.io.Serializable;
@@ -14,8 +16,12 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import junit.JunitBase;
+import junit.TestXML;
 import model.ModelFactory;
 import model.ProprietesXML;
+import model.enums.Param;
+import model.enums.ParamBool;
+import model.enums.ParamSpec;
 import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
@@ -23,10 +29,11 @@ import model.enums.TypeColEdition;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
+import model.enums.TypePlan;
 import utilities.Statics;
 import utilities.TechnicalException;
 
-public class TestProprieteXML extends JunitBase
+public class TestProprieteXML extends JunitBase implements TestXML
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -58,9 +65,184 @@ public class TestProprieteXML extends JunitBase
     @Test
     public void testControleDonnees()
     {
-        // Initialisation. mock des méthode de contrôle
+        // ----- 1. Pré-Test sans données
         
-        // Test all true
+        // Mise à vide d'une colonne pour être bien sûr qu'elle remonte en non paramétrée
+        handler.getEnumMap(TypeColSuivi.class).put(TypeColSuivi.ACTION, "");
+        
+        // Appel de la méthode
+        String retour = handler.controleDonnees();
+        
+        // Test de chaque type dénumération - On teste la présence d'au moisn une fois chaque valeur, car il peut y avoir des doublons entre toutes les énumarations
+        for (TypeColClarity type : TypeColClarity.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 1, retour);
+        }
+        for (TypeColApps type : TypeColApps.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 1, retour);
+        }
+        for (TypeColChefServ type : TypeColChefServ.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 1, retour);
+        }
+        for (TypeColEdition type : TypeColEdition.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 1, retour);
+        }
+        for (TypeColPic type : TypeColPic.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 1, retour);
+        }
+        for (TypeColSuivi type : TypeColSuivi.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 1, retour);
+        }
+               
+        for (Param param : Param.values())
+        {
+            regexControleAtLeast(param.getNom()+ NL, 1, retour);
+        }
+        
+        for (ParamSpec param : ParamSpec.values())
+        {
+            regexControleAtLeast(param.getNom()+ NL, 1, retour);
+        }
+        
+        for (ParamBool param : ParamBool.values())
+        {
+            regexControleAtLeast(param.getNom()+ NL, 1, retour);
+        }
+        
+        for (TypePlan typePlan : TypePlan.values())
+        {
+            regexControleAtLeast(typePlan.getValeur() + NL, 1, retour);
+        }
+        
+        // Contrôle des phrases de début et de fin
+        regexControleEquals("Merci de changer les paramètres en option ou de recharger les fichiers de paramétrage.", 1, retour);
+        regexControleEquals("Certaines colonnes sont mal renseignées :", 1, retour);
+        regexControleEquals("Certains paramètres sont mal renseignés :", 1, retour);
+        regexControleEquals("Certains planificateurs ne sont pas paramétrés :", 1, retour);
+                
+        // ----- 2. Test Colonnes OK
+        
+        // Récupération des valeurs depuis le fichier de paramétrage
+        handler.getEnumMap(TypeColPic.class).putAll(proprietesXML.getEnumMap(TypeColPic.class));
+        handler.getEnumMap(TypeColClarity.class).putAll(proprietesXML.getEnumMap(TypeColClarity.class));
+        handler.getEnumMap(TypeColApps.class).putAll(proprietesXML.getEnumMap(TypeColApps.class));
+        handler.getEnumMap(TypeColChefServ.class).putAll(proprietesXML.getEnumMap(TypeColChefServ.class));
+        handler.getEnumMap(TypeColEdition.class).putAll(proprietesXML.getEnumMap(TypeColEdition.class));
+        handler.getEnumMap(TypeColSuivi.class).putAll(proprietesXML.getEnumMap(TypeColSuivi.class));
+        
+        // Appel du contrôle
+        retour = handler.controleDonnees();
+        
+        // Vérfication qu'il n'y a plus de colonnes affichée comme non paramétrée
+        for (TypeColClarity type : TypeColClarity.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 0, retour);
+        }
+        for (TypeColApps type : TypeColApps.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 0, retour);
+        }
+        for (TypeColChefServ type : TypeColChefServ.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 0, retour);
+        }
+        for (TypeColEdition type : TypeColEdition.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 0, retour);
+        }
+        for (TypeColPic type : TypeColPic.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 0, retour);
+        }
+        for (TypeColSuivi type : TypeColSuivi.values())
+        {
+            regexControleAtLeast(type.getValeur() + NL, 0, retour);
+        }
+        
+        // On a toujours le message final mais on récupère le bon message pour les colonnes
+        regexControleEquals("Merci de changer les paramètres en option ou de recharger les fichiers de paramétrage.", 1, retour);
+        regexControleEquals("Nom colonnes OK", 1, retour);
+        regexControleEquals("Certaines colonnes sont mal renseignées :", 0, retour);
+        
+        
+        // ----- 2. Test Paramètres OK
+        
+        // Récupération des valeurs depuis le fichier de paramétrage
+        handler.getMapParams().putAll(proprietesXML.getMapParams());
+        handler.getMapParamsBool().putAll(proprietesXML.getMapParamsBool());
+        handler.getMapParamsSpec().putAll(proprietesXML.getMapParamsSpec());        
+        
+        // Appel du contrôle
+        retour = handler.controleDonnees();
+        
+        // Vérfication qu'il n'y a plus de paramètre affiché comme non paramétré
+        for (Param param : Param.values())
+        {
+            regexControleAtLeast(param.getNom()+ NL, 0, retour);
+        }
+        
+        for (ParamSpec param : ParamSpec.values())
+        {
+            regexControleAtLeast(param.getNom()+ NL, 0, retour);
+        }
+        
+        for (ParamBool param : ParamBool.values())
+        {
+            regexControleAtLeast(param.getNom()+ NL, 0, retour);
+        }
+        
+        // On a toujours le message final mais on récupère le bon message pour les colonnes et des paramètres
+        regexControleEquals("Merci de changer les paramètres en option ou de recharger les fichiers de paramétrage.", 1, retour);
+        regexControleEquals("Nom colonnes OK", 1, retour);
+        regexControleEquals("Certaines colonnes sont mal renseignées :", 0, retour);
+        regexControleEquals("Paramètres OK", 1, retour);
+        regexControleEquals("Certains paramètres sont mal renseignés :", 0, retour);
+        
+        
+        // ----- 3. Test Planaificateurs OK
+        
+        // Récupération des valeurs depuis le fichier de paramétrage
+        handler.getMapPlans().putAll(proprietesXML.getMapPlans());
+        
+        // Appel du contrôle
+        retour = handler.controleDonnees();
+        
+        // Vérfication qu'il n'y a plus de planificateur affiché comme non paramétré
+        for (TypePlan typePlan : TypePlan.values())
+        {
+            regexControleAtLeast(typePlan.getValeur() + NL, 0, retour);
+        }
+        
+        // On a maintenant tous les messages OK
+        regexControleEquals("Merci de changer les paramètres en option ou de recharger les fichiers de paramétrage.", 0, retour);
+        regexControleEquals("Nom colonnes OK", 1, retour);
+        regexControleEquals("Certaines colonnes sont mal renseignées :", 0, retour);
+        regexControleEquals("Paramètres OK", 1, retour);
+        regexControleEquals("Certains paramètres sont mal renseignés :", 0, retour);
+        regexControleEquals("Planificateurs OK", 1, retour);
+        regexControleEquals("Certains planificateurs ne sont pas paramétrés :", 0, retour);
+        
+        // ----- 4. Tests avec valeurs vide dans le paramétrage
+        
+        // Mise à vide de ceratiens données
+        handler.getMapParams().put(Param.ABSOLUTEPATH, "");
+        handler.getMapParamsSpec().put(ParamSpec.MEMBRESJAVA, "");
+        
+        // Appel du contrôle
+        retour = handler.controleDonnees();
+        
+        // Vérification de la remontée des erreurs
+        regexControleEquals(Param.ABSOLUTEPATH.getNom(), 1, retour);
+        regexControleEquals(ParamSpec.MEMBRESJAVA.getNom(), 1, retour);        
+        regexControleEquals("Certains paramètres sont mal renseignés :", 1, retour);
+        regexControleEquals("Merci de changer les paramètres en option ou de recharger les fichiers de paramétrage.", 1, retour);
+        
+        
     }
     
     @Test
@@ -100,8 +282,14 @@ public class TestProprieteXML extends JunitBase
         mapColsSuivi.put(TypeColSuivi.ANOMALIE, "key");
         handler.getEnumMap(TypeColSuivi.class).putAll(mapColsSuivi);
         
+        // Appel méthode
+        Map<String, TypeColSuivi> retour = handler.getMapColsInvert(TypeColSuivi.class);
         
-        
+        // Contrôle des données
+        assertNotNull(retour);
+        assertEquals(1, retour.size());
+        assertTrue(retour.containsKey("key"));
+        assertTrue(retour.containsValue(TypeColSuivi.ANOMALIE));        
     }
     
     @Test
@@ -116,6 +304,7 @@ public class TestProprieteXML extends JunitBase
     }
     
     @Test
+    @Override
     public void testGetFile()
     {
         // Test si le fichier n'est pas nul et bien initialisé.
@@ -127,6 +316,7 @@ public class TestProprieteXML extends JunitBase
     }
 
     @Test
+    @Override
     public void testGetResource()
     {
         // Test si le fichier n'est pas nul et bien initialisé.
@@ -149,6 +339,7 @@ public class TestProprieteXML extends JunitBase
         assertNotNull(map);
         assertEquals(0, map.size());
     }
+    
     /*---------- ACCESSEURS ----------*/
     
     /*---------- CLASSES PRIVEES ----------*/
@@ -173,7 +364,6 @@ public class TestProprieteXML extends JunitBase
         public String getNomCol()
         {
             return null;
-        }
-        
+        }        
     }
 }

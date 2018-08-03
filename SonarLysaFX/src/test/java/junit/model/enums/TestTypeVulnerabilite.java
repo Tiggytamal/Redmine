@@ -31,7 +31,7 @@ public class TestTypeVulnerabilite implements TestEnums
     }
     
     @Test
-    public void TestGetNomSheet()
+    public void testGetNomSheet()
     {
         assertEquals("Ouvertes", TypeVulnerabilite.OUVERTE.getNomSheet());   
         assertEquals("Résolues", TypeVulnerabilite.RESOLUE.getNomSheet());   

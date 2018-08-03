@@ -42,6 +42,12 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
     protected Boolean call() throws Exception
     {
         return creerExtract();
+    }    
+
+    @Override
+    public void annuler()
+    {
+        // Pas de traitement d'annulation        
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -39,6 +39,12 @@ public class MajFichierRTCTask extends AbstractSonarTask
     {
         return majFichierRTC();
     }
+    
+    @Override
+    public void annuler()
+    {
+        // Pas de traitement d'annulation        
+    }
 
     /*---------- METHODES PRIVEES ----------*/
 

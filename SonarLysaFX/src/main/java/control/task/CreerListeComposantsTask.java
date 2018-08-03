@@ -41,6 +41,12 @@ public class CreerListeComposantsTask extends AbstractSonarTask
     {
         return creerListeComposants();
     }
+    
+    @Override
+    public void annuler()
+    {
+        // Pas de traitement d'annulation        
+    }
 
     /*---------- METHODES PRIVEES ----------*/
 

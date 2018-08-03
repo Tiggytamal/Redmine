@@ -29,7 +29,15 @@ public class CreerVueParEditionTask extends AbstractSonarTask
     {
         return creerVueParEdition();
     }
+    
+    @Override
+    public void annuler()
+    {
+        // Pas de traitement d'annulation        
+    }
 
+    /*---------- METHODES PRIVEES ----------*/
+    
     private Boolean creerVueParEdition()
     {
         // Récupération des composants par édition
@@ -58,7 +66,6 @@ public class CreerVueParEditionTask extends AbstractSonarTask
         }
         return true;
     }
-
-    /*---------- METHODES PRIVEES ----------*/
+    
     /*---------- ACCESSEURS ----------*/
 }
