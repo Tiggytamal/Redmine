@@ -1001,7 +1001,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         contraintes = new String[TypeAction.values().length];
         for (int i = 0; i < contraintes.length; i++)
         {
-            contraintes[i] = TypeAction.values()[i].toString();
+            contraintes[i] = TypeAction.values()[i].getValeur();
         }
     }
 

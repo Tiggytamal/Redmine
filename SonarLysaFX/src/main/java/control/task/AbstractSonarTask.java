@@ -58,7 +58,7 @@ public abstract class AbstractSonarTask extends Task<Boolean>
     /**
      * Utilisée pour permettre le retour arrière si possible du traitement
      */
-    abstract public void annuler();
+    public abstract void annuler();
 
     /*---------- METHODES PRIVEES ----------*/
 

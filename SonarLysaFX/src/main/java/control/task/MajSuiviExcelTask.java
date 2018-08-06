@@ -40,6 +40,7 @@ import model.enums.ParamBool;
 import model.enums.TypeColSuivi;
 import model.enums.TypeFichier;
 import model.enums.TypeInfoMail;
+import model.enums.TypeMajSuivi;
 import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
@@ -60,7 +61,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private TypeMaj typeMaj;
+    private TypeMajSuivi typeMaj;
     private static final short ETAPES = 6;
     private static final short DUPLI = 3;
 
@@ -71,7 +72,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public MajSuiviExcelTask(TypeMaj typeMaj)
+    public MajSuiviExcelTask(TypeMajSuivi typeMaj)
     {
         super(ETAPES);
         this.typeMaj = typeMaj;
@@ -112,8 +113,8 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         // Mise à jour d'un fichier ou des deux , selon le type de mise à jour.
         switch (typeMaj)
         {
-            case SUIVI:
-                majFichierSuiviExcel();
+            case JAVA:
+                majFichierSuiviExcelJAVA();
                 break;
 
             case DATASTAGE:
@@ -187,7 +188,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
 
         // Récupération anomalies Java
         initEtape(ETAPES - 1);
-        List<String> anoJava = majFichierSuiviExcel();
+        List<String> anoJava = majFichierSuiviExcelJAVA();
 
         // Liste des anomalies sur plusieures matières
         List<String> anoMultiple = new ArrayList<>();
@@ -251,7 +252,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
      * @throws IOException
      * @throws TeamRepositoryException
      */
-    private List<String> majFichierSuiviExcel() throws IOException
+    private List<String> majFichierSuiviExcelJAVA() throws IOException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
         Map<String, List<ComposantSonar>> composants = recupererComposantsSonarVersion(Matiere.JAVA);
@@ -481,7 +482,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         Map<TypeMetrique, Metrique> metriques = composant.getMapMetriques();
 
         // Vérification que le lot est bien valorisé et controle le QG
-        if (!lot.isEmpty() && controleMetriques(metriques))
+        if (!lot.isEmpty() && controleQGMetriques(metriques))
         {
             // Ajout du lot à la liste de retour s'il y a des défaults critiques ou bloquants ou de duplication de code
             retour.get(entryKey).add(lot);
@@ -502,7 +503,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
      * @param metriques
      * @return
      */
-    private boolean controleMetriques(Map<TypeMetrique, Metrique> metriques)
+    private boolean controleQGMetriques(Map<TypeMetrique, Metrique> metriques)
     {
         String alert = metriques.computeIfAbsent(TypeMetrique.QG, t -> new Metrique(TypeMetrique.QG, null)).getValue();
         List<Periode> bloquants = getListPeriode(metriques, TypeMetrique.BLOQUANT);
@@ -622,25 +623,4 @@ public class MajSuiviExcelTask extends AbstractSonarTask
     }
 
     /*---------- ACCESSEURS ----------*/
-
-    public enum TypeMaj 
-    {
-        SUIVI("Maj Fichier de Suivi JAVA"), 
-        DATASTAGE("Maj Fichier de Suivi DataStage"), 
-        MULTI("Maj Fichiers de Suivi"), 
-        COBOL("Maj Fichier de Suivi COBOL");
-
-        private String string;
-
-        private TypeMaj(String string)
-        {
-            this.string = string;
-        }
-
-        @Override
-        public String toString()
-        {
-            return string;
-        }
-    }
 }

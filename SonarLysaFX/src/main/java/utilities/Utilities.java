@@ -27,6 +27,8 @@ public final class Utilities
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
     private static final short BASEVERSION = 17;
+    private static final String JAR = "jar:";
+    private static final int JARLENGTH = JAR.length();
 
     private Utilities() { }
 
@@ -87,9 +89,9 @@ public final class Utilities
         String path = base;
 
         // remove the "jar:" prefix and "!/" suffix, if present
-        if (path.startsWith("jar:"))
+        if (path.startsWith(JAR))
         {
-            path = path.substring(4, path.length() - 2);
+            path = path.substring(JARLENGTH, path.length() - 2);
         }
 
         try
@@ -132,11 +134,11 @@ public final class Utilities
     {
         String path = url;
         final short CUTFILE = 5;
-        if (path.startsWith("jar:"))
+        if (path.startsWith(JAR))
         {
             // remove "jar:" prefix and "!/" suffix
             final int index = path.indexOf("!/");
-            path = path.substring(4, index);
+            path = path.substring(JARLENGTH, index);
         }
         try
         {

@@ -1,13 +1,13 @@
 package control.view;
 
 import control.task.MajSuiviExcelTask;
-import control.task.MajSuiviExcelTask.TypeMaj;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
+import model.enums.TypeMajSuivi;
 import utilities.TechnicalException;
 
 public class SuiviViewControl extends AbstractViewControl
@@ -29,7 +29,7 @@ public class SuiviViewControl extends AbstractViewControl
     @FXML
     private Button executer;
 
-    private TypeMaj typeMaj;
+    private TypeMajSuivi typeMaj;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -38,7 +38,7 @@ public class SuiviViewControl extends AbstractViewControl
     @FXML
     public void executer()
     {
-        startTask(new MajSuiviExcelTask(typeMaj), typeMaj.toString());
+        startTask(new MajSuiviExcelTask(typeMaj), typeMaj.getValeur());
     }
 
     @Override
@@ -53,22 +53,22 @@ public class SuiviViewControl extends AbstractViewControl
         {
             case "radioSuivi":
                 executer.setDisable(false);
-                typeMaj = TypeMaj.SUIVI;
+                typeMaj = TypeMajSuivi.JAVA;
                 break;
 
             case "radioDataStage":
                 executer.setDisable(false);
-                typeMaj = TypeMaj.DATASTAGE;
+                typeMaj = TypeMajSuivi.DATASTAGE;
                 break;
 
             case "radioCobol":
                 executer.setDisable(false);
-                typeMaj = TypeMaj.COBOL;
+                typeMaj = TypeMajSuivi.COBOL;
                 break;
 
             case "radioMulti":
                 executer.setDisable(false);
-                typeMaj = TypeMaj.MULTI;
+                typeMaj = TypeMajSuivi.MULTI;
                 break;
 
             default:

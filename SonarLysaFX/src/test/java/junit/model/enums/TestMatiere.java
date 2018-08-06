@@ -6,13 +6,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.reflect.Whitebox;
 
 import model.enums.Matiere;
 import model.enums.TypeMail;
 
-@PrepareForTest(String.class)
 public class TestMatiere implements TestEnums
 {
     
