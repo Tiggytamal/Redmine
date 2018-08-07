@@ -243,7 +243,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     {
         String nom = compo.getNom();
 
-        if (application.equalsIgnoreCase(Statics.INCONNUE))
+        if (Statics.INCONNUE.equalsIgnoreCase(application))
         {
             LOGINCONNUE.warn("Application : INCONNUE - Composant : " + nom);
             inconnues++;

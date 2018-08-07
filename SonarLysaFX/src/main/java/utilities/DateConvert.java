@@ -9,6 +9,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.util.Date;
@@ -216,7 +217,7 @@ public class DateConvert
      * @param date
      * @return
      */
-    public static String dateFrancais(LocalDate date, String pattern)
+    public static String dateFrancais(ChronoLocalDate date, String pattern)
     {
         if (pattern == null || date == null)
             throw new IllegalArgumentException("La date et le pattern ne peuvent être nuls");

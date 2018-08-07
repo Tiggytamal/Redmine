@@ -104,15 +104,7 @@ public abstract class AbstractSonarTask extends Task<Boolean>
 
                 // Sinon on rajoute dans la map temporaire les projets qui n'ont pas au moins une version dans la map de retour
                 else if (!retour.containsKey(matcher.group(0)))
-                {
-                    // Création de la liste si la clef n'est pas encore présente dans la map
-                    if (!temp.containsKey(matcher.group(0)))
-                        temp.put(matcher.group(0), new ArrayList<>());
-
-                    // Ajout du projet
-                    List<ComposantSonar> liste = temp.get(matcher.group(0));
-                    liste.add(compo);
-                }
+                    temp.computeIfAbsent(matcher.group(0), l -> new ArrayList<>()).add(compo);
             }
         }
 

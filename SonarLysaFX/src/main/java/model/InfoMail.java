@@ -31,8 +31,7 @@ public class InfoMail implements Modele
         final int PRIME = 31;
         int result = 1;
         result = PRIME * result + ((infoSupp == null) ? 0 : infoSupp.hashCode());
-        result = PRIME * result + ((lot == null) ? 0 : lot.hashCode());
-        return result;
+        return PRIME * result + ((lot == null) ? 0 : lot.hashCode());
     }
 
     @Override

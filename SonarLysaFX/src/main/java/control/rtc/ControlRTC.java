@@ -26,6 +26,7 @@ import com.ibm.team.repository.client.login.UsernameAndPasswordLoginInfo;
 import com.ibm.team.repository.common.IAuditableHandle;
 import com.ibm.team.repository.common.IContributor;
 import com.ibm.team.repository.common.IContributorHandle;
+import com.ibm.team.repository.common.IItem;
 import com.ibm.team.repository.common.IItemHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.common.UUID;
@@ -79,7 +80,7 @@ public class ControlRTC
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
     /** Taille de la pagination */
     private static final int PAGESIZE = 512;
-    
+
     private ITeamRepository repo;
     private IProgressMonitor progressMonitor;
     private Map<String, IProjectArea> pareas;
@@ -132,7 +133,7 @@ public class ControlRTC
             // Récupérationd e tous les projets si la iste est vide. Effectuée normalemetn une seule fois par instance.
             if (pareas.isEmpty())
                 recupererTousLesProjets();
-        } 
+        }
         catch (TeamRepositoryException e)
         {
             LOGPLANTAGE.error(e);
@@ -246,7 +247,7 @@ public class ControlRTC
             WorkItemInitialization init = new WorkItemInitialization(itemType, cat, projet, ano);
             IWorkItemHandle handle = init.run(itemType, progressMonitor);
             workItem = auditableClient.fetchCurrentAuditable(handle, WorkItem.FULL_PROFILE, progressMonitor);
-        } 
+        }
         catch (TeamRepositoryException e)
         {
             LOGGER.error("Erreur traitement RTC création de Defect. Lot : " + ano.getLot());
@@ -402,8 +403,7 @@ public class ControlRTC
         IItemQuery query = IItemQuery.FACTORY.newInstance(WorkItemQueryModel.ROOT);
 
         // Predicate avec un paramètre poru chercher depuis le nom avec un paramètre de type String
-        IPredicate predicatFinal = WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotprojet")
-                ._or(WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotfonctionnement"));
+        IPredicate predicatFinal = WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotprojet")._or(WorkItemQueryModel.ROOT.workItemType()._eq("fr.ca.cat.wi.lotfonctionnement"));
 
         // Prise en compte de la date de création si elle est fournie
         if (dateCreation != null)
@@ -474,20 +474,19 @@ public class ControlRTC
      */
     public LotSuiviRTC creerLotSuiviRTCDepuisHandle(IItemHandle item) throws TeamRepositoryException
     {
-        if (item instanceof IWorkItemHandle)
-        {
-            IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, (IWorkItemHandle) item);
-            LotSuiviRTC retour = ModelFactory.getModel(LotSuiviRTC.class);
-            retour.setLot(String.valueOf(workItem.getId()));
-            retour.setLibelle(workItem.getHTMLSummary().getPlainText());
-            retour.setCpiProjet(recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
-            retour.setProjetClarity(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem));
-            retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem));
-            retour.setEtatLot(EtatLot.from(recupEtatElement(workItem)));
-            retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
-            return retour;
-        }
-        return null;
+        if (!(item instanceof IWorkItemHandle))
+            return null;
+
+        IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, (IWorkItemHandle) item);
+        LotSuiviRTC retour = ModelFactory.getModel(LotSuiviRTC.class);
+        retour.setLot(String.valueOf(workItem.getId()));
+        retour.setLibelle(workItem.getHTMLSummary().getPlainText());
+        retour.setCpiProjet(recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
+        retour.setProjetClarity(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem));
+        retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem));
+        retour.setEtatLot(EtatLot.from(recupEtatElement(workItem)));
+        retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
+        return retour;
     }
 
     /**
@@ -497,7 +496,7 @@ public class ControlRTC
      * @throws TeamRepositoryException
      */
     @SuppressWarnings("unchecked")
-    public Map<EtatLot, LocalDate> recupDatesEtatsLot(IWorkItem lot) throws TeamRepositoryException
+    public Map<EtatLot, LocalDate> recupDatesEtatsLot(IItem lot) throws TeamRepositoryException
     {
         // Manager
         IItemManager itemManager = repo.itemManager();
@@ -537,7 +536,7 @@ public class ControlRTC
         {
             String etat = recupEtatElement(recupWorkItemDepuisId(numeroAno)).trim();
             return "Close".equals(etat) || "Abandonnée".equals(etat);
-        } 
+        }
         catch (TeamRepositoryException e)
         {
             LOGPLANTAGE.error(e);

@@ -1047,8 +1047,12 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @author ETP8137 - Grégoire mathon
      * @since 1.0
      */
-    private enum Index {
-        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
+    private enum Index 
+    {
+        LOTI("Lot projet RTC"), 
+        EDITIONI("Edition"), 
+        ENVI("Etat du lot"), 
+        TRAITEI("Traitée");
 
         private String string;
 

@@ -183,7 +183,7 @@ public final class WorkItemInitialization extends WorkItemOperation
     {
         List<String> tags = workItem.getTags2();
         tags.add("lot=" + lotAno);
-        if (ano.getSecurite().equals(Statics.SECURITEKO))
+        if (Statics.SECURITEKO.equals(ano.getSecurite()))
             tags.add("sécurité");
         workItem.setTags2(tags);
     }
@@ -216,7 +216,7 @@ public final class WorkItemInitialization extends WorkItemOperation
     private String creerDescription()
     {
         String retour = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEDEFECT).replace("-lot-", String.valueOf(lotAno));
-        if (ano.getSecurite().equals(Statics.SECURITEKO))
+        if (Statics.SECURITEKO.equals(ano.getSecurite()))
             retour = retour.replace("Merci", Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTESECURITE));
         return retour;
     }

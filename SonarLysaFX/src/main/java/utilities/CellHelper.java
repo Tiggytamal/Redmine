@@ -75,7 +75,7 @@ public class CellHelper
         return retour;
     }
 
-    public Cell setFontColor(Cell cell, IndexedColors color)
+    public void setFontColor(Cell cell, IndexedColors color)
     {
         CellStyle style = wb.createCellStyle();
         style.cloneStyleFrom(cell.getCellStyle());
@@ -85,7 +85,6 @@ public class CellHelper
         font.setFontHeightInPoints(SIZEFONT);
         style.setFont(font);
         cell.setCellStyle(style);
-        return cell;
     }
 
     public Cell recentrage(Cell cell)
@@ -164,7 +163,7 @@ public class CellHelper
      *          cellule à traiter
      * @return
      */
-    public Cell createHyperLink(String adresse, Cell cell)
+    public void createHyperLink(String adresse, Cell cell)
     {
         // Création de l'hyperlink
         Hyperlink link = ch.createHyperlink(HyperlinkType.URL);
@@ -183,7 +182,6 @@ public class CellHelper
         style.setFont(font);
         cell.setHyperlink(link);
         cell.setCellStyle(style);
-        return cell;
     }
     
     /*---------- METHODES PRIVEES ----------*/

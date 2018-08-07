@@ -86,11 +86,11 @@ public class MajSuiviExcelTask extends AbstractSonarTask
     {
         return majSuiviExcel();
     }
-    
+
     @Override
     public void annuler()
     {
-        // Pas de traitement d'annulation        
+        // Pas de traitement d'annulation
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -199,7 +199,8 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         }
 
         // Mise à jour des fichiers Excel
-        ControlSuivi controlAnoJava = ExcelFactory.getReader(TypeColSuivi.class, new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA)));
+        ControlSuivi controlAnoJava = ExcelFactory.getReader(TypeColSuivi.class,
+                new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA)));
         ControlSuivi controlAnoDataStage = ExcelFactory.getReader(TypeColSuivi.class,
                 new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE)));
         controlAnoJava.majMultiMatiere(anoMultiple);
@@ -461,13 +462,19 @@ public class MajSuiviExcelTask extends AbstractSonarTask
      * Traitement Sonar d'un projet
      *
      * @param compo
+     *      Coposant à traiter
      * @param retour
+     *      Map de retour avec les lots en erreur par version
      * @param entryKey
+     *      Numéro de version
      * @param lotSecurite
+     *      Lots qui ont un problème de sécurité
      * @param lotRelease
+     *      Lots qui sont en version RELEASE
      * @param base
+     *      Base pour l'affichage du message dans la fenêtre d'execution
      */
-    private void traitementProjet(ComposantSonar compo, HashMap<String, Set<String>> retour, String entryKey, Set<String> lotSecurite, Set<String> lotRelease, String base)
+    private void traitementProjet(ComposantSonar compo, Map<String, Set<String>> retour, String entryKey, Set<String> lotSecurite, Set<String> lotRelease, String base)
     {
         String key = compo.getKey();
         String lot = compo.getLot();
@@ -482,7 +489,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         Map<TypeMetrique, Metrique> metriques = composant.getMapMetriques();
 
         // Vérification que le lot est bien valorisé et controle le QG
-        if (!lot.isEmpty() && controleQGMetriques(metriques))
+        if (!lot.isEmpty() && controleQGBloquant(metriques))
         {
             // Ajout du lot à la liste de retour s'il y a des défaults critiques ou bloquants ou de duplication de code
             retour.get(entryKey).add(lot);
@@ -503,7 +510,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
      * @param metriques
      * @return
      */
-    private boolean controleQGMetriques(Map<TypeMetrique, Metrique> metriques)
+    private boolean controleQGBloquant(Map<TypeMetrique, Metrique> metriques)
     {
         String alert = metriques.computeIfAbsent(TypeMetrique.QG, t -> new Metrique(TypeMetrique.QG, null)).getValue();
         List<Periode> bloquants = getListPeriode(metriques, TypeMetrique.BLOQUANT);
