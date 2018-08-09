@@ -19,8 +19,8 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 
+import control.quartz.AbstractJobForTask;
 import control.quartz.ControlJob;
-import control.task.AbstractJobForTask;
 import junit.JunitBase;
 import model.Planificateur;
 import model.enums.TypePlan;

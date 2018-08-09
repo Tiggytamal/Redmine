@@ -11,14 +11,13 @@ import org.powermock.reflect.Whitebox;
 import control.sonar.SonarAPI;
 import control.task.CreerVueDataStageTask;
 import de.saxsys.javafx.test.JfxRunner;
-import junit.JunitBase;
 import model.sonarapi.Vue;
 
 @RunWith(JfxRunner.class)
-public class TestCreerVueDataStageTask extends JunitBase
+public class TestCreerVueDataStageTask extends AbstractTestTask<CreerVueDataStageTask>
 {
     /*---------- ATTRIBUTS ----------*/
-    private CreerVueDataStageTask handler;
+
     private SonarAPI mock;
     
     /*---------- CONSTRUCTEURS ----------*/
@@ -39,7 +38,8 @@ public class TestCreerVueDataStageTask extends JunitBase
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void testAnnuler() throws IllegalArgumentException, IllegalAccessException
+    @Override
+    public void testAnnuler() throws IllegalAccessException
     {
         // Test simple avec la vue nulle
         handler.annuler();

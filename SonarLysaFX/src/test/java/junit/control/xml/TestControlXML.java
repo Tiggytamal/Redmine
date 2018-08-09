@@ -21,17 +21,23 @@ import utilities.TechnicalException;
 @RunWith (JfxRunner.class)
 public class TestControlXML extends JunitBase
 {
+    /*---------- ATTRIBUTS ----------*/
+
     private ControlXML handler;
 
+    /*---------- CONSTRUCTEURS ----------*/
+    
     @Before
     public void init()
     {
         handler = new ControlXML();
     }
 
+    /*---------- METHODES PUBLIQUES ----------*/
+
     @Test
     @TestInJfxThread
-    public void testRecuprerParamXML()
+    public void testRecupererXMLResources()
     {
         handler.recupererXMLResources(FichiersXML.class);
         handler.recupererXMLResources(ProprietesXML.class);
@@ -66,4 +72,7 @@ public class TestControlXML extends JunitBase
     {        
         Whitebox.invokeMethod(handler, "saveInfos", TypeFichier.RESPSERVICE, TypeColChefServ.class, new File("аз&;:["));
     }
+    
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
 }

@@ -2,7 +2,6 @@ package control.rtc;
 
 import static utilities.Statics.proprietesXML;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,14 +15,10 @@ import com.ibm.team.workitem.client.IWorkItemClient;
 import com.ibm.team.workitem.client.WorkItemOperation;
 import com.ibm.team.workitem.client.WorkItemWorkingCopy;
 import com.ibm.team.workitem.common.model.IAttribute;
-import com.ibm.team.workitem.common.model.IAttributeHandle;
 import com.ibm.team.workitem.common.model.ICategory;
-import com.ibm.team.workitem.common.model.IEnumeration;
-import com.ibm.team.workitem.common.model.ILiteral;
 import com.ibm.team.workitem.common.model.ISubscriptions;
 import com.ibm.team.workitem.common.model.IWorkItem;
 import com.ibm.team.workitem.common.model.IWorkItemType;
-import com.ibm.team.workitem.common.model.Identifier;
 
 import model.Anomalie;
 import model.enums.Matiere;
@@ -78,30 +73,30 @@ public final class WorkItemInitialization extends WorkItemOperation
         // Environnement
         IAttribute attribut = client.findAttribute(projet, TypeEnumRTC.ENVIRONNEMENT.getValeur(), null);
         if (calculPariteEdition(ano.getVersion()) || calculPariteEdition(proprietesXML.getMapParams().get(Param.RTCLOTCHC)))
-            workItem.setValue(attribut, recupLiteralDepuisString("Br A VMOE", attribut));
+            workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Br A VMOE", attribut));
         else
-            workItem.setValue(attribut, recupLiteralDepuisString("Br B VMOE", attribut));
+            workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Br B VMOE", attribut));
 
         // Importance
         attribut = client.findAttribute(projet, TypeEnumRTC.IMPORTANCE.getValeur(), null);
-        workItem.setValue(attribut, recupLiteralDepuisString("Bloquante", attribut));
+        workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Bloquante", attribut));
 
         // Origine
         attribut = client.findAttribute(projet, TypeEnumRTC.ORIGINE.getValeur(), null);
-        workItem.setValue(attribut, recupLiteralDepuisString("Qualimétrie", attribut));
+        workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Qualimétrie", attribut));
 
         // Nature
         attribut = client.findAttribute(projet, TypeEnumRTC.NATURE.getValeur(), null);
-        workItem.setValue(attribut, recupLiteralDepuisString("Qualité", attribut));
+        workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Qualité", attribut));
 
         // Entité responsable
         attribut = client.findAttribute(projet, TypeEnumRTC.ENTITERESPCORRECTION.getValeur(), null);
-        workItem.setValue(attribut, recupLiteralDepuisString("MOE", attribut));
+        workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("MOE", attribut));
 
         // Edition
         String edition = ano.getEdition();
         attribut = client.findAttribute(projet, TypeEnumRTC.EDITION.getValeur(), null);
-        workItem.setValue(attribut, recupLiteralDepuisString(calculEditionRTC(edition), attribut));
+        workItem.setValue(attribut, controlRTC.recupLiteralDepuisString(calculEditionRTC(edition), attribut));
 
         // Subscriptions
         ISubscriptions subscription = workItem.getSubscriptions();
@@ -186,31 +181,6 @@ public final class WorkItemInitialization extends WorkItemOperation
         if (Statics.SECURITEKO.equals(ano.getSecurite()))
             tags.add("sécurité");
         workItem.setTags2(tags);
-    }
-
-
-    /**
-     * 
-     * @param name
-     * @param ia
-     * @return
-     * @throws TeamRepositoryException
-     */
-    private Identifier<? extends ILiteral> recupLiteralDepuisString(String name, IAttributeHandle ia) throws TeamRepositoryException
-    {
-        Identifier<? extends ILiteral> literalID = null;
-        IEnumeration<? extends ILiteral> enumeration = client.resolveEnumeration(ia, null);
-        List<? extends ILiteral> literals = enumeration.getEnumerationLiterals();
-        for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();)
-        {
-            ILiteral iLiteral = iterator.next();
-            if (iLiteral.getName().equals(name))
-            {
-                literalID = iLiteral.getIdentifier2();
-                break;
-            }
-        }
-        return literalID;
     }
 
     private String creerDescription()

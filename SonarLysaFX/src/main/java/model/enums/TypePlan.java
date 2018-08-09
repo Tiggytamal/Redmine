@@ -1,9 +1,9 @@
 package model.enums;
 
+import control.quartz.AbstractJobForTask;
 import control.quartz.JobAnomaliesSonar;
 import control.quartz.JobVuesCDM;
 import control.quartz.JobVuesCHC;
-import control.task.AbstractJobForTask;
 
 /**
  * Enumération des types de planificateurs. Chaque Enumération contient le nom et la classe du Job traitée par le planificateur

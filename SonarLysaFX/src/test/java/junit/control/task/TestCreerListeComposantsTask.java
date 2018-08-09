@@ -1,5 +1,7 @@
 package junit.control.task;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -8,15 +10,11 @@ import org.powermock.reflect.Whitebox;
 
 import control.task.CreerListeComposantsTask;
 import de.saxsys.javafx.test.JfxRunner;
-import junit.JunitBase;
 
 @RunWith(JfxRunner.class)
-public class TestCreerListeComposantsTask extends JunitBase
+public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeComposantsTask>
 {
     /*---------- ATTRIBUTS ----------*/
-    
-    private CreerListeComposantsTask handler;
-    
     /*---------- CONSTRUCTEURS ----------*/
     
     @Before
@@ -31,7 +29,7 @@ public class TestCreerListeComposantsTask extends JunitBase
     @Ignore ("Utilisé seulement pour les tests manuels. Trop long en automatique (30 mins).")
     public void testCreerListe() throws Exception
     {   
-       Whitebox.invokeMethod(handler, "creerListeComposants");
+       assertTrue(Whitebox.invokeMethod(handler, "creerListeComposants"));
     }
     
     /*---------- METHODES PRIVEES ----------*/

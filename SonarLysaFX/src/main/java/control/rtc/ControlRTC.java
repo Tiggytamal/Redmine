@@ -27,7 +27,6 @@ import com.ibm.team.repository.common.IAuditableHandle;
 import com.ibm.team.repository.common.IContributor;
 import com.ibm.team.repository.common.IContributorHandle;
 import com.ibm.team.repository.common.IItem;
-import com.ibm.team.repository.common.IItemHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.common.UUID;
 import com.ibm.team.repository.common.model.query.BaseContributorQueryModel.ContributorQueryModel;
@@ -37,11 +36,14 @@ import com.ibm.team.repository.common.query.ast.IPredicate;
 import com.ibm.team.repository.common.service.IQueryService;
 import com.ibm.team.workitem.client.IAuditableClient;
 import com.ibm.team.workitem.client.IWorkItemClient;
+import com.ibm.team.workitem.client.WorkItemWorkingCopy;
 import com.ibm.team.workitem.common.IAuditableCommon;
 import com.ibm.team.workitem.common.internal.model.WorkItem;
 import com.ibm.team.workitem.common.internal.model.query.BaseWorkItemQueryModel.WorkItemQueryModel;
 import com.ibm.team.workitem.common.model.IAttribute;
+import com.ibm.team.workitem.common.model.IAttributeHandle;
 import com.ibm.team.workitem.common.model.ICategory;
+import com.ibm.team.workitem.common.model.IEnumeration;
 import com.ibm.team.workitem.common.model.ILiteral;
 import com.ibm.team.workitem.common.model.IWorkItem;
 import com.ibm.team.workitem.common.model.IWorkItemHandle;
@@ -82,7 +84,7 @@ public class ControlRTC
     private static final int PAGESIZE = 512;
 
     private ITeamRepository repo;
-    private IProgressMonitor progressMonitor;
+    private IProgressMonitor monitor;
     private Map<String, IProjectArea> pareas;
     private IWorkItemClient workItemClient;
     private IAuditableClient auditableClient;
@@ -110,7 +112,7 @@ public class ControlRTC
         workItemClient = (IWorkItemClient) repo.getClientLibrary(IWorkItemClient.class);
         auditableClient = (IAuditableClient) repo.getClientLibrary(IAuditableClient.class);
         auditableCommon = (IAuditableCommon) repo.getClientLibrary(IAuditableCommon.class);
-        progressMonitor = new NullProgressMonitor();
+        monitor = new NullProgressMonitor();
         pareas = new HashMap<>();
     }
 
@@ -127,7 +129,7 @@ public class ControlRTC
             if (!repo.loggedIn())
             {
                 repo.registerLoginHandler((ITeamRepository repository) -> new UsernameAndPasswordLoginInfo(Statics.info.getPseudo(), Statics.info.getMotDePasse()));
-                repo.login(progressMonitor);
+                repo.login(monitor);
             }
 
             // Récupérationd e tous les projets si la iste est vide. Effectuée normalemetn une seule fois par instance.
@@ -156,13 +158,13 @@ public class ControlRTC
      */
     public String recupProjetRTCDepuisWiLot(int lot) throws TeamRepositoryException
     {
-        IWorkItem workItem = workItemClient.findWorkItemById(lot, IWorkItem.FULL_PROFILE, progressMonitor);
+        IWorkItem workItem = workItemClient.findWorkItemById(lot, IWorkItem.FULL_PROFILE, monitor);
         if (workItem == null)
         {
             LOGGER.warn("Récupération projetRTC - Lot introuvable : " + lot);
             return "";
         }
-        IProjectArea area = (IProjectArea) repo.itemManager().fetchCompleteItem(workItem.getProjectArea(), IItemManager.DEFAULT, progressMonitor);
+        IProjectArea area = (IProjectArea) repo.itemManager().fetchCompleteItem(workItem.getProjectArea(), IItemManager.DEFAULT, monitor);
         return area.getName();
     }
 
@@ -175,7 +177,7 @@ public class ControlRTC
      */
     public <R extends T, T extends IAuditableHandle> R recupererItemDepuisHandle(Class<R> classRetour, T handle) throws TeamRepositoryException
     {
-        return classRetour.cast(repo.itemManager().fetchCompleteItem(handle, IItemManager.DEFAULT, progressMonitor));
+        return classRetour.cast(repo.itemManager().fetchCompleteItem(handle, IItemManager.DEFAULT, monitor));
     }
 
     /**
@@ -188,7 +190,35 @@ public class ControlRTC
      */
     public <R extends T, T extends IAuditableHandle> R recupererEltDepuisHandle(Class<R> classRetour, T handle, ItemProfile<? extends T> profil) throws TeamRepositoryException
     {
-        return classRetour.cast(auditableClient.fetchCurrentAuditable(handle, profil, progressMonitor));
+        return classRetour.cast(auditableClient.fetchCurrentAuditable(handle, profil, monitor));
+    }
+
+    /**
+     * Permet de retourner la valeur {@code Identifier} d'un attribut depuis la valeur {@code String}
+     * 
+     * @param name
+     *            valeur de l'attribut sous firme d'une chaîne de caractère
+     * @param ia
+     *            attribut dont on veut la valeur
+     * @return
+     * @throws TeamRepositoryException
+     */
+    @SuppressWarnings("unchecked")
+    public Identifier<ILiteral> recupLiteralDepuisString(String name, IAttributeHandle ia) throws TeamRepositoryException
+    {
+        Identifier<ILiteral> literalID = null;
+        IEnumeration<? extends ILiteral> enumeration = workItemClient.resolveEnumeration(ia, null);
+        List<? extends ILiteral> literals = enumeration.getEnumerationLiterals();
+        for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();)
+        {
+            ILiteral iLiteral = iterator.next();
+            if (iLiteral.getName().equals(name))
+            {
+                literalID = (Identifier<ILiteral>) iLiteral.getIdentifier2();
+                break;
+            }
+        }
+        return literalID;
     }
 
     /**
@@ -202,7 +232,7 @@ public class ControlRTC
     {
         if (item == null)
             return "";
-        IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(item, progressMonitor);
+        IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(item, monitor);
         return workflowInfo.getStateName(item.getState2());
     }
 
@@ -214,7 +244,21 @@ public class ControlRTC
      */
     public IWorkItem recupWorkItemDepuisId(int id) throws TeamRepositoryException
     {
-        return workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, progressMonitor);
+        return workItemClient.findWorkItemById(id, IWorkItem.FULL_PROFILE, monitor);
+    }
+
+    /**
+     * 
+     * @param id
+     * @throws TeamRepositoryException
+     */
+    public void supprimerWorkItemDepuisId(int id) throws TeamRepositoryException
+    {
+        IWorkItem workItem = recupWorkItemDepuisId(id);
+        workItemClient.getWorkItemWorkingCopyManager().connect(workItem, IWorkItem.FULL_PROFILE, monitor);
+        WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(workItem);
+        workingCopy.delete(monitor);
+        workItemClient.getWorkItemWorkingCopyManager().disconnect(workItem);
     }
 
     /**
@@ -233,20 +277,34 @@ public class ControlRTC
             IProjectArea projet = pareas.get(ano.getProjetRTC());
 
             // Type de l'objet
-            IWorkItemType itemType = workItemClient.findWorkItemType(projet, "defect", progressMonitor);
+            IWorkItemType itemType = workItemClient.findWorkItemType(projet, "defect", monitor);
 
-            List<ICategory> categories = workItemClient.findCategories(projet, ICategory.FULL_PROFILE, progressMonitor);
+            List<ICategory> categories = workItemClient.findCategories(projet, ICategory.FULL_PROFILE, monitor);
             ICategory cat = null;
             for (ICategory iCategory : categories)
             {
-                if ("Projet".equals(iCategory.getName()) || iCategory.getName().contains("Anomalie"))
+                if ("Projet".equals(iCategory.getName()))
+                {
                     cat = iCategory;
+                    break;
+                }
+            }
+            if (cat == null)
+            {
+                for (ICategory iCategory : categories)
+                {
+                    if (iCategory.getName().contains("Anomalie"))
+                    {
+                        cat = iCategory;
+                        break;
+                    }
+                }
             }
 
             // Création
             WorkItemInitialization init = new WorkItemInitialization(itemType, cat, projet, ano);
-            IWorkItemHandle handle = init.run(itemType, progressMonitor);
-            workItem = auditableClient.fetchCurrentAuditable(handle, WorkItem.FULL_PROFILE, progressMonitor);
+            IWorkItemHandle handle = init.run(itemType, monitor);
+            workItem = auditableClient.fetchCurrentAuditable(handle, WorkItem.FULL_PROFILE, monitor);
         }
         catch (TeamRepositoryException e)
         {
@@ -272,12 +330,12 @@ public class ControlRTC
      */
     public String recupererValeurAttribut(IAttribute attrb, IWorkItem item) throws TeamRepositoryException
     {
-        Object objet = attrb.getValue(auditableCommon, item, progressMonitor);
+        Object objet = attrb.getValue(auditableCommon, item, monitor);
         if (objet instanceof Identifier)
         {
             @SuppressWarnings("unchecked")
             Identifier<? extends ILiteral> literalID = (Identifier<? extends ILiteral>) objet;
-            List<? extends ILiteral> literals = workItemClient.resolveEnumeration(attrb, progressMonitor).getEnumerationLiterals();
+            List<? extends ILiteral> literals = workItemClient.resolveEnumeration(attrb, monitor).getEnumerationLiterals();
 
             for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();)
             {
@@ -370,7 +428,7 @@ public class ControlRTC
         final List<?> handles = page.getItemHandles();
         if (!handles.isEmpty())
         {
-            return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, progressMonitor);
+            return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, monitor);
         }
 
         return null;
@@ -389,7 +447,7 @@ public class ControlRTC
      * @throws TeamRepositoryException
      */
     @SuppressWarnings("unchecked")
-    public List<IItemHandle> recupLotsRTC(boolean remiseAZero, LocalDate dateCreation) throws TeamRepositoryException
+    public List<IWorkItemHandle> recupLotsRTC(boolean remiseAZero, LocalDate dateCreation) throws TeamRepositoryException
     {
         // 1. Contrôle
 
@@ -447,8 +505,8 @@ public class ControlRTC
         int pageSize = PAGESIZE;
         IItemQueryPage page = qs.queryItems(filtered, new Object[] {}, pageSize);
 
-        // Liste de tous les lots trouvés.
-        List<IItemHandle> retour = new ArrayList<>();
+        // Liste de tous les lots trouvés. ON peut utiliser des IWorkItemHandles directement car la requête ne remonte que des WorkItems
+        List<IWorkItemHandle> retour = new ArrayList<>();
         retour.addAll(page.getItemHandles());
         int nextPosition = page.getNextStartPosition();
         UUID token = page.getToken();
@@ -472,12 +530,9 @@ public class ControlRTC
      * @return {@link model.LotSuiviRTC}
      * @throws TeamRepositoryException
      */
-    public LotSuiviRTC creerLotSuiviRTCDepuisHandle(IItemHandle item) throws TeamRepositoryException
+    public LotSuiviRTC creerLotSuiviRTCDepuisHandle(IWorkItemHandle item) throws TeamRepositoryException
     {
-        if (!(item instanceof IWorkItemHandle))
-            return null;
-
-        IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, (IWorkItemHandle) item);
+        IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, item);
         LotSuiviRTC retour = ModelFactory.getModel(LotSuiviRTC.class);
         retour.setLot(String.valueOf(workItem.getId()));
         retour.setLibelle(workItem.getHTMLSummary().getPlainText());
@@ -502,7 +557,7 @@ public class ControlRTC
         IItemManager itemManager = repo.itemManager();
 
         // Récupération de l'historique des modifications faites sur le lot.
-        List<IAuditableHandle> handles = itemManager.fetchAllStateHandles((IAuditableHandle) lot.getItemHandle(), progressMonitor);
+        List<IAuditableHandle> handles = itemManager.fetchAllStateHandles((IAuditableHandle) lot.getItemHandle(), monitor);
         List<IWorkItem> workItems = itemManager.fetchCompleteStates(handles, null);
 
         // Tri de la liste par dates décroissantes
@@ -512,7 +567,7 @@ public class ControlRTC
         Map<EtatLot, LocalDate> retour = new EnumMap<>(EtatLot.class);
         for (IWorkItem iWorkItem : workItems)
         {
-            IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(iWorkItem, progressMonitor);
+            IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(iWorkItem, monitor);
             String etat = workflowInfo.getStateName(iWorkItem.getState2());
             retour.put(EtatLot.from(etat), DateConvert.localDate(iWorkItem.modified()));
         }

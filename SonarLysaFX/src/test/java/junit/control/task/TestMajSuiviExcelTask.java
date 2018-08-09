@@ -27,7 +27,6 @@ import control.rtc.ControlRTC;
 import control.sonar.SonarAPI;
 import control.task.MajSuiviExcelTask;
 import de.saxsys.javafx.test.JfxRunner;
-import junit.JunitBase;
 import model.Anomalie;
 import model.ComposantSonar;
 import model.LotSuiviRTC;
@@ -42,11 +41,10 @@ import model.sonarapi.QualityGate;
 import utilities.Statics;
 
 @RunWith(JfxRunner.class)
-public class TestMajSuiviExcelTask extends JunitBase
+public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
 {
     /*---------- ATTRIBUTS ----------*/
     
-    private MajSuiviExcelTask handler;
     private ControlRTC control = ControlRTC.INSTANCE;
     private SonarAPI api;
     private static final String NUMEROLOT1 = "123456";
@@ -69,12 +67,6 @@ public class TestMajSuiviExcelTask extends JunitBase
     
     /*---------- METHODES PUBLIQUES ----------*/
     
-    @Test
-    public void testAnnuler()
-    {
-        handler.annuler();
-        assertFalse(handler.isCancelled());
-    }
     @Test
     @Ignore ("pas encore prêt")
     public void testMajSuiviExcel() throws Exception

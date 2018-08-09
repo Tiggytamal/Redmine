@@ -27,18 +27,16 @@ import control.rtc.ControlRTC;
 import control.sonar.SonarAPI;
 import control.task.CreerVueParAppsTask;
 import de.saxsys.javafx.test.JfxRunner;
-import junit.JunitBase;
 import model.enums.CreerVueParAppsTaskOption;
 import model.sonarapi.Projet;
 import utilities.Statics;
 import utilities.TechnicalException;
 
 @RunWith(JfxRunner.class)
-public class TestCreerVueParAppsTask extends JunitBase
+public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTask>
 {
     /*---------- ATTRIBUTS ----------*/
-    
-    private CreerVueParAppsTask handler;
+   
     private File file;
     
     /*---------- CONSTRUCTEURS ----------*/

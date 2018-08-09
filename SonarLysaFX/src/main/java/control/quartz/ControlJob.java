@@ -17,7 +17,6 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
-import control.task.AbstractJobForTask;
 import model.Planificateur;
 import model.enums.TypePlan;
 import utilities.TechnicalException;

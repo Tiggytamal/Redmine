@@ -35,6 +35,12 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
 
     /*---------- CONSTRUCTEURS ----------*/
 
+    public CreerVueCHCCDMTask()
+    {
+        super(ETAPES);
+    }
+    
+    
     public CreerVueCHCCDMTask(List<String> annees, CHCouCDM chccdm)
     {
         super(ETAPES);

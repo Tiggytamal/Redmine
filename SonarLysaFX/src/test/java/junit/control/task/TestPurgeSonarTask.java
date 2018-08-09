@@ -24,7 +24,6 @@ import control.rtc.ControlRTC;
 import control.sonar.SonarAPI;
 import control.task.PurgeSonarTask;
 import de.saxsys.javafx.test.JfxRunner;
-import junit.JunitBase;
 import model.ComposantSonar;
 import model.ModelFactory;
 import model.enums.Param;
@@ -34,11 +33,10 @@ import utilities.Statics;
 import utilities.TechnicalException;
 
 @RunWith(JfxRunner.class)
-public class TestPurgeSonarTask extends JunitBase
+public class TestPurgeSonarTask extends AbstractTestTask<PurgeSonarTask>
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private PurgeSonarTask handler;
     private static final String ID = "id";
     private Map<String, ComposantSonar> save;
 
@@ -75,8 +73,8 @@ public class TestPurgeSonarTask extends JunitBase
         // Remplacement api par le mock
         Whitebox.getField(PurgeSonarTask.class, "api").set(handler, mock);
 
-        // 2. Appel de la méthode
-        assertTrue(Whitebox.invokeMethod(handler, "purgeVieuxComposants"));
+        // 2. Appel de la méthode depuis call
+        assertTrue(Whitebox.invokeMethod(handler, "call"));
     }
 
     @Test

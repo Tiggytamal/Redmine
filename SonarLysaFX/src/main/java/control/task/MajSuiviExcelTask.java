@@ -22,8 +22,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import com.ibm.team.repository.common.IItemHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
+import com.ibm.team.workitem.common.model.IWorkItemHandle;
 
 import application.Main;
 import control.excel.ControlSuivi;
@@ -152,7 +152,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         ControlRTC control = ControlRTC.INSTANCE;
         Map<String, LotSuiviRTC> map = new HashMap<>();
         map.putAll(fichiersXML.getMapLotsRTC());
-        List<IItemHandle> handles = control.recupLotsRTC(false, null);
+        List<IWorkItemHandle> handles = control.recupLotsRTC(false, null);
         if (handles.isEmpty())
             throw new TechnicalException("La liste des lots RTC est vide!", null);
 
@@ -160,7 +160,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         int size = handles.size();
         String base = "Récupération RTC - Traitement lot : ";
         String fin = "Nbre de lots traités : ";
-        for (IItemHandle handle : handles)
+        for (IWorkItemHandle handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête
             LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle(handle);

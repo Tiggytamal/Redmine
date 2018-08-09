@@ -15,7 +15,6 @@ import org.powermock.reflect.Whitebox;
 
 import control.task.CreerExtractVulnerabiliteTask;
 import de.saxsys.javafx.test.JfxRunner;
-import junit.JunitBase;
 import model.ComposantSonar;
 import model.ModelFactory;
 import model.Vulnerabilite;
@@ -24,12 +23,9 @@ import model.sonarapi.Issue;
 import utilities.Statics;
 
 @RunWith(JfxRunner.class)
-public class TestCreerExtractVulnerabiliteTask extends JunitBase  
+public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExtractVulnerabiliteTask>
 {
     /*---------- ATTRIBUTS ----------*/
-
-    private CreerExtractVulnerabiliteTask handler;
-
     /*---------- CONSTRUCTEURS ----------*/
 
     @Before

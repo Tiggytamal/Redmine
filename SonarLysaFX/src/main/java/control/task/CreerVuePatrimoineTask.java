@@ -41,6 +41,7 @@ public class CreerVuePatrimoineTask extends AbstractSonarTask
     @Override
     public void annuler()
     {
+        cancel();
         if (key != null && !key.isEmpty())
             api.supprimerProjet(key, true);
     }

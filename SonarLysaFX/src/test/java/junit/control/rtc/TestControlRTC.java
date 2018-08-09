@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -25,7 +26,6 @@ import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.repository.client.TeamPlatform;
 import com.ibm.team.repository.client.internal.TeamRepository;
 import com.ibm.team.repository.common.IContributor;
-import com.ibm.team.repository.common.IItemHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IAttribute;
 import com.ibm.team.workitem.common.model.IAttributeHandle;
@@ -151,6 +151,14 @@ public class TestControlRTC extends JunitBase
         assertNotNull(item);
         assertEquals("defect", item.getWorkItemType());
     }
+    
+    @Test
+    @Ignore("Suppression WorkItem - A finir")
+    public void testSupprimerWorkItemDepuisId() throws TeamRepositoryException
+    {
+        handler.supprimerWorkItemDepuisId(328515);
+        assertNull(handler.recupWorkItemDepuisId(328515));
+    }
 
     @Test
     public void testRecupererTousLesProjets() throws Exception
@@ -164,7 +172,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void testCreerDefect()
+    public void testCreerDefect() throws TeamRepositoryException
     {
         String projetTest = "PRJF_T300703";
         Anomalie ano = ModelFactory.getModel(Anomalie.class);
@@ -173,7 +181,13 @@ public class TestControlRTC extends JunitBase
         ano.setLot("Lot 315765");
         ano.setEdition("E32_Fil_De_Leau");
         ano.setSecurite(Statics.SECURITEKO);
-        // handler.creerDefect(ano);
+        int numero = handler.creerDefect(ano);
+        
+        // Test que le defect a bien été créé
+        assertTrue(numero > 0);
+        
+        // Suppression de celui-ci pour ne pas surcharger le projet
+        handler.supprimerWorkItemDepuisId(numero);
     }
 
     @Test
@@ -233,11 +247,11 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testRecupLotsRTC() throws TeamRepositoryException
     {
-        List<IItemHandle> liste = handler.recupLotsRTC(true, LocalDate.of(2016, 01, 01));
+        List<IWorkItemHandle> liste = handler.recupLotsRTC(true, LocalDate.of(2016, 01, 01));
         assertNotNull(liste);
         assertFalse(liste.isEmpty());
 
-        List<IItemHandle> liste2 = handler.recupLotsRTC(false, null);
+        List<IWorkItemHandle> liste2 = handler.recupLotsRTC(false, null);
         assertNotNull(liste2);
         assertFalse(liste2.isEmpty());
 
@@ -252,9 +266,9 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testCreerLotSuiviRTCDepuisHandle() throws TeamRepositoryException
     {
-        List<IItemHandle> liste = handler.recupLotsRTC(false, null);
+        List<IWorkItemHandle> liste = handler.recupLotsRTC(false, null);
         LotSuiviRTC lot = handler.creerLotSuiviRTCDepuisHandle(liste.get(0));
-        IWorkItem workItem = handler.recupererItemDepuisHandle(IWorkItem.class, (IWorkItemHandle) liste.get(0));
+        IWorkItem workItem = handler.recupererItemDepuisHandle(IWorkItem.class, liste.get(0));
         assertEquals(String.valueOf(workItem.getId()), lot.getLot());
         assertEquals(workItem.getHTMLSummary().getPlainText(), lot.getLibelle());
         assertEquals(handler.recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName(), lot.getCpiProjet());

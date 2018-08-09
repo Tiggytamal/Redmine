@@ -20,17 +20,15 @@ import org.powermock.reflect.Whitebox;
 import control.sonar.SonarAPI;
 import control.task.CreerVueCHCCDMTask;
 import de.saxsys.javafx.test.JfxRunner;
-import junit.JunitBase;
 import model.enums.CHCouCDM;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
 
 @RunWith(JfxRunner.class)
-public class TestCreerVueCHCCDMTask extends JunitBase
+public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
 {
     /*---------- ATTRIBUTS ----------*/
-
-    private CreerVueCHCCDMTask handler;
+    
     private List<String> annees;
     private SonarAPI mock;
     
@@ -61,16 +59,10 @@ public class TestCreerVueCHCCDMTask extends JunitBase
     }
     
     @Test
-    public void testCall() throws Exception
-    {
-        assertTrue(Whitebox.invokeMethod(handler, "call"));
-    }
-    
-    @Test
     public void testCreerVueCHCouCDM() throws Exception
     {
-        // test du retour avec les méthode mockées
-        assertTrue(Whitebox.invokeMethod(handler, "creerVueCHCouCDM"));
+        // test du retour avec les méthode mockées. On appel par la méthode call
+        assertTrue(Whitebox.invokeMethod(handler, "call"));
     }
     
     @Test

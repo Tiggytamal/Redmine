@@ -5,7 +5,6 @@ import java.util.List;
 import org.quartz.JobExecutionContext;
 
 import control.task.CreerVueCHCCDMTask;
-import control.task.AbstractJobForTask;
 import javafx.application.Platform;
 import model.enums.CHCouCDM;
 import model.enums.TypePlan;

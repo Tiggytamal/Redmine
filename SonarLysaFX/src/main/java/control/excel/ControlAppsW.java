@@ -107,7 +107,6 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
         valoriserCellule(row, colLDCSonar, centre, "LDC SonarQube");
         valoriserCellule(row, colLDCMain, centre, "LDC MainFrame");
         autosizeColumns(sheet);
-
     }
 
     @Override
@@ -192,9 +191,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
                 value = String.valueOf(cell.getNumericCellValue());
 
             if (codeApps.contains(value))
-            {
                 row.getCell(0).setCellValue("X");
-            }
         }
     }
 

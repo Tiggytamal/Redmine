@@ -1,8 +1,9 @@
-package control.task;
+package control.quartz;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
+import control.task.LaunchTask;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
