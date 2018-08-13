@@ -23,6 +23,9 @@ public abstract class AbstractControlExcel
 {
     /*---------- ATTRIBUTS ----------*/
     
+    /** Paramétrage pour éviter les Zip Bomb */
+    private static final double MININFLATERATIO = 0;
+    
     /** Fichier Excel à modifier */
     protected File file;
     /** Workbook représentant le fichier */
@@ -35,8 +38,6 @@ public abstract class AbstractControlExcel
     protected CreationHelper createHelper;
     /** Ancre pour les commentaire */
     protected ClientAnchor ca;
-    /** Paramétrage pour éviter les Zip Bomb */
-    private static final double MININFLATERATIO = 0;
     
     /*---------- CONSTRUCTEURS ----------*/
     

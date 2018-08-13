@@ -15,7 +15,7 @@ import utilities.FunctionalException;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
 
-public class MensuelViewControl extends AbstractViewControl
+public final class MensuelViewControl extends AbstractViewControl
 {
     /* ---------- ATTIBUTS ---------- */
 

@@ -4,32 +4,23 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
-import control.sonar.SonarAPI;
-import control.task.CreerVueParEditionTask;
 import control.task.CreerVuePatrimoineTask;
-import de.saxsys.javafx.test.JfxRunner;
 import model.ComposantSonar;
 import model.sonarapi.Vue;
 
-@RunWith(JfxRunner.class)
 public class TestCreerVuePatrimoineTask extends AbstractTestTask<CreerVuePatrimoineTask>
 {
-    /*---------- ATTRIBUTS ----------*/
-    
-    private SonarAPI api;
-    
+    /*---------- ATTRIBUTS ----------*/    
     /*---------- CONSTRUCTEURS ----------*/
     
     @Override
     public void init() throws Exception
     {
         handler = new CreerVuePatrimoineTask();
-        api = Mockito.mock(SonarAPI.class);
-        Whitebox.getField(CreerVueParEditionTask.class, "api").set(handler, api);       
+        initAPI(CreerVuePatrimoineTask.class, true);
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

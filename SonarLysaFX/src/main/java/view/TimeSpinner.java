@@ -23,9 +23,11 @@ public class TimeSpinner extends Spinner<LocalTime>
 
     /*---------- ATTRIBUTS ----------*/
 
+    // Constantes statiques
+    private static final short WIDTH = 80;
+    
     // Propriété de l'objet contenant le mode d'edition
     private final ObjectProperty<Mode> mode = new SimpleObjectProperty<>(Mode.HOURS);
-    private static final short WIDTH = 80;
 
     /*---------- CONSTRUCTEURS ----------*/
 

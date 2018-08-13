@@ -1,13 +1,13 @@
 package control.view;
 
-import control.task.LaunchTask;
+import control.task.AbstractLaunchTask;
 import control.task.MajFichierRTCTask;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
-public class FichierRTCViewControl extends LaunchTask
+public final class FichierRTCViewControl extends AbstractLaunchTask
 {
     /*---------- ATTRIBUTS ----------*/
 

@@ -18,11 +18,17 @@ import model.enums.ParamBool;
  */
 public class ParamBoolView extends VBox implements ViewXML<ParamBool, CheckBox>
 {
-    private ParamBool typeBool;
-    private CheckBox checkBox;
+    /*---------- ATTRIBUTS ----------*/
+
+    // Constantes statiques
     private static final String POINT = " : ";
     private static final short LABELWIDTH = 300;
     private static final short BASEPADDING = 5;
+    
+    private ParamBool typeBool;
+    private CheckBox checkBox;
+
+    /*---------- CONSTRUCTEURS ----------*/
 
     public ParamBoolView(ParamBool typeBool, Boolean bool)
     {
@@ -51,6 +57,10 @@ public class ParamBoolView extends VBox implements ViewXML<ParamBool, CheckBox>
         separ.setPadding(new Insets(BASEPADDING, BASEPADDING, BASEPADDING, BASEPADDING));
         rootChildren.add(separ);
     }
+    
+    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
 
     /**
      * @return the typeCol

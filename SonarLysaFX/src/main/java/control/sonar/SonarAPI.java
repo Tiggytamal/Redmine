@@ -51,14 +51,12 @@ public class SonarAPI
 {
 
     /*---------- ATTRIBUTS ----------*/
-
+    
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
-    private final WebTarget webTarget;
-    private final String codeUser;
     private static final String AUTHORIZATION = "Authorization";
     private static final String HTTP = ": HTTP ";
 
@@ -73,9 +71,12 @@ public class SonarAPI
     private static final String VIEWSCREATE = "api/views/create";
     private static final String QGSELECT = "api/qualitygates/select";
     private static final String AUTHVALID = "api/authentication/validate";
-
+    
     /** Instance du controleur */
     public static final SonarAPI INSTANCE = new SonarAPI();
+    
+    private final WebTarget webTarget;
+    private final String codeUser;
 
     /*---------- CONSTRUCTEURS ----------*/
 

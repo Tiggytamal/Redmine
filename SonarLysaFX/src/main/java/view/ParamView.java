@@ -22,10 +22,12 @@ public class ParamView extends VBox implements ViewXML<Param, TextField>
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private Param typeParam;
-    private TextField field;
+    // Constantes statiques
     private static final short LABELWIDTH = 250;
     private static final short BASEPADDING = 5;
+    
+    private Param typeParam;
+    private TextField field;
     
     /*---------- CONSTRUCTEURS ----------*/
 

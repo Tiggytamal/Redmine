@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
 import model.enums.CHCouCDM;
 import utilities.TechnicalException;
 
-public class MaintenanceViewControl extends AbstractViewControl
+public final class MaintenanceViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 

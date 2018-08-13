@@ -29,7 +29,7 @@ import view.TrayIconView;
 /**
  * @author ETP8137 - Grégoire Mathon
  */
-public class MainScreen extends Application
+public final class MainScreen extends Application
 {
     /*---------- ATTRIBUTS ----------*/
 

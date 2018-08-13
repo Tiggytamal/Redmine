@@ -21,10 +21,12 @@ public class ParamTextView extends VBox
 {
     /*---------- ATTRIBUTS ----------*/
 
+    // Constantes statiques
+    private static final short BASEPADDING = 10;
+    
     private ParamSpec param;
     private TextArea textArea;
     private double nbreLignes;
-    private static final short BASEPADDING = 10;
 
     /*---------- CONSTRUCTEURS ----------*/
 

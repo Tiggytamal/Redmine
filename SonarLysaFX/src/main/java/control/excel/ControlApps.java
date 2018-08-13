@@ -24,15 +24,15 @@ public class ControlApps extends AbstractControlExcelRead<TypeColApps, Map<Strin
 {
     /*---------- ATTRIBUTS ----------*/
 
+    private static final String ACTIF = "Actif";
+    private static final String OUI = "Oui";
+    
     private int colCode;
     private int colActif;
     private int colLib;
     private int colOpen;
     private int colMainFrame;
     
-    private static final String ACTIF = "Actif";
-    private static final String OUI = "Oui";
-
     /*---------- CONSTRUCTEURS ----------*/
 
     /**

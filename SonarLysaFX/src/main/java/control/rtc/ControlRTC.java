@@ -74,14 +74,18 @@ public class ControlRTC
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private final LocalDate today = LocalDate.now();
-
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+
     /** Taille de la pagination */
     private static final int PAGESIZE = 512;
+
+    private final LocalDate today = LocalDate.now();
+    
+    /** Instance du controleur */
+    public static final ControlRTC INSTANCE = new ControlRTC();
 
     private ITeamRepository repo;
     private IProgressMonitor monitor;
@@ -89,9 +93,6 @@ public class ControlRTC
     private IWorkItemClient workItemClient;
     private IAuditableClient auditableClient;
     private IAuditableCommon auditableCommon;
-
-    /** Instance du controleur */
-    public static final ControlRTC INSTANCE = new ControlRTC();
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -312,12 +313,12 @@ public class ControlRTC
             LOGPLANTAGE.error(e);
         }
 
-        if (workItem != null)
-        {
-            LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + ano.getLot());
-            return workItem.getId();
-        }
-        return 0;
+        if (workItem == null)
+            return 0;
+
+        LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + ano.getLot());
+        return workItem.getId();
+
     }
 
     /**
@@ -426,12 +427,10 @@ public class ControlRTC
 
         // Retour de l'objet
         final List<?> handles = page.getItemHandles();
-        if (!handles.isEmpty())
-        {
-            return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, monitor);
-        }
-
-        return null;
+        if (handles.isEmpty())
+            return null;
+        
+        return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, monitor);
     }
 
     /**

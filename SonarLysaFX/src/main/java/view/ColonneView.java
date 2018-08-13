@@ -22,11 +22,13 @@ public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements V
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private T typeCol;
-    private TextField field;
+    // Constantes statiques
     private static final String POINT = " : ";
     private static final int WIDTH = 150;
     private static final int PADDING = 5;
+    
+    private T typeCol;
+    private TextField field;
 
     /*---------- CONSTRUCTEURS ----------*/
 

@@ -24,10 +24,12 @@ public class ConnexionDialog extends Dialog<Pair<String, String>>
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private Node loginButton;
+    // Constantes statiques
     private static final int BASEGAP = 10;
     private static final int TOPINSET = 20;
     private static final int RIGHTINSET = 80;
+    
+    private Node loginButton;
     
     /*---------- CONSTRUCTEURS ----------*/
 

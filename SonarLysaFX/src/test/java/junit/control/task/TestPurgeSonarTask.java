@@ -10,29 +10,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import control.mail.ControlMail;
 import control.rtc.ControlRTC;
-import control.sonar.SonarAPI;
 import control.task.PurgeSonarTask;
-import de.saxsys.javafx.test.JfxRunner;
 import model.ComposantSonar;
 import model.ModelFactory;
-import model.enums.Param;
 import model.enums.ParamSpec;
-import model.sonarapi.Parametre;
 import utilities.Statics;
 import utilities.TechnicalException;
 
-@RunWith(JfxRunner.class)
 public class TestPurgeSonarTask extends AbstractTestTask<PurgeSonarTask>
 {
     /*---------- ATTRIBUTS ----------*/
@@ -43,12 +33,13 @@ public class TestPurgeSonarTask extends AbstractTestTask<PurgeSonarTask>
     /*---------- CONSTRUCTEURS ----------*/
 
     @Before
-    public void init()
+    public void init() throws IllegalAccessException
     {
         ControlRTC.INSTANCE.connexion();
         handler = new PurgeSonarTask();
         save = new HashMap<>();
         save.putAll(Statics.fichiersXML.getMapComposSonar());
+        initAPI(PurgeSonarTask.class, true);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -56,22 +47,7 @@ public class TestPurgeSonarTask extends AbstractTestTask<PurgeSonarTask>
     @Test
     public void testPurgeVieuxComposants() throws Exception
     {
-        // 1. Préparation du mock
-        SonarAPI mock = Mockito.mock(SonarAPI.class);
-
-        // init du webtarget
-        WebTarget webTarget = ClientBuilder.newClient().target(Statics.proprietesXML.getMapParams().get(Param.URLSONAR));
-        Whitebox.getField(SonarAPI.class, "webTarget").set(mock, webTarget);
-
-        // Vrai appel getComposant
-        Mockito.when(mock.getComposants()).thenCallRealMethod();
-
-        // Vrai appel webservice
-        Parametre param = new Parametre("search", "composant ");
-        Mockito.when(mock.appelWebserviceGET(Mockito.anyString(), Mockito.refEq(param))).thenCallRealMethod();
-
-        // Remplacement api par le mock
-        Whitebox.getField(PurgeSonarTask.class, "api").set(handler, mock);
+        mockAPIGetSomething(() -> api.getComposants());
 
         // 2. Appel de la méthode depuis call
         assertTrue(Whitebox.invokeMethod(handler, "call"));
@@ -80,7 +56,6 @@ public class TestPurgeSonarTask extends AbstractTestTask<PurgeSonarTask>
     @Test
     public void testCalculPurge() throws Exception
     {
-
         // 1. Remplacement map des composants pour test
         Map<String, ComposantSonar> mapCompos = new HashMap<>();
 

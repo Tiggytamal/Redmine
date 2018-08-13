@@ -12,7 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import utilities.TechnicalException;
 
-public class ExtractionViewControl extends AbstractViewControl
+public final class ExtractionViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 

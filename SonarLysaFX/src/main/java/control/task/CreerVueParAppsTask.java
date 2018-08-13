@@ -37,6 +37,16 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     /*---------- ATTRIBUTS ----------*/
 
     public static final String TITRE = "Vues par Application";
+    
+    /** logger composants sans applications */
+    private static final Logger LOGSANSAPP = LogManager.getLogger("sansapp-log");
+    /** logger composants avec application INCONNUE */
+    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
+    /** logger applications non listée dans le référentiel */
+    private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
+    
+    private static final short ETAPES = 3;
+    
     /** Nombre de composants avec application inconnues */
     private int inconnues;
     /** Controleur Mails */
@@ -49,15 +59,6 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     private CreerVueParAppsTaskOption option;
     /** Nom du fichier de suavegarde de l'extraction */
     private File file;
-
-    /** logger composants sans applications */
-    private static final Logger LOGSANSAPP = LogManager.getLogger("sansapp-log");
-    /** logger composants avec application INCONNUE */
-    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
-    /** logger applications non listée dans le référentiel */
-    private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
-
-    private static final short ETAPES = 3;
 
     /*---------- CONSTRUCTEURS ----------*/
 

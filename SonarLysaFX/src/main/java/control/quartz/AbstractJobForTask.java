@@ -3,7 +3,7 @@ package control.quartz;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
-import control.task.LaunchTask;
+import control.task.AbstractLaunchTask;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
@@ -13,7 +13,7 @@ import utilities.enums.Severity;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public abstract class AbstractJobForTask extends LaunchTask implements Job
+public abstract class AbstractJobForTask extends AbstractLaunchTask implements Job
 {
     public static final String CLEFANNEES = "annees";
 

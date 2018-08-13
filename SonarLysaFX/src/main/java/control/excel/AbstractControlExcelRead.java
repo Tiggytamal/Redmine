@@ -42,13 +42,13 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
 {
     /*---------- ATTRIBUTS ----------*/
 
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+    
     /** Ligne de titres de la feuille */
     protected Row titres;
     /** Classe de l'énumération des classes filles */
-    protected Class<T> enumeration;
-    
-    /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    protected Class<T> enumeration; 
 
     /*---------- CONSTRUCTEURS ----------*/
 

@@ -26,6 +26,10 @@ public class FichiersXML implements XML, Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
+    //Constantes statiques
+    private static final String NOMFICHIER = "\\fichiers.xml";
+    private static final String RESOURCE = "/fichiers.xml";
+    
     private Map<String, InfoClarity> mapClarity;
     private Map<String, Application> mapApplis;
     private Map<String, RespService> mapRespService;
@@ -35,8 +39,6 @@ public class FichiersXML implements XML, Modele
     private Map<String, ComposantSonar> mapComposSonar;
 
     private boolean controleOK;
-    private static final String NOMFICHIER = "\\fichiers.xml";
-    private static final String RESOURCE = "/fichiers.xml";
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -69,6 +71,9 @@ public class FichiersXML implements XML, Modele
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public FichiersXML majMapDonnees(TypeFichier typeFichier, Map map)
     {
+        if (map == null)
+            return this;
+        
         switch (typeFichier)
         {
             case APPS:

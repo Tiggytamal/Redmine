@@ -19,11 +19,13 @@ public class Info implements Modele, XML
 {
     /*---------- ATTRIBUTS ----------*/
 
+    // Constantes statiques
+    private static final String NOMFICHIER = "\\info.xml";
+    private static final String RESOURCE = "/info.xml";
+    
     private String pseudo;
     private String motDePasse;
     private String nom;
-    private static final String NOMFICHIER = "\\info.xml";
-    private static final String RESOURCE = "/info.xml";
 
     /*---------- CONSTRUCTEURS ----------*/
 

@@ -25,11 +25,13 @@ public class TrayIconView
 
     /*---------- ATTRIBUTS ----------*/
 
+    // Constantes statiques
+    public static final Image imageBase = Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/sonar.jpg"));
+    public static final Image imageRed = Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/sonarRed.png"));
+    
     private SystemTray tray;
     private TrayIcon trayIcon;
     private Stage stage;
-    public static final Image imageBase = Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/sonar.jpg"));
-    public static final Image imageRed = Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/sonarRed.png"));
 
     /*---------- CONSTRUCTEURS ----------*/
 

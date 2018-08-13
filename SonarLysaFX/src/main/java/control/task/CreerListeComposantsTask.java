@@ -39,7 +39,10 @@ public class CreerListeComposantsTask extends AbstractSonarTask
     @Override
     protected Boolean call() throws Exception
     {
-        return creerListeComposants();
+        Map<String, ComposantSonar> mapSonar = creerListeComposants();
+        
+        sauvegarde(mapSonar);
+        return true;
     }
     
     @Override
@@ -50,7 +53,7 @@ public class CreerListeComposantsTask extends AbstractSonarTask
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private boolean creerListeComposants()
+    private Map<String, ComposantSonar> creerListeComposants()
     {
         // Affichage
         String base = "Création de la liste des composants :\n";
@@ -58,7 +61,7 @@ public class CreerListeComposantsTask extends AbstractSonarTask
         updateProgress(0, -1);
 
         // Récupération des composants Sonar
-        Map<String, ComposantSonar> mapSonar = new HashMap<>();
+        Map<String, ComposantSonar> retour = new HashMap<>();
         @SuppressWarnings("unchecked")
         List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
 
@@ -93,12 +96,21 @@ public class CreerListeComposantsTask extends AbstractSonarTask
             composantSonar.setSecurity((int) Float.parseFloat(composant.getMapMetriques().computeIfAbsent(TypeMetrique.SECURITY, t -> new Metrique(TypeMetrique.SECURITY, "0")).getValue()));
             composantSonar
                     .setVulnerabilites(Integer.parseInt(composant.getMapMetriques().computeIfAbsent(TypeMetrique.VULNERABILITIES, t -> new Metrique(TypeMetrique.VULNERABILITIES, "0")).getValue()));
-            mapSonar.put(composantSonar.getKey(), composantSonar);
+            retour.put(composantSonar.getKey(), composantSonar);
         }
 
         // Sauvegarde des données
+        return retour;
+    }
+    
+    /**
+     * Sauvegarde des données sous forme de fichier XML
+     * 
+     * @param mapSonar
+     */
+    private void sauvegarde(Map<String, ComposantSonar> mapSonar)
+    {
         new ControlXML().saveParam(Statics.fichiersXML.majMapDonnees(TypeFichier.SONAR, mapSonar));
-        return true;
     }
 
     /*---------- ACCESSEURS ----------*/

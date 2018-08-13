@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IWorkItemHandle;
+import com.mchange.util.AssertException;
 
 import application.Main;
 import control.excel.ControlSuivi;
@@ -61,14 +62,17 @@ public class MajSuiviExcelTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private TypeMajSuivi typeMaj;
-    private static final short ETAPES = 6;
-    private static final short DUPLI = 3;
-
+    public static final String TITRE = "Maj Suivi anomalies";
+    
     /** logger applications non listée dans le référentiel */
     private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
     /** logger plantage */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+    
+    private static final short ETAPES = 6;
+    private static final short DUPLI = 3;
+    
+    private TypeMajSuivi typeMaj;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -77,6 +81,15 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         super(ETAPES);
         this.typeMaj = typeMaj;
         annulable = false;
+    }
+    
+    /**
+     * Constructeur pour les tests, ne pas utiliser lance une exception
+     */
+    public MajSuiviExcelTask()
+    {
+        super(ETAPES);
+        throw new AssertException();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

@@ -35,6 +35,10 @@ public class ProprietesXML implements XML, Modele
 {
     /*---------- ATTRIBUTS ----------*/
 
+    // Constantes statiques
+    private static final String NOMFICHIER = "\\proprietes.xml";
+    private static final String RESOURCE = "/proprietes.xml";
+    
     // Map des paramètres
     private Map<Param, String> mapParams;
     private Map<ParamBool, Boolean> mapParamsBool;
@@ -50,9 +54,6 @@ public class ProprietesXML implements XML, Modele
 
     // Map planificateurs
     private Map<TypePlan, Planificateur> mapPlans;
-
-    private static final String NOMFICHIER = "\\proprietes.xml";
-    private static final String RESOURCE = "/proprietes.xml";
 
     /*---------- CONSTRUCTEURS ----------*/
 

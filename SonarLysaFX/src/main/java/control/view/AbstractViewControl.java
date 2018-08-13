@@ -3,7 +3,7 @@ package control.view;
 import java.io.File;
 import java.io.IOException;
 
-import control.task.LaunchTask;
+import control.task.AbstractLaunchTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
@@ -12,14 +12,14 @@ import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
 
-public abstract class AbstractViewControl extends LaunchTask
+public abstract class AbstractViewControl extends AbstractLaunchTask
 {
     /*---------- ATTRIBUTS ----------*/
 
+    protected static final String TITRE = "Fichier Excel";
+    
     @FXML
     protected GridPane backgroundPane;
-
-    protected static final String TITRE = "Fichier Excel";
 
     /*---------- CONSTRUCTEURS ----------*/
 

@@ -28,9 +28,11 @@ public class CellHelper
 {
     /*---------- ATTRIBUTS ----------*/
     
+    // Constantes statiques
+    private static final short SIZEFONT = 12;
+    
     private Workbook wb;
     private CreationHelper ch;
-    private static final short SIZEFONT = 12;
 
     /*---------- CONSTRUCTEURS ----------*/
 

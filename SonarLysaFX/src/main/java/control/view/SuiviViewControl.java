@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 import model.enums.TypeMajSuivi;
 import utilities.TechnicalException;
 
-public class SuiviViewControl extends AbstractViewControl
+public final class SuiviViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 

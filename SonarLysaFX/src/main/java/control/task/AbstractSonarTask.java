@@ -32,9 +32,11 @@ public abstract class AbstractSonarTask extends Task<Boolean>
 {
     /*---------- ATTRIBUTS ----------*/
 
-    protected SonarAPI api;
-    protected static final String RECUPCOMPOSANTS = "Récupération des composants Sonar";
     public static final String TITRE = "Tâche Sonar";
+    
+    protected static final String RECUPCOMPOSANTS = "Récupération des composants Sonar";
+    
+    protected SonarAPI api;
     private StringProperty etape = new SimpleStringProperty(this, "etape", "");
     protected int debut;
     protected int fin;

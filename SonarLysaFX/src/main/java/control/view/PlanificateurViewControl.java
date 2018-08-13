@@ -29,10 +29,14 @@ import view.TrayIconView;
  * 
  * @author ETP8137 - Grégoire Mathon
  */
-public class PlanificateurViewControl extends AbstractViewControl
+public final class PlanificateurViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 
+    // Constantes statiques
+    private static final short COL2 = 2;
+    
+    // Object FXML
     @FXML
     private Button demarrer;
     @FXML
@@ -72,7 +76,6 @@ public class PlanificateurViewControl extends AbstractViewControl
     private TimeSpinner spinner;
     private Planificateur planificateur;
     private final LocalDate today = LocalDate.now();
-    private static final short COL2 = 2;
 
     /*---------- CONSTRUCTEURS ----------*/
 

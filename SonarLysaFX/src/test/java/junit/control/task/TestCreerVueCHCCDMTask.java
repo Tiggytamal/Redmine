@@ -1,36 +1,35 @@
 package junit.control.task;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static utilities.Statics.fichiersXML;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.core.Response.Status;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
-import control.sonar.SonarAPI;
 import control.task.CreerVueCHCCDMTask;
-import de.saxsys.javafx.test.JfxRunner;
 import model.enums.CHCouCDM;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
 
-@RunWith(JfxRunner.class)
 public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
 {
     /*---------- ATTRIBUTS ----------*/
     
     private List<String> annees;
-    private SonarAPI mock;
     
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -40,8 +39,7 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
         annees = new ArrayList<>();
         annees.add("2018");
         handler = new CreerVueCHCCDMTask(annees, CHCouCDM.CDM);
-        mock = Mockito.mock(SonarAPI.class);
-        Whitebox.getField(CreerVueCHCCDMTask.class, "api").set(handler, mock);
+        initAPI(CreerVueCHCCDMTask.class, true);
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -63,23 +61,33 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
     {
         // test du retour avec les méthode mockées. On appel par la méthode call
         assertTrue(Whitebox.invokeMethod(handler, "call"));
+        
+        // Vérification qu'on appele au moins une fois, l'api pour supprimer et créer les vues
+        Mockito.verify(api, Mockito.atLeast(1)).supprimerProjet(Mockito.anyString(), Mockito.anyBoolean());
+        Mockito.verify(api, Mockito.atLeast(1)).creerVue(Mockito.any(Vue.class));
+        Mockito.verify(api, Mockito.atLeast(1)).ajouterSousVue(Mockito.any(Vue.class), Mockito.any(Vue.class));
     }
     
     @Test
     public void testSuppressionVuesMaintenance() throws Exception
     {
         Whitebox.invokeMethod(handler, "suppressionVuesMaintenance", CHCouCDM.CHC, annees);
-        Mockito.verify(mock, Mockito.times(52)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
+        Mockito.verify(api, Mockito.times(52)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
         Whitebox.invokeMethod(handler, "suppressionVuesMaintenance", CHCouCDM.CDM, annees);
-        Mockito.verify(mock, Mockito.times(104)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
+        Mockito.verify(api, Mockito.times(104)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
     }
     
     @Test
-    public void testCreerVuesMaintenance() throws Exception
+    public void testPreparerMapVuesMaintenance() throws Exception
     {
-        PowerMockito.when(mock.creerVue(Mockito.any(Vue.class))).thenReturn(Status.OK);    
         Map<String, String> map = Whitebox.invokeMethod(handler, "recupererEditions", annees);
-        Whitebox.invokeMethod(handler, "creerVueMaintenance", map);
+        Map<String, Set<String>> retour = Whitebox.invokeMethod(handler, "preparerMapVuesMaintenance", map);
+        assertNotNull(retour);
+        assertFalse(retour.isEmpty());
+        for (String key : retour.keySet())
+        {
+            assertTrue(key.contains(CHCouCDM.CDM.toString()));
+        }
     }
     
     @Test
@@ -91,6 +99,24 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
         assertTrue(Whitebox.invokeMethod(handler, methode, CHCouCDM.CHC, "CHC2018"));
         assertFalse(Whitebox.invokeMethod(handler, methode, CHCouCDM.CHC, "CDM2018"));
     }  
+    
+    @Test
+    public void testCreerVuesMaintenance() throws Exception
+    {
+        // Initialisation mock et map d'entrée
+        PowerMockito.when(api.creerVue(Mockito.any(Vue.class))).thenReturn(Status.OK);   
+        Map<String, Set<String>> mapVuesACreer = new HashMap<>();
+        Set<String> hashSet = new HashSet<>();
+        hashSet.add("set1");
+        hashSet.add("set2");
+        mapVuesACreer.put("key1", hashSet);
+        
+        // Appel méthode
+        Whitebox.invokeMethod(handler, "creerVuesMaintenance", mapVuesACreer);
+        
+        Mockito.verify(api, Mockito.times(1)).creerVue(Mockito.any(Vue.class));
+        Mockito.verify(api, Mockito.times(2)).ajouterSousVue(Mockito.any(Vue.class), Mockito.any(Vue.class));      
+    }
     
     @Test
     public void testRecupererEditions() throws Exception
@@ -109,9 +135,7 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
         
         // Appel méthode et controle qu'on a bien supprimé la nouvelle valeur.
         map = Whitebox.invokeMethod(handler, "recupererEditions", annees);
-        assertNull(map.get("2019"));
-        
-        
+        assertNull(map.get("2019"));       
     }
     
     /*---------- METHODES PRIVEES ----------*/

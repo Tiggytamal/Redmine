@@ -4,22 +4,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
-import control.sonar.SonarAPI;
 import control.task.CreerVueDataStageTask;
-import de.saxsys.javafx.test.JfxRunner;
 import model.sonarapi.Vue;
 
-@RunWith(JfxRunner.class)
 public class TestCreerVueDataStageTask extends AbstractTestTask<CreerVueDataStageTask>
 {
-    /*---------- ATTRIBUTS ----------*/
-
-    private SonarAPI mock;
-    
+    /*---------- ATTRIBUTS ----------*/   
     /*---------- CONSTRUCTEURS ----------*/
     
     public TestCreerVueDataStageTask()
@@ -30,9 +23,7 @@ public class TestCreerVueDataStageTask extends AbstractTestTask<CreerVueDataStag
     @Override
     public void init() throws IllegalArgumentException, IllegalAccessException
     {
-        // Mock de l'api Sonar pour bloquer tous les mises à jour
-        mock = Mockito.mock(SonarAPI.class);
-        Whitebox.getField(CreerVueDataStageTask.class, "api").set(handler, mock);
+        initAPI(CreerVueDataStageTask.class, true);
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -45,8 +36,8 @@ public class TestCreerVueDataStageTask extends AbstractTestTask<CreerVueDataStag
         handler.annuler();
         
         // On vérifie que l'on appelle pas supprimer
-        Mockito.verify(mock, Mockito.never()).supprimerProjet(Mockito.any(Vue.class), Mockito.anyBoolean());
-        Mockito.verify(mock, Mockito.never()).supprimerVue(Mockito.any(Vue.class), Mockito.anyBoolean());
+        Mockito.verify(api, Mockito.never()).supprimerProjet(Mockito.any(Vue.class), Mockito.anyBoolean());
+        Mockito.verify(api, Mockito.never()).supprimerVue(Mockito.any(Vue.class), Mockito.anyBoolean());
         
         // Instanciation de vue et appel méthode
         Vue vue = new Vue();
@@ -54,9 +45,8 @@ public class TestCreerVueDataStageTask extends AbstractTestTask<CreerVueDataStag
         handler.annuler();
         
         // On vérifie que l'on appelle les méthodes de suppression 1 fois
-        Mockito.verify(mock, Mockito.times(1)).supprimerProjet(Mockito.any(Vue.class), Mockito.anyBoolean());
-        Mockito.verify(mock, Mockito.times(1)).supprimerVue(Mockito.any(Vue.class), Mockito.anyBoolean());
-        
+        Mockito.verify(api, Mockito.times(1)).supprimerProjet(Mockito.any(Vue.class), Mockito.anyBoolean());
+        Mockito.verify(api, Mockito.times(1)).supprimerVue(Mockito.any(Vue.class), Mockito.anyBoolean());        
     }
     
     @Test
@@ -66,7 +56,7 @@ public class TestCreerVueDataStageTask extends AbstractTestTask<CreerVueDataStag
         // Premier appel simple pour voir que l'on retourne bien true à la fin de la méthode
         assertTrue(Whitebox.invokeMethod(handler, "call"));
         
-        // Spy de l'ahndler pour mock de la méthode isCancelled
+        // Spy de l'ahndler pour api de la méthode isCancelled
         handler = Mockito.spy(handler);
         
         // Test sur le premier appel de isCancelled pour finir la méthode

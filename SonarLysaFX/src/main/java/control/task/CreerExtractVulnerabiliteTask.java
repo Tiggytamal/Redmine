@@ -8,6 +8,8 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mchange.util.AssertException;
+
 import application.Main;
 import control.excel.ControlExtractVul;
 import model.ComposantSonar;
@@ -25,8 +27,9 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
 
     /*---------- ATTRIBUTS ----------*/
 
-    private ControlExtractVul control;
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    
+    private ControlExtractVul control;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -34,6 +37,15 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
     {
         super(TypeVulnerabilite.values().length);
         control = new ControlExtractVul(file);
+    }
+    
+    /**
+     * Constructeur pour les test à ne pas utiliser, lance une exception
+     */
+    public CreerExtractVulnerabiliteTask()
+    {
+        super(TypeVulnerabilite.values().length);
+        throw new AssertException();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

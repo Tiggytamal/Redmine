@@ -66,7 +66,23 @@ import utilities.enums.Severity;
 public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
+    
+    /** logger général */
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    /** logger composants avec application INCONNUE */
+    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
+    // Constantes statiques
+    private static final String SQ = "SUIVI Qualité";
+    private static final String AC = "Anomalies closes";
+    private static final String SNAPSHOT = "SNAPSHOT";
+    private static final String RELEASE = "RELEASE";
+    private static final short CLARITY7 = 7;
+    private static final short CLARITYMINI = 5;
+    private static final short CLARITYMAX = 9;
+    
     // Liste des indices des colonnes
     // Les noms des champs doivent correspondre aux valeurs dans l'énumération TypeCol
     private int colDir;
@@ -93,15 +109,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     private int colDateRes;
     private int colDateMajEtat;
 
-    // Constantes statiques
-    private static final String SQ = "SUIVI Qualité";
-    private static final String AC = "Anomalies closes";
-    private static final String SNAPSHOT = "SNAPSHOT";
-    private static final String RELEASE = "RELEASE";
-    private static final short CLARITY7 = 7;
-    private static final short CLARITYMINI = 5;
-    private static final short CLARITYMAX = 9;
-
     // Liens vers Sonar et RTC
     private String lienslots;
     private String liensAnos;
@@ -115,13 +122,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
-
-    /** logger général */
-    private static final Logger LOGGER = LogManager.getLogger("complet-log");
-    /** logger composants avec application INCONNUE */
-    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
-    /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
     /*---------- CONSTRUCTEURS ----------*/
 

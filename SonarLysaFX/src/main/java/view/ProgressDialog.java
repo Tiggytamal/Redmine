@@ -25,16 +25,16 @@ public class ProgressDialog extends Dialog<Boolean>
 
     /*---------- ATTRIBUTS ----------*/
 
+    // Constantes statiques
+    private static final short GRIDWIDTH = 350;
+    private static final short BASEINSET = 10;
+    private static final short BARWIDTH = 100;
+    
     private ProgressBar bar;
     private ProgressIndicator indicator;
     private Label label;
     private Label stage;
     private AbstractSonarTask task;
-    
-    // Constantes d'affichage
-    private static final short GRIDWIDTH = 350;
-    private static final short BASEINSET = 10;
-    private static final short BARWIDTH = 100;
 
     /*---------- CONSTRUCTEURS ----------*/
 

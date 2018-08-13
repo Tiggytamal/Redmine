@@ -25,12 +25,12 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private int colVersion;
-    private int colLib;
-
     private static final String CHC = "CHC";
     private static final String CDM = "CDM";
     private final LocalDate today = LocalDate.now();
+    
+    private int colVersion;
+    private int colLib;
     
     /*---------- CONSTRUCTEURS ----------*/
 

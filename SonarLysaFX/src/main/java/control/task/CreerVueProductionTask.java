@@ -28,20 +28,21 @@ public class CreerVueProductionTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private String vueKey;
-    private LocalDate dateDebut;
-    private LocalDate dateFin;
     public static final String TITRE = "Vue MEP/TEP";
+    
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+    /** logger général */
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    
+    // Constantes statiques
     private static final short ETAPES = 3;
     private static final short TRIMESTRIEL = 3;
     private static final short MENSUEL = 1;
     
-
-    /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
-
-    /** logger général */
-    private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    private String vueKey;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -65,7 +66,10 @@ public class CreerVueProductionTask extends AbstractSonarTask
     public void annuler()
     {
         if (vueKey != null && !vueKey.isEmpty())
+        {
             api.supprimerProjet(vueKey, true);
+            api.supprimerVue(vueKey, true);
+        }
     }
 
     @Override
@@ -99,7 +103,7 @@ public class CreerVueProductionTask extends AbstractSonarTask
         else if (mapLot.size() == TRIMESTRIEL)
             creerVueTrimestrielle(mapLot);
         else
-            throw new FunctionalException(Severity.ERROR, "Le fichier Excel donné ou les dates fournies ne sont ni mensuels ni trimetriels.");
+            throw new FunctionalException(Severity.ERROR, "Les dates fournies ne sont ni mensuels ni trimetriels.");
         return true;
     }
 
@@ -148,9 +152,7 @@ public class CreerVueProductionTask extends AbstractSonarTask
             {
                 // Création d'une nouvelle date au 1er du mois qui servira du clef à la map.
                 LocalDate clef = LocalDate.of(date.getYear(), date.getMonth(), 1);
-                if (!retour.containsKey(clef))
-                    retour.put(clef, new ArrayList<>());
-                retour.get(clef).add(entry.getValue());
+                retour.computeIfAbsent(clef, k -> new ArrayList<>()).add(entry.getValue());
             }
         }
 

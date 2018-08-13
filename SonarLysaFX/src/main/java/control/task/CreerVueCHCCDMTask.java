@@ -28,10 +28,11 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private List<String> annees;
-    private CHCouCDM chccdm;
     private static final short ETAPES = 3;
     private static final long NBRESEMAINES = 52;
+    
+    private List<String> annees;
+    private CHCouCDM chccdm;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -39,8 +40,7 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
     {
         super(ETAPES);
     }
-    
-    
+
     public CreerVueCHCCDMTask(List<String> annees, CHCouCDM chccdm)
     {
         super(ETAPES);
@@ -58,11 +58,11 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
     {
         return creerVueCHCouCDM();
     }
-    
+
     @Override
     public void annuler()
     {
-        // Pas de traitement d'annulation        
+        // Pas de traitement d'annulation
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -72,7 +72,12 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
         // Traitement depuis le fichier XML
         suppressionVuesMaintenance(chccdm, annees);
 
-        creerVueMaintenance(recupererEditions(annees));
+        Map<String, String> editions = recupererEditions(annees);
+
+        Map<String, Set<String>> mapVues = preparerMapVuesMaintenance(editions);
+
+        creerVuesMaintenance(mapVues);
+
         return true;
     }
 
@@ -108,13 +113,18 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
     }
 
     /**
-     * Crée les vues CHC ou CDM depuis Sonar et le fichier XML. {@code true} pour les vues CDM et {@code false} pour les vues CHC
+     * Prépare la liste des vues CHC ou CDM depuis le fichier XML en filtrant selon le type d'édition choisi.
      * 
-     * @param cdm
+     * @param mapEditions
+     *            Map des éditions provenant de récupérer Edition <br/>
+     *         <b>clé</b> = numéro édition XX.YY.ZZ.AA - <b>valeur</b> = CHC(_CDM)YYYY-Sww
+     *         
+     * @return La map des vues sous forme de HashSet pour ne pas avoir de doublon de lot. <br>
+     *          <b>clé</b> : Edition - <b>valeur</b> : set des lot de l'édition 
      */
-    private void creerVueMaintenance(Map<String, String> mapEditions)
+    private Map<String, Set<String>> preparerMapVuesMaintenance(Map<String, String> mapEditions)
     {
-        Map<String, Set<String>> mapVuesACreer = new HashMap<>();
+        Map<String, Set<String>> retour = new HashMap<>();
 
         Map<String, List<ComposantSonar>> mapProjets = recupererComposantsSonarVersion(Matiere.JAVA);
 
@@ -144,22 +154,34 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
                 if (!controle(chccdm, keyCHC))
                     continue;
 
-                // AJout à la map et création de la clef au besoin
-                if (!mapVuesACreer.containsKey(keyCHC))
-                    mapVuesACreer.put(keyCHC, new HashSet<>());
-                mapVuesACreer.get(keyCHC).add(compo.getLot());
+                // AJout à la map et initialisation HashSet au besoin
+                retour.computeIfAbsent(keyCHC, k -> new HashSet<>()).add(compo.getLot());
             }
         }
 
-        creerVues(mapVuesACreer);
+        return retour;
     }
 
+    /**
+     * 
+     * @param chccdm
+     *          Type d'édition à prendre en compte
+     * @param keyCHC
+     *          Valeur de l'édition - CHC(_CDM)YYYY-Sww
+     * @return
+     *         vrai si la clef contient CDM pour le CDM ou si la clef ne contient pas CDM pour les CHC.
+     *      
+     */
     private boolean controle(CHCouCDM chccdm, String keyCHC)
     {
         return (chccdm == CHCouCDM.CDM && keyCHC.contains("CDM")) || (chccdm == CHCouCDM.CHC && !keyCHC.contains("CDM"));
     }
 
-    private void creerVues(Map<String, Set<String>> mapVuesACreer)
+    /**
+     * 
+     * @param mapVuesACreer
+     */
+    private void creerVuesMaintenance(Map<String, Set<String>> mapVuesACreer)
     {
         String base = "Création des vues :" + NL;
         etapePlus();
@@ -194,9 +216,11 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
     /**
      * Récupération des éditions CDM et CHC depuis les fichiers Excel, selon le type de vue et les annèes
      * 
-     * @param cdm
-     * @param annees
-     * @return
+     * @param annees <br/>
+     *            Liste des annèes à prendre en compte (année en cours et/ou annèe suivante et/ou annèe précedente
+     *            
+     * @return La map provenant du fichier Excel avec suppression des annèe non désirées. <br/>
+     *         <b>clé</b> = numéro édition XX.YY.ZZ.AA - <b>valeur</b> = CHC(_CDM)YYYY-Sww
      */
     private Map<String, String> recupererEditions(List<String> annees)
     {

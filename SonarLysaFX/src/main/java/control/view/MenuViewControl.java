@@ -31,10 +31,14 @@ import utilities.TechnicalException;
 import utilities.enums.Severity;
 import view.ConnexionDialog;
 
-public class MenuViewControl extends AbstractViewControl
+public final class MenuViewControl extends AbstractViewControl
 {
     /* ---------- ATTIBUTS ---------- */
 
+    // Constantes statiques
+    private static final short WIDTHALERT = 640;
+    private static final short HEIGHTALERT = 480;
+    
     /** Element du ménu lançant les contrôles mensuels */
     @FXML
     private MenuItem mensuel;
@@ -70,9 +74,6 @@ public class MenuViewControl extends AbstractViewControl
     private HBox box;
 
     private BorderPane border;
-    
-    private static final short WIDTHALERT = 640;
-    private static final short HEIGHTALERT = 480;
 
     /*---------- CONSTRUCTEURS ----------*/
 

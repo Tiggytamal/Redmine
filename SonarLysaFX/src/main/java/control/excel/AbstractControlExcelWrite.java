@@ -18,11 +18,11 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
 {
     /*---------- ATTRIBUTS ----------*/
     
-    /** Classe de l'énumération des classes filles */
-    protected Class<T> enumeration;
-    
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    
+    /** Classe de l'énumération des classes filles */
+    protected Class<T> enumeration;
     
     /*---------- CONSTRUCTEURS ----------*/
     

@@ -17,22 +17,18 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import com.mchange.util.AssertException;
 
 import control.rtc.ControlRTC;
-import control.sonar.SonarAPI;
 import control.task.CreerVueParAppsTask;
-import de.saxsys.javafx.test.JfxRunner;
 import model.enums.CreerVueParAppsTaskOption;
 import model.sonarapi.Projet;
 import utilities.Statics;
 import utilities.TechnicalException;
 
-@RunWith(JfxRunner.class)
 public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTask>
 {
     /*---------- ATTRIBUTS ----------*/
@@ -42,10 +38,12 @@ public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTas
     /*---------- CONSTRUCTEURS ----------*/
     
     @Before
-    public void init()
+    public void init() throws IllegalAccessException
     {
         file = new File(Statics.RESSTEST + "testExtract.xlsx");
-        ControlRTC.INSTANCE.connexion();    
+        ControlRTC.INSTANCE.connexion();  
+        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIER, file);  
+        initAPI(CreerVueParAppsTask.class, true);
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -127,12 +125,11 @@ public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTas
     public void testCreerVueParApplicationVueSeul() throws Exception
     {    
         // Intialisation handler et mock SonarAPI pour ne pas créeer de vue ni les supprimer.
-        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.VUE, file);     
-        SonarAPI mock = Mockito.mock(SonarAPI.class);
+        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.VUE, file);  
+        initAPI(CreerVueParAppsTask.class, true);
         List<Projet> retour = new ArrayList<>();
         retour.add(new Projet("id", "key", "nom", null, null, null));
-        Mockito.doReturn(retour).when(mock).getVuesParNom("APPLI MASTER ");
-        Whitebox.getField(CreerVueParAppsTask.class, "api").set(handler, mock);
+        Mockito.doReturn(retour).when(api).getVuesParNom("APPLI MASTER ");
         
         assertTrue(Whitebox.invokeMethod(handler, "call"));
     }

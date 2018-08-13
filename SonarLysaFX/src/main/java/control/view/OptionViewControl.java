@@ -43,7 +43,7 @@ import view.ParamListView;
 import view.ParamTextView;
 import view.ParamView;
 
-public class OptionViewControl extends AbstractViewControl
+public final class OptionViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 

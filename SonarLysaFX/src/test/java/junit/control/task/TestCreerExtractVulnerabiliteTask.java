@@ -10,11 +10,9 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.reflect.Whitebox;
 
 import control.task.CreerExtractVulnerabiliteTask;
-import de.saxsys.javafx.test.JfxRunner;
 import model.ComposantSonar;
 import model.ModelFactory;
 import model.Vulnerabilite;
@@ -22,7 +20,6 @@ import model.enums.TypeVulnerabilite;
 import model.sonarapi.Issue;
 import utilities.Statics;
 
-@RunWith(JfxRunner.class)
 public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExtractVulnerabiliteTask>
 {
     /*---------- ATTRIBUTS ----------*/

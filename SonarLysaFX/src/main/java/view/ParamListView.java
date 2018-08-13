@@ -31,12 +31,14 @@ public class ParamListView extends VBox
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private ParamSpec param;
-    private ListView<String> listView;
-    private TextField valeurField;
+    // Constantes statiques
     private static final short VIEWMINI = 20;
     private static final short BASEPADDING = 10;
     private static final short FIELDWIDTH = 150;
+    
+    private ParamSpec param;
+    private ListView<String> listView;
+    private TextField valeurField;
 
     /*---------- CONSTRUCTEURS ----------*/
 
