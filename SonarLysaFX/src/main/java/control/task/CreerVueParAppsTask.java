@@ -17,13 +17,16 @@ import org.apache.logging.log4j.Logger;
 
 import application.Main;
 import control.excel.ControlAppsW;
+import control.excel.ControlPbApps;
 import control.excel.ExcelFactory;
 import control.mail.ControlMail;
 import control.xml.ControlXML;
 import model.Application;
+import model.CompoPbApps;
 import model.ComposantSonar;
 import model.enums.CreerVueParAppsTaskOption;
 import model.enums.TypeColApps;
+import model.enums.TypeColPbApps;
 import model.enums.TypeInfoMail;
 import model.enums.TypeMail;
 import model.sonarapi.Projet;
@@ -37,16 +40,16 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     /*---------- ATTRIBUTS ----------*/
 
     public static final String TITRE = "Vues par Application";
-    
+
     /** logger composants sans applications */
     private static final Logger LOGSANSAPP = LogManager.getLogger("sansapp-log");
     /** logger composants avec application INCONNUE */
     private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
     /** logger applications non listée dans le référentiel */
     private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
-    
+
     private static final short ETAPES = 3;
-    
+
     /** Nombre de composants avec application inconnues */
     private int inconnues;
     /** Controleur Mails */
@@ -55,6 +58,8 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     private Set<Application> applisOpenSonar;
     /** Map de toutes les apllications */
     private Map<String, Application> applications;
+    /** Liste des composants avec un problème au niveau du cide application */
+    private List<ComposantSonar> composPbAppli;
     /** 2numération des options de la tâches */
     private CreerVueParAppsTaskOption option;
     /** Nom du fichier de suavegarde de l'extraction */
@@ -70,6 +75,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
         applications = fichiersXML.getMapApplis();
         controlMail = new ControlMail();
         applisOpenSonar = new HashSet<>();
+        composPbAppli = new ArrayList<>();
         this.option = option;
         this.file = file;
 
@@ -84,11 +90,11 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     {
         return creerVueParApplication();
     }
-    
+
     @Override
     public void annuler()
     {
-        // Pas de traitement d'annulation        
+        // Pas de traitement d'annulation
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -98,9 +104,9 @@ public class CreerVueParAppsTask extends AbstractSonarTask
         // 1 .Création de la liste des composants par application
         @SuppressWarnings("unchecked")
         Map<String, List<ComposantSonar>> mapApplication = Utilities.recuperation(Main.DESER, Map.class, "mapApplis.ser", this::controlerSonarQube);
-        
+
         // On ne crée pas les vues avec l'option fichier
-        if (option == CreerVueParAppsTaskOption.FICHIER)
+        if (option == CreerVueParAppsTaskOption.FICHIERS)
             return false;
 
         // 2. Suppression des vues existantes
@@ -123,7 +129,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             updateMessage(base + projet.getNom());
             updateProgress(i, listeVuesExistantes.size());
         }
-        
+
         // 3. Creation des nouvelles vues
 
         // Message
@@ -169,13 +175,14 @@ public class CreerVueParAppsTask extends AbstractSonarTask
 
         // On ne crée pas le fichier avec l'option VUE
         if (option != CreerVueParAppsTaskOption.VUE)
-            creerFichierExtraction();
+            creerFichiersExtraction();
 
         return retour;
     }
 
     /**
-     * Crée une map de toutes les apllications dans Sonar avec pour chacunes la liste des composants liés.
+     * Crée une map de toutes les applications dans Sonar avec pour chacunes la liste des composants liés.
+     * Enregistre aussi la liste des composants avec problème sur el code application
      *
      * @param mapCompos
      * @return
@@ -222,8 +229,11 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             {
                 LOGSANSAPP.warn("Application non renseignée - Composant : " + compo.getNom());
                 controlMail.addInfo(TypeInfoMail.COMPOSANSAPP, compo.getNom(), null);
+                composPbAppli.add(compo);
             }
         }
+        
+        
         LOGINCONNUE.info("Nombre d'applis inconnues : " + inconnues);
 
         // Sauvegarde des applications après mise à jour des données
@@ -236,6 +246,8 @@ public class CreerVueParAppsTask extends AbstractSonarTask
      *
      * @param application
      *            Application enregistrée pour le composant dans Sonar.
+     * @param composPbAppli
+     *            Liste des composants avec un problème sur le nom de l'application.
      * @param nom
      *            Nom du composant Sonar.
      * @param inconnues
@@ -244,45 +256,70 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     {
         String nom = compo.getNom();
 
+        // Gestion des composants avec application INCONNUE
         if (Statics.INCONNUE.equalsIgnoreCase(application))
         {
             LOGINCONNUE.warn("Application : INCONNUE - Composant : " + nom);
             inconnues++;
+            composPbAppli.add(compo);
             return true;
         }
 
+        // Gestion des composants avec application connue
         if (applications.containsKey(application))
         {
             Application app = applications.get(application);
-            if (app.isActif())
+            if (!app.isActif())
             {
-                app.ajouterldcSonar(compo.getLdc());
-                app.majValSecurite(compo.getSecurity());
-                app.ajouterVulnerabilites(compo.getVulnerabilites());
-                applisOpenSonar.add(app);
-                return true;
+                LOGNONLISTEE.warn("Application obsolète : " + application + " - composant : " + nom);
+                controlMail.addInfo(TypeInfoMail.APPLIOBSOLETE, nom, application);
             }
-
-            LOGNONLISTEE.warn("Application obsolète : " + application + " - composant : " + nom);
-            controlMail.addInfo(TypeInfoMail.APPLIOBSOLETE, nom, application);
-            return false;
+            app.ajouterldcSonar(compo.getLdc());
+            app.majValSecurite(compo.getSecurity());
+            app.ajouterVulnerabilites(compo.getVulnerabilites());
+            applisOpenSonar.add(app);
+            return true;
         }
+        
+        // Gestion des composants sans application
         LOGNONLISTEE.warn("Application n'existant pas dans le référenciel : " + application + " - composant : " + nom);
         controlMail.addInfo(TypeInfoMail.APPLINONREF, nom, application);
+        composPbAppli.add(compo);
         return false;
     }
 
     /**
      * Permet d'enregistrer la liste des applications dans le fichier excel.
      */
-    private void creerFichierExtraction()
+    private void creerFichiersExtraction()
     {
         if (option == CreerVueParAppsTaskOption.VUE)
             throw new TechnicalException("Control.task.CreerVueParAppsTask.creerFichierExtraction - Demande de création d'extraction sans fichier", null);
 
+        creerFichierSonar();
+        creerFichierPbApps();
+    }
+
+    private void creerFichierSonar()
+    {
         ControlAppsW control = ExcelFactory.getWriter(TypeColApps.class, file);
         control.creerfeuilleSonar(applisOpenSonar);
         control.write();
+    }
+    
+    private void creerFichierPbApps()
+    {
+        ControlPbApps control = ExcelFactory.getWriter(TypeColPbApps.class, file);
+        
+        List<CompoPbApps> composPbApps = new ArrayList<>();
+        
+        for (ComposantSonar compo : composPbAppli)
+        {
+            
+        }
+        
+        control.creerfeuille(applisOpenSonar);
+        control.write();        
     }
 
     /*---------- ACCESSEURS ----------*/

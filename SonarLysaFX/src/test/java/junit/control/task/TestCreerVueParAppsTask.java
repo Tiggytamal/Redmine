@@ -42,7 +42,7 @@ public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTas
     {
         file = new File(Statics.RESSTEST + "testExtract.xlsx");
         ControlRTC.INSTANCE.connexion();  
-        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIER, file);  
+        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIERS, file);  
         initAPI(CreerVueParAppsTask.class, true);
     }
     
@@ -59,13 +59,13 @@ public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTas
     public void testConstructeurException2()
     {
         // Exception car demande création de fichier et pas de fichier en entrée
-        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIER, null);
+        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIERS, null);
     }
     
     @Test
     public void testCreerVueParApplicationExcelSeul() throws Exception
     {
-        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIER, file); 
+        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIERS, file); 
         assertFalse(Whitebox.invokeMethod(handler, "call"));
         
         Workbook wb = WorkbookFactory.create(file);

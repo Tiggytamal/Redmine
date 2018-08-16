@@ -20,6 +20,6 @@ public class TestCreerVueParAppsTaskOption implements TestEnums
     public void testConstructeur()
     {
         assertEquals(CreerVueParAppsTaskOption.ALL, CreerVueParAppsTaskOption.valueOf(CreerVueParAppsTaskOption.ALL.toString()));
-        assertEquals(CreerVueParAppsTaskOption.FICHIER, CreerVueParAppsTaskOption.valueOf(CreerVueParAppsTaskOption.FICHIER.toString()));
+        assertEquals(CreerVueParAppsTaskOption.FICHIERS, CreerVueParAppsTaskOption.valueOf(CreerVueParAppsTaskOption.FICHIERS.toString()));
     }
 }

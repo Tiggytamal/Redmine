@@ -42,7 +42,7 @@ public final class VuesApplisViewControl extends AbstractViewControl
         else if (radioFichier.isSelected())
         {
             File file = saveFileFromFileChooser(TITRE);
-            startTask(new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIER, file), null);
+            startTask(new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIERS, file), null);
         }
         else if (radioAll.isSelected())
         {

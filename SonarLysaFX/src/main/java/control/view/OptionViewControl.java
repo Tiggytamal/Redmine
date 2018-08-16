@@ -103,7 +103,7 @@ public final class OptionViewControl extends AbstractViewControl
      * 
      * @param ov
      */
-    protected void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
+    public void switchPanel(ObservableValue<? extends TreeItem<String>> ov)
     {
         ObservableList<Node> root = rightSide.getChildren();
         root.clear();

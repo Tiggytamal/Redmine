@@ -267,6 +267,10 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <value>testAppsW2.xlsx</value>
         </entry>
         <entry>
+            <key>NOMFICHIERPBAPPLI</key>
+            <value>Composants Pb Code Appli.xlsx</value>
+        </entry>
+        <entry>
             <key>ABSOLUTEPATHHISTO</key>
             <value>src/test/resources/</value>
         </entry>

@@ -862,7 +862,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             controlMail.addInfo(TypeInfoMail.LOTMAJ, anoLot, etatLot.toString());
 
             // Si on arrive en VMOA ou que l'on passe à livré à l'édition directement, on met l'anomalie à relancer
-            if (etatLot == EtatLot.VMOA || (etatLot != EtatLot.VMOA && etatLot == EtatLot.EDITION))
+            if (etatLot == EtatLot.VMOA || (ano.getEtatLot() != EtatLot.VMOA && etatLot == EtatLot.EDITION))
             {
                 ano.setAction(TypeAction.RELANCER);
                 controlMail.addInfo(TypeInfoMail.ANOARELANCER, anoLot, null);
