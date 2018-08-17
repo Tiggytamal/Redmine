@@ -5,9 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -304,7 +304,7 @@ public class TestSonarAPI extends JunitBase
     @Test (expected = IllegalArgumentException.class)
     public void testTestVueExisteException2()
     {
-        handler.testVueExiste("");
+        handler.testVueExiste(Statics.EMPTY);
     }
 
     @Test

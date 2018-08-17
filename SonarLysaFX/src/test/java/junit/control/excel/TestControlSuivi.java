@@ -4,9 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.powermock.reflect.Whitebox.invokeMethod;
 import static org.powermock.reflect.Whitebox.getField;
 import static org.powermock.reflect.Whitebox.getMethod;
+import static org.powermock.reflect.Whitebox.invokeMethod;
+import static utilities.Statics.EMPTY;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -213,7 +214,7 @@ public class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, Control
         String anoLot = "123456";
 
         // Test 1 = Vert
-        ano.setEtat("");
+        ano.setEtat(EMPTY);
         ano.setNumeroAnomalie(1);
         ano.calculTraitee();
         IndexedColors couleur = invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
@@ -392,7 +393,7 @@ public class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, Control
     public void testAjouterLiensException3() throws Exception
     {
         Cell cell = wb.createSheet().createRow(0).createCell(0);
-        String baseAdresse = "";
+        String baseAdresse = EMPTY;
         String variable = "var";
         invokeMethod(handler, AJOUTERLIENS, cell, baseAdresse, variable);
     }
@@ -433,7 +434,7 @@ public class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, Control
         invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
         assertEquals(1, sheet.getPhysicalNumberOfRows());
         assertEquals(today, ano1.getDateDetection());
-        assertEquals("", ano1.getSecurite());
+        assertEquals(EMPTY, ano1.getSecurite());
         assertEquals(SNAPSHOT, ano1.getVersion());
 
         // Test 3. securite / release
@@ -535,11 +536,11 @@ public class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, Control
 
         // Test 1 nulle
         invokeMethod(handler, methode, ano);
-        assertEquals("", ano.getSecurite());
+        assertEquals(EMPTY, ano.getSecurite());
 
         // Test 2 empty
-        ano.setService("");
-        assertEquals("", ano.getSecurite());
+        ano.setService(EMPTY);
+        assertEquals(EMPTY, ano.getSecurite());
 
         // Test 3 ok
         ano.setService("Projets Credits");

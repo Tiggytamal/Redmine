@@ -59,7 +59,7 @@ public class MensuelViewControl extends AbstractViewControl
     @Override
     public void afficher(ActionEvent event)
     {
-        String id = "";
+        String id = EMPTY;
         Object source = event.getSource();
         if (source instanceof RadioButton)
             id = ((RadioButton) source).getId();

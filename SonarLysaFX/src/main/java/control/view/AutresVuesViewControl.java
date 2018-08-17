@@ -10,6 +10,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
+import utilities.Statics;
 import utilities.TechnicalException;
 
 public final class AutresVuesViewControl extends AbstractViewControl
@@ -71,7 +72,7 @@ public final class AutresVuesViewControl extends AbstractViewControl
     protected void afficher(ActionEvent event)
     {
         Object source = event.getSource();
-        String id = "";
+        String id = Statics.EMPTY;
         if (source instanceof RadioButton)
         {
             selectPane.getChildren().clear();

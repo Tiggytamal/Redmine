@@ -71,7 +71,7 @@ public class AutresVuesViewControl extends AbstractViewControl
     protected void afficher(ActionEvent event)
     {
         Object source = event.getSource();
-        String id = "";
+        String id = EMPTY;
         if (source instanceof RadioButton)
         {
             selectPane.getChildren().clear();

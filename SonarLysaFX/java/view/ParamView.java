@@ -45,7 +45,7 @@ public class ParamView extends VBox implements ViewXML<Param, TextField>
         box.getChildren().add(label);
 
         // TextField
-        field = new TextField(texte == null ? "" : texte.replace("\\\\", "\\"));
+        field = new TextField(texte == null ? EMPTY : texte.replace("\\\\", "\\"));
         HBox.setHgrow(field, Priority.ALWAYS);
         box.getChildren().add(field);
 

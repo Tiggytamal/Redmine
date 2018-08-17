@@ -140,7 +140,7 @@ public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTas
         // Appel de la méthode avec une option de création de vue uniquement
         handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.VUE, null);
         
-        Whitebox.invokeMethod(handler, "creerFichierExtraction");
+        Whitebox.invokeMethod(handler, "creerFichiersExtraction");
     }
     
     /*---------- METHODES PRIVEES ----------*/

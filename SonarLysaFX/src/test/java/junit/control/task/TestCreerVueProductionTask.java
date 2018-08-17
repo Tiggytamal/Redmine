@@ -13,6 +13,7 @@ import org.powermock.reflect.Whitebox;
 
 import control.task.CreerVueProductionTask;
 import model.sonarapi.Vue;
+import utilities.Statics;
 
 public class TestCreerVueProductionTask extends AbstractTestTask<CreerVueProductionTask>
 {
@@ -40,7 +41,7 @@ public class TestCreerVueProductionTask extends AbstractTestTask<CreerVueProduct
         Mockito.verify(api, Mockito.never()).supprimerVue(Mockito.anyString(), Mockito.anyBoolean());
         
         // Instanciation de vueKey à vide
-        Whitebox.getField(CreerVueProductionTask.class, "vueKey").set(handler, "");       
+        Whitebox.getField(CreerVueProductionTask.class, "vueKey").set(handler, Statics.EMPTY);       
         handler.annuler();
         
         // On vérifie que l'on appelle les méthodes de suppression 1 fois

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.EMPTY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +46,11 @@ public class TestVue
         assertFalse(Vue.controleVue(vue));
         vue = new Vue(null, null);
         assertFalse(Vue.controleVue(vue));
-        vue.setKey("");
+        vue.setKey(EMPTY);
         assertFalse(Vue.controleVue(vue));
         vue.setKey("key");
         assertFalse(Vue.controleVue(vue));
-        vue.setName("");
+        vue.setName(EMPTY);
         assertFalse(Vue.controleVue(vue));
         vue.setName("Name");
         assertTrue(Vue.controleVue(vue));

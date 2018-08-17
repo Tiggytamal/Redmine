@@ -253,7 +253,7 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
         Cell cell = row.getCell(cellIndex, MissingCellPolicy.CREATE_NULL_AS_BLANK);
         if (cell.getCellTypeEnum() == CellType.STRING)
             return cell.getStringCellValue();
-        return "";
+        return EMPTY;
     }
 
     /**
@@ -309,7 +309,7 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
                 return value.toString();
             return value.getStringValue();
         }
-        return "";
+        return EMPTY;
     }
 
     /**

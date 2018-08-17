@@ -24,6 +24,9 @@ import control.xml.ControlXML;
 import model.Application;
 import model.CompoPbApps;
 import model.ComposantSonar;
+import model.ControlModelInfo;
+import model.LotSuiviRTC;
+import model.ModelFactory;
 import model.enums.CreerVueParAppsTaskOption;
 import model.enums.TypeColApps;
 import model.enums.TypeColPbApps;
@@ -49,6 +52,8 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
 
     private static final short ETAPES = 3;
+    /** compo sans lot */
+    private static final String COMPOSANSLOT = "Composant sans numéro de lot";
 
     /** Nombre de composants avec application inconnues */
     private int inconnues;
@@ -309,16 +314,37 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     
     private void creerFichierPbApps()
     {
-        ControlPbApps control = ExcelFactory.getWriter(TypeColPbApps.class, file);
+        ControlPbApps control = ExcelFactory.getWriter(TypeColPbApps.class, new File("testTest1.xlsx"));
         
-        List<CompoPbApps> composPbApps = new ArrayList<>();
+        List<CompoPbApps> listePbApps = new ArrayList<>();
         
         for (ComposantSonar compo : composPbAppli)
         {
+            CompoPbApps pbApps = ModelFactory.getModel(CompoPbApps.class);
             
+            // Infos depuis le composant
+            pbApps.setCodeComposant(compo.getNom());
+            pbApps.setCodeAppli(compo.getAppli());
+            if (compo.getLot().isEmpty())
+            {
+                pbApps.setLotRTC(COMPOSANSLOT);
+                listePbApps.add(pbApps);
+                continue;
+            }
+            pbApps.setLotRTC(compo.getLot());
+            
+            //  CPI Lot depuis la map RTC
+            LotSuiviRTC lotSuiviRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLot());
+            pbApps.setCpiLot(lotSuiviRTC.getCpiProjet());
+            
+            // Departement, service et chef de service depuis la map Clarity
+            new ControlModelInfo().controleClarity(pbApps, lotSuiviRTC.getProjetClarity());         
+            
+            listePbApps.add(pbApps);
         }
         
-        control.creerfeuille(applisOpenSonar);
+        control.creerfeuille(listePbApps);
+        
         control.write();        
     }
 

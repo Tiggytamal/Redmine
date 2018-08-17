@@ -1,5 +1,7 @@
 package model;
 
+import utilities.Statics;
+
 /**
  * Représente la classe mère des classes de modèle
  * 
@@ -11,6 +13,6 @@ public interface Modele
 
     public default String getString(String val)
     {
-        return val == null ? "" : val;
+        return val == null ? Statics.EMPTY : val;
     }
 }

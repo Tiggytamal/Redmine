@@ -159,7 +159,7 @@ public class OptionViewControl extends AbstractViewControl
     @FXML
     public void chargerFichier(ActionEvent event)
     {
-        String id = "";
+        String id = EMPTY;
         Object source = event.getSource();
         if (source instanceof Node)
             id = ((Node) source).getId();
@@ -293,7 +293,7 @@ public class OptionViewControl extends AbstractViewControl
         // Affichage de la liste des paramètres
         for (Param param : Param.values())
         {
-            ParamView pv = new ParamView(param, mapParams.computeIfAbsent(param, p -> ""));
+            ParamView pv = new ParamView(param, mapParams.computeIfAbsent(param, p -> EMPTY));
             paramsBox.getChildren().add(pv);
         }
 

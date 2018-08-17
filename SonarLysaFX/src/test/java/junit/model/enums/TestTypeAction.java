@@ -1,6 +1,7 @@
 package junit.model.enums;
 
 import static org.junit.Assert.assertEquals;
+import static utilities.Statics.EMPTY;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -48,9 +49,9 @@ public class TestTypeAction implements TestEnums
         assertEquals(TypeAction.VIDE, TypeAction.from("\0A relancer"));
         assertEquals("A relancer", TypeAction.RELANCER.getValeur());
         assertEquals(TypeAction.VIDE, TypeAction.from("inconnu"));
-        assertEquals("", TypeAction.VIDE.getValeur());
+        assertEquals(EMPTY, TypeAction.VIDE.getValeur());
 
-        assertEquals(TypeAction.VIDE, TypeAction.from(""));
+        assertEquals(TypeAction.VIDE, TypeAction.from(EMPTY));
     }
 
     @Test

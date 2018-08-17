@@ -44,7 +44,7 @@ public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements V
         box.getChildren().add(label);
 
         // TextField
-        field = new TextField(texte == null ? "" : texte);
+        field = new TextField(texte == null ? EMPTY : texte);
         HBox.setHgrow(field, Priority.ALWAYS);
         box.getChildren().add(field);
 

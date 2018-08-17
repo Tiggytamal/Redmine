@@ -1,5 +1,6 @@
 package control.view;
 
+import static utilities.Statics.EMPTY;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
@@ -27,12 +28,12 @@ import javafx.stage.StageStyle;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
-import model.enums.TypeColR;
 import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
 import model.enums.TypeColPic;
+import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
 import model.enums.TypeKey;
 import model.enums.TypeParamSpec;
@@ -159,7 +160,7 @@ public final class OptionViewControl extends AbstractViewControl
     @FXML
     public void chargerFichier(ActionEvent event)
     {
-        String id = "";
+        String id = EMPTY;
         Object source = event.getSource();
         if (source instanceof Node)
             id = ((Node) source).getId();
@@ -291,7 +292,7 @@ public final class OptionViewControl extends AbstractViewControl
         // Affichage de la liste des paramètres
         for (Param param : Param.values())
         {
-            ParamView pv = new ParamView(param, mapParams.computeIfAbsent(param, p -> ""));
+            ParamView pv = new ParamView(param, mapParams.computeIfAbsent(param, p -> EMPTY));
             paramsBox.getChildren().add(pv);
         }
 

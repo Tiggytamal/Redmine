@@ -3,10 +3,10 @@ package junit.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
-import junit.JunitBase;
 import model.InfoMail;
 import model.ModelFactory;
 
@@ -17,20 +17,10 @@ import model.ModelFactory;
  * @since 1.0
  * 
  */
-public class TestInfoMail extends JunitBase
+public class TestInfoMail extends AbstractTestModel<InfoMail>
 {
     /*---------- ATTRIBUTS ----------*/
-    
-    private InfoMail handler;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-    
-    @Override
-    public void init() throws Exception
-    {
-        handler = ModelFactory.getModel(InfoMail.class);
-    }
-    
+    /*---------- CONSTRUCTEURS ----------*/    
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
@@ -49,7 +39,7 @@ public class TestInfoMail extends JunitBase
         // Passage par tous les tests de la méthode Equals
         assertTrue(handler.equals(handler));
         assertFalse(handler.equals(null));
-        assertFalse(handler.equals(""));
+        assertFalse(handler.equals(EMPTY));
         InfoMail objet = ModelFactory.getModelWithParams(InfoMail.class, "lot", "infoSupp");
         assertFalse(handler.equals(objet));
         handler.setInfoSupp("Infosupp2");
@@ -80,7 +70,7 @@ public class TestInfoMail extends JunitBase
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getLot());
+        assertEquals(EMPTY, handler.getLot());
         
         // Test setter et getter
         String lot = "Lot";
@@ -92,7 +82,7 @@ public class TestInfoMail extends JunitBase
     public void testGetInfoSupp()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getInfoSupp());
+        assertEquals(EMPTY, handler.getInfoSupp());
         
         // Test setter et getter
         String infoSupp = "infoSupp";

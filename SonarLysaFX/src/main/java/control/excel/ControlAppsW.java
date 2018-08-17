@@ -1,5 +1,7 @@
 package control.excel;
 
+import static utilities.Statics.EMPTY;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
 
     private static final String APPLIGEREES = "Périmètre Couverts SonarQbe";
     private static final String REFAPPLIS = "Ref CodeApps detaillés";
-    
+
     private int colCode;
     private int colActif;
     private int colLib;
@@ -56,7 +58,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     ControlAppsW(File sortie)
     {
         super(sortie);
-        
+
         // Création des deux feuilles du fichier Excel
         wb.createSheet(APPLIGEREES);
         wb.createSheet(REFAPPLIS);
@@ -140,7 +142,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     {
         // Récupération de la feuille venant du fichier fourni.
         Sheet sheetbase = null;
-        File file = new File (Statics.proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + Statics.proprietesXML.getMapParams().get(Param.NOMFICHIERAPPLI));
+        File file = new File(Statics.proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + Statics.proprietesXML.getMapParams().get(Param.NOMFICHIERAPPLI));
         try (Workbook wb2 = WorkbookFactory.create(file))
         {
             sheetbase = wb2.getSheet(REFAPPLIS);
@@ -152,20 +154,20 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
         }
 
         Sheet sheetFinale = wb.getSheet(REFAPPLIS);
-        
+
         // Récupération index de la colonne des code appli du fichier de base
         Row row = sheetbase.getRow(0);
         int colCodeBase = 0;
-        
+
         // Parcours de la première ligne, calcul de l'index et arrêt de la boucle.
-        for (int i =0; i < row.getLastCellNum(); i++)
+        for (int i = 0; i < row.getLastCellNum(); i++)
         {
             Cell cell = row.getCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK);
             if ("Code".equals(cell.getStringCellValue()))
             {
                 colCodeBase = cell.getColumnIndex();
                 break;
-            }               
+            }
         }
 
         for (Iterator<Row> iter = sheetbase.iterator(); iter.hasNext();)
@@ -185,7 +187,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
 
             // Test si l'application est présente dans les applications SonarQube. On protège si le nom de l'application est une valeur numérique
             Cell cell = base.getCell(colCodeBase, MissingCellPolicy.CREATE_NULL_AS_BLANK);
-            String value = "";
+            String value = EMPTY;
             if (cell.getCellTypeEnum() == CellType.STRING)
                 value = cell.getStringCellValue();
             else if (cell.getCellTypeEnum() == CellType.NUMERIC)

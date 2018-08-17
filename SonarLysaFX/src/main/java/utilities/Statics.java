@@ -69,6 +69,8 @@ public final class Statics
     public static final String DECEMBRE = "Decembre";
     /** espace */
     public static final String SPACE = " ";
+    /** String vide */
+    public static final String EMPTY = "";
     /** " : " */
     public static final String DEUXPOINTS = " : ";   
     /** apllication inconnue dans Sonar */

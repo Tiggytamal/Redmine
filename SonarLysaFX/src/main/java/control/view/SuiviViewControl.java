@@ -8,6 +8,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import model.enums.TypeMajSuivi;
+import utilities.Statics;
 import utilities.TechnicalException;
 
 public final class SuiviViewControl extends AbstractViewControl
@@ -44,7 +45,7 @@ public final class SuiviViewControl extends AbstractViewControl
     @Override
     protected void afficher(ActionEvent event)
     {
-        String id = "";
+        String id = Statics.EMPTY;
         Object source = event.getSource();
         if (source instanceof RadioButton)
             id = ((RadioButton) source).getId();

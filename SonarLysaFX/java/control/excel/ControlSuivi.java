@@ -587,7 +587,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             cell.setCellValue(numeroAno);
 
             // Rajout de "&id=", car cela fait planter la désérialisation du fichier de paramètres
-            ajouterLiens(cell, liensAnos + ano.getProjetRTC().replace(" ", "%20") + Statics.FINLIENSANO, String.valueOf(numeroAno));
+            ajouterLiens(cell, liensAnos + ano.getProjetRTC().replace(Statics.SPACE, "%20") + Statics.FINLIENSANO, String.valueOf(numeroAno));
         }
 
         // Etat anomalie
@@ -788,7 +788,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         if (map.containsKey(anoClarity))
             return ano.majDepuisClarity(map.get(anoClarity));
 
-        String temp = "";
+        String temp = EMPTY;
         boolean testT7 = anoClarity.startsWith("T") && anoClarity.length() == CLARITY7;
 
         // Sinon on itère sur les clefs en supprimant les indices de lot, et on prend la première clef correspondante

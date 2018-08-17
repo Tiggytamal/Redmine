@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import model.enums.EtatLot;
+import utilities.Statics;
 
 public class TestEtatLot implements TestEnums
 {
@@ -56,7 +57,7 @@ public class TestEtatLot implements TestEnums
         assertEquals(inconnu, EtatLot.INCONNU.getValeur());
         assertEquals(EtatLot.INCONNU, EtatLot.from(null));
         assertEquals(inconnu, EtatLot.INCONNU.getValeur());
-        assertEquals(EtatLot.INCONNU, EtatLot.from(""));
+        assertEquals(EtatLot.INCONNU, EtatLot.from(Statics.EMPTY));
         assertEquals(inconnu, EtatLot.INCONNU.getValeur());
     }
 

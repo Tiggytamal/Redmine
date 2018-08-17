@@ -35,7 +35,7 @@ public abstract class AbstractSonarTask extends Task<Boolean>
     protected SonarAPI api;
     protected static final String RECUPCOMPOSANTS = "Récupération des composants Sonar";
     public static final String TITRE = "Tâche Sonar";
-    private StringProperty etape = new SimpleStringProperty(this, "etape", "");
+    private StringProperty etape = new SimpleStringProperty(this, "etape", EMPTY);
     protected int debut;
     protected int fin;
     protected boolean annulable;
@@ -160,7 +160,7 @@ public abstract class AbstractSonarTask extends Task<Boolean>
         // Itération sur les projets pour remplir la liste de retour
         for (ComposantSonar compo : compos)
         {
-            String versionCompo = "";
+            String versionCompo = EMPTY;
             for (String version : versions)
             {
                 // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans version E32

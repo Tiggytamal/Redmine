@@ -1,88 +1,76 @@
 package junit.model;
 
 import static org.junit.Assert.assertEquals;
+import static utilities.Statics.EMPTY;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import junit.JunitBase;
-import model.ModelFactory;
 import model.RespService;
 
-public class TestRespService extends JunitBase
+public class TestRespService extends AbstractTestModel<RespService>
 {
     /*---------- ATTRIBUTS ----------*/
-
-    private RespService respService;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-    
-    @Before
-    public void init()
-    {
-        respService = ModelFactory.getModel(RespService.class);
-    }
-    
+    /*---------- CONSTRUCTEURS ----------*/   
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
     public void testGetDirection()
     {
         // test valeur vide ou nulle
-        assertEquals("", respService.getDirection());
+        assertEquals(EMPTY, handler.getDirection());
         
         // Test setter et getter
         String direction = "Direction";
-        respService.setDirection(direction);
-        assertEquals(direction, respService.getDirection());       
+        handler.setDirection(direction);
+        assertEquals(direction, handler.getDirection());       
     }
     
     @Test
     public void testGetFiliere()
     {
         // test valeur vide ou nulle
-        assertEquals("", respService.getFiliere());
+        assertEquals(EMPTY, handler.getFiliere());
         
         // Test setter et getter
         String filiere = "filiere";
-        respService.setFiliere(filiere);
-        assertEquals(filiere, respService.getFiliere());       
+        handler.setFiliere(filiere);
+        assertEquals(filiere, handler.getFiliere());       
     }
     
     @Test
     public void testGetService()
     {
         // test valeur vide ou nulle
-        assertEquals("", respService.getService());
+        assertEquals(EMPTY, handler.getService());
         
         // Test setter et getter
         String service = "service";
-        respService.setService(service);
-        assertEquals(service, respService.getService());       
+        handler.setService(service);
+        assertEquals(service, handler.getService());       
     }
     
     @Test
     public void testGetDepartement()
     {
         // test valeur vide ou nulle
-        assertEquals("", respService.getDepartement());
+        assertEquals(EMPTY, handler.getDepartement());
         
         // Test setter et getter
         String departement = "departement";
-        respService.setDepartement(departement);
-        assertEquals(departement, respService.getDepartement());       
+        handler.setDepartement(departement);
+        assertEquals(departement, handler.getDepartement());       
     }
     
     @Test
     public void testGetNom()
     {
         // test valeur vide ou nulle
-        assertEquals("", respService.getNom());
+        assertEquals(EMPTY, handler.getNom());
         
         // Test setter et getter
         String nom = "nom";
-        respService.setNom(nom);
-        assertEquals(nom, respService.getNom());       
+        handler.setNom(nom);
+        assertEquals(nom, handler.getNom());       
     }
     
     /*---------- METHODES PRIVEES ----------*/

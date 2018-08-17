@@ -2,6 +2,7 @@ package junit.control.quartz;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.EMPTY;
 
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import control.quartz.ControlJob;
 import junit.JunitBase;
 import model.Planificateur;
 import model.enums.TypePlan;
+import utilities.Statics;
 
 /**
  * JUnit pour control.quartz.ControlJob
@@ -91,14 +93,14 @@ public class TestControlJob extends JunitBase
             assertTrue(trigger instanceof CronTrigger);
 
             // Récupération de l'expression du trigger
-            String cron = ((CronTrigger) trigger).getCronExpression().replace(" ", "");
+            String cron = ((CronTrigger) trigger).getCronExpression().replace(Statics.SPACE, EMPTY);
 
             // Récupération de l'heure depuis le planificateur
             String heure = plan.getHeure().format(new DateTimeFormatterBuilder().appendPattern("mmH").toFormatter());
 
             // Récupération des jours actifs depuis le planificateur
-            StringBuilder builder = new StringBuilder(plan.isLundi() ? "2," : "");
-            String jour = builder.append(plan.isMardi() ? "3," : "").append(plan.isMercredi() ? "4," : "").append(plan.isJeudi() ? "5," : "").append(plan.isVendredi() ? "6" : "").toString();
+            StringBuilder builder = new StringBuilder(plan.isLundi() ? "2," : EMPTY);
+            String jour = builder.append(plan.isMardi() ? "3," : EMPTY).append(plan.isMercredi() ? "4," : EMPTY).append(plan.isJeudi() ? "5," : EMPTY).append(plan.isVendredi() ? "6" : EMPTY).toString();
             if (jour.endsWith(","))
                 jour = jour.substring(0, jour.length() - 1);
             

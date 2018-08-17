@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.EMPTY;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -137,7 +138,7 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
         retour.put(entryKey, new HashSet<>());
         Set<String> lotSecurite = new HashSet<>();
         Set<String> lotRelease = new HashSet<>();
-        String base = "";
+        String base = EMPTY;
 
         // Première invocation avec lot vide
         Whitebox.invokeMethod(handler, "traitementProjet", compo, retour, entryKey, lotSecurite, lotRelease, base);
@@ -217,7 +218,7 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
         assertFalse(Whitebox.invokeMethod(handler, METHODE, metriques));
 
         // Test avec QG vide
-        creerMetrique(metriques, TypeMetrique.QG, "");
+        creerMetrique(metriques, TypeMetrique.QG, EMPTY);
         assertFalse(Whitebox.invokeMethod(handler, METHODE, metriques));
 
         // Test avec QG pas en erreur
@@ -336,8 +337,8 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
 
         // Vérification de la deuxième anomalienon mise à jour
         assertNotNull(retour.get(numerolot2));
-        assertEquals("", ano2.getCpiProjet());
-        assertEquals("", ano2.getEdition());
+        assertEquals(EMPTY, ano2.getCpiProjet());
+        assertEquals(EMPTY, ano2.getEdition());
     }
 
     @Test

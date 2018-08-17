@@ -12,6 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utilities.FunctionalException;
+import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
 
@@ -59,7 +60,7 @@ public final class MensuelViewControl extends AbstractViewControl
     @Override
     public void afficher(ActionEvent event)
     {
-        String id = "";
+        String id = Statics.EMPTY;
         Object source = event.getSource();
         if (source instanceof RadioButton)
             id = ((RadioButton) source).getId();

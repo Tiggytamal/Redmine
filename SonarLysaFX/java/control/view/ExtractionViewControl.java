@@ -41,7 +41,7 @@ public class ExtractionViewControl extends AbstractViewControl
     protected void afficher(ActionEvent event) throws IOException
     {
         Object source = event.getSource();
-        String id = "";
+        String id = EMPTY;
         if (source instanceof RadioButton)
         {
             selectPane.getChildren().clear();

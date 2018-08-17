@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import model.enums.TypeColR;
+import utilities.Statics;
 
 /**
  * Bloc d'affichage pour paramétrer le nom d'une colonne
@@ -46,7 +47,7 @@ public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements V
         box.getChildren().add(label);
 
         // TextField
-        field = new TextField(texte == null ? "" : texte);
+        field = new TextField(texte == null ? Statics.EMPTY : texte);
         HBox.setHgrow(field, Priority.ALWAYS);
         box.getChildren().add(field);
 

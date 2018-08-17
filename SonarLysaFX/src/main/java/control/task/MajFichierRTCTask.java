@@ -60,7 +60,15 @@ public class MajFichierRTCTask extends AbstractSonarTask
         String base = "Récupération RTC - Traitement lot : ";
         String fin = "Nbre de lots traités : ";
         String sur = " sur ";
-        Map<String, LotSuiviRTC> map = new HashMap<>();
+        
+        // Initialisation - en cas de remise à zéro on prend une ma pvièrge sinon on récupère le fichier existant comme base.
+        Map<String, LotSuiviRTC> map = null;
+        
+        if (remiseAZero)
+            map = new HashMap<>();
+        else
+            map = Statics.fichiersXML.getMapLotsRTC();
+        
         for (IWorkItemHandle handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête

@@ -1,5 +1,7 @@
 package control.sonar;
 
+import static utilities.Statics.EMPTY;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -358,7 +360,7 @@ public class SonarAPI
         else
             LOGGER.error(erreurAPI(EVENTS) + paramResource.getValeur());
 
-        return "";
+        return EMPTY;
     }
 
     /**
@@ -701,7 +703,7 @@ public class SonarAPI
         Invocation.Builder builder = requete.request(MediaType.APPLICATION_JSON).header(AUTHORIZATION, codeUser);
 
         if (entite == null)
-            return builder.post(Entity.text(""));
+            return builder.post(Entity.text(EMPTY));
 
         return builder.post(Entity.entity(entite, MediaType.APPLICATION_JSON));
     }
@@ -723,7 +725,7 @@ public class SonarAPI
         Invocation.Builder builder = requete.request(MediaType.APPLICATION_JSON).header(AUTHORIZATION, codeUser);
 
         if (entite == null)
-            return builder.async().post(Entity.text(""));
+            return builder.async().post(Entity.text(EMPTY));
 
         return builder.async().post(Entity.entity(entite, MediaType.APPLICATION_JSON));
     }
@@ -763,7 +765,7 @@ public class SonarAPI
             throw new IllegalArgumentException("la liste ne peut pas être nulle");
 
         LocalDateTime date = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
-        String retour = "";
+        String retour = EMPTY;
 
         // Itération sur la liste pour récupérer la date la plus récente.
         for (Event event : liste)

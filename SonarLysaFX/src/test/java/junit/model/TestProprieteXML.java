@@ -3,21 +3,19 @@ package junit.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static utilities.Statics.proprietesXML;
+import static utilities.Statics.EMPTY;
 import static utilities.Statics.NL;
+import static utilities.Statics.proprietesXML;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
-import junit.JunitBase;
 import junit.TestXML;
-import model.ModelFactory;
 import model.ProprietesXML;
 import model.enums.Param;
 import model.enums.ParamBool;
@@ -33,20 +31,10 @@ import model.enums.TypePlan;
 import utilities.Statics;
 import utilities.TechnicalException;
 
-public class TestProprieteXML extends JunitBase implements TestXML
+public class TestProprieteXML extends AbstractTestModel<ProprietesXML> implements TestXML
 {
     /*---------- ATTRIBUTS ----------*/
-
-    private ProprietesXML handler;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-
-    @Before
-    public void init()
-    {
-        handler = ModelFactory.getModel(ProprietesXML.class);
-    }
-    
+    /*---------- CONSTRUCTEURS ----------*/    
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
@@ -68,7 +56,7 @@ public class TestProprieteXML extends JunitBase implements TestXML
         // ----- 1. Pré-Test sans données
         
         // Mise à vide d'une colonne pour être bien sûr qu'elle remonte en non paramétrée
-        handler.getEnumMap(TypeColSuivi.class).put(TypeColSuivi.ACTION, "");
+        handler.getEnumMap(TypeColSuivi.class).put(TypeColSuivi.ACTION, EMPTY);
         
         // Appel de la méthode
         String retour = handler.controleDonnees();
@@ -230,8 +218,8 @@ public class TestProprieteXML extends JunitBase implements TestXML
         // ----- 4. Tests avec valeurs vide dans le paramétrage
         
         // Mise à vide de ceratiens données
-        handler.getMapParams().put(Param.ABSOLUTEPATH, "");
-        handler.getMapParamsSpec().put(ParamSpec.MEMBRESJAVA, "");
+        handler.getMapParams().put(Param.ABSOLUTEPATH, EMPTY);
+        handler.getMapParamsSpec().put(ParamSpec.MEMBRESJAVA, EMPTY);
         
         // Appel du contrôle
         retour = handler.controleDonnees();

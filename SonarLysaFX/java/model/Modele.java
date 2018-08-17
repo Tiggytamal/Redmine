@@ -11,7 +11,7 @@ public interface Modele
 
     public default String getString(String val)
     {
-        return val == null ? "" : val;
+        return val == null ? EMPTY : val;
     }
 
     public default boolean compare(Object objet, Object autre)

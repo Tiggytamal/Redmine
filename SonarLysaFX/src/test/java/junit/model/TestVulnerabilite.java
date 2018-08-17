@@ -1,11 +1,10 @@
 package junit.model;
 
 import static org.junit.Assert.assertEquals;
+import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
-import junit.JunitBase;
-import model.ModelFactory;
 import model.Vulnerabilite;
 
 /**
@@ -15,27 +14,17 @@ import model.Vulnerabilite;
  * @since 1.0
  * 
  */
-public class TestVulnerabilite extends JunitBase
+public class TestVulnerabilite extends AbstractTestModel<Vulnerabilite>
 {
     /*---------- ATTRIBUTS ----------*/
-    
-    private Vulnerabilite handler;
-    
     /*---------- CONSTRUCTEURS ----------*/
-    
-    @Override
-    public void init() throws Exception
-    {
-        handler = ModelFactory.getModel(Vulnerabilite.class);
-    }
-    
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
     public void testGetSeverite()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getSeverite());
+        assertEquals(EMPTY, handler.getSeverite());
         
         // Test setter et getter
         String severite = "Sev";
@@ -47,7 +36,7 @@ public class TestVulnerabilite extends JunitBase
     public void testGetComposant()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getComposant());
+        assertEquals(EMPTY, handler.getComposant());
         
         // Test setter et getter
         String compo = "Compo";
@@ -59,7 +48,7 @@ public class TestVulnerabilite extends JunitBase
     public void testGetStatus()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getStatus());
+        assertEquals(EMPTY, handler.getStatus());
         
         // Test setter et getter
         String status = "Status";
@@ -71,7 +60,7 @@ public class TestVulnerabilite extends JunitBase
     public void testGetMessage()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getMessage());
+        assertEquals(EMPTY, handler.getMessage());
         
         // Test setter et getter
         String message = "Message";
@@ -83,7 +72,7 @@ public class TestVulnerabilite extends JunitBase
     public void testGetDateCreation()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getDateCreation());
+        assertEquals(EMPTY, handler.getDateCreation());
         
         // Test setter et getter
         String date = "10-12-2018";
@@ -95,7 +84,7 @@ public class TestVulnerabilite extends JunitBase
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getLot());
+        assertEquals(EMPTY, handler.getLot());
         
         // Test setter et getter
         String lot = "123456";
@@ -107,7 +96,7 @@ public class TestVulnerabilite extends JunitBase
     public void testGetClarity()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getClarity());
+        assertEquals(EMPTY, handler.getClarity());
         
         // Test setter et getter
         String clarity = "SVRP_qsdfhjl";
@@ -119,7 +108,7 @@ public class TestVulnerabilite extends JunitBase
     public void testGetAppli()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getAppli());
+        assertEquals(EMPTY, handler.getAppli());
         
         // Test setter et getter
         String appli = "ABCD";
@@ -131,7 +120,7 @@ public class TestVulnerabilite extends JunitBase
     public void testGetLib()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getLib());
+        assertEquals(EMPTY, handler.getLib());
         
         // Test setter et getter
         String lib = "Lib";

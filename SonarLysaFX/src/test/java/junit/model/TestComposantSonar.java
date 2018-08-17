@@ -1,27 +1,17 @@
 package junit.model;
 
 import static org.junit.Assert.assertEquals;
+import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
-import junit.JunitBase;
 import model.ComposantSonar;
 import model.ModelFactory;
 
-public class TestComposantSonar extends JunitBase
+public class TestComposantSonar extends AbstractTestModel<ComposantSonar>
 {
-    /*---------- ATTRIBUTS ----------*/
-    
-    private ComposantSonar handler;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-    
-    @Override
-    public void init() throws Exception
-    {
-        handler = ModelFactory.getModel(ComposantSonar.class);
-    }
-    
+    /*---------- ATTRIBUTS ----------*/    
+    /*---------- CONSTRUCTEURS ----------*/    
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
@@ -37,7 +27,7 @@ public class TestComposantSonar extends JunitBase
     public void testGetNom()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getNom());
+        assertEquals(EMPTY, handler.getNom());
         
         // Test setter et getter
         String nom = "Nom";
@@ -49,7 +39,7 @@ public class TestComposantSonar extends JunitBase
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getLot());
+        assertEquals(EMPTY, handler.getLot());
         
         // Test setter et getter
         String lot = "Lot";
@@ -61,7 +51,7 @@ public class TestComposantSonar extends JunitBase
     public void testGetKey()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getKey());
+        assertEquals(EMPTY, handler.getKey());
         
         // Test setter et getter
         String key = "Key";
@@ -73,7 +63,7 @@ public class TestComposantSonar extends JunitBase
     public void testGetId()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getId());
+        assertEquals(EMPTY, handler.getId());
         
         // Test setter et getter
         String id = "Id";
@@ -85,7 +75,7 @@ public class TestComposantSonar extends JunitBase
     public void testGetAppli()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getAppli());
+        assertEquals(EMPTY, handler.getAppli());
         
         // Test setter et getter
         String appli = "Appli";
@@ -97,7 +87,7 @@ public class TestComposantSonar extends JunitBase
     public void testGetEdition()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getEdition());
+        assertEquals(EMPTY, handler.getEdition());
         
         // Test setter et getter
         String edition = "Edition";

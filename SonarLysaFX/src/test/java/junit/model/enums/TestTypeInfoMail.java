@@ -1,6 +1,7 @@
 package junit.model.enums;
 
 import static org.junit.Assert.assertEquals;
+import static utilities.Statics.EMPTY;
 import static utilities.Statics.LIENANO;
 import static utilities.Statics.LIENAPP;
 
@@ -40,19 +41,19 @@ public class TestTypeInfoMail implements TestEnums
     public void testGetLiens()
     {
         assertEquals(LIENANO, TypeInfoMail.ANOSRTCCREES.getLiens());
-        assertEquals("", TypeInfoMail.ANONEW.getLiens());
+        assertEquals(EMPTY, TypeInfoMail.ANONEW.getLiens());
         assertEquals(LIENANO, TypeInfoMail.ANOABANDON.getLiens());
         assertEquals(LIENANO, TypeInfoMail.ANOABANDONRATE.getLiens());
         assertEquals(LIENANO, TypeInfoMail.ANOARELANCER.getLiens());
         assertEquals(" - Nouvel état : ", TypeInfoMail.ANOMAJ.getLiens());
         assertEquals(" - Nouvel état : ", TypeInfoMail.LOTMAJ.getLiens());
-        assertEquals("", TypeInfoMail.LOTNONRTC.getLiens());
+        assertEquals(EMPTY, TypeInfoMail.LOTNONRTC.getLiens());
         assertEquals("- Clarity : ", TypeInfoMail.CLARITYINCONNU.getLiens());
         assertEquals("- Service : ", TypeInfoMail.SERVICESSANSRESP.getLiens());
         assertEquals(LIENAPP, TypeInfoMail.APPLIOBSOLETE.getLiens());
         assertEquals(LIENAPP, TypeInfoMail.APPLINONREF.getLiens());
-        assertEquals("", TypeInfoMail.COMPOSANSAPP.getLiens());
-        assertEquals("", TypeInfoMail.COMPOPURGE.getLiens());
+        assertEquals(EMPTY, TypeInfoMail.COMPOSANSAPP.getLiens());
+        assertEquals(EMPTY, TypeInfoMail.COMPOPURGE.getLiens());
     }
 
     @Test

@@ -180,7 +180,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
      */
     private String extractLib(String message)
     {
-        String retour = message.split(" \\||/")[0].replace("Filename: ", "");
+        String retour = message.split(" \\||/")[0].replace("Filename: ", Statics.EMPTY);
         if (retour.contains(":"))
             return retour.split(":")[1];
         return retour;

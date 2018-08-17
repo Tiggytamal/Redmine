@@ -2,37 +2,26 @@ package junit.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static utilities.Statics.EMPTY;
 
 import java.time.LocalDate;
 
 import org.junit.Test;
 
-import junit.JunitBase;
 import model.LotSuiviRTC;
-import model.ModelFactory;
 import model.enums.EtatLot;
 
-public class TestLotSuiviRTC extends JunitBase
+public class TestLotSuiviRTC extends AbstractTestModel<LotSuiviRTC>
 {
     /*---------- ATTRIBUTS ----------*/
-    
-    private LotSuiviRTC handler;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-    
-    @Override
-    public void init() throws Exception
-    {
-        handler = ModelFactory.getModel(LotSuiviRTC.class);
-    }
-    
+    /*---------- CONSTRUCTEURS ----------*/    
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getLot());
+        assertEquals(EMPTY, handler.getLot());
         
         // Test setter et getter
         String direction = "123456";
@@ -44,7 +33,7 @@ public class TestLotSuiviRTC extends JunitBase
     public void testGetLibelle()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getLibelle());
+        assertEquals(EMPTY, handler.getLibelle());
         
         // Test setter et getter
         String string = "Libelle";
@@ -56,7 +45,7 @@ public class TestLotSuiviRTC extends JunitBase
     public void testGetProjetClarity()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getProjetClarity());
+        assertEquals(EMPTY, handler.getProjetClarity());
         
         // Test setter et getter
         String string = "Projet";
@@ -68,7 +57,7 @@ public class TestLotSuiviRTC extends JunitBase
     public void testGetCpiProjet()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getCpiProjet());
+        assertEquals(EMPTY, handler.getCpiProjet());
         
         // Test setter et getter
         String string = "CPI";
@@ -80,7 +69,7 @@ public class TestLotSuiviRTC extends JunitBase
     public void testGetEdition()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getEdition());
+        assertEquals(EMPTY, handler.getEdition());
         
         // Test setter et getter
         String string = "Edition";
@@ -103,7 +92,7 @@ public class TestLotSuiviRTC extends JunitBase
     public void testGetProjetRTC()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getProjetRTC());
+        assertEquals(EMPTY, handler.getProjetRTC());
         
         // Test setter et getter
         String string = "Projet";

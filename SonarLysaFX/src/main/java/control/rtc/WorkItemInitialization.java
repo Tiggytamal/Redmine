@@ -1,5 +1,6 @@
 package control.rtc;
 
+import static utilities.Statics.EMPTY;
 import static utilities.Statics.proprietesXML;
 
 import java.util.List;
@@ -148,7 +149,7 @@ public final class WorkItemInitialization extends WorkItemOperation
 
         String versionRegex = "^E[2-9][0-9](\\.[0-1]){0,1}";
         String fdlregex = "Fil_De_Leau";
-        String retour = "";
+        String retour = EMPTY;
         Matcher matcher = Pattern.compile(versionRegex).matcher(edition);
         if (matcher.find())
             retour = matcher.group(0);

@@ -1,5 +1,7 @@
 package model.enums;
 
+import utilities.Statics;
+
 /**
  * Réprésente les valeurs possibles de la colonne actions
  * @author ETP8137 - Grégoire Mathon
@@ -71,7 +73,7 @@ public enum TypeAction
         private static final String CLOTURER = "A clôturer";
         private static final String ABANDONNER = "A abandonner";
         private static final String RELANCER = "A relancer";
-        private static final String VIDE = "";
+        private static final String VIDE = Statics.EMPTY;
         
         private Valeur() 
         {

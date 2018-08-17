@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import model.ModelFactory;
 import model.Planificateur;
 import model.enums.TypePlan;
+import utilities.Statics;
 import utilities.TechnicalException;
 import view.TimeSpinner;
 import view.TrayIconView;
@@ -133,7 +134,7 @@ public final class PlanificateurViewControl extends AbstractViewControl
     @Override
     public void afficher(ActionEvent event)
     {
-        String id = "";
+        String id = Statics.EMPTY;
         Object source = event.getSource();
         if (source instanceof Node)
             id = ((Node) source).getId();

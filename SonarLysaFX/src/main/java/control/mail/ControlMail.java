@@ -63,7 +63,7 @@ public class ControlMail
     {
         // Initialisation variables
         mapInfos = new EnumMap<>(TypeInfoMail.class);
-        extra = "";
+        extra = Statics.EMPTY;
         for (TypeInfoMail type : TypeInfoMail.values())
         {
             mapInfos.put(type, new ArrayList<>());

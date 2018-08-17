@@ -10,6 +10,7 @@ import org.powermock.reflect.Whitebox;
 import control.task.CreerVuePatrimoineTask;
 import model.ComposantSonar;
 import model.sonarapi.Vue;
+import utilities.Statics;
 
 public class TestCreerVuePatrimoineTask extends AbstractTestTask<CreerVuePatrimoineTask>
 {
@@ -58,7 +59,7 @@ public class TestCreerVuePatrimoineTask extends AbstractTestTask<CreerVuePatrimo
         Mockito.verify(api, Mockito.never()).supprimerProjet(Mockito.anyString(), Mockito.anyBoolean());
         
         // 2. Test avec key vide
-        Whitebox.getField(CreerVuePatrimoineTask.class, "key").set(handler, "");
+        Whitebox.getField(CreerVuePatrimoineTask.class, "key").set(handler, Statics.EMPTY);
         
         // Appel méthode
         handler.annuler();

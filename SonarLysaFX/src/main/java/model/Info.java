@@ -57,7 +57,7 @@ public class Info implements Modele, XML
     {
         if (!controle())
             return "fichiers infos de connexion Connexion vide";
-        return "";
+        return Statics.EMPTY;
     }
     /*---------- ACCESSEURS ----------*/
 

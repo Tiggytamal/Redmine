@@ -309,11 +309,11 @@ public class MajSuiviExcelTask extends AbstractSonarTask
             for (Map.Entry<String, Set<String>> entry : mapLotsSonar.entrySet())
             {
                 // Création de la vue, gestion du message et ajout à la liste de vues créées en cas d'annulation
-                String nom = fichier.replace("_", " ").split("\\.")[0];
+                String nom = fichier.replace("_", Statics.SPACE).split("\\.")[0];
                 String nomVue = nom + " - Edition " + entry.getKey();
                 String base = "Création Vue " + nomVue + Statics.NL;
                 updateMessage(base);
-                Vue vueParent = creerVue(nom.replace(" ", "") + "Key" + entry.getKey(), nomVue, "Vue regroupant tous les lots avec des composants en erreur", true);
+                Vue vueParent = creerVue(nom.replace(Statics.SPACE, EMPTY) + "Key" + entry.getKey(), nomVue, "Vue regroupant tous les lots avec des composants en erreur", true);
 
                 // Ajout des sous-vue
                 int i = 0;

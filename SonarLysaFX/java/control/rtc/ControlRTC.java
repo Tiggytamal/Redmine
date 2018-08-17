@@ -159,7 +159,7 @@ public class ControlRTC
         if (workItem == null)
         {
             LOGGER.warn("Récupération projetRTC - Lot introuvable : " + lot);
-            return "";
+            return EMPTY;
         }
         IProjectArea area = (IProjectArea) repo.itemManager().fetchCompleteItem(workItem.getProjectArea(), IItemManager.DEFAULT, progressMonitor);
         return area.getName();
@@ -200,7 +200,7 @@ public class ControlRTC
     public String recupEtatElement(IWorkItem item) throws TeamRepositoryException
     {
         if (item == null)
-            return "";
+            return EMPTY;
         IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(item, progressMonitor);
         return workflowInfo.getStateName(item.getState2());
     }

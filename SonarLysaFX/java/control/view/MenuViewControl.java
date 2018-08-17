@@ -124,7 +124,7 @@ public class MenuViewControl extends AbstractViewControl
     @Override
     public void afficher(ActionEvent event) throws IOException
     {
-        String id = "";
+        String id = EMPTY;
         Object source = event.getSource();
         if (source instanceof MenuItem)
             id = ((MenuItem) source).getId();

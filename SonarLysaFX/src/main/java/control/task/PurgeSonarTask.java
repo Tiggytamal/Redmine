@@ -115,7 +115,7 @@ public class PurgeSonarTask extends AbstractSonarTask
         }
 
         // On enlève la dernière |
-        builder.replace(builder.length() - 1, builder.length(), "");
+        builder.replace(builder.length() - 1, builder.length(), Statics.EMPTY);
         builder.append("]$");
         String pattern = builder.toString();
 

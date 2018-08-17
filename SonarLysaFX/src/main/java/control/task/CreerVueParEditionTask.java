@@ -52,7 +52,7 @@ public class CreerVueParEditionTask extends AbstractSonarTask
             String base = "Vue " + nom + Statics.NL;
             updateMessage(base);
             updateProgress(0, 1);
-            Vue vueParent = creerVue(entry.getKey() + "Key", nom, "", true);
+            Vue vueParent = creerVue(entry.getKey() + "Key", nom, Statics.EMPTY, true);
             
             int i = 0;
             int size = entry.getValue().size();

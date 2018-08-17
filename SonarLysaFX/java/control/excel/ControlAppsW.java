@@ -183,7 +183,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
 
             // Test si l'application est présente dans les applications SonarQube. On protège si le nom de l'application est une valeur numérique
             Cell cell = base.getCell(colCodeBis);
-            String value = "";
+            String value = EMPTY;
             if (cell.getCellTypeEnum() == CellType.STRING)
                 value = cell.getStringCellValue();
             else if (cell.getCellTypeEnum() == CellType.NUMERIC)

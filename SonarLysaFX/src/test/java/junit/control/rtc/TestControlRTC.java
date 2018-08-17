@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.EMPTY;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class TestControlRTC extends JunitBase
         // Création mock puis remplacement repo du handler.
         TeamRepository repo = Mockito.mock(TeamRepository.class);
         Whitebox.getField(ControlRTC.class, "repo").set(handler, repo);
-        PowerMockito.doThrow(new TeamRepositoryException("")).when(repo).login(Mockito.any(IProgressMonitor.class));
+        PowerMockito.doThrow(new TeamRepositoryException(EMPTY)).when(repo).login(Mockito.any(IProgressMonitor.class));
 
         // Appel méthode
         assertFalse(handler.connexion());
@@ -106,7 +107,7 @@ public class TestControlRTC extends JunitBase
         Logger logger = TestUtils.getMockLogger(ControlRTC.class, "LOGGER");
 
         // Test avec lot absent de RTC
-        assertEquals("", handler.recupProjetRTCDepuisWiLot(10));
+        assertEquals(EMPTY, handler.recupProjetRTCDepuisWiLot(10));
         Mockito.verify(logger, Mockito.times(1)).warn(Mockito.anyString());
 
         // Test lot 278180
@@ -126,7 +127,7 @@ public class TestControlRTC extends JunitBase
         if (item != null)
             assertEquals("Close", handler.recupEtatElement(item).trim());
 
-        assertEquals("", handler.recupEtatElement(null));
+        assertEquals(EMPTY, handler.recupEtatElement(null));
     }
 
     @Test
@@ -233,7 +234,7 @@ public class TestControlRTC extends JunitBase
         }
 
         // Test sur les retour null
-        assertNull(handler.recupContributorDepuisNom(""));
+        assertNull(handler.recupContributorDepuisNom(EMPTY));
         assertNull(handler.recupContributorDepuisNom(null));
     }
 
@@ -300,7 +301,7 @@ public class TestControlRTC extends JunitBase
     {
         // Initialisation. On mock le recupererEtatElement qui renvoit les 3 valeurs possibles
         handler = PowerMockito.spy(handler);
-        PowerMockito.when(handler.recupEtatElement(Mockito.any(IWorkItem.class))).thenReturn("Close").thenReturn("Abandonnée").thenReturn("");
+        PowerMockito.when(handler.recupEtatElement(Mockito.any(IWorkItem.class))).thenReturn("Close").thenReturn("Abandonnée").thenReturn(EMPTY);
         Logger logMock = TestUtils.getMockLogger(ControlRTC.class, "LOGPLANTAGE");
 
         // Test de la méthode

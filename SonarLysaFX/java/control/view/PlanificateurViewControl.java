@@ -130,7 +130,7 @@ public class PlanificateurViewControl extends AbstractViewControl
     @Override
     public void afficher(ActionEvent event)
     {
-        String id = "";
+        String id = EMPTY;
         Object source = event.getSource();
         if (source instanceof Node)
             id = ((Node) source).getId();

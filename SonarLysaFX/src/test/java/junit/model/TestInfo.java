@@ -3,31 +3,20 @@ package junit.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.EMPTY;
 
 import java.io.File;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
-import junit.JunitBase;
 import model.Info;
-import model.ModelFactory;
 import utilities.Statics;
 
-public class TestInfo extends JunitBase
+public class TestInfo extends AbstractTestModel<Info>
 {
     /*---------- ATTRIBUTS ----------*/
-
-    private Info info;
-    
     /*---------- CONSTRUCTEURS ----------*/
-    
-    @Before
-    public void init()
-    {
-        info = ModelFactory.getModel(Info.class);
-    }
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
@@ -38,17 +27,17 @@ public class TestInfo extends JunitBase
         assertFalse(info.controle());
         
         // Test mot de passe vide
-        info.setMotDePasse("");
+        info.setMotDePasse(EMPTY);
         assertFalse(info.controle());
         
         // Test pseudo vide
-        info.setPseudo("");
+        info.setPseudo(EMPTY);
         info.setMotDePasse(null);
         assertFalse(info.controle());
         
         // Test les deux vides
-        info.setPseudo("");
-        info.setMotDePasse("");
+        info.setPseudo(EMPTY);
+        info.setMotDePasse(EMPTY);
         assertFalse(info.controle());
         
         // Test mot de passe rempli
@@ -56,7 +45,7 @@ public class TestInfo extends JunitBase
         assertFalse(info.controle());
         
         // Test pseudo rempli
-        info.setMotDePasse("");
+        info.setMotDePasse(EMPTY);
         info.setPseudo(valeur);
         assertFalse(info.controle());
         
@@ -102,7 +91,7 @@ public class TestInfo extends JunitBase
     public void testGetMotDePasse()
     {
         // test valeur vide ou nulle
-        assertEquals("", info.getMotDePasse());
+        assertEquals(EMPTY, info.getMotDePasse());
         
         // Test setter et getter
         String mdp = "motDePasse";
@@ -114,7 +103,7 @@ public class TestInfo extends JunitBase
     public void testGetPseudo()
     {
         // test valeur vide ou nulle
-        assertEquals("", info.getPseudo());
+        assertEquals(EMPTY, info.getPseudo());
         
         // Test setter et getter
         String pseudo = "pseudo";
@@ -126,7 +115,7 @@ public class TestInfo extends JunitBase
     public void testGetNom()
     {
         // test valeur vide ou nulle
-        assertEquals("", info.getNom());
+        assertEquals(EMPTY, info.getNom());
         
         // Test setter et getter
         String pseudo = "pseudo";

@@ -16,6 +16,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.enums.CHCouCDM;
+import utilities.Statics;
 import utilities.TechnicalException;
 
 public final class MaintenanceViewControl extends AbstractViewControl
@@ -57,7 +58,7 @@ public final class MaintenanceViewControl extends AbstractViewControl
     public void afficher(ActionEvent event)
     {
         Object source = event.getSource();
-        String id = "";
+        String id = Statics.EMPTY;
         if (source instanceof RadioButton)
         {
             ObservableList<Node> children = selectPane.getChildren();

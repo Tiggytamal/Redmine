@@ -1,5 +1,7 @@
 package control.rtc;
 
+import static utilities.Statics.EMPTY;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -163,7 +165,7 @@ public class ControlRTC
         if (workItem == null)
         {
             LOGGER.warn("Récupération projetRTC - Lot introuvable : " + lot);
-            return "";
+            return EMPTY;
         }
         IProjectArea area = (IProjectArea) repo.itemManager().fetchCompleteItem(workItem.getProjectArea(), IItemManager.DEFAULT, monitor);
         return area.getName();
@@ -232,7 +234,7 @@ public class ControlRTC
     public String recupEtatElement(IWorkItem item) throws TeamRepositoryException
     {
         if (item == null)
-            return "";
+            return EMPTY;
         IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(item, monitor);
         return workflowInfo.getStateName(item.getState2());
     }
@@ -435,9 +437,9 @@ public class ControlRTC
 
     /**
      * Récupération de tous les lots RTC selon les paramètres fournis : <br>
-     * - remiseAZero = indique si l'on prend tous les loes depuis la date de création fournie ou seulement depuis la dernière mise à jour <br>
+     * - remiseAZero = indique si l'on prend tous les les depuis la date de création fournie ou seulement depuis la dernière mise à jour <br>
      * - date Création = date de la dernière mise àjour du fichier <br>
-     * Si la date de dernière mise àjour n'est pas connue, une demande de remise à zéero sera renvoyée.<br>
+     * Si la date de dernière mise à jour n'est pas connue, une demande de remise à zéro sera renvoyée.<br>
      * Une erreur sera remontée pour toute remise à zéro sans date limite de création
      * 
      * @param remiseAZero

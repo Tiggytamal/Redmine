@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
+import utilities.Statics;
 import utilities.TechnicalException;
 
 public final class ExtractionViewControl extends AbstractViewControl
@@ -41,7 +42,7 @@ public final class ExtractionViewControl extends AbstractViewControl
     protected void afficher(ActionEvent event) throws IOException
     {
         Object source = event.getSource();
-        String id = "";
+        String id = Statics.EMPTY;
         if (source instanceof RadioButton)
         {
             selectPane.getChildren().clear();

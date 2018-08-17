@@ -1,5 +1,6 @@
 package control.task;
 
+import static utilities.Statics.EMPTY;
 import static utilities.Statics.info;
 import static utilities.Statics.proprietesXML;
 
@@ -37,7 +38,7 @@ public abstract class AbstractSonarTask extends Task<Boolean>
     protected static final String RECUPCOMPOSANTS = "Récupération des composants Sonar";
     
     protected SonarAPI api;
-    private StringProperty etape = new SimpleStringProperty(this, "etape", "");
+    private StringProperty etape = new SimpleStringProperty(this, "etape", EMPTY);
     protected int debut;
     protected int fin;
     protected boolean annulable;
@@ -66,7 +67,7 @@ public abstract class AbstractSonarTask extends Task<Boolean>
 
     /**
      * Permet de récupérer la dernière version de chaque composants créés dans Sonar qui a été au moins envoyé à l'édition. Rajoute les plus anciennes versions des
-     * composants qui n'ont pas de version livrèe à l'édition (dûe à la purge).
+     * composants qui n'ont pas de version livrèe à l'édition (due à la purge).
      *
      * @return
      */
@@ -151,7 +152,7 @@ public abstract class AbstractSonarTask extends Task<Boolean>
         // Itération sur les projets pour remplir la liste de retour
         for (ComposantSonar compo : compos)
         {
-            String versionCompo = "";
+            String versionCompo = EMPTY;
             for (String version : versions)
             {
                 // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans version E32

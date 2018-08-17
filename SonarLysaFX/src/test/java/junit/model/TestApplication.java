@@ -3,27 +3,16 @@ package junit.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
-import junit.JunitBase;
 import model.Application;
-import model.ModelFactory;
 
-public class TestApplication extends JunitBase
+public class TestApplication extends AbstractTestModel<Application>
 {
-    /*---------- ATTRIBUTS ----------*/
-    
-    private Application handler;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-    
-    @Override
-    public void init() throws Exception
-    {
-        handler = ModelFactory.getModel(Application.class);
-    }
-    
+    /*---------- ATTRIBUTS ----------*/    
+    /*---------- CONSTRUCTEURS ----------*/   
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
@@ -54,7 +43,7 @@ public class TestApplication extends JunitBase
     public void testMajValSecurite()
     {
         // Mise à jour de la valeur de sécurité et vérification que l'on retrouve bine toujours la valeur maximale
-        assertEquals("", handler.getValSecurite());
+        assertEquals(EMPTY, handler.getValSecurite());
         handler.majValSecurite(1);
         assertEquals("A", handler.getValSecurite());
         handler.majValSecurite(3);
@@ -77,7 +66,7 @@ public class TestApplication extends JunitBase
     public void testGetCode()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getCode());
+        assertEquals(EMPTY, handler.getCode());
         
         // Test setter et getter
         String code = "Code";
@@ -100,7 +89,7 @@ public class TestApplication extends JunitBase
     public void testGetLibelle()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getLibelle());
+        assertEquals(EMPTY, handler.getLibelle());
         
         // Test setter et getter
         String libelle = "Libelle";
@@ -134,7 +123,7 @@ public class TestApplication extends JunitBase
     public void testGetValSecurite()
     {
         // test valeur vide ou nulle
-        assertEquals("", handler.getValSecurite());
+        assertEquals(EMPTY, handler.getValSecurite());
         
         // Test setter et getter
         String valSecurite = "Z";

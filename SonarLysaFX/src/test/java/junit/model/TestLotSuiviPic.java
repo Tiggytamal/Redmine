@@ -1,175 +1,166 @@
 package junit.model;
 
 import static org.junit.Assert.assertEquals;
+import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
-import junit.JunitBase;
 import model.LotSuiviPic;
-import model.ModelFactory;
 
-public class TestLotSuiviPic extends JunitBase
+public class TestLotSuiviPic extends AbstractTestModel<LotSuiviPic>
 {
     /*---------- ATTRIBUTS ----------*/
-    
-    private LotSuiviPic lotSUiviPic;
     /*---------- CONSTRUCTEURS ----------*/
-    
-    @Override
-    public void init()
-    {
-        lotSUiviPic = ModelFactory.getModel(LotSuiviPic.class);
-    }
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals("", lotSUiviPic.getLot());
+        assertEquals(EMPTY, handler.getLot());
         
         // Test setter et getter
         String lot = "lot";
-        lotSUiviPic.setLot(lot);
-        assertEquals(lot, lotSUiviPic.getLot());       
+        handler.setLot(lot);
+        assertEquals(lot, handler.getLot());       
     }
     
     @Test
     public void testGetLibelle()
     {
         // test valeur vide ou nulle
-        assertEquals("", lotSUiviPic.getLibelle());
+        assertEquals(EMPTY, handler.getLibelle());
         
         // Test setter et getter
         String libelle = "libelle";
-        lotSUiviPic.setLibelle(libelle);
-        assertEquals(libelle, lotSUiviPic.getLibelle());       
+        handler.setLibelle(libelle);
+        assertEquals(libelle, handler.getLibelle());       
     }
     
     @Test
     public void testGetProjetClarity()
     {
         // test valeur vide ou nulle
-        assertEquals("", lotSUiviPic.getProjetClarity());
+        assertEquals(EMPTY, handler.getProjetClarity());
         
         // Test setter et getter
         String projetClarity = "projetClarity";
-        lotSUiviPic.setProjetClarity(projetClarity);
-        assertEquals(projetClarity, lotSUiviPic.getProjetClarity());       
+        handler.setProjetClarity(projetClarity);
+        assertEquals(projetClarity, handler.getProjetClarity());       
     }
     
     @Test
     public void testGetCpiProjet()
     {
         // test valeur vide ou nulle
-        assertEquals("", lotSUiviPic.getCpiProjet());
+        assertEquals(EMPTY, handler.getCpiProjet());
         
         // Test setter et getter
         String cpiProjet = "cpiProjet";
-        lotSUiviPic.setCpiProjet(cpiProjet);
-        assertEquals(cpiProjet, lotSUiviPic.getCpiProjet());       
+        handler.setCpiProjet(cpiProjet);
+        assertEquals(cpiProjet, handler.getCpiProjet());       
     }
     
     @Test
     public void testGetEdition()
     {
         // test valeur vide ou nulle
-        assertEquals("", lotSUiviPic.getEdition());
+        assertEquals(EMPTY, handler.getEdition());
         
         // Test setter et getter
         String edition = "edition";
-        lotSUiviPic.setEdition(edition);
-        assertEquals(edition, lotSUiviPic.getEdition());       
+        handler.setEdition(edition);
+        assertEquals(edition, handler.getEdition());       
     }
     
     @Test
     public void testGetNbreComposants()
     {
         // test valeur vide ou nulle
-        assertEquals(0, lotSUiviPic.getNbreComposants());
+        assertEquals(0, handler.getNbreComposants());
         
         // Test setter et getter
         int nbreComposants = 10;
-        lotSUiviPic.setNbreComposants(nbreComposants);
-        assertEquals(nbreComposants, lotSUiviPic.getNbreComposants());       
+        handler.setNbreComposants(nbreComposants);
+        assertEquals(nbreComposants, handler.getNbreComposants());       
     }
     
     @Test
     public void testGetNbrePaquets()
     {
         // test valeur vide ou nulle
-        assertEquals(0, lotSUiviPic.getNbrePaquets());
+        assertEquals(0, handler.getNbrePaquets());
         
         // Test setter et getter
         int nbrePaquets = 10;
-        lotSUiviPic.setNbrePaquets(nbrePaquets);
-        assertEquals(nbrePaquets, lotSUiviPic.getNbrePaquets());       
+        handler.setNbrePaquets(nbrePaquets);
+        assertEquals(nbrePaquets, handler.getNbrePaquets());       
     }
     
     @Test
     public void testGetBuild()
     {
         // test valeur vide ou nulle
-        assertEquals(null, lotSUiviPic.getBuild());
+        assertEquals(null, handler.getBuild());
         
         // Test setter et getter
-        lotSUiviPic.setBuild(today);
-        assertEquals(today, lotSUiviPic.getBuild());       
+        handler.setBuild(today);
+        assertEquals(today, handler.getBuild());       
     }
     
     @Test
     public void testGetDevtu()
     {
         // test valeur vide ou nulle
-        assertEquals(null, lotSUiviPic.getDevtu());
+        assertEquals(null, handler.getDevtu());
         
         // Test setter et getter
-        lotSUiviPic.setDevtu(today);
-        assertEquals(today, lotSUiviPic.getDevtu());       
+        handler.setDevtu(today);
+        assertEquals(today, handler.getDevtu());       
     }
     
     @Test
     public void testGetTfon()
     {
         // test valeur vide ou nulle
-        assertEquals(null, lotSUiviPic.getTfon());
+        assertEquals(null, handler.getTfon());
         
         // Test setter et getter
-        lotSUiviPic.setTfon(today);
-        assertEquals(today, lotSUiviPic.getTfon());       
+        handler.setTfon(today);
+        assertEquals(today, handler.getTfon());       
     }
     
     @Test
     public void testGetVmoe()
     {
         // test valeur vide ou nulle
-        assertEquals(null, lotSUiviPic.getVmoe());
+        assertEquals(null, handler.getVmoe());
         
         // Test setter et getter
-        lotSUiviPic.setVmoe(today);
-        assertEquals(today, lotSUiviPic.getVmoe());       
+        handler.setVmoe(today);
+        assertEquals(today, handler.getVmoe());       
     }
     
     @Test
     public void testGetVmoa()
     {
         // test valeur vide ou nulle
-        assertEquals(null, lotSUiviPic.getVmoa());
+        assertEquals(null, handler.getVmoa());
         
         // Test setter et getter
-        lotSUiviPic.setVmoa(today);
-        assertEquals(today, lotSUiviPic.getVmoa());       
+        handler.setVmoa(today);
+        assertEquals(today, handler.getVmoa());       
     }
     
     @Test
     public void testGetLivraison()
     {
         // test valeur vide ou nulle
-        assertEquals(null, lotSUiviPic.getLivraison());
+        assertEquals(null, handler.getLivraison());
         
         // Test setter et getter
-        lotSUiviPic.setLivraison(today);
-        assertEquals(today, lotSUiviPic.getLivraison());       
+        handler.setLivraison(today);
+        assertEquals(today, handler.getLivraison());       
     }
     
     /*---------- METHODES PRIVEES ----------*/

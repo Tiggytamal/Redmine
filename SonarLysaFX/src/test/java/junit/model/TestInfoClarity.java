@@ -3,123 +3,111 @@ package junit.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.EMPTY;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import junit.JunitBase;
 import model.InfoClarity;
-import model.ModelFactory;
 
-public class TestInfoClarity extends JunitBase
+public class TestInfoClarity extends AbstractTestModel<InfoClarity>
 {
     /*---------- ATTRIBUTS ----------*/
-
-    private InfoClarity info;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-    
-    @Before
-    public void init()
-    {
-        info = ModelFactory.getModel(InfoClarity.class);
-    }
-    
+    /*---------- CONSTRUCTEURS ----------*/    
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
     public void testIsActif()
     {
         // test valeur vide ou nulle
-        assertFalse(info.isActif());
+        assertFalse(handler.isActif());
         
         // Test setter et getter
-        info.setActif(true);
-        assertTrue(info.isActif());       
+        handler.setActif(true);
+        assertTrue(handler.isActif());       
     }
     
     @Test
     public void testGetCodeClarity()
     {
         // test valeur vide ou nulle
-        assertEquals("", info.getCodeClarity());
+        assertEquals(EMPTY, handler.getCodeClarity());
         
         // Test setter et getter
         String codeClarity = "codeClarity";
-        info.setCodeClarity(codeClarity);
-        assertEquals(codeClarity, info.getCodeClarity());       
+        handler.setCodeClarity(codeClarity);
+        assertEquals(codeClarity, handler.getCodeClarity());       
     }
     
     @Test
     public void testGetLibelleProjet()
     {
         // test valeur vide ou nulle
-        assertEquals("", info.getLibelleProjet());
+        assertEquals(EMPTY, handler.getLibelleProjet());
         
         // Test setter et getter
         String libelleProjet = "libelleProjet";
-        info.setLibelleProjet(libelleProjet);
-        assertEquals(libelleProjet, info.getLibelleProjet());       
+        handler.setLibelleProjet(libelleProjet);
+        assertEquals(libelleProjet, handler.getLibelleProjet());       
     }
     
     @Test
     public void testGetChefProjet()
     {
         // test valeur vide ou nulle
-        assertEquals("", info.getChefProjet());
+        assertEquals(EMPTY, handler.getChefProjet());
         
         // Test setter et getter
         String chefProjet = "chefProjet";
-        info.setChefProjet(chefProjet);
-        assertEquals(chefProjet, info.getChefProjet());       
+        handler.setChefProjet(chefProjet);
+        assertEquals(chefProjet, handler.getChefProjet());       
     }
     
     @Test
     public void testGetEdition()
     {
         // test valeur vide ou nulle
-        assertEquals("", info.getEdition());
+        assertEquals(EMPTY, handler.getEdition());
         
         // Test setter et getter
         String edition = "edition";
-        info.setEdition(edition);
-        assertEquals(edition, info.getEdition());       
+        handler.setEdition(edition);
+        assertEquals(edition, handler.getEdition());       
     }
     
     @Test
     public void testGetDirection()
     {
         // test valeur vide ou nulle
-        assertEquals("", info.getDirection());
+        assertEquals(EMPTY, handler.getDirection());
         
         // Test setter et getter
         String direction = "direction";
-        info.setDirection(direction);
-        assertEquals(direction, info.getDirection());       
+        handler.setDirection(direction);
+        assertEquals(direction, handler.getDirection());       
     }
     
     @Test
     public void testGetDepartement()
     {
         // test valeur vide ou nulle
-        assertEquals("", info.getDepartement());
+        assertEquals(EMPTY, handler.getDepartement());
         
         // Test setter et getter
         String departement = "departement";
-        info.setDepartement(departement);
-        assertEquals(departement, info.getDepartement());       
+        handler.setDepartement(departement);
+        assertEquals(departement, handler.getDepartement());       
     }
     
     @Test
     public void testGetService()
     {
         // test valeur vide ou nulle
-        assertEquals("", info.getService());
+        assertEquals(EMPTY, handler.getService());
         
         // Test setter et getter
         String service = "service";
-        info.setService(service);
-        assertEquals(service, info.getService());       
+        handler.setService(service);
+        assertEquals(service, handler.getService());       
     }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

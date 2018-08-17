@@ -83,7 +83,7 @@ public class TestWorkItemInitialization extends JunitBase
         ano.setCpiProjet("TRICOT Nicolas");
         ano.setVersion("E32");
         ano.setMatieresString(Matiere.DATASTAGE.getValeur());
-        ano.setSecurite("");
+        ano.setSecurite(Statics.EMPTY);
 
         testExecute(ano);
     }

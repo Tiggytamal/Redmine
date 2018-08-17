@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 import control.excel.ControlSuivi;
 import model.Anomalie;
 import model.enums.TypeColSuivi;
+import utilities.Statics;
 
 public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<Anomalie>>
 {
@@ -161,7 +162,7 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
     public void testValoriserCelluleException1() throws Exception
     {
         // Appel méthode avec ligne nulle       
-        invokeMethod(handler, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, null, 1, null, "", null);        
+        invokeMethod(handler, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, null, 1, null, Statics.EMPTY, null);        
     }
     
     @Test(expected = IllegalArgumentException.class)

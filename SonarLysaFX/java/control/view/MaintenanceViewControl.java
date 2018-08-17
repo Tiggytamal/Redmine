@@ -57,7 +57,7 @@ public class MaintenanceViewControl extends AbstractViewControl
     public void afficher(ActionEvent event)
     {
         Object source = event.getSource();
-        String id = "";
+        String id = EMPTY;
         if (source instanceof RadioButton)
         {
             ObservableList<Node> children = selectPane.getChildren();

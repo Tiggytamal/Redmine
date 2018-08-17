@@ -72,7 +72,7 @@ public enum TypeAction
         private static final String CLOTURER = "A clôturer";
         private static final String ABANDONNER = "A abandonner";
         private static final String RELANCER = "A relancer";
-        private static final String VIDE = "";
+        private static final String VIDE = EMPTY;
         
         private Valeur() 
         {

@@ -4,15 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static utilities.Statics.EMPTY;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.poi.xssf.usermodel.XSSFComment;
-import org.junit.Before;
 import org.junit.Test;
 
-import junit.JunitBase;
 import model.Anomalie;
 import model.InfoClarity;
 import model.LotSuiviRTC;
@@ -21,11 +20,10 @@ import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
 
-public class TestAnomalie extends JunitBase
+public class TestAnomalie extends AbstractTestModel<Anomalie>
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private Anomalie ano;
     private XSSFComment comment;
     
     /*---------- CONSTRUCTEURS ----------*/
@@ -35,20 +33,14 @@ public class TestAnomalie extends JunitBase
         comment = new XSSFComment(null, null, null);
     }
     
-    @Before
-    public void init()
-    {
-        ano = ModelFactory.getModel(Anomalie.class);
-    }
-    
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
     public void testAnomlieWithLot()
     {
         // Test création anomalie depuis LotSuiviRTC
-        ano = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotSuiviRTC.class));
-        assertNotNull(ano);
+        handler = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotSuiviRTC.class));
+        assertNotNull(handler);
     }
     
     @Test
@@ -69,13 +61,13 @@ public class TestAnomalie extends JunitBase
         lotRTC.setEtatLot(EtatLot.NOUVEAU);
         
         // Test
-        ano.majDepuisRTC(lotRTC);
-        assertEquals(cpi, ano.getCpiProjet());
-        assertEquals(edition, ano.getEdition());
-        assertEquals(libProjet, ano.getLibelleProjet());
-        assertEquals(clarity, ano.getProjetClarity());
-        assertEquals("Lot " + lot, ano.getLot());
-        assertEquals(EtatLot.NOUVEAU, ano.getEtatLot());       
+        handler.majDepuisRTC(lotRTC);
+        assertEquals(cpi, handler.getCpiProjet());
+        assertEquals(edition, handler.getEdition());
+        assertEquals(libProjet, handler.getLibelleProjet());
+        assertEquals(clarity, handler.getProjetClarity());
+        assertEquals("Lot " + lot, handler.getLot());
+        assertEquals(EtatLot.NOUVEAU, handler.getEtatLot());       
     }
     
     @Test
@@ -91,47 +83,47 @@ public class TestAnomalie extends JunitBase
         infoClarity.setService(service);
         
         // Test
-        ano.majDepuisClarity(infoClarity);
-        assertEquals(direction, ano.getDirection());
-        assertEquals(departement, ano.getDepartement());
-        assertEquals(service, ano.getService());
+        handler.majDepuisClarity(infoClarity);
+        assertEquals(direction, handler.getDirection());
+        assertEquals(departement, handler.getDepartement());
+        assertEquals(service, handler.getService());
     }
     
     @Test
     public void testToString()
     {
-        ano.setLot("123456");
-        ano.setNumeroAnomalie(12);
-        assertEquals("Anomalie du lot 123456 - RTC = 12", ano.toString());
+        handler.setLot("123456");
+        handler.setNumeroAnomalie(12);
+        assertEquals("Anomalie du lot 123456 - RTC = 12", handler.toString());
     }
     
     @Test
     public void testCalculTraitee()
     {
         // Avec une objet juste initialisé, le booleén doit être à faux.
-        ano.calculTraitee();
-        assertFalse(ano.isTraitee());
+        handler.calculTraitee();
+        assertFalse(handler.isTraitee());
         
         // Test avec remarque non nulle.
-        ano.setRemarque("");
-        ano.calculTraitee();
-        assertFalse(ano.isTraitee());
+        handler.setRemarque(EMPTY);
+        handler.calculTraitee();
+        assertFalse(handler.isTraitee());
         
         // Test avec remarque non vide.
-        ano.setRemarque("remarque");
-        ano.calculTraitee();
-        assertTrue(ano.isTraitee());
+        handler.setRemarque("remarque");
+        handler.calculTraitee();
+        assertTrue(handler.isTraitee());
         
         // test avec numéro d'anomalie non 0.
-        ano.setRemarque(null);
-        ano.setNumeroAnomalie(10);
-        ano.calculTraitee();
-        assertTrue(ano.isTraitee());
+        handler.setRemarque(null);
+        handler.setNumeroAnomalie(10);
+        handler.calculTraitee();
+        assertTrue(handler.isTraitee());
         
         // Test avec les deux bons
-        ano.setRemarque("rem");
-        ano.calculTraitee();
-        assertTrue(ano.isTraitee());
+        handler.setRemarque("rem");
+        handler.calculTraitee();
+        assertTrue(handler.isTraitee());
     }
     
     @Test
@@ -141,329 +133,329 @@ public class TestAnomalie extends JunitBase
         Set<Matiere> matieres = new HashSet<>();
         matieres.add(Matiere.JAVA);
         matieres.add(Matiere.DATASTAGE);
-        ano.setMatieres(matieres);
+        handler.setMatieres(matieres);
         
         // Test
-        assertTrue(ano.getMatieresString().contains(Matiere.JAVA.toString()));
-        assertTrue(ano.getMatieresString().contains(Matiere.DATASTAGE.toString()));
-        assertTrue(ano.getMatieresString().contains(" - "));
+        assertTrue(handler.getMatieresString().contains(Matiere.JAVA.toString()));
+        assertTrue(handler.getMatieresString().contains(Matiere.DATASTAGE.toString()));
+        assertTrue(handler.getMatieresString().contains(" - "));
     }
     
     @Test
     public void testSetMatieresString()
     {
         // Test avec string vide ou null
-        ano.setMatieresString(null);
-        assertEquals(0, ano.getMatieres().size());
-        ano.setMatieresString("");
-        assertEquals(0, ano.getMatieres().size());
+        handler.setMatieresString(null);
+        assertEquals(0, handler.getMatieres().size());
+        handler.setMatieresString(EMPTY);
+        assertEquals(0, handler.getMatieres().size());
         
         
         // Test avec une matière
         String matiere = "JAVA";
-        ano.setMatieresString(matiere);
-        assertEquals(Matiere.JAVA, ano.getMatieres().iterator().next());
+        handler.setMatieresString(matiere);
+        assertEquals(Matiere.JAVA, handler.getMatieres().iterator().next());
         
         // Test avec deux matières
         String matieres = "JAVA - DATASTAGE";
-        ano.setMatieresString(matieres);
-        assertTrue(ano.getMatieres().contains(Matiere.JAVA));
-        assertTrue(ano.getMatieres().contains(Matiere.DATASTAGE));
+        handler.setMatieresString(matieres);
+        assertTrue(handler.getMatieres().contains(Matiere.JAVA));
+        assertTrue(handler.getMatieres().contains(Matiere.DATASTAGE));
     }
     
     @Test
     public void testGetDirection()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getDirection());
+        assertEquals(EMPTY, handler.getDirection());
         
         // Test setter et getter
         String direction = "Direction";
-        ano.setDirection(direction);
-        assertEquals(direction, ano.getDirection());       
+        handler.setDirection(direction);
+        assertEquals(direction, handler.getDirection());       
     }
     
     @Test
     public void testGetDepartement()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getDepartement());
+        assertEquals(EMPTY, handler.getDepartement());
         
         // Test setter et getter
         String string = "Departement";
-        ano.setDepartement(string);
-        assertEquals(string, ano.getDepartement());       
+        handler.setDepartement(string);
+        assertEquals(string, handler.getDepartement());       
     }
     
     @Test
     public void testGetService()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getService());
+        assertEquals(EMPTY, handler.getService());
         
         // Test setter et getter
         String string = "Service";
-        ano.setService(string);
-        assertEquals(string, ano.getService());       
+        handler.setService(string);
+        assertEquals(string, handler.getService());       
     }
     
     @Test
     public void testGetResponsableService()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getResponsableService());
+        assertEquals(EMPTY, handler.getResponsableService());
         
         // Test setter et getter
         String string = "RespService";
-        ano.setResponsableService(string);
-        assertEquals(string, ano.getResponsableService());       
+        handler.setResponsableService(string);
+        assertEquals(string, handler.getResponsableService());       
     }
     
     @Test
     public void testGetProjetClarity()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getProjetClarity());
+        assertEquals(EMPTY, handler.getProjetClarity());
         
         // Test setter et getter
         String string = "projetClarity";
-        ano.setProjetClarity(string);
-        assertEquals(string, ano.getProjetClarity());       
+        handler.setProjetClarity(string);
+        assertEquals(string, handler.getProjetClarity());       
     }
     
     @Test
     public void testGetLibelleProjet()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getLibelleProjet());
+        assertEquals(EMPTY, handler.getLibelleProjet());
         
         // Test setter et getter
         String string = "libelleProjet";
-        ano.setLibelleProjet(string);
-        assertEquals(string, ano.getLibelleProjet());       
+        handler.setLibelleProjet(string);
+        assertEquals(string, handler.getLibelleProjet());       
     }
     
     @Test
     public void testGetCpiProjet()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getCpiProjet());
+        assertEquals(EMPTY, handler.getCpiProjet());
         
         // Test setter et getter
         String string = "cpiProjet";
-        ano.setCpiProjet(string);
-        assertEquals(string, ano.getCpiProjet());       
+        handler.setCpiProjet(string);
+        assertEquals(string, handler.getCpiProjet());       
     }
     
     @Test
     public void testGetEdition()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getEdition());
+        assertEquals(EMPTY, handler.getEdition());
         
         // Test setter et getter
         String string = "edition";
-        ano.setEdition(string);
-        assertEquals(string, ano.getEdition());       
+        handler.setEdition(string);
+        assertEquals(string, handler.getEdition());       
     }
     
     @Test
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getLot());
+        assertEquals(EMPTY, handler.getLot());
         
         // Test setter et getter
         String string = "lot";
-        ano.setLot(string);
-        assertEquals(string, ano.getLot());       
+        handler.setLot(string);
+        assertEquals(string, handler.getLot());       
     }
     
     @Test
     public void testGetNumeroAnomalie()
     {
         // test valeur vide ou nulle
-        assertEquals(0, ano.getNumeroAnomalie());
+        assertEquals(0, handler.getNumeroAnomalie());
         
         // Test setter et getter
         int integer = 12;
-        ano.setNumeroAnomalie(integer);
-        assertEquals(integer, ano.getNumeroAnomalie());       
+        handler.setNumeroAnomalie(integer);
+        assertEquals(integer, handler.getNumeroAnomalie());       
     }
     
     @Test
     public void testGetEtat()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getEtat());
+        assertEquals(EMPTY, handler.getEtat());
         
         // Test setter et getter
         String string = "etat";
-        ano.setEtat(string);
-        assertEquals(string, ano.getEtat());       
+        handler.setEtat(string);
+        assertEquals(string, handler.getEtat());       
     }
     
     @Test
     public void testGetSecurite()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getSecurite());
+        assertEquals(EMPTY, handler.getSecurite());
         
         // Test setter et getter
         String string = "securite";
-        ano.setSecurite(string);
-        assertEquals(string, ano.getSecurite());       
+        handler.setSecurite(string);
+        assertEquals(string, handler.getSecurite());       
     }
     
     @Test
     public void testGetRemarque()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getRemarque());
+        assertEquals(EMPTY, handler.getRemarque());
         
         // Test setter et getter
         String string = "remarque";
-        ano.setRemarque(string);
-        assertEquals(string, ano.getRemarque());       
+        handler.setRemarque(string);
+        assertEquals(string, handler.getRemarque());       
     }
     
     @Test
     public void testGetLiensLot()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getLiensLot());
+        assertEquals(EMPTY, handler.getLiensLot());
         
         // Test setter et getter
         String string = "liensLot";
-        ano.setLiensLot(string);
-        assertEquals(string, ano.getLiensLot());       
+        handler.setLiensLot(string);
+        assertEquals(string, handler.getLiensLot());       
     }
     
     @Test
     public void testGetLiensAno()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getLiensAno());
+        assertEquals(EMPTY, handler.getLiensAno());
         
         // Test setter et getter
         String string = "liensAno";
-        ano.setLiensAno(string);
-        assertEquals(string, ano.getLiensAno());       
+        handler.setLiensAno(string);
+        assertEquals(string, handler.getLiensAno());       
     }
     
     @Test
     public void testGetTypeAssemblage()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getTypeAssemblage());
+        assertEquals(EMPTY, handler.getTypeAssemblage());
         
         // Test setter et getter
         String string = "typeAssemblage";
-        ano.setTypeAssemblage(string);
-        assertEquals(string, ano.getTypeAssemblage());       
+        handler.setTypeAssemblage(string);
+        assertEquals(string, handler.getTypeAssemblage());       
     }
     
     @Test
     public void testGetVersion()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getVersion());
+        assertEquals(EMPTY, handler.getVersion());
         
         // Test setter et getter
         String string = "version";
-        ano.setVersion(string);
-        assertEquals(string, ano.getVersion());       
+        handler.setVersion(string);
+        assertEquals(string, handler.getVersion());       
     }
     
     @Test
     public void testGetProjetRTC()
     {
         // test valeur vide ou nulle
-        assertEquals("", ano.getProjetRTC());
+        assertEquals(EMPTY, handler.getProjetRTC());
         
         // Test setter et getter
         String string = "projetRTC";
-        ano.setProjetRTC(string);
-        assertEquals(string, ano.getProjetRTC());       
+        handler.setProjetRTC(string);
+        assertEquals(string, handler.getProjetRTC());       
     }
     
     @Test
     public void testGetEnvironnement()
     {
         // test valeur vide ou nulle
-        assertEquals(EtatLot.INCONNU, ano.getEtatLot());
+        assertEquals(EtatLot.INCONNU, handler.getEtatLot());
         
         // Test setter et getter
         EtatLot env = EtatLot.DEVTU;
-        ano.setEtatLot(env);
-        assertEquals(env, ano.getEtatLot());       
+        handler.setEtatLot(env);
+        assertEquals(env, handler.getEtatLot());       
     }
     
     @Test
     public void testGetAction()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getAction());
+        assertEquals(null, handler.getAction());
         
         // Test setter et getter
         TypeAction action = TypeAction.CREER;
-        ano.setAction(action);
-        assertEquals(action, ano.getAction());       
+        handler.setAction(action);
+        assertEquals(action, handler.getAction());       
     }
     
     @Test
     public void testGetDateCreation()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDateCreation());
+        assertEquals(null, handler.getDateCreation());
         
         // Test setter et getter
-        ano.setDateCreation(today);
-        assertEquals(today, ano.getDateCreation());       
+        handler.setDateCreation(today);
+        assertEquals(today, handler.getDateCreation());       
     }
     
     @Test
     public void testGetDateDetection()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDateDetection());
+        assertEquals(null, handler.getDateDetection());
         
         // Test setter et getter
-        ano.setDateDetection(today);
-        assertEquals(today, ano.getDateDetection());       
+        handler.setDateDetection(today);
+        assertEquals(today, handler.getDateDetection());       
     }
     
     @Test
     public void testGetDateRelance()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDateRelance());
+        assertEquals(null, handler.getDateRelance());
         
         // Test setter et getter
-        ano.setDateRelance(today);
-        assertEquals(today, ano.getDateRelance());       
+        handler.setDateRelance(today);
+        assertEquals(today, handler.getDateRelance());       
     }
     
     @Test
     public void testGetDateReso()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDateReso());
+        assertEquals(null, handler.getDateReso());
         
         // Test setter et getter
-        ano.setDateReso(today);
-        assertEquals(today, ano.getDateReso());       
+        handler.setDateReso(today);
+        assertEquals(today, handler.getDateReso());       
     }
     
     @Test
     public void testGetDateMajEtat()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDateMajEtat());
+        assertEquals(null, handler.getDateMajEtat());
         
         // Test setter et getter
-        ano.setDateMajEtat(today);
-        assertEquals(today, ano.getDateMajEtat());       
+        handler.setDateMajEtat(today);
+        assertEquals(today, handler.getDateMajEtat());       
     }
     
     /* TEST COMMENTAIRES */
@@ -472,286 +464,286 @@ public class TestAnomalie extends JunitBase
     public void testGetDirectionComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDirectionComment());
+        assertEquals(null, handler.getDirectionComment());
         
         // Test setter et getter
-        ano.setDirectionComment(comment);
-        assertEquals(comment, ano.getDirectionComment());   
+        handler.setDirectionComment(comment);
+        assertEquals(comment, handler.getDirectionComment());   
     }
     
     @Test
     public void testGetDepartementComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDepartementComment());
+        assertEquals(null, handler.getDepartementComment());
         
         // Test setter et getter
-        ano.setDepartementComment(comment);
-        assertEquals(comment, ano.getDepartementComment());   
+        handler.setDepartementComment(comment);
+        assertEquals(comment, handler.getDepartementComment());   
     }
     
     @Test
     public void testGetServiceComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getServiceComment());
+        assertEquals(null, handler.getServiceComment());
         
         // Test setter et getter
-        ano.setServiceComment(comment);
-        assertEquals(comment, ano.getServiceComment());   
+        handler.setServiceComment(comment);
+        assertEquals(comment, handler.getServiceComment());   
     }
     
     @Test
     public void testGetResponsableServiceComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getResponsableServiceComment());
+        assertEquals(null, handler.getResponsableServiceComment());
         
         // Test setter et getter
-        ano.setResponsableServiceComment(comment);
-        assertEquals(comment, ano.getResponsableServiceComment());   
+        handler.setResponsableServiceComment(comment);
+        assertEquals(comment, handler.getResponsableServiceComment());   
     }
     
     @Test
     public void testGetProjetClarityComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getProjetClarityComment());
+        assertEquals(null, handler.getProjetClarityComment());
         
         // Test setter et getter
-        ano.setProjetClarityComment(comment);
-        assertEquals(comment, ano.getProjetClarityComment());   
+        handler.setProjetClarityComment(comment);
+        assertEquals(comment, handler.getProjetClarityComment());   
     }
     
     @Test
     public void testGetLibelleProjetComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getLibelleProjetComment());
+        assertEquals(null, handler.getLibelleProjetComment());
         
         // Test setter et getter
-        ano.setLibelleProjetComment(comment);
-        assertEquals(comment, ano.getLibelleProjetComment());   
+        handler.setLibelleProjetComment(comment);
+        assertEquals(comment, handler.getLibelleProjetComment());   
     }
     
     @Test
     public void testGetCpiProjetComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getCpiProjetComment());
+        assertEquals(null, handler.getCpiProjetComment());
         
         // Test setter et getter
-        ano.setCpiProjetComment(comment);
-        assertEquals(comment, ano.getCpiProjetComment());   
+        handler.setCpiProjetComment(comment);
+        assertEquals(comment, handler.getCpiProjetComment());   
     }
     
     @Test
     public void testGetEditionComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getEditionComment());
+        assertEquals(null, handler.getEditionComment());
         
         // Test setter et getter
-        ano.setEditionComment(comment);
-        assertEquals(comment, ano.getEditionComment());   
+        handler.setEditionComment(comment);
+        assertEquals(comment, handler.getEditionComment());   
     }
     
     @Test
     public void testGetLotComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getLotComment());
+        assertEquals(null, handler.getLotComment());
         
         // Test setter et getter
-        ano.setLotComment(comment);
-        assertEquals(comment, ano.getLotComment());   
+        handler.setLotComment(comment);
+        assertEquals(comment, handler.getLotComment());   
     }
     
     @Test
     public void testGetLiensLotComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getLiensLotComment());
+        assertEquals(null, handler.getLiensLotComment());
         
         // Test setter et getter
-        ano.setLiensLotComment(comment);
-        assertEquals(comment, ano.getLiensLotComment());   
+        handler.setLiensLotComment(comment);
+        assertEquals(comment, handler.getLiensLotComment());   
     }
     
     @Test
     public void testGetEnvironnementComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getEtatLotComment());
+        assertEquals(null, handler.getEtatLotComment());
         
         // Test setter et getter
-        ano.setEtatLotComment(comment);
-        assertEquals(comment, ano.getEtatLotComment());   
+        handler.setEtatLotComment(comment);
+        assertEquals(comment, handler.getEtatLotComment());   
     }
     
     @Test
     public void testGetNumeroAnomalieComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getNumeroAnomalieComment());
+        assertEquals(null, handler.getNumeroAnomalieComment());
         
         // Test setter et getter
-        ano.setNumeroAnomalieComment(comment);
-        assertEquals(comment, ano.getNumeroAnomalieComment());   
+        handler.setNumeroAnomalieComment(comment);
+        assertEquals(comment, handler.getNumeroAnomalieComment());   
     }
     
     @Test
     public void testGetLiensAnoComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getLiensAnoComment());
+        assertEquals(null, handler.getLiensAnoComment());
         
         // Test setter et getter
-        ano.setLiensAnoComment(comment);
-        assertEquals(comment, ano.getLiensAnoComment());   
+        handler.setLiensAnoComment(comment);
+        assertEquals(comment, handler.getLiensAnoComment());   
     }
     
     @Test
     public void testGetEtatComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getEtatComment());
+        assertEquals(null, handler.getEtatComment());
         
         // Test setter et getter
-        ano.setEtatComment(comment);
-        assertEquals(comment, ano.getEtatComment());   
+        handler.setEtatComment(comment);
+        assertEquals(comment, handler.getEtatComment());   
     }
     
     @Test
     public void testGetTypeAssemblageComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getTypeAssemblageComment());
+        assertEquals(null, handler.getTypeAssemblageComment());
         
         // Test setter et getter
-        ano.setTypeAssemblageComment(comment);
-        assertEquals(comment, ano.getTypeAssemblageComment());   
+        handler.setTypeAssemblageComment(comment);
+        assertEquals(comment, handler.getTypeAssemblageComment());   
     }
     
     @Test
     public void testGetSecuriteComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getSecuriteComment());
+        assertEquals(null, handler.getSecuriteComment());
         
         // Test setter et getter
-        ano.setSecuriteComment(comment);
-        assertEquals(comment, ano.getSecuriteComment());   
+        handler.setSecuriteComment(comment);
+        assertEquals(comment, handler.getSecuriteComment());   
     }
     
     @Test
     public void testGetRemarqueComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getRemarqueComment());
+        assertEquals(null, handler.getRemarqueComment());
         
         // Test setter et getter
-        ano.setRemarqueComment(comment);
-        assertEquals(comment, ano.getRemarqueComment());   
+        handler.setRemarqueComment(comment);
+        assertEquals(comment, handler.getRemarqueComment());   
     }
     
     @Test
     public void testGetVersionComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getVersionComment());
+        assertEquals(null, handler.getVersionComment());
         
         // Test setter et getter
-        ano.setVersionComment(comment);
-        assertEquals(comment, ano.getVersionComment());   
+        handler.setVersionComment(comment);
+        assertEquals(comment, handler.getVersionComment());   
     }
     
     @Test
     public void testGetDateCreationComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDateCreationComment());
+        assertEquals(null, handler.getDateCreationComment());
         
         // Test setter et getter
-        ano.setDateCreationComment(comment);
-        assertEquals(comment, ano.getDateCreationComment());   
+        handler.setDateCreationComment(comment);
+        assertEquals(comment, handler.getDateCreationComment());   
     }
     
     @Test
     public void testGetDateDetectionComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDateDetectionComment());
+        assertEquals(null, handler.getDateDetectionComment());
         
         // Test setter et getter
-        ano.setDateDetectionComment(comment);
-        assertEquals(comment, ano.getDateDetectionComment());   
+        handler.setDateDetectionComment(comment);
+        assertEquals(comment, handler.getDateDetectionComment());   
     }
     
     @Test
     public void testGetDateResoComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDateResoComment());
+        assertEquals(null, handler.getDateResoComment());
         
         // Test setter et getter
-        ano.setDateResoComment(comment);
-        assertEquals(comment, ano.getDateResoComment());   
+        handler.setDateResoComment(comment);
+        assertEquals(comment, handler.getDateResoComment());   
     }
     
     @Test
     public void testGetDateMajEtatComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDateMajEtatComment());
+        assertEquals(null, handler.getDateMajEtatComment());
         
         // Test setter et getter
-        ano.setDateMajEtatComment(comment);
-        assertEquals(comment, ano.getDateMajEtatComment());   
+        handler.setDateMajEtatComment(comment);
+        assertEquals(comment, handler.getDateMajEtatComment());   
     }
     
     @Test
     public void testGetDateRelanceComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getDateRelanceComment());
+        assertEquals(null, handler.getDateRelanceComment());
         
         // Test setter et getter
-        ano.setDateRelanceComment(comment);
-        assertEquals(comment, ano.getDateRelanceComment());   
+        handler.setDateRelanceComment(comment);
+        assertEquals(comment, handler.getDateRelanceComment());   
     }
     
     @Test
     public void testGetMatieresComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getMatieresComment());
+        assertEquals(null, handler.getMatieresComment());
         
         // Test setter et getter
-        ano.setMatieresComment(comment);
-        assertEquals(comment, ano.getMatieresComment());   
+        handler.setMatieresComment(comment);
+        assertEquals(comment, handler.getMatieresComment());   
     }
     
     @Test
     public void testGetProjetRTCComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getProjetRTCComment());
+        assertEquals(null, handler.getProjetRTCComment());
         
         // Test setter et getter
-        ano.setProjetRTCComment(comment);
-        assertEquals(comment, ano.getProjetRTCComment());   
+        handler.setProjetRTCComment(comment);
+        assertEquals(comment, handler.getProjetRTCComment());   
     }
     
     @Test
     public void testGetActionComment()
     {
         // test valeur vide ou nulle
-        assertEquals(null, ano.getActionComment());
+        assertEquals(null, handler.getActionComment());
         
         // Test setter et getter
-        ano.setActionComment(comment);
-        assertEquals(comment, ano.getActionComment());   
+        handler.setActionComment(comment);
+        assertEquals(comment, handler.getActionComment());   
     }
     
     /*---------- METHODES PRIVEES ----------*/
