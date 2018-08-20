@@ -12,7 +12,7 @@ public class TestTypeFichier implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(6, TypeFichier.values().length);
+        assertEquals(7, TypeFichier.values().length);
     }
 
     @Test

@@ -196,7 +196,7 @@ public class ControlMail
      * Enregistre une information dans le mail de rapport
      * 
      * @param type
-     * @param info
+     * @param handler
      */
     public void addInfo(TypeInfoMail type, String lot, String infoSupp)
     {

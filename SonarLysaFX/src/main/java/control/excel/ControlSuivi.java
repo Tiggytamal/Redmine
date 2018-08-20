@@ -41,6 +41,7 @@ import com.ibm.team.workitem.common.model.IWorkItem;
 import control.mail.ControlMail;
 import control.rtc.ControlRTC;
 import model.Anomalie;
+import model.ControlModelInfo;
 import model.InfoClarity;
 import model.ModelFactory;
 import model.RespService;
@@ -108,6 +109,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     private int colAction;
     private int colDateRes;
     private int colDateMajEtat;
+    private int colNpc;
 
     // Liens vers Sonar et RTC
     private String lienslots;
@@ -119,6 +121,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     // Controleurs
     private ControlMail controlMail;
     private ControlRTC controlRTC;
+    private ControlModelInfo controlModelInfo;
 
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
@@ -135,6 +138,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         liensAnos = proprietes.get(Param.LIENSANOS);
         controlMail = new ControlMail();
         controlRTC = ControlRTC.INSTANCE;
+        controlModelInfo = new ControlModelInfo();
         initContraintes();
     }
 
@@ -517,10 +521,13 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         // 2. Contrôle des données
 
         // Contrôle Clarity et mise à jour données
-        controleClarity(ano);
+        controlModelInfo.controleClarity(ano, controlMail);
 
         // Contrôle chef de service et mise à jour des données
         controleChefDeService(ano);
+        
+        // Contrôle si le projet est un projet NPC
+        controleNPC(ano);
 
         // Controle informations RTC
         try
@@ -626,6 +633,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
         // Action
         valoriserCellule(row, colAction, centre, ano.getAction(), ano.getActionComment());
+        
+        // Projet NPC
+        valoriserCellule(row, colNpc, centre, ano.getNpc(), ano.getNpcComment());
     }
 
     /**
@@ -896,6 +906,20 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             controlMail.addInfo(TypeInfoMail.SERVICESSANSRESP, ano.getLot(), ano.getService());
         }
     }
+    
+    /**
+     * Met à jour le champ NPC si le projet en fait parti
+     * 
+     * @param ano
+     * 
+     */
+    private void controleNPC(Anomalie ano)
+    {
+        if (Statics.fichiersXML.getMapProjetsNpc().containsKey(ano.getProjetRTC()))
+            ano.setNpc("X");
+        else
+            ano.setNpc(Statics.EMPTY);
+    }
 
     /**
      * Crée une anomalie depuis les informatiosn du fichier Excel
@@ -952,6 +976,8 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         retour.setActionComment(getCellComment(row, colAction));
         retour.setProjetRTC(getCellStringValue(row, colProjetRTC));
         retour.setProjetRTCComment(getCellComment(row, colProjetRTC));
+        retour.setNpc(getCellStringValue(row, colNpc));
+        retour.setNpcComment(getCellComment(row, colNpc));
         retour.calculTraitee();
         return retour;
     }

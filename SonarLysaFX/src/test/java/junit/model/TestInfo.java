@@ -23,49 +23,50 @@ public class TestInfo extends AbstractTestModel<Info>
     public void testControle()
     {
         String valeur = "pasvide";
+        
         // Test après initialisation
-        assertFalse(info.controle());
+        assertFalse(handler.controle());
         
         // Test mot de passe vide
-        info.setMotDePasse(EMPTY);
-        assertFalse(info.controle());
+        handler.setMotDePasse(EMPTY);
+        assertFalse(handler.controle());
         
         // Test pseudo vide
-        info.setPseudo(EMPTY);
-        info.setMotDePasse(null);
-        assertFalse(info.controle());
+        handler.setPseudo(EMPTY);
+        handler.setMotDePasse(null);
+        assertFalse(handler.controle());
         
         // Test les deux vides
-        info.setPseudo(EMPTY);
-        info.setMotDePasse(EMPTY);
-        assertFalse(info.controle());
+        handler.setPseudo(EMPTY);
+        handler.setMotDePasse(EMPTY);
+        assertFalse(handler.controle());
         
         // Test mot de passe rempli
-        info.setMotDePasse(valeur);
-        assertFalse(info.controle());
+        handler.setMotDePasse(valeur);
+        assertFalse(handler.controle());
         
         // Test pseudo rempli
-        info.setMotDePasse(EMPTY);
-        info.setPseudo(valeur);
-        assertFalse(info.controle());
+        handler.setMotDePasse(EMPTY);
+        handler.setPseudo(valeur);
+        assertFalse(handler.controle());
         
         // Test les deux remplis
-        info.setPseudo(valeur);
-        info.setMotDePasse(valeur);
-        assertTrue(info.controle());
+        handler.setPseudo(valeur);
+        handler.setMotDePasse(valeur);
+        assertTrue(handler.controle());
     }
     
     @Test
     public void testGetFile()
     {
-        File file = info.getFile();       
+        File file = handler.getFile();       
         assertEquals(new File(Statics.JARPATH + Whitebox.getInternalState(Info.class, "NOMFICHIER")), file);
     }
     
     @Test
     public void testGetRessource()
     {
-        File resource = info.getResource();
+        File resource = handler.getResource();
         
         assertEquals(new File(getClass().getResource(Whitebox.getInternalState(Info.class, "RESOURCE")).getFile()), resource);
     }
@@ -74,53 +75,53 @@ public class TestInfo extends AbstractTestModel<Info>
     public void testControleDonnees()
     {
         // Test mdp null
-        info.setPseudo("a");
-        assertFalse(info.controleDonnees().isEmpty());
+        handler.setPseudo("a");
+        assertFalse(handler.controleDonnees() + " - n'est pas vide", handler.controleDonnees().isEmpty());
         
         // Test pseudo null
-        info.setPseudo(null);
-        info.setMotDePasse("b");
-        assertFalse(info.controleDonnees().isEmpty());
+        handler.setPseudo(null);
+        handler.setMotDePasse("b");
+        assertFalse(handler.controleDonnees().isEmpty());
         
         // test ok
-        info.setPseudo("a");
-        assertEquals(0, info.controleDonnees().length());
+        handler.setPseudo("a");
+        assertEquals(0, handler.controleDonnees().length());
     }
     
     @Test
     public void testGetMotDePasse()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, info.getMotDePasse());
+        assertEquals(EMPTY, handler.getMotDePasse());
         
         // Test setter et getter
         String mdp = "motDePasse";
-        info.setMotDePasse(mdp);
-        assertEquals(mdp, info.getMotDePasse());  
+        handler.setMotDePasse(mdp);
+        assertEquals(mdp, handler.getMotDePasse());  
     }
     
     @Test
     public void testGetPseudo()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, info.getPseudo());
+        assertEquals(EMPTY, handler.getPseudo());
         
         // Test setter et getter
         String pseudo = "pseudo";
-        info.setPseudo(pseudo);
-        assertEquals(pseudo, info.getPseudo());  
+        handler.setPseudo(pseudo);
+        assertEquals(pseudo, handler.getPseudo());  
     }
     
     @Test
     public void testGetNom()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, info.getNom());
+        assertEquals(EMPTY, handler.getNom());
         
         // Test setter et getter
         String pseudo = "pseudo";
-        info.setNom(pseudo);
-        assertEquals(pseudo, info.getNom());  
+        handler.setNom(pseudo);
+        assertEquals(pseudo, handler.getNom());  
     }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

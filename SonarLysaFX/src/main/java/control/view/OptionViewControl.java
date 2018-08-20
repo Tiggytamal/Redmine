@@ -32,6 +32,7 @@ import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
+import model.enums.TypeColNPC;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
@@ -148,6 +149,10 @@ public final class OptionViewControl extends AbstractViewControl
             case "Applications":
                 afficherColonnes(TypeColApps.class, root);
                 break;
+                
+            case "NPC":
+                afficherColonnes(TypeColNPC.class, root);
+                break;
 
             case "Nom Colonnes":
                 break;
@@ -181,6 +186,10 @@ public final class OptionViewControl extends AbstractViewControl
 
             case "edition":
                 charger("Editions CDM", file -> control.recupEditionDepuisExcel(file));
+                break;
+                
+            case "NPC":
+                charger("Projets NPC", file -> control.recupEditionDepuisExcel(file));
                 break;
 
             default:

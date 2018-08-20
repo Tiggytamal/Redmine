@@ -236,7 +236,17 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
 			<key>DATEMAJETAT</key>
             <value>Date mise à jour état</value>
         </entry>
+        <entry>
+			<key>NPC</key>
+            <value>NPC</value>
+        </entry>
     </mapColsSuivi>
+    <mapColsNPC>
+        <entry>
+            <key>NOM</key>
+            <value>Nom Projet</value>
+        </entry>    
+    </mapColsNPC>
     <mapParams>
         <entry>
             <key>FILTREDATASTAGE</key>

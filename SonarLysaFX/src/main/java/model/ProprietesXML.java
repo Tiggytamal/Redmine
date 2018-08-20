@@ -16,6 +16,7 @@ import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
+import model.enums.TypeColNPC;
 import model.enums.TypeColPic;
 import model.enums.TypeColSuivi;
 import model.enums.Param;
@@ -51,6 +52,7 @@ public class ProprietesXML implements XML, Modele
     private Map<TypeColPic, String> mapColsPic;
     private Map<TypeColEdition, String> mapColsEdition;
     private Map<TypeColApps, String> mapColsApps;
+    private Map<TypeColNPC, String> mapColsNPC;
 
     // Map planificateurs
     private Map<TypePlan, Planificateur> mapPlans;
@@ -66,6 +68,7 @@ public class ProprietesXML implements XML, Modele
         mapColsPic = new EnumMap<>(TypeColPic.class);
         mapColsEdition = new EnumMap<>(TypeColEdition.class);
         mapColsApps = new EnumMap<>(TypeColApps.class);
+        mapColsNPC = new EnumMap<>(TypeColNPC.class);
         mapPlans = new EnumMap<>(TypePlan.class);
         mapParamsBool = new EnumMap<>(ParamBool.class);
         mapParamsSpec = new EnumMap<>(ParamSpec.class);
@@ -100,23 +103,26 @@ public class ProprietesXML implements XML, Modele
     {
         switch (typeColClass.getName())
         {
-            case "model.enums.TypeColSuivi":
+            case "model.enums.TypeColSuivi" :
                 return (Map<T, String>) mapColsSuivi;
 
-            case "model.enums.TypeColClarity":
+            case "model.enums.TypeColClarity" :
                 return (Map<T, String>) mapColsClarity;
 
-            case "model.enums.TypeColChefServ":
+            case "model.enums.TypeColChefServ" :
                 return (Map<T, String>) mapColsChefServ;
 
-            case "model.enums.TypeColPic":
+            case "model.enums.TypeColPic" :
                 return (Map<T, String>) mapColsPic;
 
-            case "model.enums.TypeColEdition":
+            case "model.enums.TypeColEdition" :
                 return (Map<T, String>) mapColsEdition;
 
-            case "model.enums.TypeColApps":
+            case "model.enums.TypeColApps" :
                 return (Map<T, String>) mapColsApps;
+                
+            case "model.enums.TypeColNPC" :
+                return (Map<T, String>) mapColsNPC;
 
             default:
                 throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);
@@ -211,6 +217,13 @@ public class ProprietesXML implements XML, Modele
     {
         return mapColsApps;
     }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsNPC", required = false)
+    private Map<TypeColNPC, String> getMapColsNPC()
+    {
+        return mapColsNPC;
+    }
 
     @Override
     public File getFile()
@@ -237,6 +250,7 @@ public class ProprietesXML implements XML, Modele
         controleMap(builderErreurs, TypeColPic.class, mapColsPic);
         controleMap(builderErreurs, TypeColEdition.class, mapColsEdition);
         controleMap(builderErreurs, TypeColApps.class, mapColsApps);
+        controleMap(builderErreurs, TypeColNPC.class, mapColsNPC);
 
         // Renvoi du booleen
         if (builderErreurs.length() == 0)

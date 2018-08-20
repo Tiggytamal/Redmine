@@ -12,5 +12,6 @@ public enum TypeFichier implements TypeKey
     RESPSERVICE, 
     EDITION,
     LOTSRTC,
-    SONAR;
+    SONAR,
+    NPC;
 }

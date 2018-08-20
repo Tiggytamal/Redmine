@@ -10,7 +10,6 @@ import com.ibm.team.repository.common.TeamRepositoryException;
 import control.xml.ControlXML;
 import model.ComposantSonar;
 import model.FichiersXML;
-import utilities.Statics;
 
 /**
  * Calsse permetant de faire des tests directement avec une entrée JAVA classique

@@ -21,7 +21,7 @@ public abstract class JunitBase
 {   
     protected static final ProprietesXML proprietes = new ControlXML().recupererXMLResources(ProprietesXML.class);
     protected static final FichiersXML fichiers = new ControlXML().recupererXMLResources(FichiersXML.class);
-    protected static final Info info = new ControlXML().recupererXMLResources(Info.class);
+    protected static final Info handler = new ControlXML().recupererXMLResources(Info.class);
     protected final LocalDate today = LocalDate.now();
     
     protected JunitBase()
@@ -29,7 +29,7 @@ public abstract class JunitBase
         // Mock des fichiers de paramètres depuis les ressources
         Whitebox.setInternalState(Statics.class, proprietes);
         Whitebox.setInternalState(Statics.class, fichiers);
-        Whitebox.setInternalState(Statics.class, info);
+        Whitebox.setInternalState(Statics.class, handler);
     }
     
     @Before

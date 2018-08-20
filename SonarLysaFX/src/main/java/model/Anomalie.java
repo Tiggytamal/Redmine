@@ -74,6 +74,8 @@ public class Anomalie implements Modele
     private Comment projetRTCComment;
     private TypeAction action;
     private Comment actionComment;
+    private String npc;
+    private Comment npcComment;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -429,6 +431,16 @@ public class Anomalie implements Modele
     {
         this.matieres = matieres;
     }
+    
+    public String getNpc()
+    {
+        return getString(npc);
+    }
+    
+    public void setNpc(String npc)
+    {
+        this.npc = npc;
+    }
 
     /*---------- ACCESSEURS COMMENTAIRES ----------*/
 
@@ -690,5 +702,15 @@ public class Anomalie implements Modele
     public void setActionComment(Comment actionComment)
     {
         this.actionComment = actionComment;
+    }
+    
+    public Comment getNpcComment()
+    {
+        return npcComment;
+    }
+    
+    public void setNpcComment(Comment npcComment)
+    {
+        this.npcComment = npcComment;
     }
 }

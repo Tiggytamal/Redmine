@@ -37,6 +37,7 @@ public class FichiersXML implements XML, Modele
     private Map<String, String> mapEditions;
     private Map<String, LotSuiviRTC> mapLotsRTC;
     private Map<String, ComposantSonar> mapComposSonar;
+    private Map<String, String> mapProjetsNpc;
 
     private boolean controleOK;
 
@@ -51,6 +52,7 @@ public class FichiersXML implements XML, Modele
         mapComposSonar = new HashMap<>();
         dateMaj = new EnumMap<>(TypeFichier.class);
         mapEditions = new HashMap<>();
+        mapProjetsNpc = new HashMap<>();
         controleOK = true;
     }
 
@@ -109,6 +111,12 @@ public class FichiersXML implements XML, Modele
             case SONAR:
                 mapComposSonar.clear();
                 mapComposSonar.putAll(map);
+                setDateFichier(typeFichier);
+                break;
+                
+            case NPC:
+                mapProjetsNpc.clear();
+                mapProjetsNpc.putAll(map);
                 setDateFichier(typeFichier);
                 break;
 
@@ -230,6 +238,13 @@ public class FichiersXML implements XML, Modele
     public Map<String, ComposantSonar> getMapComposSonar()
     {
         return mapComposSonar;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapProjetsNpc", required = false)
+    public Map<String, String> getMapProjetsNpc()
+    {
+        return mapProjetsNpc;
     }
 
     /**

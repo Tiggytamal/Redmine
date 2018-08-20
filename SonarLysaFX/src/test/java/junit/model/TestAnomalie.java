@@ -458,7 +458,19 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
         assertEquals(today, handler.getDateMajEtat());       
     }
     
-    /* TEST COMMENTAIRES */
+    @Test
+    public void testGetNpc()
+    {
+        // test valeur vide ou nulle
+        assertEquals(EMPTY, handler.getNpc());
+        
+        // Test setter et getter
+        String npc = "npc";
+        handler.setNpc(npc);
+        assertEquals(npc, handler.getNpc());       
+    }
+    
+    /* ---------- TEST COMMENTAIRES ---------- */
     
     @Test
     public void testGetDirectionComment()
@@ -744,6 +756,17 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
         // Test setter et getter
         handler.setActionComment(comment);
         assertEquals(comment, handler.getActionComment());   
+    }
+    
+    @Test
+    public void testGetNpcComment()
+    {
+        // test valeur vide ou nulle
+        assertEquals(null, handler.getNpcComment());
+        
+        // Test setter et getter
+        handler.setNpcComment(comment);
+        assertEquals(comment, handler.getNpcComment());   
     }
     
     /*---------- METHODES PRIVEES ----------*/

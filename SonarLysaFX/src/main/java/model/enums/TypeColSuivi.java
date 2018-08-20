@@ -31,7 +31,8 @@ public enum TypeColSuivi  implements TypeColR
     DATEMAJETAT("Date de mise à jour de l'état", "colDateMajEtat"),
     MATIERE("Matière", "colMatiere"),
     PROJETRTC("Projet RTC", "colProjetRTC"),
-    ACTION("Action", "colAction");
+    ACTION("Action", "colAction"),
+    NPC("Projet NPC", "colNpc");
 
     private final String valeur;
     private final String nomCol;

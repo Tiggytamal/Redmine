@@ -19,7 +19,7 @@ public class TestTypeColSuivi implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(23, TypeColSuivi.values().length);
+        assertEquals(24, TypeColSuivi.values().length);
     }
     
     @Test
@@ -38,6 +38,7 @@ public class TestTypeColSuivi implements TestEnums
         assertEquals("Matière", TypeColSuivi.MATIERE.getValeur());
         assertEquals("Projet RTC", TypeColSuivi.PROJETRTC.getValeur());
         assertEquals("Action", TypeColSuivi.ACTION.getValeur());
+        assertEquals("Projet NPC", TypeColSuivi.NPC.getValeur());
     }
     
     @Test
@@ -64,5 +65,6 @@ public class TestTypeColSuivi implements TestEnums
         assertEquals("colMatiere", TypeColSuivi.MATIERE.getNomCol());
         assertEquals("colProjetRTC", TypeColSuivi.PROJETRTC.getNomCol());
         assertEquals("colAction", TypeColSuivi.ACTION.getNomCol());
+        assertEquals("colNpc", TypeColSuivi.NPC.getNomCol());
     }
 }
