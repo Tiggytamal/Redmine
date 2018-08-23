@@ -17,12 +17,21 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import junit.JunitBase;
 import model.enums.TypeFichier;
+import model.utilities.AbstractModele;
+import model.utilities.XML;
 import utilities.DateConvert;
 import utilities.Statics;
 import utilities.TechnicalException;
 
+/**
+ * Classe représentant le fichier XML de sauvegarde des données
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 @XmlRootElement
-public class FichiersXML implements XML, Modele
+public class FichiersXML extends AbstractModele implements XML
 {
     /*---------- ATTRIBUTS ----------*/
 

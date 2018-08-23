@@ -5,8 +5,17 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+
+/**
+ * Classe de modèle réprésentant un composant SonarQube du fichier XML
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 @XmlRootElement
-public class ComposantSonar implements Modele, Serializable
+public class ComposantSonar extends AbstractModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 

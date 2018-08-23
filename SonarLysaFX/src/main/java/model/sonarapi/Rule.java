@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class Rule
+public class Rule extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -38,7 +41,7 @@ public class Rule
     @XmlAttribute(name = "key")
     public String getKey()
     {
-        return key;
+        return getString(key);
     }
 
     public void setKey(String key)
@@ -49,7 +52,7 @@ public class Rule
     @XmlAttribute(name = "name")
     public String getName()
     {
-        return name;
+        return getString(name);
     }
 
     public void setName(String name)
@@ -60,7 +63,7 @@ public class Rule
     @XmlAttribute(name = "status")
     public String getStatus()
     {
-        return status;
+        return getString(status);
     }
 
     public void setStatus(String status)
@@ -71,7 +74,7 @@ public class Rule
     @XmlAttribute(name = "lang")
     public String getLang()
     {
-        return lang;
+        return getString(lang);
     }
 
     public void setLang(String lang)
@@ -82,7 +85,7 @@ public class Rule
     @XmlAttribute(name = "langName")
     public String getLangName()
     {
-        return langName;
+        return getString(langName);
     }
 
     public void setLangName(String langName)

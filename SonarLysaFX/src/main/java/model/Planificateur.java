@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import model.utilities.AbstractModele;
 import utilities.adapter.LocalTimeAdapter;
 
 /**
@@ -17,7 +18,7 @@ import utilities.adapter.LocalTimeAdapter;
  * @author ETP8137 - Grégoire Mathon
  */
 @XmlRootElement
-public class Planificateur implements Modele
+public class Planificateur extends AbstractModele
 {
     /*---------- ATTRIBUTS ----------*/
 

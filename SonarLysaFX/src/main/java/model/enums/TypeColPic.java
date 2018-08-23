@@ -2,8 +2,10 @@ package model.enums;
 
 /**
  * Colonnes des extractions de la Pic
+ * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public enum TypeColPic implements TypeColR
 {

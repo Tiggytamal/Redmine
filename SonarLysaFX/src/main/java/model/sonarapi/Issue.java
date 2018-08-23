@@ -1,12 +1,14 @@
 package model.sonarapi;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
 
 /**
  * Classe de modèle pour les erreurs remontées dans SonarQube
@@ -17,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @XmlRootElement
 @JsonIgnoreProperties({"flows","components"})
-public class Issue implements ModeleSonar
+public class Issue extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -98,7 +100,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "key")
     public String getKey()
     {
-        return key;
+        return getString(key);
     }
     
     public void setKey(String key)
@@ -109,7 +111,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "rule", required = false)
     public String getRule()
     {
-        return rule;
+        return getString(rule);
     }
     
     public void setRule(String rule)
@@ -120,7 +122,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "severity", required = false)
     public String getSeverity()
     {
-        return severity;
+        return getString(severity);
     }
     
     public void setSeverity(String severity)
@@ -131,7 +133,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "component", required = false)
     public String getComposant()
     {
-        return composant;
+        return getString(composant);
     }
     
     public void setComposant(String composant)
@@ -142,7 +144,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "componentId", required = false)
     public String getComposantId()
     {
-        return composantId;
+        return getString(composantId);
     }
     
     public void setComposantId(String composantId)
@@ -153,7 +155,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "project", required = false)
     public String getProjet()
     {
-        return projet;
+        return getString(projet);
     }
     
     public void setProjet(String projet)
@@ -164,7 +166,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "status", required = false)
     public String getStatus()
     {
-        return status;
+        return getString(status);
     }
     
     public void setStatus(String status)
@@ -175,7 +177,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "message", required = false)
     public String getMessage()
     {
-        return message;
+        return getString(message);
     }
     
     public void setMessage(String message)
@@ -186,7 +188,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "author", required = false)
     public String getAutheur()
     {
-        return auteur;
+        return getString(auteur);
     }
     
     public void setAutheur(String auteur)
@@ -197,9 +199,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "tags", required = false)
     public List<String> getTags()
     {
-        if (tags == null)
-            return new ArrayList<>();
-        return tags;
+        return getList(tags);
     }
     
     public void setTags(List<String> tags)
@@ -210,7 +210,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "creationDate", required = false)
     public String getCreationDate()
     {
-        return creationDate;
+        return getString(creationDate);
     }
     
     public void setCreationDate(String creationDate)
@@ -221,7 +221,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "updateDate", required = false)
     public String getUpdateDate()
     {
-        return updateDate;
+        return getString(updateDate);
     }
     
     public void setUpdateDate(String updateDate)
@@ -232,7 +232,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "type", required = false)
     public String getType()
     {
-        return type;
+        return getString(type);
     }
     
     public void setType(String type)
@@ -243,7 +243,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "resolution", required = false)
     public String getResolution()
     {
-        return resolution;
+        return getString(resolution);
     }
     
     public void setResolution(String resolution)
@@ -265,6 +265,8 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "textRange", required = false)
     public TextRange getTextRange()
     {
+        if( textRange == null)
+            return new TextRange();
         return textRange;
     }
     
@@ -276,7 +278,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "effort", required = false)
     public String getEffort()
     {
-        return effort;
+        return getString(effort);
     }
     
     public void setEffort(String effort)
@@ -287,9 +289,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "comments", required = false)
     public List<Commentaire> getCommentaires()
     {
-        if (commentaires == null)
-            return new ArrayList<>();
-        return commentaires;
+        return getList(commentaires);
     }
     
     public void setCommentaires(List<Commentaire> commentaires)
@@ -300,7 +300,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "attr", required = false)
     public String getAttr()
     {
-        return attr;
+        return getString(attr);
     }
     
     public void setAttr(String attr)
@@ -311,9 +311,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "transitions", required = false)
     public List<String> getTransitions()
     {
-        if (transitions == null)
-            return new ArrayList<>();
-        return transitions;
+        return getList(transitions);
     }
     
     public void setTransitions(List<String> transitions)
@@ -324,9 +322,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "actions", required = false)
     public List<String> getActions()
     {
-        if (actions == null)
-            return new ArrayList<>();
-        return actions;
+        return getList(actions);
     }
     
     public void setActions(List<String> actions)
@@ -337,9 +333,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "components", required = false)
     public List<Composant> getComposants()
     {
-        if (composants == null)
-            return new ArrayList<>();
-        return composants;
+        return getList(composants);
     }
     
     public void setComposants(List<Composant> composants)
@@ -350,9 +344,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "rules", required = false)
     public List<Rule> getRules()
     {
-        if (rules == null)
-            return new ArrayList<>();
-        return rules;
+        return getList(rules);
     }
     
     public void setRules(List<Rule> rules)
@@ -363,9 +355,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "users", required = false)
     public List<User> getUsers()
     {
-        if (users == null)
-            return new ArrayList<>();
-        return users;
+        return getList(users);
     }
     
     public void setUsers(List<User> users)
@@ -376,7 +366,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "subProject", required = false)
     public String getSubProject()
     {
-        return subProject;
+        return getString(subProject);
     }
     
     public void setSubProject(String subProject)
@@ -387,7 +377,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "debt", required = false)
     public String getDebt()
     {
-        return debt;
+        return getString(debt);
     }
     
     public void setDebt(String debt)
@@ -398,9 +388,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "flows", required = false)
     public List<Flow> getFlows()
     {
-        if (flows == null)
-            return new ArrayList<>();
-        return flows;
+        return getList(flows);
     }
     
     public void setFlows(List<Flow> flows)
@@ -411,7 +399,7 @@ public class Issue implements ModeleSonar
     @XmlAttribute(name = "closeDate", required = false)
     public String getCloseDate()
     {
-        return closeDate;
+        return getString(closeDate);
     }
 
     public void setCloseDate(String closeDate)

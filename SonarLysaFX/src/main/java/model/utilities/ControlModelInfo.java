@@ -1,14 +1,26 @@
-package model;
+package model.utilities;
 
 import static utilities.Statics.fichiersXML;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import control.mail.ControlMail;
-import model.enums.TypeInfoMail;
+import com.ibm.team.repository.common.TeamRepositoryException;
+import com.ibm.team.workitem.common.model.IWorkItem;
+
+import control.rtc.ControlRTC;
+import control.word.ControlRapport;
+import model.Anomalie;
+import model.CompoPbApps;
+import model.InfoClarity;
+import model.RespService;
+import model.enums.EtatLot;
+import model.enums.TypeAction;
+import model.enums.TypeInfo;
+import utilities.DateConvert;
 import utilities.Statics;
 
 /**
@@ -21,12 +33,15 @@ public class ControlModelInfo
 {
     /*---------- ATTRIBUTS ----------*/
 
+    /** logger général */
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    
+    /** logger composants avec application INCONNUE */
+    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
+    
     private static final short CLARITYMINI = 5;
     private static final short CLARITYMAX = 9;
     private static final short CLARITY7 = 7;
-
-    /** logger composants avec application INCONNUE */
-    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
 
     /*---------- CONSTRUCTEURS ----------*/
     /*---------- METHODES PUBLIQUES ----------*/
@@ -36,7 +51,7 @@ public class ControlModelInfo
      * 
      * @param ano
      */
-    public void controleClarity(Anomalie ano, ControlMail controlMail)
+    public void controleClarity(Anomalie ano, ControlRapport controlRapport)
     {
         // Récupération infox Clarity depuis fichier Excel
         String anoClarity = ano.getProjetClarity();
@@ -79,7 +94,7 @@ public class ControlModelInfo
 
         // Si on ne trouve pas, on renvoie juste l'anomalie avec le log d'erreur
         LOGINCONNUE.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLot());
-        controlMail.addInfo(TypeInfoMail.CLARITYINCONNU, ano.getLot(), anoClarity);
+        controlRapport.addInfo(TypeInfo.CLARITYINCONNU, ano.getLot(), anoClarity);
         ano.setDepartement(Statics.INCONNU);
         ano.setService(Statics.INCONNU);
         ano.setDirection(Statics.INCONNUE);
@@ -139,6 +154,95 @@ public class ControlModelInfo
         pbApps.setDepart(Statics.INCONNU);
         pbApps.setService(Statics.INCONNU);
         pbApps.setChefService(Statics.INCONNU);
+    }
+    
+    /**
+     * @param ano
+     * @return
+     * @throws TeamRepositoryException
+     */
+    public void controleRTC(Anomalie ano, ControlRapport controlMail, ControlRTC controlRTC) throws TeamRepositoryException
+    {
+        // Controle sur l'état de l'anomalie (projet Clarity, lot et numéro anomalie renseignée
+        String anoLot = ano.getLot().substring(Statics.SBTRINGLOT);
+        int anoLotInt = Integer.parseInt(anoLot);
+
+        // Controle si le projet RTC est renseigné. Sinon on le récupère depuis Jazz avec le numéro de lot
+        if (ano.getProjetRTC().isEmpty())
+            ano.setProjetRTC(controlRTC.recupProjetRTCDepuisWiLot(anoLotInt));
+
+        // Mise à jour de l'état de l'anomalie ainsi que les dates de résolution et de création
+        if (ano.getNumeroAnomalie() != 0)
+        {
+            IWorkItem anoRTC = controlRTC.recupWorkItemDepuisId(ano.getNumeroAnomalie());
+            String newEtat = controlRTC.recupEtatElement(anoRTC);
+            if (!newEtat.equals(ano.getEtat()))
+            {
+                LOGGER.info("Lot : " + anoLot + " - nouvel etat anomalie : " + newEtat);
+                controlMail.addInfo(TypeInfo.ANOMAJ, anoLot, newEtat);
+                ano.setEtat(newEtat);
+            }
+            ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
+            if (anoRTC.getResolutionDate() != null)
+                ano.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
+        }
+
+        // Mise à jour de l'état du lot et de la date de mise à jour
+        IWorkItem lotRTC = controlRTC.recupWorkItemDepuisId(anoLotInt);
+        EtatLot etatLot = EtatLot.from(controlRTC.recupEtatElement(lotRTC));
+        if (ano.getEtatLot() != etatLot)
+        {
+            LOGGER.info("Lot : " + anoLot + " - nouvel etat Lot : " + etatLot);
+            controlMail.addInfo(TypeInfo.LOTMAJ, anoLot, etatLot.toString());
+
+            // Si on arrive en VMOA ou que l'on passe à livré à l'édition directement, on met l'anomalie à relancer
+            if (etatLot == EtatLot.VMOA || (ano.getEtatLot() != EtatLot.VMOA && etatLot == EtatLot.EDITION))
+            {
+                ano.setAction(TypeAction.RELANCER);
+                controlMail.addInfo(TypeInfo.ANOARELANCER, anoLot, null);
+            }
+            ano.setEtatLot(etatLot);
+        }
+        ano.setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));
+    }
+    
+    /**
+     * Met à jour le responsable de service depuis les informations du fichier XML, si le service est renseigné.<br>
+     * Remonte un warning si le service n'est pas connu
+     * 
+     * @param ano
+     * @param mapRespService
+     */
+    public void controleChefDeService(Anomalie ano, ControlRapport controlMail)
+    {
+        // Controle définition du service pour l'anomalie
+        String anoServ = ano.getService();
+        if (anoServ.isEmpty())
+            return;
+
+        // Recherche du responsable dans les paramètres et remontée d'info si non trouvé.
+        Map<String, RespService> mapRespService = fichiersXML.getMapRespService();
+        if (mapRespService.containsKey(anoServ))
+            ano.setResponsableService(mapRespService.get(anoServ).getNom());
+        else
+        {
+            LOGINCONNUE.warn("Pas de responsable de service trouvé pour ce service : " + ano.getService());
+            controlMail.addInfo(TypeInfo.SERVICESSANSRESP, ano.getLot(), ano.getService());
+        }
+    }
+    
+    /**
+     * Met à jour le champ NPC si le projet en fait parti
+     * 
+     * @param ano
+     * 
+     */
+    public void controleNPC(Anomalie ano)
+    {
+        if (Statics.fichiersXML.getMapProjetsNpc().containsKey(ano.getProjetRTC()))
+            ano.setNpc("X");
+        else
+            ano.setNpc(Statics.EMPTY);
     }
 
     /*---------- METHODES PRIVEES ----------*/

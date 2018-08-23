@@ -3,6 +3,9 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 /**
  * Modèle des QualityGate
  * 
@@ -10,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement
-public class QualityGate
+public class QualityGate extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -37,7 +40,7 @@ public class QualityGate
     @XmlAttribute(name = "id")
     public String getId()
     {
-        return id;
+        return getString(id);
     }
 
     public void setId(String id)
@@ -48,7 +51,7 @@ public class QualityGate
     @XmlAttribute(name = "name")
     public String getName()
     {
-        return name;
+        return getString(name);
     }
 
     public void setName(String name)

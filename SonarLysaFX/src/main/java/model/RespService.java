@@ -2,13 +2,15 @@ package model;
 
 import java.io.Serializable;
 
+import model.utilities.AbstractModele;
+
 /**
  * Calsse de modèle du fichier Excel des responsables de services
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class RespService implements Modele, Serializable
+public class RespService extends AbstractModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 

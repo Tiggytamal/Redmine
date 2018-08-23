@@ -23,6 +23,7 @@ import utilities.enums.Severity;
  * 
  * @author ETP8137 - Grégoire MAthon
  * @since 1.0
+ * 
  */
 public class CreerVueCHCCDMTask extends AbstractSonarTask
 {

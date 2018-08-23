@@ -1,6 +1,5 @@
 package control.excel;
 
-import static utilities.Statics.fichiersXML;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
@@ -36,23 +35,20 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import com.ibm.team.repository.common.PermissionDeniedException;
 import com.ibm.team.repository.common.TeamRepositoryException;
-import com.ibm.team.workitem.common.model.IWorkItem;
 
-import control.mail.ControlMail;
 import control.rtc.ControlRTC;
+import control.word.ControlRapport;
 import model.Anomalie;
-import model.ControlModelInfo;
-import model.InfoClarity;
 import model.ModelFactory;
-import model.RespService;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
-import model.enums.TypeInfoMail;
+import model.enums.TypeInfo;
+import model.enums.TypeRapport;
+import model.utilities.ControlModelInfo;
 import utilities.CellHelper;
-import utilities.DateConvert;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -60,9 +56,11 @@ import utilities.enums.Bordure;
 import utilities.enums.Severity;
 
 /**
- * Classe de getion du fichier Excel des anomalies SonarQube
+ * Classe de gestion du fichier Excel des anomalies SonarQube
  * 
  * @author ETP137 - Grégoire Mathon
+ * @since 1.0
+ * 
  */
 public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<Anomalie>>
 {
@@ -70,8 +68,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
-    /** logger composants avec application INCONNUE */
-    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
@@ -80,9 +76,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     private static final String AC = "Anomalies closes";
     private static final String SNAPSHOT = "SNAPSHOT";
     private static final String RELEASE = "RELEASE";
-    private static final short CLARITY7 = 7;
-    private static final short CLARITYMINI = 5;
-    private static final short CLARITYMAX = 9;
     
     // Liste des indices des colonnes
     // Les noms des champs doivent correspondre aux valeurs dans l'énumération TypeCol
@@ -119,7 +112,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     private final LocalDate today = LocalDate.now();
 
     // Controleurs
-    private ControlMail controlMail;
+    private ControlRapport controlRapport;
     private ControlRTC controlRTC;
     private ControlModelInfo controlModelInfo;
 
@@ -136,7 +129,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         Map<Param, String> proprietes = proprietesXML.getMapParams();
         lienslots = proprietes.get(Param.LIENSLOTS);
         liensAnos = proprietes.get(Param.LIENSANOS);
-        controlMail = new ControlMail();
         controlRTC = ControlRTC.INSTANCE;
         controlModelInfo = new ControlModelInfo();
         initContraintes();
@@ -232,7 +224,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             else
             {
                 creerLigneVersion(row, ano, IndexedColors.LIGHT_YELLOW, "N");
-                controlMail.addInfo(TypeInfoMail.ANONEW, ano.getLot(), null);
+                controlRapport.addInfo(TypeInfo.ANONEW, ano.getLot(), null);
                 retour.add(ano);
             }
         }
@@ -241,6 +233,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         sheet.autoSizeColumn(Index.EDITIONI.ordinal());
         sheet.autoSizeColumn(Index.ENVI.ordinal());
         sheet.autoSizeColumn(Index.TRAITEI.ordinal());
+        
+        // Ecriture de a feuille pour éviter de perdre les données s'il y a un plantage.
+        write();
         return retour;
     }
 
@@ -327,7 +322,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         autosizeColumns(sheetClose);
 
         wb.setActiveSheet(wb.getSheetIndex(sheet));
-        controlMail.envoyerMail(matiere.getTypeMail());
+        controlRapport.creerFichier();
         write();
     }
 
@@ -459,13 +454,13 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             {
                 Row row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
                 creerLigneSQ(row, ano, IndexedColors.WHITE);
-                controlMail.addInfo(TypeInfoMail.ANOABANDON, ano.getLot(), String.valueOf(ano.getNumeroAnomalie()));
+                controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLot(), String.valueOf(ano.getNumeroAnomalie()));
                 return false;
             }
             else
             {
                 LOGGER.warn("L'anomalie " + ano.getNumeroAnomalie() + " n'a pas été clôturée. Impossible de la supprimer du fichier de suivi.");
-                controlMail.addInfo(TypeInfoMail.ANOABANDONRATE, ano.getLot(), String.valueOf(ano.getNumeroAnomalie()));
+                controlRapport.addInfo(TypeInfo.ANOABANDONRATE, ano.getLot(), String.valueOf(ano.getNumeroAnomalie()));
                 return true;
             }
         }
@@ -480,7 +475,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
                 ano.setDateCreation(today);
                 ano.calculTraitee();
                 LOGGER.info("Création anomalie " + numeroAno + " pour le lot " + anoLot);
-                controlMail.addInfo(TypeInfoMail.ANOSRTCCREES, ano.getLot(), null);
+                controlRapport.addInfo(TypeInfo.ANOSRTCCREES, ano.getLot(), null);
             }
         }
         return true;
@@ -521,18 +516,18 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         // 2. Contrôle des données
 
         // Contrôle Clarity et mise à jour données
-        controlModelInfo.controleClarity(ano, controlMail);
+        controlModelInfo.controleClarity(ano, controlRapport);
 
         // Contrôle chef de service et mise à jour des données
-        controleChefDeService(ano);
+        controlModelInfo.controleChefDeService(ano, controlRapport);
         
         // Contrôle si le projet est un projet NPC
-        controleNPC(ano);
+        controlModelInfo.controleNPC(ano);
 
         // Controle informations RTC
         try
         {
-            controleRTC(ano);
+            controlModelInfo.controleRTC(ano, controlRapport, controlRTC);
         }
         catch (PermissionDeniedException e)
         {
@@ -652,7 +647,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
         valoriserCellule(row, Index.LOTI.ordinal(), centre, ano.getLot(), null);
         valoriserCellule(row, Index.EDITIONI.ordinal(), helper.getStyle(couleur), ano.getEdition(), null);
-        valoriserCellule(row, Index.ENVI.ordinal(), centre, ano.getEtatLot().toString(), null);
+        valoriserCellule(row, Index.ENVI.ordinal(), centre, ano.getEtatLot().getValeur(), null);
         valoriserCellule(row, Index.TRAITEI.ordinal(), centre, traite, null);
     }
 
@@ -778,150 +773,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     }
 
     /**
-     * Contrôle si le code clarity de l'anomalie est bien dans le fichier Excel et renseigne les informations depuis celui-ci
-     * 
-     * @param ano
-     */
-    private void controleClarity(Anomalie ano)
-    {
-        // Récupération infox Clarity depuis fichier Excel
-        String anoClarity = ano.getProjetClarity();
-        if (anoClarity.isEmpty())
-            return;
-        Map<String, InfoClarity> map = fichiersXML.getMapClarity();
-
-        // Vérification si le code Clarity de l'anomalie est bien dans la map
-        if (map.containsKey(anoClarity))
-        {
-            ano.majDepuisClarity(map.get(anoClarity));
-            return;
-        }
-
-        String temp = Statics.EMPTY;
-        boolean testT7 = anoClarity.startsWith("T") && anoClarity.length() == CLARITY7;
-
-        // Sinon on itère sur les clefs en supprimant les indices de lot, et on prend la première clef correspondante
-        for (Map.Entry<String, InfoClarity> entry : map.entrySet())
-        {
-            String key = entry.getKey();
-
-            // On retire les deux dernières lettres pour les clefs de plus de 6 caractères finissants par 0[1-9]
-            if (controleKey(anoClarity, key))
-            {
-                ano.majDepuisClarity(entry.getValue());
-                return;
-            }
-
-            // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
-            if (testT7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
-                temp = key;
-        }
-
-        if (!temp.isEmpty())
-        {
-            ano.majDepuisClarity(map.get(temp));
-            return;
-        }
-
-        // Si on ne trouve pas, on renvoie juste l'anomalie avec le log d'erreur
-        LOGINCONNUE.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLot());
-        controlMail.addInfo(TypeInfoMail.CLARITYINCONNU, ano.getLot(), anoClarity);
-        ano.setDepartement(Statics.INCONNU);
-        ano.setService(Statics.INCONNU);
-        ano.setDirection(Statics.INCONNUE);
-        ano.setResponsableService(Statics.INCONNU);
-    }
-
-    /**
-     * @param ano
-     * @return
-     * @throws TeamRepositoryException
-     */
-    private void controleRTC(Anomalie ano) throws TeamRepositoryException
-    {
-        // Controle sur l'état de l'anomalie (projet Clarity, lot et numéro anomalie renseignée
-        String anoLot = ano.getLot().substring(Statics.SBTRINGLOT);
-        int anoLotInt = Integer.parseInt(anoLot);
-
-        // Controle si le projet RTC est renseigné. Sinon on le récupère depuis Jazz avec le numéro de lot
-        if (ano.getProjetRTC().isEmpty())
-            ano.setProjetRTC(controlRTC.recupProjetRTCDepuisWiLot(anoLotInt));
-
-        // Mise à jour de l'état de l'anomalie ainsi que les dates de résolution et de création
-        if (ano.getNumeroAnomalie() != 0)
-        {
-            IWorkItem anoRTC = controlRTC.recupWorkItemDepuisId(ano.getNumeroAnomalie());
-            String newEtat = controlRTC.recupEtatElement(anoRTC);
-            if (!newEtat.equals(ano.getEtat()))
-            {
-                LOGGER.info("Lot : " + anoLot + " - nouvel etat anomalie : " + newEtat);
-                controlMail.addInfo(TypeInfoMail.ANOMAJ, anoLot, newEtat);
-                ano.setEtat(newEtat);
-            }
-            ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
-            if (anoRTC.getResolutionDate() != null)
-                ano.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
-        }
-
-        // Mise à jour de l'état du lot et de la date de mise à jour
-        IWorkItem lotRTC = controlRTC.recupWorkItemDepuisId(anoLotInt);
-        EtatLot etatLot = EtatLot.from(controlRTC.recupEtatElement(lotRTC));
-        if (ano.getEtatLot() != etatLot)
-        {
-            LOGGER.info("Lot : " + anoLot + " - nouvel etat Lot : " + etatLot);
-            controlMail.addInfo(TypeInfoMail.LOTMAJ, anoLot, etatLot.toString());
-
-            // Si on arrive en VMOA ou que l'on passe à livré à l'édition directement, on met l'anomalie à relancer
-            if (etatLot == EtatLot.VMOA || (ano.getEtatLot() != EtatLot.VMOA && etatLot == EtatLot.EDITION))
-            {
-                ano.setAction(TypeAction.RELANCER);
-                controlMail.addInfo(TypeInfoMail.ANOARELANCER, anoLot, null);
-            }
-            ano.setEtatLot(etatLot);
-        }
-        ano.setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));
-    }
-
-    /**
-     * Met à jour le responsable de service depuis les informations du fichier XML, si le service est renseigné.<br>
-     * Remonte un warning si le service n'est pas connu
-     * 
-     * @param ano
-     * @param mapRespService
-     */
-    private void controleChefDeService(Anomalie ano)
-    {
-        // Controle définition du service pour l'anomalie
-        String anoServ = ano.getService();
-        if (anoServ.isEmpty())
-            return;
-
-        // Recherche du responsable dans les paramètres et remontée d'info si non trouvé.
-        Map<String, RespService> mapRespService = fichiersXML.getMapRespService();
-        if (mapRespService.containsKey(anoServ))
-            ano.setResponsableService(mapRespService.get(anoServ).getNom());
-        else
-        {
-            LOGINCONNUE.warn("Pas de responsable de service trouvé pour ce service : " + ano.getService());
-            controlMail.addInfo(TypeInfoMail.SERVICESSANSRESP, ano.getLot(), ano.getService());
-        }
-    }
-    
-    /**
-     * Met à jour le champ NPC si le projet en fait parti
-     * 
-     * @param ano
-     * 
-     */
-    private void controleNPC(Anomalie ano)
-    {
-        if (Statics.fichiersXML.getMapProjetsNpc().containsKey(ano.getProjetRTC()))
-            ano.setNpc("X");
-        else
-            ano.setNpc(Statics.EMPTY);
-    }
-
-    /**
      * Crée une anomalie depuis les informatiosn du fichier Excel
      * 
      * @param row
@@ -982,33 +833,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         return retour;
     }
 
-    /**
-     * Contrôle les valeurs du code Clarity en prenant en compte les différentes erreurs possibles
-     * 
-     * @param anoClarity
-     * @param key
-     * @return
-     */
-    private boolean controleKey(String anoClarity, String key)
-    {
-        // Retourne une clef avec 6 caractères maximum si celle-ci finie par un numéro de lot
-        String smallkey = key.length() > CLARITYMINI && key.matches(".*0[0-9E]$") ? key.substring(0, CLARITYMINI + 1) : key;
-
-        // Contrôle si la clef est de type T* ou P*.
-        String newKey = key.length() == CLARITYMAX && (key.startsWith("T") || key.startsWith("P")) ? key.substring(0, CLARITYMAX - 1) : smallkey;
-
-        // Retourne la clef clairity de l'anomalie avec 6 caractères maximum si celle-ci finie par un numéro de lot
-        String smallClarity = anoClarity.length() > CLARITYMINI && anoClarity.matches(".*0[0-9E]$") ? anoClarity.substring(0, CLARITYMINI + 1) : anoClarity;
-
-        // Contrôle si la clef est de type T* ou P*.
-        String newClarity = anoClarity.length() == CLARITYMAX && (anoClarity.startsWith("T") || anoClarity.startsWith("P")) ? anoClarity.substring(0, CLARITYMAX - 1) : smallClarity;
-
-        // remplace le dernier du coade Clarity par 0.
-        String lastClarity = anoClarity.replace(anoClarity.charAt(anoClarity.length() - 1), '0');
-
-        return anoClarity.equalsIgnoreCase(newKey) || newClarity.equalsIgnoreCase(key) || lastClarity.equalsIgnoreCase(key);
-    }
-
     @Override
     protected Sheet initSheet()
     {
@@ -1062,9 +886,14 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * 
      * @return
      */
-    public ControlMail getControlMail()
+    public ControlRapport getControlRapport()
     {
-        return controlMail;
+        return controlRapport;
+    }
+    
+    public void createControlRapport(TypeRapport type)
+    {
+        controlRapport = new ControlRapport(type);
     }
 
     /**

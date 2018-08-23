@@ -10,9 +10,15 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
-import utilities.Statics;
 import utilities.TechnicalException;
 
+/**
+ * Controleur de la page de contrôle de gestion des autres vues SonarQube.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public final class AutresVuesViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
@@ -72,12 +78,12 @@ public final class AutresVuesViewControl extends AbstractViewControl
     protected void afficher(ActionEvent event)
     {
         Object source = event.getSource();
-        String id = Statics.EMPTY;
+
         if (source instanceof RadioButton)
         {
             selectPane.getChildren().clear();
 
-            id = ((RadioButton) source).getId();
+            String id = ((RadioButton) source).getId();
 
             switch (id)
             {

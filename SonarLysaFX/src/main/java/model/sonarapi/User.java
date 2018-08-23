@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class User
+public class User extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -35,7 +38,7 @@ public class User
     @XmlAttribute(name = "login")
     public String getLogin()
     {
-        return login;
+        return getString(login);
     }
 
     public void setLogin(String login)
@@ -46,7 +49,7 @@ public class User
     @XmlAttribute(name = "name")
     public String getName()
     {
-        return name;
+        return getString(name);
     }
 
     public void setName(String name)
@@ -57,7 +60,7 @@ public class User
     @XmlAttribute(name = "active")
     public String getActive()
     {
-        return active;
+        return getString(active);
     }
 
     public void setActive(String active)
@@ -68,7 +71,7 @@ public class User
     @XmlAttribute(name = "email")
     public String getEmail()
     {
-        return email;
+        return getString(email);
     }
 
     public void setEmail(String email)

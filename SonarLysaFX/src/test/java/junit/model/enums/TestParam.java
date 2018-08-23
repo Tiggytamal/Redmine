@@ -20,7 +20,7 @@ public class TestParam implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(19, Param.values().length);
+        assertEquals(20, Param.values().length);
     }
     
     @Test
@@ -34,6 +34,7 @@ public class TestParam implements TestEnums
         assertFalse(Param.NOMFICHIERAPPLI.getNom().isEmpty());
         assertFalse(Param.NOMFICHIERPBAPPLI.getNom().isEmpty());
         assertFalse(Param.ABSOLUTEPATHHISTO.getNom().isEmpty());
+        assertFalse(Param.ABSOLUTEPATHRAPPORT.getNom().isEmpty());
         assertFalse(Param.LIENSLOTS.getNom().isEmpty());
         assertFalse(Param.LIENSANOS.getNom().isEmpty());
         assertFalse(Param.NOMQGDATASTAGE.getNom().isEmpty());

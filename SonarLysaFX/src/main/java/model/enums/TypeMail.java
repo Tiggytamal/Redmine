@@ -2,8 +2,10 @@ package model.enums;
 
 /**
  * Enumération répertoriant tous les types de mail à envoyer.
+ * 
  * @author ETP8137 - Grégoire Mathon
- *
+ * @since 1.0
+ * 
  */
 public enum TypeMail
 {

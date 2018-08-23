@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static utilities.Statics.EMPTY;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -92,9 +93,99 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
     @Test
     public void testToString()
     {
+        // Test sans initialisation
+        handler = ModelFactory.getModel(Anomalie.class);
+        String string = handler.toString();
+        System.out.println(string);
+        assertTrue(string.contains("direction=<null>"));
+        assertTrue(string.contains("departement=<null>"));
+        assertTrue(string.contains("responsableService=<null>"));
+        assertTrue(string.contains("projetClarity=<null>"));
+        assertTrue(string.contains("libelleProjet=<null>"));
+        assertTrue(string.contains("cpiProjet=<null>"));
+        assertTrue(string.contains("edition=<null>"));
+        assertTrue(string.contains("lot=<null>"));
+        assertTrue(string.contains("liensLot=<null>"));
+        assertTrue(string.contains("etatLot=<null>"));
+        assertTrue(string.contains("numeroAnomalie=0"));
+        assertTrue(string.contains("liensAno=<null>"));
+        assertTrue(string.contains("etat=<null>"));
+        assertTrue(string.contains("typeAssemblage=<null>"));
+        assertTrue(string.contains("securite=<null>"));
+        assertTrue(string.contains("remarque=<null>"));
+        assertTrue(string.contains("version=<null>"));
+        assertTrue(string.contains("dateCreation=<null>"));
+        assertTrue(string.contains("dateDetection=<null>"));
+        assertTrue(string.contains("dateRelance=<null>"));
+        assertTrue(string.contains("dateReso=<null>"));
+        assertTrue(string.contains("dateMajEtat=<null>"));
+        assertTrue(string.contains("traitee=false"));
+        assertTrue(string.contains("matieres=[]"));
+        assertTrue(string.contains("projetRTC=<null>"));
+        assertTrue(string.contains("action=<null>"));
+        assertTrue(string.contains("npc=<null>"));
+
+        
+        // Test avec initialisation
+        LocalDate date = LocalDate.now();
+        String dateString = date.toString();
+        handler.setDirection("direction");
+        handler.setDepartement("departement");
+        handler.setService("service");
+        handler.setResponsableService("respservice");
+        handler.setProjetClarity("clarity");
+        handler.setLibelleProjet("libelle");
+        handler.setCpiProjet("cpi");
+        handler.setEdition("edition");
         handler.setLot("123456");
+        handler.setEtatLot(EtatLot.DEVTU);
         handler.setNumeroAnomalie(12);
-        assertEquals("Anomalie du lot 123456 - RTC = 12", handler.toString());
+        handler.setLiensAno("https");
+        handler.setLiensLot("https2");
+        handler.setEtat("etat");
+        handler.setTypeAssemblage("type");
+        handler.setSecurite("X");
+        handler.setRemarque("remarque");
+        handler.setVersion("version");
+        handler.setDateCreation(date);
+        handler.setDateDetection(date);
+        handler.setDateRelance(date);
+        handler.setDateReso(date);
+        handler.setDateMajEtat(date);
+        handler.setMatieresString("JAVA");
+        handler.setProjetRTC("RTC");
+        handler.setAction(TypeAction.ABANDONNER);
+        handler.setNpc("npc");
+        
+        string = handler.toString();
+        System.out.println(string);
+        assertTrue(string.contains("direction=direction"));
+        assertTrue(string.contains("departement=departement"));
+        assertTrue(string.contains("responsableService=respservice"));
+        assertTrue(string.contains("projetClarity=clarity"));
+        assertTrue(string.contains("libelleProjet=libelle"));
+        assertTrue(string.contains("cpiProjet=cpi"));
+        assertTrue(string.contains("edition=edition"));
+        assertTrue(string.contains("lot=123456"));
+        assertTrue(string.contains("liensLot=https2"));
+        assertTrue(string.contains("etatLot=DEVTU"));
+        assertTrue(string.contains("numeroAnomalie=12"));
+        assertTrue(string.contains("liensAno=https"));
+        assertTrue(string.contains("etat=etat"));
+        assertTrue(string.contains("typeAssemblage=type"));
+        assertTrue(string.contains("securite=X"));
+        assertTrue(string.contains("remarque=remarque"));
+        assertTrue(string.contains("version=version"));
+        assertTrue(string.contains("dateCreation=" + dateString));
+        assertTrue(string.contains("dateDetection=" + dateString));
+        assertTrue(string.contains("dateRelance=" + dateString));
+        assertTrue(string.contains("dateReso=" + dateString));
+        assertTrue(string.contains("dateMajEtat=" + dateString));
+        assertTrue(string.contains("traitee=false"));
+        assertTrue(string.contains("matieres=[JAVA]"));
+        assertTrue(string.contains("projetRTC=RTC"));
+        assertTrue(string.contains("action=ABANDONNER"));
+        assertTrue(string.contains("npc=npc"));
     }
     
     @Test

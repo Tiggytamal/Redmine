@@ -8,6 +8,13 @@ import model.enums.Matiere;
 import model.sonarapi.Vue;
 import utilities.Statics;
 
+/**
+ * Tâche de création des vues Sonar par édition (E30,E31,E32...)
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class CreerVueParEditionTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/

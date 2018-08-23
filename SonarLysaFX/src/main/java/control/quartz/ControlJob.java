@@ -26,6 +26,7 @@ import utilities.TechnicalException;
  * 
  * @author ETP137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public class ControlJob
 {

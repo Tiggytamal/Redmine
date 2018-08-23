@@ -31,6 +31,13 @@ import utilities.TechnicalException;
 import utilities.enums.Severity;
 import view.ConnexionDialog;
 
+/**
+ * Gestion de l'affichage du menu de l'application.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public final class MenuViewControl extends AbstractViewControl
 {
     /* ---------- ATTIBUTS ---------- */

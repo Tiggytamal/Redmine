@@ -34,10 +34,11 @@ import utilities.TechnicalException;
 import utilities.enums.Severity;
 
 /**
- * Classe mère des contrôleurs pour les fichiers Excel
+ * Classe mère des contrôleurs pour les fichiers Excel en lecture
  * 
  * @author ETP137 - Grégoire Mathon
- *
+ * @since 1.0
+ * 
  */
 public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> extends AbstractControlExcel
 {

@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class Validation implements ModeleSonar
+public class Validation extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 

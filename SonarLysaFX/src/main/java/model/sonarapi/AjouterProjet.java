@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class AjouterProjet implements ModeleSonar
+public class AjouterProjet extends AbstractModele implements ModeleSonar
 {
 
     /*---------- ATTRIBUTS ----------*/
@@ -30,7 +33,7 @@ public class AjouterProjet implements ModeleSonar
     @XmlAttribute(name = "key")
     public String getKey()
     {
-        return key;
+        return getString(key);
     }
     
     public void setKey(String key)
@@ -41,7 +44,7 @@ public class AjouterProjet implements ModeleSonar
     @XmlAttribute(name = "project_key")
     public String getProjectKey()
     {
-        return projectKey;
+        return getString(projectKey);
     }
     
     public void setProjectKey(String projectKey)

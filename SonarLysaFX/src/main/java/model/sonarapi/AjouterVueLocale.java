@@ -3,6 +3,9 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 /**
  * Classe de modèle 
  * 
@@ -10,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @since 1.0
  */
 @XmlRootElement
-public class AjouterVueLocale implements ModeleSonar
+public class AjouterVueLocale extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -35,7 +38,7 @@ public class AjouterVueLocale implements ModeleSonar
     @XmlAttribute(name = "key", required = true)
     public String getKey()
     {
-        return key;
+        return getString(key);
     }
     
     public void setKey(String key)
@@ -46,7 +49,7 @@ public class AjouterVueLocale implements ModeleSonar
     @XmlAttribute(name = "ref_key", required = true)
     public String getRefKey()
     {
-        return refKey;
+        return getString(refKey);
     }
     
     public void setRefKey(String refKey)

@@ -3,8 +3,17 @@ package model;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+
+/**
+ * Classe représentant un projet Clarity extrait du fichier hebdomadaire des projets.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 @XmlRootElement
-public class InfoClarity implements Modele
+public class InfoClarity extends AbstractModele
 {
     /*---------- ATTRIBUTS ----------*/
 

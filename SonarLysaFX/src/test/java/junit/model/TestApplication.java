@@ -63,6 +63,18 @@ public class TestApplication extends AbstractTestModel<Application>
     }
     
     @Test
+    public void testToString()
+    {
+        handler.setActif(true);
+        handler.setCode("code");
+        handler.setLibelle("libelle");
+        String string = handler.toString();
+        assertTrue(string.contains("code=code"));
+        assertTrue(string.contains("libelle=libelle"));
+        assertTrue(string.contains("actif=true"));        
+    }
+    
+    @Test
     public void testGetCode()
     {
         // test valeur vide ou nulle

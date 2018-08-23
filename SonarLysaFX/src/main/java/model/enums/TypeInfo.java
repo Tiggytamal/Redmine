@@ -9,15 +9,16 @@ import static utilities.Statics.LIENAPP;
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
-public enum TypeInfoMail 
+public enum TypeInfo 
 {
     /*---------- ATTRIBUTS ----------*/
 
     ANOSRTCCREES("Lots avec anomalies RTC créées :\n", LIENANO),
     ANONEW("Lots avec nouvelles anomalies :\n", EMPTY),
-    ANOABANDON("Lots avec anomalies fermées (abandonnées ou cloturées) :\n", LIENANO),
-    ANOABANDONRATE("Lots avec anomalies non fermèess :\n", LIENANO),
+    ANOABANDON("Lots avec anomalies fermées (abandonnées ou clôturées) :\n", LIENANO),
+    ANOABANDONRATE("Lots avec anomalies non fermèes :\n", LIENANO),
     ANOARELANCER("Lots avec anomalies à relancer :\n", LIENANO),
     ANOMAJ("Anomalies RTC mises à jour :\n", " - Nouvel état : "),
     LOTMAJ("Lots mis à jour :\n", " - Nouvel état : "),
@@ -34,7 +35,7 @@ public enum TypeInfoMail
     
     /*---------- CONSTRUCTEURS ----------*/
 
-    private TypeInfoMail(String titre, String liens)
+    private TypeInfo(String titre, String liens)
     {
         this.titre = titre;
         this.liens = liens;

@@ -38,17 +38,24 @@ import model.sonarapi.Issue;
 import model.sonarapi.Issues;
 import model.sonarapi.IssuesSimple;
 import model.sonarapi.Message;
-import model.sonarapi.ModeleSonar;
 import model.sonarapi.Parametre;
 import model.sonarapi.Projet;
 import model.sonarapi.QualityGate;
 import model.sonarapi.Retour;
 import model.sonarapi.Validation;
 import model.sonarapi.Vue;
+import model.utilities.ModeleSonar;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
 
+/**
+ * Classe d'appel des webservices SonarQube 5.7
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ */
 public class SonarAPI
 {
 

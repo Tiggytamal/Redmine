@@ -16,6 +16,13 @@ import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
 
+/**
+ * Gestion de l'affichage de la création des vues menseulles et trimestrielles de mise ne production
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public final class MensuelViewControl extends AbstractViewControl
 {
     /* ---------- ATTIBUTS ---------- */

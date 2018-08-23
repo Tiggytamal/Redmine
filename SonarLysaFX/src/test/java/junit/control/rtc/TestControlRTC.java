@@ -154,11 +154,11 @@ public class TestControlRTC extends JunitBase
     }
     
     @Test
-    @Ignore("Suppression WorkItem - A finir")
+    @Ignore("Suppression WorkItem - A utiliser en test manuel")
     public void testSupprimerWorkItemDepuisId() throws TeamRepositoryException
     {
-        handler.supprimerWorkItemDepuisId(328515);
-        assertNull(handler.recupWorkItemDepuisId(328515));
+        handler.supprimerWorkItemDepuisId(345654);
+        assertNull(handler.recupWorkItemDepuisId(345654));
     }
 
     @Test
@@ -187,8 +187,11 @@ public class TestControlRTC extends JunitBase
         // Test que le defect a bien été créé
         assertTrue(numero > 0);
         
-        // Suppression de celui-ci pour ne pas surcharger le projet
+        // Suppression defect
         handler.supprimerWorkItemDepuisId(numero);
+        
+        // Test de la suppression
+        assertNull(handler.recupWorkItemDepuisId(numero));        
     }
 
     @Test

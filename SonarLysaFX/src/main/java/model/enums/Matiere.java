@@ -5,24 +5,25 @@ package model.enums;
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public enum Matiere 
 {
     /*---------- ATTRIBUTS ----------*/
 
-    JAVA(Valeur.JAVA, TypeMail.SUIVIJAVA),
-    DATASTAGE(Valeur.DATASTAGE, TypeMail.SUIVIDATASTAGE),
-    COBOL(Valeur.COBOL, TypeMail.SUIVICOBOL);
+    JAVA(Valeur.JAVA, TypeRapport.SUIVIJAVA),
+    DATASTAGE(Valeur.DATASTAGE, TypeRapport.SUIVIDATASTAGE),
+    COBOL(Valeur.COBOL, TypeRapport.SUIVICOBOL);
     
     private final String valeur;
-    private final TypeMail typeMail;
+    private final TypeRapport typeRapport;
     
     /*---------- CONSTRUCTEURS ----------*/
 
-    private Matiere(String valeur, TypeMail typeMail)
+    private Matiere(String valeur, TypeRapport typeRapport)
     {
         this.valeur = valeur;
-        this.typeMail = typeMail;
+        this.typeRapport = typeRapport;
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
@@ -53,9 +54,9 @@ public enum Matiere
         return valeur;
     }
     
-    public TypeMail getTypeMail()
+    public TypeRapport getTypeRapport()
     {
-        return typeMail;
+        return typeRapport;
     }
     
     /*---------- CLASSES PRIVEES ----------*/

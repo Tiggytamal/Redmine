@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class Commentaire
+public class Commentaire extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -38,7 +41,7 @@ public class Commentaire
     @XmlAttribute(name = "key")
     public String getKey()
     {
-        return key;
+        return getString(key);
     }
     
     public void setKey(String key)
@@ -49,7 +52,7 @@ public class Commentaire
     @XmlAttribute(name = "login")
     public String getLogin()
     {
-        return login;
+        return getString(login);
     }
     
     public void setLogin(String login)
@@ -60,7 +63,7 @@ public class Commentaire
     @XmlAttribute(name = "htmlText")
     public String getHtmlText()
     {
-        return htmlText;
+        return getString(htmlText);
     }
     
     public void setHtmlText(String htmlText)
@@ -71,7 +74,7 @@ public class Commentaire
     @XmlAttribute(name = "markdown")
     public String getMarkdown()
     {
-        return markdown;
+        return getString(markdown);
     }
     
     public void setMarkdown(String markdown)
@@ -82,7 +85,7 @@ public class Commentaire
     @XmlAttribute(name = "updatable")
     public String getUpdatable()
     {
-        return updatable;
+        return getString(updatable);
     }
     
     public void setUpdatable(String updatable)
@@ -93,7 +96,7 @@ public class Commentaire
     @XmlAttribute(name = "createdAt")
     public String getCreatedAt()
     {
-        return createdAt;
+        return getString(createdAt);
     }
 
     public void setCreatedAt(String createdAt)

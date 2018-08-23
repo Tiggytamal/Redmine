@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import model.enums.Matiere;
-import model.enums.TypeMail;
+import model.enums.TypeRapport;
 
 public class TestMatiere implements TestEnums
 {
@@ -40,11 +40,11 @@ public class TestMatiere implements TestEnums
     }
     
     @Test
-    public void testGetTypeMail()
+    public void testGetTypeRapport()
     {
-        assertEquals(TypeMail.SUIVIJAVA, Matiere.JAVA.getTypeMail());
-        assertEquals(TypeMail.SUIVIDATASTAGE, Matiere.DATASTAGE.getTypeMail());
-        assertEquals(TypeMail.SUIVICOBOL, Matiere.COBOL.getTypeMail());
+        assertEquals(TypeRapport.SUIVIJAVA, Matiere.JAVA.getTypeRapport());
+        assertEquals(TypeRapport.SUIVIDATASTAGE, Matiere.DATASTAGE.getTypeRapport());
+        assertEquals(TypeRapport.SUIVICOBOL, Matiere.COBOL.getTypeRapport());
     }
     
     @Test

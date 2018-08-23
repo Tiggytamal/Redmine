@@ -67,10 +67,11 @@ import utilities.Statics;
 import utilities.TechnicalException;
 
 /**
- * Classe de controle des accès RTC sous form dénumération pour forcer le singleton
+ * Classe de controle des accès RTC sous forme se singleton
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public class ControlRTC
 {

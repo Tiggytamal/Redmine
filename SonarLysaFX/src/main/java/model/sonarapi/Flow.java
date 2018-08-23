@@ -6,8 +6,11 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class Flow
+public class Flow extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -35,7 +38,7 @@ public class Flow
     @XmlAttribute(name = "locations", required = false)
     public List<Location> getLocations()
     {
-        return locations;
+        return getList(locations);
     }
 
     public void setLocations(List<Location> locations)

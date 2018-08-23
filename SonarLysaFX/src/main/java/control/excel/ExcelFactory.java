@@ -9,10 +9,18 @@ import model.enums.TypeColR;
 import model.enums.TypeColW;
 import utilities.TechnicalException;
 
+/**
+ * Factory de création des controleurs Excel
+ * 
+ * @author ETP8137 - Grégoire mathon
+ * @since 1.0
+ * 
+ */
 public interface ExcelFactory
 {   
     /**
      * Retourne une instance d'un controleur Excel en fonction du type d'énumération
+     * 
      * @param type
      * @param file
      * @return
@@ -42,6 +50,9 @@ public interface ExcelFactory
             case "model.enums.TypeColSuivi" :
                 return (R) new ControlSuivi(file);
                 
+            case "model.enums.TypeColNPC" :
+                return (R) new ControlTypeProjets(file);
+                
             default:
                 throw new TechnicalException("ExcelFactory.getReader - type non géré : " + type.toString(), null);
         }
@@ -49,6 +60,7 @@ public interface ExcelFactory
     
     /**
      * Retourne une instance d'un controleur Excel en fonction du type d'énumération
+     * 
      * @param type
      * @param file
      * @return

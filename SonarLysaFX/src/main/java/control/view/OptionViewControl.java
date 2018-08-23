@@ -45,6 +45,13 @@ import view.ParamListView;
 import view.ParamTextView;
 import view.ParamView;
 
+/**
+ * Gestion de l'affichage des options de l'application.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public final class OptionViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
@@ -155,6 +162,7 @@ public final class OptionViewControl extends AbstractViewControl
                 break;
 
             case "Nom Colonnes":
+                // Evite plantage en cas de clic sur le sous-menu
                 break;
 
             default:
@@ -188,8 +196,8 @@ public final class OptionViewControl extends AbstractViewControl
                 charger("Editions CDM", file -> control.recupEditionDepuisExcel(file));
                 break;
                 
-            case "NPC":
-                charger("Projets NPC", file -> control.recupEditionDepuisExcel(file));
+            case "npc":
+                charger("Projets NPC", file -> control.recupProjetsNPCDepuisExcel(file));
                 break;
 
             default:

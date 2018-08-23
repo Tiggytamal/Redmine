@@ -1,5 +1,12 @@
-package model.sonarapi;
+package model.enums;
 
+/**
+ * Enumération représentant les status possible d'une QualityGate dans Sonar.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public enum Status 
 {
     /*---------- ATTRIBUTS ----------*/

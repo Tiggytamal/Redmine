@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import junit.model.enums.TestEnums;
-import model.sonarapi.Status;
+import model.enums.Status;
 
 public class TestStatus implements TestEnums
 {

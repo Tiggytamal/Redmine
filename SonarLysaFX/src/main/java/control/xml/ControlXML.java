@@ -18,15 +18,16 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
-import model.ModelFactory;
-import model.Modele;
-import model.XML;
 import model.enums.TypeColR;
+import model.ModelFactory;
 import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
+import model.enums.TypeColNPC;
 import model.enums.TypeFichier;
+import model.utilities.AbstractModele;
+import model.utilities.XML;
 import utilities.TechnicalException;
 
 /**
@@ -56,7 +57,7 @@ public class ControlXML
      * @return le fichier XML desérialisé
      */
     @SuppressWarnings("unchecked")
-    public <T extends XML & Modele> T recupererXML(Class<T> typeXML)
+    public <T extends AbstractModele & XML> T recupererXML(Class<T> typeXML)
     {
         // variables
         JAXBContext context;
@@ -88,7 +89,7 @@ public class ControlXML
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <T extends XML & Modele> T recupererXMLResources(Class<T> typeXML)
+    public <T extends AbstractModele & XML> T recupererXMLResources(Class<T> typeXML)
     {
         // variables
         JAXBContext context;
@@ -116,7 +117,7 @@ public class ControlXML
      * Sauvegarde le fichier de paramètres
      * 
      * @param fichier
-     *            Fichier à suvagarder, doit implémenter l'interface {@link model.XML}.
+     *            Fichier à suvagarder, doit implémenter l'interface {@link model.utilities.XML}.
      * @throws JAXBException
      */
     public void saveParam(XML fichier)
@@ -177,6 +178,17 @@ public class ControlXML
     public void recupEditionDepuisExcel(File file)
     {
         saveInfos(TypeFichier.EDITION, TypeColEdition.class, file);
+    }
+    
+    /**
+     * Récupère depuis le fichier Excel toutes les édition CHC/CDM, aver leurs numéros de version, pour l'annèe en cours, la précedente et la suivante.
+     * 
+     * @param file
+     *            Fichier à utiliser
+     */
+    public void recupProjetsNPCDepuisExcel(File file)
+    {
+        saveInfos(TypeFichier.NPC, TypeColNPC.class, file);
     }
 
     /**

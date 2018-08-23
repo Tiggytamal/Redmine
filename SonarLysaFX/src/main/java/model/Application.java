@@ -6,6 +6,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import model.utilities.AbstractModele;
+
 /**
  * Classe de modèle pour les applications CATS
  * 
@@ -13,7 +15,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  */
 @XmlRootElement
-public class Application implements Modele, Serializable
+public class Application extends AbstractModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 

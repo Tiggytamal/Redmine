@@ -12,6 +12,13 @@ import model.enums.Param;
 import model.sonarapi.Vue;
 import utilities.Statics;
 
+/**
+ * Tâche de création de la vue Sonar du patrimoine
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class CreerVuePatrimoineTask extends AbstractSonarTask
 {
 

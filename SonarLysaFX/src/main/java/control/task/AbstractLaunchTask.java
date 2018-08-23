@@ -6,6 +6,13 @@ import application.Main;
 import javafx.application.Platform;
 import view.ProgressDialog;
 
+/**
+ * Classe abstraite de lancement des tâches
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ */
 public abstract class AbstractLaunchTask
 {
     /*---------- ATTRIBUTS ----------*/

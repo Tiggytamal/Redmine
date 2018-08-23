@@ -5,8 +5,11 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class Vue implements ModeleSonar
+public class Vue extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -60,7 +63,7 @@ public class Vue implements ModeleSonar
     @XmlAttribute(name = "key")
     public String getKey()
     {
-        return key;
+        return getString(key);
     }
 
     public void setKey(String key)
@@ -71,18 +74,12 @@ public class Vue implements ModeleSonar
     @XmlAttribute(name = "name")
     public String getName()
     {
-        return name;
+        return getString(name);
     }
 
     public void setName(String name)
     {
         this.name = name;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "View [key=" + key + ", name=" + name + "]";
     }
 
     @XmlAttribute(name = "selected", required = false)
@@ -99,7 +96,7 @@ public class Vue implements ModeleSonar
     @XmlAttribute(name = "selectionMode", required = false)
     public String getSelectionMode()
     {
-        return selectionMode;
+        return getString(selectionMode);
     }
 
     public void setSelectionMode(String selectionMode)
@@ -110,7 +107,7 @@ public class Vue implements ModeleSonar
     @XmlAttribute(name = "description", required = false)
     public String getDescription()
     {
-        return description;
+        return getString(description);
     }
 
     public void setDescription(String description)
@@ -120,7 +117,7 @@ public class Vue implements ModeleSonar
 
     public List<String> getListeClefsComposants()
     {
-        return listeClefsComposants;
+        return getList(listeClefsComposants);
     }
 
     public void setListeClefsComposants(List<String> listeClefsComposants)

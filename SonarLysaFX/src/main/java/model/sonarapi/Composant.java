@@ -1,6 +1,5 @@
 package model.sonarapi;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +10,11 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import model.enums.TypeMetrique;
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
 
 @XmlRootElement(name = "component")
-public class Composant implements ModeleSonar
+public class Composant extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -85,7 +86,7 @@ public class Composant implements ModeleSonar
     @XmlAttribute(name = "id", required = false)
     public String getId()
     {
-        return id;
+        return getString(id);
     }
 
     public void setId(String id)
@@ -96,7 +97,7 @@ public class Composant implements ModeleSonar
     @XmlAttribute(name = "key", required = false)
     public String getKey()
     {
-        return key;
+        return getString(key);
     }
 
     public void setKey(String key)
@@ -107,7 +108,7 @@ public class Composant implements ModeleSonar
     @XmlAttribute(name = "name", required = false)
     public String getNom()
     {
-        return nom;
+        return getString(nom);
     }
 
     public void setNom(String nom)
@@ -118,7 +119,7 @@ public class Composant implements ModeleSonar
     @XmlAttribute(name = "description", required = false)
     public String getDescritpion()
     {
-        return descritpion;
+        return getString(descritpion);
     }
 
     public void setDescritpion(String descritpion)
@@ -129,7 +130,7 @@ public class Composant implements ModeleSonar
     @XmlAttribute(name = "qualifier", required = false)
     public String getQualifier()
     {
-        return qualifier;
+        return getString(qualifier);
     }
 
     public void setQualifier(String qualifier)
@@ -140,7 +141,7 @@ public class Composant implements ModeleSonar
     @XmlAttribute(name = "language", required = false)
     public String getLangage()
     {
-        return langage;
+        return getString(langage);
     }
 
     public void setLangage(String langage)
@@ -151,7 +152,7 @@ public class Composant implements ModeleSonar
     @XmlAttribute(name = "path", required = false)
     public String getPath()
     {
-        return path;
+        return getString(path);
     }
 
     public void setPath(String path)
@@ -163,9 +164,7 @@ public class Composant implements ModeleSonar
     @XmlElement(name = "measures", required = false)
     public List<Metrique> getMetriques()
     {
-        if (metriques == null)
-            return new ArrayList<>();
-        return metriques;
+        return getList(metriques);
     }
 
     public void setMetriques(List<Metrique> metriques)
@@ -176,7 +175,7 @@ public class Composant implements ModeleSonar
     @XmlAttribute(name = "uuid", required = false)
     public String getUuid()
     {
-        return uuid;
+        return getString(uuid);
     }
 
     public void setUuid(String uuid)
@@ -198,7 +197,7 @@ public class Composant implements ModeleSonar
     @XmlAttribute(name = "longName", required = false)
     public String getLongName()
     {
-        return longName;
+        return getString(longName);
     }
 
     public void setLongName(String longName)

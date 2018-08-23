@@ -1,9 +1,7 @@
 package junit.control.excel;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.powermock.reflect.Whitebox.getField;
 import static org.powermock.reflect.Whitebox.getMethod;
 import static org.powermock.reflect.Whitebox.invokeMethod;
@@ -38,10 +36,10 @@ import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
+import model.enums.TypeRapport;
 import utilities.FunctionalException;
-import utilities.Statics;
 
-public class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<Anomalie>>
+public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -67,18 +65,6 @@ public class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, Control
     public void testRecupDonneesDepuisExcel()
     {
         testRecupDonneesDepuisExcel(map -> map.size() == 27); 
-    }
-
-    @Test
-    public void testControleKey() throws Exception
-    {
-        String methode = "controleKey";
-        assertTrue(invokeMethod(handler, methode, "a", "a"));
-        assertTrue(invokeMethod(handler, methode, "A", "a"));
-        assertFalse(invokeMethod(handler, methode, "A", "b"));
-        assertTrue(invokeMethod(handler, methode, "BEF000", "BEF0009"));
-        assertTrue(invokeMethod(handler, methode, "T7004360", "T7004360E"));
-        assertTrue(invokeMethod(handler, methode, "BF046502", "BF046500"));
     }
 
     @Test
@@ -482,80 +468,6 @@ public class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, Control
     }
 
     @Test
-    public void testControleClarity() throws Exception
-    {
-        // Intialisation
-        Anomalie ano = ModelFactory.getModel(Anomalie.class);
-        ano.setProjetClarity("a");
-        String methode = "controleClarity";
-
-        // Test 1 - aucune correspondance
-        invokeMethod(handler, methode, ano);
-        assertEquals(Statics.INCONNU, ano.getDepartement());
-        assertEquals(Statics.INCONNU, ano.getService());
-        assertEquals(Statics.INCONNUE, ano.getDirection());
-
-        // Test 2 - correspondance parfaite - données tirées du fichier excel
-        ano.setProjetClarity("BDGREF047");
-        invokeMethod(handler, methode, ano);
-        assertEquals("Controle de gestion et pilotage", ano.getDepartement());
-        assertEquals("Controle de gestion des filieres", ano.getService());
-        assertEquals("FINANCE ACHATS LOGISTIQUE", ano.getDirection());
-
-        // test 3 - correspondance trouvé avec algo de recherche du projet T le plus récent
-        // On doit trouver les informations du projet T3004730E
-        ano.setProjetClarity("T3004730");
-        invokeMethod(handler, methode, ano);
-        assertTrue("Risques Financier RH et CIS".equals(ano.getDepartement()) || "Distribution Ouest et Marches specialises".equals(ano.getDepartement()));
-        assertTrue("Service".equals(ano.getService()) || "Financier".equals(ano.getService()));
-        assertEquals("DOMAINES REGALIENS", ano.getDirection());
-
-        // test 4 - Correspondance avec les deux derniers caratères manquants
-        ano.setProjetClarity("P00839");
-        invokeMethod(handler, methode, ano);
-        assertEquals("Risques Financier RH et CIS", ano.getDepartement());
-        assertEquals("Financier", ano.getService());
-        assertEquals("DOMAINES REGALIENS", ano.getDirection());
-        
-        // Test 5 - projet T mais trop long
-        ano.setProjetClarity("T300473000");
-        invokeMethod(handler, methode, ano);
-        assertEquals(Statics.INCONNU, ano.getDepartement());
-        assertEquals(Statics.INCONNU, ano.getService());
-        assertEquals(Statics.INCONNUE, ano.getDirection());
-        
-        
-    }
-
-    @Test
-    public void testControleChefDeService() throws Exception
-    {
-        // Initialisation
-        Anomalie ano = ModelFactory.getModel(Anomalie.class);
-        String methode = "controleChefDeService";
-
-        // Test 1 nulle
-        invokeMethod(handler, methode, ano);
-        assertEquals(EMPTY, ano.getSecurite());
-
-        // Test 2 empty
-        ano.setService(EMPTY);
-        assertEquals(EMPTY, ano.getSecurite());
-
-        // Test 3 ok
-        ano.setService("Projets Credits");
-        invokeMethod(handler, methode, ano);
-        assertEquals("METROP-TAINTURIER, NATHALIE", ano.getResponsableService());
-
-        // Test 4 loggin
-        ano.setService("abc");
-        ano.setResponsableService("abc");
-        invokeMethod(handler, methode, ano);
-        assertEquals("abc", ano.getResponsableService());
-
-    }
-
-    @Test
     @Override
     public void testInitEnum() throws IllegalAccessException
     {
@@ -584,6 +496,12 @@ public class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, Control
 
     /*---------- METHODES PRIVEES ----------*/
 
+    @Override
+    protected void initOther()
+    {
+        handler.createControlRapport(TypeRapport.SUIVIJAVA); 
+    }
+    
     private void removeSheet(String nomSheet)
     {
         wb.removeSheetAt(wb.getSheetIndex(wb.getSheet(nomSheet)));

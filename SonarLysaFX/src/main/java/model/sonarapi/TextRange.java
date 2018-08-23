@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class TextRange
+public class TextRange extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 

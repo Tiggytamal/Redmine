@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class AssocierQG implements ModeleSonar
+public class AssocierQG extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -31,7 +34,7 @@ public class AssocierQG implements ModeleSonar
     @XmlAttribute (name = "gateId")
     public String getGateId()
     {
-        return gateId;
+        return getString(gateId);
     }
     
     public void setGateId(String gateId)
@@ -42,7 +45,7 @@ public class AssocierQG implements ModeleSonar
     @XmlAttribute (name = "projectId")
     public String getProjectId()
     {
-        return projectId;
+        return getString(projectId);
     }
 
     public void setProjectId(String projectId)

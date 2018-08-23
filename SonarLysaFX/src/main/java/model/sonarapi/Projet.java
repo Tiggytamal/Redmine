@@ -5,8 +5,11 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class Projet implements ModeleSonar, Serializable
+public class Projet extends AbstractModele implements ModeleSonar, Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -50,7 +53,7 @@ public class Projet implements ModeleSonar, Serializable
     @XmlAttribute(name = "k", required = true)
     public String getKey()
     {
-        return key;
+        return getString(key);
     }
 
     public void setKey(String key)
@@ -61,7 +64,7 @@ public class Projet implements ModeleSonar, Serializable
     @XmlAttribute(name = "id")
     public String getId()
     {
-        return id;
+        return getString(id);
     }
 
     public void setId(String id)
@@ -72,7 +75,7 @@ public class Projet implements ModeleSonar, Serializable
     @XmlAttribute(name = "nm")
     public String getNom()
     {
-        return nom;
+        return getString(nom);
     }
 
     public void setNom(String nom)
@@ -83,7 +86,7 @@ public class Projet implements ModeleSonar, Serializable
     @XmlAttribute(name = "sc")
     public String getSc()
     {
-        return sc;
+        return getString(sc);
     }
 
     public void setSc(String sc)
@@ -94,7 +97,7 @@ public class Projet implements ModeleSonar, Serializable
     @XmlAttribute(name = "qu")
     public String getQu()
     {
-        return qu;
+        return getString(qu);
     }
 
     public void setQu(String qu)
@@ -104,7 +107,7 @@ public class Projet implements ModeleSonar, Serializable
 
     public String getLot()
     {
-        return lot;
+        return getString(lot);
     }
 
     public void setLot(String lot)

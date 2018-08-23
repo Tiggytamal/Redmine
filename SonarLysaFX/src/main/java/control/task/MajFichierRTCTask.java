@@ -16,6 +16,13 @@ import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
 
+/**
+ * Tâche permettant de mettre à jour le fichier XML des lots RTC.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class MajFichierRTCTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/

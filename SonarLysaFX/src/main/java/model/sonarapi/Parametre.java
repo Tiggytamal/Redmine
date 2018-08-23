@@ -1,6 +1,9 @@
 package model.sonarapi;
 
-public class Parametre
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
+public class Parametre extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -26,7 +29,7 @@ public class Parametre
 
     public String getClef()
     {
-        return clef;
+        return getString(clef);
     }
 
     public void setClef(String clef)
@@ -36,7 +39,7 @@ public class Parametre
 
     public String getValeur()
     {
-        return valeur;
+        return getString(valeur);
     }
 
     public void setValeur(String valeur)

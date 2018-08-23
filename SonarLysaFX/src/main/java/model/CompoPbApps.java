@@ -1,12 +1,14 @@
 package model;
 
+import model.utilities.AbstractModele;
+
 /**
  * Classe de modèle représentant les informations des composants avec un problème de code application
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class CompoPbApps implements Modele
+public class CompoPbApps extends AbstractModele
 {
     /*---------- ATTRIBUTS ----------*/
 

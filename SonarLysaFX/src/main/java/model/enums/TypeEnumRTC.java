@@ -1,5 +1,12 @@
 package model.enums;
 
+/**
+ * Enumération possible dnas RTC.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public enum TypeEnumRTC 
 {
     ENTITERESPCORRECTION ("fr.ca.cat.attribut.entiteresponsablecorrection"),

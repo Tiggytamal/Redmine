@@ -261,6 +261,10 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <value>src/test/resources/</value>
         </entry>
         <entry>
+            <key>ABSOLUTEPATHRAPPORT</key>
+            <value>src/test/resources/</value>
+        </entry>
+        <entry>
             <key>NOMFICHIERJAVA</key>
             <value>Suivi_Quality_GateTest.xlsx</value>
         </entry>

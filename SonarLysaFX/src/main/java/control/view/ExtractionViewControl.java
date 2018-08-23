@@ -10,9 +10,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
-import utilities.Statics;
 import utilities.TechnicalException;
 
+/**
+ * Gestion de l'affichage pour la création de sextractions SonarQube.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public final class ExtractionViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
@@ -42,12 +48,12 @@ public final class ExtractionViewControl extends AbstractViewControl
     protected void afficher(ActionEvent event) throws IOException
     {
         Object source = event.getSource();
-        String id = Statics.EMPTY;
+
         if (source instanceof RadioButton)
         {
             selectPane.getChildren().clear();
 
-            id = ((RadioButton) source).getId();
+            String id = ((RadioButton) source).getId();
 
             switch (id)
             {

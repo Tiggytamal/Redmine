@@ -1,4 +1,4 @@
-package junit.model;
+package junit.model.utilities;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -9,7 +9,7 @@ import model.Anomalie;
 import model.LotSuiviPic;
 import model.LotSuiviRTC;
 import model.ModelFactory;
-import model.Modele;
+import model.utilities.AbstractModele;
 import utilities.TechnicalException;
 
 /**
@@ -71,7 +71,7 @@ public class TestModelFactory extends JunitBase
      * @author ETP8137 - Grégoire Mathon
      * @since 1.0
      */
-    private class ModeletTest implements Modele
+    private class ModeletTest extends AbstractModele
     {
         private ModeletTest() {}
     }

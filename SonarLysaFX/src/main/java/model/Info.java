@@ -6,6 +6,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import junit.JunitBase;
+import model.utilities.AbstractModele;
+import model.utilities.XML;
 import utilities.Statics;
 
 /**
@@ -15,7 +17,7 @@ import utilities.Statics;
  * @since 1.0
  */
 @XmlRootElement
-public class Info implements Modele, XML
+public class Info extends AbstractModele implements XML
 {
     /*---------- ATTRIBUTS ----------*/
 

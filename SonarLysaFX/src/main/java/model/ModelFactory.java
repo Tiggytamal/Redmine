@@ -3,6 +3,7 @@ package model;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import model.utilities.AbstractModele;
 import utilities.TechnicalException;
 
 public interface ModelFactory
@@ -13,7 +14,7 @@ public interface ModelFactory
      * @param modelClass
      * @return
      */
-    public static <T extends Modele> T getModel(Class<T> modelClass)
+    public static <T extends AbstractModele> T getModel(Class<T> modelClass)
     {
         try
         {
@@ -34,7 +35,7 @@ public interface ModelFactory
      * @param params
      * @return
      */
-    public static <T extends Modele> T getModelWithParams(Class<T> modelClass, Object... params)
+    public static <T extends AbstractModele> T getModelWithParams(Class<T> modelClass, Object... params)
     {
         try
         {

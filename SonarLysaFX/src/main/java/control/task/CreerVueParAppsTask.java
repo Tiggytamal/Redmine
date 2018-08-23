@@ -19,25 +19,33 @@ import application.Main;
 import control.excel.ControlAppsW;
 import control.excel.ControlPbApps;
 import control.excel.ExcelFactory;
-import control.mail.ControlMail;
+import control.word.ControlRapport;
 import control.xml.ControlXML;
 import model.Application;
 import model.CompoPbApps;
 import model.ComposantSonar;
-import model.ControlModelInfo;
 import model.LotSuiviRTC;
 import model.ModelFactory;
 import model.enums.CreerVueParAppsTaskOption;
 import model.enums.TypeColApps;
 import model.enums.TypeColPbApps;
-import model.enums.TypeInfoMail;
-import model.enums.TypeMail;
+import model.enums.TypeInfo;
+import model.enums.TypeRapport;
 import model.sonarapi.Projet;
 import model.sonarapi.Vue;
+import model.utilities.ControlModelInfo;
 import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.Utilities;
 
+/**
+ * Tâche de création des vues par application. Permet aussi de créer le fichier d'extraction des composant traités dans Sonar 
+ * ainsi que le fichier des problèmes des codes applicatifs.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class CreerVueParAppsTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
@@ -58,7 +66,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     /** Nombre de composants avec application inconnues */
     private int inconnues;
     /** Controleur Mails */
-    private ControlMail controlMail;
+    private ControlRapport controlRapport;
     /** Liste des apllications Dans SonarQube */
     private Set<Application> applisOpenSonar;
     /** Map de toutes les apllications */
@@ -78,7 +86,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
         annulable = false;
         inconnues = 0;
         applications = fichiersXML.getMapApplis();
-        controlMail = new ControlMail();
+        controlRapport = new ControlRapport(TypeRapport.VUEAPPS);
         applisOpenSonar = new HashSet<>();
         composPbAppli = new ArrayList<>();
         this.option = option;
@@ -163,7 +171,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             }
         }
 
-        controlMail.envoyerMail(TypeMail.VUEAPPS);
+        controlRapport.creerFichier();
         return true;
     }
 
@@ -233,7 +241,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             else
             {
                 LOGSANSAPP.warn("Application non renseignée - Composant : " + compo.getNom());
-                controlMail.addInfo(TypeInfoMail.COMPOSANSAPP, compo.getNom(), null);
+                controlRapport.addInfo(TypeInfo.COMPOSANSAPP, compo.getNom(), null);
                 composPbAppli.add(compo);
             }
         }
@@ -277,7 +285,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             if (!app.isActif())
             {
                 LOGNONLISTEE.warn("Application obsolète : " + application + " - composant : " + nom);
-                controlMail.addInfo(TypeInfoMail.APPLIOBSOLETE, nom, application);
+                controlRapport.addInfo(TypeInfo.APPLIOBSOLETE, nom, application);
             }
             app.ajouterldcSonar(compo.getLdc());
             app.majValSecurite(compo.getSecurity());
@@ -288,7 +296,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
         
         // Gestion des composants sans application
         LOGNONLISTEE.warn("Application n'existant pas dans le référenciel : " + application + " - composant : " + nom);
-        controlMail.addInfo(TypeInfoMail.APPLINONREF, nom, application);
+        controlRapport.addInfo(TypeInfo.APPLINONREF, nom, application);
         composPbAppli.add(compo);
         return false;
     }
@@ -301,21 +309,12 @@ public class CreerVueParAppsTask extends AbstractSonarTask
         if (option == CreerVueParAppsTaskOption.VUE)
             throw new TechnicalException("Control.task.CreerVueParAppsTask.creerFichierExtraction - Demande de création d'extraction sans fichier", null);
 
-        creerFichierSonar();
-        creerFichierPbApps();
-    }
-
-    private void creerFichierSonar()
-    {
-        ControlAppsW control = ExcelFactory.getWriter(TypeColApps.class, file);
-        control.creerfeuilleSonar(applisOpenSonar);
-        control.write();
-    }
-    
-    private void creerFichierPbApps()
-    {
-        ControlPbApps control = ExcelFactory.getWriter(TypeColPbApps.class, new File("testTest1.xlsx"));
+        // Fichier Sonar
+        ControlAppsW controlAppsW = ExcelFactory.getWriter(TypeColApps.class, file);
+        controlAppsW.creerfeuilleSonar(applisOpenSonar);
+        controlAppsW.write();
         
+        // Fichier des problèmes des codes apllication       
         List<CompoPbApps> listePbApps = new ArrayList<>();
         
         for (ComposantSonar compo : composPbAppli)
@@ -343,9 +342,10 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             listePbApps.add(pbApps);
         }
         
-        control.creerfeuille(listePbApps);
-        
-        control.write();        
+        // Ecriture fichier
+        ControlPbApps controlPbApps = ExcelFactory.getWriter(TypeColPbApps.class, new File("pbApps1.xlsx"));
+        controlPbApps.creerfeuille(listePbApps);       
+        controlPbApps.write();  
     }
 
     /*---------- ACCESSEURS ----------*/

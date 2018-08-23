@@ -7,10 +7,10 @@ import org.apache.logging.log4j.Logger;
 
 import junit.JunitBase;
 import model.ModelFactory;
-import model.Modele;
+import model.utilities.AbstractModele;
 import utilities.TechnicalException;
 
-public abstract class AbstractTestModel<T extends Modele> extends JunitBase
+public abstract class AbstractTestModel<T extends AbstractModele> extends JunitBase
 {
      /*---------- ATTRIBUTS ----------*/
     

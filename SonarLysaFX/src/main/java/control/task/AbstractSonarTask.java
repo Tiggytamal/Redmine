@@ -29,6 +29,13 @@ import utilities.Statics;
 import utilities.Utilities;
 import utilities.enums.Severity;
 
+/**
+ * Classe abstraite des tâches de traitement de l'application
+ * 
+ * @author ETP8137 - Grégoire mathon
+ * @since 1.0
+ *
+ */
 public abstract class AbstractSonarTask extends Task<Boolean>
 {
     /*---------- ATTRIBUTS ----------*/

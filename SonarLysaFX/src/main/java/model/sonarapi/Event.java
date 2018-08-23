@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class Event implements ModeleSonar
+public class Event extends AbstractModele implements ModeleSonar
 {
 
     /*---------- ATTRIBUTS ----------*/
@@ -39,7 +42,7 @@ public class Event implements ModeleSonar
     @XmlAttribute(name = "id")
     public String getId()
     {
-        return id;
+        return getString(id);
     }
 
     public void setId(String id)
@@ -50,7 +53,7 @@ public class Event implements ModeleSonar
     @XmlAttribute(name = "rk")
     public String getRk()
     {
-        return rk;
+        return getString(rk);
     }
 
     public void setRk(String rk)
@@ -61,7 +64,7 @@ public class Event implements ModeleSonar
     @XmlAttribute(name = "n")
     public String getN()
     {
-        return n;
+        return getString(n);
     }
 
     public void setN(String n)
@@ -72,7 +75,7 @@ public class Event implements ModeleSonar
     @XmlAttribute(name = "c")
     public String getC()
     {
-        return c;
+        return getString(c);
     }
 
     public void setC(String c)
@@ -83,7 +86,7 @@ public class Event implements ModeleSonar
     @XmlAttribute(name = "dt")
     public String getDt()
     {
-        return dt;
+        return getString(dt);
     }
 
     public void setDt(String dt)

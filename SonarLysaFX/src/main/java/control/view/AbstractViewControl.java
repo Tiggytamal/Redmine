@@ -12,6 +12,13 @@ import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
 
+/**
+ * Classe mère des controleurs de l'affichage de l'application
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public abstract class AbstractViewControl extends AbstractLaunchTask
 {
     /*---------- ATTRIBUTS ----------*/

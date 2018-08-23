@@ -14,9 +14,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
-import control.mail.ControlMail;
 import control.rtc.ControlRTC;
 import control.task.PurgeSonarTask;
+import control.word.ControlRapport;
 import model.ComposantSonar;
 import model.ModelFactory;
 import model.enums.ParamSpec;
@@ -105,8 +105,7 @@ public class TestPurgeSonarTask extends AbstractTestTask<PurgeSonarTask>
         assertTrue(liste.contains(e));
 
         // Test de la zone extra du controlMail.
-        Whitebox.getField(ControlMail.class, "extra").get(Whitebox.getField(PurgeSonarTask.class, "controlMail").get(handler))
-                .equals("Composants uniques : 5\nComposants solo : 2\nTotal composants sonar : 14\nSuppressions : 5\n");
+        Whitebox.getField(ControlRapport.class, "extra").get(Whitebox.getField(PurgeSonarTask.class, "controlRapport").get(handler));
 
         // Reinstanciation de la map des composants
         Statics.fichiersXML.getMapComposSonar().clear();

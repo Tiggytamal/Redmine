@@ -26,7 +26,7 @@ import model.InfoMail;
 import model.ModelFactory;
 import model.enums.Param;
 import model.enums.ParamSpec;
-import model.enums.TypeInfoMail;
+import model.enums.TypeInfo;
 import model.enums.TypeMail;
 import utilities.DateConvert;
 import utilities.Statics;
@@ -36,6 +36,7 @@ import utilities.Statics;
  * 
  * @author ETP8137 - Grégoire mathon
  * @since 1.0
+ * 
  */
 public class ControlMail
 {
@@ -43,18 +44,18 @@ public class ControlMail
 
     private static final String SERVEUR = Statics.proprietesXML.getMapParams().get(Param.IPMAIL);
     private static final String PORT = Statics.proprietesXML.getMapParams().get(Param.PORTMAIL);
-    
+
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
     private Message message;
     private String adresseConnecte;
     private String adressesEnvoi;
     private Properties props;
     private String extra;
-    private Map<TypeInfoMail, List<InfoMail>> mapInfos;
+    private Map<TypeInfo, List<InfoMail>> mapInfos;
     private final String today = DateConvert.dateFrancais(LocalDate.now(), "dd MMMM YYYY");
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -62,9 +63,9 @@ public class ControlMail
     public ControlMail()
     {
         // Initialisation variables
-        mapInfos = new EnumMap<>(TypeInfoMail.class);
+        mapInfos = new EnumMap<>(TypeInfo.class);
         extra = Statics.EMPTY;
-        for (TypeInfoMail type : TypeInfoMail.values())
+        for (TypeInfo type : TypeInfo.values())
         {
             mapInfos.put(type, new ArrayList<>());
         }
@@ -73,7 +74,7 @@ public class ControlMail
         try
         {
             initMail();
-        } 
+        }
         catch (TeamRepositoryException e)
         {
             LOGPLANTAGE.error(e);
@@ -114,7 +115,7 @@ public class ControlMail
             transportMail();
 
             LOGGER.info("Envoi du mail de rapport OK.");
-        } 
+        }
         catch (MessagingException e)
         {
             LOGPLANTAGE.error(e);
@@ -161,7 +162,7 @@ public class ControlMail
         StringBuilder builder = new StringBuilder(debut).append(today).append(Statics.NL).append(Statics.NL);
 
         // Gestion des infos
-        for (TypeInfoMail type : TypeInfoMail.values())
+        for (TypeInfo type : TypeInfo.values())
         {
             List<InfoMail> lots = mapInfos.computeIfAbsent(type, n -> new ArrayList<>());
             if (lots.isEmpty())
@@ -181,10 +182,10 @@ public class ControlMail
 
         // Ajout de données extra
         builder.append(extra);
-        
+
         return builder.toString();
     }
-    
+
     protected void transportMail() throws MessagingException
     {
         Transport.send(message);
@@ -198,11 +199,11 @@ public class ControlMail
      * @param type
      * @param handler
      */
-    public void addInfo(TypeInfoMail type, String lot, String infoSupp)
+    public void addInfo(TypeInfo type, String lot, String infoSupp)
     {
         mapInfos.get(type).add(ModelFactory.getModelWithParams(InfoMail.class, lot, infoSupp));
     }
-    
+
     /**
      * Ajoute des données sous forme d'une chaîne de caratères au mail.
      * 

@@ -4,8 +4,10 @@ import utilities.Statics;
 
 /**
  * Réprésente les valeurs possibles de la colonne actions
+ * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */ 
 public enum TypeAction
 {

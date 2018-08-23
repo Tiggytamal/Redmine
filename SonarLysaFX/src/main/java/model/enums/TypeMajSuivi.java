@@ -1,5 +1,12 @@
 package model.enums;
 
+/**
+ * Option pour la mise à jour des fichiers de suivi.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public enum TypeMajSuivi 
 {
     /*---------- ATTRIBUTS ----------*/

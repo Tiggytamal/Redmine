@@ -1,12 +1,14 @@
 package model;
 
+import model.utilities.AbstractModele;
+
 /**
  * Classe de modèle pour les informations extraites des traitements à envoyer par mail.
  * 
  * @author ETP8137 - Grégoire Mathon
  *
  */
-public class InfoMail implements Modele
+public class InfoMail extends AbstractModele
 {
     /*---------- ATTRIBUTS ----------*/
 

@@ -1,5 +1,12 @@
 package model.enums;
 
+/**
+ * Enumération représentant les paramètre de type booléen.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public enum ParamBool implements TypeKey 
 {
     /*---------- ATTRIBUTS ----------*/

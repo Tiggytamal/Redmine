@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class Condition implements ModeleSonar
+public class Condition extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -37,7 +40,7 @@ public class Condition implements ModeleSonar
     @XmlAttribute(name = "status")
     public String getStatus()
     {
-        return status;
+        return getString(status);
     }
     
     public void setStatus(String status)
@@ -48,7 +51,7 @@ public class Condition implements ModeleSonar
     @XmlAttribute(name = "metricKey")
     public String getMetricKeys()
     {
-        return metricKeys;
+        return getString(metricKeys);
     }
     
     public void setMetricKeys(String metricKeys)
@@ -59,7 +62,7 @@ public class Condition implements ModeleSonar
     @XmlAttribute(name = "comparator")
     public String getComparator()
     {
-        return comparator;
+        return getString(comparator);
     }
     
     public void setComparator(String comparator)
@@ -81,7 +84,7 @@ public class Condition implements ModeleSonar
     @XmlAttribute(name = "errorThreshold")
     public String getErrorThreshold()
     {
-        return errorThreshold;
+        return getString(errorThreshold);
     }
     
     public void setErrorThreshold(String errorThreshold)
@@ -92,7 +95,7 @@ public class Condition implements ModeleSonar
     @XmlAttribute(name = "actualValue")
     public String getActualValue()
     {
-        return actualValue;
+        return getString(actualValue);
     }
 
     public void setActualValue(String actualValue)

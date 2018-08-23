@@ -1,5 +1,12 @@
 package model.enums;
 
+/**
+ * Colonnes du fichier des vulnérabilitès
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public enum TypeColVul implements TypeColW 
 {
     SEVERITE("Severité", "colSeverity"), 

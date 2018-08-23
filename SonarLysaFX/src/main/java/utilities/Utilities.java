@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import model.enums.DeserOption;
 import utilities.enums.Severity;
 
 /**
@@ -253,18 +254,28 @@ public final class Utilities
      *            Fonction à utliser pour récupérer les informations necessaire à la créationde l'objet de retour
      * @return
      */
-    public static <T> T recuperation(boolean deserialisation, Class<T> classRetour, String nomSer, Supplier<T> fonction)
+    public static <T> T recuperation(DeserOption option, Class<T> classRetour, String nomSer, Supplier<T> fonction)
     {
         T retour;
-        if (deserialisation)
+        switch (option)
         {
-            retour = Utilities.deserialisation(Statics.ADRESSEDESER + nomSer, classRetour);
+            case AUCUNE :
+                retour = fonction.get();
+                break;
+                
+            case DESERIALISATION :
+                retour = Utilities.deserialisation(Statics.ADRESSEDESER + nomSer, classRetour);
+                break;
+                
+            case SERIALISATION :
+                retour = fonction.get();
+                Utilities.serialisation(Statics.ADRESSEDESER + nomSer, retour);
+                break;
+                
+            default :
+                throw new TechnicalException("utilities.Utilities.recuperation - DeserOption " + option + " inconnue", null);
         }
-        else
-        {
-            retour = fonction.get();
-            Utilities.serialisation(Statics.ADRESSEDESER + nomSer, retour);
-        }
+
         return retour;
     }
 }

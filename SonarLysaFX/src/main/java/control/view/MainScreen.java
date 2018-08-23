@@ -27,7 +27,11 @@ import utilities.TechnicalException;
 import view.TrayIconView;
 
 /**
+ * Ecran principal de l'application
+ * 
  * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
  */
 public final class MainScreen extends Application
 {

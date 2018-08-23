@@ -1,6 +1,5 @@
 package model.sonarapi;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -9,9 +8,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
 @JsonIgnoreProperties({"components"})
-public class Issues implements ModeleSonar
+public class Issues extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -64,6 +66,8 @@ public class Issues implements ModeleSonar
     @XmlAttribute(name = "paging")
     public Paging getPaging()
     {
+        if (paging == null)
+            return new Paging();
         return paging;
     }
 
@@ -71,17 +75,13 @@ public class Issues implements ModeleSonar
     @XmlAttribute(name = "components", required = false)
     public List<Composant> getComposants()
     {
-        if (composants == null)
-            return new ArrayList<>();
-        return composants;
+        return getList(composants);
     }
 
     @XmlElementWrapper
     @XmlAttribute(name = "issues", required = false)
     public List<Issue> getListIssues()
     {
-        if (listIssues == null)
-            return new ArrayList<>();
-        return listIssues;
+        return getList(listIssues);
     }
 }

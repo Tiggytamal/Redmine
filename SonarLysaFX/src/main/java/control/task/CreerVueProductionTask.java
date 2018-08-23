@@ -24,6 +24,13 @@ import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
 
+/**
+ * Permet de créer les vues mensuelles et trimestrielles des composants mis en production.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class CreerVueProductionTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/

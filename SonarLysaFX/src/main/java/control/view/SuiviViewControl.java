@@ -11,6 +11,13 @@ import model.enums.TypeMajSuivi;
 import utilities.Statics;
 import utilities.TechnicalException;
 
+/**
+ * Gestionde l'affichage pour le control des fichiers de suivi.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public final class SuiviViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/

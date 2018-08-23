@@ -19,6 +19,13 @@ import model.sonarapi.Projet;
 import utilities.Statics;
 import utilities.Utilities;
 
+/**
+ * Tâche de création de la liste des composants SonarQube avec sauvegarde sous forme de fichier XML
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class CreerListeComposantsTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/

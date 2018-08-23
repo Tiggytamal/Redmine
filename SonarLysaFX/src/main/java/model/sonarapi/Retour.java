@@ -5,6 +5,9 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 /**
  * Classe de wrapping des retour JSON. tous les attibuts sont optionnels,pour permettre le retour de n'importe quel type d'objet.
  * 
@@ -12,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement
-public class Retour implements ModeleSonar
+public class Retour extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -52,25 +55,29 @@ public class Retour implements ModeleSonar
     @XmlAttribute(name = "component", required = false)
     public Composant getComponent()
     {
+        if (component == null)
+            return new Composant();
         return component;
     }
 
     @XmlAttribute(name = "views", required = false)
     public List<Vue> getListeVues()
     {
-        return listeVues;
+        return getList(listeVues);
     }
 
     @XmlAttribute(name = "projectStatus", required = false)
     public StatusProjet getStatusProjet()
     {
+        if (statusProjet == null)
+            return new StatusProjet();
         return statusProjet;
     }
 
     @XmlAttribute(name = "results", required = false)
     public List<Vue> getResults()
     {
-        return results;
+        return getList(results);
     }
 
     @XmlAttribute(name = "more", required = false)
@@ -82,18 +89,18 @@ public class Retour implements ModeleSonar
     @XmlAttribute(name = "errors", required = false)
     public List<Message> getErrors()
     {
-        return errors;
+        return getList(errors);
     }
 
     @XmlAttribute(name = "qualitygates", required = false)
     public List<QualityGate> getQualityGates()
     {
-        return qualityGates;
+        return getList(qualityGates);
     }
 
     @XmlAttribute(name = "default", required = false)
     public String getDefaut()
     {
-        return defaut;
+        return getString(defaut);
     }
 }

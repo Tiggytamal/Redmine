@@ -28,7 +28,7 @@ import junit.TestUtils;
 import model.InfoMail;
 import model.ModelFactory;
 import model.enums.ParamSpec;
-import model.enums.TypeInfoMail;
+import model.enums.TypeInfo;
 import model.enums.TypeMail;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -50,7 +50,6 @@ public class TestControlMail extends JunitBase
         
         // Mock pour éviter le départ des mails tout en testant tout le reste.
         handler = PowerMockito.spy(handler);      
-//        PowerMockito.doNothing().when(handler, "transportMail");
     }
 
     /*---------- METHODES PUBLIQUES ----------*/ 
@@ -100,51 +99,51 @@ public class TestControlMail extends JunitBase
     public void testAddInfo() throws IllegalArgumentException, IllegalAccessException
     {
         // Initialisation test
-        handler.addInfo(TypeInfoMail.ANOABANDON, "123456", null);
-        handler.addInfo(TypeInfoMail.ANOABANDON, "654321", "000001");
-        handler.addInfo(TypeInfoMail.ANONEW, "234567", "infoSupp");
-        handler.addInfo(TypeInfoMail.APPLIOBSOLETE, "345678", "application");
-        handler.addInfo(TypeInfoMail.LOTMAJ, "123456", null);
+        handler.addInfo(TypeInfo.ANOABANDON, "123456", null);
+        handler.addInfo(TypeInfo.ANOABANDON, "654321", "000001");
+        handler.addInfo(TypeInfo.ANONEW, "234567", "infoSupp");
+        handler.addInfo(TypeInfo.APPLIOBSOLETE, "345678", "application");
+        handler.addInfo(TypeInfo.LOTMAJ, "123456", null);
         
         // création de la map        
         @SuppressWarnings("unchecked")
-        Map<TypeInfoMail, List<InfoMail>> mapInfos = (Map<TypeInfoMail, List<InfoMail>>) Whitebox.getField(ControlMail.class, "mapInfos").get(handler);
+        Map<TypeInfo, List<InfoMail>> mapInfos = (Map<TypeInfo, List<InfoMail>>) Whitebox.getField(ControlMail.class, "mapInfos").get(handler);
         
         // Contrôle
         assertFalse(mapInfos.isEmpty());
-        assertFalse(mapInfos.get(TypeInfoMail.ANOABANDON).isEmpty());
-        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "123456", null), mapInfos.get(TypeInfoMail.ANOABANDON).get(0));
-        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "654321", "000001"), mapInfos.get(TypeInfoMail.ANOABANDON).get(1));
-        assertFalse(mapInfos.get(TypeInfoMail.ANONEW).isEmpty());
-        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "234567", "infoSupp"), mapInfos.get(TypeInfoMail.ANONEW).get(0));
-        assertFalse(mapInfos.get(TypeInfoMail.APPLIOBSOLETE).isEmpty());
-        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "345678", "application"), mapInfos.get(TypeInfoMail.APPLIOBSOLETE).get(0));
-        assertFalse(mapInfos.get(TypeInfoMail.LOTMAJ).isEmpty());
-        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "123456", null), mapInfos.get(TypeInfoMail.LOTMAJ).get(0));
+        assertFalse(mapInfos.get(TypeInfo.ANOABANDON).isEmpty());
+        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "123456", null), mapInfos.get(TypeInfo.ANOABANDON).get(0));
+        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "654321", "000001"), mapInfos.get(TypeInfo.ANOABANDON).get(1));
+        assertFalse(mapInfos.get(TypeInfo.ANONEW).isEmpty());
+        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "234567", "infoSupp"), mapInfos.get(TypeInfo.ANONEW).get(0));
+        assertFalse(mapInfos.get(TypeInfo.APPLIOBSOLETE).isEmpty());
+        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "345678", "application"), mapInfos.get(TypeInfo.APPLIOBSOLETE).get(0));
+        assertFalse(mapInfos.get(TypeInfo.LOTMAJ).isEmpty());
+        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "123456", null), mapInfos.get(TypeInfo.LOTMAJ).get(0));
     }
     
     @Test
     public void testCreerTexte() throws Exception
     {
         // Initialisation
-        handler.addInfo(TypeInfoMail.ANOABANDON, "123456", null);
-        handler.addInfo(TypeInfoMail.ANOABANDON, "654321", "000001");
-        handler.addInfo(TypeInfoMail.ANONEW, "234567", "infoSupp");
-        handler.addInfo(TypeInfoMail.APPLIOBSOLETE, "345678", "application");
-        handler.addInfo(TypeInfoMail.LOTMAJ, "123456", null);
+        handler.addInfo(TypeInfo.ANOABANDON, "123456", null);
+        handler.addInfo(TypeInfo.ANOABANDON, "654321", "000001");
+        handler.addInfo(TypeInfo.ANONEW, "234567", "infoSupp");
+        handler.addInfo(TypeInfo.APPLIOBSOLETE, "345678", "application");
+        handler.addInfo(TypeInfo.LOTMAJ, "123456", null);
         
         // Appel méthode
         String messageMail = Whitebox.invokeMethod(handler, "creerTexte", "debut");
         
-        assertTrue(messageMail.contains(TypeInfoMail.ANOABANDON.getTitre()));
-        assertTrue(messageMail.contains(TypeInfoMail.ANONEW.getTitre()));
-        assertTrue(messageMail.contains(TypeInfoMail.APPLIOBSOLETE.getTitre()));
-        assertTrue(messageMail.contains(TypeInfoMail.LOTMAJ.getTitre()));
+        assertTrue(messageMail.contains(TypeInfo.ANOABANDON.getTitre()));
+        assertTrue(messageMail.contains(TypeInfo.ANONEW.getTitre()));
+        assertTrue(messageMail.contains(TypeInfo.APPLIOBSOLETE.getTitre()));
+        assertTrue(messageMail.contains(TypeInfo.LOTMAJ.getTitre()));
         assertTrue(messageMail.contains(Statics.TIRET + "123456"));
-        assertTrue(messageMail.contains(Statics.TIRET + "654321" + TypeInfoMail.ANOABANDON.getLiens() + "000001"));
+        assertTrue(messageMail.contains(Statics.TIRET + "654321" + TypeInfo.ANOABANDON.getLiens() + "000001"));
         assertTrue(messageMail.contains(Statics.TIRET + "234567"));
-        assertFalse(messageMail.contains(Statics.TIRET + "234567" + TypeInfoMail.ANONEW.getLiens() + "infoSupp"));
-        assertTrue(messageMail.contains(Statics.TIRET + "345678" + TypeInfoMail.APPLIOBSOLETE.getLiens() + "application"));
+        assertFalse(messageMail.contains(Statics.TIRET + "234567" + TypeInfo.ANONEW.getLiens() + "infoSupp"));
+        assertTrue(messageMail.contains(Statics.TIRET + "345678" + TypeInfo.APPLIOBSOLETE.getLiens() + "application"));
         assertTrue(messageMail.contains(Statics.TIRET + "123456"));        
     }
     

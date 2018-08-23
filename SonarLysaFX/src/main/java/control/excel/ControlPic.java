@@ -12,6 +12,13 @@ import model.LotSuiviPic;
 import model.ModelFactory;
 import model.enums.TypeColPic;
 
+/**
+ * Classe de contrôle des fichiers d'extraction de la PIC
+ * 
+ * @author ETP8137 - Grégoire mathon
+ * @since 1.0
+ *
+ */
 public final class ControlPic extends AbstractControlExcelRead<TypeColPic, Map<String, LotSuiviPic>>
 {
     /*---------- ATTRIBUTS ----------*/

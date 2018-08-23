@@ -22,6 +22,8 @@ import model.enums.TypeColSuivi;
 import model.enums.Param;
 import model.enums.ParamSpec;
 import model.enums.TypePlan;
+import model.utilities.AbstractModele;
+import model.utilities.XML;
 import utilities.Statics;
 import utilities.TechnicalException;
 
@@ -32,7 +34,7 @@ import utilities.TechnicalException;
  * @since 1.0
  */
 @XmlRootElement
-public class ProprietesXML implements XML, Modele
+public class ProprietesXML extends AbstractModele implements XML
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -104,25 +106,25 @@ public class ProprietesXML implements XML, Modele
         switch (typeColClass.getName())
         {
             case "model.enums.TypeColSuivi" :
-                return (Map<T, String>) mapColsSuivi;
+                return (Map<T, String>) getMapColsSuivi();
 
             case "model.enums.TypeColClarity" :
-                return (Map<T, String>) mapColsClarity;
+                return (Map<T, String>) getMapColsClarity();
 
             case "model.enums.TypeColChefServ" :
-                return (Map<T, String>) mapColsChefServ;
+                return (Map<T, String>) getMapColsChefServ();
 
             case "model.enums.TypeColPic" :
-                return (Map<T, String>) mapColsPic;
+                return (Map<T, String>) getMapColsPic();
 
             case "model.enums.TypeColEdition" :
-                return (Map<T, String>) mapColsEdition;
+                return (Map<T, String>) getMapColsEdition();
 
             case "model.enums.TypeColApps" :
-                return (Map<T, String>) mapColsApps;
+                return (Map<T, String>) getMapColsApps();
                 
             case "model.enums.TypeColNPC" :
-                return (Map<T, String>) mapColsNPC;
+                return (Map<T, String>) getMapColsNPC();
 
             default:
                 throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);

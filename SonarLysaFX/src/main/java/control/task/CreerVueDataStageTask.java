@@ -7,6 +7,13 @@ import model.ComposantSonar;
 import model.sonarapi.Vue;
 import utilities.Statics;
 
+/**
+ * Tâche de création de la vue regroupant tous les composants DataStage
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class CreerVueDataStageTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/

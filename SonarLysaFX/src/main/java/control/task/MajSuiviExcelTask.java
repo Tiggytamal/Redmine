@@ -38,25 +38,28 @@ import model.ModelFactory;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamBool;
+import model.enums.Status;
 import model.enums.TypeColSuivi;
 import model.enums.TypeFichier;
-import model.enums.TypeInfoMail;
+import model.enums.TypeInfo;
 import model.enums.TypeMajSuivi;
 import model.enums.TypeMetrique;
+import model.enums.TypeRapport;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Periode;
 import model.sonarapi.QualityGate;
-import model.sonarapi.Status;
 import model.sonarapi.Vue;
 import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.Utilities;
 
 /**
+ * Tâche permettant de mettre à jour les fichiers Excel de suivi des anomalies Sonar.
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public class MajSuiviExcelTask extends AbstractSonarTask
 {
@@ -214,8 +217,10 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         // Mise à jour des fichiers Excel
         ControlSuivi controlAnoJava = ExcelFactory.getReader(TypeColSuivi.class,
                 new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA)));
+        controlAnoJava.createControlRapport(TypeRapport.SUIVIJAVA);
         ControlSuivi controlAnoDataStage = ExcelFactory.getReader(TypeColSuivi.class,
                 new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE)));
+        controlAnoJava.createControlRapport(TypeRapport.SUIVIDATASTAGE);
         controlAnoJava.majMultiMatiere(anoMultiple);
         controlAnoDataStage.majMultiMatiere(anoMultiple);
         controlAnoJava.close();
@@ -256,6 +261,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         etapePlus();
 
         // Traitement du fichier de suivi
+        
         return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIERCOBOL), Matiere.COBOL);
     }
 
@@ -300,18 +306,28 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         Set<String> lotRelease = new HashSet<>();
 
         etapePlus();
-        if (Main.DESER)
+        
+        switch (Main.DESER)
         {
-            mapLotsSonar = Utilities.deserialisation("lotsSonar" + matiere.toString() + ".ser", HashMap.class);
-            lotsSecurite = Utilities.deserialisation("lotsSecurite" + matiere.toString() + ".ser", HashSet.class);
-            lotRelease = Utilities.deserialisation("lotsRelease" + matiere.toString() + ".ser", HashSet.class);
-        }
-        else
-        {
-            mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotRelease);
-            Utilities.serialisation("lotsSecurite" + matiere.toString() + ".ser", lotsSecurite);
-            Utilities.serialisation("lotsSonar" + matiere.toString() + ".ser", mapLotsSonar);
-            Utilities.serialisation("lotsRelease" + matiere.toString() + ".ser", lotRelease);
+            case AUCUNE:
+                mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotRelease);
+                break;
+                
+            case DESERIALISATION:
+                mapLotsSonar = Utilities.deserialisation("lotsSonar" + matiere.toString() + ".ser", HashMap.class);
+                lotsSecurite = Utilities.deserialisation("lotsSecurite" + matiere.toString() + ".ser", HashSet.class);
+                lotRelease = Utilities.deserialisation("lotsRelease" + matiere.toString() + ".ser", HashSet.class);
+                break;
+                
+            case SERIALISATION:
+                mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotRelease);
+                Utilities.serialisation("lotsSecurite" + matiere.toString() + ".ser", lotsSecurite);
+                Utilities.serialisation("lotsSonar" + matiere.toString() + ".ser", mapLotsSonar);
+                Utilities.serialisation("lotsRelease" + matiere.toString() + ".ser", lotRelease);
+                break;
+                
+            default:
+                throw new TechnicalException("control.task.MajSuiviExcelTask.traitementFichierSuivi - DeserOption " + Main.DESER + " inconnue", null);
         }
 
         etapePlus();
@@ -414,6 +430,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         // Controleur
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;
         ControlSuivi controlAno = ExcelFactory.getReader(TypeColSuivi.class, new File(name));
+        controlAno.createControlRapport(matiere.getTypeRapport());
 
         // Lecture du fichier pour remonter les anomalies en cours.
         List<Anomalie> listeLotenAno = controlAno.recupDonneesDepuisExcel();
@@ -446,7 +463,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
                 if (lot == null)
                 {
                     LOGNONLISTEE.warn("Un lot du fichier Excel n'est pas connu : " + numeroLot);
-                    controlAno.getControlMail().addInfo(TypeInfoMail.LOTNONRTC, numeroLot, null);
+                    controlAno.getControlRapport().addInfo(TypeInfo.LOTNONRTC, numeroLot, null);
                     continue;
                 }
 

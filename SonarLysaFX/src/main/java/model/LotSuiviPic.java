@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import model.utilities.AbstractModele;
 import utilities.adapter.LocalDateAdapter;
 
 /**
@@ -15,7 +16,7 @@ import utilities.adapter.LocalDateAdapter;
  * @since 1.0
  */
 @XmlRootElement
-public class LotSuiviPic implements Modele
+public class LotSuiviPic extends AbstractModele
 {
     /*---------- ATTRIBUTS ----------*/
 

@@ -6,8 +6,11 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class StatusProjet implements ModeleSonar
+public class StatusProjet extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -36,7 +39,7 @@ public class StatusProjet implements ModeleSonar
     @XmlAttribute(name = "status")
     public String getStatus()
     {
-        return status;
+        return getString(status);
     }
 
     public void setStatus(String status)
@@ -47,7 +50,7 @@ public class StatusProjet implements ModeleSonar
     @XmlAttribute(name = "conditions")
     public List<Condition> getConditions()
     {
-        return conditions;
+        return getList(conditions);
     }
 
     public void setConditions(List<Condition> conditions)
@@ -58,7 +61,7 @@ public class StatusProjet implements ModeleSonar
     @XmlAttribute(name = "periods")
     public List<StatusPeriode> getPeriodes()
     {
-        return periodes;
+        return getList(periodes);
     }
 
     public void setPeriodes(List<StatusPeriode> periodes)

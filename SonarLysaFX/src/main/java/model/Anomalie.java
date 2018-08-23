@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Comment;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
+import model.utilities.AbstractModele;
 
 /**
  * Classe de modèle qui correspond aux données du fichier Excel des anomalies.
@@ -17,7 +18,7 @@ import model.enums.TypeAction;
  * @author ETP8137 - Grégoire mathon
  * @since 1.0
  */
-public class Anomalie implements Modele
+public class Anomalie extends AbstractModele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -111,12 +112,6 @@ public class Anomalie implements Modele
         setDirection(info.getDirection());
         setService(info.getService());
         return this;
-    }
-    
-    @Override
-    public String toString()
-    {
-        return "Anomalie du lot " + getLot() + " - RTC = " + getNumeroAnomalie();
     }
 
     /**
@@ -409,7 +404,7 @@ public class Anomalie implements Modele
     
     public TypeAction getAction()
     {
-        return action;
+        return action == null ? TypeAction.VIDE : action;
     }
 
     public void setAction(TypeAction action)
@@ -424,7 +419,7 @@ public class Anomalie implements Modele
 
     public Set<Matiere> getMatieres()
     {
-        return matieres;
+        return matieres == null ? new HashSet<>() : matieres;
     }
 
     public void setMatieres(Set<Matiere> matieres)

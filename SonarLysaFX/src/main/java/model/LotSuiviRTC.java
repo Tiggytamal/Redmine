@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import model.enums.EtatLot;
+import model.utilities.AbstractModele;
 import utilities.adapter.LocalDateAdapter;
 
 /**
@@ -16,7 +17,7 @@ import utilities.adapter.LocalDateAdapter;
  * @since 1.0
  */
 @XmlRootElement
-public class LotSuiviRTC implements Modele
+public class LotSuiviRTC extends AbstractModele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -95,7 +96,7 @@ public class LotSuiviRTC implements Modele
     @XmlAttribute(required = false)
     public EtatLot getEtatLot()
     {
-        return etatLot;
+        return etatLot == null ? EtatLot.INCONNU : etatLot;
     }
 
     public void setEtatLot(EtatLot etatLot)

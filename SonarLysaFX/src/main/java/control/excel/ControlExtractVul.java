@@ -14,6 +14,13 @@ import model.enums.TypeColVul;
 import model.enums.TypeVulnerabilite;
 import utilities.enums.Bordure;
 
+/**
+ * Classe de contrôle du fichier d'extraction des vulnérabilitès
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ */
 public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, List<Vulnerabilite>>
 {
     /*---------- ATTRIBUTS ----------*/

@@ -9,8 +9,9 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import model.Modele;
 import model.enums.TypeMetrique;
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
 import utilities.adapter.TypeMetriqueAdapter;
 
 /**
@@ -20,7 +21,7 @@ import utilities.adapter.TypeMetriqueAdapter;
  * @since 1.0
  */
 @XmlRootElement
-public class Metrique implements Modele
+public class Metrique extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -81,9 +82,7 @@ public class Metrique implements Modele
     @XmlElement(name = "periods", required = false)
     public List<Periode> getListePeriodes()
     {
-        if (listePeriodes == null)
-            return new ArrayList<>();
-        return listePeriodes;
+        return getList(listePeriodes);
     }
     
     public void setListePeriodes(List<Periode> listePeriodes)

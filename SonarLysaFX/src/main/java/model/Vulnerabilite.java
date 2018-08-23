@@ -2,13 +2,15 @@ package model;
 
 import java.io.Serializable;
 
+import model.utilities.AbstractModele;
+
 /**
  * Classe de modèle pour l'extraction des vulnérabilités CVE
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class Vulnerabilite implements Serializable, Modele
+public class Vulnerabilite extends AbstractModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 

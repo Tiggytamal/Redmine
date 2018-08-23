@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class Periode
+public class Periode extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -42,7 +45,7 @@ public class Periode
     @XmlAttribute(name = "value")
     public String getValeur()
     {
-        return valeur;
+        return getString(valeur);
     }
 
     public void setValeur(String value)

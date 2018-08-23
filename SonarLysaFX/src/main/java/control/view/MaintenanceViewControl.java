@@ -16,9 +16,15 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.enums.CHCouCDM;
-import utilities.Statics;
 import utilities.TechnicalException;
 
+/**
+ * Gestion de l'affichage de la création de svues de maintenance (CHC - CDM)
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public final class MaintenanceViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
@@ -58,13 +64,13 @@ public final class MaintenanceViewControl extends AbstractViewControl
     public void afficher(ActionEvent event)
     {
         Object source = event.getSource();
-        String id = Statics.EMPTY;
+
         if (source instanceof RadioButton)
         {
             ObservableList<Node> children = selectPane.getChildren();
             children.clear();
 
-            id = ((RadioButton) source).getId();
+            String id = ((RadioButton) source).getId();
 
             switch (id)
             {

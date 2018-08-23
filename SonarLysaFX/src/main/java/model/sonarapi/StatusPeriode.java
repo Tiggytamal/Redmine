@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class StatusPeriode
+public class StatusPeriode extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -46,7 +49,7 @@ public class StatusPeriode
     @XmlAttribute
     public String getMode()
     {
-        return mode;
+        return getString(mode);
     }
 
     public void setMode(String mode)
@@ -57,7 +60,7 @@ public class StatusPeriode
     @XmlAttribute
     public String getDate()
     {
-        return date;
+        return getString(date);
     }
 
     public void setDate(String date)
@@ -68,7 +71,7 @@ public class StatusPeriode
     @XmlAttribute
     public String getParameter()
     {
-        return parameter;
+        return getString(parameter);
     }
 
     public void setParameter(String parameter)

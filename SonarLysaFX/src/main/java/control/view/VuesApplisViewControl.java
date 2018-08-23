@@ -11,6 +11,13 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import model.enums.CreerVueParAppsTaskOption;
 
+/**
+ * Gestion de l'affichage du control pour la création des vues par application
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public final class VuesApplisViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/

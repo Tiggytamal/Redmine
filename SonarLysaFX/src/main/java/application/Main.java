@@ -16,6 +16,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+import model.enums.DeserOption;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -26,11 +27,12 @@ import utilities.enums.Severity;
  * 
  * @author ETP137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public final class Main extends Application
 {
     /** Boolean pour gérer la désrialisation ou non des objets JAVA - A ACTIVER UNIQUEMENT EN TEST */
-    public static final boolean DESER = false;
+    public static final DeserOption DESER = DeserOption.AUCUNE;
 
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");

@@ -19,6 +19,13 @@ import model.enums.TypeAction;
 import utilities.CellHelper;
 import utilities.DateConvert;
 
+/**
+ * Classe abstraite générique de contrôle des fichiers Excel
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ */
 public abstract class AbstractControlExcel
 {
     /*---------- ATTRIBUTS ----------*/

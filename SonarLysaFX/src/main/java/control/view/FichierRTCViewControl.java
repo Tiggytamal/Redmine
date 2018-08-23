@@ -7,6 +7,13 @@ import javafx.scene.control.DatePicker;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
+/**
+ * Contrôle de la mise à jour du fichier RTC.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public final class FichierRTCViewControl extends AbstractLaunchTask
 {
     /*---------- ATTRIBUTS ----------*/

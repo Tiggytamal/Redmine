@@ -12,16 +12,22 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import control.mail.ControlMail;
+import control.word.ControlRapport;
 import model.ComposantSonar;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
-import model.enums.TypeInfoMail;
-import model.enums.TypeMail;
+import model.enums.TypeInfo;
+import model.enums.TypeRapport;
 import utilities.Statics;
 import utilities.TechnicalException;
 
+/**
+ * Tâche permetant d'effectuer la purge des composants SonarQube
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ */
 public class PurgeSonarTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
@@ -31,7 +37,7 @@ public class PurgeSonarTask extends AbstractSonarTask
     public static final String TITRE = "Purge des composants SonarQube";
     private static final short ETAPES = 2;
     private static final short MAXVERSION = 3;
-    private ControlMail controlMail;
+    private ControlRapport controlRapport;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -39,7 +45,7 @@ public class PurgeSonarTask extends AbstractSonarTask
     {
         super(ETAPES);
         annulable = true;
-        controlMail = new ControlMail();
+        controlRapport = new ControlRapport(TypeRapport.PURGESONAR);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -77,13 +83,13 @@ public class PurgeSonarTask extends AbstractSonarTask
             updateProgress(i, size);
             api.supprimerProjet(compo.getKey(), true);
             api.supprimerVue(compo.getKey(), true);
-            controlMail.addInfo(TypeInfoMail.COMPOPURGE, compo.getNom(), null);
+            controlRapport.addInfo(TypeInfo.COMPOPURGE, compo.getNom(), null);
         }
 
         updateMessage("Fin du traitement.");
         updateProgress(1, 1);
 
-        controlMail.envoyerMail(TypeMail.PURGESONAR);
+        controlRapport.creerFichier();
         return true;
     }
 
@@ -178,7 +184,7 @@ public class PurgeSonarTask extends AbstractSonarTask
         // ----- 5. Logs des résultats -----
         String extraDonnees = "Composants uniques (hors versions) : " + mapCompos.size() + "\nComposants solo (une seule version) : " + solo + "\nTotal composants sonar (toutes versions comprises) : "
                 + total + "\nSuppressions : " + supp + "\n";
-        controlMail.addExtra(extraDonnees);
+        controlRapport.addExtra(extraDonnees);
 
         return retour;
     }

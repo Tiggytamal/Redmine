@@ -29,6 +29,8 @@ import view.TrayIconView;
  * Controleur de la vue des planificateurs
  * 
  * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
  */
 public final class PlanificateurViewControl extends AbstractViewControl
 {

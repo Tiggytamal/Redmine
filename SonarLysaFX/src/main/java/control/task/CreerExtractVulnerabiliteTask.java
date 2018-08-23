@@ -22,6 +22,13 @@ import model.sonarapi.Parametre;
 import utilities.Statics;
 import utilities.Utilities;
 
+/**
+ * Tâche d'extraction des vulnérabilités Sonar du patrimoine
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
 {
 

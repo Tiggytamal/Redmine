@@ -3,8 +3,11 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import model.utilities.AbstractModele;
+import model.utilities.ModeleSonar;
+
 @XmlRootElement
-public class Location
+public class Location extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -32,6 +35,8 @@ public class Location
     @XmlAttribute(name = "textRange")
     public TextRange getTextRange()
     {
+        if (textRange == null)
+            return new TextRange();
         return textRange;
     }
 
@@ -43,7 +48,7 @@ public class Location
     @XmlAttribute(name = "msg")
     public String getMsg()
     {
-        return msg;
+        return getString(msg);
     }
 
     public void setMsg(String msg)

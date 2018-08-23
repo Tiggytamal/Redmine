@@ -93,6 +93,7 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
         file = new File(getClass().getResource(Statics.ROOT + fichier).getFile());
         handler = ExcelFactory.getReader(typeColClass, file);
         wb = (Workbook) getField(handler.getClass(), "wb").get(handler);
+        initOther();
     }
     
     @Test (expected = TechnicalException.class)
@@ -242,6 +243,14 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
     }
     
     /*---------- METHODES PRIVEES ----------*/
+    
+    /**
+     * Permet d'initialisaer d'autres objets
+     */
+    protected void initOther()
+    {
+        // Pas d'initialisation par défaut
+    }
     
     /**
      * Méthode générique pour tester la méthode recupDonneesDepuisExcel. Il suffit d'injecter le contrôle de la taille
