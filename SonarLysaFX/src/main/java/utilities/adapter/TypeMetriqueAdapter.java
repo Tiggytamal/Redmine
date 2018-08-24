@@ -9,6 +9,7 @@ import model.enums.TypeMetrique;
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public class TypeMetriqueAdapter extends XmlAdapter<String, TypeMetrique>
 {

@@ -57,7 +57,7 @@ public class TestProprieteXML extends AbstractTestModel<ProprietesXML> implement
         // ----- 1. Pré-Test sans données
         
         // Mise à vide d'une colonne pour être bien sûr qu'elle remonte en non paramétrée
-        handler.getEnumMap(TypeColSuivi.class).put(TypeColSuivi.ACTION, EMPTY);
+        handler.getEnumMapR(TypeColSuivi.class).put(TypeColSuivi.ACTION, EMPTY);
         
         // Appel de la méthode
         String retour = handler.controleDonnees();
@@ -117,13 +117,13 @@ public class TestProprieteXML extends AbstractTestModel<ProprietesXML> implement
         // ----- 2. Test Colonnes OK
         
         // Récupération des valeurs depuis le fichier de paramétrage
-        handler.getEnumMap(TypeColPic.class).putAll(proprietesXML.getEnumMap(TypeColPic.class));
-        handler.getEnumMap(TypeColClarity.class).putAll(proprietesXML.getEnumMap(TypeColClarity.class));
-        handler.getEnumMap(TypeColApps.class).putAll(proprietesXML.getEnumMap(TypeColApps.class));
-        handler.getEnumMap(TypeColChefServ.class).putAll(proprietesXML.getEnumMap(TypeColChefServ.class));
-        handler.getEnumMap(TypeColEdition.class).putAll(proprietesXML.getEnumMap(TypeColEdition.class));
-        handler.getEnumMap(TypeColSuivi.class).putAll(proprietesXML.getEnumMap(TypeColSuivi.class));
-        handler.getEnumMap(TypeColNPC.class).putAll(proprietesXML.getEnumMap(TypeColNPC.class));
+        handler.getEnumMapR(TypeColPic.class).putAll(proprietesXML.getEnumMapR(TypeColPic.class));
+        handler.getEnumMapR(TypeColClarity.class).putAll(proprietesXML.getEnumMapR(TypeColClarity.class));
+        handler.getEnumMapR(TypeColApps.class).putAll(proprietesXML.getEnumMapR(TypeColApps.class));
+        handler.getEnumMapR(TypeColChefServ.class).putAll(proprietesXML.getEnumMapR(TypeColChefServ.class));
+        handler.getEnumMapR(TypeColEdition.class).putAll(proprietesXML.getEnumMapR(TypeColEdition.class));
+        handler.getEnumMapR(TypeColSuivi.class).putAll(proprietesXML.getEnumMapR(TypeColSuivi.class));
+        handler.getEnumMapR(TypeColNPC.class).putAll(proprietesXML.getEnumMapR(TypeColNPC.class));
         
         // Appel du contrôle
         retour = handler.controleDonnees();
@@ -242,22 +242,22 @@ public class TestProprieteXML extends AbstractTestModel<ProprietesXML> implement
     @Test
     public void testGetEnumMap()
     {
-        Map<TypeColSuivi, String> mapColsSuivi = handler.getEnumMap(TypeColSuivi.class); 
+        Map<TypeColSuivi, String> mapColsSuivi = handler.getEnumMapR(TypeColSuivi.class); 
         assertNotNull(mapColsSuivi);
         assertEquals(0, mapColsSuivi.size());
-        Map<TypeColClarity, String> mapColsClarity = handler.getEnumMap(TypeColClarity.class);
+        Map<TypeColClarity, String> mapColsClarity = handler.getEnumMapR(TypeColClarity.class);
         assertNotNull(mapColsClarity);
         assertEquals(0, mapColsClarity.size());
-        Map<TypeColApps, String> mapColsApps = handler.getEnumMap(TypeColApps.class);
+        Map<TypeColApps, String> mapColsApps = handler.getEnumMapR(TypeColApps.class);
         assertNotNull(mapColsApps);
         assertEquals(0, mapColsApps.size());
-        Map<TypeColChefServ, String> mapColsChefServ = handler.getEnumMap(TypeColChefServ.class);
+        Map<TypeColChefServ, String> mapColsChefServ = handler.getEnumMapR(TypeColChefServ.class);
         assertNotNull(mapColsChefServ);
         assertEquals(0, mapColsChefServ.size());
-        Map<TypeColEdition, String> mapColsEdition = handler.getEnumMap(TypeColEdition.class);
+        Map<TypeColEdition, String> mapColsEdition = handler.getEnumMapR(TypeColEdition.class);
         assertNotNull(mapColsEdition);
         assertEquals(0, mapColsEdition.size());
-        Map<TypeColPic, String> mapColsPic = handler.getEnumMap(TypeColPic.class);
+        Map<TypeColPic, String> mapColsPic = handler.getEnumMapR(TypeColPic.class);
         assertNotNull(mapColsPic);
         assertEquals(0, mapColsPic.size());
     }
@@ -265,7 +265,7 @@ public class TestProprieteXML extends AbstractTestModel<ProprietesXML> implement
     @Test (expected = TechnicalException.class)
     public void testGetEnumMapException()
     {
-        handler.getEnumMap(TypeColTest.class);
+        handler.getEnumMapR(TypeColTest.class);
     }
     
     @Test
@@ -274,7 +274,7 @@ public class TestProprieteXML extends AbstractTestModel<ProprietesXML> implement
         // Initialisation de la map ColSuivi
         Map<TypeColSuivi, String> mapColsSuivi = new HashMap<>();
         mapColsSuivi.put(TypeColSuivi.ANOMALIE, "key");
-        handler.getEnumMap(TypeColSuivi.class).putAll(mapColsSuivi);
+        handler.getEnumMapR(TypeColSuivi.class).putAll(mapColsSuivi);
         
         // Appel méthode
         Map<String, TypeColSuivi> retour = handler.getMapColsInvert(TypeColSuivi.class);

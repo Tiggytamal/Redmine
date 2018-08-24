@@ -37,7 +37,7 @@ public class Info extends AbstractModele implements XML
 
     public boolean controle()
     {
-        return pseudo != null && !pseudo.isEmpty() && motDePasse != null && !motDePasse.isEmpty();
+        return !getPseudo().isEmpty() && !getMotDePasse().isEmpty();
     }
 
     /*---------- METHODES PRIVEES ----------*/

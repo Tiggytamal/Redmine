@@ -3,9 +3,7 @@ package model.utilities;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
+import utilities.AbstractToStringImpl;
 import utilities.Statics;
 
 /**
@@ -15,7 +13,7 @@ import utilities.Statics;
  * @since 1.0
  *
  */
-public abstract class AbstractModele
+public abstract class AbstractModele extends AbstractToStringImpl
 {
     
     protected AbstractModele() { }
@@ -38,11 +36,5 @@ public abstract class AbstractModele
     protected <T> List<T> getList(List<T> liste)
     {
         return liste == null ? new ArrayList<>() : liste;
-    }
-    
-    @Override
-    public String toString()
-    {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }

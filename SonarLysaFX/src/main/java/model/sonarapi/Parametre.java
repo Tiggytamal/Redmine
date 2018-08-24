@@ -3,6 +3,13 @@ package model.sonarapi;
 import model.utilities.AbstractModele;
 import model.utilities.ModeleSonar;
 
+/**
+ * Classe de modèle représentant un paramètre à envoyer à un webservice Sonar.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ */
 public class Parametre extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/

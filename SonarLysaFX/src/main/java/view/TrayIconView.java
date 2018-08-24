@@ -19,6 +19,7 @@ import utilities.Statics;
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public class TrayIconView
 {

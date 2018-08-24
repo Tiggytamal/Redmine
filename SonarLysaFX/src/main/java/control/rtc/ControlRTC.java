@@ -62,6 +62,7 @@ import model.enums.EtatLot;
 import model.enums.Param;
 import model.enums.TypeEnumRTC;
 import model.enums.TypeFichier;
+import utilities.AbstractToStringImpl;
 import utilities.DateConvert;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -73,7 +74,7 @@ import utilities.TechnicalException;
  * @since 1.0
  * 
  */
-public class ControlRTC
+public class ControlRTC extends AbstractToStringImpl
 {
     /*---------- ATTRIBUTS ----------*/
 

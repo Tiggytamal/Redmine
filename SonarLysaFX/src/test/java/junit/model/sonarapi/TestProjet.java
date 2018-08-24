@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +47,8 @@ public class TestProjet
     public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
-        assertNull(modeleNull.getKey());
+        assertNotNull(modeleNull.getKey());
+        assertTrue(modeleNull.getKey().isEmpty());
     }
     
     @Test
@@ -62,7 +64,8 @@ public class TestProjet
     public void testGetId()
     {
         assertEquals(ID, modele.getId());
-        assertNull(modeleNull.getId());
+        assertNotNull(modeleNull.getId());
+        assertTrue(modeleNull.getId().isEmpty());
     }
     
     @Test
@@ -78,7 +81,8 @@ public class TestProjet
     public void testGetNom()
     {
         assertEquals(NOM, modele.getNom());
-        assertNull(modeleNull.getNom());
+        assertNotNull(modeleNull.getNom());
+        assertTrue(modeleNull.getNom().isEmpty());
     }
     
     @Test
@@ -94,7 +98,8 @@ public class TestProjet
     public void testGetSc()
     {
         assertEquals(SC, modele.getSc());
-        assertNull(modeleNull.getSc());
+        assertNotNull(modeleNull.getSc());
+        assertTrue(modeleNull.getSc().isEmpty());
     }
     
     @Test
@@ -110,7 +115,8 @@ public class TestProjet
     public void testGetQu()
     {
         assertEquals(QU, modele.getQu());
-        assertNull(modeleNull.getQu());
+        assertNotNull(modeleNull.getQu());
+        assertTrue(modeleNull.getQu().isEmpty());
     }
     
     @Test
@@ -126,7 +132,8 @@ public class TestProjet
     public void testGetLot()
     {
         assertEquals(LOT, modele.getLot());
-        assertNull(modeleNull.getLot());
+        assertNotNull(modeleNull.getLot());
+        assertTrue(modeleNull.getLot().isEmpty());
     }
     
     @Test

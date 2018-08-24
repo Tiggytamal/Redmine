@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import control.sonar.SonarAPI;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -69,6 +72,12 @@ public abstract class AbstractSonarTask extends Task<Boolean>
      * Utilisée pour permettre le retour arrière si possible du traitement
      */
     public abstract void annuler();
+    
+    @Override
+    public String toString()
+    {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
 
     /*---------- METHODES PRIVEES ----------*/
 

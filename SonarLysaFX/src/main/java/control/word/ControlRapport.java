@@ -37,17 +37,17 @@ public class ControlRapport extends AbstractControlWord
 
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
-
+    
     // Constantes statiques
     private static final long MARGE = 960L;
     private static final String FONT = "Times New Roman";
     private static final int TITRESIZE = 18;
     private static final int CORPSSIZE = 12;
+    private static final String TODAY = DateConvert.dateFrancais(LocalDate.now(), "dd MMMM YYYY");
 
     private TypeRapport typeRapport;
     private String extra;
     private Map<TypeInfo, List<InfoMail>> mapInfos;
-    private static final String TODAY = DateConvert.dateFrancais(LocalDate.now(), "dd MMMM YYYY");
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -122,7 +122,6 @@ public class ControlRapport extends AbstractControlWord
         pageMar.setTop(BigInteger.valueOf(MARGE));
         pageMar.setRight(BigInteger.valueOf(MARGE));
         pageMar.setBottom(BigInteger.valueOf(MARGE));
-        
     }
     
     private void creerTitre()

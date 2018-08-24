@@ -16,7 +16,8 @@ public enum TypeColVul implements TypeColW
     LOT("Lot", "colLot"),
     CLARITY("Code Clarity", "colClarity"),
     APPLI("Appli", "colAppli"),
-    COMPOSANT("Composant", "colComp");
+    COMPOSANT("Composant", "colComp"),
+    LIB("Bibliothèque", "colLib");
 
     private final String valeur;
     private final String nomCol;

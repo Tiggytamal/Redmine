@@ -9,6 +9,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import model.utilities.AbstractModele;
 import model.utilities.ModeleSonar;
 
+/**
+ * Classe de modèle représentant le status d'un projet en retour du webservice Sonar.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ */
 @XmlRootElement
 public class StatusProjet extends AbstractModele implements ModeleSonar
 {

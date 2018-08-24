@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,8 @@ public class TestAjouterProjet
     public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
-        assertNull(modeleNull.getKey());
+        assertNotNull(modeleNull.getKey());
+        assertTrue(modeleNull.getKey().isEmpty());
     }
     
     @Test
@@ -49,7 +51,8 @@ public class TestAjouterProjet
     public void testGetProjectKey()
     {
         assertEquals(PROJECT, modele.getProjectKey());
-        assertNull(modeleNull.getProjectKey());
+        assertNotNull(modeleNull.getProjectKey());
+        assertTrue(modeleNull.getProjectKey().isEmpty());
     }
     
     @Test

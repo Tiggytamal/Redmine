@@ -19,6 +19,7 @@ import javafx.util.Pair;
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public class ConnexionDialog extends Dialog<Pair<String, String>>
 {

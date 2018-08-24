@@ -3,7 +3,7 @@ package junit.model.sonarapi;
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static utilities.Statics.EMPTY;
 
@@ -68,7 +68,8 @@ public class TestVue
     public void testGetName()
     {
         assertEquals(NAME, modele.getName());
-        assertNull(modeleNull.getName());
+        assertNotNull(modeleNull.getName());
+        assertTrue(modeleNull.getName().isEmpty());
     }
     
     @Test
@@ -84,7 +85,8 @@ public class TestVue
     public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
-        assertNull(modeleNull.getKey());
+        assertNotNull(modeleNull.getKey());
+        assertTrue(modeleNull.getKey().isEmpty());
     }
     
     @Test
@@ -100,7 +102,8 @@ public class TestVue
     public void testGetSelectionMode()
     {
         assertEquals(SELECTIONMODE, modele.getSelectionMode());
-        assertNull(modeleNull.getSelectionMode());
+        assertNotNull(modeleNull.getSelectionMode());
+        assertTrue(modeleNull.getSelectionMode().isEmpty());
     }
     
     @Test
@@ -116,7 +119,8 @@ public class TestVue
     public void testGetDescription()
     {
         assertEquals(DESCRIPTION, modele.getDescription());
-        assertNull(modeleNull.getDescription());
+        assertNotNull(modeleNull.getDescription());
+        assertTrue(modeleNull.getDescription().isEmpty());
     }
     
     @Test
@@ -132,7 +136,8 @@ public class TestVue
     public void testGetListeClefsComposants()
     {
         assertEquals(LISTECLEFSCOMPOSANTS, modele.getListeClefsComposants());
-        assertNull(modeleNull.getListeClefsComposants());
+        assertNotNull(modeleNull.getListeClefsComposants());
+        assertTrue(modeleNull.getListeClefsComposants().isEmpty());
     }
     
     @Test

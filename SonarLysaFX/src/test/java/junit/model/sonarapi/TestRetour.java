@@ -3,7 +3,7 @@ package junit.model.sonarapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class TestRetour
     public void testGetComponent()
     {
         assertEquals(COMPOSANT, modele.getComponent());
-        assertNull(modeleNull.getComponent());
+        assertNotNull(modeleNull.getComponent());
     }
     
     @Test
@@ -61,14 +61,15 @@ public class TestRetour
         assertEquals(LISTEVUES, modele.getListeVues());
         assertNotNull(modele.getListeVues());
         assertFalse(modele.getListeVues().isEmpty());
-        assertNull(modeleNull.getListeVues());
+        assertNotNull(modeleNull.getListeVues());
+        assertFalse(modeleNull.getListeVues().isEmpty());
     }
     
     @Test
     public void testGetStatusProjet()
     {
         assertEquals(STATUSPROJET, modele.getStatusProjet());
-        assertNull(modeleNull.getStatusProjet());
+        assertNotNull(modeleNull.getStatusProjet());
     }
     
     @Test
@@ -77,7 +78,8 @@ public class TestRetour
         assertEquals(RESULTS, modele.getResults());
         assertNotNull(modele.getResults());
         assertFalse(modele.getResults().isEmpty());
-        assertNull(modeleNull.getResults());
+        assertNotNull(modeleNull.getResults());
+        assertFalse(modeleNull.getResults().isEmpty());
     }
     
     @Test
@@ -93,7 +95,8 @@ public class TestRetour
         assertEquals(ERRORS, modele.getErrors());
         assertNotNull(modele.getErrors());
         assertFalse(modele.getErrors().isEmpty());
-        assertNull(modeleNull.getErrors());
+        assertNotNull(modeleNull.getErrors());
+        assertFalse(modeleNull.getErrors().isEmpty());
     }
     
     @Test
@@ -102,14 +105,16 @@ public class TestRetour
         assertEquals(QGS, modele.getQualityGates());
         assertNotNull(modele.getQualityGates());
         assertFalse(modele.getQualityGates().isEmpty());
-        assertNull(modeleNull.getQualityGates());
+        assertNotNull(modeleNull.getQualityGates());
+        assertFalse(modeleNull.getQualityGates().isEmpty());
     }
     
     @Test
     public void testGetDefaut()
     {
         assertEquals(DEFAUT, modele.getDefaut());
-        assertNull(modeleNull.getDefaut());
+        assertNotNull(modeleNull.getDefaut());
+        assertTrue(modeleNull.getDefaut().isEmpty());
     }
     
     /*---------- METHODES PRIVEES ----------*/

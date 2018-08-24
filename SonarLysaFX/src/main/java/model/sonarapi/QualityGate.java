@@ -7,7 +7,7 @@ import model.utilities.AbstractModele;
 import model.utilities.ModeleSonar;
 
 /**
- * Modèle des QualityGate
+ * Modèle des QualityGate en retour du webservice Sonar.
  * 
  * @author ETP8137 - Grégoire mathon
  *

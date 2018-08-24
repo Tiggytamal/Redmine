@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  * 
  * @author ETP8137 - Grégoire mathon
  * @since 1.0
+ * 
  */
 public class LocalDateAdapter extends XmlAdapter<String, LocalDate>
 {

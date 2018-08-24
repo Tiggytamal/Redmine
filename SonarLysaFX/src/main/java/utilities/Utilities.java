@@ -22,6 +22,7 @@ import utilities.enums.Severity;
  *
  * @author Tiggy Tamal
  * @since 1.0
+ * 
  */
 public final class Utilities
 {

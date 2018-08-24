@@ -6,6 +6,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import model.utilities.AbstractModele;
 import model.utilities.ModeleSonar;
 
+/**
+ * Classe de modèle pour associer un Quality Gate depuis le websrvice Sonar.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ */
 @XmlRootElement
 public class AssocierQG extends AbstractModele implements ModeleSonar
 {

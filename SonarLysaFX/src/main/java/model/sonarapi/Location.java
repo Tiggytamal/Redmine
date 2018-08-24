@@ -6,6 +6,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import model.utilities.AbstractModele;
 import model.utilities.ModeleSonar;
 
+/**
+ * Classe de modèle représentant l'emplacement d'une anomalie dans le code en retour du webservice Sonar.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ */
 @XmlRootElement
 public class Location extends AbstractModele implements ModeleSonar
 {

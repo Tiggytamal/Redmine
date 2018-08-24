@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,8 @@ public class TestCommentaire
     public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
-        assertNull(modeleNull.getKey());
+        assertNotNull(modeleNull.getKey());
+        assertTrue(modeleNull.getKey().isEmpty());
     }
     
     @Test
@@ -53,7 +55,8 @@ public class TestCommentaire
     public void testGetLogin()
     {
         assertEquals(LOGIN, modele.getLogin());
-        assertNull(modeleNull.getLogin());
+        assertNotNull(modeleNull.getLogin());
+        assertTrue(modeleNull.getLogin().isEmpty());
     }
     
     @Test
@@ -69,7 +72,8 @@ public class TestCommentaire
     public void testGetHtmlText()
     {
         assertEquals(HTMLTEXT, modele.getHtmlText());
-        assertNull(modeleNull.getHtmlText());
+        assertNotNull(modeleNull.getHtmlText());
+        assertTrue(modeleNull.getHtmlText().isEmpty());
     }
     
     @Test
@@ -85,7 +89,8 @@ public class TestCommentaire
     public void testGetMarkdown()
     {
         assertEquals(MARKDOWN, modele.getMarkdown());
-        assertNull(modeleNull.getMarkdown());
+        assertNotNull(modeleNull.getMarkdown());
+        assertTrue(modeleNull.getMarkdown().isEmpty());
     }
     
     @Test
@@ -101,7 +106,8 @@ public class TestCommentaire
     public void testGetUpdatable()
     {
         assertEquals(UPDATABLE, modele.getUpdatable());
-        assertNull(modeleNull.getUpdatable());
+        assertNotNull(modeleNull.getUpdatable());
+        assertTrue(modeleNull.getUpdatable().isEmpty());
     }
     
     @Test
@@ -117,7 +123,8 @@ public class TestCommentaire
     public void testGetCreatedAt()
     {
         assertEquals(CREATEDAT, modele.getCreatedAt());
-        assertNull(modeleNull.getCreatedAt());
+        assertNotNull(modeleNull.getCreatedAt());
+        assertTrue(modeleNull.getCreatedAt().isEmpty());
     }
     
     @Test

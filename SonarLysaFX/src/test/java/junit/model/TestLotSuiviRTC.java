@@ -81,7 +81,8 @@ public class TestLotSuiviRTC extends AbstractTestModel<LotSuiviRTC>
     public void testGetEtatLot()
     {
         // test valeur vide ou nulle
-        assertNull(handler.getEtatLot());
+        assertEquals(EtatLot.INCONNU, handler.getEtatLot());
+        
         
         // Test setter et getter
         handler.setEtatLot(EtatLot.DEVTU);;

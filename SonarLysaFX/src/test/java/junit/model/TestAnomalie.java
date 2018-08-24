@@ -486,7 +486,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
     public void testGetAction()
     {
         // test valeur vide ou nulle
-        assertEquals(null, handler.getAction());
+        assertEquals(TypeAction.VIDE, handler.getAction());
         
         // Test setter et getter
         TypeAction action = TypeAction.CREER;

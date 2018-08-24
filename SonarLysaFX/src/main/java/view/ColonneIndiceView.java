@@ -8,8 +8,9 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import model.enums.TypeColR;
+import model.enums.TypeColW;
 import utilities.Statics;
 
 /**
@@ -20,21 +21,24 @@ import utilities.Statics;
  *
  * @param <T>
  */
-public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements ViewXML<T, TextField>
+public class ColonneIndiceView<T extends Enum<T> & TypeColW> extends VBox implements ViewXML<T, TextField>
 {
     /*---------- ATTRIBUTS ----------*/
 
     // Constantes statiques
     private static final String POINT = " : ";
-    private static final int WIDTH = 150;
+    private static final short REGIONWIDTH = 20;
+    private static final int WIDTHLABEL = 100;
+    private static final int WIDTHINDICE = 30;
     private static final int PADDING = 5;
     
     private T typeCol;
-    private TextField field;
+    private TextField texteField;
+    private TextField indiceField;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public ColonneView(T typeCol, String texte)
+    public ColonneIndiceView(T typeCol, String texte, String indice)
     {
         this.typeCol = typeCol;
         ObservableList<Node> children = getChildren();
@@ -44,13 +48,23 @@ public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements V
 
         // Label
         Label label = new Label(typeCol.getValeur() + POINT);
-        label.setPrefWidth(WIDTH);
+        label.setPrefWidth(WIDTHLABEL);
         box.getChildren().add(label);
 
+        indiceField = new TextField(indice == null ? Statics.EMPTY : indice);
+        indiceField.setPrefWidth(WIDTHINDICE);
+        box.getChildren().add(indiceField);
+        
+        // Region
+        Region region = new Region();
+        region.setPrefWidth(REGIONWIDTH);
+        region.setPrefHeight(REGIONWIDTH);
+        box.getChildren().add(region);
+               
         // TextField
-        field = new TextField(texte == null ? Statics.EMPTY : texte);
-        HBox.setHgrow(field, Priority.ALWAYS);
-        box.getChildren().add(field);
+        texteField = new TextField(texte == null ? Statics.EMPTY : texte);
+        HBox.setHgrow(texteField, Priority.ALWAYS);
+        box.getChildren().add(texteField);
 
         children.add(box);
 
@@ -67,6 +81,7 @@ public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements V
     /**
      * @return the typeCol
      */
+    @Override
     public T getType()
     {
         return typeCol;
@@ -75,8 +90,14 @@ public class ColonneView<T extends Enum<T> & TypeColR> extends VBox implements V
     /**
      * @return the field
      */
+    @Override
     public TextField getField()
     {
-        return field;
+        return texteField;
     }
+    
+    public TextField getIndice()
+    {
+        return indiceField;
+    }   
 }

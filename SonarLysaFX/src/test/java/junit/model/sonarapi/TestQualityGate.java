@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,8 @@ public class TestQualityGate
     public void testGetId()
     {
         assertEquals(ID, modele.getId());
-        assertNull(modeleNull.getId());
+        assertNotNull(modeleNull.getId());
+        assertTrue(modeleNull.getId().isEmpty());
     }
     
     @Test
@@ -49,7 +51,8 @@ public class TestQualityGate
     public void testGetName()
     {
         assertEquals(NAME, modele.getName());
-        assertNull(modeleNull.getName());
+        assertNotNull(modeleNull.getName());
+        assertTrue(modeleNull.getName().isEmpty());
     }
     
     @Test

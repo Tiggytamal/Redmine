@@ -13,6 +13,13 @@ import model.enums.TypeMetrique;
 import model.utilities.AbstractModele;
 import model.utilities.ModeleSonar;
 
+/**
+ * Classe de modèle représentant un composant en retour du webservice Sonar.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ */
 @XmlRootElement(name = "component")
 public class Composant extends AbstractModele implements ModeleSonar
 {

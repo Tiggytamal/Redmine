@@ -26,6 +26,7 @@ import utilities.enums.Severity;
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public class ParamListView extends VBox
 {

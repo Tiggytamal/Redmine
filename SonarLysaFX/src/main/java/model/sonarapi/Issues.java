@@ -11,6 +11,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import model.utilities.AbstractModele;
 import model.utilities.ModeleSonar;
 
+/**
+ * Classe de modèle représentant une liste d'anomalies en retour du webservice Sonar.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ */
 @XmlRootElement
 @JsonIgnoreProperties({"components"})
 public class Issues extends AbstractModele implements ModeleSonar

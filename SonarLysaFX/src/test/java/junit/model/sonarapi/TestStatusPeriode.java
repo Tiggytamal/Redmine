@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +52,8 @@ public class TestStatusPeriode
     public void testGetMode()
     {
         assertEquals(MODE, modele.getMode());
-        assertNull(modeleNull.getMode());
+        assertNotNull(modeleNull.getMode());
+        assertTrue(modeleNull.getMode().isEmpty());
     }
     
     @Test
@@ -67,7 +69,8 @@ public class TestStatusPeriode
     public void testGetDate()
     {
         assertEquals(DATE, modele.getDate());
-        assertNull(modeleNull.getDate());
+        assertNotNull(modeleNull.getDate());
+        assertTrue(modeleNull.getDate().isEmpty());
     }
     
     @Test
@@ -83,7 +86,8 @@ public class TestStatusPeriode
     public void testGetParameter()
     {
         assertEquals(PARAMETER, modele.getParameter());
-        assertNull(modeleNull.getParameter());
+        assertNotNull(modeleNull.getParameter());
+        assertTrue(modeleNull.getParameter().isEmpty());
     }
     
     @Test

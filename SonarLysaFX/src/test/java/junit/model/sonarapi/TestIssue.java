@@ -3,7 +3,7 @@ package junit.model.sonarapi;
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,8 @@ public class TestIssue
     public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
-        assertNull(modeleNull.getKey());
+        assertNotNull(modeleNull.getKey());
+        assertTrue(modeleNull.getKey().isEmpty());
     }
     
     @Test
@@ -98,7 +99,8 @@ public class TestIssue
     public void testGetResolution()
     {
         assertEquals(RESOLUTION, modele.getResolution());
-        assertNull(modeleNull.getResolution());
+        assertNotNull(modeleNull.getResolution());
+        assertTrue(modeleNull.getResolution().isEmpty());
     }
     
     @Test
@@ -130,7 +132,7 @@ public class TestIssue
     public void testGetTextRange()
     {
         assertEquals(TEXTRANGE, modele.getTextRange());
-        assertNull(modeleNull.getTextRange());
+        assertNotNull(modeleNull.getTextRange());
     }
     
     @Test
@@ -146,7 +148,8 @@ public class TestIssue
     public void testGetEffort()
     {
         assertEquals(EFFORT, modele.getEffort());
-        assertNull(modeleNull.getEffort());
+        assertNotNull(modeleNull.getEffort());
+        assertTrue(modeleNull.getEffort().isEmpty());
     }
     
     @Test
@@ -162,7 +165,8 @@ public class TestIssue
     public void testGetDebt()
     {
         assertEquals(DEBT, modele.getDebt());
-        assertNull(modeleNull.getDebt());
+        assertNotNull(modeleNull.getDebt());
+        assertTrue(modeleNull.getDebt().isEmpty());
     }
     
     @Test
@@ -195,7 +199,8 @@ public class TestIssue
     public void testGetAttr()
     {
         assertEquals(ATTR, modele.getAttr());
-        assertNull(modeleNull.getAttr());
+        assertNotNull(modeleNull.getAttr());
+        assertTrue(modeleNull.getAttr().isEmpty());
     }
     
     @Test
@@ -245,7 +250,8 @@ public class TestIssue
     public void testGetRule()
     {
         assertEquals(RULE, modele.getRule());
-        assertNull(modeleNull.getRule());
+        assertNotNull(modeleNull.getRule());
+        assertTrue(modeleNull.getRule().isEmpty());
     }
     
     @Test
@@ -261,7 +267,8 @@ public class TestIssue
     public void testGetSeverity()
     {
         assertEquals(SEVERITY, modele.getSeverity());
-        assertNull(modeleNull.getSeverity());
+        assertNotNull(modeleNull.getSeverity());
+        assertTrue(modeleNull.getSeverity().isEmpty());
     }
     
     @Test
@@ -277,7 +284,8 @@ public class TestIssue
     public void testGetComposant()
     {
         assertEquals(COMPOSANT, modele.getComposant());
-        assertNull(modeleNull.getRule());
+        assertNotNull(modeleNull.getComposant());
+        assertTrue(modeleNull.getComposant().isEmpty());
     }
     
     @Test
@@ -293,7 +301,8 @@ public class TestIssue
     public void testGetComposantId()
     {
         assertEquals(COMPOSANTID, modele.getComposantId());
-        assertNull(modeleNull.getComposantId());
+        assertNotNull(modeleNull.getComposantId());
+        assertTrue(modeleNull.getComposantId().isEmpty());
     }
     
     @Test
@@ -309,7 +318,8 @@ public class TestIssue
     public void testGetProjet()
     {
         assertEquals(PROJET, modele.getProjet());
-        assertNull(modeleNull.getProjet());
+        assertNotNull(modeleNull.getProjet());
+        assertTrue(modeleNull.getProjet().isEmpty());
     }
     
     @Test
@@ -325,7 +335,8 @@ public class TestIssue
     public void testGetSubProject()
     {
         assertEquals(SUBPROJET, modele.getSubProject());
-        assertNull(modeleNull.getSubProject());
+        assertNotNull(modeleNull.getSubProject());
+        assertTrue(modeleNull.getSubProject().isEmpty());
     }
     
     @Test
@@ -341,7 +352,8 @@ public class TestIssue
     public void testGetStatus()
     {
         assertEquals(STATUS, modele.getStatus());
-        assertNull(modeleNull.getStatus());
+        assertNotNull(modeleNull.getStatus());
+        assertTrue(modeleNull.getStatus().isEmpty());
     }
     
     @Test
@@ -357,7 +369,8 @@ public class TestIssue
     public void testGetMessage()
     {
         assertEquals(MESSAGE, modele.getMessage());
-        assertNull(modeleNull.getMessage());
+        assertNotNull(modeleNull.getMessage());
+        assertTrue(modeleNull.getMessage().isEmpty());
     }
     
     @Test
@@ -373,7 +386,8 @@ public class TestIssue
     public void testGetAutheur()
     {
         assertEquals(AUTHEUR, modele.getAutheur());
-        assertNull(modeleNull.getAutheur());
+        assertNotNull(modeleNull.getAutheur());
+        assertTrue(modeleNull.getAutheur().isEmpty());
     }
     
     @Test
@@ -422,7 +436,8 @@ public class TestIssue
     public void testGetCreationDate()
     {
         assertEquals(CREATIONDATE, modele.getCreationDate());
-        assertNull(modeleNull.getCreationDate());
+        assertNotNull(modeleNull.getCreationDate());
+        assertTrue(modeleNull.getCreationDate().isEmpty());
     }
     
     @Test
@@ -438,7 +453,8 @@ public class TestIssue
     public void testGetUpdateDate()
     {
         assertEquals(UPDATEDATE, modele.getUpdateDate());
-        assertNull(modeleNull.getUpdateDate());
+        assertNotNull(modeleNull.getUpdateDate());
+        assertTrue(modeleNull.getUpdateDate().isEmpty());
     }
     
     @Test
@@ -454,7 +470,8 @@ public class TestIssue
     public void testGetCloseDate()
     {
         assertEquals(CLOSEDATE, modele.getCloseDate());
-        assertNull(modeleNull.getCloseDate());
+        assertNotNull(modeleNull.getCloseDate());
+        assertTrue(modeleNull.getCloseDate().isEmpty());
     }
     
     @Test
@@ -470,7 +487,8 @@ public class TestIssue
     public void testGetType()
     {
         assertEquals(TYPE, modele.getType());
-        assertNull(modeleNull.getType());
+        assertNotNull(modeleNull.getType());
+        assertTrue(modeleNull.getType().isEmpty());
     }
     
     @Test

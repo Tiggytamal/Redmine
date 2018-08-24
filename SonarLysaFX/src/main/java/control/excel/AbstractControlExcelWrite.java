@@ -3,16 +3,22 @@ package control.excel;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import model.Colonne;
 import model.enums.TypeColW;
 import utilities.CellHelper;
+import utilities.FunctionalException;
+import utilities.Statics;
 import utilities.TechnicalException;
+import utilities.enums.Severity;
 
 /**
  * Classe mère des contrôleur pour les fihciers Excel en écriture
@@ -77,6 +83,39 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
 
     /*---------- METHODES PRIVEES ----------*/
 
+    @Override
+    protected void calculIndiceColonnes()
+    {
+        Map<T, Colonne> map = Statics.proprietesXML.getEnumMapW(enumeration);
+        
+        int nbreCol = 0;
+        
+        Field field;
+        
+        for (Map.Entry<T, Colonne> entry : map.entrySet())
+        {
+            T typeCol = entry.getKey();
+            try
+            {
+                field = getClass().getDeclaredField(typeCol.getNomCol());
+                field.setAccessible(true);
+                field.set(this, entry.getValue().getIndice());
+                testMax((int) field.get(this));
+                nbreCol++;
+            } 
+            catch (NoSuchFieldException | IllegalAccessException e)
+            {
+                throw new TechnicalException("Erreur à l'affectation d'une variable lors de l'initialisation d'une colonne : " + typeCol.getNomCol(), e);
+            }
+        }
+        
+        // Gestion des erreurs si on ne trouve pas le bon nombre de colonnes
+        int enumLength = enumeration.getEnumConstants().length;
+        if (nbreCol != enumLength)
+            throw new FunctionalException(Severity.ERROR,
+                    "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci : Différence = " + (enumLength - nbreCol));
+    }
+    
     @Override
     protected final void createWb()
     {

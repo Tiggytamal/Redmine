@@ -3,7 +3,7 @@ package junit.model.sonarapi;
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,8 @@ public class TestStatusProjet
     public void testGetStatus()
     {
         assertEquals(STATUS, modele.getStatus());
-        assertNull(modeleNull.getStatus());
+        assertNotNull(modeleNull.getStatus());
+        assertTrue(modeleNull.getStatus().isEmpty());
     }
     
     @Test
@@ -67,7 +68,7 @@ public class TestStatusProjet
     public void testSetConditions()
     {
         modele.setConditions(null);
-        assertNull(modele.getConditions());
+        assertNotNull(modele.getConditions());
         modeleNull.setConditions(CONDITIONS);
         assertEquals(CONDITIONS, modeleNull.getConditions());
     }
@@ -84,7 +85,8 @@ public class TestStatusProjet
     public void testSetPeriodes()
     {
         modele.setPeriodes(null);
-        assertNull(modele.getPeriodes());
+        assertNotNull(modeleNull.getPeriodes());
+        assertTrue(modeleNull.getPeriodes().isEmpty());
         modeleNull.setPeriodes(PROJETS);
         assertEquals(PROJETS, modeleNull.getPeriodes());
     }

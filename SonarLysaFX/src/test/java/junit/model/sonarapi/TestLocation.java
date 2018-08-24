@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,14 +35,14 @@ public class TestLocation
     public void testGetTextRange()
     {
         assertEquals(TEXTRANGE, modele.getTextRange());
-        assertNull(modeleNull.getTextRange());
+        assertNotNull(modeleNull.getTextRange());
     }
     
     @Test
     public void testSetTotal()
     {
         modele.setTextRange(null);
-        assertNull(modele.getTextRange());
+        assertNotNull(modele.getTextRange());
         modeleNull.setTextRange(TEXTRANGE);
         assertEquals(TEXTRANGE, modeleNull.getTextRange());
     }
@@ -50,7 +51,8 @@ public class TestLocation
     public void testGetMsg()
     {
         assertEquals(MSG, modele.getMsg());
-        assertNull(modeleNull.getMsg());
+        assertNotNull(modeleNull.getMsg());
+        assertTrue(modeleNull.getMsg().isEmpty());
     }
     
     @Test

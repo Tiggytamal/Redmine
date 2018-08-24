@@ -247,6 +247,12 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <value>Nom Projet</value>
         </entry>    
     </mapColsNPC>
+    <mapColsVul>
+    	<entry>
+    		<key>SEVERITE</key>
+    		<value nom="Sévérité" indice="7" />
+    	</entry>    
+    </mapColsVul>
     <mapParams>
         <entry>
             <key>FILTREDATASTAGE</key>

@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,8 @@ public class TestEvent
     public void testGetId()
     {
         assertEquals(ID, modele.getId());
-        assertNull(modeleNull.getId());
+        assertNotNull(modeleNull.getId());
+        assertTrue(modeleNull.getId().isEmpty());
     }
     
     @Test
@@ -52,7 +54,8 @@ public class TestEvent
     public void testGetRk()
     {
         assertEquals(RK, modele.getRk());
-        assertNull(modeleNull.getRk());
+        assertNotNull(modeleNull.getRk());
+        assertTrue(modeleNull.getRk().isEmpty());
     }
     
     @Test
@@ -68,7 +71,8 @@ public class TestEvent
     public void testGetN()
     {
         assertEquals(N, modele.getN());
-        assertNull(modeleNull.getN());
+        assertNotNull(modeleNull.getN());
+        assertTrue(modeleNull.getN().isEmpty());
     }
     
     @Test
@@ -84,7 +88,8 @@ public class TestEvent
     public void testGetC()
     {
         assertEquals(C, modele.getC());
-        assertNull(modeleNull.getC());
+        assertNotNull(modeleNull.getC());
+        assertTrue(modeleNull.getC().isEmpty());
     }
     
     @Test
@@ -100,7 +105,8 @@ public class TestEvent
     public void testGetDt()
     {
         assertEquals(DT, modele.getDt());
-        assertNull(modeleNull.getDt());
+        assertNotNull(modeleNull.getDt());
+        assertTrue(modeleNull.getDt().isEmpty());
     }
     
     @Test

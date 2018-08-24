@@ -4,7 +4,6 @@ import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -80,7 +79,8 @@ public class TestComposant
     public void testGetId()
     {
         assertEquals(ID, modele.getId());
-        assertNull(modeleNull.getId());
+        assertNotNull(modeleNull.getId());
+        assertTrue(modeleNull.getId().isEmpty());
     }
     
     @Test
@@ -96,7 +96,8 @@ public class TestComposant
     public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
-        assertNull(modeleNull.getKey());
+        assertNotNull(modeleNull.getKey());
+        assertTrue(modeleNull.getKey().isEmpty());
     }
     
     @Test
@@ -112,7 +113,8 @@ public class TestComposant
     public void testGetNom()
     {
         assertEquals(NOM, modele.getNom());
-        assertNull(modeleNull.getNom());
+        assertNotNull(modeleNull.getNom());
+        assertTrue(modeleNull.getNom().isEmpty());
     }
     
     @Test
@@ -128,7 +130,8 @@ public class TestComposant
     public void testGetDescritpion()
     {
         assertEquals(DESC, modele.getDescritpion());
-        assertNull(modeleNull.getDescritpion());
+        assertNotNull(modeleNull.getDescritpion());
+        assertTrue(modeleNull.getDescritpion().isEmpty());
     }
     
     @Test
@@ -144,7 +147,8 @@ public class TestComposant
     public void testGetQualifier()
     {
         assertEquals(QUALIFIER, modele.getQualifier());
-        assertNull(modeleNull.getQualifier());
+        assertNotNull(modeleNull.getQualifier());
+        assertTrue(modeleNull.getQualifier().isEmpty());
     }
     
     @Test
@@ -160,7 +164,8 @@ public class TestComposant
     public void testGetLangage()
     {
         assertEquals(LANGUAGE, modele.getLangage());
-        assertNull(modeleNull.getLangage());
+        assertNotNull(modeleNull.getLangage());
+        assertTrue(modeleNull.getLangage().isEmpty());
     }
     
     @Test
@@ -176,7 +181,8 @@ public class TestComposant
     public void testGetPath()
     {
         assertEquals(PATH, modele.getPath());
-        assertNull(modeleNull.getPath());
+        assertNotNull(modeleNull.getPath());
+        assertTrue(modeleNull.getPath().isEmpty());
     }
     
     @Test
@@ -209,7 +215,8 @@ public class TestComposant
     public void testGetUuid()
     {
         assertEquals(UUID, modele.getUuid());
-        assertNull(modeleNull.getUuid());
+        assertNotNull(modeleNull.getUuid());
+        assertTrue(modeleNull.getUuid().isEmpty());
     }
     
     @Test
@@ -241,7 +248,8 @@ public class TestComposant
     public void testGetLongName()
     {
         assertEquals(LONGNAME, modele.getLongName());
-        assertNull(modeleNull.getLongName());
+        assertNotNull(modeleNull.getLongName());
+        assertTrue(modeleNull.getLongName().isEmpty());
     }
     
     @Test

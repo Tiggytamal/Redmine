@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,8 @@ public class TestRule
     public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
-        assertNull(modeleNull.getKey());
+        assertNotNull(modeleNull.getKey());
+        assertTrue(modeleNull.getKey().isEmpty());
     }
     
     @Test
@@ -52,7 +54,8 @@ public class TestRule
     public void testGetName()
     {
         assertEquals(NAME, modele.getName());
-        assertNull(modeleNull.getName());
+        assertNotNull(modeleNull.getName());
+        assertTrue(modeleNull.getName().isEmpty());
     }
     
     @Test
@@ -68,7 +71,8 @@ public class TestRule
     public void testGetStatus()
     {
         assertEquals(STATUS, modele.getStatus());
-        assertNull(modeleNull.getStatus());
+        assertNotNull(modeleNull.getStatus());
+        assertTrue(modeleNull.getStatus().isEmpty());
     }
     
     @Test
@@ -84,7 +88,8 @@ public class TestRule
     public void testGetLang()
     {
         assertEquals(LANG, modele.getLang());
-        assertNull(modeleNull.getLang());
+        assertNotNull(modeleNull.getLang());
+        assertTrue(modeleNull.getLang().isEmpty());
     }
     
     @Test
@@ -100,7 +105,8 @@ public class TestRule
     public void testGetLangName()
     {
         assertEquals(LANGNAME, modele.getLangName());
-        assertNull(modeleNull.getLangName());
+        assertNotNull(modeleNull.getLangName());
+        assertTrue(modeleNull.getLangName().isEmpty());
     }
     
     @Test

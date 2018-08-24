@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
+import utilities.AbstractToStringImpl;
+
 /**
  * Classe abstraite de contrôle des fichiers Word
  * 
@@ -15,7 +17,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  * @since 1.0
  * 
  */
-public abstract class AbstractControlWord
+public abstract class AbstractControlWord extends AbstractToStringImpl
 {
     /*---------- ATTRIBUTS ----------*/
 

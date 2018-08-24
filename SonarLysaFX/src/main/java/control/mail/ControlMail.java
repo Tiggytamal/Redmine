@@ -28,6 +28,7 @@ import model.enums.Param;
 import model.enums.ParamSpec;
 import model.enums.TypeInfo;
 import model.enums.TypeMail;
+import utilities.AbstractToStringImpl;
 import utilities.DateConvert;
 import utilities.Statics;
 
@@ -38,7 +39,7 @@ import utilities.Statics;
  * @since 1.0
  * 
  */
-public class ControlMail
+public class ControlMail extends AbstractToStringImpl
 {
     /*---------- ATTRIBUTS ----------*/
 

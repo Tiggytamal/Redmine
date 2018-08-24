@@ -15,6 +15,7 @@ import model.enums.ParamBool;
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public class ParamBoolView extends VBox implements ViewXML<ParamBool, CheckBox>
 {

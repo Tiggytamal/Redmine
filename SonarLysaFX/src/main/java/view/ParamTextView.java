@@ -17,6 +17,14 @@ import javafx.scene.layout.VBox;
 import model.enums.ParamSpec;
 import utilities.Statics;
 
+/**
+ * Classe gérant l'affichage d'un paramètre sous forme de texte.
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
+ *
+ */
 public class ParamTextView extends VBox
 {
     /*---------- ATTRIBUTS ----------*/

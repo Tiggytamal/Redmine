@@ -121,7 +121,7 @@ public class Anomalie extends AbstractModele
      */
     public boolean calculTraitee()
     {
-        traitee = (remarque != null && !remarque.isEmpty()) || (numeroAnomalie != 0);
+        traitee = (!getRemarque().isEmpty()) || (numeroAnomalie != 0);
         return traitee;
     }
 
@@ -254,7 +254,7 @@ public class Anomalie extends AbstractModele
 
     public EtatLot getEtatLot()
     {
-        return etatLot != null ? etatLot : EtatLot.INCONNU;
+        return etatLot == null ? EtatLot.INCONNU : etatLot;
     }
 
     public void setEtatLot(EtatLot etatLot)

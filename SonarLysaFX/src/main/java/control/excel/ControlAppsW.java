@@ -89,7 +89,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
         colLDCSonar = 7;
         colLDCMain = 8;
     }
-
+    
     @Override
     protected final void initTitres()
     {

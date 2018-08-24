@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,8 @@ public class TestCondition
     public void testGetStatus()
     {
         assertEquals(STATUS, modele.getStatus());
-        assertNull(modeleNull.getStatus());
+        assertNotNull(modeleNull.getStatus());
+        assertTrue(modeleNull.getStatus().isEmpty());
     }
     
     @Test
@@ -53,7 +55,8 @@ public class TestCondition
     public void testGetMetricKeys()
     {
         assertEquals(METRICKEYS, modele.getMetricKeys());
-        assertNull(modeleNull.getMetricKeys());
+        assertNotNull(modeleNull.getMetricKeys());
+        assertTrue(modeleNull.getMetricKeys().isEmpty());
     }
     
     @Test
@@ -69,7 +72,8 @@ public class TestCondition
     public void testGetComparator()
     {
         assertEquals(COMPARATOR, modele.getComparator());
-        assertNull(modeleNull.getComparator());
+        assertNotNull(modeleNull.getComparator());
+        assertTrue(modeleNull.getComparator().isEmpty());
     }
     
     @Test
@@ -101,7 +105,8 @@ public class TestCondition
     public void testGetErrorThreshold()
     {
         assertEquals(ERRORTHRESHOLD, modele.getErrorThreshold());
-        assertNull(modeleNull.getErrorThreshold());
+        assertNotNull(modeleNull.getErrorThreshold());
+        assertTrue(modeleNull.getErrorThreshold().isEmpty());
     }
     
     @Test
@@ -117,7 +122,8 @@ public class TestCondition
     public void testGetActualValue()
     {
         assertEquals(VALUE, modele.getActualValue());
-        assertNull(modeleNull.getActualValue());
+        assertNotNull(modeleNull.getActualValue());
+        assertTrue(modeleNull.getActualValue().isEmpty());
     }
     
     @Test

@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,8 @@ public class TestAjouterVueLocale
     public void testGetKey()
     {
         assertEquals(KEY, modele.getKey());
-        assertNull(modeleNull.getKey());
+        assertNotNull(modeleNull.getKey());
+        assertTrue(modeleNull.getKey().isEmpty());
     }
     
     @Test
@@ -49,7 +51,8 @@ public class TestAjouterVueLocale
     public void testGetRefKey()
     {
         assertEquals(PROJECT, modele.getRefKey());
-        assertNull(modeleNull.getRefKey());
+        assertNotNull(modeleNull.getRefKey());
+        assertTrue(modeleNull.getRefKey().isEmpty());
     }
     
     @Test

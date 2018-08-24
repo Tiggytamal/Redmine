@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import model.enums.EtatLot;
 import model.enums.TypeAction;
+import utilities.AbstractToStringImpl;
 import utilities.CellHelper;
 import utilities.DateConvert;
 
@@ -26,7 +27,7 @@ import utilities.DateConvert;
  * @since 1.0
  * 
  */
-public abstract class AbstractControlExcel
+public abstract class AbstractControlExcel extends AbstractToStringImpl
 {
     /*---------- ATTRIBUTS ----------*/
     

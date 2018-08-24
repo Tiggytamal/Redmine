@@ -120,7 +120,7 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
     }
 
     /**
-     * Initialise les numéro des colonnes du fichier Excel venant de la PIC.
+     * Initialise les numéro des colonnes du fichier Excel.
      */
     @Override
     protected final void calculIndiceColonnes()

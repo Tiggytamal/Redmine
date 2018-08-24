@@ -12,6 +12,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import model.Vulnerabilite;
 import model.enums.TypeColVul;
 import model.enums.TypeVulnerabilite;
+import utilities.Statics;
+import utilities.TechnicalException;
 import utilities.enums.Bordure;
 
 /**
@@ -64,31 +66,20 @@ public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, Lis
         {
             Sheet sheet = wb.createSheet(type.getNomSheet());
             Row row = sheet.createRow(0);
-            valoriserCellule(row, colSeverity, centre, "Criticité", null);
-            valoriserCellule(row, colStatus, centre, "Statut", null);
-            valoriserCellule(row, colMess, centre, "Message", null);
-            valoriserCellule(row, colDateCrea, centre, "Date création", null);
-            valoriserCellule(row, colLot, centre, "Lot", null);
-            valoriserCellule(row, colClarity, centre, "Code Clarity", null);
-            valoriserCellule(row, colAppli, centre, "Code application", null);
-            valoriserCellule(row, colComp, centre, "Nom composant", null);
-            valoriserCellule(row, colLib, centre, "Bibliothèque", null);
-        }
-    }
 
-    @Override
-    protected final void calculIndiceColonnes()
-    {
-        colSeverity = 7;
-        colStatus = 5;
-        colMess = 8;
-        colDateCrea = 6;
-        colLot = 2;
-        colClarity = 4;
-        colAppli = 3;
-        colComp = 0;
-        colLib = 1;
-        maxIndice = 7;
+            for (TypeColVul typeColVul : TypeColVul.values())
+            {
+                try
+                {
+                    valoriserCellule(row, (Integer) getClass().getDeclaredField(typeColVul.getNomCol()).get(this), centre, Statics.proprietesXML.getEnumMapW(TypeColVul.class).get(typeColVul).getNom(),
+                            null);
+                }
+                catch (IllegalAccessException | NoSuchFieldException | SecurityException e)
+                {
+                    throw new TechnicalException("", e);
+                }
+            }
+        }
     }
 
     @Override

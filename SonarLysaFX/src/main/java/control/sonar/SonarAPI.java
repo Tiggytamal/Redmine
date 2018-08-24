@@ -45,6 +45,7 @@ import model.sonarapi.Retour;
 import model.sonarapi.Validation;
 import model.sonarapi.Vue;
 import model.utilities.ModeleSonar;
+import utilities.AbstractToStringImpl;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
@@ -56,7 +57,7 @@ import utilities.enums.Severity;
  * @since 1.0
  * 
  */
-public class SonarAPI
+public class SonarAPI extends AbstractToStringImpl
 {
 
     /*---------- ATTRIBUTS ----------*/

@@ -2,7 +2,8 @@ package junit.model.sonarapi;
 
 import static junit.TestUtils.NEWVAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,8 @@ public class TestParametre
     public void testGetClef()
     {
         assertEquals(CLEF, modele.getClef());
-        assertNull(modeleNull.getClef());
+        assertNotNull(modeleNull.getClef());
+        assertTrue(modeleNull.getClef().isEmpty());
     }
     
     @Test
@@ -49,7 +51,8 @@ public class TestParametre
     public void testGetValeur()
     {
         assertEquals(VALEUR, modele.getValeur());
-        assertNull(modeleNull.getValeur());
+        assertNotNull(modeleNull.getValeur());
+        assertTrue(modeleNull.getValeur().isEmpty());
     }
     
     @Test

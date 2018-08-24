@@ -17,7 +17,6 @@ import java.util.Locale;
 
 /**
  * Utilitaire de conversion entre les deux formats de Date {@code java.util.Date} et {@code java.time.*}).
- * <p>
  * Toutes les méthodes sont null-safe.
  */
 public class DateConvert

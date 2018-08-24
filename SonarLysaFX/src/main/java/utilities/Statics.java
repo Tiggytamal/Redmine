@@ -12,6 +12,8 @@ import model.ProprietesXML;
  * Classe regroupant toutes les constantes statiques
  * 
  * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ * 
  */
 public final class Statics
 {   

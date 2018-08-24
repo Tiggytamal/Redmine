@@ -19,6 +19,7 @@ import javafx.stage.Modality;
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
+ * 
  */
 public class ProgressDialog extends Dialog<Boolean>
 {

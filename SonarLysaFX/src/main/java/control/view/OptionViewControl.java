@@ -25,6 +25,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
+import model.Colonne;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
@@ -36,9 +37,12 @@ import model.enums.TypeColNPC;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
+import model.enums.TypeColVul;
+import model.enums.TypeColW;
 import model.enums.TypeKey;
 import model.enums.TypeParamSpec;
 import utilities.TechnicalException;
+import view.ColonneIndiceView;
 import view.ColonneView;
 import view.ParamBoolView;
 import view.ParamListView;
@@ -160,6 +164,10 @@ public final class OptionViewControl extends AbstractViewControl
             case "NPC":
                 afficherColonnes(TypeColNPC.class, root);
                 break;
+                
+            case "extractVul":
+                afficherColonnesIndice(TypeColVul.class, root);
+                break;
 
             case "Nom Colonnes":
                 // Evite plantage en cas de clic sur le sous-menu
@@ -266,7 +274,7 @@ public final class OptionViewControl extends AbstractViewControl
             {
                 @SuppressWarnings("unchecked")
                 ColonneView<T> view = (ColonneView<T>) node;
-                Map<T, String> mapCols = proprietesXML.getEnumMap(view.getType().getDeclaringClass());
+                Map<T, String> mapCols = proprietesXML.getEnumMapR(view.getType().getDeclaringClass());
                 saveText(view.getField(), mapCols, view.getType());
             }
         }
@@ -288,11 +296,29 @@ public final class OptionViewControl extends AbstractViewControl
         colonnesBox.getChildren().clear();
 
         // Récupération de la map correspondante au type de fichier et affichage des colonnes
-        for (Object objet : proprietesXML.getEnumMap(typeCol).entrySet())
+        for (Map.Entry<T, String> entry : proprietesXML.getEnumMapR(typeCol).entrySet())
         {
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-            Map.Entry<T, String> entry = (Map.Entry) objet;
             ColonneView<T> cv = new ColonneView<>(entry.getKey(), entry.getValue());
+            colonnesBox.getChildren().add(cv);
+        }
+        root.add(colonnesPane);
+    }
+    
+    /**
+     * Affichge les colonnes du fichier choisi dans les options
+     * 
+     * @param typeCol
+     * @param root
+     */
+    private <T extends Enum<T> & TypeColW> void afficherColonnesIndice(Class<T> typeCol, ObservableList<Node> root)
+    {
+        // Nettoyage de l'affichage
+        colonnesBox.getChildren().clear();
+
+        // Récupération de la map correspondante au type de fichier et affichage des colonnes
+        for (Map.Entry<T, Colonne> entry : proprietesXML.getEnumMapW(typeCol).entrySet())
+        {
+            ColonneIndiceView<T> cv = new ColonneIndiceView<>(entry.getKey(), entry.getValue().getNom(), entry.getValue().getIndice());
             colonnesBox.getChildren().add(cv);
         }
         root.add(colonnesPane);
