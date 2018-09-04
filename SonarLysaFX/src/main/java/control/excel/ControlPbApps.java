@@ -11,6 +11,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 import model.CompoPbApps;
 import model.enums.TypeColPbApps;
+import utilities.Statics;
+import utilities.TechnicalException;
 import utilities.enums.Bordure;
 
 /**
@@ -57,18 +59,6 @@ public class ControlPbApps extends AbstractControlExcelWrite<TypeColPbApps, List
     /*---------- METHODES PRIVEES ----------*/
 
     @Override
-    protected final void calculIndiceColonnes()
-    {
-        colCode = 0;
-        colAppli = 1;
-        colLot = 2;
-        colCpiLot = 3;
-        colDep = 4;
-        colService = 5;
-        colChefServ = 6;
-    }
-
-    @Override
     protected final void initTitres()
     {
         CellStyle centre = helper.getStyle(IndexedColors.AQUA, Bordure.BAS, HorizontalAlignment.CENTER);
@@ -78,13 +68,19 @@ public class ControlPbApps extends AbstractControlExcelWrite<TypeColPbApps, List
         Sheet sheet = wb.getSheet(PBAPPLI);
 
         Row row = sheet.createRow(0);
-        valoriserCellule(row, colCode, centre, "Composant");
-        valoriserCellule(row, colAppli, centre, "Code application");
-        valoriserCellule(row, colLot, centre, "Lot RTC");
-        valoriserCellule(row, colCpiLot, centre, "Cpi Lot");
-        valoriserCellule(row, colDep, centre, "Departement");
-        valoriserCellule(row, colService, centre, "Service");
-        valoriserCellule(row, colChefServ, centre, "Chef de Service");
+        
+        for (TypeColPbApps typeColPbApps : TypeColPbApps.values())
+        {
+            try
+            {
+                valoriserCellule(row, (Integer) getClass().getDeclaredField(typeColPbApps.getNomCol()).get(this), 
+                        centre, Statics.proprietesXML.getEnumMapColW(TypeColPbApps.class).get(typeColPbApps).getNom(), null);
+            }
+            catch (IllegalAccessException | NoSuchFieldException | SecurityException e)
+            {
+                throw new TechnicalException("", e);
+            }
+        }
         autosizeColumns(sheet);
     }
 

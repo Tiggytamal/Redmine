@@ -9,11 +9,13 @@ package model.enums;
  */
 public enum TypeColPbApps implements TypeColW
 {
-    CODEAPPS("Code Application", "colCode"),
-    ACTIF("Actif", "colActif"),
-    LIB("Libellé", "colLib"),
-    OPEN("Top appli open", "colOpen"),
-    MAINFRAME("Top appli MainFrame", "colMainFrame");
+    CODE("Code Composant", "colCode"),
+    APPLI("Code Application", "colAppli"),
+    LOT("Lot RTC", "colLot"),
+    CPILOT("Cpi lot", "colCpiLot"),
+    DEP("Département", "colDep"),
+    SERVICE("Service", "colService"),
+    CHEFSERV("Chef de Service", "colChefServ");
     
     private final String valeur;
     private final String nomCol;

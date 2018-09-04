@@ -7,20 +7,24 @@ package model.enums;
  * @since 1.0
  * 
  */
-public enum TypeColApps implements TypeColR 
+public enum TypeColAppsW implements TypeColR, TypeColW
 {
     CODEAPPS("Code Application", "colCode"),
     ACTIF("Actif", "colActif"),
     LIB("Libellé", "colLib"),
     OPEN("Top appli open", "colOpen"),
-    MAINFRAME("Top appli MainFrame", "colMainFrame");
+    MAINFRAME("Top appli MainFrame", "colMainFrame"),
+    CRITICITE("Criticité", "colCrit"),
+    VULN("Vulnérabilitès", "colVuln"),
+    LDCSONAR("LDC SonarQube", "colLDCSonar"),
+    LDCMAIN("LDC MainFrame", "colLDCMain");
     
     private final String valeur;
     private final String nomCol;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private TypeColApps(String valeur, String nomCol)
+    private TypeColAppsW(String valeur, String nomCol)
     {
         this.valeur = valeur;
         this.nomCol = nomCol;

@@ -7,10 +7,12 @@ import static org.powermock.reflect.Whitebox.invokeMethod;
 import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
+import org.powermock.reflect.Whitebox;
 
 import control.word.ControlRapport;
 import junit.JunitBase;
 import model.Anomalie;
+import model.CompoPbApps;
 import model.ModelFactory;
 import model.enums.TypeRapport;
 import model.utilities.ControlModelInfo;
@@ -101,6 +103,42 @@ public class TestControlModelInfo extends JunitBase
         ano.setResponsableService("abc");
         handler.controleChefDeService(ano, controlRapport);
         assertEquals("abc", ano.getResponsableService());
+    }
+    
+    @Test
+    public void testControleNPC()
+    {
+        // Initialisation
+        Anomalie ano = ModelFactory.getModel(Anomalie.class);
+        
+        // Test NPC
+        ano.setProjetRTC(Statics.fichiersXML.getMapProjetsNpc().values().iterator().next());
+        handler.controleNPC(ano);
+        assertEquals(Statics.X, ano.getNpc());
+        
+        // Test non NPC
+        ano.setProjetRTC("pas NPC");
+        handler.controleNPC(ano);
+        assertEquals(Statics.EMPTY, ano.getNpc());
+    }
+    
+    @Test
+    public void testInitChefService() throws Exception
+    {
+        // Initialisation
+        CompoPbApps compo = ModelFactory.getModel(CompoPbApps.class);
+        
+        String methode = "initChefService";
+        String service = "ASSURANCE QUALITE";
+        String serviceNonExistant = "serv";
+        
+        // Test avec bon service
+        Whitebox.invokeMethod(handler, methode, compo, service);
+        assertEquals(Statics.fichiersXML.getMapRespService().get(service).getNom(), compo.getChefService());
+        
+        // Test avec service non existant
+        Whitebox.invokeMethod(handler, methode, compo, serviceNonExistant);
+        assertEquals(Statics.INCONNU, compo.getChefService());
     }
     
     @Test

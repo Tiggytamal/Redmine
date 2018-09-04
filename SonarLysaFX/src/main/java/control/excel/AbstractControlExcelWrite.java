@@ -84,9 +84,9 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
     /*---------- METHODES PRIVEES ----------*/
 
     @Override
-    protected void calculIndiceColonnes()
+    protected final void calculIndiceColonnes()
     {
-        Map<T, Colonne> map = Statics.proprietesXML.getEnumMapW(enumeration);
+        Map<T, Colonne> map = Statics.proprietesXML.getEnumMapColW(enumeration);
         
         int nbreCol = 0;
         
@@ -98,8 +98,8 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
             try
             {
                 field = getClass().getDeclaredField(typeCol.getNomCol());
-                field.setAccessible(true);
-                field.set(this, entry.getValue().getIndice());
+                field.setAccessible(true);                
+                field.set(this, Integer.parseInt(entry.getValue().getIndice()));
                 testMax((int) field.get(this));
                 nbreCol++;
             } 
@@ -112,8 +112,7 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
         // Gestion des erreurs si on ne trouve pas le bon nombre de colonnes
         int enumLength = enumeration.getEnumConstants().length;
         if (nbreCol != enumLength)
-            throw new FunctionalException(Severity.ERROR,
-                    "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci : Différence = " + (enumLength - nbreCol));
+            throw new FunctionalException(Severity.ERROR, "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci : Différence = " + (enumLength - nbreCol));
     }
     
     @Override

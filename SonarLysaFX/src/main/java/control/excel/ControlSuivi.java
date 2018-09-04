@@ -291,7 +291,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
             // Contrôle si le lot a une erreur de sécurité pour mettre à jour la donnée.
             if (lotsSecurite.contains(anoLot))
-                ano.setSecurite(Statics.SECURITEKO);
+                ano.setSecurite(Statics.X);
 
             // Calcul version SNAPSHOT ou RELEASE
             if (lotsRelease.contains(anoLot))
@@ -715,7 +715,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
             // Contrôle si le lot a une erreur de sécurité pour mettre à jour la donnée.
             if (lotsSecurite.contains(anoLot))
-                ano.setSecurite(Statics.SECURITEKO);
+                ano.setSecurite(Statics.X);
 
             // Ajout de la donnée de version
             if (lotsRelease.contains(anoLot))

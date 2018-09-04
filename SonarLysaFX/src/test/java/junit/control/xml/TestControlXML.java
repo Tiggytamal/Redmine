@@ -67,6 +67,12 @@ public class TestControlXML extends JunitBase
         handler.recupEditionDepuisExcel(new File(getClass().getResource(Statics.ROOT + "Codification_des_Editions.xlsx").getFile()));
     }
     
+    @Test
+    public void testRecupProjetsNPCDepuisExcel()
+    {
+        handler.recupProjetsNPCDepuisExcel(new File(getClass().getResource(Statics.ROOT + "projets npc.xlsx").getFile()));
+    }
+    
     @Test (expected = TechnicalException.class)
     public void testSaveInfosException() throws Exception
     {        

@@ -24,7 +24,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import model.Application;
 import model.enums.Param;
-import model.enums.TypeColApps;
+import model.enums.TypeColAppsW;
 import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Bordure;
@@ -36,7 +36,7 @@ import utilities.enums.Bordure;
  * @since 1.0
  *
  */
-public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collection<Application>>
+public class ControlAppsW extends AbstractControlExcelWrite<TypeColAppsW, Collection<Application>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -75,20 +75,6 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
     }
 
     /*---------- METHODES PRIVEES ----------*/
-
-    @Override
-    protected final void calculIndiceColonnes()
-    {
-        colCode = 0;
-        colActif = 1;
-        colLib = 2;
-        colOpen = 3;
-        colMainFrame = 4;
-        colCrit = 5;
-        colVuln = 6;
-        colLDCSonar = 7;
-        colLDCMain = 8;
-    }
     
     @Override
     protected final void initTitres()
@@ -100,15 +86,20 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
         Sheet sheet = wb.getSheet(APPLIGEREES);
 
         Row row = sheet.createRow(0);
-        valoriserCellule(row, colCode, centre, "Code Application");
-        valoriserCellule(row, colActif, centre, "Actif");
-        valoriserCellule(row, colLib, centre, "Libellé");
-        valoriserCellule(row, colOpen, centre, "Open");
-        valoriserCellule(row, colMainFrame, centre, "MainFrame");
-        valoriserCellule(row, colCrit, centre, "Valeur Sécurité");
-        valoriserCellule(row, colVuln, centre, "Vulnérabilitès");
-        valoriserCellule(row, colLDCSonar, centre, "LDC SonarQube");
-        valoriserCellule(row, colLDCMain, centre, "LDC MainFrame");
+        
+        for (TypeColAppsW typeColAppsW : TypeColAppsW.values())
+        {
+            try
+            {
+                valoriserCellule(row, (Integer) getClass().getDeclaredField(typeColAppsW.getNomCol()).get(this), 
+                        centre, Statics.proprietesXML.getEnumMapColW(TypeColAppsW.class).get(typeColAppsW).getNom(), null);
+            }
+            catch (IllegalAccessException | NoSuchFieldException | SecurityException e)
+            {
+                throw new TechnicalException("", e);
+            }
+        }
+        
         autosizeColumns(sheet);
     }
 
@@ -170,6 +161,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
             }
         }
 
+        // Copie des cellules du fichier initial vers le fichier final
         for (Iterator<Row> iter = sheetbase.iterator(); iter.hasNext();)
         {
             // Initialisation des deux lignes
@@ -194,7 +186,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
                 value = String.valueOf(cell.getNumericCellValue());
 
             if (codeApps.contains(value))
-                row.getCell(0).setCellValue("X");
+                row.getCell(0).setCellValue(Statics.X);
         }
     }
 

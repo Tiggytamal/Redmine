@@ -11,35 +11,39 @@ public class TestTypeColPbApps implements TestEnums
     @Test
     public void testGetValeur()
     {
-        assertEquals("Code Application", TypeColPbApps.CODEAPPS.getValeur());
-        assertEquals("Actif", TypeColPbApps.ACTIF.getValeur());
-        assertEquals("Libellé", TypeColPbApps.LIB.getValeur());
-        assertEquals("Top appli open", TypeColPbApps.OPEN.getValeur());
-        assertEquals("Top appli MainFrame", TypeColPbApps.MAINFRAME.getValeur());
+        assertEquals("Code Composant", TypeColPbApps.CODE.getValeur());
+        assertEquals("Code Application", TypeColPbApps.APPLI.getValeur());
+        assertEquals("Lot RTC", TypeColPbApps.LOT.getValeur());
+        assertEquals("Cpi lot", TypeColPbApps.CPILOT.getValeur());
+        assertEquals("Département", TypeColPbApps.DEP.getValeur());
+        assertEquals("Service", TypeColPbApps.SERVICE.getValeur());
+        assertEquals("Chef de Service", TypeColPbApps.CHEFSERV.getValeur());
     }
     
     @Test
     public void testGetNomCol()
     {
-        assertEquals("colCode", TypeColPbApps.CODEAPPS.getNomCol());
-        assertEquals("colActif", TypeColPbApps.ACTIF.getNomCol());
-        assertEquals("colLib", TypeColPbApps.LIB.getNomCol());
-        assertEquals("colOpen", TypeColPbApps.OPEN.getNomCol());
-        assertEquals("colMainFrame", TypeColPbApps.MAINFRAME.getNomCol());
+        assertEquals("colCode", TypeColPbApps.CODE.getNomCol());
+        assertEquals("colAppli", TypeColPbApps.APPLI.getNomCol());
+        assertEquals("colLot", TypeColPbApps.LOT.getNomCol());
+        assertEquals("colCpiLot", TypeColPbApps.CPILOT.getNomCol());
+        assertEquals("colDep", TypeColPbApps.DEP.getNomCol());
+        assertEquals("colService", TypeColPbApps.SERVICE.getNomCol());
+        assertEquals("colChefServ", TypeColPbApps.CHEFSERV.getNomCol());
     }
     
     @Test
     @Override
     public void testConstructeur()
     {
-        assertEquals(TypeColPbApps.MAINFRAME, TypeColPbApps.valueOf(TypeColPbApps.MAINFRAME.toString()));         
+        assertEquals(TypeColPbApps.DEP, TypeColPbApps.valueOf(TypeColPbApps.DEP.toString()));         
     }
 
     @Test
     @Override
     public void testSize()
     {
-        assertEquals(5, TypeColPbApps.values().length);       
+        assertEquals(7, TypeColPbApps.values().length);       
     }
 
 }

@@ -165,6 +165,10 @@ public class ControlModelInfo
     {
         // Controle sur l'état de l'anomalie (projet Clarity, lot et numéro anomalie renseignée
         String anoLot = ano.getLot().substring(Statics.SBTRINGLOT);
+        
+        // Protection contre les numéros de lot vide
+        if (anoLot == Statics.EMPTY)
+            return;
         int anoLotInt = Integer.parseInt(anoLot);
 
         // Controle si le projet RTC est renseigné. Sinon on le récupère depuis Jazz avec le numéro de lot
@@ -240,7 +244,7 @@ public class ControlModelInfo
     public void controleNPC(Anomalie ano)
     {
         if (Statics.fichiersXML.getMapProjetsNpc().containsKey(ano.getProjetRTC()))
-            ano.setNpc("X");
+            ano.setNpc(Statics.X);
         else
             ano.setNpc(Statics.EMPTY);
     }

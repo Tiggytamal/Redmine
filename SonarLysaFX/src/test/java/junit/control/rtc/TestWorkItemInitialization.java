@@ -68,7 +68,7 @@ public class TestWorkItemInitialization extends JunitBase
         ano.setProjetRTC("PRJF_T300703");
         ano.setLot(NUMEROLOT1);
         ano.setCpiProjet("TRICOT Nicolas");
-        ano.setSecurite("X");
+        ano.setSecurite(Statics.X);
         ano.setMatieresString(Matiere.JAVA.getValeur());
 
         testExecute(ano);

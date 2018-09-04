@@ -71,8 +71,8 @@ public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, Lis
             {
                 try
                 {
-                    valoriserCellule(row, (Integer) getClass().getDeclaredField(typeColVul.getNomCol()).get(this), centre, Statics.proprietesXML.getEnumMapW(TypeColVul.class).get(typeColVul).getNom(),
-                            null);
+                    valoriserCellule(row, (Integer) getClass().getDeclaredField(typeColVul.getNomCol()).get(this), 
+                            centre, Statics.proprietesXML.getEnumMapColW(TypeColVul.class).get(typeColVul).getNom(), null);
                 }
                 catch (IllegalAccessException | NoSuchFieldException | SecurityException e)
                 {

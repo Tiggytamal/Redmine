@@ -274,7 +274,7 @@ public final class OptionViewControl extends AbstractViewControl
             {
                 @SuppressWarnings("unchecked")
                 ColonneView<T> view = (ColonneView<T>) node;
-                Map<T, String> mapCols = proprietesXML.getEnumMapR(view.getType().getDeclaringClass());
+                Map<T, String> mapCols = proprietesXML.getEnumMapColR(view.getType().getDeclaringClass());
                 saveText(view.getField(), mapCols, view.getType());
             }
         }
@@ -296,7 +296,7 @@ public final class OptionViewControl extends AbstractViewControl
         colonnesBox.getChildren().clear();
 
         // Récupération de la map correspondante au type de fichier et affichage des colonnes
-        for (Map.Entry<T, String> entry : proprietesXML.getEnumMapR(typeCol).entrySet())
+        for (Map.Entry<T, String> entry : proprietesXML.getEnumMapColR(typeCol).entrySet())
         {
             ColonneView<T> cv = new ColonneView<>(entry.getKey(), entry.getValue());
             colonnesBox.getChildren().add(cv);
@@ -316,7 +316,7 @@ public final class OptionViewControl extends AbstractViewControl
         colonnesBox.getChildren().clear();
 
         // Récupération de la map correspondante au type de fichier et affichage des colonnes
-        for (Map.Entry<T, Colonne> entry : proprietesXML.getEnumMapW(typeCol).entrySet())
+        for (Map.Entry<T, Colonne> entry : proprietesXML.getEnumMapColW(typeCol).entrySet())
         {
             ColonneIndiceView<T> cv = new ColonneIndiceView<>(entry.getKey(), entry.getValue().getNom(), entry.getValue().getIndice());
             colonnesBox.getChildren().add(cv);

@@ -20,11 +20,11 @@ import control.excel.ControlAppsW;
 import model.Application;
 import model.ModelFactory;
 import model.enums.Param;
-import model.enums.TypeColApps;
+import model.enums.TypeColAppsW;
 import utilities.Statics;
 import utilities.TechnicalException;
 
-public class TestControlAppsW extends TestControlExcelWrite<TypeColApps, ControlAppsW, Collection<Application>>
+public class TestControlAppsW extends TestControlExcelWrite<TypeColAppsW, ControlAppsW, Collection<Application>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -34,7 +34,7 @@ public class TestControlAppsW extends TestControlExcelWrite<TypeColApps, Control
 
     public TestControlAppsW()
     {
-        super(TypeColApps.class, "testAppW.xlsx");
+        super(TypeColAppsW.class, "testAppW.xlsx");
         appli = ModelFactory.getModel(Application.class);
         appli.setActif(true);
         appli.setCode("ABCD");
@@ -49,7 +49,7 @@ public class TestControlAppsW extends TestControlExcelWrite<TypeColApps, Control
     public void testInitEnum() throws IllegalAccessException
     {
         // test - énumération du bon Type
-        assertEquals(TypeColApps.class, getField(ControlAppsW.class, "enumeration").get(handler));
+        assertEquals(TypeColAppsW.class, getField(ControlAppsW.class, "enumeration").get(handler));
     }
 
     @Test

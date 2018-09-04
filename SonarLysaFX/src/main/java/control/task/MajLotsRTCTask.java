@@ -23,7 +23,7 @@ import utilities.enums.Severity;
  * @since 1.0
  *
  */
-public class MajFichierRTCTask extends AbstractSonarTask
+public class MajLotsRTCTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -32,7 +32,7 @@ public class MajFichierRTCTask extends AbstractSonarTask
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public MajFichierRTCTask(LocalDate date, boolean remiseAZero)
+    public MajLotsRTCTask(LocalDate date, boolean remiseAZero)
     {
         super(1);
         this.date = date;

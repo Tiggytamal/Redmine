@@ -13,14 +13,17 @@ import control.excel.ControlChefService;
 import control.excel.ControlClarity;
 import control.excel.ControlEdition;
 import control.excel.ControlExtractVul;
+import control.excel.ControlPbApps;
 import control.excel.ControlPic;
 import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
 import junit.JunitBase;
 import model.enums.TypeColApps;
+import model.enums.TypeColAppsW;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
+import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
@@ -73,7 +76,8 @@ public class TestExcelFactory extends JunitBase
     {
         // Appel de toutes les énumérations, et vérification de la bonne instanciation des controleurs
         assertEquals(ControlExtractVul.class, ExcelFactory.getWriter(TypeColVul.class, new File("testExtract.xlsx")).getClass());
-        assertEquals(ControlAppsW.class, ExcelFactory.getWriter(TypeColApps.class, new File("testAppsW.xlsx")).getClass());
+        assertEquals(ControlAppsW.class, ExcelFactory.getWriter(TypeColAppsW.class, new File("testAppsW.xlsx")).getClass());
+        assertEquals(ControlPbApps.class, ExcelFactory.getWriter(TypeColPbApps.class, new File("testPbApps.xlsx")).getClass());
     }
     
     @Test (expected = TechnicalException.class)

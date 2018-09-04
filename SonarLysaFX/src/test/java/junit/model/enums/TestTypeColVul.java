@@ -12,7 +12,7 @@ public class TestTypeColVul implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(8, TypeColVul.values().length);
+        assertEquals(9, TypeColVul.values().length);
     }
     
     @Test

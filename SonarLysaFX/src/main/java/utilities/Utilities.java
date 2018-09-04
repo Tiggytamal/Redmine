@@ -279,4 +279,21 @@ public final class Utilities
 
         return retour;
     }
+    
+    public static int stringToInt(String valeur)
+    {
+        int retour = 0;
+        
+        try
+        {
+            retour = Integer.parseInt(valeur);
+        }
+        catch (NumberFormatException e)
+        {
+            LOGPLANTAGE.error(e);
+            throw new TechnicalException("Erreur au moment de générer un nombre de puis une chaîne de caractères.", e);
+        }
+        
+        return retour;
+    }
 }

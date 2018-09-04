@@ -81,6 +81,9 @@ public interface ExcelFactory
             case "model.enums.TypeColPbApps" :
                 return (R) new ControlPbApps(file);
                 
+            case "model.enums.TypeColAppsW" :
+                return (R) new ControlAppsW(file);
+                
             default:
                 throw new TechnicalException("ExcelFactory.getXriter - type non géré : " + type.toString(), null);
         }

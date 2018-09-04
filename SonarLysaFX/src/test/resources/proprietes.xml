@@ -251,8 +251,108 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
     	<entry>
     		<key>SEVERITE</key>
     		<value nom="Sévérité" indice="7" />
-    	</entry>    
+    	</entry>  
+    	<entry>
+    		<key>STATUS</key>
+    		<value nom="Status" indice="5" />
+    	</entry>
+    	<entry>
+    		<key>MESSAGE</key>
+    		<value nom="Message" indice="8" />
+    	</entry>
+    	<entry>
+    		<key>DATECREA</key>
+    		<value nom="Date création" indice="6" />
+    	</entry>
+    	<entry>
+    		<key>LOT</key>
+    		<value nom="Lot" indice="2" />
+    	</entry>
+    	<entry>
+    		<key>CLARITY</key>
+    		<value nom="Code Clarity" indice="4" />
+    	</entry>
+    	<entry>
+    		<key>APPLI</key>
+    		<value nom="Appli" indice="3" />
+    	</entry>
+    	<entry>
+    		<key>COMPOSANT</key>
+    		<value nom="Composant" indice="0" />
+    	</entry>
+    	<entry>
+    		<key>LIB</key>
+    		<value nom="Bibliothèque" indice="1" />
+    	</entry>		
     </mapColsVul>
+	<mapColsPbApps>
+		<entry>
+    		<key>CODE</key>
+    		<value nom="Code Composant" indice="0" />
+    	</entry>
+		<entry>
+    		<key>APPLI</key>
+    		<value nom="Code Application" indice="1" />
+    	</entry>
+		<entry>
+    		<key>LOT</key>
+    		<value nom="Lot RTC" indice="2" />
+    	</entry>
+		<entry>
+    		<key>CPILOT</key>
+    		<value nom="Cpi lot" indice="3" />
+    	</entry>
+		<entry>
+    		<key>DEP</key>
+    		<value nom="Département" indice="4" />
+    	</entry>
+		<entry>
+    		<key>SERVICE</key>
+    		<value nom="Service" indice="5" />
+    	</entry>
+		<entry>
+    		<key>CHEFSERV</key>
+    		<value nom="Chef de Service" indice="6" />
+    	</entry>	
+	</mapColsPbApps>
+	<mapColsAppsW>
+		<entry>
+    		<key>CODEAPPS</key>
+    		<value nom="Code Application" indice="0" />
+    	</entry>
+		<entry>
+    		<key>ACTIF</key>
+    		<value nom="Actif" indice="1" />
+    	</entry>
+		<entry>
+    		<key>LIB</key>
+    		<value nom="Libellé" indice="2" />
+    	</entry>
+		<entry>
+    		<key>OPEN</key>
+    		<value nom="Open" indice="3" />
+    	</entry>
+		<entry>
+    		<key>MAINFRAME</key>
+    		<value nom="MainFrame" indice="4" />
+    	</entry>
+		<entry>
+    		<key>CRITICITE</key>
+    		<value nom="Valeur Sécurité" indice="5" />
+    	</entry>
+		<entry>
+    		<key>VULN</key>
+    		<value nom="Vulnérabilitès" indice="6" />
+    	</entry>
+		<entry>
+    		<key>LDCSONAR</key>
+    		<value nom="LDC SonarQube" indice="7" />
+    	</entry>
+		<entry>
+    		<key>LDCMAIN</key>
+    		<value nom="LDC MainFrame" indice="8" />
+    	</entry>
+	</mapColsAppsW>
     <mapParams>
         <entry>
             <key>FILTREDATASTAGE</key>

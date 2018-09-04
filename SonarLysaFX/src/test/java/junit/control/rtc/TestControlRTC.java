@@ -181,7 +181,7 @@ public class TestControlRTC extends JunitBase
         ano.setProjetRTC(projetTest);
         ano.setLot("Lot 315765");
         ano.setEdition("E32_Fil_De_Leau");
-        ano.setSecurite(Statics.SECURITEKO);
+        ano.setSecurite(Statics.X);
         int numero = handler.creerDefect(ano);
         
         // Test que le defect a bien été créé

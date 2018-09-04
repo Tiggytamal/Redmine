@@ -62,7 +62,7 @@ public class TestRetour
         assertNotNull(modele.getListeVues());
         assertFalse(modele.getListeVues().isEmpty());
         assertNotNull(modeleNull.getListeVues());
-        assertFalse(modeleNull.getListeVues().isEmpty());
+        assertTrue(modeleNull.getListeVues().isEmpty());
     }
     
     @Test
@@ -79,7 +79,7 @@ public class TestRetour
         assertNotNull(modele.getResults());
         assertFalse(modele.getResults().isEmpty());
         assertNotNull(modeleNull.getResults());
-        assertFalse(modeleNull.getResults().isEmpty());
+        assertTrue(modeleNull.getResults().isEmpty());
     }
     
     @Test
@@ -96,7 +96,7 @@ public class TestRetour
         assertNotNull(modele.getErrors());
         assertFalse(modele.getErrors().isEmpty());
         assertNotNull(modeleNull.getErrors());
-        assertFalse(modeleNull.getErrors().isEmpty());
+        assertTrue(modeleNull.getErrors().isEmpty());
     }
     
     @Test
@@ -106,7 +106,7 @@ public class TestRetour
         assertNotNull(modele.getQualityGates());
         assertFalse(modele.getQualityGates().isEmpty());
         assertNotNull(modeleNull.getQualityGates());
-        assertFalse(modeleNull.getQualityGates().isEmpty());
+        assertTrue(modeleNull.getQualityGates().isEmpty());
     }
     
     @Test

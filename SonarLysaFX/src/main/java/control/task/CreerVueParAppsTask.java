@@ -27,7 +27,7 @@ import model.ComposantSonar;
 import model.LotSuiviRTC;
 import model.ModelFactory;
 import model.enums.CreerVueParAppsTaskOption;
-import model.enums.TypeColApps;
+import model.enums.TypeColAppsW;
 import model.enums.TypeColPbApps;
 import model.enums.TypeInfo;
 import model.enums.TypeRapport;
@@ -310,7 +310,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             throw new TechnicalException("Control.task.CreerVueParAppsTask.creerFichierExtraction - Demande de création d'extraction sans fichier", null);
 
         // Fichier Sonar
-        ControlAppsW controlAppsW = ExcelFactory.getWriter(TypeColApps.class, file);
+        ControlAppsW controlAppsW = ExcelFactory.getWriter(TypeColAppsW.class, file);
         controlAppsW.creerfeuilleSonar(applisOpenSonar);
         controlAppsW.write();
         

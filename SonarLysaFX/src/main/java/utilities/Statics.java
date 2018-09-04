@@ -44,7 +44,7 @@ public final class Statics
     /** Valeur pour le séparateur de ligne indépendant du système */
     public static final String NL = System.getProperty("line.separator");
     /** Indiqe une anomalie avec un problème de sécurité */
-    public static final String SECURITEKO = "X";
+    public static final String X = "X";
     /** Mois de janvier */
     public static final String JANVIER = "Janvier";
     /** Mois de janvier */

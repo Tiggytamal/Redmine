@@ -457,8 +457,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
             // Iteration sur toutes les anomalies venant de Sonar pour chaque version
             for (String numeroLot : entry.getValue())
             {
-                // On va chercher les informations de ce lot dans le fichier des lots de la PIC. Si on ne les trouve
-                // pas, il faudra mettre à jour ce fichier
+                // On va chercher les informations de ce lot dans le fichier des lots de la PIC. Si on ne les trouve pas, il faudra mettre à jour ce fichier
                 LotSuiviRTC lot = lotsRTC.get(numeroLot);
                 if (lot == null)
                 {

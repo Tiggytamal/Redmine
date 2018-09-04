@@ -190,7 +190,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColApps, Collect
                 value = String.valueOf(cell.getNumericCellValue());
 
             if (codeApps.contains(value))
-                row.getCell(0).setCellValue("X");
+                row.getCell(0).setCellValue(Statics.X);
         }
     }
 

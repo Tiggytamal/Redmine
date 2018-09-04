@@ -218,7 +218,7 @@ public class SonarAPI extends AbstractToStringImpl
         else
         {
             LOGGER.error(erreurAPI(MEASURESCOMPONENT) + paramComposant.getValeur());
-            return null;
+            return new Composant();
         }
     }
 
@@ -428,6 +428,22 @@ public class SonarAPI extends AbstractToStringImpl
         else
         {
             String erreur = "Impossible de remonter les QualityGate de Sonar - API : " + QGLIST;
+            LOGGER.error(erreur);
+            throw new FunctionalException(Severity.ERROR, erreur);
+        }
+    }
+    
+    public List<Event> getEventsComposant(String key)
+    {
+        Parametre param = new Parametre("resource", key);
+        Parametre paramCategorie = new Parametre("categories", "Version");
+        Response response = appelWebserviceGET(EVENTS, param, paramCategorie);
+
+        if (response.getStatus() == Status.OK.getStatusCode())
+            return response.readEntity(new GenericType<List<Event>>() { });
+        else
+        {
+            String erreur = "Impossible de remonter tous les événements de Sonar - API : " + EVENTS;
             LOGGER.error(erreur);
             throw new FunctionalException(Severity.ERROR, erreur);
         }

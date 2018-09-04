@@ -23,7 +23,7 @@ public class TestControlExtractVul extends TestControlExcelWrite<TypeColVul, Con
 
     public TestControlExtractVul() throws Exception
     {
-        super(TypeColVul.class, "extract.xlsx");
+        super(TypeColVul.class, "extractVul.xlsx");
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

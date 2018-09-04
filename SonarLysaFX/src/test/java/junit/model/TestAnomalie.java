@@ -20,6 +20,7 @@ import model.ModelFactory;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
+import utilities.Statics;
 
 public class TestAnomalie extends AbstractTestModel<Anomalie>
 {
@@ -144,7 +145,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
         handler.setLiensLot("https2");
         handler.setEtat("etat");
         handler.setTypeAssemblage("type");
-        handler.setSecurite("X");
+        handler.setSecurite(Statics.X);
         handler.setRemarque("remarque");
         handler.setVersion("version");
         handler.setDateCreation(date);

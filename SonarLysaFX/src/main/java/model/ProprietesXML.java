@@ -14,10 +14,12 @@ import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
 import model.enums.TypeColApps;
+import model.enums.TypeColAppsW;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
 import model.enums.TypeColNPC;
+import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
@@ -59,6 +61,8 @@ public class ProprietesXML extends AbstractModele implements XML
     
     // Map des colonnes avec indice pour écriture
     private Map<TypeColVul, Colonne> mapColsVul;
+    private Map<TypeColPbApps, Colonne> mapColsPbApps;
+    private Map<TypeColAppsW, Colonne> mapColsAppsW;
 
     // Map planificateurs
     private Map<TypePlan, Planificateur> mapPlans;
@@ -76,6 +80,8 @@ public class ProprietesXML extends AbstractModele implements XML
         mapColsApps = new EnumMap<>(TypeColApps.class);
         mapColsNPC = new EnumMap<>(TypeColNPC.class);
         mapColsVul = new EnumMap<>(TypeColVul.class);
+        mapColsPbApps = new EnumMap<>(TypeColPbApps.class);
+        mapColsAppsW = new EnumMap<>(TypeColAppsW.class);
         mapPlans = new EnumMap<>(TypePlan.class);
         mapParamsBool = new EnumMap<>(ParamBool.class);
         mapParamsSpec = new EnumMap<>(ParamSpec.class);
@@ -106,7 +112,7 @@ public class ProprietesXML extends AbstractModele implements XML
      * @return
      */
     @SuppressWarnings({ "unchecked" })
-    public <T extends Enum<T>> Map<T, String> getEnumMapR(Class<T> typeColClass)
+    public <T extends Enum<T>> Map<T, String> getEnumMapColR(Class<T> typeColClass)
     {
         switch (typeColClass.getName())
         {
@@ -143,15 +149,18 @@ public class ProprietesXML extends AbstractModele implements XML
      * @return
      */
     @SuppressWarnings({ "unchecked" })
-    public <T extends Enum<T>> Map<T, Colonne> getEnumMapW(Class<T> typeColClass)
+    public <T extends Enum<T>> Map<T, Colonne> getEnumMapColW(Class<T> typeColClass)
     {
         switch (typeColClass.getName())
         {
             case "model.enums.TypeColVul" :
                 return (Map<T, Colonne>) getMapColsVul();
                 
-//            case "model.enums.TypecolPbApps" :
-//                return (Map<T, Colonne>) getMapColsPbApps();
+            case "model.enums.TypeColPbApps" :
+                return (Map<T, Colonne>) getMapColsPbApps();
+                
+            case "model.enums.TypeColAppsW" :
+                return (Map<T, Colonne>) getMapColsAppsW();
 
             default:
                 throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);
@@ -166,7 +175,7 @@ public class ProprietesXML extends AbstractModele implements XML
     public <T extends Enum<T> & TypeColR> Map<String, T> getMapColsInvert(Class<T> typeColClass)
     {
         Map<String, T> retour = new HashMap<>();
-        for (Object entry : getEnumMapR(typeColClass).entrySet())
+        for (Object entry : getEnumMapColR(typeColClass).entrySet())
         {
             @SuppressWarnings({ "unchecked", "rawtypes" })
             Map.Entry<T, String> test = (Map.Entry) entry;
@@ -259,6 +268,20 @@ public class ProprietesXML extends AbstractModele implements XML
     private Map<TypeColVul, Colonne> getMapColsVul()
     {
         return mapColsVul;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsPbApps", required = false)
+    private Map<TypeColPbApps, Colonne> getMapColsPbApps()
+    {
+        return mapColsPbApps;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsAppsW", required = false)
+    private Map<TypeColAppsW, Colonne> getMapColsAppsW()
+    {
+        return mapColsAppsW;
     }
 
     @Override
