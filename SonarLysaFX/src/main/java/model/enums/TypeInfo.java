@@ -27,6 +27,7 @@ public enum TypeInfo
     SERVICESSANSRESP("Lots avec services sans responsable :\n", "- Service : "),
     APPLIOBSOLETE("Liste des composants avec un code application obsolète :\n", LIENAPP),
     APPLINONREF("Liste des composants avec une application non listée dans le référentiel :\n", LIENAPP),
+    APPLICOMPOPRECOK("Liste des composants avec code application OK sur une verison précedente :\n", LIENAPP),
     COMPOSANSAPP("Liste des composants sans application :\n", EMPTY),
     COMPOPURGE("Liste des composants purgés :\n", EMPTY);   
     

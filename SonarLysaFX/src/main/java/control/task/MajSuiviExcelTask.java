@@ -183,7 +183,8 @@ public class MajSuiviExcelTask extends AbstractSonarTask
             i++;
             updateProgress(i, size);
             updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).toString());
-            map.put(lot.getLot(), lot);
+            if (!lot.getLot().isEmpty())
+                map.put(lot.getLot(), lot);
         }
 
         Statics.fichiersXML.majMapDonnees(TypeFichier.LOTSRTC, map);

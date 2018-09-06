@@ -135,7 +135,7 @@ public class TestControlRTC extends JunitBase
     {
         // Test sur la récupération des objets depuis RTC
         assertNull(handler.recupWorkItemDepuisId(10));
-
+        
         // Test sur des lots
         IWorkItem item = handler.recupWorkItemDepuisId(278180);
         assertNotNull(item);
@@ -270,7 +270,14 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testCreerLotSuiviRTCDepuisHandle() throws TeamRepositoryException
     {
-        List<IWorkItemHandle> liste = handler.recupLotsRTC(false, null);
+        List<IWorkItemHandle> liste = handler.recupLotsRTC(true, LocalDate.of(2016, 01, 01));
+        
+        for (IWorkItemHandle handle : liste)
+        {
+            IWorkItem workItem = handler.recupererItemDepuisHandle(IWorkItem.class, handle);
+            System.out.println(workItem.getId());
+        }
+        
         LotSuiviRTC lot = handler.creerLotSuiviRTCDepuisHandle(liste.get(0));
         IWorkItem workItem = handler.recupererItemDepuisHandle(IWorkItem.class, liste.get(0));
         assertEquals(String.valueOf(workItem.getId()), lot.getLot());

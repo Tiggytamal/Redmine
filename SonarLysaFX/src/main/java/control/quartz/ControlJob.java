@@ -55,13 +55,13 @@ public class ControlJob
         // Création et mise en place des jobs
         for (Map.Entry<TypePlan, Planificateur> entry : mapPlans.entrySet())
         {
-            // ON saut les planificateurs non activés
+            // On saute les planificateurs non activés
             if (!entry.getValue().isActive())
                 continue;
             JobDetail job = creerJob(entry.getKey());
             
             //Rajout dans la DataMap de la liste des annèes
-            job.getJobDataMap().put(AbstractJobForTask.CLEFANNEES + entry.getKey().toString(), entry.getValue().getAnnees());
+            job.getJobDataMap().put(AbstractJobForTask.CLEFANNEES + entry.getKey().getValeur(), entry.getValue().getAnnees());
             
             // Enregistrement des jobs
             scheduler.deleteJob(job.getKey());

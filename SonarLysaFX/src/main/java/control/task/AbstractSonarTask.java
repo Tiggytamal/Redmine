@@ -21,7 +21,6 @@ import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import model.ComposantSonar;
 import model.LotSuiviRTC;
-import model.ModelFactory;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.Param;
@@ -116,7 +115,11 @@ public abstract class AbstractSonarTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                EtatLot etatLot = Statics.fichiersXML.getMapLotsRTC().computeIfAbsent(compo.getLot(), l -> ModelFactory.getModel(LotSuiviRTC.class)).getEtatLot();
+                LotSuiviRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLot());
+                EtatLot etatLot = null;
+                
+                if (lotRTC != null)
+                    etatLot = lotRTC.getEtatLot();
 
                 if (etatLot == EtatLot.TERMINE || etatLot == EtatLot.EDITION)
                     retour.put(matcher.group(0), compo);

@@ -70,7 +70,7 @@ public class TestControlXML extends JunitBase
     @Test
     public void testRecupProjetsNPCDepuisExcel()
     {
-        handler.recupProjetsNPCDepuisExcel(new File(getClass().getResource(Statics.ROOT + "projets npc.xlsx").getFile()));
+        handler.recupProjetsNPCDepuisExcel(new File(getClass().getResource(Statics.ROOT + "projets_npc.xlsx").getFile()));
     }
     
     @Test (expected = TechnicalException.class)

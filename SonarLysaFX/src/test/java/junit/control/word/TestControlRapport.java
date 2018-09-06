@@ -15,6 +15,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
 import control.word.ControlRapport;
@@ -43,10 +44,14 @@ public class TestControlRapport extends JunitBase
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
-    public void testCreerRapport()
+    public void testCreerRapport() throws Exception
     {       
         // Création logger
         Logger logger = TestUtils.getMockLogger(ControlRapport.class, "LOGGER");
+        
+        // Blocage de la méthode write pour éviter de créer des fichiers dans les ressources
+        handler = PowerMockito.spy(handler);
+        PowerMockito.doNothing().when(handler, "write");
         
         // Appel méthode
         handler.creerFichier();

@@ -51,6 +51,21 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
         initEnum();
     }
 
+    /*---------- METHODS ABSTRAITES ----------*/
+
+    /**
+     * Initilisa les titres des feuilles
+     */
+    protected abstract void initTitres();
+
+    /**
+     * Enregistre les données dans la feuille donnée du fichier excel
+     * 
+     * @param donnees
+     * @param sheet
+     */
+    protected abstract void enregistrerDonnees(R donnees, Sheet sheet);
+    
     /*---------- METHODES PUBLIQUES ----------*/
 
     public void write()
@@ -66,22 +81,7 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
         }
     }
 
-    /*---------- METHODS ABSTRAITES ----------*/
-
-    /**
-     * Initilisa les titres des feuilles
-     */
-    protected abstract void initTitres();
-
-    /**
-     * Enregistre les données dans la feuille donnée du fichier excel
-     * 
-     * @param donnees
-     * @param sheet
-     */
-    protected abstract void enregistrerDonnees(R donnees, Sheet sheet);
-
-    /*---------- METHODES PRIVEES ----------*/
+    /*---------- METHODES PROTECTED ----------*/
 
     @Override
     protected final void calculIndiceColonnes()
@@ -123,6 +123,8 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
         createHelper = wb.getCreationHelper();
         ca = createHelper.createClientAnchor();
     }
+    
+    /*---------- METHODES PRIVEES ----------*/
 
     @SuppressWarnings("unchecked")
     private void initEnum()

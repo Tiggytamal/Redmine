@@ -10,16 +10,16 @@ import model.enums.TypeColNPC;
 public class TestControlTypeProjets extends TestControlExcelRead<TypeColNPC, ControlTypeProjets, Map<String, String>>
 {
 
-    protected TestControlTypeProjets()
+    public TestControlTypeProjets()
     {
-        super(TypeColNPC.class, "projets npc.xlsx");
+        super(TypeColNPC.class, "projets_npc.xlsx");
     }
 
     @Test
     public void testCalculIndiceColonnes() throws Exception
     {
-        // Test initialisation colonnes. Pour ce fichier, la première colonne n'est pas utilisée
-        testCalculIndiceColonnes(0);
+        // Test initialisation colonnes. Pour ce fichier, la première colonne est utilisée
+        testCalculIndiceColonnes(1);
     }
     
     @Test

@@ -77,29 +77,27 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
      * @return
      */
     public abstract R recupDonneesDepuisExcel();
-
-    /*---------- METHODES PRIVEES ----------*/
-
-    @SuppressWarnings("unchecked")
-    private void initEnum()
+    
+    /*---------- METHODES PUBLIQUES ----------*/
+    
+    /**
+     * Ferme un workbook.
+     * 
+     * @throws IOException
+     *             Exception lors d'un problème I/O
+     */
+    public void close()
     {
-        // Permet de récuperer la classe sous forme de type paramétré
-        ParameterizedType pt = (ParameterizedType) getClass().getGenericSuperclass();
-        
-        // On récupère les paramètres de classe (ici T et R), on prend le premier (T), et le split permet d'enlever le "classe" devant le nom
-        String parameterClassName = pt.getActualTypeArguments()[0].toString().split("\\s")[1];
-        
-        // Instantiate the Parameter and initialize it.
         try
         {
-            enumeration = (Class<T>) Class.forName(parameterClassName);
+            wb.close();
         } 
-        catch (ClassNotFoundException e)
+        catch (IOException e)
         {
-            LOGPLANTAGE.error(e);
-            throw new TechnicalException("Impossible d'instancier l'énumération - control.excel.ControlExcelRead", e);
+            throw new TechnicalException("Impossible de clôturer le workbook du fichier : " + file.getName(), e);
         }
     }
+    /*---------- METHODES PROTECTED ----------*/
     
     /**
      * Récupération de la feuille Excel pour le traitement. Remonte de base la première feuille. Surcharge possible si besoin d'un traitement différent.
@@ -183,23 +181,7 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
         ca = createHelper.createClientAnchor();
     }
 
-    /**
-     * Ferme un workbook.
-     * 
-     * @throws IOException
-     *             Exception lors d'un problème I/O
-     */
-    public void close()
-    {
-        try
-        {
-            wb.close();
-        } 
-        catch (IOException e)
-        {
-            throw new TechnicalException("Impossible de clôturer le workbook du fichier : " + file.getName(), e);
-        }
-    }
+
 
     /**
      * Ecris le workbook dans le fichier cible.
@@ -327,6 +309,29 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
     {
         Cell cell = row.getCell(cellIndex, MissingCellPolicy.CREATE_NULL_AS_BLANK);
         return cell.getCellComment();
+    }
+    
+    /*---------- METHODES PRIVEES ----------*/
+
+    @SuppressWarnings("unchecked")
+    private void initEnum()
+    {
+        // Permet de récuperer la classe sous forme de type paramétré
+        ParameterizedType pt = (ParameterizedType) getClass().getGenericSuperclass();
+        
+        // On récupère les paramètres de classe (ici T et R), on prend le premier (T), et le split permet d'enlever le "classe" devant le nom
+        String parameterClassName = pt.getActualTypeArguments()[0].toString().split("\\s")[1];
+        
+        // Instantiate the Parameter and initialize it.
+        try
+        {
+            enumeration = (Class<T>) Class.forName(parameterClassName);
+        } 
+        catch (ClassNotFoundException e)
+        {
+            LOGPLANTAGE.error(e);
+            throw new TechnicalException("Impossible d'instancier l'énumération - control.excel.ControlExcelRead", e);
+        }
     }
 
     /*---------- ACCESSEURS ----------*/

@@ -14,7 +14,6 @@ import application.Main;
 import control.excel.ControlExtractVul;
 import model.ComposantSonar;
 import model.LotSuiviRTC;
-import model.ModelFactory;
 import model.Vulnerabilite;
 import model.enums.TypeVulnerabilite;
 import model.sonarapi.Issue;
@@ -116,8 +115,12 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
         retour.setMessage(issue.getMessage());
         retour.setLot(composant.getLot());
         retour.setAppli(composant.getAppli());
-        retour.setClarity(Statics.fichiersXML.getMapLotsRTC().computeIfAbsent(retour.getLot(), s -> ModelFactory.getModel(LotSuiviRTC.class)).getProjetClarity());
         retour.setLib(extractLib(retour.getMessage()));
+        
+        LotSuiviRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(retour.getLot());
+        if (lotRTC != null)
+        retour.setClarity(lotRTC.getProjetClarity());
+  
         return retour;
     }
 
