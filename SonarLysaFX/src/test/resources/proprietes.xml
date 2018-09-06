@@ -285,6 +285,16 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
     		<value nom="Bibliothèque" indice="1" />
     	</entry>		
     </mapColsVul>
+	<mapColsUA>
+	    <entry>
+    		<key>UA</key>
+    		<value>ID_UA</value>
+    	</entry>
+		<entry>
+    		<key>APPLI</key>
+    		<value>APPL</value>
+    	</entry>
+	</mapColsUA>
 	<mapColsPbApps>
 		<entry>
     		<key>CODE</key>

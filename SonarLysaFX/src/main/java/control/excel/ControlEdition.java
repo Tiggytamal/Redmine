@@ -60,7 +60,7 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
         int year = today.getYear();
         List<String> annees = Arrays.asList(String.valueOf(year), String.valueOf(year + 1), String.valueOf(year - 1));
 
-        // Itération sur toutes les lignes sauf la première. ON enregistre l'édition si le libelle correspond à une CHC
+        // Itération sur toutes les lignes sauf la première. On enregistre l'édition si le libelle correspond à une CHC
         // ou à une CHC_CDM
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {

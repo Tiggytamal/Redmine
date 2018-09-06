@@ -17,7 +17,6 @@ import utilities.FunctionalException;
 public class TestControlEdition extends TestControlExcelRead<TypeColEdition, ControlEdition, Map<String, String>>
 {
     /*---------- ATTRIBUTS ----------*/
-
     /*---------- CONSTRUCTEURS ----------*/
     
     public TestControlEdition()

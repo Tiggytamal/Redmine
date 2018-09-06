@@ -30,13 +30,16 @@ import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
 import model.enums.TypeColApps;
+import model.enums.TypeColAppsW;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
 import model.enums.TypeColNPC;
+import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
+import model.enums.TypeColUA;
 import model.enums.TypeColVul;
 import model.enums.TypeColW;
 import model.enums.TypeKey;
@@ -165,10 +168,22 @@ public final class OptionViewControl extends AbstractViewControl
                 afficherColonnes(TypeColNPC.class, root);
                 break;
                 
+            case "UA":
+                afficherColonnes(TypeColUA.class, root);
+                break;
+                
             case "extractVul":
                 afficherColonnesIndice(TypeColVul.class, root);
                 break;
-
+                
+            case "Pb. Applications":
+                afficherColonnesIndice(TypeColPbApps.class, root);
+                break;
+                
+            case "Extraction Applications":
+                afficherColonnesIndice(TypeColAppsW.class, root);
+                break;
+                
             case "Nom Colonnes":
                 // Evite plantage en cas de clic sur le sous-menu
                 break;

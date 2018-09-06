@@ -46,6 +46,9 @@
 										<TreeItem value="Applications" />
 										<TreeItem value="NPC" />
 										<TreeItem value="extractVul" />
+										<TreeItem value="Pb. Applications" />
+										<TreeItem value="Extraction Applications" />
+										<TreeItem value="UA" />
 									</children>
 								</TreeItem>
 							</children>

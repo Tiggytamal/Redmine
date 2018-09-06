@@ -23,6 +23,7 @@ import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
+import model.enums.TypeColUA;
 import model.enums.TypeColVul;
 import model.enums.TypePlan;
 import model.utilities.AbstractModele;
@@ -58,6 +59,7 @@ public class ProprietesXML extends AbstractModele implements XML
     private Map<TypeColEdition, String> mapColsEdition;
     private Map<TypeColApps, String> mapColsApps;
     private Map<TypeColNPC, String> mapColsNPC;
+    private Map<TypeColUA, String> mapColsUA;
     
     // Map des colonnes avec indice pour écriture
     private Map<TypeColVul, Colonne> mapColsVul;
@@ -79,6 +81,7 @@ public class ProprietesXML extends AbstractModele implements XML
         mapColsEdition = new EnumMap<>(TypeColEdition.class);
         mapColsApps = new EnumMap<>(TypeColApps.class);
         mapColsNPC = new EnumMap<>(TypeColNPC.class);
+        mapColsUA = new EnumMap<>(TypeColUA.class);
         mapColsVul = new EnumMap<>(TypeColVul.class);
         mapColsPbApps = new EnumMap<>(TypeColPbApps.class);
         mapColsAppsW = new EnumMap<>(TypeColAppsW.class);
@@ -136,6 +139,9 @@ public class ProprietesXML extends AbstractModele implements XML
                 
             case "model.enums.TypeColNPC" :
                 return (Map<T, String>) getMapColsNPC();
+                
+            case "model.enums.TypeColUA" :
+                return (Map<T, String>) getMapColsUA();
 
             default:
                 throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);
@@ -261,6 +267,13 @@ public class ProprietesXML extends AbstractModele implements XML
     private Map<TypeColNPC, String> getMapColsNPC()
     {
         return mapColsNPC;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsUA", required = false)
+    private Map<TypeColUA, String> getMapColsUA()
+    {
+        return mapColsUA;
     }
     
     @XmlElementWrapper

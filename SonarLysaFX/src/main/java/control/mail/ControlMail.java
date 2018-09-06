@@ -50,7 +50,6 @@ public class ControlMail extends AbstractToStringImpl
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
-    private Message message;
     private String adresseConnecte;
     private String adressesEnvoi;
     private Properties props;
@@ -97,7 +96,7 @@ public class ControlMail extends AbstractToStringImpl
             Session session = Session.getInstance(props, new MailAuthenticator());
 
             // ----- 2. Création du message depuis la session -----
-            message = new MimeMessage(session);
+            Message message = new MimeMessage(session);
 
             // ----- 3. Enregistrement envoyeur du mail -----
             message.setFrom(new InternetAddress(adresseConnecte));

@@ -670,8 +670,6 @@ public class SonarAPI extends AbstractToStringImpl
         gestionErreur(response);
     }
 
-    /*---------- METHODES PRIVEES ----------*/
-
     /**
      * Appel des webservices en GET sans paramètres supplémentaires
      * 
@@ -679,7 +677,7 @@ public class SonarAPI extends AbstractToStringImpl
      *            Url du webservices
      * @return
      */
-    public Response appelWebserviceGET(final String url)
+    public Response appelWebserviceGET(String url)
     {
         WebTarget requete = webTarget.path(url);
 
@@ -695,7 +693,7 @@ public class SonarAPI extends AbstractToStringImpl
      *            Paramètres optionnels de la requête
      * @return
      */
-    public Response appelWebserviceGET(final String url, Parametre... params)
+    public Response appelWebserviceGET(String url, Parametre... params)
     {
         WebTarget requete = webTarget.path(url);
 
@@ -720,7 +718,7 @@ public class SonarAPI extends AbstractToStringImpl
      *            pas beaoin de paramètres.
      * @return
      */
-    public Response appelWebservicePOST(final String url, ModeleSonar entite)
+    public Response appelWebservicePOST(String url, ModeleSonar entite)
     {
         // Création ed la requête
         WebTarget requete = webTarget.path(url);
@@ -742,7 +740,7 @@ public class SonarAPI extends AbstractToStringImpl
      *            pas beaoin de paramètres.
      * @return
      */
-    public Future<Response> appelWebserviceAsyncPOST(final String url, ModeleSonar entite)
+    public Future<Response> appelWebserviceAsyncPOST(String url, ModeleSonar entite)
     {
         // Création de la requête
         WebTarget requete = webTarget.path(url);
@@ -754,6 +752,8 @@ public class SonarAPI extends AbstractToStringImpl
         return builder.async().post(Entity.entity(entite, MediaType.APPLICATION_JSON));
     }
 
+    /*---------- METHODES PRIVEES ----------*/
+    
     /**
      * Gère les retours d'erreurs des Webservices.
      * 

@@ -528,14 +528,14 @@ public class ControlRTC extends AbstractToStringImpl
     /**
      * Création d'un LotSuiviRTC regroupant les informations depuis RTC. Ne prend en compte que les IWorkItemHandle
      * 
-     * @param item
+     * @param handle
      *            IItemHandle provenant de RTC.
      * @return {@link model.LotSuiviRTC}
      * @throws TeamRepositoryException
      */
-    public LotSuiviRTC creerLotSuiviRTCDepuisHandle(IWorkItemHandle item) throws TeamRepositoryException
+    public LotSuiviRTC creerLotSuiviRTCDepuisHandle(IWorkItemHandle handle) throws TeamRepositoryException
     {
-        IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, item);
+        IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, handle);
         LotSuiviRTC retour = ModelFactory.getModel(LotSuiviRTC.class);
         retour.setLot(String.valueOf(workItem.getId()));
         retour.setLibelle(workItem.getHTMLSummary().getPlainText());

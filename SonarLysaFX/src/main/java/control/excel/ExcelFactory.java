@@ -53,6 +53,9 @@ public interface ExcelFactory
             case "model.enums.TypeColNPC" :
                 return (R) new ControlTypeProjets(file);
                 
+            case "model.enums.TypeColUA" :
+                return (R) new ControlUA(file);
+                
             default:
                 throw new TechnicalException("ExcelFactory.getReader - type non géré : " + type.toString(), null);
         }
