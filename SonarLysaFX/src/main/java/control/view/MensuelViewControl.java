@@ -97,6 +97,6 @@ public final class MensuelViewControl extends AbstractViewControl
             throw new FunctionalException(Severity.ERROR, "Les dates sont mal renseignées");
 
         // Traitement
-        startTask(new CreerVueProductionTask(dateDebut, dateFin), CreerVueProductionTask.TITRE);
+        startTask(new CreerVueProductionTask(dateDebut, dateFin));
     }
 }

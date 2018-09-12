@@ -11,6 +11,7 @@ public enum TypeColPbApps implements TypeColW
 {
     CODE("Code Composant", "colCode"),
     APPLI("Code Application", "colAppli"),
+    ETATAPPLI("Etat Application", "colEtatAppli"),
     LOT("Lot RTC", "colLot"),
     CPILOT("Cpi lot", "colCpiLot"),
     DEP("Département", "colDep"),

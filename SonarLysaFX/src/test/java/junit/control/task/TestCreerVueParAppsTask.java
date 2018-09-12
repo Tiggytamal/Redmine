@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,7 +25,9 @@ import com.mchange.util.AssertException;
 
 import control.rtc.ControlRTC;
 import control.task.CreerVueParAppsTask;
-import model.enums.CreerVueParAppsTaskOption;
+import model.ComposantSonar;
+import model.enums.OptionCreerVueParAppsTask;
+import model.enums.OptionRecupCompo;
 import model.sonarapi.Projet;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -42,7 +45,7 @@ public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTas
     {
         file = new File(Statics.RESSTEST + "testExtract.xlsx");
         ControlRTC.INSTANCE.connexion();  
-        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIERS, file);  
+        handler = new CreerVueParAppsTask(OptionCreerVueParAppsTask.FICHIERS, file);  
         initAPI(CreerVueParAppsTask.class, true);
     }
     
@@ -52,20 +55,20 @@ public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTas
     public void testConstructeurException()
     {
         // Exception car demande création de fichier et pas de fichier en entrée
-        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.ALL, null);
+        handler = new CreerVueParAppsTask(OptionCreerVueParAppsTask.ALL, null);
     }
     
     @Test (expected = TechnicalException.class)
     public void testConstructeurException2()
     {
         // Exception car demande création de fichier et pas de fichier en entrée
-        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIERS, null);
+        handler = new CreerVueParAppsTask(OptionCreerVueParAppsTask.FICHIERS, null);
     }
     
     @Test
     public void testCreerVueParApplicationExcelSeul() throws Exception
     {
-        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIERS, file); 
+        handler = new CreerVueParAppsTask(OptionCreerVueParAppsTask.FICHIERS, file); 
         assertFalse(Whitebox.invokeMethod(handler, "call"));
         
         Workbook wb = WorkbookFactory.create(file);
@@ -125,7 +128,7 @@ public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTas
     public void testCreerVueParApplicationVueSeul() throws Exception
     {    
         // Intialisation handler et mock SonarAPI pour ne pas créeer de vue ni les supprimer.
-        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.VUE, file);  
+        handler = new CreerVueParAppsTask(OptionCreerVueParAppsTask.VUE, file);  
         initAPI(CreerVueParAppsTask.class, true);
         List<Projet> retour = new ArrayList<>();
         retour.add(new Projet("id", "key", "nom", null, null, null));
@@ -134,13 +137,22 @@ public class TestCreerVueParAppsTask extends AbstractTestTask<CreerVueParAppsTas
         assertTrue(Whitebox.invokeMethod(handler, "call"));
     }
     
-    @Test (expected = TechnicalException.class)
-    public void testCreerFichierExtractionException() throws Exception
+    @Test
+    public void testCreerFichierProblemesAppli() throws Exception
     {
-        // Appel de la méthode avec une option de création de vue uniquement
-        handler = new CreerVueParAppsTask(CreerVueParAppsTaskOption.VUE, null);
+        Map<String, ComposantSonar> mapCompos = Whitebox.invokeMethod(handler, "recupererComposantsSonar", OptionRecupCompo.DERNIERE);
+        Whitebox.invokeMethod(handler, "creerMapApplication", mapCompos);
+        Whitebox.invokeMethod(handler, "creerFichierProblemesAppli");
         
-        Whitebox.invokeMethod(handler, "creerFichiersExtraction");
+    }
+    
+    @Test
+    public void testCreerFichierExtractionAppli() throws Exception
+    {
+        Map<String, ComposantSonar> mapCompos = Whitebox.invokeMethod(handler, "recupererComposantsSonar", OptionRecupCompo.PATRIMOINE);
+        Whitebox.invokeMethod(handler, "creerMapApplication", mapCompos);
+        Whitebox.invokeMethod(handler, "creerFichierExtractionAppli");
+        
     }
     
     /*---------- METHODES PRIVEES ----------*/

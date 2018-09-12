@@ -3,6 +3,7 @@ package control.view;
 import java.io.File;
 import java.io.IOException;
 
+import control.task.CreerExtractComposantsSonarTask;
 import control.task.CreerExtractVulnerabiliteTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
+import model.enums.OptionExtract;
 import utilities.TechnicalException;
 
 /**
@@ -30,16 +32,29 @@ public final class ExtractionViewControl extends AbstractViewControl
     @FXML
     private RadioButton radioVuln;
     @FXML
-    private Button extraireVuln;
+    private RadioButton radioCompo;
+    @FXML
+    private Button extraire;
+    
+    private OptionExtract option;
 
     /*---------- CONSTRUCTEURS ----------*/
     /*---------- METHODES PUBLIQUES ----------*/
 
     @FXML
-    public void extraireVuln()
+    public void extraire()
     {
         File file = saveFileFromFileChooser(TITRE);
-        startTask(new CreerExtractVulnerabiliteTask(file), null);
+        switch (option)
+        {
+            case COMPOSANTS:
+                startTask(new CreerExtractComposantsSonarTask(file));
+                break;
+                
+            case VULNERABILITES:
+                startTask(new CreerExtractVulnerabiliteTask(file));
+                break;            
+        }
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -58,11 +73,19 @@ public final class ExtractionViewControl extends AbstractViewControl
             switch (id)
             {
                 case "radioVuln":
-                    selectPane.getChildren().add(extraireVuln);
+                    selectPane.getChildren().clear();
+                    selectPane.getChildren().add(extraire);
+                    option = OptionExtract.VULNERABILITES;
+                    break;
+                    
+                case "radioCompo":
+                    selectPane.getChildren().clear();
+                    selectPane.getChildren().add(extraire);
+                    option = OptionExtract.COMPOSANTS;
                     break;
 
                 default:
-                    throw new TechnicalException("RadioButton pas géré" + id, null);
+                    throw new TechnicalException("RadioButton pas géré" + id);
             }
         }
     }

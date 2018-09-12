@@ -15,6 +15,7 @@ import control.excel.ControlExtractVul;
 import model.ComposantSonar;
 import model.LotSuiviRTC;
 import model.Vulnerabilite;
+import model.enums.OptionRecupCompo;
 import model.enums.TypeVulnerabilite;
 import model.sonarapi.Issue;
 import model.sonarapi.Parametre;
@@ -34,6 +35,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
     /*---------- ATTRIBUTS ----------*/
 
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    private static final String TITRE = "Extraction vulnérabilités";
     
     private ControlExtractVul control;
 
@@ -41,7 +43,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
 
     public CreerExtractVulnerabiliteTask(File file)
     {
-        super(TypeVulnerabilite.values().length);
+        super(TypeVulnerabilite.values().length, TITRE);
         control = new ControlExtractVul(file);
     }
     
@@ -50,7 +52,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
      */
     public CreerExtractVulnerabiliteTask()
     {
-        super(TypeVulnerabilite.values().length);
+        super(TypeVulnerabilite.values().length, TITRE);
         throw new AssertException();
     }
 
@@ -74,7 +76,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
     {
         // Création liste des noms des composants du patrimoine
         List<String> nomsComposPatrimoine = new ArrayList<>();
-        for (ComposantSonar compo : recupererComposantsSonar().values())
+        for (ComposantSonar compo : recupererComposantsSonar(OptionRecupCompo.PATRIMOINE).values())
         {
             nomsComposPatrimoine.add(compo.getNom());
         }

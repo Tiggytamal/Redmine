@@ -46,7 +46,7 @@ public class ProgressDialog extends Dialog<Boolean>
      */
     public <T extends AbstractSonarTask> ProgressDialog(T task)
     {
-        this(task, T.TITRE);
+        this(task, task.getTitre());
     }
 
     public ProgressDialog(AbstractSonarTask task, String titre)

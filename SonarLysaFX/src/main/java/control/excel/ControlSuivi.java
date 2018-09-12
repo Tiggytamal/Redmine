@@ -224,7 +224,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             else
             {
                 creerLigneVersion(row, ano, IndexedColors.LIGHT_YELLOW, "N");
-                controlRapport.addInfo(TypeInfo.ANONEW, ano.getLot(), null);
                 retour.add(ano);
             }
         }
@@ -709,7 +708,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         for (Anomalie ano : anoAajouter)
         {
             ano.getMatieres().add(matiere);
-            Row row = sheet.createRow(sheet.getLastRowNum() + 1);
 
             String anoLot = ano.getLot().substring(Statics.SBTRINGLOT);
 
@@ -736,12 +734,17 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
                 ano.setRemarque(anoClose.getRemarque());
                 ano.setNumeroAnomalie(anoClose.getNumeroAnomalie());
                 ano.setAction(TypeAction.VERIFIER);
+                Row row = sheet.createRow(sheet.getLastRowNum() + 1);
                 creerLigneSQ(row, ano, IndexedColors.GREY_25_PERCENT);
                 mapAnoCloses.remove(ano.getLot());
             }
             // Ajoute une ligne orange si la ligne ne provient pas des anomalies closes
             else if (!mapAnoCloses.containsKey(ano.getLot()))
+            {
+                Row row = sheet.createRow(sheet.getLastRowNum() + 1);
                 creerLigneSQ(row, ano, IndexedColors.LIGHT_ORANGE);
+                controlRapport.addInfo(TypeInfo.ANONEW, ano.getLot(), null);
+            }
         }
     }
 

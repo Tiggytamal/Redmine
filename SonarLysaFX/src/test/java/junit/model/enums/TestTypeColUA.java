@@ -19,14 +19,14 @@ public class TestTypeColUA implements TestEnums
     public void testGetValeur()
     {
         assertEquals("Nom UA", TypeColUA.UA.getValeur());
-        assertEquals("Code Application", TypeColUA.UA.getValeur());
+        assertEquals("Code Application", TypeColUA.APPLI.getValeur());
     }
     
     @Test
     public void testGetNomCol()
     {
         assertEquals("colUA", TypeColUA.UA.getNomCol());
-        assertEquals("colAppli", TypeColUA.UA.getNomCol());
+        assertEquals("colAppli", TypeColUA.APPLI.getNomCol());
     }
 
     @Test

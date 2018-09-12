@@ -34,7 +34,7 @@ public class PurgeSonarTask extends AbstractSonarTask
 
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
-    public static final String TITRE = "Purge des composants SonarQube";
+    private static final String TITRE = "Purge des composants SonarQube";
     private static final short ETAPES = 2;
     private static final short MAXVERSION = 3;
     private ControlRapport controlRapport;
@@ -43,7 +43,7 @@ public class PurgeSonarTask extends AbstractSonarTask
 
     public PurgeSonarTask()
     {
-        super(ETAPES);
+        super(ETAPES, TITRE);
         annulable = true;
         controlRapport = new ControlRapport(TypeRapport.PURGESONAR);
     }

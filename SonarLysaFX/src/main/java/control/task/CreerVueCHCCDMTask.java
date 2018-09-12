@@ -31,6 +31,7 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
 
     private static final short ETAPES = 3;
     private static final long NBRESEMAINES = 52;
+    private static final String TITRE = "création vues Maintenance";
     
     private List<String> annees;
     private CHCouCDM chccdm;
@@ -39,12 +40,12 @@ public class CreerVueCHCCDMTask extends AbstractSonarTask
 
     public CreerVueCHCCDMTask()
     {
-        super(ETAPES);
+        super(ETAPES, TITRE);
     }
 
     public CreerVueCHCCDMTask(List<String> annees, CHCouCDM chccdm)
     {
-        super(ETAPES);
+        super(ETAPES, TITRE);
         annulable = false;
         if (annees == null || annees.isEmpty())
             throw new FunctionalException(Severity.ERROR, "Création task CreerVueCHCCDMTask sans liste d'années");

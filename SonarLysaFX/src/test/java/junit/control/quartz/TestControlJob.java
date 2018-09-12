@@ -58,7 +58,7 @@ public class TestControlJob extends JunitBase
         {
             if (entry.getValue().isActive())
             {
-                planKey.add(entry.getKey().toString());
+                planKey.add(entry.getKey().getValeur());
             }
         }
 

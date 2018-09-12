@@ -461,7 +461,7 @@ public class SonarAPI extends AbstractToStringImpl
     public boolean testVueExiste(String vueKey)
     {
         if (vueKey == null || vueKey.isEmpty())
-            throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.testVueExiste a son argument nul");
+            throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.testVueExiste a son argument nul ou vide");
 
         Response response = appelWebserviceGET(VIEWSSHOW, new Parametre("key", vueKey));
         if (response.getStatus() == Status.OK.getStatusCode())
@@ -470,6 +470,29 @@ public class SonarAPI extends AbstractToStringImpl
             return false;
         LOGGER.error(erreurAPI(VIEWSSHOW) + vueKey);
         return false;
+    }
+    
+    /**
+     * Remonte toutes les informations d'une vue avec la liste des sous-vues.
+     * 
+     * @param vueKey
+     * @return
+     */
+    public Vue getInfosEtListeSousVues(String vueKey)
+    {
+        if (vueKey == null || vueKey.isEmpty())
+            throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.getListSousVues a son argument nul ou vide");
+        
+        Vue retour = new Vue(vueKey, "vue non trouvée");
+        
+        Response response = appelWebserviceGET(VIEWSSHOW, new Parametre("key", vueKey));
+        if (response.getStatus() != Status.OK.getStatusCode())
+        {
+            LOGGER.error(erreurAPI(VIEWSSHOW) + vueKey);
+            return retour;
+        }
+        
+        return response.readEntity(Vue.class);        
     }
 
     /*---------- METHODES PUBLIQUES POST ----------*/

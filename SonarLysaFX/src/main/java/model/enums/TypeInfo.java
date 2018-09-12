@@ -29,6 +29,7 @@ public enum TypeInfo
     APPLINONREF("Liste des composants avec une application non listée dans le référentiel :\n", LIENAPP),
     APPLICOMPOPRECOK("Liste des composants avec code application OK sur une verison précedente :\n", LIENAPP),
     COMPOSANSAPP("Liste des composants sans application :\n", EMPTY),
+    COMPOUAEXCEL("Liste des ua trouvées dans le catalogue des UAs :\n", LIENAPP),
     COMPOPURGE("Liste des composants purgés :\n", EMPTY);   
     
     private String titre;

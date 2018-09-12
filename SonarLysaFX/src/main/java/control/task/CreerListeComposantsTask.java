@@ -32,12 +32,13 @@ public class CreerListeComposantsTask extends AbstractSonarTask
 
     private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
     private static final short ETAPES = 2;
+    private static final String TITRE = "Création liste des composants";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public CreerListeComposantsTask()
     {
-        super(ETAPES);
+        super(ETAPES, TITRE);
         annulable = false;
     }
 

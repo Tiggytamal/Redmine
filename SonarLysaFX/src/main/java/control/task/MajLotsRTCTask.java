@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IWorkItemHandle;
+import com.mchange.util.AssertException;
 
 import control.rtc.ControlRTC;
 import control.xml.ControlXML;
@@ -27,6 +28,7 @@ public class MajLotsRTCTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
+    private static final String TITRE = "Mise à jour des Lots RTC";
     private LocalDate date;
     private boolean remiseAZero;
 
@@ -34,9 +36,18 @@ public class MajLotsRTCTask extends AbstractSonarTask
 
     public MajLotsRTCTask(LocalDate date, boolean remiseAZero)
     {
-        super(1);
+        super(1, TITRE);
         this.date = date;
         this.remiseAZero = remiseAZero;
+    }
+    
+    /**
+     * Constructeur sans paramètres pour les tests. Ne pas utiliser, lance une exception
+     */
+    public MajLotsRTCTask()
+    {
+        super(1, TITRE);
+        throw new AssertException();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

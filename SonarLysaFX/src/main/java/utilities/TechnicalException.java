@@ -21,6 +21,14 @@ public class TechnicalException extends RuntimeException
     {
         super(message, cause);
     }
+    
+    /**
+     * Constructeur des erreurs fonctionnelles sans exception intiale.
+     */
+    public TechnicalException(String message)
+    {
+        this(message, null);
+    }
 
     /**
      * @return the severity

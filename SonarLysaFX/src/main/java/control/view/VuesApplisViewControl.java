@@ -9,7 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import model.enums.CreerVueParAppsTaskOption;
+import model.enums.OptionCreerVueParAppsTask;
 
 /**
  * Gestion de l'affichage du control pour la création des vues par application
@@ -45,16 +45,16 @@ public final class VuesApplisViewControl extends AbstractViewControl
     public void traiter()
     {
         if (radioVue.isSelected())
-            startTask(new CreerVueParAppsTask(CreerVueParAppsTaskOption.VUE, null), null);
+            startTask(new CreerVueParAppsTask(OptionCreerVueParAppsTask.VUE, null));
         else if (radioFichier.isSelected())
         {
             File file = saveFileFromFileChooser(TITRE);
-            startTask(new CreerVueParAppsTask(CreerVueParAppsTaskOption.FICHIERS, file), null);
+            startTask(new CreerVueParAppsTask(OptionCreerVueParAppsTask.FICHIERS, file));
         }
         else if (radioAll.isSelected())
         {
             File file = saveFileFromFileChooser(TITRE);
-            startTask(new CreerVueParAppsTask(CreerVueParAppsTaskOption.ALL, file), null);
+            startTask(new CreerVueParAppsTask(OptionCreerVueParAppsTask.ALL, file));
         }
     }
 

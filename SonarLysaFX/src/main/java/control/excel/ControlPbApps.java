@@ -30,6 +30,7 @@ public class ControlPbApps extends AbstractControlExcelWrite<TypeColPbApps, List
     
     private int colCode;
     private int colAppli;
+    private int colEtatAppli;
     private int colLot;
     private int colCpiLot;
     private int colDep;
@@ -96,6 +97,7 @@ public class ControlPbApps extends AbstractControlExcelWrite<TypeColPbApps, List
             row = sheet.createRow(sheet.getLastRowNum() + 1);
             valoriserCellule(row, colCode, centre, compo.getCodeComposant());
             valoriserCellule(row, colAppli, centre, compo.getCodeAppli());
+            valoriserCellule(row, colEtatAppli, centre, compo.getEtatAppli());
             valoriserCellule(row, colLot, centre, compo.getLotRTC());
             valoriserCellule(row, colCpiLot, centre, compo.getCpiLot());
             valoriserCellule(row, colDep, centre, compo.getDepart());

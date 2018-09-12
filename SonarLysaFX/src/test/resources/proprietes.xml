@@ -305,24 +305,28 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
     		<value nom="Code Application" indice="1" />
     	</entry>
 		<entry>
+    		<key>ETATAPPLI</key>
+    		<value nom="Etat Application" indice="2" />
+    	</entry>
+		<entry>
     		<key>LOT</key>
-    		<value nom="Lot RTC" indice="2" />
+    		<value nom="Lot RTC" indice="3" />
     	</entry>
 		<entry>
     		<key>CPILOT</key>
-    		<value nom="Cpi lot" indice="3" />
+    		<value nom="Cpi lot" indice="4" />
     	</entry>
 		<entry>
     		<key>DEP</key>
-    		<value nom="Département" indice="4" />
+    		<value nom="Département" indice="5" />
     	</entry>
 		<entry>
     		<key>SERVICE</key>
-    		<value nom="Service" indice="5" />
+    		<value nom="Service" indice="6" />
     	</entry>
 		<entry>
     		<key>CHEFSERV</key>
-    		<value nom="Chef de Service" indice="6" />
+    		<value nom="Chef de Service" indice="7" />
     	</entry>	
 	</mapColsPbApps>
 	<mapColsAppsW>
@@ -363,6 +367,24 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
     		<value nom="LDC MainFrame" indice="8" />
     	</entry>
 	</mapColsAppsW>
+	<mapColsCompo>
+		<entry>
+    		<key>PATRIMOINE</key>
+    		<value nom="Composants du Patrimoine" indice="0" />
+    	</entry>
+		<entry>
+    		<key>INCONNU</key>
+    		<value nom="Composants sans lot RTC connu" indice="1" />
+    	</entry>
+		<entry>
+    		<key>NONPROD</key>
+    		<value nom="Composants sans lots en production" indice="2" />
+    	</entry>
+		<entry>
+    		<key>TERMINE</key>
+    		<value nom="Composants avec lots en production" indice="3" />
+    	</entry>
+	</mapColsCompo>
     <mapParams>
         <entry>
             <key>FILTREDATASTAGE</key>

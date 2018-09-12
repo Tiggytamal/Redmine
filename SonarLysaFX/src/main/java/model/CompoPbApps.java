@@ -1,5 +1,6 @@
 package model;
 
+import model.enums.EtatAppli;
 import model.utilities.AbstractModele;
 
 /**
@@ -22,6 +23,7 @@ public class CompoPbApps extends AbstractModele
     private String service;
     private String chefService;
     private String lotRTC;
+    private EtatAppli etatAppli;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -124,5 +126,25 @@ public class CompoPbApps extends AbstractModele
     public void setLotRTC(String lotRTC)
     {
         this.lotRTC = lotRTC;
+    }
+    
+    public EtatAppli getEtatAppli()
+    {
+        return etatAppli;
+    }
+
+    public void setEtatAppli(EtatAppli etatAppli)
+    {
+        this.etatAppli = etatAppli;
+    }
+
+    public static String getDepartvide()
+    {
+        return DEPARTVIDE;
+    }
+
+    public static String getServvide()
+    {
+        return SERVVIDE;
     }
 }

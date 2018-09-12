@@ -33,6 +33,7 @@ import model.enums.TypeColApps;
 import model.enums.TypeColAppsW;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
+import model.enums.TypeColCompo;
 import model.enums.TypeColEdition;
 import model.enums.TypeColNPC;
 import model.enums.TypeColPbApps;
@@ -172,7 +173,7 @@ public final class OptionViewControl extends AbstractViewControl
                 afficherColonnes(TypeColUA.class, root);
                 break;
                 
-            case "extractVul":
+            case "Extract. Vul.":
                 afficherColonnesIndice(TypeColVul.class, root);
                 break;
                 
@@ -180,8 +181,12 @@ public final class OptionViewControl extends AbstractViewControl
                 afficherColonnesIndice(TypeColPbApps.class, root);
                 break;
                 
-            case "Extraction Applications":
+            case "Extract. Applications":
                 afficherColonnesIndice(TypeColAppsW.class, root);
+                break;
+                
+            case "Extract. Composants":
+                afficherColonnesIndice(TypeColCompo.class, root);
                 break;
                 
             case "Nom Colonnes":

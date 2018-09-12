@@ -22,12 +22,13 @@
 		</fx:define>
 		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
 			<RadioButton fx:id="radioVuln" text="Vulnérabilités patrimoine" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioCompo" text="Composants SonarQube" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 		</VBox>
 
 		<!-- VBox -->
 		<VBox fx:id="selectPane" GridPane.columnIndex="1" alignment="CENTER" minWidth="250" minHeight="200">
 			<children>
-				<Button text="Extraire" fx:id="extraireVuln" onAction="#extraireVuln" alignment="CENTER" />
+				<Button text="Extraire" fx:id="extraire" onAction="#extraire" alignment="CENTER" />
 			</children>
 		</VBox>
 	</children>

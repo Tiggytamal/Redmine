@@ -45,9 +45,10 @@
 										<TreeItem value="Codification Editions" />
 										<TreeItem value="Applications" />
 										<TreeItem value="NPC" />
-										<TreeItem value="extractVul" />
+										<TreeItem value="Extract. Vul." />
 										<TreeItem value="Pb. Applications" />
-										<TreeItem value="Extraction Applications" />
+										<TreeItem value="Extract. Applications" />
+										<TreeItem value="Extract. Composants" />
 										<TreeItem value="UA" />
 									</children>
 								</TreeItem>

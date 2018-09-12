@@ -65,7 +65,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    public static final String TITRE = "Maj Suivi anomalies";
+    private static final String TITRE = "Maj Suivi anomalies";
     
     /** logger applications non listée dans le référentiel */
     private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
@@ -81,17 +81,17 @@ public class MajSuiviExcelTask extends AbstractSonarTask
 
     public MajSuiviExcelTask(TypeMajSuivi typeMaj)
     {
-        super(ETAPES);
+        super(ETAPES, TITRE);
         this.typeMaj = typeMaj;
         annulable = false;
     }
     
     /**
-     * Constructeur pour les tests, ne pas utiliser lance une exception
+     * Constructeur pour les tests, ne pas utiliser. Lance une exception
      */
     public MajSuiviExcelTask()
     {
-        super(ETAPES);
+        super(ETAPES, TITRE);
         throw new AssertException();
     }
 

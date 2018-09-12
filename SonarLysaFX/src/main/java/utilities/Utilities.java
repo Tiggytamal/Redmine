@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import model.enums.DeserOption;
+import model.enums.OptionDeser;
 import utilities.enums.Severity;
 
 /**
@@ -255,7 +255,7 @@ public final class Utilities
      *            Fonction à utliser pour récupérer les informations necessaire à la créationde l'objet de retour
      * @return
      */
-    public static <T> T recuperation(DeserOption option, Class<T> classRetour, String nomSer, Supplier<T> fonction)
+    public static <T> T recuperation(OptionDeser option, Class<T> classRetour, String nomSer, Supplier<T> fonction)
     {
         T retour;
         switch (option)

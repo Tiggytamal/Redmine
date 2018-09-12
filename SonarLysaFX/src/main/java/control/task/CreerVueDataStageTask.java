@@ -18,7 +18,7 @@ public class CreerVueDataStageTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    public static final String TITRE = "Vue Datastage";
+    private static final String TITRE = "Création Vue Datastage";
     private static final int ETAPES = 2;
 
     private Vue vue;
@@ -27,7 +27,7 @@ public class CreerVueDataStageTask extends AbstractSonarTask
 
     public CreerVueDataStageTask()
     {
-        super(ETAPES);
+        super(ETAPES, TITRE);
         annulable = true;
     }
 

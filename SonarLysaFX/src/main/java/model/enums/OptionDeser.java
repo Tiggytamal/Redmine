@@ -7,7 +7,7 @@ package model.enums;
  * @author ETP8137
  * @since 1.0
  */
-public enum DeserOption 
+public enum OptionDeser 
 {   
     AUCUNE,
     DESERIALISATION,

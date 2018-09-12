@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+import model.enums.EtatAppli;
 import model.utilities.AbstractModele;
 
 /**
@@ -26,19 +28,43 @@ public class ComposantSonar extends AbstractModele implements Serializable
     private String id;
     private String appli;
     private String edition;
+    private EtatAppli etatAppli;
     private int ldc;
     private int security;
     private int vulnerabilites;
     
     /*---------- CONSTRUCTEURS ----------*/
 
-    ComposantSonar() {}
+    ComposantSonar() 
+    {
+        if (etatAppli == null)
+        etatAppli = EtatAppli.OK;
+    }
     
     ComposantSonar(String id, String key, String nom)
     {
         this.id = id;
         this.key = key;
         this.nom = nom;
+    }
+    
+    /**
+     * Constructeur pour créer un clone d'un composant Sonar
+     * 
+     * @param clone
+     */
+    ComposantSonar(ComposantSonar clone)
+    {
+        this.nom = clone.nom;
+        this.lot = clone.lot;
+        this.key = clone.key;
+        this.id = clone.id;
+        this.appli = clone.appli;
+        this.edition = clone.edition;
+        this.etatAppli = clone.etatAppli;
+        this.ldc = clone.ldc;
+        this.security = clone.security;
+        this.vulnerabilites = clone.vulnerabilites;       
     }
   
     /*---------- METHODES PUBLIQUES ----------*/  
@@ -142,5 +168,17 @@ public class ComposantSonar extends AbstractModele implements Serializable
     public void setVulnerabilites(int vulnerabilites)
     {
         this.vulnerabilites = vulnerabilites;
+    }
+    
+//    @XmlAttribute (name = "etatAppli", required = true) 
+    @XmlTransient
+    public EtatAppli getetatAppli()
+    {
+        return etatAppli;
+    }
+    
+    public void setEtatAppli(EtatAppli etatAppli)
+    {
+        this.etatAppli = etatAppli;
     }
 }

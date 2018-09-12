@@ -442,7 +442,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         anoClose.setRemarque("remarque");
         mapAnoCloses.put(LOT, anoClose);
         invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
-        assertEquals(5, sheet.getPhysicalNumberOfRows());
+        assertEquals(4, sheet.getPhysicalNumberOfRows());
         assertEquals(anoClose.getNumeroAnomalie(), ano1.getNumeroAnomalie());
         assertEquals(anoClose.getLot(), ano1.getLot());
         assertEquals(anoClose.getNumeroAnomalie(), ano1.getNumeroAnomalie());

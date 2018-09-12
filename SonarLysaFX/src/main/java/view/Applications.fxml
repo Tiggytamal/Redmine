@@ -23,7 +23,7 @@
 		</fx:define>
 		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
 			<RadioButton fx:id="radioVue" text="Création des Vues Sonar" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT"/>
-			<RadioButton fx:id="radioFichier" text="Création du fichier d'extraction" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT"/>
+			<RadioButton fx:id="radioFichier" text="Création des fichiers d'extraction" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT"/>
 			<RadioButton fx:id="radioAll" text="Traitement complet" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT"/>
 		</VBox>
 

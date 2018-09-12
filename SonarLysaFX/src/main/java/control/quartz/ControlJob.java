@@ -122,7 +122,7 @@ public class ControlJob
         LocalTime heure = plan.getHeure();
         
         // Création du trigger
-        return newTrigger().withIdentity(entry.getKey().toString(), GROUP).startNow()
+        return newTrigger().withIdentity(entry.getKey().getValeur(), GROUP).startNow()
                 .withSchedule(atHourAndMinuteOnGivenDaysOfWeek(heure.getHour(), heure.getMinute(), listeJour.toArray(new Integer[listeJour.size()]))).build();
     }
     
@@ -134,7 +134,7 @@ public class ControlJob
      */
     private JobDetail creerJob(TypePlan typePlan)
     {
-        return newJob(typePlan.getClassJob()).withIdentity(typePlan.toString(), GROUP).build();
+        return newJob(typePlan.getClassJob()).withIdentity(typePlan.getValeur(), GROUP).build();
     }
     
     /*---------- ACCESSEURS ----------*/

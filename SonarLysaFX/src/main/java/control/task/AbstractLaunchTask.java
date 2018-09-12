@@ -61,4 +61,15 @@ public abstract class AbstractLaunchTask
         // Lancement du thread de la tâche.
         new Thread(task).start();
     }
+    
+    /**
+     * Permet de lancer une tâche avec le titre par défault de la tâche.
+     * 
+     * @param task
+     *            La tâche à lancer. Implémentation concrète de {@code AbstractSonarTask}.
+     */
+    protected void startTask(AbstractSonarTask task)
+    {
+        startTask(task, null);
+    }
 }

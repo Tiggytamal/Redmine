@@ -50,11 +50,11 @@ public class TestControlModelInfo extends JunitBase
         assertEquals(Statics.INCONNUE, ano.getDirection());
 
         // Test 2 - correspondance parfaite - données tirées du fichier excel
-        ano.setProjetClarity("BDGREF047");
+        ano.setProjetClarity("BF040841");
         handler.controleClarity(ano, controlRapport);
-        assertEquals("Controle de gestion et pilotage", ano.getDepartement());
-        assertEquals("Controle de gestion des filieres", ano.getService());
-        assertEquals("FINANCE ACHATS LOGISTIQUE", ano.getDirection());
+        assertEquals("Departement", ano.getDepartement());
+        assertEquals("FABRICATION SI ENTREPRISE", ano.getService());
+        assertEquals("DOMAINES ENTREPRISES", ano.getDirection());
 
         // test 3 - correspondance trouvé avec algo de recherche du projet T le plus récent
         // On doit trouver les informations du projet T3004730E

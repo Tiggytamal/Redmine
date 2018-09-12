@@ -35,7 +35,7 @@ public class CreerVueProductionTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    public static final String TITRE = "Vue MEP/TEP";
+    private static final String TITRE = "Vue MEP/TEP";
     
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
@@ -55,13 +55,13 @@ public class CreerVueProductionTask extends AbstractSonarTask
 
     public CreerVueProductionTask()
     {
-        super(ETAPES);
+        super(ETAPES, TITRE);
         annulable = true;
     }
 
     public CreerVueProductionTask(LocalDate dateDebut, LocalDate dateFin)
     {
-        super(ETAPES + 1);
+        super(ETAPES + 1, TITRE);
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         annulable = true;

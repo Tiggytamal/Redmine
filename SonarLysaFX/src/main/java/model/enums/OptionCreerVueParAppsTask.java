@@ -7,7 +7,7 @@ package model.enums;
  * @since 1.0
  *
  */
-public enum CreerVueParAppsTaskOption 
+public enum OptionCreerVueParAppsTask 
 {
     /** Tous les traitements*/
     ALL, 

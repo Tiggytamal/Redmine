@@ -89,14 +89,15 @@ public class ControlMail extends AbstractToStringImpl
      * @param typeMail
      *            Enumération du type de mail
      */
-    public void envoyerMail(TypeMail typeMail)
+    public Message envoyerMail(TypeMail typeMail)
     {
+        Message message = null;
         try
         {
             Session session = Session.getInstance(props, new MailAuthenticator());
 
             // ----- 2. Création du message depuis la session -----
-            Message message = new MimeMessage(session);
+            message = new MimeMessage(session);
 
             // ----- 3. Enregistrement envoyeur du mail -----
             message.setFrom(new InternetAddress(adresseConnecte));
@@ -120,6 +121,7 @@ public class ControlMail extends AbstractToStringImpl
             LOGPLANTAGE.error(e);
             LOGGER.error("Erreur lors de la création du mail. Voir log plantage");
         }
+        return message;
     }
 
     /*---------- METHODES PRIVEES ----------*/

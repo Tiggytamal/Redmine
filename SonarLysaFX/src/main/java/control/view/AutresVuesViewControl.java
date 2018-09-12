@@ -59,19 +59,19 @@ public final class AutresVuesViewControl extends AbstractViewControl
     @FXML
     public void creerPat()
     {
-        startTask(new CreerVuePatrimoineTask(), null);
+        startTask(new CreerVuePatrimoineTask());
     }
     
     @FXML
     public void creerDataStage()
     {
-        startTask(new CreerVueDataStageTask(), null);
+        startTask(new CreerVueDataStageTask());
     }
     
     @FXML
     public void creerEdition()
     {
-        startTask(new CreerVueParEditionTask(), null);
+        startTask(new CreerVueParEditionTask());
     }
 
     @Override

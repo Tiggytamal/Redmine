@@ -11,13 +11,13 @@ public class MajVuesTask extends AbstractSonarTask
 {
     /*---------- ATTRIBUTS ----------*/
     
-    public static final String TITRE = "Mise à jour des vues Sonar";
+    private static final String TITRE = "Mise à jour des vues Sonar";
     
     /*---------- CONSTRUCTEURS ----------*/
     
     public MajVuesTask()
     {
-        super(1);
+        super(1, TITRE);
         annulable = false;
     }
     
@@ -42,7 +42,9 @@ public class MajVuesTask extends AbstractSonarTask
      */
     private boolean majVues()
     {
+        updateProgress(0, 1);
         api.majVues();
+        updateProgress(1, 1);
         return true;
     }
 

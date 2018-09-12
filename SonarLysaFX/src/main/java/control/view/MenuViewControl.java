@@ -279,15 +279,13 @@ public final class MenuViewControl extends AbstractViewControl
     {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.getDialogPane().getStylesheets().add(Statics.CSS);
-        alert.setTitle(T.TITRE);
+        alert.setTitle(task.getTitre());
         alert.setHeaderText(null);
         alert.setContentText(confirmation + Statics.NL + "Etes-vous sur?");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get().equals(ButtonType.OK))
-        {
-            startTask(task, T.TITRE);
-        }
+            startTask(task);
     }
 
     /* ---------- ACCESSEURS ---------- */

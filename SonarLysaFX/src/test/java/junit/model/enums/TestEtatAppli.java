@@ -4,21 +4,21 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import model.enums.DeserOption;
+import model.enums.EtatAppli;
 
-public class TestDeserOption implements TestEnums
+public class TestEtatAppli implements TestEnums
 {
     @Test
     @Override
     public void testSize()
     {
-        assertEquals(3, DeserOption.values().length);
+        assertEquals(6, EtatAppli.values().length);
     }
 
     @Test
     @Override
     public void testConstructeur()
     {
-        assertEquals(DeserOption.AUCUNE, DeserOption.valueOf(DeserOption.AUCUNE.toString()));
+        assertEquals(EtatAppli.PREC, EtatAppli.valueOf(EtatAppli.PREC.toString()));
     }
 }

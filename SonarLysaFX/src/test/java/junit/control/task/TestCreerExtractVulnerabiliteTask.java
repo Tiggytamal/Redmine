@@ -10,8 +10,10 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
+import control.excel.ControlExtractVul;
 import control.task.CreerExtractVulnerabiliteTask;
 import model.ComposantSonar;
 import model.ModelFactory;
@@ -37,7 +39,9 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
     public void testCreerExtract() throws Exception
     {   
         // Appel de la méthode call qui ne sert qu'à appeler la méthode privée.
-        // Controle du bon retour à true puis possiblilité de vérifier le fichier Excel créé.
+        // Controle du bon retour à true. Mock du controleur pour éviter écriture du fichier.
+        ControlExtractVul control = Mockito.mock(ControlExtractVul.class);
+        Whitebox.getField(CreerExtractVulnerabiliteTask.class, "control").set(handler, control);
         assertTrue(Whitebox.invokeMethod(handler, "call"));
     }
     

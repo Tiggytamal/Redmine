@@ -17,6 +17,7 @@ import model.enums.TypeColApps;
 import model.enums.TypeColAppsW;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
+import model.enums.TypeColCompo;
 import model.enums.TypeColEdition;
 import model.enums.TypeColNPC;
 import model.enums.TypeColPbApps;
@@ -65,6 +66,7 @@ public class ProprietesXML extends AbstractModele implements XML
     private Map<TypeColVul, Colonne> mapColsVul;
     private Map<TypeColPbApps, Colonne> mapColsPbApps;
     private Map<TypeColAppsW, Colonne> mapColsAppsW;
+    private Map<TypeColCompo, Colonne> mapColsCompo;
 
     // Map planificateurs
     private Map<TypePlan, Planificateur> mapPlans;
@@ -85,6 +87,7 @@ public class ProprietesXML extends AbstractModele implements XML
         mapColsVul = new EnumMap<>(TypeColVul.class);
         mapColsPbApps = new EnumMap<>(TypeColPbApps.class);
         mapColsAppsW = new EnumMap<>(TypeColAppsW.class);
+        mapColsCompo = new EnumMap<>(TypeColCompo.class);
         mapPlans = new EnumMap<>(TypePlan.class);
         mapParamsBool = new EnumMap<>(ParamBool.class);
         mapParamsSpec = new EnumMap<>(ParamSpec.class);
@@ -167,6 +170,9 @@ public class ProprietesXML extends AbstractModele implements XML
                 
             case "model.enums.TypeColAppsW" :
                 return (Map<T, Colonne>) getMapColsAppsW();
+                
+            case "model.enums.TypeColCompo" :
+                return (Map<T, Colonne>) getMapColsCompo();
 
             default:
                 throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);
@@ -295,6 +301,13 @@ public class ProprietesXML extends AbstractModele implements XML
     private Map<TypeColAppsW, Colonne> getMapColsAppsW()
     {
         return mapColsAppsW;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsCompo", required = false)
+    private Map<TypeColCompo, Colonne> getMapColsCompo()
+    {
+        return mapColsCompo;
     }
 
     @Override

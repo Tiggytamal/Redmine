@@ -305,6 +305,15 @@ public class TestSonarAPI extends JunitBase
     {
         handler.testVueExiste(Statics.EMPTY);
     }
+    
+    @Test
+    public void testGetInfosEtListeSousVues()
+    {
+        Vue vue = handler.getInfosEtListeSousVues("vue_patrimoine_2018_S37");
+        assertNotNull(vue);
+        assertNotNull(vue.getListeClefsComposants());
+        assertFalse(vue.getListeClefsComposants().isEmpty());        
+    }
 
     @Test
     public void testCreerVue() throws Exception

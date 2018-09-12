@@ -9,13 +9,13 @@ import org.junit.Test;
 
 import model.enums.TypeInfo;
 
-public class TestTypeInfoMail implements TestEnums
+public class TestTypeInfo implements TestEnums
 {
     @Test
     @Override
     public void testSize()
     {
-        assertEquals(14, TypeInfo.values().length);
+        assertEquals(16, TypeInfo.values().length);
     }
     
     @Test
@@ -32,9 +32,11 @@ public class TestTypeInfoMail implements TestEnums
         assertEquals("Lots avec Clarity inconnu :\n", TypeInfo.CLARITYINCONNU.getTitre());
         assertEquals("Lots avec services sans responsable :\n", TypeInfo.SERVICESSANSRESP.getTitre());
         assertEquals("Liste des composants avec un code application obsolète :\n", TypeInfo.APPLIOBSOLETE.getTitre());
+        assertEquals("Liste des composants avec code application OK sur une verison précedente :\n", TypeInfo.APPLICOMPOPRECOK.getTitre());
         assertEquals("Liste des composants avec une application non listée dans le référentiel :\n", TypeInfo.APPLINONREF.getTitre());
         assertEquals("Liste des composants sans application :\n", TypeInfo.COMPOSANSAPP.getTitre());
         assertEquals("Liste des composants purgés :\n", TypeInfo.COMPOPURGE.getTitre());
+        assertEquals("Liste des ua trouvées dans le catalogue des UAs :\n", TypeInfo.COMPOUAEXCEL.getTitre());
     }
     
     @Test
@@ -51,9 +53,11 @@ public class TestTypeInfoMail implements TestEnums
         assertEquals("- Clarity : ", TypeInfo.CLARITYINCONNU.getLiens());
         assertEquals("- Service : ", TypeInfo.SERVICESSANSRESP.getLiens());
         assertEquals(LIENAPP, TypeInfo.APPLIOBSOLETE.getLiens());
+        assertEquals(LIENAPP, TypeInfo.APPLICOMPOPRECOK.getLiens());
         assertEquals(LIENAPP, TypeInfo.APPLINONREF.getLiens());
         assertEquals(EMPTY, TypeInfo.COMPOSANSAPP.getLiens());
         assertEquals(EMPTY, TypeInfo.COMPOPURGE.getLiens());
+        assertEquals(LIENAPP, TypeInfo.COMPOUAEXCEL.getLiens());
     }
 
     @Test

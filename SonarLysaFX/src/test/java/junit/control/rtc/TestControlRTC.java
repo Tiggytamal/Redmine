@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -157,8 +158,8 @@ public class TestControlRTC extends JunitBase
     @Ignore("Suppression WorkItem - A utiliser en test manuel")
     public void testSupprimerWorkItemDepuisId() throws TeamRepositoryException
     {
-        handler.supprimerWorkItemDepuisId(345654);
-        assertNull(handler.recupWorkItemDepuisId(345654));
+        handler.supprimerWorkItemDepuisId(326691);
+        assertNull(handler.recupWorkItemDepuisId(326691));
     }
 
     @Test
@@ -188,7 +189,7 @@ public class TestControlRTC extends JunitBase
         assertTrue(numero > 0);
         
         // Suppression defect
-        handler.supprimerWorkItemDepuisId(numero);
+        assertEquals(IStatus.OK, handler.supprimerWorkItemDepuisId(numero).getCode());
         
         // Test de la suppression
         assertNull(handler.recupWorkItemDepuisId(numero));        
@@ -270,14 +271,7 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testCreerLotSuiviRTCDepuisHandle() throws TeamRepositoryException
     {
-        List<IWorkItemHandle> liste = handler.recupLotsRTC(true, LocalDate.of(2016, 01, 01));
-        
-        for (IWorkItemHandle handle : liste)
-        {
-            IWorkItem workItem = handler.recupererItemDepuisHandle(IWorkItem.class, handle);
-            System.out.println(workItem.getId());
-        }
-        
+        List<IWorkItemHandle> liste = handler.recupLotsRTC(true, LocalDate.of(2016, 01, 01));       
         LotSuiviRTC lot = handler.creerLotSuiviRTCDepuisHandle(liste.get(0));
         IWorkItem workItem = handler.recupererItemDepuisHandle(IWorkItem.class, liste.get(0));
         assertEquals(String.valueOf(workItem.getId()), lot.getLot());

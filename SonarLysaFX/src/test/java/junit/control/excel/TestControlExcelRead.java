@@ -153,6 +153,7 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
         assertEquals(wb.getSheetAt(0), sheet);
     }
 
+    // Peut-être surchargé en cas de modification de l'initialisation des feuilles excel.
     @Test (expected = FunctionalException.class)
     public void testInitSheetException() throws Exception
     {

@@ -13,6 +13,7 @@ public class TestTypeColPbApps implements TestEnums
     {
         assertEquals("Code Composant", TypeColPbApps.CODE.getValeur());
         assertEquals("Code Application", TypeColPbApps.APPLI.getValeur());
+        assertEquals("Etat Application", TypeColPbApps.ETATAPPLI.getValeur());
         assertEquals("Lot RTC", TypeColPbApps.LOT.getValeur());
         assertEquals("Cpi lot", TypeColPbApps.CPILOT.getValeur());
         assertEquals("Département", TypeColPbApps.DEP.getValeur());
@@ -25,6 +26,7 @@ public class TestTypeColPbApps implements TestEnums
     {
         assertEquals("colCode", TypeColPbApps.CODE.getNomCol());
         assertEquals("colAppli", TypeColPbApps.APPLI.getNomCol());
+        assertEquals("colEtatAppli", TypeColPbApps.ETATAPPLI.getNomCol());
         assertEquals("colLot", TypeColPbApps.LOT.getNomCol());
         assertEquals("colCpiLot", TypeColPbApps.CPILOT.getNomCol());
         assertEquals("colDep", TypeColPbApps.DEP.getNomCol());
@@ -43,7 +45,7 @@ public class TestTypeColPbApps implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(7, TypeColPbApps.values().length);       
+        assertEquals(8, TypeColPbApps.values().length);       
     }
 
 }

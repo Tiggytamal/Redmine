@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 import model.ComposantSonar;
+import model.enums.OptionRecupCompo;
 import model.enums.Param;
 import model.sonarapi.Vue;
 import utilities.Statics;
@@ -24,7 +25,7 @@ public class CreerVuePatrimoineTask extends AbstractSonarTask
 
     /*---------- ATTRIBUTS ----------*/
 
-    public static final String TITRE = "Vue Patrimoine";
+    public static final String TITRE = "Création Vue Patrimoine";
     
     private static final int ETAPES = 3;
     
@@ -35,7 +36,7 @@ public class CreerVuePatrimoineTask extends AbstractSonarTask
 
     public CreerVuePatrimoineTask()
     {
-        super(ETAPES);
+        super(ETAPES, TITRE);
         annulable = true;
     }
 
@@ -73,7 +74,7 @@ public class CreerVuePatrimoineTask extends AbstractSonarTask
         String nom = "Vue patrimoine " + today.getYear() + " S" + today.get(woy);
 
         // Récupération des composants
-        List<ComposantSonar> composants = new ArrayList<>(recupererComposantsSonar().values());
+        List<ComposantSonar> composants = new ArrayList<>(recupererComposantsSonar(OptionRecupCompo.PATRIMOINE).values());
 
         if (isCancelled())
             return false;

@@ -24,7 +24,7 @@ public class Vue extends AbstractModele implements ModeleSonar
     private String name;
     private boolean selected;
     private String selectionMode;
-    private String description;
+    private String desc;
     private List<String> listeClefsComposants;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -47,7 +47,7 @@ public class Vue extends AbstractModele implements ModeleSonar
         this.name = name;
         this.selected = selected;
         this.selectionMode = selectionMode;
-        this.description = description;
+        this.desc = description;
         this.listeClefsComposants = listeClefsComposants;
     }
 
@@ -111,17 +111,18 @@ public class Vue extends AbstractModele implements ModeleSonar
         this.selectionMode = selectionMode;
     }
 
-    @XmlAttribute(name = "description", required = false)
+    @XmlAttribute(name = "desc", required = false)
     public String getDescription()
     {
-        return getString(description);
+        return getString(desc);
     }
 
-    public void setDescription(String description)
+    public void setDescription(String desc)
     {
-        this.description = description;
+        this.desc = desc;
     }
 
+    @XmlAttribute(name = "projects", required = false)
     public List<String> getListeClefsComposants()
     {
         return getList(listeClefsComposants);

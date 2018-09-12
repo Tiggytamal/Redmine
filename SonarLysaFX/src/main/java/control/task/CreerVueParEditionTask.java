@@ -20,12 +20,13 @@ public class CreerVueParEditionTask extends AbstractSonarTask
     /*---------- ATTRIBUTS ----------*/
     
     private static final short ETAPES = 2;
+    private static final String TITRE = "Création Vues par Edition";
     
     /*---------- CONSTRUCTEURS ----------*/
 
     public CreerVueParEditionTask()
     {
-        super(ETAPES);
+        super(ETAPES, TITRE);
         annulable = false;
     }
     

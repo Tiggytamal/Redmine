@@ -15,6 +15,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.ibm.team.process.client.IProcessClientService;
@@ -257,13 +258,14 @@ public class ControlRTC extends AbstractToStringImpl
      * @param id
      * @throws TeamRepositoryException
      */
-    public void supprimerWorkItemDepuisId(int id) throws TeamRepositoryException
+    public IStatus supprimerWorkItemDepuisId(int id) throws TeamRepositoryException
     {
         IWorkItem workItem = recupWorkItemDepuisId(id);
         workItemClient.getWorkItemWorkingCopyManager().connect(workItem, IWorkItem.FULL_PROFILE, monitor);
         WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(workItem);
-        workingCopy.delete(monitor);
+        IStatus status = workingCopy.delete(monitor);
         workItemClient.getWorkItemWorkingCopyManager().disconnect(workItem);
+        return status;
     }
 
     /**

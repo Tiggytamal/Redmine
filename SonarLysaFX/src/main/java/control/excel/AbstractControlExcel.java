@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import model.enums.EtatAppli;
 import model.enums.EtatLot;
 import model.enums.TypeAction;
 import utilities.AbstractToStringImpl;
@@ -183,9 +184,11 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
         if (texte instanceof String)
             cell.setCellValue((String) texte);
         else if (texte instanceof EtatLot)
-            cell.setCellValue(((EtatLot) texte).toString());
+            cell.setCellValue(((EtatLot) texte).getValeur());
         else if (texte instanceof TypeAction)
-            cell.setCellValue(((TypeAction) texte).toString());
+            cell.setCellValue(((TypeAction) texte).getValeur());
+        else if (texte instanceof EtatAppli)
+            cell.setCellValue(((EtatAppli) texte).toString());
         else if (texte instanceof LocalDate)
             cell.setCellValue(DateConvert.convertToOldDate(texte));
         else

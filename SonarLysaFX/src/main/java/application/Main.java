@@ -16,7 +16,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import model.enums.DeserOption;
+import model.enums.OptionDeser;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -32,7 +32,7 @@ import utilities.enums.Severity;
 public final class Main extends Application
 {
     /** Boolean pour gérer la désrialisation ou non des objets JAVA - A ACTIVER UNIQUEMENT EN TEST */
-    public static final DeserOption DESER = DeserOption.AUCUNE;
+    public static final OptionDeser DESER = OptionDeser.SERIALISATION;
 
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
@@ -85,9 +85,10 @@ public final class Main extends Application
         }
         else
         {
-            LOGPLANTAGE.error(e);
             createAlert(Severity.ERROR, e, e.getClass().getSimpleName() + e.getMessage());
         }
+        
+        LOGPLANTAGE.error(e);
     }
 
     /**

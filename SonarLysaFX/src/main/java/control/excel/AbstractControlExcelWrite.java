@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import model.Colonne;
+import model.enums.TypeColCompo;
 import model.enums.TypeColW;
 import utilities.CellHelper;
 import utilities.FunctionalException;
@@ -122,6 +123,20 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
         helper = new CellHelper(wb);
         createHelper = wb.getCreationHelper();
         ca = createHelper.createClientAnchor();
+    }
+    
+    protected final int getNumCol(TypeColCompo type)
+    {
+        try
+        {
+            Field field = getClass().getDeclaredField(type.getNomCol());
+            field.setAccessible(true);
+            return (int) field.get(this);
+        }
+        catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e)
+        {
+            throw new TechnicalException("Mauvaise déclaration des noms de colonnes : " + type.getNomCol(), e);
+        }
     }
     
     /*---------- METHODES PRIVEES ----------*/
