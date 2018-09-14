@@ -29,7 +29,7 @@ import utilities.Utilities;
  * @since 1.0
  *
  */
-public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
+public class CreerExtractVulnerabiliteTask extends AbstractTask
 {
 
     /*---------- ATTRIBUTS ----------*/

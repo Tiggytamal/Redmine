@@ -81,3 +81,11 @@
 .tree-cell:filled:selected{
     -fx-background-color: linear-gradient(#c1dbe1, #8cbdc8);
 }
+
+.date-chooser.label {
+	    -fx-text-fill: black;
+}
+
+.date-picker.label {
+	    -fx-text-fill: black;
+}

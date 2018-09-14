@@ -44,7 +44,7 @@ import utilities.enums.Severity;
  * @since 1.0
  *
  */
-public abstract class AbstractSonarTask extends Task<Boolean>
+public abstract class AbstractTask extends Task<Boolean>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -62,7 +62,7 @@ public abstract class AbstractSonarTask extends Task<Boolean>
     /**
      * Constructeur utilisant les données de l'utilisateur. Initialisation des étapes de traitement
      */
-    protected AbstractSonarTask(int fin, String titre)
+    protected AbstractTask(int fin, String titre)
     {
         if (!info.controle())
             throw new FunctionalException(Severity.ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");

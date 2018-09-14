@@ -7,7 +7,7 @@ package control.task;
  * @since 1.0
  *
  */
-public class MajVuesTask extends AbstractSonarTask
+public class MajVuesTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -42,6 +42,7 @@ public class MajVuesTask extends AbstractSonarTask
      */
     private boolean majVues()
     {
+        updateProgress(0, 1);
         api.majVues();
         updateProgress(1, 1);
         return true;

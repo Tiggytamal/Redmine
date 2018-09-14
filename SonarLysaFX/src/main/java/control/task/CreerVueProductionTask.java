@@ -17,8 +17,11 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
+import model.ComposantSonar;
 import model.enums.EtatLot;
+import model.enums.Matiere;
 import model.enums.OptionVueProduction;
+import model.sonarapi.Projet;
 import model.sonarapi.Vue;
 import utilities.DateConvert;
 import utilities.FunctionalException;
@@ -33,7 +36,7 @@ import utilities.enums.Severity;
  * @since 1.0
  *
  */
-public class CreerVueProductionTask extends AbstractSonarTask
+public class CreerVueProductionTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -216,27 +219,22 @@ public class CreerVueProductionTask extends AbstractSonarTask
         updateMessage("Récupérations des lots dans Sonar...");
         
         Map<String, Vue> map = new HashMap<>();
-        List<Vue> views = api.getVues();
         
-        int size = views.size();
-        updateProgress(0, size);
-        int i = 0;
-        
-        for (Vue view : views)
+        Map<String, List<ComposantSonar>> composDataStage = recupererComposantsSonarVersion(Matiere.DATASTAGE);
+        for (List<ComposantSonar> liste : composDataStage.values())
         {
-            if (view.getName().startsWith("Lot "))
+            int size = liste.size();
+            updateProgress(0, size);
+            int i = 0;
+            for (ComposantSonar composantSonar : liste)
             {
-                view = api.getInfosEtListeSousVues(view.getKey());
-
-                for (String clef : view.getListeClefsComposants())
-                {
-                    if (clef.contains("DS_"))
-                        map.put(view.getName().substring(Statics.SBTRINGLOT), view);
-                }
+                List<Projet> projets = api.getVuesParNom("Lot " + composantSonar.getLot());
+                map.put(projets.get(0).getNom().substring(Statics.SBTRINGLOT), new Vue(projets.get(0).getKey(), projets.get(0).getNom()));
+                i++;
+                updateProgress(i, size);
             }
-            i++;
-            updateProgress(i, size);
         }
+        
         updateMessage("Récupérations des lots dans Sonar OK");
         return map;
     }
@@ -258,7 +256,7 @@ public class CreerVueProductionTask extends AbstractSonarTask
         // Création de la vue principale
 
         String nomVue = new StringBuilder("MEP ").append(DateConvert.dateFrancais(entry.getKey(), "yyyy.MM - MMMM")).append(option.getTitre()).toString();
-        vueKey = new StringBuilder("MEPMEP").append(DateConvert.dateFrancais(entry.getKey(), "MMyyyy")).append("Key").toString();
+        vueKey = new StringBuilder("MEPMEP").append(DateConvert.dateFrancais(entry.getKey(), "MMyyyy")).append("Key").append(option.toString()).toString();
         etapePlus();
         String base = "Vue " + nomVue + Statics.NL;
         updateMessage(base);
@@ -329,7 +327,7 @@ public class CreerVueProductionTask extends AbstractSonarTask
         String date = builderDate.toString();
 
         // Création de la vue et envoie vers SonarQube
-        vueKey = new StringBuilder("MEPMEP").append(date).append(nom).toString();
+        vueKey = new StringBuilder("MEPMEP").append(date).append(nom).append("Key").append(option.toString()).toString();
         String nomVue = new StringBuilder("TEP ").append(date).append(Statics.SPACE).append(nom).append(option.getTitre()).toString();
         etapePlus();
         String base = "Vue " + nomVue + Statics.NL;

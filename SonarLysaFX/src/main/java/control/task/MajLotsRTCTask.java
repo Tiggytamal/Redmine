@@ -24,7 +24,7 @@ import utilities.enums.Severity;
  * @since 1.0
  *
  */
-public class MajLotsRTCTask extends AbstractSonarTask
+public class MajLotsRTCTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 

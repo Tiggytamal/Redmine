@@ -14,7 +14,7 @@ import utilities.Statics;
  * @since 1.0
  *
  */
-public class CreerVueDataStageTask extends AbstractSonarTask
+public class CreerVueDataStageTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 

@@ -20,7 +20,7 @@ import utilities.Statics;
  * @since 1.0
  *
  */
-public class CreerVuePatrimoineTask extends AbstractSonarTask
+public class CreerVuePatrimoineTask extends AbstractTask
 {
 
     /*---------- ATTRIBUTS ----------*/

@@ -25,7 +25,7 @@ import utilities.enums.Severity;
  * @since 1.0
  * 
  */
-public class CreerVueCHCCDMTask extends AbstractSonarTask
+public class CreerVueCHCCDMTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 

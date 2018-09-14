@@ -28,7 +28,7 @@ import utilities.Utilities;
  * @since 1.0
  *
  */
-public class CreerListeComposantsTask extends AbstractSonarTask
+public class CreerListeComposantsTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 

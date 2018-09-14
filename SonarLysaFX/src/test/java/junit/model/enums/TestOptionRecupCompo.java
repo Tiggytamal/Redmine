@@ -12,7 +12,7 @@ public class TestOptionRecupCompo implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(4, OptionRecupCompo.values().length);
+        assertEquals(5, OptionRecupCompo.values().length);
     }
 
     @Test

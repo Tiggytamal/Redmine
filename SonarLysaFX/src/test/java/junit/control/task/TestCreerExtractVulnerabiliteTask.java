@@ -41,6 +41,7 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
         // Appel de la méthode call qui ne sert qu'à appeler la méthode privée.
         // Controle du bon retour à true. Mock du controleur pour éviter écriture du fichier.
         ControlExtractVul control = Mockito.mock(ControlExtractVul.class);
+        Mockito.when(control.write()).thenReturn(true);
         Whitebox.getField(CreerExtractVulnerabiliteTask.class, "control").set(handler, control);
         assertTrue(Whitebox.invokeMethod(handler, "call"));
     }

@@ -51,7 +51,7 @@ import utilities.Utilities;
  * @since 1.0
  *
  */
-public class CreerVueParAppsTask extends AbstractSonarTask
+public class CreerVueParAppsTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 

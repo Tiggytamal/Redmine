@@ -16,7 +16,7 @@ import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import control.sonar.SonarAPI;
-import control.task.AbstractSonarTask;
+import control.task.AbstractTask;
 import de.saxsys.javafx.test.JfxRunner;
 import junit.JunitBase;
 import model.enums.Param;
@@ -35,7 +35,7 @@ import utilities.enums.Severity;
  *            Classe concrète de traitement d'une tâche
  */
 @RunWith(JfxRunner.class)
-public abstract class AbstractTestTask<T extends AbstractSonarTask> extends JunitBase
+public abstract class AbstractTestTask<T extends AbstractTask> extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -88,17 +88,26 @@ public abstract class AbstractTestTask<T extends AbstractSonarTask> extends Juni
 
     /*---------- METHODES PRIVEES ----------*/
 
+    /**
+     * Initialise l'api Sonar, et crée le mock au besoin.
+     * 
+     * @param clazz
+     *            Classe à tester
+     * @param mock
+     *            true si besoin de créer le mock de l'api.
+     * @throws IllegalAccessException
+     */
     protected void initAPI(Class<T> clazz, boolean mock) throws IllegalAccessException
     {
         if (mock)
         {
-            api = Mockito.mock(SonarAPI.class);            
+            api = Mockito.mock(SonarAPI.class);
             Whitebox.getField(clazz, "api").set(handler, api);
         }
         else
             api = SonarAPI.INSTANCE;
     }
-    
+
     /**
      * Permet d'utiliser une vrai méthode get de l'api SonarAPI avec le mock. ex: getComposants, getVues(). La méthode doit avoir un objet en retour
      * 
@@ -111,7 +120,7 @@ public abstract class AbstractTestTask<T extends AbstractSonarTask> extends Juni
         builder.append(":");
         builder.append(Statics.info.getMotDePasse());
         Whitebox.getField(SonarAPI.class, "codeUser").set(api, Base64.getEncoder().encodeToString(builder.toString().getBytes()));
-        
+
         // init du webtarget
         WebTarget webTarget = ClientBuilder.newClient().target(Statics.proprietesXML.getMapParams().get(Param.URLSONAR));
         Whitebox.getField(SonarAPI.class, "webTarget").set(api, webTarget);
@@ -120,7 +129,7 @@ public abstract class AbstractTestTask<T extends AbstractSonarTask> extends Juni
         Parametre param = new Parametre("search", "composant ");
         Mockito.when(api.appelWebserviceGET(Mockito.anyString(), Mockito.refEq(param))).thenCallRealMethod();
         Mockito.when(api.appelWebserviceGET(Mockito.anyString())).thenCallRealMethod();
-        
+
         // Vrai appel getComposant
         Mockito.when(supplier.get()).thenCallRealMethod();
     }

@@ -20,7 +20,7 @@ import model.enums.TypeColCompo;
  * @since 1.0
  *
  */
-public class CreerExtractComposantsSonarTask extends AbstractSonarTask
+public class CreerExtractComposantsSonarTask extends AbstractTask
 {
 
     /*---------- ATTRIBUTS ----------*/

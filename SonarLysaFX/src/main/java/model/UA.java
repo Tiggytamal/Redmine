@@ -19,7 +19,7 @@ public class UA extends AbstractModele
 
     public String getCodeUA()
     {
-        return codeUA;
+        return getString(codeUA);
     }
 
     public void setCodeUA(String codeUA)
@@ -29,7 +29,7 @@ public class UA extends AbstractModele
 
     public String getCodeAppli()
     {
-        return codeAppli;
+        return getString(codeAppli);
     }
 
     public void setCodeAppli(String codeAppli)

@@ -28,7 +28,7 @@ import utilities.TechnicalException;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class PurgeSonarTask extends AbstractSonarTask
+public class PurgeSonarTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 

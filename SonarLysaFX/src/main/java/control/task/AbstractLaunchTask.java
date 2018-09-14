@@ -32,7 +32,7 @@ public abstract class AbstractLaunchTask
      * @param titre
      *            Le titre affiché sur la fénêtre.
      */
-    protected void startTask(AbstractSonarTask task, String titre)
+    protected void startTask(AbstractTask task, String titre)
     {
         ProgressDialog dialog;
         
@@ -68,7 +68,7 @@ public abstract class AbstractLaunchTask
      * @param task
      *            La tâche à lancer. Implémentation concrète de {@code AbstractSonarTask}.
      */
-    protected void startTask(AbstractSonarTask task)
+    protected void startTask(AbstractTask task)
     {
         startTask(task, null);
     }

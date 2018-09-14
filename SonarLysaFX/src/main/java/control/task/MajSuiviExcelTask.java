@@ -57,7 +57,7 @@ import utilities.Utilities;
  * @since 1.0
  * 
  */
-public class MajSuiviExcelTask extends AbstractSonarTask
+public class MajSuiviExcelTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 

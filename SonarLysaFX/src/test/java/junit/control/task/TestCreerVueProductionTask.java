@@ -13,6 +13,7 @@ import org.powermock.reflect.Whitebox;
 
 import control.sonar.SonarAPI;
 import control.task.CreerVueProductionTask;
+import control.task.MajLotsSonarTask;
 import model.sonarapi.Vue;
 import utilities.Statics;
 
@@ -59,7 +60,7 @@ public class TestCreerVueProductionTask extends AbstractTestTask<CreerVueProduct
     }
     
     @Test
-    public void testRecuperLotsSonarQube() throws Exception
+    public void testRecupetrLotsSonarQube() throws Exception
     {
         // Mock et appel de la méthode
         mockAPIGetSomething(() -> api.getVues());
@@ -79,7 +80,8 @@ public class TestCreerVueProductionTask extends AbstractTestTask<CreerVueProduct
     public void testRecuperLotsSonarQubeDataStage() throws Exception
     {
         // Mock et appel de la méthode
-        Whitebox.getField(CreerVueProductionTask.class, "api").set(handler, SonarAPI.INSTANCE);
+        mockAPIGetSomething(() -> api.getVues());
+        Mockito.when(((SonarAPI)Whitebox.getField(CreerVueProductionTask.class, "api").get(handler)).getVuesParNom(Mockito.anyString())).thenCallRealMethod();
         Map<String, Vue> retour = Whitebox.invokeMethod(handler, "recupererLotsSonarQubeDataStage");
         
         // Contrôle sur la liste : non nulle, non vide, et test sur les regex des clefs et des noms des vues

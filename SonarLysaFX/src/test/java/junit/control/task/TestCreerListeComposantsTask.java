@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +18,7 @@ import org.powermock.reflect.Whitebox;
 import control.task.CreerListeComposantsTask;
 import de.saxsys.javafx.test.JfxRunner;
 import model.ComposantSonar;
+import model.ModelFactory;
 import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
@@ -95,33 +95,35 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
     {
         // Initialisaiton des variables
         // Metrique avec une liste des périodes non vide
+        Composant compo = ModelFactory.getModel(Composant.class);
         List<Periode> periodes = new ArrayList<>();
         periodes.add(new Periode(1, UN));
-        Map<TypeMetrique, Metrique> metriques = new HashMap<>();
+        List<Metrique> metriques = new ArrayList<>();
         Metrique metrique = new Metrique();
         metrique.setMetric(TypeMetrique.APPLI);
         metrique.setListePeriodes(periodes);
-        metriques.put(TypeMetrique.APPLI, metrique);
+        metriques.add(metrique);
 
         // Metrique avec une liste des périodes vide
         Metrique metrique2 = new Metrique();
         metrique2.setMetric(TypeMetrique.BUGS);
-        metriques.put(TypeMetrique.BUGS, metrique2);
-
+        metriques.add(metrique2);       
+        compo.setMetriques(metriques);
+        
         // Appel avec premier metrique
-        List<Periode> retour = Whitebox.invokeMethod(handler, "getListPeriode", metriques, TypeMetrique.APPLI);
+        List<Periode> retour = Whitebox.invokeMethod(handler, "getListPeriode", compo, TypeMetrique.APPLI);
         assertNotNull(retour);
         assertEquals(1, retour.size());
         assertEquals(UN, retour.get(0).getValeur());
         assertEquals(1, retour.get(0).getIndex());
 
         // Appel avec metrique avec liste période non initialisée
-        retour = Whitebox.invokeMethod(handler, "getListPeriode", metriques, TypeMetrique.BUGS);
+        retour = Whitebox.invokeMethod(handler, "getListPeriode", compo, TypeMetrique.BUGS);
         assertNotNull(retour);
         assertEquals(0, retour.size());
 
         // Appel avec metrique nulle
-        retour = Whitebox.invokeMethod(handler, "getListPeriode", metriques, TypeMetrique.BLOQUANT);
+        retour = Whitebox.invokeMethod(handler, "getListPeriode", compo, TypeMetrique.BLOQUANT);
         assertNotNull(retour);
         assertEquals(0, retour.size());
     }

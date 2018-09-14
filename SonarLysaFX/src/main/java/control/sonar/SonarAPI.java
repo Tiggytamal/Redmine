@@ -37,6 +37,7 @@ import model.sonarapi.Event;
 import model.sonarapi.Issue;
 import model.sonarapi.Issues;
 import model.sonarapi.IssuesSimple;
+import model.sonarapi.ManualMesure;
 import model.sonarapi.Message;
 import model.sonarapi.Parametre;
 import model.sonarapi.Projet;
@@ -79,6 +80,7 @@ public class SonarAPI extends AbstractToStringImpl
     private static final String EVENTS = "api/events";
     private static final String VIEWSSHOW = "api/views/show";
     private static final String VIEWSCREATE = "api/views/create";
+    private static final String VIEWSMODE = "api/views/mode";    
     private static final String QGSELECT = "api/qualitygates/select";
     private static final String AUTHVALID = "api/authentication/validate";
     
@@ -530,12 +532,12 @@ public class SonarAPI extends AbstractToStringImpl
      * 
      * @param vue
      */
-    public void supprimerProjet(Vue vue, boolean erreur)
+    public Status supprimerProjet(Vue vue, boolean erreur)
     {
         if (!Vue.controleVue(vue))
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerProjet a son argument nul");
 
-        supprimerProjet(vue.getKey(), erreur);
+        return supprimerProjet(vue.getKey(), erreur);
     }
 
     /**
@@ -562,12 +564,12 @@ public class SonarAPI extends AbstractToStringImpl
      * 
      * @param vue
      */
-    public void supprimerVue(Vue vue, boolean erreur)
+    public Status supprimerVue(Vue vue, boolean erreur)
     {
         if (!Vue.controleVue(vue))
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerVue a son argument nul");
 
-        supprimerVue(vue.getKey(), erreur);
+        return supprimerVue(vue.getKey(), erreur);
     }
 
     /**
@@ -620,12 +622,12 @@ public class SonarAPI extends AbstractToStringImpl
      * @param vue
      * @param parent
      */
-    public void ajouterSousVue(Vue vue, Vue parent)
+    public boolean ajouterSousVue(Vue vue, Vue parent)
     {
         AjouterVueLocale localView = new AjouterVueLocale(parent.getKey(), vue.getKey());
         Response response = appelWebservicePOST("api/views/add_local_view", localView);
         LOGGER.info("Vue " + parent.getName() + " ajout sous-vue " + vue.getName() + HTTP + response.getStatus());
-        gestionErreur(response);
+        return gestionErreur(response);
     }
 
     /**
@@ -648,12 +650,12 @@ public class SonarAPI extends AbstractToStringImpl
      * @param parent
      * @param projet
      */
-    public void ajouterProjet(Projet projet, Vue parent)
+    public boolean ajouterProjet(Projet projet, Vue parent)
     {
         AjouterProjet addProjet = new AjouterProjet(parent.getKey(), projet.getKey());
         Response response = appelWebservicePOST("api/views/add_project", addProjet);
         LOGGER.info("Vue " + parent.getKey() + " ajout sous-projet " + projet.getNom() + HTTP + response.getStatus());
-        gestionErreur(response);
+        return gestionErreur(response);
     }
 
     /**
@@ -662,21 +664,28 @@ public class SonarAPI extends AbstractToStringImpl
      * @param parent
      * @param compo
      */
-    public void ajouterProjet(ComposantSonar compo, Vue parent)
+    public boolean ajouterProjet(ComposantSonar compo, Vue parent)
     {
         AjouterProjet addProjet = new AjouterProjet(parent.getKey(), compo.getKey());
         Response response = appelWebservicePOST("api/views/add_project", addProjet);
         LOGGER.info("Vue " + parent.getKey() + " ajout sous-projet " + compo.getNom() + HTTP + response.getStatus());
-        gestionErreur(response);
+        return gestionErreur(response);
+    }
+    
+    public boolean setManualMesureView(String key)
+    {
+        ManualMesure entite = new ManualMesure(key);
+        Response response = appelWebservicePOST(VIEWSMODE, entite);
+        return gestionErreur(response);
     }
 
     /**
      * Force la mise à jour de toutes les vues dans SonarQube.
      */
-    public void majVues()
+    public boolean majVues()
     {
         Response response = appelWebservicePOST("api/views/run", null);
-        gestionErreur(response);
+        return gestionErreur(response);
     }
 
     /**
@@ -685,12 +694,12 @@ public class SonarAPI extends AbstractToStringImpl
      * @param compo
      * @param qg
      */
-    public void associerQualitygate(ComposantSonar compo, QualityGate qg)
+    public boolean associerQualitygate(ComposantSonar compo, QualityGate qg)
     {
         AssocierQG assQG = new AssocierQG(qg.getId(), compo.getId());
         Response response = appelWebservicePOST(QGSELECT, assQG);
         LOGGER.info("projet " + compo.getNom() + " association " + qg.getName() + HTTP + response.getStatus());
-        gestionErreur(response);
+        return gestionErreur(response);
     }
 
     /**

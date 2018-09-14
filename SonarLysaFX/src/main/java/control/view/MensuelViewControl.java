@@ -86,12 +86,12 @@ public final class MensuelViewControl extends AbstractViewControl
     @FXML
     public void creerVue()
     {
+        if (option == null)
+            throw new FunctionalException(Severity.ERROR, "Veuillez choisir une option");
+        
         // Contrôle sur les dates
         LocalDate dateDebut = dateDebutPicker.getValue();
         LocalDate dateFin = dateFinPicker.getValue();
-        
-        if (option == null)
-            throw new FunctionalException(Severity.ERROR, "Veuillez choisir une option");
             
         if (dateDebut == null || dateFin == null || dateFin.isBefore(dateDebut))
             throw new FunctionalException(Severity.ERROR, "Les dates sont mal renseignées");

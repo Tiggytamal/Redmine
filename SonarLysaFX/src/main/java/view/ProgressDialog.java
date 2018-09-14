@@ -1,6 +1,6 @@
 package view;
 
-import control.task.AbstractSonarTask;
+import control.task.AbstractTask;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -35,7 +35,7 @@ public class ProgressDialog extends Dialog<Boolean>
     private ProgressIndicator indicator;
     private Label label;
     private Label stage;
-    private AbstractSonarTask task;
+    private AbstractTask task;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -44,12 +44,12 @@ public class ProgressDialog extends Dialog<Boolean>
      * 
      * @param task
      */
-    public <T extends AbstractSonarTask> ProgressDialog(T task)
+    public <T extends AbstractTask> ProgressDialog(T task)
     {
         this(task, task.getTitre());
     }
 
-    public ProgressDialog(AbstractSonarTask task, String titre)
+    public ProgressDialog(AbstractTask task, String titre)
     {
         // Initialisation
         this.task = task;
