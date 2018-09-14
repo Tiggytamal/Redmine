@@ -40,7 +40,7 @@ public class MajLotsRTCTask extends AbstractSonarTask
         this.date = date;
         this.remiseAZero = remiseAZero;
     }
-    
+
     /**
      * Constructeur sans paramètres pour les tests. Ne pas utiliser, lance une exception
      */
@@ -55,18 +55,19 @@ public class MajLotsRTCTask extends AbstractSonarTask
     @Override
     protected Boolean call() throws Exception
     {
-        return majFichierRTC();
+        majFichierRTC();
+        return sauvegarde();
     }
-    
+
     @Override
     public void annuler()
     {
-        // Pas de traitement d'annulation        
+        // Pas de traitement d'annulation
     }
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private boolean majFichierRTC() throws TeamRepositoryException
+    private void majFichierRTC() throws TeamRepositoryException
     {
         ControlRTC control = ControlRTC.INSTANCE;
         List<IWorkItemHandle> handles = control.recupLotsRTC(remiseAZero, date);
@@ -78,31 +79,39 @@ public class MajLotsRTCTask extends AbstractSonarTask
         String base = "Récupération RTC - Traitement lot : ";
         String fin = "Nbre de lots traités : ";
         String sur = " sur ";
-        
+
         // Initialisation - en cas de remise à zéro on prend une ma pvièrge sinon on récupère le fichier existant comme base.
         Map<String, LotSuiviRTC> map = null;
-        
+
         if (remiseAZero)
             map = new HashMap<>();
         else
             map = Statics.fichiersXML.getMapLotsRTC();
-        
+
         for (IWorkItemHandle handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête
             LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle(handle);
             i++;
-            
+
             updateProgress(i, size);
             updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).append(sur).append(size).toString());
-            
+
             if (!lot.getLot().isEmpty())
                 map.put(lot.getLot(), lot);
         }
 
         Statics.fichiersXML.majMapDonnees(TypeFichier.LOTSRTC, map);
-        new ControlXML().saveParam(Statics.fichiersXML);
-        return true;
+    }
+
+    /**
+     * Sauvegarde du fichier
+     * 
+     * @return
+     */
+    private boolean sauvegarde()
+    {
+        return new ControlXML().saveParam(Statics.fichiersXML);
     }
 
     /*---------- ACCESSEURS ----------*/

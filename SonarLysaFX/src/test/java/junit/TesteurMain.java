@@ -25,25 +25,25 @@ public class TesteurMain
         builder.append("28H02m8903,;:!");
         System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
 
-        SonarAPI api = SonarAPI.INSTANCE;
-
-        List<Projet> liste = api.getComposants();
-        int i = 0;
-        int j = 0;
-
-        for (Projet projet : liste)
-        {
-            List<Event> events = api.getEventsComposant(projet.getKey());
-            j++;
-            if (events.isEmpty())
-            {
-                System.out.println(projet.getKey());
-                i++;
-            }
-            
-            if (j % 100 == 0)
-                System.out.println(j);
-        }
-        System.out.println(i);
+//        SonarAPI api = SonarAPI.INSTANCE;
+//
+//        List<Projet> liste = api.getComposants();
+//        int i = 0;
+//        int j = 0;
+//
+//        for (Projet projet : liste)
+//        {
+//            List<Event> events = api.getEventsComposant(projet.getKey());
+//            j++;
+//            if (events.isEmpty())
+//            {
+//                System.out.println(projet.getKey());
+//                i++;
+//            }
+//            
+//            if (j % 100 == 0)
+//                System.out.println(j);
+//        }
+//        System.out.println(i);
     }
 }

@@ -23,11 +23,11 @@ public abstract class AbstractControlWord extends AbstractToStringImpl
 
     protected static final String DOCX = ".docx";
     /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log"); 
-    
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+
     /** Fichier Excel à modifier */
     protected File file;
-    
+
     protected XWPFDocument document;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -39,31 +39,34 @@ public abstract class AbstractControlWord extends AbstractToStringImpl
     }
 
     /*---------- METHODES ABSTRAITES ----------*/
-    
+
     /**
-     * Permet de créer le fichier word
+     * Permet de créer le fichier word.
+     * 
+     * @return
+     *       vrai si la création s'est bbine effectuée.
      */
-    protected abstract void creerFichier();
-    
+    protected abstract boolean creerFichier();
+
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     /**
-     * Enregistre le fichier Word sur le disque
+     * Enregistre le fichier Word sur le disque, et retourne si celui-ci existe bien.
      */
-    protected void write()
-    {        
+    protected boolean write()
+    {
         try (FileOutputStream out = new FileOutputStream(file))
         {
             document.write(out);
+            return file.exists();
         }
         catch (IOException e)
         {
-            LOGPLANTAGE.error(e);            
+            LOGPLANTAGE.error(e);
+            return false;
         }
     }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
-
-
 
 }

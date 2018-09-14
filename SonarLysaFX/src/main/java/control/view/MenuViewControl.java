@@ -45,7 +45,9 @@ public final class MenuViewControl extends AbstractViewControl
     // Constantes statiques
     private static final short WIDTHALERT = 640;
     private static final short HEIGHTALERT = 480;
-    
+    private static final String OUTILS = "/Outils/";
+    private static final String FONCTIONS = "/Fonctions/";
+
     /** Element du ménu lançant les contrôles mensuels */
     @FXML
     private MenuItem mensuel;
@@ -127,6 +129,7 @@ public final class MenuViewControl extends AbstractViewControl
         box.getChildren().remove(deConnexion);
         box.getChildren().add(connexion);
         border.setCenter(null);
+        majTitre(box, Statics.NOMAPPLI);
     }
 
     /**
@@ -136,9 +139,13 @@ public final class MenuViewControl extends AbstractViewControl
     public void afficher(ActionEvent event) throws IOException
     {
         String id = Statics.EMPTY;
+        String texte = Statics.EMPTY;
         Object source = event.getSource();
         if (source instanceof MenuItem)
+        {
             id = ((MenuItem) source).getId();
+            texte = ((MenuItem) source).getText();
+        }
 
         if (!info.controle() && !"options".equals(id))
             throw new FunctionalException(Severity.ERROR, "Pas de connexion au serveur Sonar, Merci de vous connecter");
@@ -148,38 +155,47 @@ public final class MenuViewControl extends AbstractViewControl
             // Chargement des écrans
             case "mensuel":
                 load("/view/Mensuel.fxml");
+                majTitre(box, FONCTIONS + texte);
                 break;
 
             case "options":
                 load("/view/Options.fxml");
+                majTitre(box, OUTILS + texte);
                 break;
 
             case "planificateur":
                 load("/view/Planificateur.fxml");
+                majTitre(box, OUTILS  + texte);
                 break;
 
             case "autres":
                 load("/view/AutresVues.fxml");
+                majTitre(box, FONCTIONS  + texte);
                 break;
 
             case "maintenance":
                 load("/view/Maintenance.fxml");
+                majTitre(box, FONCTIONS  + texte);
                 break;
 
             case "suivi":
                 load("/view/Suivi.fxml");
+                majTitre(box, FONCTIONS  + texte);
                 break;
 
             case "appli":
                 load("/view/Applications.fxml");
+                majTitre(box, FONCTIONS  + texte);
                 break;
 
             case "rtc":
                 load("/view/FichierRTC.fxml");
+                majTitre(box, FONCTIONS  + texte);
                 break;
 
             case "extraction":
                 load("/view/Extraction.fxml");
+                majTitre(box, FONCTIONS  + texte);
                 break;
 
             // Demande confirmations pour traitements
@@ -287,6 +303,6 @@ public final class MenuViewControl extends AbstractViewControl
         if (result.isPresent() && result.get().equals(ButtonType.OK))
             startTask(task);
     }
-
+    
     /* ---------- ACCESSEURS ---------- */
 }

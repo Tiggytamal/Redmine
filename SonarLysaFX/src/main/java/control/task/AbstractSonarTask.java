@@ -27,6 +27,9 @@ import model.enums.Matiere;
 import model.enums.OptionRecupCompo;
 import model.enums.Param;
 import model.enums.ParamSpec;
+import model.enums.TypeMetrique;
+import model.sonarapi.Composant;
+import model.sonarapi.Metrique;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
 import utilities.Statics;
@@ -183,6 +186,22 @@ public abstract class AbstractSonarTask extends Task<Boolean>
 
         updateMessage(RECUPCOMPOSANTS + "OK");
         return retour;
+    }
+    
+    /**
+     * Remonte la valeur d'une metrique en protegeant des nullPointeur avec une valeur par défault.
+     * 
+     * @param compo
+     *            Composant.
+     * @param type
+     *            type du métrique.
+     * @param value
+     *            valeur par défault à remonter en cas de valeur nulle.
+     * @return
+     */
+    protected String getValueMetrique(Composant compo, TypeMetrique type, String value)
+    {
+        return compo.getMapMetriques().computeIfAbsent(type, t -> new Metrique(type, value)).getValue();
     }
 
     /**

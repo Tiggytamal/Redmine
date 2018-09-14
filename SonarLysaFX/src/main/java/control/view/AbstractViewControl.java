@@ -6,8 +6,10 @@ import java.io.IOException;
 import control.task.AbstractLaunchTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
@@ -31,6 +33,7 @@ public abstract class AbstractViewControl extends AbstractLaunchTask
     /*---------- CONSTRUCTEURS ----------*/
 
     /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PROTECTED ----------*/
 
     /**
      * Permet de gérer l'affichage entre les différentes options de la page
@@ -74,6 +77,17 @@ public abstract class AbstractViewControl extends AbstractLaunchTask
         if (file == null)
             throw new FunctionalException(Severity.INFO, "Impossible de récupérer le fichier.");
         return file;
+    }
+    
+    /**
+     * Change de le titre de l'application pour afficher le menu actuel
+     * 
+     * @param node
+     * @param titre
+     */
+    protected void majTitre(Node node, String titre)
+    {
+        ((Stage)node.getScene().getWindow()).setTitle(Statics.NOMAPPLI + "/" + titre);
     }
 
     /*---------- METHODES PRIVEES ----------*/

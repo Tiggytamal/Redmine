@@ -2,7 +2,7 @@ package control.task;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +53,8 @@ public class CreerExtractComposantsSonarTask extends AbstractSonarTask
     @Override
     protected Boolean call() throws Exception
     {
-        return extractionComposants();
+        extractionComposants();
+        return sauvegarde();
     }
 
     @Override
@@ -70,30 +71,30 @@ public class CreerExtractComposantsSonarTask extends AbstractSonarTask
      * @return {@code true} Si la vue a bien été créée.<br>
      *         {@code false} Si la task a été intérompue ou s'il y a eu une erreur.
      */
-    private boolean extractionComposants()
+    private void extractionComposants()
     {
-        Map<TypeColCompo, List<ComposantSonar>> map = new HashMap<>();
+        Map<TypeColCompo, List<ComposantSonar>> map = new EnumMap<>(TypeColCompo.class);
 
         // Récupération des composants
         List<ComposantSonar> patrimoine = new ArrayList<>(recupererComposantsSonar(OptionRecupCompo.PATRIMOINE).values());
-        System.out.println("Patrimoine : " + patrimoine.size());
         map.put(TypeColCompo.PATRIMOINE, patrimoine);
                 
         List<ComposantSonar> inconnus = new ArrayList<>(recupererComposantsSonar(OptionRecupCompo.INCONNU).values());
-        System.out.println("inco : " + inconnus.size());
         map.put(TypeColCompo.INCONNU, inconnus);
         
         List<ComposantSonar> nonprod = new ArrayList<>(recupererComposantsSonar(OptionRecupCompo.NONPROD).values());
-        System.out.println("Non prod : " + nonprod.size());
         map.put(TypeColCompo.NONPROD, nonprod);
         
         List<ComposantSonar> termines = new ArrayList<>(recupererComposantsSonar(OptionRecupCompo.TERMINE).values());
-        System.out.println("Terminés : " + termines.size());
         map.put(TypeColCompo.TERMINE, termines);
         
+        // Mise à jour du fichier Excel
         control.ajouterExtraction(map);
-
-        return true;
+    }
+    
+    private boolean sauvegarde()
+    {
+        return control.write();
     }
 
     /*---------- ACCESSEURS ----------*/

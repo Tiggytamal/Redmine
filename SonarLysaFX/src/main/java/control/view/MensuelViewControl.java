@@ -11,6 +11,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.enums.OptionVueProduction;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -42,21 +43,13 @@ public final class MensuelViewControl extends AbstractViewControl
     @FXML
     private Button creer;
     @FXML
-    private RadioButton radioDate;
-    @FXML
     private ToggleGroup toggleGroup;
     @FXML
     private VBox selectPane;
+    
+    private OptionVueProduction option;
 
     /* ---------- CONSTRUCTEURS ---------- */
-
-    @FXML
-    public void initialize()
-    {
-        selectPane.getChildren().clear();
-        backgroundPane.getChildren().remove(creer);
-    }
-
     /* ---------- METHODES PUBLIQUES ---------- */
 
     /**
@@ -72,16 +65,19 @@ public final class MensuelViewControl extends AbstractViewControl
         if (source instanceof RadioButton)
             id = ((RadioButton) source).getId();
 
-        if ("radioDate".equals(id))
+        switch (id)
         {
-            selectPane.getChildren().clear();
-            selectPane.getChildren().add(dateDebutHBox);
-            selectPane.getChildren().add(dateFinHBox);
-            selectPane.getChildren().add(creer);
-        }
-        else
-            throw new TechnicalException("RadioButton pas géré" + id, null);
-
+            case "radioAll": 
+                option = OptionVueProduction.ALL;
+                break;
+            
+            case "radioDataStage":
+                option = OptionVueProduction.DATASTAGE;
+                break;
+                
+            default:
+                throw new TechnicalException("RadioButton pas géré" + id, null);               
+        }          
     }
 
     /**
@@ -93,10 +89,14 @@ public final class MensuelViewControl extends AbstractViewControl
         // Contrôle sur les dates
         LocalDate dateDebut = dateDebutPicker.getValue();
         LocalDate dateFin = dateFinPicker.getValue();
+        
+        if (option == null)
+            throw new FunctionalException(Severity.ERROR, "Veuillez choisir une option");
+            
         if (dateDebut == null || dateFin == null || dateFin.isBefore(dateDebut))
             throw new FunctionalException(Severity.ERROR, "Les dates sont mal renseignées");
 
         // Traitement
-        startTask(new CreerVueProductionTask(dateDebut, dateFin));
+        startTask(new CreerVueProductionTask(dateDebut, dateFin, option));
     }
 }

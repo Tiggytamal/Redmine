@@ -18,10 +18,12 @@ import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
 import model.enums.EtatLot;
+import model.enums.OptionVueProduction;
 import model.sonarapi.Vue;
 import utilities.DateConvert;
 import utilities.FunctionalException;
 import utilities.Statics;
+import utilities.TechnicalException;
 import utilities.enums.Severity;
 
 /**
@@ -36,20 +38,21 @@ public class CreerVueProductionTask extends AbstractSonarTask
     /*---------- ATTRIBUTS ----------*/
 
     private static final String TITRE = "Vue MEP/TEP";
-    
+
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
-    
+
     // Constantes statiques
     private static final short ETAPES = 3;
     private static final short TRIMESTRIEL = 3;
     private static final short MENSUEL = 1;
-    
+
     private String vueKey;
     private LocalDate dateDebut;
     private LocalDate dateFin;
+    private OptionVueProduction option;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -57,14 +60,16 @@ public class CreerVueProductionTask extends AbstractSonarTask
     {
         super(ETAPES, TITRE);
         annulable = true;
+        option = OptionVueProduction.ALL;
     }
 
-    public CreerVueProductionTask(LocalDate dateDebut, LocalDate dateFin)
+    public CreerVueProductionTask(LocalDate dateDebut, LocalDate dateFin, OptionVueProduction option)
     {
         super(ETAPES + 1, TITRE);
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         annulable = true;
+        this.option = option;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -97,11 +102,27 @@ public class CreerVueProductionTask extends AbstractSonarTask
      */
     private boolean creerVueProduction()
     {
+        // Variables
         Map<LocalDate, List<Vue>> mapLot;
+        Map<String, Vue> mapSonar;
         etapePlus();
 
         // Récupération des données
-        Map<String, Vue> mapSonar = recupererLotsSonarQube();
+        switch (option)
+        {
+            case DATASTAGE:
+                mapSonar = recupererLotsSonarQubeDataStage();
+                break;
+                
+            case ALL:
+                mapSonar = recupererLotsSonarQube();
+                break;
+                
+            default:
+                throw new TechnicalException("control.task.CreerVueProductionTask.creerVueProduction : option inconnue - " + option);
+        }
+ 
+        // Récupération des lots mis en production dans les dates données depuis RTC
         mapLot = recupLotRTCPourMEP(dateDebut, dateFin, mapSonar);
 
         // Création des vues mensuelles ou trimestrielles
@@ -183,7 +204,41 @@ public class CreerVueProductionTask extends AbstractSonarTask
             updateMessage("Récupérations des lots dans Sonar OK");
         }
         return map;
+    }
 
+    /**
+     * Récupère tous les lots créés dans Sonar.
+     *
+     * @return
+     */
+    private Map<String, Vue> recupererLotsSonarQubeDataStage()
+    {
+        updateMessage("Récupérations des lots dans Sonar...");
+        
+        Map<String, Vue> map = new HashMap<>();
+        List<Vue> views = api.getVues();
+        
+        int size = views.size();
+        updateProgress(0, size);
+        int i = 0;
+        
+        for (Vue view : views)
+        {
+            if (view.getName().startsWith("Lot "))
+            {
+                view = api.getInfosEtListeSousVues(view.getKey());
+
+                for (String clef : view.getListeClefsComposants())
+                {
+                    if (clef.contains("DS_"))
+                        map.put(view.getName().substring(Statics.SBTRINGLOT), view);
+                }
+            }
+            i++;
+            updateProgress(i, size);
+        }
+        updateMessage("Récupérations des lots dans Sonar OK");
+        return map;
     }
 
     /**
@@ -202,7 +257,7 @@ public class CreerVueProductionTask extends AbstractSonarTask
 
         // Création de la vue principale
 
-        String nomVue = new StringBuilder("MEP ").append(DateConvert.dateFrancais(entry.getKey(), "yyyy.MM - MMMM")).toString();
+        String nomVue = new StringBuilder("MEP ").append(DateConvert.dateFrancais(entry.getKey(), "yyyy.MM - MMMM")).append(option.getTitre()).toString();
         vueKey = new StringBuilder("MEPMEP").append(DateConvert.dateFrancais(entry.getKey(), "MMyyyy")).append("Key").toString();
         etapePlus();
         String base = "Vue " + nomVue + Statics.NL;
@@ -275,7 +330,7 @@ public class CreerVueProductionTask extends AbstractSonarTask
 
         // Création de la vue et envoie vers SonarQube
         vueKey = new StringBuilder("MEPMEP").append(date).append(nom).toString();
-        String nomVue = new StringBuilder("TEP ").append(date).append(Statics.SPACE).append(nom).toString();
+        String nomVue = new StringBuilder("TEP ").append(date).append(Statics.SPACE).append(nom).append(option.getTitre()).toString();
         etapePlus();
         String base = "Vue " + nomVue + Statics.NL;
         updateMessage(base);

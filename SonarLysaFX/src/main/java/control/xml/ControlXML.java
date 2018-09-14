@@ -114,20 +114,24 @@ public class ControlXML
     }
 
     /**
-     * Sauvegarde le fichier de paramètres
+     * Sauvegarde le fichier de paramètres. Retourne vrai si le fichier a bien été mis à jour.
      * 
      * @param fichier
      *            Fichier à suvagarder, doit implémenter l'interface {@link model.utilities.XML}.
      * @throws JAXBException
      */
-    public void saveParam(XML fichier)
+    public boolean saveParam(XML fichier)
     {
         try
         {
+            long time = fichier.getFile().lastModified();
             JAXBContext context = JAXBContext.newInstance(fichier.getClass());
             Marshaller jaxbMarshaller = context.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.marshal(fichier, fichier.getFile());
+
+            // Contrôle que le fichier a bien été mis à jour
+            return time < fichier.getFile().lastModified();
         }
         catch (JAXBException e)
         {
@@ -179,7 +183,7 @@ public class ControlXML
     {
         saveInfos(TypeFichier.EDITION, TypeColEdition.class, file);
     }
-    
+
     /**
      * Récupère depuis le fichier Excel toutes les édition CHC/CDM, aver leurs numéros de version, pour l'annèe en cours, la précedente et la suivante.
      * 

@@ -27,9 +27,9 @@ import model.CompoPbApps;
 import model.ComposantSonar;
 import model.LotSuiviRTC;
 import model.ModelFactory;
+import model.enums.EtatAppli;
 import model.enums.OptionCreerVueParAppsTask;
 import model.enums.OptionRecupCompo;
-import model.enums.EtatAppli;
 import model.enums.Param;
 import model.enums.TypeColAppsW;
 import model.enums.TypeColPbApps;
@@ -121,18 +121,33 @@ public class CreerVueParAppsTask extends AbstractSonarTask
 
     private boolean creerVueParApplication()
     {
-        // 1 .Création de la liste des composants par application
+        boolean fichiersOK = true;
+        
+        /* -----  1 .Création de la liste des composants par application ----- */
+        
         @SuppressWarnings("unchecked")
         Map<String, List<ComposantSonar>> mapApplication = Utilities.recuperation(Main.DESER, Map.class, "mapApplis.ser", this::controlerSonarQube);
-
+        
+        /* ----- 2. Création des fichiers d'extraction ----- */
+        
+        // On ne crée pas les fichiers avec l'option VUE
         if (option != OptionCreerVueParAppsTask.VUE)
-            controlRapport.creerFichier();
+        {
+            // Création des fichiers avec mise à jour du booléen.
+            if (!creerFichierExtractionAppli())
+                fichiersOK = false;
+            if (!creerFichierProblemesAppli())
+                fichiersOK = false;            
+        }
 
+        // Création du fichier de rapport word
+        controlRapport.creerFichier();
+        
         // On ne crée pas les vues avec l'option fichier
         if (option == OptionCreerVueParAppsTask.FICHIERS)
             return false;
 
-        // 2. Suppression des vues existantes
+        /* ----- 3. Suppression des vues existantes ----- */
 
         // Message
         String base = "Suppression des vues existantes :" + NL;
@@ -153,7 +168,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             updateProgress(i, listeVuesExistantes.size());
         }
 
-        // 3. Creation des nouvelles vues
+        /* ----- 4. Creation des nouvelles vues ----- */
 
         // Message
         base = "Creation des nouvelles vues :" + NL;
@@ -180,7 +195,8 @@ public class CreerVueParAppsTask extends AbstractSonarTask
                 api.ajouterProjet(composantSonar, vue);
             }
         }
-        return true;
+        
+        return fichiersOK;
     }
 
     /**
@@ -192,16 +208,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     {
         // Récupération des composants Sonar
         Map<String, ComposantSonar> mapCompos = recupererComposantsSonar(OptionRecupCompo.PATRIMOINE);
-        HashMap<String, List<ComposantSonar>> retour = creerMapApplication(mapCompos);
-
-        // On ne crée pas le fichier avec l'option VUE
-        if (option != OptionCreerVueParAppsTask.VUE)
-        {
-            creerFichierExtractionAppli();
-            creerFichierProblemesAppli();
-        }
-
-        return retour;
+        return creerMapApplication(mapCompos);
     }
 
     /**
@@ -312,7 +319,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
 
             // Maj données de l'application
             app.ajouterldcSonar(compo.getLdc());
-            app.majValSecurite(compo.getSecurity());
+            app.majValSecurite(compo.getSecurityRating());
             app.ajouterVulnerabilites(compo.getVulnerabilites());
             applisOpenSonar.add(app);
             return true;
@@ -382,7 +389,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
     /**
      * Permet d'enregistrer la liste des applications dans le fichier excel.
      */
-    private void creerFichierExtractionAppli()
+    private boolean creerFichierExtractionAppli()
     {
         if (option == OptionCreerVueParAppsTask.VUE)
             throw new TechnicalException("Control.task.CreerVueParAppsTask.creerFichierExtraction - Demande de création d'extraction sans fichier", null);
@@ -394,10 +401,13 @@ public class CreerVueParAppsTask extends AbstractSonarTask
         // Fichier Sonar
         ControlAppsW controlAppsW = ExcelFactory.getWriter(TypeColAppsW.class, file);
         controlAppsW.creerfeuilleSonar(applisOpenSonar);
-        controlAppsW.write();
+        return controlAppsW.write();
     }
 
-    private void creerFichierProblemesAppli()
+    /**
+     * Crée le fichier des composants avec des problèmes sur les codes application
+     */
+    private boolean creerFichierProblemesAppli()
     {
         etapePlus();
         int size = composPbAppli.size();
@@ -427,7 +437,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
                 continue;
             }
             pbApps.setLotRTC(compo.getLot());
-            pbApps.setEtatAppli(compo.getetatAppli());
+            pbApps.setEtatAppli(compo.getEtatAppli());
             pbApps.setCodeAppli(compo.getAppli());
 
             // CPI Lot depuis la map RTC
@@ -452,8 +462,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
         // Ecriture fichier
         ControlPbApps controlPbApps = ExcelFactory.getWriter(TypeColPbApps.class, new File(Statics.proprietesXML.getMapParams().get(Param.NOMFICHIERPBAPPLI)));
         controlPbApps.creerfeuille(listePbApps);
-        controlPbApps.write();
-
+        return controlPbApps.write();
     }
 
     /**
@@ -478,6 +487,6 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             }
         }
     }
-
+    
     /*---------- ACCESSEURS ----------*/
 }

@@ -38,16 +38,12 @@ import model.ModelFactory;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamBool;
-import model.enums.Status;
+import model.enums.QG;
 import model.enums.TypeColSuivi;
 import model.enums.TypeFichier;
 import model.enums.TypeInfo;
 import model.enums.TypeMajSuivi;
-import model.enums.TypeMetrique;
 import model.enums.TypeRapport;
-import model.sonarapi.Composant;
-import model.sonarapi.Metrique;
-import model.sonarapi.Periode;
 import model.sonarapi.QualityGate;
 import model.sonarapi.Vue;
 import utilities.Statics;
@@ -304,27 +300,27 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         Map<String, Set<String>> mapLotsSonar;
 
         Set<String> lotsSecurite = new HashSet<>();
-        Set<String> lotRelease = new HashSet<>();
+        Set<String> lotsRelease = new HashSet<>();
 
         etapePlus();
         
         switch (Main.DESER)
         {
             case AUCUNE:
-                mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotRelease);
+                mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotsRelease);
                 break;
                 
             case DESERIALISATION:
                 mapLotsSonar = Utilities.deserialisation("lotsSonar" + matiere.toString() + ".ser", HashMap.class);
                 lotsSecurite = Utilities.deserialisation("lotsSecurite" + matiere.toString() + ".ser", HashSet.class);
-                lotRelease = Utilities.deserialisation("lotsRelease" + matiere.toString() + ".ser", HashSet.class);
+                lotsRelease = Utilities.deserialisation("lotsRelease" + matiere.toString() + ".ser", HashSet.class);
                 break;
                 
             case SERIALISATION:
-                mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotRelease);
+                mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotsRelease);
                 Utilities.serialisation("lotsSecurite" + matiere.toString() + ".ser", lotsSecurite);
                 Utilities.serialisation("lotsSonar" + matiere.toString() + ".ser", mapLotsSonar);
-                Utilities.serialisation("lotsRelease" + matiere.toString() + ".ser", lotRelease);
+                Utilities.serialisation("lotsRelease" + matiere.toString() + ".ser", lotsRelease);
                 break;
                 
             default:
@@ -336,7 +332,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
         updateProgress(-1, 1);
 
         // 3. Supression des lots déjà créés et création des feuille Excel avec les nouvelles erreurs
-        majFichierAnomalies(mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);
+        majFichierAnomalies(mapLotsSonar, lotsSecurite, lotsRelease, fichier, matiere);
 
         updateProgress(1, 1);
         etapePlus();
@@ -384,7 +380,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
      * @param versions
      * @return
      */
-    private Map<String, Set<String>> lotSonarQGError(Map<String, List<ComposantSonar>> composants, Set<String> lotSecurite, Set<String> lotRelease)
+    private Map<String, Set<String>> lotSonarQGError(Map<String, List<ComposantSonar>> composants, Set<String> lotsSecurite, Set<String> lotsRelease)
     {
         // Création de la map de retour
         HashMap<String, Set<String>> retour = new HashMap<>();
@@ -403,7 +399,7 @@ public class MajSuiviExcelTask extends AbstractSonarTask
             // Iteration sur la liste des projets
             for (ComposantSonar compo : entry.getValue())
             {
-                traitementProjet(compo, retour, entryKey, lotSecurite, lotRelease, base);
+                traitementProjet(compo, retour, entryKey, lotsSecurite, lotsRelease, base);
                 i++;
                 updateProgress(i, size);
             }
@@ -497,40 +493,31 @@ public class MajSuiviExcelTask extends AbstractSonarTask
      *      Map de retour avec les lots en erreur par version
      * @param entryKey
      *      Numéro de version
-     * @param lotSecurite
+     * @param lotsSecurite
      *      Lots qui ont un problème de sécurité
-     * @param lotRelease
+     * @param lotsRelease
      *      Lots qui sont en version RELEASE
      * @param base
      *      Base pour l'affichage du message dans la fenêtre d'execution
      */
-    private void traitementProjet(ComposantSonar compo, Map<String, Set<String>> retour, String entryKey, Set<String> lotSecurite, Set<String> lotRelease, String base)
+    private void traitementProjet(ComposantSonar compo, Map<String, Set<String>> retour, String entryKey, Set<String> lotsSecurite, Set<String> lotsRelease, String base)
     {
-        String key = compo.getKey();
         String lot = compo.getLot();
-
         updateMessage(base + compo.getNom());
 
-        // Récupération du composant
-        Composant composant = api.getMetriquesComposant(key,
-                new String[] { TypeMetrique.QG.getValeur(), TypeMetrique.DUPLICATION.getValeur(), TypeMetrique.BLOQUANT.getValeur(), TypeMetrique.CRITIQUE.getValeur() });
-
-        // Récupération depuis la map des métriques
-        Map<TypeMetrique, Metrique> metriques = composant.getMapMetriques();
-
         // Vérification que le lot est bien valorisé et controle le QG
-        if (!lot.isEmpty() && controleQGBloquant(metriques))
+        if (!lot.isEmpty() && controleQGBloquant(compo))
         {
             // Ajout du lot à la liste de retour s'il y a des défaults critiques ou bloquants ou de duplication de code
             retour.get(entryKey).add(lot);
 
-            // Contrôle pour vérifier si le composant à une erreur de sécurité, ce qui ajout le lot à la listeSecurite
-            if (api.getSecuriteComposant(key) > 0)
-                lotSecurite.add(lot);
+            // Contrôle pour vérifier si le composant a une erreur de sécurité, ce qui ajoute le lot à la listeSecurite
+            if (compo.isSecurite())
+                lotsSecurite.add(lot);
 
             // Contrôle du composant pour voir s'il a une version release ou SNAPSHOT
-            if (release(key))
-                lotRelease.add(lot);
+            if (compo.isVersionRelease())
+                lotsRelease.add(lot);
         }
     }
 
@@ -540,44 +527,9 @@ public class MajSuiviExcelTask extends AbstractSonarTask
      * @param metriques
      * @return
      */
-    private boolean controleQGBloquant(Map<TypeMetrique, Metrique> metriques)
+    private boolean controleQGBloquant(ComposantSonar compo)
     {
-        String alert = metriques.computeIfAbsent(TypeMetrique.QG, t -> new Metrique(TypeMetrique.QG, null)).getValue();
-        List<Periode> bloquants = getListPeriode(metriques, TypeMetrique.BLOQUANT);
-        List<Periode> critiques = getListPeriode(metriques, TypeMetrique.CRITIQUE);
-        List<Periode> duplication = getListPeriode(metriques, TypeMetrique.DUPLICATION);
-        return !alert.isEmpty() && Status.from(alert) == Status.ERROR && (recupLeakPeriod(bloquants) > 0 || recupLeakPeriod(critiques) > 0 || recupLeakPeriod(duplication) > DUPLI);
-    }
-
-    /**
-     * Remonte une liste de période en protégeant des nullPointer
-     * 
-     * @param metriques
-     * @param type
-     * @return
-     */
-    private List<Periode> getListPeriode(Map<TypeMetrique, Metrique> metriques, TypeMetrique type)
-    {
-        return metriques.computeIfAbsent(type, t -> new Metrique(type, null)).getListePeriodes();
-    }
-
-    /**
-     * Remonte la valeur du premier index de la période qui correspond à la leakPeriod
-     * 
-     * @param periodes
-     * @return
-     */
-    private float recupLeakPeriod(List<Periode> periodes)
-    {
-        if (periodes == null)
-            return 0F;
-
-        for (Periode periode : periodes)
-        {
-            if (periode.getIndex() == 1)
-                return Float.valueOf(periode.getValeur());
-        }
-        return 0F;
+        return compo.getQualityGate() == QG.ERROR && (compo.getBloquants() > 0 || compo.getCritiques() > 0 || compo.getDuplication() > DUPLI);
     }
 
     /**
@@ -610,18 +562,6 @@ public class MajSuiviExcelTask extends AbstractSonarTask
             retour.put(anoLot, ano);
         }
         return retour;
-    }
-
-    /**
-     * Test si un composant a une version release ou snapshot.
-     *
-     * @param key
-     * @return
-     */
-    private boolean release(String key)
-    {
-        String version = api.getVersionComposant(key);
-        return !version.contains("SNAPSHOT");
     }
 
     /**

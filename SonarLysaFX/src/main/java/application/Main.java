@@ -32,7 +32,7 @@ import utilities.enums.Severity;
 public final class Main extends Application
 {
     /** Boolean pour gérer la désrialisation ou non des objets JAVA - A ACTIVER UNIQUEMENT EN TEST */
-    public static final OptionDeser DESER = OptionDeser.SERIALISATION;
+    public static final OptionDeser DESER = OptionDeser.AUCUNE;
 
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");

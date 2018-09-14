@@ -7,7 +7,7 @@ package model.enums;
  * @since 1.0
  *
  */
-public enum Status 
+public enum QG 
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -20,20 +20,19 @@ public enum Status
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private Status(String string)
+    private QG(String string)
     {
         this.string = string;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    @Override
-    public String toString()
+    public String getValeur()
     {
         return string;
     }
 
-    public static Status from(String status)
+    public static QG from(String status)
     {
         switch (status)
         {

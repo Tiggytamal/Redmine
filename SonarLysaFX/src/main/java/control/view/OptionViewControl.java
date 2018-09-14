@@ -63,6 +63,8 @@ import view.ParamView;
 public final class OptionViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
+    
+    private static final String ENTETE = "Outils/Options/";
 
     // Attributs FXML
 
@@ -124,11 +126,14 @@ public final class OptionViewControl extends AbstractViewControl
     {
         ObservableList<Node> root = rightSide.getChildren();
         root.clear();
+        
+        String value = ov.getValue().getValue();
+        majTitre(rightSide, ENTETE + value);
 
-        switch (ov.getValue().getValue())
+        switch (value)
         {
             case "Chargement fichiers":
-                root.add(chargementPane);
+                root.add(chargementPane);                
                 break;
 
             case "Paramètres":
@@ -191,6 +196,7 @@ public final class OptionViewControl extends AbstractViewControl
                 
             case "Nom Colonnes":
                 // Evite plantage en cas de clic sur le sous-menu
+                majTitre(rightSide, ENTETE);
                 break;
 
             default:

@@ -105,9 +105,7 @@ public class ControlExtractCompo extends AbstractControlExcelWrite<TypeColCompo,
             }
         }
 
-        autosizeColumns(sheet);
-        
-        write();        
+        autosizeColumns(sheet);       
     }
 
     /*---------- METHODES PRIVEES ----------*/

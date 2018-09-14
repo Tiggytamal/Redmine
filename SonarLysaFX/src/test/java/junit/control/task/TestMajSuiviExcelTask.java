@@ -30,6 +30,7 @@ import model.Anomalie;
 import model.ComposantSonar;
 import model.LotSuiviRTC;
 import model.ModelFactory;
+import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.TypeMajSuivi;
 import model.enums.TypeMetrique;
@@ -113,9 +114,16 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
     }
 
     @Test
-    public void testMajFichierAnomalies()
+    public void testMajFichierAnomalies() throws Exception
     {
-
+        Map<String, Set<String>> mapLotsSonar = new HashMap<>();
+        Set<String> lotsSecurite = new HashSet<>();
+        Set<String> lotRelease = new HashSet<>();
+        String fichier = Statics.EMPTY;
+        Matiere matiere = Matiere.JAVA;
+        
+        Whitebox.invokeMethod(handler, "majFichierAnomalies", mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);
+        
     }
 
     @Test
@@ -245,63 +253,6 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
     }
 
     @Test
-    public void testGetListPeriode() throws Exception
-    {
-        // Initialisaiton des variables
-        // Metrique avec une liste des périodes non vide
-        List<Periode> periodes = new ArrayList<>();
-        periodes.add(new Periode(1, UN));
-        Map<TypeMetrique, Metrique> metriques = new HashMap<>();
-        Metrique metrique = new Metrique();
-        metrique.setMetric(TypeMetrique.APPLI);
-        metrique.setListePeriodes(periodes);
-        metriques.put(TypeMetrique.APPLI, metrique);
-
-        // Metrique avec une liste des périodes vide
-        Metrique metrique2 = new Metrique();
-        metrique2.setMetric(TypeMetrique.BUGS);
-        metriques.put(TypeMetrique.BUGS, metrique2);
-
-        // Appel avec premier metrique
-        List<Periode> retour = Whitebox.invokeMethod(handler, "getListPeriode", metriques, TypeMetrique.APPLI);
-        assertNotNull(retour);
-        assertEquals(1, retour.size());
-        assertEquals(UN, retour.get(0).getValeur());
-        assertEquals(1, retour.get(0).getIndex());
-
-        // Appel avec metrique avec liste période non initialisée
-        retour = Whitebox.invokeMethod(handler, "getListPeriode", metriques, TypeMetrique.BUGS);
-        assertNotNull(retour);
-        assertEquals(0, retour.size());
-
-        // Appel avec metrique nulle
-        retour = Whitebox.invokeMethod(handler, "getListPeriode", metriques, TypeMetrique.BLOQUANT);
-        assertNotNull(retour);
-        assertEquals(0, retour.size());
-    }
-
-    @Test
-    public void testRecupLeakPeriod() throws Exception
-    {
-        // Initialisation objets - Liste plus deux périodes avec des index différents
-        List<Periode> periodes = new ArrayList<>();
-        Periode periode = new Periode();
-        periode.setIndex(0);
-        periode.setValeur(UN);
-        periodes.add(periode);
-        Periode periode2 = new Periode();
-        periode2.setIndex(1);
-        periode2.setValeur("2.0");
-        periodes.add(periode2);
-
-        // On récupère bine la valeur qui a l'index 2.0
-        assertEquals(2.0F, (float) Whitebox.invokeMethod(handler, "recupLeakPeriod", periodes), 0.1F);
-
-        // Test envoit d'un paramètre null
-        assertEquals(0F, (float) Whitebox.invokeMethod(handler, "recupLeakPeriod", new Object[] { null }), 0.1F);
-    }
-
-    @Test
     public void testCreationNumerosLots() throws Exception
     {
         List<Anomalie> listeLotenAno = new ArrayList<>();
@@ -339,17 +290,6 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
         assertNotNull(retour.get(numerolot2));
         assertEquals(EMPTY, ano2.getCpiProjet());
         assertEquals(EMPTY, ano2.getEdition());
-    }
-
-    @Test
-    public void testRelease() throws Exception
-    {
-        // Préparation retour SNAPSHOT et RELEASE de l'appel api.
-        Mockito.doReturn("SNAPSHOT").doReturn("RELEASE").when(api).getVersionComposant(Mockito.anyString());
-
-        // Test que la méthode renvoit bien true et false delon RELEASE ou SNAPSHOT
-        assertFalse(Whitebox.invokeMethod(handler, "release", "key"));
-        assertTrue(Whitebox.invokeMethod(handler, "release", "key"));
     }
 
     @Test

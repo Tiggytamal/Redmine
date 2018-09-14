@@ -71,12 +71,16 @@ public class ControlRapport extends AbstractControlWord
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public void creerFichier()
+    public boolean creerFichier()
     {
         creerTitre();
         creerTexte();
-        write();
-        LOGGER.info("Création du rapport OK.");
+        if (write())
+        {
+            LOGGER.info("Création du rapport OK.");
+            return true;
+        }
+        return false;
     }
 
     /*---------- METHODES PRIVEES ----------*/

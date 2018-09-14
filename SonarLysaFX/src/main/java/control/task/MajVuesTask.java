@@ -42,7 +42,6 @@ public class MajVuesTask extends AbstractSonarTask
      */
     private boolean majVues()
     {
-        updateProgress(0, 1);
         api.majVues();
         updateProgress(1, 1);
         return true;

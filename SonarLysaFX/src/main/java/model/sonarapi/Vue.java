@@ -24,7 +24,9 @@ public class Vue extends AbstractModele implements ModeleSonar
     private String name;
     private boolean selected;
     private String selectionMode;
-    private String desc;
+    private String manual_measure_key;
+    private String manual_measure_value;
+    private String description;
     private List<String> listeClefsComposants;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -47,7 +49,7 @@ public class Vue extends AbstractModele implements ModeleSonar
         this.name = name;
         this.selected = selected;
         this.selectionMode = selectionMode;
-        this.desc = description;
+        this.description = description;
         this.listeClefsComposants = listeClefsComposants;
     }
 
@@ -114,12 +116,12 @@ public class Vue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "desc", required = false)
     public String getDescription()
     {
-        return getString(desc);
+        return getString(description);
     }
 
     public void setDescription(String desc)
     {
-        this.desc = desc;
+        this.description = desc;
     }
 
     @XmlAttribute(name = "projects", required = false)
@@ -131,5 +133,27 @@ public class Vue extends AbstractModele implements ModeleSonar
     public void setListeClefsComposants(List<String> listeClefsComposants)
     {
         this.listeClefsComposants = listeClefsComposants;
+    }
+    
+    @XmlAttribute(name = "manual_measure_key", required = false)
+    public String getManual_measure_key()
+    {
+        return manual_measure_key;
+    }
+
+    public void setManual_measure_key(String manual_measure_key)
+    {
+        this.manual_measure_key = manual_measure_key;
+    }
+
+    @XmlAttribute(name = "manual_measure_value", required = false)
+    public String getManual_measure_value()
+    {
+        return manual_measure_value;
+    }
+
+    public void setManual_measure_value(String manual_measure_value)
+    {
+        this.manual_measure_value = manual_measure_value;
     }
 }

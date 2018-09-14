@@ -66,15 +66,22 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
      * @param sheet
      */
     protected abstract void enregistrerDonnees(R donnees, Sheet sheet);
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public void write()
+    /**
+     * Ecris le fichier sur le disque. Retourne vrai si celui-ci a bine été modifié.
+     * 
+     * @return
+     */
+    public boolean write()
     {
         try (FileOutputStream stream = new FileOutputStream(file.getPath()))
         {
+            long time = file.lastModified();
             wb.write(stream);
             wb.close();
+            return time < file.lastModified();
         }
         catch (IOException e)
         {
@@ -88,34 +95,34 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
     protected final void calculIndiceColonnes()
     {
         Map<T, Colonne> map = Statics.proprietesXML.getEnumMapColW(enumeration);
-        
+
         int nbreCol = 0;
-        
+
         Field field;
-        
+
         for (Map.Entry<T, Colonne> entry : map.entrySet())
         {
             T typeCol = entry.getKey();
             try
             {
                 field = getClass().getDeclaredField(typeCol.getNomCol());
-                field.setAccessible(true);                
+                field.setAccessible(true);
                 field.set(this, Integer.parseInt(entry.getValue().getIndice()));
                 testMax((int) field.get(this));
                 nbreCol++;
-            } 
+            }
             catch (NoSuchFieldException | IllegalAccessException e)
             {
                 throw new TechnicalException("Erreur à l'affectation d'une variable lors de l'initialisation d'une colonne : " + typeCol.getNomCol(), e);
             }
         }
-        
+
         // Gestion des erreurs si on ne trouve pas le bon nombre de colonnes
         int enumLength = enumeration.getEnumConstants().length;
         if (nbreCol != enumLength)
             throw new FunctionalException(Severity.ERROR, "Le fichier excel est mal configuré, vérifié les colonnes de celui-ci : Différence = " + (enumLength - nbreCol));
     }
-    
+
     @Override
     protected final void createWb()
     {
@@ -124,7 +131,7 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
         createHelper = wb.getCreationHelper();
         ca = createHelper.createClientAnchor();
     }
-    
+
     protected final int getNumCol(TypeColCompo type)
     {
         try
@@ -138,7 +145,7 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
             throw new TechnicalException("Mauvaise déclaration des noms de colonnes : " + type.getNomCol(), e);
         }
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
 
     @SuppressWarnings("unchecked")

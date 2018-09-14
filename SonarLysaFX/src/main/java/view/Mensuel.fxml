@@ -29,7 +29,8 @@
 		</fx:define>
 
 		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
-			<RadioButton fx:id="radioDate" text="Par Date" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioAll" text="Tous languages" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioDataStage" text="DataStage" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 		</VBox>
 
 

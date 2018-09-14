@@ -111,12 +111,12 @@ public class TestComposantSonar extends AbstractTestModel<ComposantSonar>
     public void testSecurity()
     {
         // test valeur vide ou nulle
-        assertEquals(0, handler.getSecurity());
+        assertEquals(0, handler.getSecurityRating());
         
         // Test setter et getter
         int securite = 12345;
-        handler.setSecurity(securite);
-        assertEquals(securite, handler.getSecurity());       
+        handler.setSecurityRating(securite);
+        assertEquals(securite, handler.getSecurityRating());       
     }
     
     @Test

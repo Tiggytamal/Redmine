@@ -40,7 +40,7 @@ public final class Statics
     /* ----- String statiques ----- */
     
     /** Nom de l'application */
-    public static final String NOMAPPLI = "SonarLyza";
+    public static final String NOMAPPLI = "SonarLysa";
     /** Valeur pour le séparateur de ligne indépendant du système */
     public static final String NL = System.getProperty("line.separator");
     /** Indiqe une anomalie avec un problème de sécurité */

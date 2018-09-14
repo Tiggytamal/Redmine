@@ -89,8 +89,7 @@ public class PurgeSonarTask extends AbstractSonarTask
         updateMessage("Fin du traitement.");
         updateProgress(1, 1);
 
-        controlRapport.creerFichier();
-        return true;
+        return controlRapport.creerFichier();
     }
 
     /**

@@ -36,7 +36,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
 
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     private static final String TITRE = "Extraction vulnérabilités";
-    
+
     private ControlExtractVul control;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -46,7 +46,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
         super(TypeVulnerabilite.values().length, TITRE);
         control = new ControlExtractVul(file);
     }
-    
+
     /**
      * Constructeur pour les test à ne pas utiliser, lance une exception
      */
@@ -61,18 +61,19 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
     @Override
     protected Boolean call() throws Exception
     {
-        return creerExtract();
-    }    
+        creerExtract();
+        return sauvegarde();
+    }
 
     @Override
     public void annuler()
     {
-        // Pas de traitement d'annulation        
+        // Pas de traitement d'annulation
     }
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private boolean creerExtract()
+    private void creerExtract()
     {
         // Création liste des noms des composants du patrimoine
         List<String> nomsComposPatrimoine = new ArrayList<>();
@@ -84,8 +85,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
         for (TypeVulnerabilite type : TypeVulnerabilite.values())
         {
             @SuppressWarnings("unchecked")
-            List<Vulnerabilite> vulnerabilites = Utilities.recuperation(Main.DESER, List.class, "vulnera" + type.toString() + ".ser",
-                    () -> recupVulnerabilitesSonar(type, nomsComposPatrimoine));
+            List<Vulnerabilite> vulnerabilites = Utilities.recuperation(Main.DESER, List.class, "vulnera" + type.toString() + ".ser", () -> recupVulnerabilitesSonar(type, nomsComposPatrimoine));
 
             // Création de la feuille excel
             updateMessage("Traitement fichier Excel");
@@ -96,8 +96,6 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
 
         // Ecriture du fichier
         updateProgress(1, 1);
-        control.write();
-        return true;
     }
 
     /**
@@ -118,11 +116,11 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
         retour.setLot(composant.getLot());
         retour.setAppli(composant.getAppli());
         retour.setLib(extractLib(retour.getMessage()));
-        
+
         LotSuiviRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(retour.getLot());
         if (lotRTC != null)
-        retour.setClarity(lotRTC.getProjetClarity());
-  
+            retour.setClarity(lotRTC.getProjetClarity());
+
         return retour;
     }
 
@@ -196,6 +194,16 @@ public class CreerExtractVulnerabiliteTask extends AbstractSonarTask
         if (retour.contains(":"))
             return retour.split(":")[1];
         return retour;
+    }
+
+    /**
+     * Sauvegarde du fichier
+     * 
+     * @return
+     */
+    private boolean sauvegarde()
+    {
+        return control.write();
     }
     /*---------- ACCESSEURS ----------*/
 }

@@ -5,9 +5,12 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import model.enums.EtatAppli;
+import model.enums.QG;
 import model.utilities.AbstractModele;
+import utilities.adapter.QGAdapter;
 
 /**
  * Classe de modèle réprésentant un composant SonarQube du fichier XML
@@ -30,24 +33,30 @@ public class ComposantSonar extends AbstractModele implements Serializable
     private String edition;
     private EtatAppli etatAppli;
     private int ldc;
-    private int security;
+    private int securityRating;
     private int vulnerabilites;
-    
+    private boolean securite;
+    private QG qualityGate;
+    private float bloquants;
+    private float critiques;
+    private float duplication;
+    private boolean versionRelease;
+
     /*---------- CONSTRUCTEURS ----------*/
 
-    ComposantSonar() 
+    ComposantSonar()
     {
         if (etatAppli == null)
-        etatAppli = EtatAppli.OK;
+            etatAppli = EtatAppli.OK;
     }
-    
+
     ComposantSonar(String id, String key, String nom)
     {
         this.id = id;
         this.key = key;
         this.nom = nom;
     }
-    
+
     /**
      * Constructeur pour créer un clone d'un composant Sonar
      * 
@@ -63,15 +72,15 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.edition = clone.edition;
         this.etatAppli = clone.etatAppli;
         this.ldc = clone.ldc;
-        this.security = clone.security;
-        this.vulnerabilites = clone.vulnerabilites;       
+        this.securityRating = clone.securityRating;
+        this.vulnerabilites = clone.vulnerabilites;
     }
-  
-    /*---------- METHODES PUBLIQUES ----------*/  
+
+    /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
-    
-    @XmlAttribute (name = "nom", required = true)
+
+    @XmlAttribute(name = "nom", required = true)
     public String getNom()
     {
         return getString(nom);
@@ -82,7 +91,7 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.nom = nom;
     }
 
-    @XmlAttribute (name = "lot", required = false)
+    @XmlAttribute(name = "lot", required = false)
     public String getLot()
     {
         return getString(lot);
@@ -93,7 +102,7 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.lot = lot;
     }
 
-    @XmlAttribute (name = "key", required = true)
+    @XmlAttribute(name = "key", required = true)
     public String getKey()
     {
         return getString(key);
@@ -104,7 +113,7 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.key = key;
     }
 
-    @XmlAttribute (name = "appli", required = false)
+    @XmlAttribute(name = "appli", required = false)
     public String getAppli()
     {
         return getString(appli);
@@ -114,8 +123,8 @@ public class ComposantSonar extends AbstractModele implements Serializable
     {
         this.appli = appli;
     }
-    
-    @XmlAttribute (name = "edition", required = false)
+
+    @XmlAttribute(name = "edition", required = false)
     public String getEdition()
     {
         return getString(edition);
@@ -125,8 +134,8 @@ public class ComposantSonar extends AbstractModele implements Serializable
     {
         this.edition = edition;
     }
-    
-    @XmlAttribute (name = "id", required = true)
+
+    @XmlAttribute(name = "id", required = true)
     public String getId()
     {
         return getString(id);
@@ -136,8 +145,8 @@ public class ComposantSonar extends AbstractModele implements Serializable
     {
         this.id = id;
     }
-    
-    @XmlAttribute (name = "ldc", required = true)
+
+    @XmlAttribute(name = "ldc", required = true)
     public int getLdc()
     {
         return ldc;
@@ -147,19 +156,29 @@ public class ComposantSonar extends AbstractModele implements Serializable
     {
         this.ldc = ldc;
     }
-    
-    @XmlAttribute (name = "security", required = true)
-    public int getSecurity()
+
+    /**
+     * Setter de ldc qui parse les String en int directement
+     * 
+     * @param ldc
+     */
+    public void setLdc(String ldc)
     {
-        return security;
+        this.ldc = Integer.parseInt(ldc);
     }
 
-    public void setSecurity(int security)
+    @XmlAttribute(name = "security", required = true)
+    public int getSecurityRating()
     {
-        this.security = security;
+        return securityRating;
     }
-    
-    @XmlAttribute (name = "vulnerabilities", required = true)   
+
+    public void setSecurityRating(int securityRating)
+    {
+        this.securityRating = securityRating;
+    }
+
+    @XmlAttribute(name = "vulnerabilities", required = true)
     public int getVulnerabilites()
     {
         return vulnerabilites;
@@ -169,16 +188,103 @@ public class ComposantSonar extends AbstractModele implements Serializable
     {
         this.vulnerabilites = vulnerabilites;
     }
-    
-//    @XmlAttribute (name = "etatAppli", required = true) 
+
+    /**
+     * Setter de vulnerabilite qui parse les String directement en int
+     * 
+     * @param vulnerabilites
+     */
+    public void setVulnerabilites(String vulnerabilites)
+    {
+        this.vulnerabilites = Integer.parseInt(vulnerabilites);
+    }
+
+    // @XmlAttribute (name = "etatAppli", required = true)
     @XmlTransient
-    public EtatAppli getetatAppli()
+    public EtatAppli getEtatAppli()
     {
         return etatAppli;
     }
-    
+
     public void setEtatAppli(EtatAppli etatAppli)
     {
         this.etatAppli = etatAppli;
+    }
+
+    @XmlAttribute(name = "securite", required = true)
+    public boolean isSecurite()
+    {
+        return securite;
+    }
+
+    public void setSecurite(boolean securite)
+    {
+        this.securite = securite;
+    }
+
+    @XmlAttribute(name = "qualityGate", required = false)
+    @XmlJavaTypeAdapter(value = QGAdapter.class)
+    public QG getQualityGate()
+    {
+        return qualityGate == null ? QG.NONE : qualityGate;
+    }
+
+    public void setQualityGate(QG qualityGate)
+    {
+        this.qualityGate = qualityGate;
+    }
+
+    /**
+     * Seter du QualityGate depuis une chaîne de caratère.
+     * 
+     * @param qualityGate
+     */
+    public void setQualityGate(String qualityGate)
+    {
+        this.qualityGate = QG.from(qualityGate);
+    }
+
+    @XmlAttribute(name = "bloquants", required = false)
+    public float getBloquants()
+    {
+        return bloquants;
+    }
+
+    public void setBloquants(float bloquants)
+    {
+        this.bloquants = bloquants;
+    }
+
+    @XmlAttribute(name = "critiques", required = false)
+    public float getCritiques()
+    {
+        return critiques;
+    }
+
+    public void setCritiques(float critiques)
+    {
+        this.critiques = critiques;
+    }
+
+    @XmlAttribute(name = "duplication", required = false)
+    public float getDuplication()
+    {
+        return duplication;
+    }
+
+    public void setDuplication(float duplication)
+    {
+        this.duplication = duplication;
+    }
+
+    @XmlAttribute(name = "versionRelease", required = false)
+    public boolean isVersionRelease()
+    {
+        return versionRelease;
+    }
+
+    public void setVersionRelease(boolean versionRelease)
+    {
+        this.versionRelease = versionRelease;
     }
 }

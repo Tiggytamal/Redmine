@@ -65,7 +65,7 @@ public final class MainScreen extends Application
         final Scene scene = new Scene(root, 640, 480);
         scene.getStylesheets().add(Statics.CSS);
         trayIcon.setStage(stage);
-        stage.setTitle("Sonar Lysa");
+        stage.setTitle(Statics.NOMAPPLI);
         stage.setResizable(true);
         stage.setScene(scene);
         stage.iconifiedProperty().addListener(new IconifiedListener());
