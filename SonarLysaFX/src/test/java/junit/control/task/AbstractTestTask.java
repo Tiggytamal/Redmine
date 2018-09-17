@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Base64;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import javax.ws.rs.client.ClientBuilder;
@@ -102,6 +103,18 @@ public abstract class AbstractTestTask<T extends AbstractTask> extends JunitBase
         if (mock)
         {
             api = Mockito.mock(SonarAPI.class);
+            
+            // Init du codeUser
+            StringBuilder builder = new StringBuilder(Statics.info.getPseudo());
+            builder.append(":");
+            builder.append(Statics.info.getMotDePasse());
+            Whitebox.getField(SonarAPI.class, "codeUser").set(api, Base64.getEncoder().encodeToString(builder.toString().getBytes()));
+            
+            // init du webtarget
+            WebTarget webTarget = ClientBuilder.newClient().target(Statics.proprietesXML.getMapParams().get(Param.URLSONAR));
+            Whitebox.getField(SonarAPI.class, "webTarget").set(api, webTarget);
+            
+            // Ajout du mock à l'instance de la classe testée
             Whitebox.getField(clazz, "api").set(handler, api);
         }
         else
@@ -115,23 +128,27 @@ public abstract class AbstractTestTask<T extends AbstractTask> extends JunitBase
      */
     protected <R> void mockAPIGetSomething(Supplier<R> supplier) throws IllegalAccessException
     {
-        // Init du codeUser
-        StringBuilder builder = new StringBuilder(Statics.info.getPseudo());
-        builder.append(":");
-        builder.append(Statics.info.getMotDePasse());
-        Whitebox.getField(SonarAPI.class, "codeUser").set(api, Base64.getEncoder().encodeToString(builder.toString().getBytes()));
-
-        // init du webtarget
-        WebTarget webTarget = ClientBuilder.newClient().target(Statics.proprietesXML.getMapParams().get(Param.URLSONAR));
-        Whitebox.getField(SonarAPI.class, "webTarget").set(api, webTarget);
-
         // Vrai appel webservice
-        Parametre param = new Parametre("search", "composant ");
-        Mockito.when(api.appelWebserviceGET(Mockito.anyString(), Mockito.refEq(param))).thenCallRealMethod();
+        Mockito.when(api.appelWebserviceGET(Mockito.anyString(), Mockito.any(Parametre[].class))).thenCallRealMethod();
         Mockito.when(api.appelWebserviceGET(Mockito.anyString())).thenCallRealMethod();
 
         // Vrai appel getComposant
         Mockito.when(supplier.get()).thenCallRealMethod();
+    }
+    
+    /**
+     * Permet d'utiliser une vrai méthode get de l'api SonarAPI avec le mock. ex: getComposants, getVues(). La méthode doit avoir un objet en retour
+     * 
+     * @throws IllegalAccessException
+     */
+    @SuppressWarnings("unchecked")
+    protected <R, S> S mockAPIGetSomethingWithParam(Function<R, S> fonction, R r) throws IllegalAccessException
+    {
+        // Vrai appel webservice
+        Mockito.when(api.appelWebserviceGET(Mockito.anyString(), Mockito.any(Parametre[].class))).thenCallRealMethod();
+
+        // Vrai appel getComposant
+        return (S) Mockito.when(fonction.apply(r)).thenCallRealMethod();
     }
 
     /*---------- ACCESSEURS ----------*/

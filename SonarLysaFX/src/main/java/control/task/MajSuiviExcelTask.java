@@ -215,12 +215,15 @@ public class MajSuiviExcelTask extends AbstractTask
         ControlSuivi controlAnoJava = ExcelFactory.getReader(TypeColSuivi.class,
                 new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA)));
         controlAnoJava.createControlRapport(TypeRapport.SUIVIJAVA);
+        controlAnoJava.majMultiMatiere(anoMultiple);
+        write(controlAnoJava);
+        controlAnoJava.close();
+        
         ControlSuivi controlAnoDataStage = ExcelFactory.getReader(TypeColSuivi.class,
                 new File(proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE)));
-        controlAnoJava.createControlRapport(TypeRapport.SUIVIDATASTAGE);
-        controlAnoJava.majMultiMatiere(anoMultiple);
+        controlAnoDataStage.createControlRapport(TypeRapport.SUIVIDATASTAGE);
         controlAnoDataStage.majMultiMatiere(anoMultiple);
-        controlAnoJava.close();
+        write(controlAnoDataStage);
         controlAnoDataStage.close();
     }
 
@@ -472,6 +475,7 @@ public class MajSuiviExcelTask extends AbstractTask
 
             // Mise à jour de la feuille des anomalies pour chaque version de composants
             anoAajouter.addAll(controlAno.createSheetError(entry.getKey(), anoACreer, anoDejacrees));
+            write(controlAno);
         }
 
         // Sauvegarde fichier et maj feuille principale
@@ -480,7 +484,8 @@ public class MajSuiviExcelTask extends AbstractTask
         // Mis à jour de la feuille principale
         controlAno.majFeuillePrincipale(listeLotenAno, anoAajouter, lotsEnErreur, lotsSecurite, lotRelease, sheet, matiere);
 
-        // Fermeture controleur
+        // Ecriture et Fermeture controleur
+        write(controlAno);
         controlAno.close();
     }
 
@@ -597,6 +602,17 @@ public class MajSuiviExcelTask extends AbstractTask
                 api.associerQualitygate(compo, qg);
             }
         }
+    }
+    
+    /**
+     * Méthode d'écriture des fichier pour premettre les tests.
+     * 
+     * @param control
+     * @return
+     */
+    private boolean write(ControlSuivi control)
+    {
+        return control.write();
     }
 
     /*---------- ACCESSEURS ----------*/

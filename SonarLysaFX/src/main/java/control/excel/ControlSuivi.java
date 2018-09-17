@@ -232,9 +232,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         sheet.autoSizeColumn(Index.EDITIONI.ordinal());
         sheet.autoSizeColumn(Index.ENVI.ordinal());
         sheet.autoSizeColumn(Index.TRAITEI.ordinal());
-        
-        // Ecriture de a feuille pour éviter de perdre les données s'il y a un plantage.
-        write();
+
         return retour;
     }
 
@@ -322,7 +320,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
         wb.setActiveSheet(wb.getSheetIndex(sheet));
         controlRapport.creerFichier();
-        write();
     }
 
     /**
@@ -345,7 +342,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             if (anoMultiple.contains(lot.length() < Statics.SBTRINGLOT ? lot : lot.substring(Statics.SBTRINGLOT)))
                 row.getCell(colMatiere, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(Matiere.JAVA + " - " + Matiere.DATASTAGE);
         }
-        write();
     }
 
     /*---------- METHODES PRIVEES ----------*/

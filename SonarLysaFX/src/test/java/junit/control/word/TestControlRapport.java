@@ -51,7 +51,7 @@ public class TestControlRapport extends JunitBase
         
         // Blocage de la méthode write pour éviter de créer des fichiers dans les ressources
         handler = PowerMockito.spy(handler);
-        PowerMockito.doNothing().when(handler, "write");
+        PowerMockito.doReturn(true).when(handler, "write");
         
         // Appel méthode
         handler.creerFichier();

@@ -152,7 +152,7 @@ public class SonarAPI extends AbstractToStringImpl
         Parametre paramViews = new Parametre("views", "true");
 
         // Appel webService
-        Response response = appelWebserviceGET(PROJECTSINDEX, paramSearch, paramViews);
+        Response response = appelWebserviceGET(PROJECTSINDEX, new Parametre[] { paramSearch, paramViews });
 
         // Contrôle de la réponse
         if (response.getStatus() == Status.OK.getStatusCode())
@@ -212,7 +212,7 @@ public class SonarAPI extends AbstractToStringImpl
         paramMetrics.setValeur(valeur.toString());
 
         // 2. appel du webservices
-        Response response = appelWebserviceGET(MEASURESCOMPONENT, paramComposant, paramMetrics);
+        Response response = appelWebserviceGET(MEASURESCOMPONENT, new Parametre[] { paramComposant, paramMetrics });
 
         // 3. Test du retour et renvoie du composant si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
@@ -240,7 +240,7 @@ public class SonarAPI extends AbstractToStringImpl
         Parametre paramResolved = new Parametre("resolved", "false");
 
         // 2. appel du webservices
-        Response response = appelWebserviceGET(ISSUESSEARCH, paramComposant, paramSeverities, paramSinceLeakPeriod, paramTypes, paramResolved);
+        Response response = appelWebserviceGET(ISSUESSEARCH, new Parametre[] { paramComposant, paramSeverities, paramSinceLeakPeriod, paramTypes, paramResolved });
 
         // 3. Test du retour et renvoie du composant si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
@@ -327,7 +327,7 @@ public class SonarAPI extends AbstractToStringImpl
             paramPage = new Parametre("p", String.valueOf(page));
 
             // 2. appel du webservices
-            Response response = appelWebserviceGET(ISSUESSEARCH, paramComposant, paramSeverities, paramSinceLeakPeriod, paramResolved, paramPage);
+            Response response = appelWebserviceGET(ISSUESSEARCH, new Parametre[] { paramComposant, paramSeverities, paramSinceLeakPeriod, paramResolved, paramPage });
 
             // 3. Test du retour et renvoie du composant si ok.
             if (response.getStatus() == Status.OK.getStatusCode())
@@ -358,7 +358,7 @@ public class SonarAPI extends AbstractToStringImpl
         Parametre paramCategorie = new Parametre("categories", "Version");
 
         // 2. appel du webservices
-        Response response = appelWebserviceGET(EVENTS, paramResource, paramCategorie);
+        Response response = appelWebserviceGET(EVENTS, new Parametre[] { paramResource, paramCategorie });
 
         // 3. Test du retour et renvoie de la dernière version si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
@@ -381,7 +381,7 @@ public class SonarAPI extends AbstractToStringImpl
     public List<Projet> getComposants()
     {
         Parametre param = new Parametre("search", "composant ");
-        Response response = appelWebserviceGET(PROJECTSINDEX, param);
+        Response response = appelWebserviceGET(PROJECTSINDEX, new Parametre[] { param });
 
         if (response.getStatus() == Status.OK.getStatusCode())
         {
@@ -439,7 +439,7 @@ public class SonarAPI extends AbstractToStringImpl
     {
         Parametre param = new Parametre("resource", key);
         Parametre paramCategorie = new Parametre("categories", "Version");
-        Response response = appelWebserviceGET(EVENTS, param, paramCategorie);
+        Response response = appelWebserviceGET(EVENTS, new Parametre[] { param, paramCategorie });
 
         if (response.getStatus() == Status.OK.getStatusCode())
             return response.readEntity(new GenericType<List<Event>>() { });
@@ -465,7 +465,7 @@ public class SonarAPI extends AbstractToStringImpl
         if (vueKey == null || vueKey.isEmpty())
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.testVueExiste a son argument nul ou vide");
 
-        Response response = appelWebserviceGET(VIEWSSHOW, new Parametre("key", vueKey));
+        Response response = appelWebserviceGET(VIEWSSHOW, new Parametre[] { new Parametre("key", vueKey) });
         if (response.getStatus() == Status.OK.getStatusCode())
             return true;
         if (response.getStatus() == Status.NOT_FOUND.getStatusCode())
@@ -487,7 +487,7 @@ public class SonarAPI extends AbstractToStringImpl
         
         Vue retour = new Vue(vueKey, "vue non trouvée");
         
-        Response response = appelWebserviceGET(VIEWSSHOW, new Parametre("key", vueKey));
+        Response response = appelWebserviceGET(VIEWSSHOW, new Parametre[] { new Parametre("key", vueKey) });
         if (response.getStatus() != Status.OK.getStatusCode())
         {
             LOGGER.error(erreurAPI(VIEWSSHOW) + vueKey);
@@ -725,12 +725,12 @@ public class SonarAPI extends AbstractToStringImpl
      *            Paramètres optionnels de la requête
      * @return
      */
-    public Response appelWebserviceGET(String url, Parametre... params)
+    public Response appelWebserviceGET(String url, Parametre[] params)
     {
-        WebTarget requete = webTarget.path(url);
-
         if (params == null)
-            return requete.request(MediaType.APPLICATION_JSON).header(AUTHORIZATION, codeUser).get();
+            return appelWebserviceGET(url);
+        
+        WebTarget requete = webTarget.path(url);
 
         for (Parametre parametre : params)
         {

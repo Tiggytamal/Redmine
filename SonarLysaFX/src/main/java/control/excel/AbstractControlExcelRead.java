@@ -97,6 +97,28 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
             throw new TechnicalException("Impossible de clôturer le workbook du fichier : " + file.getName(), e);
         }
     }
+    
+    /**
+     * Ecris le workbook dans le fichier cible.
+     * 
+     * @throws IOException
+     *             Exception lors d'un problème I/O
+     */
+    public boolean write()
+    {
+        
+        try(FileOutputStream stream = new FileOutputStream(file.getName()))
+        {
+            long time = file.lastModified();
+            wb.write(stream);
+            return time < file.lastModified();
+        } 
+        catch (IOException e)
+        {
+            throw new TechnicalException("Erreur au moment de sauvegarder le fichier Excel :" + file.getName(), e);
+        }
+    }
+    
     /*---------- METHODES PROTECTED ----------*/
     
     /**
@@ -179,27 +201,6 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
         helper = new CellHelper(wb);
         createHelper = wb.getCreationHelper();
         ca = createHelper.createClientAnchor();
-    }
-
-
-
-    /**
-     * Ecris le workbook dans le fichier cible.
-     * 
-     * @throws IOException
-     *             Exception lors d'un problème I/O
-     */
-    protected void write()
-    {
-        
-        try(FileOutputStream stream = new FileOutputStream(file.getName()))
-        {
-            wb.write(stream);
-        } 
-        catch (IOException e)
-        {
-            throw new TechnicalException("Erreur au moment de sauvegarder le fichier Excel :" + file.getName(), e);
-        }
     }
 
     /**

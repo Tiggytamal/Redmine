@@ -4,6 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.powermock.reflect.Whitebox.invokeMethod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +17,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
 
 import control.task.CreerListeComposantsTask;
 import de.saxsys.javafx.test.JfxRunner;
@@ -41,32 +44,48 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-
+    
     @Test
     public void testCreerListeComposants() throws Exception
     {        
         // Préparation des mocks
         mockAPIGetSomething(() -> api.getComposants());
-        Mockito.when(api.getMetriquesComposant(Mockito.anyString(), Mockito.any(String[].class))).thenReturn(new Composant());
+        when(api.getVersionComposant(anyString())).thenReturn("1.00");
+        
+        // On retourne un composant cide, sauf le premier qui sera null
+        when(api.getMetriquesComposant(anyString(), any(String[].class))).thenReturn(null).thenReturn(new Composant());
+        
+        // La méthode SecuriteComposant retournera qu'une seule fois 1 puis 0
+        when(api.getSecuriteComposant(anyString())).thenReturn(1).thenReturn(0);
         
         // Appel de la méthode
-        Map<String, ComposantSonar> retour = Whitebox.invokeMethod(handler, "creerListeComposants");
+        Map<String, ComposantSonar> retour = invokeMethod(handler, "creerListeComposants");
+
         
         // Contrôle
         assertNotNull(retour);
         assertFalse(retour.isEmpty());
-        assertEquals(api.getComposants().size(), retour.size());
+        assertEquals(api.getComposants().size()-1, retour.size());
+        
+        // Contrôle qu'un seul composant a une valeur de sécurité à "true"
+        int i = 0;
+        for (ComposantSonar compo : retour.values())
+        {
+            if (compo.isSecurite())
+                i++;
+        }
+        assertEquals(1, i);
     }
     
     @Test
     public void testCheckVersion() throws Exception
     {
         // Préparation retour SNAPSHOT et RELEASE de l'appel api.
-        Mockito.doReturn("SNAPSHOT").doReturn("RELEASE").when(api).getVersionComposant(Mockito.anyString());
+        Mockito.doReturn("SNAPSHOT").doReturn("RELEASE").when(api).getVersionComposant(anyString());
 
         // Test que la méthode renvoit bien true et false delon RELEASE ou SNAPSHOT
-        assertFalse(Whitebox.invokeMethod(handler, "checkVersion", "key"));
-        assertTrue(Whitebox.invokeMethod(handler, "checkVersion", "key"));
+        assertFalse(invokeMethod(handler, "checkVersion", "key"));
+        assertTrue(invokeMethod(handler, "checkVersion", "key"));
     }
     
     @Test
@@ -84,10 +103,10 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
         periodes.add(periode2);
 
         // On récupère bine la valeur qui a l'index 2.0
-        assertEquals(2.0F, (float) Whitebox.invokeMethod(handler, "recupLeakPeriod", periodes), 0.1F);
+        assertEquals(2.0F, (float) invokeMethod(handler, "recupLeakPeriod", periodes), 0.1F);
 
         // Test envoit d'un paramètre null
-        assertEquals(0F, (float) Whitebox.invokeMethod(handler, "recupLeakPeriod", new Object[] { null }), 0.1F);
+        assertEquals(0F, (float) invokeMethod(handler, "recupLeakPeriod", new Object[] { null }), 0.1F);
     }
     
     @Test
@@ -111,19 +130,19 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
         compo.setMetriques(metriques);
         
         // Appel avec premier metrique
-        List<Periode> retour = Whitebox.invokeMethod(handler, "getListPeriode", compo, TypeMetrique.APPLI);
+        List<Periode> retour = invokeMethod(handler, "getListPeriode", compo, TypeMetrique.APPLI);
         assertNotNull(retour);
         assertEquals(1, retour.size());
         assertEquals(UN, retour.get(0).getValeur());
         assertEquals(1, retour.get(0).getIndex());
 
         // Appel avec metrique avec liste période non initialisée
-        retour = Whitebox.invokeMethod(handler, "getListPeriode", compo, TypeMetrique.BUGS);
+        retour = invokeMethod(handler, "getListPeriode", compo, TypeMetrique.BUGS);
         assertNotNull(retour);
         assertEquals(0, retour.size());
 
         // Appel avec metrique nulle
-        retour = Whitebox.invokeMethod(handler, "getListPeriode", compo, TypeMetrique.BLOQUANT);
+        retour = invokeMethod(handler, "getListPeriode", compo, TypeMetrique.BLOQUANT);
         assertNotNull(retour);
         assertEquals(0, retour.size());
     }

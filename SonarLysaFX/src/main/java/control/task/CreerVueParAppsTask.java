@@ -15,7 +15,6 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import application.Main;
 import control.excel.ControlAppsW;
 import control.excel.ControlPbApps;
 import control.excel.ControlUA;
@@ -41,7 +40,6 @@ import model.sonarapi.Vue;
 import model.utilities.ControlModelInfo;
 import utilities.Statics;
 import utilities.TechnicalException;
-import utilities.Utilities;
 
 /**
  * Tâche de création des vues par application. Permet aussi de créer le fichier d'extraction des composant traités dans Sonar ainsi que le fichier des problèmes
@@ -124,18 +122,23 @@ public class CreerVueParAppsTask extends AbstractTask
         boolean fichiersOK = true;
         
         /* -----  1 .Création de la liste des composants par application ----- */
-        
-        @SuppressWarnings("unchecked")
-        Map<String, List<ComposantSonar>> mapApplication = Utilities.recuperation(Main.DESER, Map.class, "mapApplis.ser", this::controlerSonarQube);
+        Map<String, List<ComposantSonar>>  mapApplication = new HashMap<>();
         
         /* ----- 2. Création des fichiers d'extraction ----- */
         
         // On ne crée pas les fichiers avec l'option VUE
         if (option != OptionCreerVueParAppsTask.VUE)
         {
+
+            // Récupération des donnèes sur le patrimoine
+            controlerSonarQube(OptionRecupCompo.PATRIMOINE);
+            
             // Création des fichiers avec mise à jour du booléen.
             if (!creerFichierExtractionAppli())
                 fichiersOK = false;
+            
+            // Récupération des donnèes sur la dernière version des composants et instanciation de la map des application
+            mapApplication = controlerSonarQube(OptionRecupCompo.DERNIERE);
             if (!creerFichierProblemesAppli())
                 fichiersOK = false;            
         }
@@ -204,10 +207,10 @@ public class CreerVueParAppsTask extends AbstractTask
      *
      * @return map des composants SonarQube par application
      */
-    public Map<String, List<ComposantSonar>> controlerSonarQube()
+    public Map<String, List<ComposantSonar>> controlerSonarQube(OptionRecupCompo option)
     {
         // Récupération des composants Sonar
-        Map<String, ComposantSonar> mapCompos = recupererComposantsSonar(OptionRecupCompo.PATRIMOINE);
+        Map<String, ComposantSonar> mapCompos = recupererComposantsSonar(option);
         return creerMapApplication(mapCompos);
     }
 

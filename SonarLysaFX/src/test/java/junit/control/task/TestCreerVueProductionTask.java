@@ -11,9 +11,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
-import control.sonar.SonarAPI;
 import control.task.CreerVueProductionTask;
-import control.task.MajLotsSonarTask;
 import model.sonarapi.Vue;
 import utilities.Statics;
 
@@ -81,7 +79,7 @@ public class TestCreerVueProductionTask extends AbstractTestTask<CreerVueProduct
     {
         // Mock et appel de la méthode
         mockAPIGetSomething(() -> api.getVues());
-        Mockito.when(((SonarAPI)Whitebox.getField(CreerVueProductionTask.class, "api").get(handler)).getVuesParNom(Mockito.anyString())).thenCallRealMethod();
+        mockAPIGetSomething(() -> api.getVuesParNom(Mockito.anyString()));
         Map<String, Vue> retour = Whitebox.invokeMethod(handler, "recupererLotsSonarQubeDataStage");
         
         // Contrôle sur la liste : non nulle, non vide, et test sur les regex des clefs et des noms des vues

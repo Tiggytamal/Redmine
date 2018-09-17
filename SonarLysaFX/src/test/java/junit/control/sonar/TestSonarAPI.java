@@ -95,13 +95,13 @@ public class TestSonarAPI extends JunitBase
         assertNotNull(vues);
         assertFalse(vues.isEmpty());
 
-        appelGetMock();
+        appelGetMockErreur();
 
         // nouvel appel et contrôle que la liste est vide et que le logger a bine été utilisé.
         vues = handler.getVues();
         assertNotNull(vues);
         assertEquals(0, vues.size());
-        testLogger();
+        testLoggerErreur();
     }
 
     @Test
@@ -113,13 +113,13 @@ public class TestSonarAPI extends JunitBase
         assertFalse(projets.isEmpty());
 
         // Mock de la réponse pour renvoyer un status non OK et passer dans le logger
-        appelGetMockWithParam();
+        appelGetMockErreurWithParam();
 
         // nouvel appel et contrôle que la liste est vide et que le logger a bien été utilisé.
         projets = handler.getVuesParNom("APPLI MASTER ");
         assertNotNull(projets);
         assertEquals(0, projets.size());
-        testLogger();
+        testLoggerErreur();
     }
 
     @Test
@@ -130,7 +130,7 @@ public class TestSonarAPI extends JunitBase
         assertTrue(verif);
         verify(logger, times(1)).info("Utilisateur OK");
         
-        appelGetMock();
+        appelGetMockErreur();
 
         verif = handler.verificationUtilisateur();
         assertFalse(verif);
@@ -150,7 +150,7 @@ public class TestSonarAPI extends JunitBase
         // Appel avec un mauvais composant. Contrôle du log de l'erreur
         composant = handler.getMetriquesComposant("a", new String[] { TypeMetrique.BUGS.getValeur() });
         assertNotNull(composant);
-        testLogger();
+        testLoggerErreur();
     }
 
     @Test
@@ -162,7 +162,7 @@ public class TestSonarAPI extends JunitBase
 
         // Appel avec retour d'une erreur
         assertEquals(0, handler.getSecuriteComposant("fa"));
-        testLogger();
+        testLoggerErreur();
     }
 
     @Test
@@ -177,7 +177,7 @@ public class TestSonarAPI extends JunitBase
         List<Issue> listeErreur = handler.getIssuesComposant("fa");
         assertNotNull(listeErreur);
         assertEquals(0, listeErreur.size());
-        testLogger();
+        testLoggerErreur();
     }
     
     @Test
@@ -220,7 +220,7 @@ public class TestSonarAPI extends JunitBase
         version = handler.getVersionComposant("ab");
         assertNotNull(version);
         assertEquals(0, version.length());
-        testLogger();
+        testLoggerErreur();
     }
 
     @Test(expected = FunctionalException.class)
@@ -233,7 +233,7 @@ public class TestSonarAPI extends JunitBase
         testNoLogger();
 
         // Mock de la réponse pour renvoyer un status non OK et passer dans le logger
-        appelGetMockWithParam();
+        appelGetMockErreurWithParam();
 
         // Appel de la méthode, avec catch de l'erreur pour tester le logger, puis renvoie de celle-ci pour contrôle
         try
@@ -241,7 +241,7 @@ public class TestSonarAPI extends JunitBase
             handler.getComposants();
         } catch (FunctionalException e)
         {
-            testLogger();
+            testLoggerErreur();
             throw e;
         }
     }
@@ -273,7 +273,7 @@ public class TestSonarAPI extends JunitBase
         assertFalse(liste.isEmpty());
 
         // Appel avec retour en erreur
-        appelGetMock();
+        appelGetMockErreur();
         handler.getListQualitygate();
     }
 
@@ -289,9 +289,9 @@ public class TestSonarAPI extends JunitBase
         assertFalse(test);
         
         // Test erreur appel  + log
-        appelGetMockWithParam();
+        appelGetMockErreurWithParam();
         handler.testVueExiste("E31Key");
-        testLogger();
+        testLoggerErreur();
     }
     
     @Test (expected = IllegalArgumentException.class)
@@ -402,7 +402,7 @@ public class TestSonarAPI extends JunitBase
      * Mock l'api pour retourner une réponse en erreur de l'appel du webservice GET
      * @throws Exception
      */
-    private void appelGetMock() throws Exception
+    private void appelGetMockErreur() throws Exception
     {
         when(handler, APPELGET, Mockito.anyString()).thenReturn(responseMock);
     }
@@ -411,16 +411,16 @@ public class TestSonarAPI extends JunitBase
      *  Mock l'api pour retourner une réponse en erreur de l'appel du webservice GET avec des paramètres
      * @throws Exception
      */
-    private void appelGetMockWithParam() throws Exception
+    private void appelGetMockErreurWithParam() throws Exception
     {
         Method methode = Whitebox.getMethod(SonarAPI.class, APPELGET, String.class, Parametre[].class);
-        when(handler, methode).withArguments(Mockito.anyString(), Mockito.any(Parametre.class)).thenReturn(responseMock);
+        when(handler, methode).withArguments(Mockito.anyString(), new Object[] {Mockito.any(Parametre[].class) }).thenReturn(responseMock);
     }
     
     /**
      * Teste si le logger a été appelé pour une erreur
      */
-    private void testLogger()
+    private void testLoggerErreur()
     {
         verify(logger, times(1)).error(Mockito.anyString());
     }

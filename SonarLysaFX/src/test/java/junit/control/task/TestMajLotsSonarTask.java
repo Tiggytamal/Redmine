@@ -1,5 +1,7 @@
 package junit.control.task;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -30,6 +32,14 @@ public class TestMajLotsSonarTask extends AbstractTestTask<MajLotsSonarTask>
         mockAPIGetSomething(() -> api.getVues());
         Mockito.when(((SonarAPI)Whitebox.getField(MajLotsSonarTask.class, "api").get(handler)).setManualMesureView(Mockito.anyString())).thenReturn(true);
         Whitebox.invokeMethod(handler, "majLotsSonar");
+    }
+    
+    @Test
+    public void testAnnuler() throws IllegalAccessException
+    {
+        // Pas d'action sur la fonction annuler
+        handler.annuler();
+        assertTrue(handler.isCancelled());
     }
     
     /*---------- METHODES PRIVEES ----------*/
