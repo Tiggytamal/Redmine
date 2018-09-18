@@ -104,6 +104,17 @@ public class MajSuiviExcelTask extends AbstractTask
     {
         // Pas de traitement d'annulation
     }
+     
+    /**
+     * Méthode d'écriture des fichier pour premettre les tests.
+     * 
+     * @param control
+     * @return
+     */
+    public boolean write(ControlSuivi control)
+    {
+        return control.write();
+    }
 
     /*---------- METHODES PRIVEES ----------*/
 
@@ -602,17 +613,6 @@ public class MajSuiviExcelTask extends AbstractTask
                 api.associerQualitygate(compo, qg);
             }
         }
-    }
-    
-    /**
-     * Méthode d'écriture des fichier pour premettre les tests.
-     * 
-     * @param control
-     * @return
-     */
-    private boolean write(ControlSuivi control)
-    {
-        return control.write();
     }
 
     /*---------- ACCESSEURS ----------*/

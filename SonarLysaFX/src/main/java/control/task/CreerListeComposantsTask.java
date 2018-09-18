@@ -1,5 +1,6 @@
 package control.task;
 
+import java.security.DomainCombiner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,8 @@ import org.apache.logging.log4j.Logger;
 
 import application.Main;
 import control.xml.ControlXML;
-import model.ComposantSonar;
+import dao.DaoComposantSonar;
+import model.sql.ComposantSonar;
 import model.ModelFactory;
 import model.enums.QG;
 import model.enums.TypeFichier;
@@ -114,7 +116,12 @@ public class CreerListeComposantsTask extends AbstractTask
             retour.put(composantSonar.getKey(), composantSonar);
 
             if (api.getSecuriteComposant(projet.getKey()) > 0)
-                composantSonar.setSecurite(true);            
+                composantSonar.setSecurite(true);        
+            
+            if (i == 3)
+                break;
+            DaoComposantSonar dao = new DaoComposantSonar();
+            dao.save(composantSonar);
         }
 
         // Sauvegarde des données

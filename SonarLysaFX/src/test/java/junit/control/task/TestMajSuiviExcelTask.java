@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static utilities.Statics.EMPTY;
+import static utilities.Statics.proprietesXML;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +21,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
+import control.excel.ControlSuivi;
 import control.rtc.ControlRTC;
 import control.task.MajSuiviExcelTask;
 import model.Anomalie;
@@ -30,10 +32,6 @@ import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.QG;
 import model.enums.TypeMajSuivi;
-import model.enums.TypeMetrique;
-import model.sonarapi.Composant;
-import model.sonarapi.Metrique;
-import model.sonarapi.Periode;
 import model.sonarapi.QualityGate;
 import utilities.Statics;
 
@@ -43,14 +41,20 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
 
     private ControlRTC control = ControlRTC.INSTANCE;
     private static final String NUMEROLOT1 = "123456";
-    private static final String UN = "1.0";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     @Before
-    public void init() throws IllegalArgumentException, IllegalAccessException
+    public void init() throws Exception
     {
+        // Création handler
         handler = new MajSuiviExcelTask(TypeMajSuivi.MULTI);
+        
+        // spy pour annuler la méthode write et éviter de modifier les fichiers de test
+        handler = Mockito.spy(handler);        
+        Mockito.doReturn(true).when(handler).write(Mockito.any(ControlSuivi.class));
+        
+        // Connexion à RTC et initialisation API Sonar
         control.connexion();
         initAPI(MajSuiviExcelTask.class, true);
     }
@@ -112,7 +116,7 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
         Map<String, Set<String>> mapLotsSonar = new HashMap<>();
         Set<String> lotsSecurite = new HashSet<>();
         Set<String> lotRelease = new HashSet<>();
-        String fichier = Statics.EMPTY;
+        String fichier = proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA);
         Matiere matiere = Matiere.JAVA;        
         Whitebox.invokeMethod(handler, "majFichierAnomalies", mapLotsSonar, lotsSecurite, lotRelease, fichier, matiere);       
     }
@@ -268,49 +272,40 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
     {
         final String METHODE = "controleQGBloquant";
 
-        // Paramètre de base de la méthode
-        Map<TypeMetrique, Metrique> metriques = new HashMap<>();
+        // Paramètre de base de la méthode        
+        ComposantSonar compo = ModelFactory.getModel(ComposantSonar.class);
 
         // Appel liste vide
-        assertFalse(Whitebox.invokeMethod(handler, METHODE, metriques));
+        assertFalse(Whitebox.invokeMethod(handler, METHODE, compo));
 
         // Test avec QG vide
-        creerMetrique(metriques, TypeMetrique.QG, EMPTY);
-        assertFalse(Whitebox.invokeMethod(handler, METHODE, metriques));
+        compo.setQualityGate(QG.NONE);
+        assertFalse(Whitebox.invokeMethod(handler, METHODE, compo));
 
         // Test avec QG pas en erreur
-        creerMetrique(metriques, TypeMetrique.QG, "OK");
-        assertFalse(Whitebox.invokeMethod(handler, METHODE, metriques));
+        compo.setQualityGate(QG.OK);
+        assertFalse(Whitebox.invokeMethod(handler, METHODE, compo));
 
         // Test avec QG en erreur mais sans erreurs des métriques
-        creerMetrique(metriques, TypeMetrique.QG, "ERROR");
-        assertFalse(Whitebox.invokeMethod(handler, METHODE, metriques));
+        compo.setQualityGate(QG.ERROR);
+        assertFalse(Whitebox.invokeMethod(handler, METHODE, compo));
 
         // Test avec QG en erreur mais avec erreurs bloquantes
-        creerMetrique(metriques, TypeMetrique.BLOQUANT, UN);
-        assertTrue(Whitebox.invokeMethod(handler, METHODE, metriques));
+        compo.setBloquants(1.0F);
+        assertTrue(Whitebox.invokeMethod(handler, METHODE, compo));
 
         // Test avec QG en erreur mais avec erreurs critiques
-        creerMetrique(metriques, TypeMetrique.CRITIQUE, UN);
-        metriques.remove(TypeMetrique.BLOQUANT);
-        assertTrue(Whitebox.invokeMethod(handler, METHODE, metriques));
+        compo.setCritiques(1.0F);
+        compo.setBloquants(0.0F);
+        assertTrue(Whitebox.invokeMethod(handler, METHODE, compo));
 
-        // Test avec QG en erreur mais aavec duplication de code
-        creerMetrique(metriques, TypeMetrique.DUPLICATION, "5.0");
-        metriques.remove(TypeMetrique.CRITIQUE);
-        assertTrue(Whitebox.invokeMethod(handler, METHODE, metriques));
+        // Test avec QG en erreur mais avec duplication de code
+        compo.setDuplication(5.0F);
+        compo.setCritiques(0.0F);
+        assertTrue(Whitebox.invokeMethod(handler, METHODE, compo));
     }
 
     /*---------- METHODES PRIVEES ----------*/
-
-    private void creerMetrique(Map<TypeMetrique, Metrique> metriques, TypeMetrique type, String valeur)
-    {
-        Metrique metrique = new Metrique(type, valeur);
-        List<Periode> periodes = new ArrayList<>();
-        periodes.add(new Periode(1, valeur));
-        metrique.setListePeriodes(periodes);
-        metriques.put(type, metrique);
-    }
     /*---------- ACCESSEURS ----------*/
 
 }
