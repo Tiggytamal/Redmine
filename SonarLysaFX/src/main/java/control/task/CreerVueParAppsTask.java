@@ -21,6 +21,7 @@ import control.excel.ControlUA;
 import control.excel.ExcelFactory;
 import control.word.ControlRapport;
 import control.xml.ControlXML;
+import dao.DaoComposantSonar;
 import model.Application;
 import model.CompoPbApps;
 import model.ComposantSonar;
@@ -364,7 +365,7 @@ public class CreerVueParAppsTask extends AbstractTask
         for (; i > 0; i--)
         {
             String newKey = compo.getKey().replace(compo.getKey().charAt(compo.getKey().length() - 1) + "", String.valueOf(i));
-            ComposantSonar compo2 = fichiersXML.getMapComposSonar().get(newKey);
+            ComposantSonar compo2 = new DaoComposantSonar().readAllMap().get(newKey);
 
             // Si on trouve un composant, on va tester l'application
             if (compo2 != null)

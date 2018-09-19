@@ -17,6 +17,7 @@ import org.powermock.reflect.Whitebox;
 import control.rtc.ControlRTC;
 import control.task.PurgeSonarTask;
 import control.word.ControlRapport;
+import dao.DaoComposantSonar;
 import model.ComposantSonar;
 import model.ModelFactory;
 import model.enums.ParamSpec;
@@ -38,7 +39,7 @@ public class TestPurgeSonarTask extends AbstractTestTask<PurgeSonarTask>
         ControlRTC.INSTANCE.connexion();
         handler = new PurgeSonarTask();
         save = new HashMap<>();
-        save.putAll(Statics.fichiersXML.getMapComposSonar());
+        save.putAll(new DaoComposantSonar().readAllMap());
         initAPI(PurgeSonarTask.class, true);
     }
 

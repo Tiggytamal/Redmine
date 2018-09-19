@@ -12,6 +12,7 @@ import com.mchange.util.AssertException;
 
 import application.Main;
 import control.excel.ControlExtractVul;
+import dao.DaoComposantSonar;
 import model.ComposantSonar;
 import model.LotSuiviRTC;
 import model.Vulnerabilite;
@@ -141,7 +142,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
         // Variables
         List<Vulnerabilite> retour = new ArrayList<>();
         int i = 0;
-        Map<String, ComposantSonar> composants = Statics.fichiersXML.getMapComposSonar();
+        Map<String, ComposantSonar> composants = new DaoComposantSonar().readAllMap();
 
         // Paramètres
         List<Parametre> params = new ArrayList<>();

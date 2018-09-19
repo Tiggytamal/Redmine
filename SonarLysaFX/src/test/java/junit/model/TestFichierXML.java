@@ -105,17 +105,10 @@ public class TestFichierXML extends AbstractTestModel<FichiersXML> implements Te
         // Test mapLotsRTC
         assertEquals(5, handler.getMapLotsRTC().size());
         assertEquals(date, handler.getDateMaj().get(TypeFichier.LOTSRTC));
-
-        // Test mapClarity
-        assertEquals(6, handler.getMapComposSonar().size());
-        assertEquals(date, handler.getDateMaj().get(TypeFichier.SONAR));
         
         // Test mapProjetsNpc
         assertEquals(7, handler.getMapProjetsNpc().size());
         assertEquals(date, handler.getDateMaj().get(TypeFichier.NPC));
-
-        // Test map null
-        assertEquals(handler, handler.majMapDonnees(TypeFichier.SONAR, null));
     }
 
     @Test
@@ -209,15 +202,6 @@ public class TestFichierXML extends AbstractTestModel<FichiersXML> implements Te
         mapLotsRTC.put("d", ModelFactory.getModel(LotSuiviRTC.class));
         mapLotsRTC.put("e", ModelFactory.getModel(LotSuiviRTC.class));
         handler.majMapDonnees(TypeFichier.LOTSRTC, mapLotsRTC);
-
-        Map<String, ComposantSonar> mapComposSonar = new HashMap<>();
-        mapComposSonar.put("a", ModelFactory.getModel(ComposantSonar.class));
-        mapComposSonar.put("b", ModelFactory.getModel(ComposantSonar.class));
-        mapComposSonar.put("c", ModelFactory.getModel(ComposantSonar.class));
-        mapComposSonar.put("d", ModelFactory.getModel(ComposantSonar.class));
-        mapComposSonar.put("e", ModelFactory.getModel(ComposantSonar.class));
-        mapComposSonar.put("f", ModelFactory.getModel(ComposantSonar.class));
-        handler.majMapDonnees(TypeFichier.SONAR, mapComposSonar);
         
         Map<String, String> mapProjetsNpc = new HashMap<>();
         mapProjetsNpc.put("a", "a");

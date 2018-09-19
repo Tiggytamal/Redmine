@@ -18,9 +18,11 @@ public interface ModelFactory
     {
         try
         {
-            return modelClass.newInstance();
+            Constructor<T> constructor = modelClass.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return constructor.newInstance();
         }
-        catch (InstantiationException | IllegalAccessException e)
+        catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e)
         {
             throw new TechnicalException("Impossible d'instancier l'objet - classe : " + modelClass.getName(), e);
         }

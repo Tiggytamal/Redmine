@@ -16,6 +16,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import control.sonar.SonarAPI;
+import dao.DaoComposantSonar;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -97,9 +98,8 @@ public abstract class AbstractTask extends Task<Boolean>
         updateMessage(RECUPCOMPOSANTS);
         updateProgress(-1, -1);
 
-        // Récupération des composants Sonar depuis le fichier XML
-        List<ComposantSonar> composantsSonar = new ArrayList<>();
-        composantsSonar.addAll(Statics.fichiersXML.getMapComposSonar().values());
+        // Récupération des composants Sonar depuis la base de donnèes
+        List<ComposantSonar> composantsSonar = new DaoComposantSonar().readAll();
 
         // Triage ascendant de la liste par nom de projet
         composantsSonar.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
@@ -153,7 +153,7 @@ public abstract class AbstractTask extends Task<Boolean>
         String[] versions = proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONS).split(";");
 
         // Récupération composants depuis fichier XML
-        List<ComposantSonar> compos = Statics.fichiersXML.getListComposants();
+        List<ComposantSonar> compos = new DaoComposantSonar().readAll();
 
         // Création de la map de retour en utilisant les versions données
         Map<String, List<ComposantSonar>> retour = new HashMap<>();

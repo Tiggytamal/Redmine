@@ -8,17 +8,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import application.Main;
-import control.xml.ControlXML;
+import dao.DaoComposantSonar;
 import model.ComposantSonar;
 import model.ModelFactory;
 import model.enums.QG;
-import model.enums.TypeFichier;
 import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Periode;
 import model.sonarapi.Projet;
-import utilities.Statics;
 import utilities.Utilities;
 
 /**
@@ -50,7 +48,7 @@ public class CreerListeComposantsTask extends AbstractTask
     protected Boolean call() throws Exception
     {
         Map<String, ComposantSonar> mapSonar = creerListeComposants();
-        return sauvegarde(mapSonar);
+        return sauvegarde(mapSonar) >= mapSonar.size();
     }
 
     @Override
@@ -114,7 +112,7 @@ public class CreerListeComposantsTask extends AbstractTask
             retour.put(composantSonar.getKey(), composantSonar);
 
             if (api.getSecuriteComposant(projet.getKey()) > 0)
-                composantSonar.setSecurite(true);            
+                composantSonar.setSecurite(true);
         }
 
         // Sauvegarde des données
@@ -167,13 +165,18 @@ public class CreerListeComposantsTask extends AbstractTask
     }
 
     /**
-     * Sauvegarde des données sous forme de fichier XML
+     * Sauvegarde les donnèes en base avec retour ud nombre de lignes ajoutèes
      * 
      * @param mapSonar
      */
-    private boolean sauvegarde(Map<String, ComposantSonar> mapSonar)
-    {
-        return new ControlXML().saveParam(Statics.fichiersXML.majMapDonnees(TypeFichier.SONAR, mapSonar));
+    private int sauvegarde(Map<String, ComposantSonar> mapSonar)
+    {        
+        // Controleur de persistance SQL
+        DaoComposantSonar dao = new DaoComposantSonar();
+        
+        // Initialisation de la table et ajout des donnèes
+        dao.resetTable();
+        return dao.save(mapSonar.values());
     }
 
     /*---------- ACCESSEURS ----------*/

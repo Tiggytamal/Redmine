@@ -2,6 +2,16 @@ package model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -20,26 +30,72 @@ import utilities.adapter.QGAdapter;
  *
  */
 @XmlRootElement
+@Entity
+@Table(name = "composants")
+//@formatter:off
+@NamedQueries (value = {
+        @NamedQuery(name="ComposantSonar.findAll", query="SELECT c FROM ComposantSonar c"),
+        @NamedQuery(name="ComposantSonar.resetTable", query="DELETE FROM ComposantSonar")
+})
+//@formatter:on
 public class ComposantSonar extends AbstractModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idBase;
+
+    @Column(name = "nom", nullable = false, length = 128)
     private String nom;
+
+    @Column(name = "lot", nullable = true, length = 6)
     private String lot;
+
+    @Column(name = "composantKey", nullable = false, length = 256)
     private String key;
+
+    @Column(name = "id", nullable = false)
     private String id;
+
+    @Column(name = "appli", nullable = true)
     private String appli;
+
+    @Column(name = "edition", nullable = true, length = 20)
     private String edition;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "etatAppli", nullable = true)
     private EtatAppli etatAppli;
+
+    @Column(name = "ldc", nullable = true)
     private int ldc;
+
+    @Column(name = "securityRating", nullable = true)
     private int securityRating;
+
+    @Column(name = "vulnerabilites", nullable = true)
     private int vulnerabilites;
+
+    @Column(name = "securite", nullable = true)
     private boolean securite;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "qualityGate", nullable = true)
     private QG qualityGate;
+
+    @Column(name = "bloquants", nullable = true)
     private float bloquants;
+
+    @Column(name = "critiques", nullable = true)
     private float critiques;
+
+    @Column(name = "duplication", nullable = true)
     private float duplication;
+
+    @Column(name = "versionRelease", nullable = true)
     private boolean versionRelease;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -79,6 +135,17 @@ public class ComposantSonar extends AbstractModele implements Serializable
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
+
+    @XmlTransient
+    public int getIdBase()
+    {
+        return idBase;
+    }
+
+    public void setIdBase(int idBase)
+    {
+        this.idBase = idBase;
+    }
 
     @XmlAttribute(name = "nom", required = true)
     public String getNom()
@@ -199,7 +266,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.vulnerabilites = Integer.parseInt(vulnerabilites);
     }
 
-    // @XmlAttribute (name = "etatAppli", required = true)
     @XmlTransient
     public EtatAppli getEtatAppli()
     {

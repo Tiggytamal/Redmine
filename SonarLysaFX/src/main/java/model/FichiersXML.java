@@ -116,12 +116,6 @@ public class FichiersXML extends AbstractModele implements XML
                 mapLotsRTC.putAll(map);
                 setDateFichier(typeFichier);
                 break;
-
-            case SONAR:
-                mapComposSonar.clear();
-                mapComposSonar.putAll(map);
-                setDateFichier(typeFichier);
-                break;
                 
             case NPC:
                 mapProjetsNpc.clear();
@@ -156,9 +150,6 @@ public class FichiersXML extends AbstractModele implements XML
 
         // Contrôle Lots RTC
         controleMap(mapLotsRTC, builder, "lots RTC", TypeFichier.LOTSRTC);
-
-        // Contrôle Composants Sonar
-        controleMap(mapComposSonar, builder, "Composants Sonar", TypeFichier.SONAR);
 
         if (!controleOK)
             builder.append("Merci de recharger le(s) fichier(s) de paramétrage.").append(NL);

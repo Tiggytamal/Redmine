@@ -5,7 +5,10 @@ import java.util.Map;
 import org.junit.Test;
 
 import control.excel.ControlApps;
+import control.xml.ControlXML;
 import model.Application;
+import model.SwitchXML;
+import model.enums.Switch;
 import model.enums.TypeColApps;
 
 public class TestControlApps extends TestControlExcelRead<TypeColApps, ControlApps, Map<String, Application>>
@@ -26,6 +29,10 @@ public class TestControlApps extends TestControlExcelRead<TypeColApps, ControlAp
     {
         // Test initialisation colonnes. Pour ce fichier, la première colonne est utilisée.
         testCalculIndiceColonnes(1);
+        
+        SwitchXML switchXML = new SwitchXML();
+        switchXML.setSwitch(Switch.BDD);
+        new ControlXML().saveParam(switchXML);
     }
     
     @Test

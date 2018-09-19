@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import control.word.ControlRapport;
+import dao.DaoComposantSonar;
 import model.ComposantSonar;
 import model.enums.Param;
 import model.enums.ParamBool;
@@ -191,7 +192,7 @@ public class PurgeSonarTask extends AbstractTask
     private Map<String, List<ComposantSonar>> compileMap()
     {
         // Récupération composants depuis fichier XML
-        List<ComposantSonar> compos = Statics.fichiersXML.getListComposants();
+        List<ComposantSonar> compos = new DaoComposantSonar().readAll();
 
         // Contrôle si la liste des composants est vide.
         if (compos.isEmpty())

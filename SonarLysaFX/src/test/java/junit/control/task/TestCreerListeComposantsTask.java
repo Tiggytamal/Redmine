@@ -4,10 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 import static org.powermock.reflect.Whitebox.invokeMethod;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
     public void init() throws IllegalAccessException
     {
         handler = new CreerListeComposantsTask();
-        initAPI(CreerListeComposantsTask.class, true);
+        initAPI(CreerListeComposantsTask.class, false);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -60,8 +60,7 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
         
         // Appel de la méthode
         Map<String, ComposantSonar> retour = invokeMethod(handler, "creerListeComposants");
-
-        
+      
         // Contrôle
         assertNotNull(retour);
         assertFalse(retour.isEmpty());
