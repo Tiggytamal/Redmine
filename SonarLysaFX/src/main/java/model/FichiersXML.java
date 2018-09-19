@@ -4,16 +4,13 @@ import static utilities.Statics.NL;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import junit.JunitBase;
 import model.enums.TypeFichier;
@@ -45,7 +42,6 @@ public class FichiersXML extends AbstractModele implements XML
     private Map<TypeFichier, String> dateMaj;
     private Map<String, String> mapEditions;
     private Map<String, LotSuiviRTC> mapLotsRTC;
-    private Map<String, ComposantSonar> mapComposSonar;
     private Map<String, String> mapProjetsNpc;
 
     private boolean controleOK;
@@ -58,7 +54,6 @@ public class FichiersXML extends AbstractModele implements XML
         mapLotsRTC = new HashMap<>();
         mapApplis = new HashMap<>();
         mapRespService = new HashMap<>();
-        mapComposSonar = new HashMap<>();
         dateMaj = new EnumMap<>(TypeFichier.class);
         mapEditions = new HashMap<>();
         mapProjetsNpc = new HashMap<>();
@@ -232,31 +227,11 @@ public class FichiersXML extends AbstractModele implements XML
     {
         return mapLotsRTC;
     }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapComposSonar", required = false)
-    public Map<String, ComposantSonar> getMapComposSonar()
-    {
-        return mapComposSonar;
-    }
     
     @XmlElementWrapper
     @XmlElement(name = "mapProjetsNpc", required = false)
     public Map<String, String> getMapProjetsNpc()
     {
         return mapProjetsNpc;
-    }
-
-    /**
-     * Retourne la map des composants Sonar sous forme de liste
-     * 
-     * @return
-     */
-    @XmlTransient
-    public List<ComposantSonar> getListComposants()
-    {
-        List<ComposantSonar> retour = new ArrayList<>();
-        retour.addAll(mapComposSonar.values());
-        return retour;
     }
 }

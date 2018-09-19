@@ -1,7 +1,6 @@
 package junit.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -9,14 +8,12 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 
 import junit.TestXML;
 import model.Application;
-import model.ComposantSonar;
 import model.FichiersXML;
 import model.InfoClarity;
 import model.LotSuiviRTC;
@@ -70,8 +67,6 @@ public class TestFichierXML extends AbstractTestModel<FichiersXML> implements Te
         assertEquals(0, handler.getMapClarity().size());
         assertNotNull(handler.getMapApplis());
         assertEquals(0, handler.getMapApplis().size());
-        assertNotNull(handler.getMapComposSonar());
-        assertEquals(0, handler.getMapComposSonar().size());
         assertNotNull(handler.getMapEditions());
         assertEquals(0, handler.getMapEditions().size());
         assertNotNull(handler.getMapRespService());
@@ -148,22 +143,6 @@ public class TestFichierXML extends AbstractTestModel<FichiersXML> implements Te
         // On ne doit plus afficher la demande de rechargement
         regexControleEquals("Merci de recharger le(s) fichier(s) de paramétrage.", 0, controle);
 
-    }
-
-    @Test
-    public void testGetListComposants()
-    {
-        // Test avec liste vide
-        List<ComposantSonar> liste = handler.getListComposants();
-        assertNotNull(liste);
-        assertEquals(0, liste.size());
-
-        // Après intialisation la liste doit contenir les objets de la map
-        initMaps();
-        liste = handler.getListComposants();
-        assertNotNull(liste);
-        assertFalse(liste.isEmpty());
-        assertEquals(6, liste.size());
     }
 
     /*---------- METHODES PRIVEES ----------*/
