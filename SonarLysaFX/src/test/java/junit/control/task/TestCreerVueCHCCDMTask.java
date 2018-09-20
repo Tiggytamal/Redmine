@@ -4,7 +4,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static utilities.Statics.fichiersXML;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +20,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
 import control.task.CreerVueCHCCDMTask;
+import dao.DaoEdition;
+import model.Edition;
+import model.ModelFactory;
 import model.enums.CHCouCDM;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
@@ -130,8 +132,8 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
         }       
         
         // rajout d'une nouvelle valeur dans la map
-        Map<String, String> mapTest = fichiersXML.getMapEditions();
-        mapTest.put("2019", "2019");
+        Map<String, Edition> mapTest = new DaoEdition().readAllMap();
+        mapTest.put("2019", ModelFactory.getModelWithParams(Edition.class, "2019","2019"));
         
         // Appel méthode et controle qu'on a bien supprimé la nouvelle valeur.
         map = Whitebox.invokeMethod(handler, "recupererEditions", annees);

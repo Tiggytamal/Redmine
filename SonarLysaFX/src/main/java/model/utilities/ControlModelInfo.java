@@ -1,7 +1,5 @@
 package model.utilities;
 
-import static utilities.Statics.fichiersXML;
-
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -13,10 +11,12 @@ import com.ibm.team.workitem.common.model.IWorkItem;
 
 import control.rtc.ControlRTC;
 import control.word.ControlRapport;
+import dao.DaoChefService;
+import dao.DaoInfoClarity;
 import model.Anomalie;
+import model.ChefService;
 import model.CompoPbApps;
 import model.InfoClarity;
-import model.RespService;
 import model.enums.EtatLot;
 import model.enums.TypeAction;
 import model.enums.TypeInfo;
@@ -57,7 +57,7 @@ public class ControlModelInfo
         String anoClarity = ano.getProjetClarity();
         if (anoClarity.isEmpty())
             return;
-        Map<String, InfoClarity> map = fichiersXML.getMapClarity();
+        Map<String, InfoClarity> map = new DaoInfoClarity().readAllMap();
 
         // Vérification si le code Clarity de l'anomalie est bien dans la map
         if (map.containsKey(anoClarity))
@@ -112,7 +112,7 @@ public class ControlModelInfo
         if (anoClarity.isEmpty())
             return;
         
-        Map<String, InfoClarity> map = fichiersXML.getMapClarity();
+        Map<String, InfoClarity> map = new DaoInfoClarity().readAllMap();
 
         // Vérification si le code Clarity de l'anomalie est bien dans la map
         if (map.containsKey(anoClarity))
@@ -226,7 +226,7 @@ public class ControlModelInfo
             return;
 
         // Recherche du responsable dans les paramètres et remontée d'info si non trouvé.
-        Map<String, RespService> mapRespService = fichiersXML.getMapRespService();
+        Map<String, ChefService> mapRespService = new DaoChefService().readAllMap();
         if (mapRespService.containsKey(anoServ))
             ano.setResponsableService(mapRespService.get(anoServ).getNom());
         else
@@ -254,7 +254,7 @@ public class ControlModelInfo
 
     private void initChefService(CompoPbApps pbApps, String service)
     {
-        RespService respService = Statics.fichiersXML.getMapRespService().get(service);
+        ChefService respService = new DaoChefService().readAllMap().get(service);
         if (respService != null)
             pbApps.setChefService(respService.getNom());
         else

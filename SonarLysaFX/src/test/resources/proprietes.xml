@@ -88,6 +88,10 @@
             <value>Numero de version
 NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
         </entry>
+		<entry>
+			<key>COMMENTAIRE</key>
+			<value>Commentaires</value>
+		</entry>
     </mapColsEdition>
     <mapColsPic>
         <entry>

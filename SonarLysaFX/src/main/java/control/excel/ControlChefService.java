@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import model.ModelFactory;
-import model.RespService;
+import model.ChefService;
 import model.enums.TypeColChefServ;
 
 /**
@@ -18,7 +18,7 @@ import model.enums.TypeColChefServ;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlChefService extends AbstractControlExcelRead<TypeColChefServ, Map<String, RespService>>
+public class ControlChefService extends AbstractControlExcelRead<TypeColChefServ, Map<String, ChefService>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -49,13 +49,13 @@ public class ControlChefService extends AbstractControlExcelRead<TypeColChefServ
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public Map<String, RespService> recupDonneesDepuisExcel()
+    public Map<String, ChefService> recupDonneesDepuisExcel()
     {
         // Itération sur toutes les feuilles du fichier Excel
         Sheet sheet = wb.getSheetAt(0);
         
         // Liste de retour
-        Map<String, RespService> retour = new HashMap<>(sheet.getLastRowNum());
+        Map<String, ChefService> retour = new HashMap<>(sheet.getLastRowNum());
 
         // Itération sur chaque ligne pour récupérer les données
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
@@ -63,7 +63,7 @@ public class ControlChefService extends AbstractControlExcelRead<TypeColChefServ
             Row row = sheet.getRow(i);
 
             // Création de l'objet
-            RespService respServ = ModelFactory.getModel(RespService.class);
+            ChefService respServ = ModelFactory.getModel(ChefService.class);
             respServ.setDepartement(getCellStringValue(row, colDepart));
             respServ.setDirection(getCellStringValue(row, colDir));
             respServ.setService(getCellStringValue(row, colService));

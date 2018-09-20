@@ -36,11 +36,7 @@ public class FichiersXML extends AbstractModele implements XML
     private static final String NOMFICHIER = "\\fichiers.xml";
     private static final String RESOURCE = "/fichiers.xml";
     
-    private Map<String, InfoClarity> mapClarity;
-    private Map<String, Application> mapApplis;
-    private Map<String, RespService> mapRespService;
     private Map<TypeFichier, String> dateMaj;
-    private Map<String, String> mapEditions;
     private Map<String, LotSuiviRTC> mapLotsRTC;
     private Map<String, String> mapProjetsNpc;
 
@@ -50,12 +46,8 @@ public class FichiersXML extends AbstractModele implements XML
 
     FichiersXML()
     {
-        mapClarity = new HashMap<>();
         mapLotsRTC = new HashMap<>();
-        mapApplis = new HashMap<>();
-        mapRespService = new HashMap<>();
         dateMaj = new EnumMap<>(TypeFichier.class);
-        mapEditions = new HashMap<>();
         mapProjetsNpc = new HashMap<>();
         controleOK = true;
     }
@@ -82,30 +74,6 @@ public class FichiersXML extends AbstractModele implements XML
         
         switch (typeFichier)
         {
-            case APPS:
-                mapApplis.clear();
-                mapApplis.putAll(map);
-                setDateFichier(typeFichier);
-                break;
-
-            case CLARITY:
-                mapClarity.clear();
-                mapClarity.putAll(map);
-                setDateFichier(typeFichier);
-                break;
-
-            case EDITION:
-                mapEditions.clear();
-                mapEditions.putAll(map);
-                setDateFichier(typeFichier);
-                break;
-
-            case RESPSERVICE:
-                mapRespService.clear();
-                mapRespService.putAll(map);
-                setDateFichier(typeFichier);
-                break;
-
             case LOTSRTC:
                 mapLotsRTC.clear();
                 mapLotsRTC.putAll(map);
@@ -130,18 +98,6 @@ public class FichiersXML extends AbstractModele implements XML
     {
         StringBuilder builder = new StringBuilder("Chargement fichiers Excel :").append(NL);
         controleOK = true;
-
-        // Contrôle liste application
-        controleMap(mapApplis, builder, "Liste des applications", TypeFichier.APPS);
-
-        // Contrôle Referentiel Clarity
-        controleMap(mapClarity, builder, "Referentiel Clarity", TypeFichier.CLARITY);
-
-        // Contrôle Referentiel Clarity
-        controleMap(mapRespService, builder, "Responsables de services", TypeFichier.RESPSERVICE);
-
-        // Contrôle Editions
-        controleMap(mapEditions, builder, "Editions Pic", TypeFichier.EDITION);
 
         // Contrôle Lots RTC
         controleMap(mapLotsRTC, builder, "lots RTC", TypeFichier.LOTSRTC);
@@ -187,38 +143,10 @@ public class FichiersXML extends AbstractModele implements XML
     /*---------- ACCESSEURS ----------*/
 
     @XmlElementWrapper
-    @XmlElement(name = "mapApplis", required = false)
-    public Map<String, Application> getMapApplis()
-    {
-        return mapApplis;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapClarity", required = false)
-    public Map<String, InfoClarity> getMapClarity()
-    {
-        return mapClarity;
-    }
-
-    @XmlElementWrapper
     @XmlElement(name = "dateMaj", required = false)
     public Map<TypeFichier, String> getDateMaj()
     {
         return dateMaj;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapRespService", required = false)
-    public Map<String, RespService> getMapRespService()
-    {
-        return mapRespService;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapEditions", required = false)
-    public Map<String, String> getMapEditions()
-    {
-        return mapEditions;
     }
 
     @XmlElementWrapper

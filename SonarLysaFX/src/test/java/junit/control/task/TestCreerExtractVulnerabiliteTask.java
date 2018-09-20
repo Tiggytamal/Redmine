@@ -16,6 +16,7 @@ import org.powermock.reflect.Whitebox;
 import control.excel.ControlExtractVul;
 import control.task.CreerExtractVulnerabiliteTask;
 import dao.DaoComposantSonar;
+import model.Application;
 import model.ComposantSonar;
 import model.ModelFactory;
 import model.Vulnerabilite;
@@ -58,12 +59,12 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
         issue.setMessage("javajaf.jar");
         ComposantSonar composant = ModelFactory.getModel(ComposantSonar.class);
         composant.setNom("nom");      
-        composant.setAppli("appli");
+        composant.setAppli(ModelFactory.getModel(Application.class));
         composant.setLot("123456");
         Vulnerabilite retour = Whitebox.invokeMethod(handler, "convertIssueToVul", issue, composant);
         
         // Controleur que les valeurs sont bonnes après conversion
-        assertEquals("appli", retour.getAppli());
+        assertEquals(Statics.EMPTY, retour.getAppli());
         assertEquals("123456", retour.getLot());
         assertEquals("nom", retour.getComposant());
         assertEquals("status", retour.getStatus());

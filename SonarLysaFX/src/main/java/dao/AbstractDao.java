@@ -1,6 +1,8 @@
 package dao;
 
 
+import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -19,12 +21,12 @@ import javax.persistence.Persistence;
  */
 public abstract class AbstractDao<T>
 {
-    /* ---------- ATTIBUTES ---------- */
+    /*---------- ATTRIBUTS ----------*/
     
 	private EntityManagerFactory emf;
 	protected EntityManager em;
 
-    /* ---------- CONSTUCTORS ---------- */
+    /*---------- CONSTRUCTEURS ----------*/
 	
 	public AbstractDao()
 	{
@@ -38,19 +40,65 @@ public abstract class AbstractDao<T>
         em = emf.createEntityManager();
 	}
 
-    /* ---------- METHODS ---------- */
+    /*---------- METHODES ABSTRAITES ----------*/
 	
 	public abstract List<T> readAll();
 	
-    /* ---------- ACCESS ---------- */
+	public abstract int recupDonneesDepuisExcel(File file);
 	
-	 /**
-     * getter de l'EntityManager.
-     *
-     * @return l'EntityManager
-     */
-    public EntityManager getEm()
-    {
-        return em;
-    }
+    /*---------- METHODES PUBLIQUES ----------*/
+	
+	/**
+	 * Méthode de sauvegarde d'un élément.<br/>
+	 * Retourne vrai si l'objet a bien été persisté.
+	 * 
+	 * @param t
+	 */
+	public final boolean save(T t)
+	{
+	    boolean ok = false;
+        em.getTransaction().begin();
+        if (!em.contains(t))
+        {
+            em.persist(t);
+            ok = true;
+        }
+        em.getTransaction().commit();
+        return ok;
+	}
+	
+	/**
+	 * Méthode de sauvegarde d'une collection d'éléments.<br/>
+	 * Retourne le nombre d'éléments enregistrés.
+	 * 
+	 * @param collection
+	 * @return
+	 */
+	public final int save(Collection<T> collection)
+	{
+        em.getTransaction().begin();
+        int i = 0;
+        for (T t : collection)
+        {
+            if (!em.contains(t))
+            {
+                em.persist(t);
+                i++;
+            }
+        }
+        em.getTransaction().commit();
+        return i;
+	}
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
+	
+//	 /**
+//     * getter de l'EntityManager.
+//     *
+//     * @return l'EntityManager
+//     */
+//    public EntityManager getEm()
+//    {
+//        return em;
+//    }
 }

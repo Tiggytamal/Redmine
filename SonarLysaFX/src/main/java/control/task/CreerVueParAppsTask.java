@@ -21,6 +21,7 @@ import control.excel.ControlUA;
 import control.excel.ExcelFactory;
 import control.word.ControlRapport;
 import control.xml.ControlXML;
+import dao.DaoApplication;
 import dao.DaoComposantSonar;
 import model.Application;
 import model.CompoPbApps;
@@ -91,7 +92,7 @@ public class CreerVueParAppsTask extends AbstractTask
         super(ETAPES, TITRE);
         annulable = false;
         inconnues = 0;
-        applications = fichiersXML.getMapApplis();
+        applications = new DaoApplication().readAllMap();
         controlRapport = new ControlRapport(TypeRapport.VUEAPPS);
         applisOpenSonar = new HashSet<>();
         composPbAppli = new ArrayList<>();
@@ -244,9 +245,9 @@ public class CreerVueParAppsTask extends AbstractTask
             updateProgress(i, mapCompos.size());
 
             // Test si le code application est vide, cela veut dire que le projet n'a pas de code application.
-            if (!compo.getAppli().isEmpty())
+            if (!compo.getAppli().getCode().isEmpty())
             {
-                String application = compo.getAppli().trim().toUpperCase(Locale.FRANCE);
+                String application = compo.getAppli().getCode().trim().toUpperCase(Locale.FRANCE);
 
                 // Si l'application n'est pas dans la PIC, on continue au projet suivant.
                 if (!testAppli(application, compo))
@@ -378,11 +379,11 @@ public class CreerVueParAppsTask extends AbstractTask
                 }
 
                 // On tag le code appli si la nouvelle application est bien référencée.
-                if (applications.containsKey(compo2.getAppli()))
+                if (applications.containsKey(compo2.getAppli().getCode()))
                 {
                     retour.setEtatAppli(EtatAppli.PREC);
                     retour.setAppli(compo2.getAppli());
-                    controlRapport.addInfo(TypeInfo.APPLICOMPOPRECOK, compo.getNom(), compo2.getAppli());
+                    controlRapport.addInfo(TypeInfo.APPLICOMPOPRECOK, compo.getNom(), compo2.getAppli().getCode());
                 }
                 return retour;
             }
@@ -442,7 +443,7 @@ public class CreerVueParAppsTask extends AbstractTask
             }
             pbApps.setLotRTC(compo.getLot());
             pbApps.setEtatAppli(compo.getEtatAppli());
-            pbApps.setCodeAppli(compo.getAppli());
+            pbApps.setCodeAppli(compo.getAppli().getCode());
 
             // CPI Lot depuis la map RTC
             LotSuiviRTC lotSuiviRTC = fichiersXML.getMapLotsRTC().get(compo.getLot());

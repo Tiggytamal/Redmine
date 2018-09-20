@@ -121,8 +121,8 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColAppsW, Collec
             valoriserCellule(row, colMainFrame, centre, String.valueOf(app.isMainFrame()));
             valoriserCellule(row, colCrit, centre, app.getValSecurite());
             valoriserCellule(row, colVuln, centre, String.valueOf(app.getNbreVulnerabilites()));
-            valoriserCellule(row, colLDCSonar, centre, String.valueOf(app.getLDCSonar()));
-            valoriserCellule(row, colLDCMain, centre, String.valueOf(app.getLDCMainframe()));
+            valoriserCellule(row, colLDCSonar, centre, String.valueOf(app.getLdcSonar()));
+            valoriserCellule(row, colLDCMain, centre, String.valueOf(app.getLdcMainframe()));
             codeApps.add(app.getCode());
         }
         autosizeColumns(sheet);

@@ -10,6 +10,10 @@ import java.util.function.Consumer;
 import javax.xml.bind.JAXBException;
 
 import control.xml.ControlXML;
+import dao.DaoApplication;
+import dao.DaoChefService;
+import dao.DaoEdition;
+import dao.DaoInfoClarity;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -215,19 +219,19 @@ public final class OptionViewControl extends AbstractViewControl
         switch (id)
         {
             case "apps":
-                charger("Applications", file -> control.recupListeAppsDepuisExcel(file));
+                charger("Applications", new DaoApplication()::recupDonneesDepuisExcel);
                 break;
 
             case "clarity":
-                charger("Referentiel Clarity", file -> control.recupInfosClarityDepuisExcel(file));
+                charger("Referentiel Clarity", new DaoInfoClarity()::recupDonneesDepuisExcel);
                 break;
 
             case "chefSrev":
-                charger("Chefs de Service", file -> control.recupChefServiceDepuisExcel(file));
+                charger("Chefs de Service", new DaoChefService()::recupDonneesDepuisExcel);
                 break;
 
             case "edition":
-                charger("Editions CDM", file -> control.recupEditionDepuisExcel(file));
+                charger("Editions CDM", new DaoEdition()::recupDonneesDepuisExcel);
                 break;
                 
             case "npc":

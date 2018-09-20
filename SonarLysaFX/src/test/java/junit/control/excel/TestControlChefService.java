@@ -10,11 +10,11 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlChefService;
-import model.RespService;
+import model.ChefService;
 import model.enums.TypeColChefServ;
 import utilities.FunctionalException;
 
-public class TestControlChefService extends TestControlExcelRead<TypeColChefServ, ControlChefService, Map<String, RespService>>
+public class TestControlChefService extends TestControlExcelRead<TypeColChefServ, ControlChefService, Map<String, ChefService>>
 {
     /*---------- ATTRIBUTS ----------*/
     

@@ -5,9 +5,9 @@ import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
-import model.RespService;
+import model.ChefService;
 
-public class TestRespService extends AbstractTestModel<RespService>
+public class TestRespService extends AbstractTestModel<ChefService>
 {
     /*---------- ATTRIBUTS ----------*/
     /*---------- CONSTRUCTEURS ----------*/   

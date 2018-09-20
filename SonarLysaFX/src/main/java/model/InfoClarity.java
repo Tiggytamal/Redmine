@@ -1,7 +1,13 @@
 package model;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 import model.utilities.AbstractModele;
 
@@ -12,18 +18,44 @@ import model.utilities.AbstractModele;
  * @since 1.0
  *
  */
-@XmlRootElement
+@Entity
+@Table(name = "infos_clarity")
+//@formatter:off
+@NamedQueries (value = {
+      @NamedQuery(name="InfoClarity.findAll", query="SELECT ic FROM InfoClarity ic"),
+      @NamedQuery(name="InfoClarity.resetTable", query="DELETE FROM InfoClarity")
+})
+//@formatter:on
 public class InfoClarity extends AbstractModele
 {
     /*---------- ATTRIBUTS ----------*/
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idBase;
 
-    private boolean actif;
+    @Column(name = "code_Clarity", nullable = false)
     private String codeClarity;
+    
+    @Column(name = "actif", nullable = false)
+    private boolean actif;
+    
+    @Column(name = "libellé_projet", nullable = false)
     private String libelleProjet;
+    
+    @Column(name = "chef_de_projet", nullable = false)
     private String chefProjet;
+    
+    @Column(name = "édition", nullable = false)
     private String edition;
+    
+    @Column(name = "direction", nullable = false)
     private String direction;
+    
+    @Column(name = "département", nullable = false)
     private String departement;
+    
+    @Column(name = "service", nullable = false)
     private String service;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -31,10 +63,32 @@ public class InfoClarity extends AbstractModele
     InfoClarity() { }
 
     /*---------- METHODES PUBLIQUES ----------*/
+    
+    public InfoClarity update(InfoClarity info)
+    {
+        actif = info.actif;
+        libelleProjet = info.libelleProjet;
+        chefProjet = info.chefProjet;
+        edition = info.edition;
+        direction = info.direction;
+        departement = info.departement;
+        service = info.service;
+        return this;
+    }
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
-    @XmlAttribute(name = "actif", required = false)
+    public int getIdBase()
+    {
+        return idBase;
+    }
+
+    public void setIdBase(int idBase)
+    {
+        this.idBase = idBase;
+    }
+    
     public boolean isActif()
     {
         return actif;
@@ -45,7 +99,6 @@ public class InfoClarity extends AbstractModele
         this.actif = actif;
     }
 
-    @XmlAttribute(name = "codeClarity", required = false)
     public String getCodeClarity()
     {
         return getString(codeClarity);
@@ -56,7 +109,6 @@ public class InfoClarity extends AbstractModele
         this.codeClarity = codeClarity;
     }
 
-    @XmlAttribute(name = "libelleProjet", required = false)
     public String getLibelleProjet()
     {
         return getString(libelleProjet);
@@ -67,7 +119,6 @@ public class InfoClarity extends AbstractModele
         this.libelleProjet = libelleProjet;
     }
 
-    @XmlAttribute(name = "chefProjet", required = false)
     public String getChefProjet()
     {
         return getString(chefProjet);
@@ -78,7 +129,6 @@ public class InfoClarity extends AbstractModele
         this.chefProjet = chefProjet;
     }
 
-    @XmlAttribute(name = "edition", required = false)
     public String getEdition()
     {
         return getString(edition);
@@ -92,7 +142,6 @@ public class InfoClarity extends AbstractModele
     /**
      * @return the direction
      */
-    @XmlAttribute(name = "direction", required = false)
     public String getDirection()
     {
         return getString(direction);
@@ -103,7 +152,6 @@ public class InfoClarity extends AbstractModele
         this.direction = direction;
     }
 
-    @XmlAttribute(name = "departement", required = false)
     public String getDepartement()
     {
         return getString(departement);
@@ -114,7 +162,6 @@ public class InfoClarity extends AbstractModele
         this.departement = departement;
     }
 
-    @XmlAttribute(name = "service", required = false)
     public String getService()
     {
         return getString(service);

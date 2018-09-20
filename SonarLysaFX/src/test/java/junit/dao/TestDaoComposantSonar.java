@@ -3,7 +3,6 @@ package junit.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import dao.DaoComposantSonar;
@@ -33,10 +32,11 @@ public class TestDaoComposantSonar extends JunitBase
     }
     
     @Test
-    @Ignore ("test manuel pour effacer la table")
-    public void testRestTable()
+//    @Ignore ("test manuel pour effacer la table")
+    public void testResetTable()
     {
-        assertEquals(handler.readAll().size(), handler.resetTable());
+        int size = handler.resetTable();
+        assertEquals(handler.readAll().size(), size);
     }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

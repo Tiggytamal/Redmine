@@ -1,7 +1,6 @@
 package control.task;
 
 import static utilities.Statics.NL;
-import static utilities.Statics.fichiersXML;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import dao.DaoEdition;
 import model.ComposantSonar;
+import model.Edition;
 import model.enums.CHCouCDM;
 import model.enums.Matiere;
 import model.sonarapi.Vue;
@@ -74,7 +75,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
         // Traitement depuis le fichier XML
         suppressionVuesMaintenance(chccdm, annees);
 
-        Map<String, String> editions = recupererEditions(annees);
+        Map<String, Edition> editions = recupererEditions(annees);
 
         Map<String, Set<String>> mapVues = preparerMapVuesMaintenance(editions);
 
@@ -124,7 +125,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
      * @return La map des vues sous forme de HashSet pour ne pas avoir de doublon de lot. <br>
      *          <b>clé</b> : Edition - <b>valeur</b> : set des lot de l'édition 
      */
-    private Map<String, Set<String>> preparerMapVuesMaintenance(Map<String, String> mapEditions)
+    private Map<String, Set<String>> preparerMapVuesMaintenance(Map<String, Edition> mapEditions)
     {
         Map<String, Set<String>> retour = new HashMap<>();
 
@@ -150,7 +151,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
             if (!compo.getLot().isEmpty() && mapEditions.containsKey(compo.getEdition()))
             {
-                String keyCHC = mapEditions.get(compo.getEdition());
+                String keyCHC = mapEditions.get(compo.getEdition()).getNom();
 
                 // Contrôle pour ne prendre que les CHC ou CDM selon le booléen
                 if (!controle(chccdm, keyCHC))
@@ -224,18 +225,18 @@ public class CreerVueCHCCDMTask extends AbstractTask
      * @return La map provenant du fichier Excel avec suppression des annèe non désirées. <br/>
      *         <b>clé</b> = numéro édition XX.YY.ZZ.AA - <b>valeur</b> = CHC(_CDM)YYYY-Sww
      */
-    private Map<String, String> recupererEditions(List<String> annees)
+    private Map<String, Edition> recupererEditions(List<String> annees)
     {
-        Map<String, String> retour = fichiersXML.getMapEditions();
+        Map<String, Edition> retour = new DaoEdition().readAllMap();
 
         // On itère sur la HashMap pour retirer tous les éléments qui ne sont pas des annèes selectionnées
-        for (Iterator<String> iter = retour.values().iterator(); iter.hasNext();)
+        for (Iterator<Edition> iter = retour.values().iterator(); iter.hasNext();)
         {
             boolean ok = false;
-            String value = iter.next();
+            Edition edition = iter.next();
             for (String annee : annees)
             {
-                if (value.contains(annee))
+                if (edition.getNom().contains(annee))
                     ok = true;
             }
             if (!ok)

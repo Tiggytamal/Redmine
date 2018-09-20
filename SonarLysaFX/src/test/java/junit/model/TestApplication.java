@@ -20,11 +20,11 @@ public class TestApplication extends AbstractTestModel<Application>
     {
         // Ajout de valeurs et vérification que le total est bon
         handler.ajouterldcSonar(100);
-        assertEquals(100, handler.getLDCSonar());
+        assertEquals(100, handler.getLdcSonar());
         handler.ajouterldcSonar(95);
-        assertEquals(195, handler.getLDCSonar());
+        assertEquals(195, handler.getLdcSonar());
         handler.ajouterldcSonar(112);
-        assertEquals(307, handler.getLDCSonar());
+        assertEquals(307, handler.getLdcSonar());
     }
     
     @Test
@@ -159,24 +159,24 @@ public class TestApplication extends AbstractTestModel<Application>
     public void testGetLdcSonar()
     {
         // test valeur vide ou nulle
-        assertEquals(0, handler.getLDCSonar());
+        assertEquals(0, handler.getLdcSonar());
         
         // Test setter et getter
         int ldcSonar = 2000;
-        handler.setLDCSonar(ldcSonar);
-        assertEquals(ldcSonar, handler.getLDCSonar());       
+        handler.setLdcSonar(ldcSonar);
+        assertEquals(ldcSonar, handler.getLdcSonar());       
     }
     
     @Test
     public void testGetLdcMainFrame()
     {
         // test valeur vide ou nulle
-        assertEquals(0, handler.getLDCMainframe());
+        assertEquals(0, handler.getLdcMainframe());
         
         // Test setter et getter
         int ldcMain = 150;
-        handler.setLDCMainframe(ldcMain);
-        assertEquals(ldcMain, handler.getLDCMainframe());       
+        handler.setLdcMainframe(ldcMain);
+        assertEquals(ldcMain, handler.getLdcMainframe());       
     }
     
     /*---------- METHODES PRIVEES ----------*/

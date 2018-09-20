@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.word.ControlRapport;
+import dao.DaoChefService;
 import junit.JunitBase;
 import model.Anomalie;
 import model.CompoPbApps;
@@ -134,7 +135,7 @@ public class TestControlModelInfo extends JunitBase
         
         // Test avec bon service
         Whitebox.invokeMethod(handler, methode, compo, service);
-        assertEquals(Statics.fichiersXML.getMapRespService().get(service).getNom(), compo.getChefService());
+        assertEquals(new DaoChefService().readAllMap().get(service).getNom(), compo.getChefService());
         
         // Test avec service non existant
         Whitebox.invokeMethod(handler, methode, compo, serviceNonExistant);

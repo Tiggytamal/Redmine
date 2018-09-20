@@ -11,10 +11,11 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlEdition;
+import model.Edition;
 import model.enums.TypeColEdition;
 import utilities.FunctionalException;
 
-public class TestControlEdition extends TestControlExcelRead<TypeColEdition, ControlEdition, Map<String, String>>
+public class TestControlEdition extends TestControlExcelRead<TypeColEdition, ControlEdition, Map<String, Edition>>
 {
     /*---------- ATTRIBUTS ----------*/
     /*---------- CONSTRUCTEURS ----------*/
@@ -37,13 +38,13 @@ public class TestControlEdition extends TestControlExcelRead<TypeColEdition, Con
     public void testRecupDonneesDepuisExcel()
     {
         // Premiers test génériques
-        Map<String, String> map = testRecupDonneesDepuisExcel(a -> a.size() == 72);
+        Map<String, Edition> map = testRecupDonneesDepuisExcel(a -> a.size() == 72);
         
         // Test sur le format des clefs/valeurs dans la map
-        for (Map.Entry<String, String> entry : map.entrySet())
+        for (Map.Entry<String, Edition> entry : map.entrySet())
         {
             assertTrue(entry.getKey(), entry.getKey().matches("^([0-9]{2}\\.){3}[0-9]{2}$"));
-            assertTrue(entry.getValue(), entry.getValue().matches("^CHC(_CDM){0,1}20[12][0-9]\\-S[0-5][0-9]$"));
+            assertTrue(entry.getValue().getNom(), entry.getValue().getNom().matches("^CHC(_CDM){0,1}20[12][0-9]\\-S[0-5][0-9]$"));
         }
     }
     

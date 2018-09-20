@@ -2,9 +2,15 @@ package model;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import model.utilities.AbstractModele;
 
@@ -14,25 +20,79 @@ import model.utilities.AbstractModele;
  * @author ETP8137 - Grégoire Mathon
  *
  */
-@XmlRootElement
+@Entity
+@Table(name = "applications")
+//@formatter:off
+@NamedQueries (value = {
+        @NamedQuery(name="Application.findAll", query="SELECT a FROM Application a"),
+        @NamedQuery(name="Application.resetTable", query="DELETE FROM Application")
+})
+//@formatter:on
 public class Application extends AbstractModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idBase;
+    
+    @Column(name = "code", nullable = false, length = 128)
     private String code;
+    
+    @Column(name = "actif", nullable = false)
     private boolean actif;
+    
+    @Column(name = "libelle", nullable = false)
     private String libelle;
+    
+    @Column(name = "open", nullable = false)
     private boolean open;
+    
+    @Column(name = "mainFrame", nullable = false)
     private boolean mainFrame;
+    
+    @Column(name = "referentiel", nullable = false)
+    private boolean referentiel;
+
+    @Transient
     private String valSecurite;
+    
+    @Transient
     private int nbreVulnerabilites;
+    
+    @Transient
     private int ldcSonar;
+    
+    @Transient
     private int ldcMainframe;
 
     /*---------- CONSTRUCTEURS ----------*/
+    
+    Application() { }
+    
+    Application(String codeAppli)
+    {
+        code = codeAppli;
+        actif = false;
+        libelle = "Appli inconnue du référentielle";
+        open = true;
+        mainFrame = false;
+        referentiel = false;
+    }
     /*---------- METHODES PUBLIQUES ----------*/
 
+    public Application update(Application appli)
+    {
+        actif = appli.actif;
+        libelle = appli.libelle;
+        open = appli.open;
+        mainFrame = appli.mainFrame;
+        referentiel = appli.referentiel;
+        return this;
+    }
+    
     /**
      * 
      * @param valeur
@@ -89,7 +149,16 @@ public class Application extends AbstractModele implements Serializable
 
     /*---------- ACCESSEURS ----------*/
 
-    @XmlAttribute (name = "code", required = true)
+    public int getIdBase()
+    {
+        return idBase;
+    }
+
+    public void setIdBase(int idBase)
+    {
+        this.idBase = idBase;
+    }
+    
     public String getCode()
     {
         return getString(code);
@@ -100,7 +169,6 @@ public class Application extends AbstractModele implements Serializable
         this.code = code;
     }
 
-    @XmlAttribute (name = "actif", required = true)
     public boolean isActif()
     {
         return actif;
@@ -111,7 +179,7 @@ public class Application extends AbstractModele implements Serializable
         this.actif = actif;
     }
 
-    @XmlAttribute (name = "libelle", required = true)
+
     public String getLibelle()
     {
         return getString(libelle);
@@ -122,7 +190,7 @@ public class Application extends AbstractModele implements Serializable
         this.libelle = libelle;
     }
 
-    @XmlAttribute (name = "open", required = false)
+
     public boolean isOpen()
     {
         return open;
@@ -133,7 +201,6 @@ public class Application extends AbstractModele implements Serializable
         this.open = open;
     }
 
-    @XmlAttribute (name = "mainFrame", required = false)
     public boolean isMainFrame()
     {
         return mainFrame;
@@ -144,7 +211,6 @@ public class Application extends AbstractModele implements Serializable
         this.mainFrame = mainFrame;
     }
 
-    @XmlTransient
     public String getValSecurite()
     {
         return getString(valSecurite);
@@ -155,7 +221,6 @@ public class Application extends AbstractModele implements Serializable
         this.valSecurite = valSecurite;
     }
 
-    @XmlTransient
     public int getNbreVulnerabilites()
     {
         return nbreVulnerabilites;
@@ -166,25 +231,34 @@ public class Application extends AbstractModele implements Serializable
         this.nbreVulnerabilites = nbreVulnerabilites;
     }
 
-    @XmlTransient
-    public int getLDCSonar()
+    public int getLdcSonar()
     {
         return ldcSonar;
     }
 
-    public void setLDCSonar(int ldcSonar)
+    public void setLdcSonar(int ldcSonar)
     {
         this.ldcSonar = ldcSonar;
     }
 
-    @XmlTransient
-    public int getLDCMainframe()
+    public int getLdcMainframe()
     {
         return ldcMainframe;
     }
 
-    public void setLDCMainframe(int ldcMainframe)
+    public void setLdcMainframe(int ldcMainframe)
     {
         this.ldcMainframe = ldcMainframe;
+    }
+    
+    
+    public boolean isReferentiel()
+    {
+        return referentiel;
+    }
+
+    public void setReferentiel(boolean referentiel)
+    {
+        this.referentiel = referentiel;
     }
 }

@@ -11,6 +11,8 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import model.Edition;
+import model.ModelFactory;
 import model.enums.TypeColEdition;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
@@ -21,7 +23,7 @@ import utilities.enums.Severity;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map<String, String>>
+public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map<String, Edition>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -31,6 +33,7 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
     
     private int colVersion;
     private int colLib;
+    private int colComment;
     
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -50,10 +53,10 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public Map<String, String> recupDonneesDepuisExcel()
+    public Map<String, Edition> recupDonneesDepuisExcel()
     {
         // Initialisation map
-        Map<String, String> retour = new HashMap<>();
+        Map<String, Edition> retour = new HashMap<>();
 
         Sheet sheet = wb.getSheetAt(0);
 
@@ -68,8 +71,18 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
             for (String annee : annees)
             {
                 String libelle = getCellStringValue(row, colLib);
+                
+                // ON vérfie qu'on a bien un libellé de version de type CHC et CDM
                 if (libelle.contains(CDM + annee) || libelle.contains(CHC + annee))
-                    retour.put(getCellFormulaValue(row, colVersion), prepareLibelle(getCellStringValue(row, colLib)));
+                {
+                    String nom = prepareLibelle(getCellStringValue(row, colLib));
+                    String numero = getCellFormulaValue(row, colVersion);
+                    Edition edition = ModelFactory.getModel(Edition.class);
+                    edition.setNom(nom);
+                    edition.setNumero(numero);
+                    edition.setCommentaire(getCellStringValue(row, colComment));
+                    retour.put(numero, edition);
+                }
             }
         }
         return retour;

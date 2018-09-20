@@ -1,7 +1,7 @@
 package dao;
 
+import java.io.File;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +28,13 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     {
         return em.createNamedQuery("ComposantSonar.findAll", ComposantSonar.class).getResultList();
     }
+    
+
+    @Override
+    public int recupDonneesDepuisExcel(File file)
+    {
+        return 0;       
+    }
 
     /**
      * Retourne tous les éléments sous forme d'une map
@@ -43,52 +50,6 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
             retour.put(compo.getKey(), compo);
         }
         return retour;
-    }
-
-    /**
-     * Sauvegarde d'un {@code ComposantSonar}
-     * 
-     * @param compo
-     */
-    public void save(ComposantSonar compo)
-    {
-        em.getTransaction().begin();
-        if (!em.contains(compo))
-        {
-            em.persist(compo);
-        }
-        em.getTransaction().commit();
-    }
-
-    /**
-     * Sauvegarde d'une liste de {@code ComposantSonar}
-     * 
-     * @param compos
-     */
-    public int save(Collection<ComposantSonar> compos)
-    {
-        em.getTransaction().begin();
-        int i = 0;
-        for (ComposantSonar compo : compos)
-        {
-            if (!em.contains(compo))
-            {
-                em.persist(compo);
-                i++;
-            }
-        }
-        em.getTransaction().commit();
-        return i;
-    }
-
-    /**
-     * Sauvegarde d'une liste de {@code ComposantSonar}
-     * 
-     * @param compos
-     */
-    public int saveMap(Map<String, ComposantSonar> compos)
-    {
-        return save(compos.values());
     }
 
     /**

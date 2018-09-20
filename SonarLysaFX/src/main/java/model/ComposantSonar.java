@@ -2,25 +2,27 @@ package model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.eclipse.persistence.annotations.BatchFetch;
+import org.eclipse.persistence.annotations.BatchFetchType;
 
 import model.enums.EtatAppli;
 import model.enums.QG;
 import model.utilities.AbstractModele;
-import utilities.adapter.QGAdapter;
 
 /**
  * Classe de modèle réprésentant un composant SonarQube du fichier XML
@@ -29,12 +31,12 @@ import utilities.adapter.QGAdapter;
  * @since 1.0
  *
  */
-@XmlRootElement
 @Entity
 @Table(name = "composants")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="ComposantSonar.findAll", query="SELECT c FROM ComposantSonar c"),
+        @NamedQuery(name="ComposantSonar.findAll", query="SELECT c FROM ComposantSonar c "
+                + "JOIN FETCH c.appli a"),
         @NamedQuery(name="ComposantSonar.resetTable", query="DELETE FROM ComposantSonar")
 })
 //@formatter:on
@@ -60,8 +62,10 @@ public class ComposantSonar extends AbstractModele implements Serializable
     @Column(name = "id", nullable = false)
     private String id;
 
-    @Column(name = "appli", nullable = true)
-    private String appli;
+    @BatchFetch(value = BatchFetchType.JOIN)    
+    @ManyToOne (targetEntity = Application.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn (name = "appli")
+    private Application appli;
 
     @Column(name = "edition", nullable = true, length = 20)
     private String edition;
@@ -136,7 +140,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
-    @XmlTransient
     public int getIdBase()
     {
         return idBase;
@@ -147,7 +150,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.idBase = idBase;
     }
 
-    @XmlAttribute(name = "nom", required = true)
     public String getNom()
     {
         return getString(nom);
@@ -158,7 +160,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.nom = nom;
     }
 
-    @XmlAttribute(name = "lot", required = false)
     public String getLot()
     {
         return getString(lot);
@@ -169,7 +170,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.lot = lot;
     }
 
-    @XmlAttribute(name = "key", required = true)
     public String getKey()
     {
         return getString(key);
@@ -180,18 +180,16 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.key = key;
     }
 
-    @XmlAttribute(name = "appli", required = false)
-    public String getAppli()
+    public Application getAppli()
     {
-        return getString(appli);
+        return appli;
     }
 
-    public void setAppli(String appli)
+    public void setAppli(Application appli)
     {
         this.appli = appli;
     }
 
-    @XmlAttribute(name = "edition", required = false)
     public String getEdition()
     {
         return getString(edition);
@@ -202,7 +200,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.edition = edition;
     }
 
-    @XmlAttribute(name = "id", required = true)
     public String getId()
     {
         return getString(id);
@@ -213,7 +210,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.id = id;
     }
 
-    @XmlAttribute(name = "ldc", required = true)
     public int getLdc()
     {
         return ldc;
@@ -234,7 +230,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.ldc = Integer.parseInt(ldc);
     }
 
-    @XmlAttribute(name = "security", required = true)
     public int getSecurityRating()
     {
         return securityRating;
@@ -245,7 +240,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.securityRating = securityRating;
     }
 
-    @XmlAttribute(name = "vulnerabilities", required = true)
     public int getVulnerabilites()
     {
         return vulnerabilites;
@@ -266,7 +260,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.vulnerabilites = Integer.parseInt(vulnerabilites);
     }
 
-    @XmlTransient
     public EtatAppli getEtatAppli()
     {
         return etatAppli;
@@ -277,7 +270,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.etatAppli = etatAppli;
     }
 
-    @XmlAttribute(name = "securite", required = true)
     public boolean isSecurite()
     {
         return securite;
@@ -288,8 +280,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.securite = securite;
     }
 
-    @XmlAttribute(name = "qualityGate", required = false)
-    @XmlJavaTypeAdapter(value = QGAdapter.class)
     public QG getQualityGate()
     {
         return qualityGate == null ? QG.NONE : qualityGate;
@@ -310,7 +300,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.qualityGate = QG.from(qualityGate);
     }
 
-    @XmlAttribute(name = "bloquants", required = false)
     public float getBloquants()
     {
         return bloquants;
@@ -321,7 +310,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.bloquants = bloquants;
     }
 
-    @XmlAttribute(name = "critiques", required = false)
     public float getCritiques()
     {
         return critiques;
@@ -332,7 +320,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.critiques = critiques;
     }
 
-    @XmlAttribute(name = "duplication", required = false)
     public float getDuplication()
     {
         return duplication;
@@ -343,7 +330,6 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.duplication = duplication;
     }
 
-    @XmlAttribute(name = "versionRelease", required = false)
     public boolean isVersionRelease()
     {
         return versionRelease;

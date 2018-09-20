@@ -10,7 +10,8 @@ package model.enums;
 public enum TypeColEdition implements TypeColR  
 {
     LIBELLE ("Libellé", "colLib"),
-    VERSION ("Numero de version", "colVersion");
+    VERSION ("Numero de version", "colVersion"),
+    COMMENTAIRE("Commentaire", "colComment");
 
     private final String valeur;
     private final String nomCol;

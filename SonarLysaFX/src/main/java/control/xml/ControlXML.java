@@ -18,13 +18,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
-import model.enums.TypeColR;
 import model.ModelFactory;
-import model.enums.TypeColApps;
-import model.enums.TypeColChefServ;
-import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
 import model.enums.TypeColNPC;
+import model.enums.TypeColR;
 import model.enums.TypeFichier;
 import model.utilities.AbstractModele;
 import model.utilities.XML;
@@ -141,50 +138,6 @@ public class ControlXML
     }
 
     /**
-     * Enregistre le fichier Excel de la liste des applications dans les paramètres XML.
-     * 
-     * @param file
-     *            Fichier à utiliser
-     */
-    public void recupListeAppsDepuisExcel(File file)
-    {
-        saveInfos(TypeFichier.APPS, TypeColApps.class, file);
-    }
-
-    /**
-     * Enregistre le fichier Excel des informations Clarity dans les paramètres XML
-     * 
-     * @param file
-     *            Fichier à utiliser
-     */
-    public void recupInfosClarityDepuisExcel(File file)
-    {
-        saveInfos(TypeFichier.CLARITY, TypeColClarity.class, file);
-    }
-
-    /**
-     * Enregistre le fichier Excel des chef de services dans les paramètres XML
-     * 
-     * @param file
-     *            Fichier à utiliser
-     */
-    public void recupChefServiceDepuisExcel(File file)
-    {
-        saveInfos(TypeFichier.RESPSERVICE, TypeColChefServ.class, file);
-    }
-
-    /**
-     * Récupère depuis le fichier Excel toutes les édition CHC/CDM, aver leurs numéros de version, pour l'annèe en cours, la précedente et la suivante.
-     * 
-     * @param file
-     *            Fichier à utiliser
-     */
-    public void recupEditionDepuisExcel(File file)
-    {
-        saveInfos(TypeFichier.EDITION, TypeColEdition.class, file);
-    }
-
-    /**
      * Récupère depuis le fichier Excel toutes les édition CHC/CDM, aver leurs numéros de version, pour l'annèe en cours, la précedente et la suivante.
      * 
      * @param file
@@ -204,11 +157,20 @@ public class ControlXML
      *            Type de colonnes de fichiers, énumération
      * @param file
      */
-    @SuppressWarnings("rawtypes")
     private <T extends Enum<T> & TypeColR> void saveInfos(TypeFichier typeFichier, Class<T> typeCol, File file)
     {
-        fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getReader(typeCol, file).recupDonneesDepuisExcel());
-        saveParam(fichiersXML);
+        switch (typeFichier)
+        {
+                
+            case NPC:
+                fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getReader(typeCol, file).recupDonneesDepuisExcel());
+                saveParam(fichiersXML);
+                break;
+                
+            default:
+                throw new TechnicalException("control.xml.ControlXML.saveInfos - TypeFichier inconnu : " + typeFichier);
+        }
+
     }
 
     /*---------- METHODES PRIVEES ----------*/

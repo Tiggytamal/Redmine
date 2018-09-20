@@ -115,7 +115,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
         retour.setSeverite(issue.getSeverity());
         retour.setMessage(issue.getMessage());
         retour.setLot(composant.getLot());
-        retour.setAppli(composant.getAppli());
+        retour.setAppli(composant.getAppli().getCode());
         retour.setLib(extractLib(retour.getMessage()));
 
         LotSuiviRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(retour.getLot());

@@ -18,7 +18,7 @@ import model.FichiersXML;
 import model.InfoClarity;
 import model.LotSuiviRTC;
 import model.ModelFactory;
-import model.RespService;
+import model.ChefService;
 import model.enums.TypeFichier;
 import utilities.Statics;
 
@@ -63,14 +63,6 @@ public class TestFichierXML extends AbstractTestModel<FichiersXML> implements Te
     public void testMajMapDonnees()
     {
         // PreTest - toutes les maps sont vides et les dates de maj aussi
-        assertNotNull(handler.getMapClarity());
-        assertEquals(0, handler.getMapClarity().size());
-        assertNotNull(handler.getMapApplis());
-        assertEquals(0, handler.getMapApplis().size());
-        assertNotNull(handler.getMapEditions());
-        assertEquals(0, handler.getMapEditions().size());
-        assertNotNull(handler.getMapRespService());
-        assertEquals(0, handler.getMapRespService().size());
         assertNotNull(handler.getMapLotsRTC());
         assertEquals(0, handler.getMapLotsRTC().size());
         assertNotNull(handler.getDateMaj());
@@ -80,22 +72,6 @@ public class TestFichierXML extends AbstractTestModel<FichiersXML> implements Te
 
         // Initialisation des maps et mise à jour du fichier
         initMaps();
-
-        // Test mapClarity
-        assertEquals(1, handler.getMapClarity().size());
-        assertEquals(date, handler.getDateMaj().get(TypeFichier.CLARITY));
-
-        // Test mapApplis
-        assertEquals(2, handler.getMapApplis().size());
-        assertEquals(date, handler.getDateMaj().get(TypeFichier.APPS));
-
-        // Test mapRespService
-        assertEquals(3, handler.getMapRespService().size());
-        assertEquals(date, handler.getDateMaj().get(TypeFichier.RESPSERVICE));
-
-        // Test mapEditions
-        assertEquals(4, handler.getMapEditions().size());
-        assertEquals(date, handler.getDateMaj().get(TypeFichier.EDITION));
 
         // Test mapLotsRTC
         assertEquals(5, handler.getMapLotsRTC().size());
@@ -161,10 +137,10 @@ public class TestFichierXML extends AbstractTestModel<FichiersXML> implements Te
         mapApplis.put("b", ModelFactory.getModel(Application.class));
         handler.majMapDonnees(TypeFichier.APPS, mapApplis);
 
-        Map<String, RespService> mapRespService = new HashMap<>();
-        mapRespService.put("a", ModelFactory.getModel(RespService.class));
-        mapRespService.put("b", ModelFactory.getModel(RespService.class));
-        mapRespService.put("c", ModelFactory.getModel(RespService.class));
+        Map<String, ChefService> mapRespService = new HashMap<>();
+        mapRespService.put("a", ModelFactory.getModel(ChefService.class));
+        mapRespService.put("b", ModelFactory.getModel(ChefService.class));
+        mapRespService.put("c", ModelFactory.getModel(ChefService.class));
         handler.majMapDonnees(TypeFichier.RESPSERVICE, mapRespService);
 
         Map<String, String> mapEditions = new HashMap<>();

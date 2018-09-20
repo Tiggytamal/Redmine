@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import model.Application;
+import model.ModelFactory;
 import model.enums.TypeColApps;
 
 /**
@@ -60,7 +61,7 @@ public class ControlApps extends AbstractControlExcelRead<TypeColApps, Map<Strin
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
             Row row = sheet.getRow(i);
-            Application app = new Application();
+            Application app = ModelFactory.getModel(Application.class);
 
             // Application active ou non
             if (ACTIF.equals(getCellStringValue(row, colActif)))
@@ -83,6 +84,9 @@ public class ControlApps extends AbstractControlExcelRead<TypeColApps, Map<Strin
             // Indicateur application mainframe
             if (OUI.equals(getCellStringValue(row, colMainFrame)))
                 app.setMainFrame(true);
+            
+            // Mise du référentiel à oui
+            app.setReferentiel(true);
             
             retour.put(app.getCode(), app);
         }

@@ -8,7 +8,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import application.Main;
+import dao.DaoApplication;
 import dao.DaoComposantSonar;
+import model.Application;
 import model.ComposantSonar;
 import model.ModelFactory;
 import model.enums.QG;
@@ -68,6 +70,7 @@ public class CreerListeComposantsTask extends AbstractTask
 
         // Récupération des composants Sonar
         Map<String, ComposantSonar> retour = new HashMap<>();
+        Map<String, Application> mapAppli = new DaoApplication().readAllMap();
         @SuppressWarnings("unchecked")
         List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
 
@@ -99,7 +102,13 @@ public class CreerListeComposantsTask extends AbstractTask
             composantSonar.setNom(projet.getNom());
             composantSonar.setId(projet.getId());
             composantSonar.setLot(getValueMetrique(composant, TypeMetrique.LOT, null));
-            composantSonar.setAppli(getValueMetrique(composant, TypeMetrique.APPLI, null));
+
+            // Code application
+            String codeAppli = getValueMetrique(composant, TypeMetrique.APPLI, null);
+            // On récupère le code appli des infos du composant et si on ne trouve pas le code application dans la base de données, 
+            // on crée une nouvelle en spécifiant qu'elle ne fait pas partie du référentiel
+            composantSonar.setAppli(mapAppli.computeIfAbsent(codeAppli, code -> ModelFactory.getModelWithParams(Application.class, code)));
+                        
             composantSonar.setEdition(getValueMetrique(composant, TypeMetrique.EDITION, null));
             composantSonar.setLdc(getValueMetrique(composant, TypeMetrique.LDC, "0"));
             composantSonar.setSecurityRating((int) Float.parseFloat(getValueMetrique(composant, TypeMetrique.SECURITY, "0")));

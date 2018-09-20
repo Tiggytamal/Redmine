@@ -4,6 +4,12 @@
 	<persistence-unit name="SonarLysaFX" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>model.ComposantSonar</class>
+		<class>model.Application</class>
+		<class>model.ChefService</class>
+		<class>model.InfoClarity</class>
+		<class>model.Edition</class>
+		<class>utilities.adapter.LocalDateConverter</class>
+		<class>utilities.adapter.LocalDateTimeConverter</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://10.156.33.85:3306/sonarlysa" />
 			<property name="javax.persistence.jdbc.user" value="root" />

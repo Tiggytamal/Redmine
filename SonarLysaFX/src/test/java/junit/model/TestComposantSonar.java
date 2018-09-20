@@ -5,6 +5,7 @@ import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
+import model.Application;
 import model.ComposantSonar;
 import model.ModelFactory;
 
@@ -78,7 +79,8 @@ public class TestComposantSonar extends AbstractTestModel<ComposantSonar>
         assertEquals(EMPTY, handler.getAppli());
         
         // Test setter et getter
-        String appli = "Appli";
+        Application appli = ModelFactory.getModel(Application.class);
+        appli.setCode("Appli");
         handler.setAppli(appli);
         assertEquals(appli, handler.getAppli());       
     }
