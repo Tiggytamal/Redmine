@@ -56,6 +56,7 @@ public class CreerVueParEditionTask extends AbstractTask
 
         for (Map.Entry<String, List<ComposantSonar>> entry : map.entrySet())
         {
+            // Affichage et variables
             String nom = "Edition - " + entry.getKey() + "C";
             String base = "Vue " + nom + Statics.NL;
             updateMessage(base);
@@ -64,12 +65,17 @@ public class CreerVueParEditionTask extends AbstractTask
             
             int i = 0;
             int size = entry.getValue().size();
+            long debut = System.currentTimeMillis();
+            
+            // Itération sur chaque composant pour les ajouter à la vue Parent
             for (ComposantSonar compo : entry.getValue())
             {
+                api.ajouterProjet(compo, vueParent);
+                
+                // Affichage
                 i++;
                 updateProgress(i, size);
-                updateMessage(base + "Ajout : " + compo.getNom());
-                api.ajouterProjet(compo, vueParent);
+                updateMessage(base + "Ajout : " + compo.getNom() + affichageTemps(debut, i, size));
             }
         }
         return true;

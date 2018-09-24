@@ -8,6 +8,8 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import dao.DaoChefService;
+import model.ChefService;
 import model.InfoClarity;
 import model.ModelFactory;
 import model.enums.TypeColClarity;
@@ -55,7 +57,11 @@ public class ControlClarity extends AbstractControlExcelRead<TypeColClarity, Map
         // Récupération de la première feuille
         Sheet sheet = wb.getSheetAt(0);
 
+        //Map de retour
         Map<String, InfoClarity> retour = new HashMap<>();
+        
+        // Liste des chef de service depuis la base de données - clef = service
+        Map<String, ChefService> mapChefService = new DaoChefService().readAllMap();
 
         // Itération sur la feuille hormis la ligne des titres, et récupération des lignes qui ont un code Clarity
         for (int i = 1; i < sheet.getLastRowNum(); i++)
@@ -66,6 +72,10 @@ public class ControlClarity extends AbstractControlExcelRead<TypeColClarity, Map
             if (!getCellStringValue(row, colClarity).isEmpty())
             {
                 InfoClarity info = creerInfoClarityDepuisExcel(row);
+                
+                // Récupération du chef de service depuis la map et création d'un chef inconnu si on n'en a pas trouvé
+                ChefService chefService = mapChefService.computeIfAbsent(info.getService(), key -> ModelFactory.getModelWithParams(ChefService.class, info.getService()));
+                info.setChefService(chefService);
                 retour.put(info.getCodeClarity(), info);
             }
         }

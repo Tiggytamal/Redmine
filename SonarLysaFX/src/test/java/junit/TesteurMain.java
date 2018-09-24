@@ -19,5 +19,9 @@ public class TesteurMain
         builder.append(":");
         builder.append("28H02m8903,;:!");
         System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
+        builder = new StringBuilder("admin");
+        builder.append(":");
+        builder.append("admin");
+        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
     }
 }

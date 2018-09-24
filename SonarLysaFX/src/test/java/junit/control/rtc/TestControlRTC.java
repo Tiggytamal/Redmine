@@ -282,7 +282,7 @@ public class TestControlRTC extends JunitBase
         assertNotNull(lot.getEdition());
         assertFalse(lot.getEdition().isEmpty());
         assertNotNull(lot.getProjetClarity());
-        assertFalse(lot.getProjetClarity().isEmpty());
+        assertFalse(lot.getProjetClarity().getCodeClarity().isEmpty());
     }
 
     @Test

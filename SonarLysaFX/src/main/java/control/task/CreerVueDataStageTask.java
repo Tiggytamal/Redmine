@@ -85,6 +85,7 @@ public class CreerVueDataStageTask extends AbstractTask
 
         int i = 0;
         int size = listeDS.size();
+        long debut = System.currentTimeMillis();
 
         for (ComposantSonar compo : listeDS)
         {
@@ -92,9 +93,11 @@ public class CreerVueDataStageTask extends AbstractTask
                 return false;
 
             api.ajouterProjet(compo, vue);
+            
+            // Affichage
             i++;
             updateProgress(i, size);
-            updateMessage(baseMessage + compo.getNom());
+            updateMessage(baseMessage + compo.getNom() + affichageTemps(debut, i, size));
         }
         return true;
     }

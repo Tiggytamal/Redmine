@@ -8,7 +8,9 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
+import model.InfoClarity;
 import model.LotSuiviRTC;
+import model.ModelFactory;
 import model.enums.EtatLot;
 
 public class TestLotSuiviRTC extends AbstractTestModel<LotSuiviRTC>
@@ -49,7 +51,7 @@ public class TestLotSuiviRTC extends AbstractTestModel<LotSuiviRTC>
         
         // Test setter et getter
         String string = "Projet";
-        handler.setProjetClarity(string);
+        handler.setProjetClarity(ModelFactory.getModelWithParams(InfoClarity.class,  string));
         assertEquals(string, handler.getProjetClarity());       
     }
     

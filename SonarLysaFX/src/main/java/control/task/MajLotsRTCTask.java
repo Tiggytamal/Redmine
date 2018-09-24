@@ -1,7 +1,6 @@
 package control.task;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,9 +9,8 @@ import com.ibm.team.workitem.common.model.IWorkItemHandle;
 import com.mchange.util.AssertException;
 
 import control.rtc.ControlRTC;
-import control.xml.ControlXML;
+import dao.DaoLotSuiviRTC;
 import model.LotSuiviRTC;
-import model.enums.TypeFichier;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
@@ -31,6 +29,7 @@ public class MajLotsRTCTask extends AbstractTask
     private static final String TITRE = "Mise à jour des Lots RTC";
     private LocalDate date;
     private boolean remiseAZero;
+    private DaoLotSuiviRTC dao;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -39,6 +38,7 @@ public class MajLotsRTCTask extends AbstractTask
         super(1, TITRE);
         this.date = date;
         this.remiseAZero = remiseAZero;
+        dao = new DaoLotSuiviRTC();
     }
 
     /**
@@ -55,8 +55,8 @@ public class MajLotsRTCTask extends AbstractTask
     @Override
     protected Boolean call() throws Exception
     {
-        majFichierRTC();
-        return sauvegarde();
+        Map<String, LotSuiviRTC> map = majLotsRTC();
+        return sauvegarde(map);
     }
 
     @Override
@@ -67,41 +67,47 @@ public class MajLotsRTCTask extends AbstractTask
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private void majFichierRTC() throws TeamRepositoryException
+    private Map<String, LotSuiviRTC> majLotsRTC() throws TeamRepositoryException
     {
         ControlRTC control = ControlRTC.INSTANCE;
         List<IWorkItemHandle> handles = control.recupLotsRTC(remiseAZero, date);
         if (handles.isEmpty())
             throw new FunctionalException(Severity.ERROR, "La liste des lots RTC est vide!");
 
+        // VAriables
         int i = 0;
         int size = handles.size();
         String base = "Récupération RTC - Traitement lot : ";
         String fin = "Nbre de lots traités : ";
         String sur = " sur ";
+        long debut = System.currentTimeMillis();
 
-        // Initialisation - en cas de remise à zéro on prend une ma pvièrge sinon on récupère le fichier existant comme base.
-        Map<String, LotSuiviRTC> map = null;
-
-        if (remiseAZero)
-            map = new HashMap<>();
-        else
-            map = Statics.fichiersXML.getMapLotsRTC();
+        // Initialisation de la map depuis les informations de la base de données
+        Map<String, LotSuiviRTC> retour = dao.readAllMap();
 
         for (IWorkItemHandle handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête
-            LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle(handle);
+            LotSuiviRTC lotRTC = control.creerLotSuiviRTCDepuisHandle(handle);
+
+            String lot = lotRTC.getLot();
+
+            // ON saute tous les lotRTC sans numéro de lot.
+            if (lotRTC.getLot().isEmpty())
+                continue;
+
+            // On rajoute les lots non éxistants à la map et on mets à jour les autres avec les nouvelles données
+            if (!retour.containsKey(lot))
+                retour.put(lot, lotRTC);
+            else
+                retour.get(lot).update(lotRTC);
+            
+            // Affichage
             i++;
-
             updateProgress(i, size);
-            updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).append(sur).append(size).toString());
-
-            if (!lot.getLot().isEmpty())
-                map.put(lot.getLot(), lot);
+            updateMessage(new StringBuilder(base).append(lot).append(Statics.NL).append(fin).append(i).append(sur).append(size).append(affichageTemps(debut, i, size)).toString());
         }
-
-        Statics.fichiersXML.majMapDonnees(TypeFichier.LOTSRTC, map);
+        return retour;
     }
 
     /**
@@ -109,9 +115,11 @@ public class MajLotsRTCTask extends AbstractTask
      * 
      * @return
      */
-    private boolean sauvegarde()
+    private boolean sauvegarde(Map<String, LotSuiviRTC> map)
     {
-        return new ControlXML().saveParam(Statics.fichiersXML);
+        if (remiseAZero)
+            dao.resetTable();
+        return dao.update(map.values());
     }
 
     /*---------- ACCESSEURS ----------*/

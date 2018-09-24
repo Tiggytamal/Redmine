@@ -153,10 +153,11 @@ public class CreerVueProductionTask extends AbstractTask
     {
         Map<LocalDate, List<Vue>> retour = new HashMap<>();
 
-        // Affichage fenêtre
+        // Affichage et variables
         String base = "Traitement RTC :";
         int size = mapSonar.size();
         int i = 0;
+        long debut = System.currentTimeMillis();
 
         // Itération sur les lots Sonar
         for (Map.Entry<String, Vue> entry : mapSonar.entrySet())
@@ -166,9 +167,12 @@ public class CreerVueProductionTask extends AbstractTask
             {
                 // Récupération des états du lot depuis RTC
                 map = ControlRTC.INSTANCE.recupDatesEtatsLot(ControlRTC.INSTANCE.recupWorkItemDepuisId(Integer.parseInt(entry.getKey())));
-                updateMessage(base + Statics.NL + "Lot " + entry.getKey());
+                
+                // Affichage
                 i++;
                 updateProgress(i, size);
+                updateMessage(base + Statics.NL + "Lot " + entry.getKey() + affichageTemps(debut, i, size));
+
             }
             catch (TeamRepositoryException e)
             {

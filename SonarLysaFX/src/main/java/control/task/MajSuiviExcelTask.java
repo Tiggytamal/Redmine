@@ -161,6 +161,7 @@ public class MajSuiviExcelTask extends AbstractTask
      */
     private void majFichierRTC() throws TeamRepositoryException
     {
+        // Variables
         ControlRTC control = ControlRTC.INSTANCE;
         Map<String, LotSuiviRTC> map = new HashMap<>();
         map.putAll(fichiersXML.getMapLotsRTC());
@@ -172,15 +173,19 @@ public class MajSuiviExcelTask extends AbstractTask
         int size = handles.size();
         String base = "Récupération RTC - Traitement lot : ";
         String fin = "Nbre de lots traités : ";
+        long debut = System.currentTimeMillis();
+        
         for (IWorkItemHandle handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête
             LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle(handle);
-            i++;
-            updateProgress(i, size);
-            updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).toString());
             if (!lot.getLot().isEmpty())
                 map.put(lot.getLot(), lot);
+            
+            // Affichage
+            i++;
+            updateProgress(i, size);
+            updateMessage(new StringBuilder(base).append(lot.getLot()).append(Statics.NL).append(fin).append(i).append(affichageTemps(debut, i, size)).toString());
         }
 
         Statics.fichiersXML.majMapDonnees(TypeFichier.LOTSRTC, map);

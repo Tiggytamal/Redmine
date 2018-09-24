@@ -67,9 +67,9 @@ public class DaoChefService extends AbstractDao<ChefService> implements Serializ
     {
         Map<String, ChefService> retour = new HashMap<>();
 
-        for (ChefService appli : readAll())
+        for (ChefService chefService : readAll())
         {
-            retour.put(appli.getNom(), appli);
+            retour.put(chefService.getService(), chefService);
         }
         return retour;
     }

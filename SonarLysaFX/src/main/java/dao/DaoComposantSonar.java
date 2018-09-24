@@ -2,6 +2,7 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,51 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
         return 0;       
     }
 
+    /**
+     * Méthode de sauvegarde d'un élément.<br/>
+     * Retourne vrai si l'objet a bien été persisté.
+     * 
+     * @param compo
+     */
+    @Override
+    public boolean save(ComposantSonar compo)
+    {
+        if (!em.contains(compo))
+        {
+            if (compo.getAppli().getIdBase() == 0)
+                em.persist(compo.getAppli());
+            em.persist(compo);
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Méthode de sauvegarde d'une collection d'éléments.<br/>
+     * Retourne le nombre d'éléments enregistrés.
+     * 
+     * @param collection
+     * @return
+     */
+    @Override
+    public int save(Collection<ComposantSonar> collection)
+    {
+        em.getTransaction().begin();
+        int i = 0;
+        for (ComposantSonar t : collection)
+        {
+            if (!em.contains(t))
+            {
+                if (t.getAppli().getIdBase() == 0)
+                    em.persist(t.getAppli());
+                em.persist(t);
+                i++;
+            }
+        }
+        em.getTransaction().commit();
+        return i;
+    }
+    
     /**
      * Retourne tous les éléments sous forme d'une map
      * 

@@ -2,6 +2,7 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,20 +44,60 @@ public class DaoInfoClarity extends AbstractDao<InfoClarity> implements Serializ
         Map<String, InfoClarity> mapBase = readAllMap();
 
         for (Map.Entry<String, InfoClarity> entry : mapExcel.entrySet())
-        {            
+        {
             mapBase.put(entry.getKey(), mapBase.computeIfAbsent(entry.getKey(), key -> entry.getValue()).update(entry.getValue()));
         }
 
+        save(mapBase.values());
+        return mapBase.values().size();
+    }
+
+    /**
+     * Méthode de sauvegarde d'un élément.<br/>
+     * Retourne vrai si l'objet a bien été persisté.
+     * 
+     * @param info
+     */
+    @Override
+    public boolean save(InfoClarity info)
+    {
+        boolean ok = false;
         em.getTransaction().begin();
-        for (InfoClarity appli : mapBase.values())
+        if (!em.contains(info))
         {
-            if (em.contains(appli))
-                em.merge(appli);
-            else
-                em.persist(appli);
+            if (info.getChefService() != null && info.getChefService().getIdBase() == 0)
+                em.persist(info.getChefService());
+            em.persist(info);
+            ok = true;
         }
         em.getTransaction().commit();
-        return mapBase.values().size();
+        return ok;
+    }
+
+    /**
+     * Méthode de sauvegarde d'une collection d'éléments.<br/>
+     * Retourne le nombre d'éléments enregistrés.
+     * 
+     * @param collection
+     * @return
+     */
+    @Override
+    public int save(Collection<InfoClarity> collection)
+    {
+        em.getTransaction().begin();
+        int i = 0;
+        for (InfoClarity info : collection)
+        {
+            if (!em.contains(info))
+            {
+                if (info.getChefService().getIdBase() == 0)
+                    em.persist(info.getChefService());
+                em.persist(info);
+                i++;
+            }
+        }
+        em.getTransaction().commit();
+        return i;
     }
 
     /**
@@ -73,6 +114,21 @@ public class DaoInfoClarity extends AbstractDao<InfoClarity> implements Serializ
             retour.put(info.getCodeClarity(), info);
         }
         return retour;
+    }
+
+    /**
+     * Remonte un {@code InfoClarity} depuis la base de données avec le code du projet
+     * 
+     * @param codeClarity
+     * @return
+     */
+    public InfoClarity getInfoClarityByCode(String codeClarity)
+    {
+        List<InfoClarity> liste = em.createNamedQuery("InfoClarity.findByCode", InfoClarity.class).setParameter("code", codeClarity).getResultList();
+        if (liste.isEmpty())
+            return null;
+        else
+            return liste.get(0);
     }
 
     /**

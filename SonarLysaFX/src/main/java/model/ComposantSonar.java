@@ -35,7 +35,7 @@ import model.utilities.AbstractModele;
 @Table(name = "composants")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="ComposantSonar.findAll", query="SELECT c FROM ComposantSonar c "
+        @NamedQuery(name="ComposantSonar.findAll", query="SELECT distinct(c) FROM ComposantSonar c "
                 + "JOIN FETCH c.appli a"),
         @NamedQuery(name="ComposantSonar.resetTable", query="DELETE FROM ComposantSonar")
 })
@@ -63,7 +63,7 @@ public class ComposantSonar extends AbstractModele implements Serializable
     private String id;
 
     @BatchFetch(value = BatchFetchType.JOIN)    
-    @ManyToOne (targetEntity = Application.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne (targetEntity = Application.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn (name = "appli")
     private Application appli;
 

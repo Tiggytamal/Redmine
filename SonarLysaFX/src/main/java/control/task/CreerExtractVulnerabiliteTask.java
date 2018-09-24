@@ -120,7 +120,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
 
         LotSuiviRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(retour.getLot());
         if (lotRTC != null)
-            retour.setClarity(lotRTC.getProjetClarity());
+            retour.setClarity(lotRTC.getProjetClarity().getCodeClarity());
 
         return retour;
     }

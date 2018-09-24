@@ -98,7 +98,7 @@ public class Anomalie extends AbstractModele
         setCpiProjet(lotRTC.getCpiProjet());
         setEdition(lotRTC.getEdition());
         setLibelleProjet(lotRTC.getLibelle());
-        setProjetClarity(lotRTC.getProjetClarity());
+        setProjetClarity(lotRTC.getProjetClarity().getCodeClarity());
         setLot("Lot " + lotRTC.getLot());
         setEtatLot(lotRTC.getEtatLot());
         setProjetRTC(lotRTC.getProjetRTC());

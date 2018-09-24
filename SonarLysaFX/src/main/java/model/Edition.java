@@ -58,9 +58,10 @@ public class Edition extends AbstractModele implements Serializable
     }
     /*---------- METHODES PUBLIQUES ----------*/
     
-    public Edition update(Edition edition)
+    public Edition update(Edition update)
     {
-        nom = edition.nom;
+        nom = update.nom;
+        commentaire = update.commentaire;
         return this;
     }
     /*---------- METHODES PRIVEES ----------*/
@@ -84,11 +85,6 @@ public class Edition extends AbstractModele implements Serializable
     public void setNumero(String numero)
     {
         this.numero = numero;
-    }
-        
-    public int getIdBase()
-    {
-        return idBase;
     }
     
     public String getCommentaire()

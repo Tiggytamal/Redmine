@@ -54,7 +54,7 @@ public abstract class AbstractDao<T>
 	 * 
 	 * @param t
 	 */
-	public final boolean save(T t)
+	public boolean save(T t)
 	{
 	    boolean ok = false;
         em.getTransaction().begin();
@@ -74,7 +74,7 @@ public abstract class AbstractDao<T>
 	 * @param collection
 	 * @return
 	 */
-	public final int save(Collection<T> collection)
+	public int save(Collection<T> collection)
 	{
         em.getTransaction().begin();
         int i = 0;
@@ -89,6 +89,7 @@ public abstract class AbstractDao<T>
         em.getTransaction().commit();
         return i;
 	}
+	
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 	

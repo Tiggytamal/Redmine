@@ -19,7 +19,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import model.ModelFactory;
-import model.enums.TypeColEdition;
 import model.enums.TypeColNPC;
 import model.enums.TypeColR;
 import model.enums.TypeFichier;

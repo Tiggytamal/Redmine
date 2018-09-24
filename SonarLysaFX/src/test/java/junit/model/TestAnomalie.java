@@ -57,7 +57,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
         String libProjet = "libProjet";
         lotRTC.setLibelle(libProjet);
         String clarity = "clarity";
-        lotRTC.setProjetClarity(clarity);
+        lotRTC.setProjetClarity(ModelFactory.getModelWithParams(InfoClarity.class, clarity));
         String lot = "123456";
         lotRTC.setLot(lot);
         lotRTC.setEtatLot(EtatLot.NOUVEAU);

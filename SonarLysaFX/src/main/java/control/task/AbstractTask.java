@@ -4,6 +4,8 @@ import static utilities.Statics.EMPTY;
 import static utilities.Statics.info;
 import static utilities.Statics.proprietesXML;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -50,6 +52,9 @@ public abstract class AbstractTask extends Task<Boolean>
     /*---------- ATTRIBUTS ----------*/
 
     protected static final String RECUPCOMPOSANTS = "Récupération des composants Sonar";
+    private static final int MILLITOSECOND = 1000;
+    private static final String ECOULE = "\nTemps écoulé : ";
+    private static final String RESTANT = "\nTemps restant : ";
 
     protected SonarAPI api;
     private StringProperty etape = new SimpleStringProperty(this, "etape", EMPTY);
@@ -187,7 +192,7 @@ public abstract class AbstractTask extends Task<Boolean>
         updateMessage(RECUPCOMPOSANTS + "OK");
         return retour;
     }
-    
+
     /**
      * Remonte la valeur d'une metrique en protegeant des nullPointeur avec une valeur par défault.
      * 
@@ -276,6 +281,27 @@ public abstract class AbstractTask extends Task<Boolean>
     {
         debut++;
         setEtape(debut, fin);
+    }
+
+    /**
+     * Affiche le temps restant et le temps écoulé dans les fenêtres des tâches
+     * 
+     * @param debut
+     *            Heure de début.
+     * @param i
+     *            Index de l'élément en cours
+     * @param size
+     *            Taille de la liste parcourue.
+     * @return
+     */
+    protected final String affichageTemps(long debut, int i, int size)
+    {
+        long actuel = System.currentTimeMillis();
+        long ecoute = actuel - debut;
+        long prevu = ecoute / i * size;
+        String ecoule = LocalTime.ofSecondOfDay(ecoute / MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME);
+        String restant = LocalTime.ofSecondOfDay(Math.abs((prevu - ecoute)) / MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME);
+        return new StringBuilder(ECOULE).append(ecoule).append(RESTANT).append(restant).toString();
     }
 
     /*---------- METHODES PRIVEES ----------*/

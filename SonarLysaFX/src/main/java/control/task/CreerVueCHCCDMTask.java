@@ -31,7 +31,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
     /*---------- ATTRIBUTS ----------*/
 
     private static final short ETAPES = 3;
-    private static final long NBRESEMAINES = 52;
+    private static final int NBRESEMAINES = 52;
     private static final String TITRE = "création vues Maintenance";
     
     private List<String> annees;
@@ -93,6 +93,9 @@ public class CreerVueCHCCDMTask extends AbstractTask
         String base;
         String baseMessage = "Suppression des vues existantes :" + NL;
         int j = 1;
+        long debut = System.currentTimeMillis();
+        int size = NBRESEMAINES * annees.size();
+        
         // On itère sur chacune des annèes
         for (String annee : annees)
         {
@@ -108,9 +111,11 @@ public class CreerVueCHCCDMTask extends AbstractTask
                 StringBuilder builder = new StringBuilder(base).append("-S").append(String.format("%02d", i));
                 String message = builder.toString();
                 api.supprimerProjet(builder.append("Key").toString(), false);
-                updateMessage(baseMessage + message);
-                updateProgress(j, NBRESEMAINES * annees.size());
+                
+                //Affichage
                 j++;
+                updateProgress(j, (long) size);
+                updateMessage(baseMessage + message + affichageTemps(debut, j, size));
             }
         }
     }

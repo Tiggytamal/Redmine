@@ -8,6 +8,7 @@
 		<class>model.ChefService</class>
 		<class>model.InfoClarity</class>
 		<class>model.Edition</class>
+		<class>model.LotSuiviRTC</class>
 		<class>utilities.adapter.LocalDateConverter</class>
 		<class>utilities.adapter.LocalDateTimeConverter</class>
 		<properties>

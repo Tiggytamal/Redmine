@@ -79,12 +79,14 @@ public class PurgeSonarTask extends AbstractTask
         // Suppression de tous les composants de la liste
         for (ComposantSonar compo : suppression)
         {
-            i++;
-            updateMessage(base + compo.getNom() + "\n" + i + " sur" + size);
-            updateProgress(i, size);
             api.supprimerProjet(compo.getKey(), true);
             api.supprimerVue(compo.getKey(), true);
             controlRapport.addInfo(TypeInfo.COMPOPURGE, compo.getNom(), null);
+            
+            // Affichage
+            i++;
+            updateProgress(i, size);
+            updateMessage(new StringBuilder(base).append(compo.getNom()).append("\n").append(i).append(" sur").append(size).append(affichageTemps(i, i, size)).toString());
         }
 
         updateMessage("Fin du traitement.");

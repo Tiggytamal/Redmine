@@ -44,12 +44,14 @@ public class MajLotsSonarTask extends AbstractTask
 
     private boolean majLotsSonar()
     {
+        // variables
         List<Vue> liste = api.getVues();
         String base = "Mise à jour des vues Sonar.\n";
         boolean ok = true;
-
         int size = liste.size();
         int i = 0;
+        long debut = System.currentTimeMillis();
+        
         for (Vue vue : liste)
         {
             i++;
@@ -57,8 +59,10 @@ public class MajLotsSonarTask extends AbstractTask
             {
                 if (!api.setManualMesureView(vue.getKey()))
                     ok = false;
+                
+                // Affichage
                 updateProgress(i, size);
-                updateMessage(base + "vue " + i + " / " + size);
+                updateMessage(base + "vue " + i + " / " + size + affichageTemps(debut, i, size));
             }
         }
 

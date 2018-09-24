@@ -72,6 +72,11 @@ public class Application extends AbstractModele implements Serializable
     
     Application() { }
     
+    /**
+     * Constructeur pour un code application inconnu
+     * 
+     * @param codeAppli
+     */
     Application(String codeAppli)
     {
         code = codeAppli;
@@ -83,13 +88,13 @@ public class Application extends AbstractModele implements Serializable
     }
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public Application update(Application appli)
+    public Application update(Application update)
     {
-        actif = appli.actif;
-        libelle = appli.libelle;
-        open = appli.open;
-        mainFrame = appli.mainFrame;
-        referentiel = appli.referentiel;
+        actif = update.actif;
+        libelle = update.libelle;
+        open = update.open;
+        mainFrame = update.mainFrame;
+        referentiel = update.referentiel;
         return this;
     }
     

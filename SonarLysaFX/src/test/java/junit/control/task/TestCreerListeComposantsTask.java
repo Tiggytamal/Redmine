@@ -40,7 +40,7 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
     public void init() throws IllegalAccessException
     {
         handler = new CreerListeComposantsTask();
-        initAPI(CreerListeComposantsTask.class, false);
+        initAPI(CreerListeComposantsTask.class, true);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -48,18 +48,18 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
     @Test
     public void testCreerListeComposants() throws Exception
     {        
-//        // Préparation des mocks
-//        mockAPIGetSomething(() -> api.getComposants());
-//        when(api.getVersionComposant(anyString())).thenReturn("1.00");
-//        
-//        // On retourne un composant cide, sauf le premier qui sera null
-//        when(api.getMetriquesComposant(anyString(), any(String[].class))).thenReturn(null).thenReturn(new Composant());
-//        
-//        // La méthode SecuriteComposant retournera qu'une seule fois 1 puis 0
-//        when(api.getSecuriteComposant(anyString())).thenReturn(1).thenReturn(0);
+        // Préparation des mocks
+        mockAPIGetSomething(() -> api.getComposants());
+        when(api.getVersionComposant(anyString())).thenReturn("1.00");
+        
+        // On retourne un composant cide, sauf le premier qui sera null
+        when(api.getMetriquesComposant(anyString(), any(String[].class))).thenReturn(null).thenReturn(new Composant());
+        
+        // La méthode SecuriteComposant retournera qu'une seule fois 1 puis 0
+        when(api.getSecuriteComposant(anyString())).thenReturn(1).thenReturn(0);
         
         // Appel de la méthode
-        Map<String, ComposantSonar> retour = invokeMethod(handler, "call");
+        Map<String, ComposantSonar> retour = invokeMethod(handler, "creerListeComposants");
       
         // Contrôle
         assertNotNull(retour);

@@ -79,14 +79,10 @@ public class CreerListeComposantsTask extends AbstractTask
         etapePlus();
         int i = 0;
         int size = projets.size();
+        long debut = System.currentTimeMillis();
 
         for (Projet projet : projets)
         {
-            // Affichage
-            updateMessage(base + projet.getNom());
-            i++;
-            updateProgress(i, size);
-
             LOGCONSOLE.debug("Traitement composants Sonar : " + i + " - " + size);
 
             // Récupération du numéro de lot et de l'applicaitond e chaque composant.
@@ -122,6 +118,11 @@ public class CreerListeComposantsTask extends AbstractTask
 
             if (api.getSecuriteComposant(projet.getKey()) > 0)
                 composantSonar.setSecurite(true);
+            
+            // Affichage
+            i++;
+            updateMessage(base + projet.getNom() + affichageTemps(debut, i, size));
+            updateProgress(i, size);
         }
 
         // Sauvegarde des données

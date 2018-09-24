@@ -80,11 +80,14 @@ public class CreerVuePatrimoineTask extends AbstractTask
             return false;
 
         // Création de la vue
+        
+        // Affichage plus variables
         StringBuilder builder = new StringBuilder("Création vue ");
         etapePlus();
         updateMessage(builder.append(nom).toString());
         Vue vue = creerVue(key, nom, null, true);
         String baseMessage = builder.append(" OK.").append(Statics.NL).append("Ajout : ").toString();
+        long debut = System.currentTimeMillis();
 
         // Ajout des composants
         int size = composants.size();
@@ -100,8 +103,10 @@ public class CreerVuePatrimoineTask extends AbstractTask
                 continue;
 
             api.ajouterProjet(projet, vue);
+            
+            // Affichage
             updateProgress(i, size);
-            updateMessage(baseMessage + projet.getNom());
+            updateMessage(baseMessage + projet.getNom() + affichageTemps(debut, i, size));
         }
         return true;
     }

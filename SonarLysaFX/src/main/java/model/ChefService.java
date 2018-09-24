@@ -33,42 +33,59 @@ public class ChefService extends AbstractModele implements Serializable
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
-    
+    private static final String INCONNU = "Chef de Service inconnu";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idBase;
 
-    @Column (name = "filière", nullable = false)
+    @Column(name = "filière", nullable = false)
     private String filiere;
-    
+
     @Column(name = "direction", nullable = false)
     private String direction;
-    
+
     @Column(name = "service", nullable = false)
     private String service;
-    
+
     @Column(name = "département", nullable = false)
     private String departement;
-    
+
     @Column(name = "nom", nullable = false)
     private String nom;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    ChefService() { }
+    ChefService()
+    {
+    }
+
+    /**
+     * Constructeur d'un chef de service inconnu
+     * 
+     * @param service
+     */
+    ChefService(String service)
+    {
+        nom = INCONNU;
+        filiere = INCONNU;
+        direction = INCONNU;
+        departement = INCONNU;
+        this.service = service;
+    }
 
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     public ChefService update(ChefService chef)
     {
         filiere = chef.filiere;
         direction = chef.direction;
-        service = chef.direction;
+        service = chef.service;
         departement = chef.departement;
-        
+
         return this;
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
@@ -81,7 +98,7 @@ public class ChefService extends AbstractModele implements Serializable
     {
         this.idBase = idBase;
     }
-    
+
     public String getFiliere()
     {
         return getString(filiere);

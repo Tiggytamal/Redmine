@@ -162,23 +162,27 @@ public class CreerVueParAppsTask extends AbstractTask
 
         // Suppression anciennes vues
         List<Projet> listeVuesExistantes = api.getVuesParNom("APPLI MASTER ");
-        for (int i = 0; i < listeVuesExistantes.size(); i++)
+        int size = listeVuesExistantes.size();
+        long debut = System.currentTimeMillis();
+        
+        for (int i = 0; i < size; i++)
         {
             Projet projet = listeVuesExistantes.get(i);
             api.supprimerProjet(projet.getKey(), false);
             api.supprimerVue(projet.getKey(), false);
 
-            // Message
-            updateMessage(base + projet.getNom());
-            updateProgress(i, listeVuesExistantes.size());
+            // Affichage
+            updateMessage(base + projet.getNom() + affichageTemps(debut, i, size));
+            updateProgress(i, size);
         }
 
         /* ----- 4. Creation des nouvelles vues ----- */
 
-        // Message
+        // Affichage et variables
         base = "Creation des nouvelles vues :" + NL;
         int i = 0;
-        int size = mapApplication.entrySet().size();
+        size = mapApplication.entrySet().size();
+        debut = System.currentTimeMillis();
         etapePlus();
         updateMessage(base);
         updateProgress(0, size);
@@ -189,11 +193,11 @@ public class CreerVueParAppsTask extends AbstractTask
             // Création de la vue principale
             Vue vue = creerVue("APPMASTERAPP" + entry.getKey(), "APPLI MASTER " + entry.getKey(), "Liste des composants de l'application " + entry.getKey(), false);
 
-            // Message
-            String baseVue = base + "traitement : " + vue.getName() + NL;
-            updateMessage(baseVue);
+            // Affichage
             i++;
+            String baseVue = base + "traitement : " + vue.getName() + NL;
             updateProgress(i, size);
+            updateMessage(baseVue + affichageTemps(debut, i, size));
             for (ComposantSonar composantSonar : entry.getValue())
             {
                 updateMessage(baseVue + "Ajout : " + composantSonar.getNom());
@@ -454,7 +458,7 @@ public class CreerVueParAppsTask extends AbstractTask
                 pbApps.setCpiLot(lotSuiviRTC.getCpiProjet());
 
                 // Departement, service et chef de service depuis la map Clarity
-                new ControlModelInfo().controleClarity(pbApps, lotSuiviRTC.getProjetClarity());
+                new ControlModelInfo().controleClarity(pbApps, lotSuiviRTC.getProjetClarity().getCodeClarity());
             }
 
             listePbApps.add(pbApps);

@@ -28,6 +28,7 @@ public class ProgressDialog extends Dialog<Boolean>
 
     // Constantes statiques
     private static final short GRIDWIDTH = 350;
+    private static final short GRIDHEIGHT = 300;
     private static final short BASEINSET = 10;
     private static final short BARWIDTH = 100;
     
@@ -62,6 +63,7 @@ public class ProgressDialog extends Dialog<Boolean>
         // Gridpane
         GridPane grid = new GridPane();
         grid.setPrefWidth(GRIDWIDTH);
+        grid.setPrefHeight(GRIDHEIGHT);
         grid.setHgap(BASEINSET);
         grid.setVgap(BASEINSET);
         grid.setPadding(new Insets(BASEINSET, BASEINSET, BASEINSET, BASEINSET));

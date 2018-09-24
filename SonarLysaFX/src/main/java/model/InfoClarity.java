@@ -1,15 +1,23 @@
 package model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.BatchFetch;
+import org.eclipse.persistence.annotations.BatchFetchType;
+
 import model.utilities.AbstractModele;
+import utilities.Statics;
 
 /**
  * Classe représentant un projet Clarity extrait du fichier hebdomadaire des projets.
@@ -22,8 +30,10 @@ import model.utilities.AbstractModele;
 @Table(name = "infos_clarity")
 //@formatter:off
 @NamedQueries (value = {
-      @NamedQuery(name="InfoClarity.findAll", query="SELECT ic FROM InfoClarity ic"),
-      @NamedQuery(name="InfoClarity.resetTable", query="DELETE FROM InfoClarity")
+      @NamedQuery(name="InfoClarity.findAll", query="SELECT distinct(ic) FROM InfoClarity ic "
+              + "JOIN FETCH ic.chefService cs"),
+      @NamedQuery(name="InfoClarity.resetTable", query="DELETE FROM InfoClarity"),
+      @NamedQuery(name="InfoClarity.findByCode", query="SELECT ic FROM InfoClarity ic WHERE ic.codeClarity = :code")
 })
 //@formatter:on
 public class InfoClarity extends AbstractModele
@@ -57,22 +67,46 @@ public class InfoClarity extends AbstractModele
     
     @Column(name = "service", nullable = false)
     private String service;
+    
+    @BatchFetch(value = BatchFetchType.JOIN)    
+    @ManyToOne (targetEntity = ChefService.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn (name = "chef_service")
+    private ChefService chefService;
+    
+    
 
     /*---------- CONSTRUCTEURS ----------*/
 
     InfoClarity() { }
+    
+    /**
+     * Costructeur pour projet Clarity inconnu
+     * 
+     * @param codeClarity
+     */
+    InfoClarity(String codeClarity)
+    {
+        this.codeClarity = codeClarity;
+        actif = false;
+        libelleProjet = "Code Clarity inconnu du réferentiel";
+        chefProjet = Statics.EMPTY;
+        edition = Statics.EMPTY;
+        direction = Statics.EMPTY;
+        departement = Statics.EMPTY;
+        service = Statics.EMPTY;
+    }
 
     /*---------- METHODES PUBLIQUES ----------*/
     
-    public InfoClarity update(InfoClarity info)
+    public InfoClarity update(InfoClarity update)
     {
-        actif = info.actif;
-        libelleProjet = info.libelleProjet;
-        chefProjet = info.chefProjet;
-        edition = info.edition;
-        direction = info.direction;
-        departement = info.departement;
-        service = info.service;
+        actif = update.actif;
+        libelleProjet = update.libelleProjet;
+        chefProjet = update.chefProjet;
+        edition = update.edition;
+        direction = update.direction;
+        departement = update.departement;
+        service = update.service;
         return this;
     }
     
@@ -170,5 +204,15 @@ public class InfoClarity extends AbstractModele
     public void setService(String service)
     {
         this.service = service;
+    }
+    
+    public ChefService getChefService()
+    {
+        return chefService;
+    }
+
+    public void setChefService(ChefService chefService)
+    {
+        this.chefService = chefService;
     }
 }
