@@ -1,5 +1,6 @@
 package model;
 
+import model.bdd.ProjetClarity;
 import model.enums.EtatAppli;
 import model.utilities.AbstractModele;
 
@@ -37,7 +38,7 @@ public class CompoPbApps extends AbstractModele
      * @param info
      * @return
      */
-    public boolean majDepuisClarity(InfoClarity info)
+    public boolean majDepuisClarity(ProjetClarity info)
     {
         // Indique un manque d'info si le département est vide.
         if (info.getDepartement().isEmpty())

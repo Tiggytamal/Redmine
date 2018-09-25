@@ -3,7 +3,7 @@ package control.task;
 import java.util.List;
 import java.util.Map;
 
-import model.ComposantSonar;
+import model.bdd.ComposantSonar;
 import model.enums.Matiere;
 import model.sonarapi.Vue;
 import utilities.Statics;

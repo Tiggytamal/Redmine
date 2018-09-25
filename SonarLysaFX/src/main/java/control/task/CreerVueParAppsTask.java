@@ -21,13 +21,12 @@ import control.excel.ControlUA;
 import control.excel.ExcelFactory;
 import control.word.ControlRapport;
 import control.xml.ControlXML;
-import dao.DaoApplication;
-import dao.DaoComposantSonar;
-import model.Application;
+import dao.DaoFactory;
 import model.CompoPbApps;
-import model.ComposantSonar;
-import model.LotSuiviRTC;
 import model.ModelFactory;
+import model.bdd.Application;
+import model.bdd.ComposantSonar;
+import model.bdd.LotRTC;
 import model.enums.EtatAppli;
 import model.enums.OptionCreerVueParAppsTask;
 import model.enums.OptionRecupCompo;
@@ -92,7 +91,7 @@ public class CreerVueParAppsTask extends AbstractTask
         super(ETAPES, TITRE);
         annulable = false;
         inconnues = 0;
-        applications = new DaoApplication().readAllMap();
+        applications = DaoFactory.getDao(Application.class).readAllMap();
         controlRapport = new ControlRapport(TypeRapport.VUEAPPS);
         applisOpenSonar = new HashSet<>();
         composPbAppli = new ArrayList<>();
@@ -370,13 +369,13 @@ public class CreerVueParAppsTask extends AbstractTask
         for (; i > 0; i--)
         {
             String newKey = compo.getKey().replace(compo.getKey().charAt(compo.getKey().length() - 1) + "", String.valueOf(i));
-            ComposantSonar compo2 = new DaoComposantSonar().readAllMap().get(newKey);
+            ComposantSonar compo2 = DaoFactory.getDao(ComposantSonar.class).readAllMap().get(newKey);
 
             // Si on trouve un composant, on va tester l'application
             if (compo2 != null)
             {
                 // Si on a un composant du lot 315765, on prend le nouveau composant
-                if (compo.getLot().equals(LOT315765))
+                if (compo.getLotRTC().equals(LOT315765))
                 {
                     retour = compo2;
                     retour.setEtatAppli(EtatAppli.KO);
@@ -439,18 +438,18 @@ public class CreerVueParAppsTask extends AbstractTask
 
             // Infos depuis le composant
             pbApps.setCodeComposant(compo.getNom());
-            if (compo.getLot().isEmpty())
+            if (compo.getLotRTC().getLot().isEmpty())
             {
                 pbApps.setLotRTC(COMPOSANSLOT);
                 listePbApps.add(pbApps);
                 continue;
             }
-            pbApps.setLotRTC(compo.getLot());
+            pbApps.setLotRTC(compo.getLotRTC().getLot());
             pbApps.setEtatAppli(compo.getEtatAppli());
             pbApps.setCodeAppli(compo.getAppli().getCode());
 
             // CPI Lot depuis la map RTC
-            LotSuiviRTC lotSuiviRTC = fichiersXML.getMapLotsRTC().get(compo.getLot());
+            LotRTC lotSuiviRTC = fichiersXML.getMapLotsRTC().get(compo.getLotRTC().getLot());
             if (lotSuiviRTC == null)
                 pbApps.setCpiLot("Lot inaccessible depuis RTC");
             else
@@ -458,7 +457,7 @@ public class CreerVueParAppsTask extends AbstractTask
                 pbApps.setCpiLot(lotSuiviRTC.getCpiProjet());
 
                 // Departement, service et chef de service depuis la map Clarity
-                new ControlModelInfo().controleClarity(pbApps, lotSuiviRTC.getProjetClarity().getCodeClarity());
+                new ControlModelInfo().controleClarity(pbApps, lotSuiviRTC.getProjetClarity().getCode());
             }
 
             listePbApps.add(pbApps);

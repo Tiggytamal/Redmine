@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import dao.DaoEdition;
-import model.ComposantSonar;
-import model.Edition;
+import dao.DaoFactory;
+import model.bdd.ComposantSonar;
+import model.bdd.Edition;
 import model.enums.CHCouCDM;
 import model.enums.Matiere;
 import model.sonarapi.Vue;
@@ -154,7 +154,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
             updateProgress(i, tousLesProjets.size());
 
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
-            if (!compo.getLot().isEmpty() && mapEditions.containsKey(compo.getEdition()))
+            if (!compo.getLotRTC().getLot().isEmpty() && mapEditions.containsKey(compo.getEdition()))
             {
                 String keyCHC = mapEditions.get(compo.getEdition()).getNom();
 
@@ -163,7 +163,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
                     continue;
 
                 // AJout à la map et initialisation HashSet au besoin
-                retour.computeIfAbsent(keyCHC, k -> new HashSet<>()).add(compo.getLot());
+                retour.computeIfAbsent(keyCHC, k -> new HashSet<>()).add(compo.getLotRTC().getLot());
             }
         }
 
@@ -232,7 +232,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
      */
     private Map<String, Edition> recupererEditions(List<String> annees)
     {
-        Map<String, Edition> retour = new DaoEdition().readAllMap();
+        Map<String, Edition> retour = DaoFactory.getDao(Edition.class).readAllMap();
 
         // On itère sur la HashMap pour retirer tous les éléments qui ne sont pas des annèes selectionnées
         for (Iterator<Edition> iter = retour.values().iterator(); iter.hasNext();)

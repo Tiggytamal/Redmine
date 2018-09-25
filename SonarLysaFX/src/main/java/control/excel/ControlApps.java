@@ -11,8 +11,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import model.Application;
 import model.ModelFactory;
+import model.bdd.Application;
 import model.enums.TypeColApps;
 
 /**

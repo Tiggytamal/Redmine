@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import control.task.CreerVuePatrimoineTask;
-import model.ComposantSonar;
+import model.bdd.ComposantSonar;
 import model.sonarapi.Vue;
 import utilities.Statics;
 

@@ -2,13 +2,12 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import control.excel.ControlApps;
 import control.excel.ExcelFactory;
-import model.Application;
+import model.bdd.Application;
 import model.enums.TypeColApps;
 
 /**
@@ -24,13 +23,10 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
     private static final long serialVersionUID = 1L;
 
     /*---------- CONSTRUCTEURS ----------*/
+    
+    DaoApplication() { }
+    
     /*---------- METHODES PUBLIQUES ----------*/
-
-    @Override
-    public List<Application> readAll()
-    {
-        return em.createNamedQuery("Application.findAll", Application.class).getResultList();
-    }
 
     @Override
     public int recupDonneesDepuisExcel(File file)
@@ -39,39 +35,33 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
         ControlApps control = ExcelFactory.getReader(TypeColApps.class, file);
         Map<String, Application> mapExcel = control.recupDonneesDepuisExcel();
 
+        // Récupération des données en base
         Map<String, Application> mapBase = readAllMap();
 
+        // Mise à jour des applications déjà enregistrées et ajout des nouvelles.
         for (Map.Entry<String, Application> entry : mapExcel.entrySet())
         {            
             mapBase.put(entry.getKey(), mapBase.computeIfAbsent(entry.getKey(), key -> entry.getValue()).update(entry.getValue()));
         }
 
-        em.getTransaction().begin();
-        for (Application appli : mapBase.values())
-        {
-            if (em.contains(appli))
-                em.merge(appli);
-            else
-                em.persist(appli);
-        }
-        em.getTransaction().commit();
-        return mapBase.values().size();
+        // Persistance en base
+        return persist(mapBase.values());
     }
-
-    /**
-     * Retourne tous les éléments sous forme d'une map
-     * 
-     * @return
-     */
-    public Map<String, Application> readAllMap()
+    
+    @Override
+    public List<Application> readAll()
     {
-        Map<String, Application> retour = new HashMap<>();
+        return em.createNamedQuery("Application.findAll", Application.class).getResultList();
+    }    
 
-        for (Application appli : readAll())
-        {
-            retour.put(appli.getCode(), appli);
-        }
-        return retour;
+    @Override
+    public Application recupEltParCode(String codeAppli)
+    {
+        List<Application> liste = em.createNamedQuery("Application.findByCode", Application.class).setParameter("code", codeAppli).getResultList();
+        if (liste.isEmpty())
+            return null;
+        else
+            return liste.get(0);
     }
 
     /**
@@ -79,6 +69,7 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
      * 
      * @return
      */
+    @Override
     public int resetTable()
     {
         int retour = 0;

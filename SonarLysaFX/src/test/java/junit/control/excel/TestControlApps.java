@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import control.excel.ControlApps;
 import control.xml.ControlXML;
-import model.Application;
 import model.SwitchXML;
+import model.bdd.Application;
 import model.enums.Switch;
 import model.enums.TypeColApps;
 

@@ -2,13 +2,12 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import control.excel.ControlEdition;
 import control.excel.ExcelFactory;
-import model.Edition;
+import model.bdd.Edition;
 import model.enums.TypeColEdition;
 
 /**
@@ -24,13 +23,10 @@ public class DaoEdition extends AbstractDao<Edition> implements Serializable
     private static final long serialVersionUID = 1L;
 
     /*---------- CONSTRUCTEURS ----------*/
+    
+    DaoEdition() { }
+    
     /*---------- METHODES PUBLIQUES ----------*/
-
-    @Override
-    public List<Edition> readAll()
-    {
-        return em.createNamedQuery("Edition.findAll", Edition.class).getResultList();
-    }
 
     @Override
     public int recupDonneesDepuisExcel(File file)
@@ -39,46 +35,36 @@ public class DaoEdition extends AbstractDao<Edition> implements Serializable
         ControlEdition control = ExcelFactory.getReader(TypeColEdition.class, file);
         Map<String, Edition> mapExcel = control.recupDonneesDepuisExcel();
 
+        // Récupération des données en base
         Map<String, Edition> mapBase = readAllMap();
 
+        // Mise à jour des données
         for (Map.Entry<String, Edition> entry : mapExcel.entrySet())
         {            
             mapBase.put(entry.getKey(), mapBase.computeIfAbsent(entry.getKey(), key -> entry.getValue()).update(entry.getValue()));
         }
 
-        em.getTransaction().begin();
-        for (Edition appli : mapBase.values())
-        {
-            if (em.contains(appli))
-                em.merge(appli);
-            else
-                em.persist(appli);
-        }
-        em.getTransaction().commit();
-        return mapBase.values().size();
+        // PErsistance des données
+        return persist(mapBase.values());
     }
 
-    /**
-     * Retourne tous les éléments sous forme d'une map
-     * 
-     * @return
-     */
-    public Map<String, Edition> readAllMap()
+    @Override
+    public List<Edition> readAll()
     {
-        Map<String, Edition> retour = new HashMap<>();
-
-        for (Edition appli : readAll())
-        {
-            retour.put(appli.getNumero(), appli);
-        }
-        return retour;
+        return em.createNamedQuery("Edition.findAll", Edition.class).getResultList();
+    }
+    
+    @Override
+    public Edition recupEltParCode(String numero)
+    {
+        List<Edition> liste = em.createNamedQuery("Edition.findByCode", Edition.class).setParameter("code", numero).getResultList();
+        if (liste.isEmpty())
+            return null;
+        else
+            return liste.get(0);
     }
 
-    /**
-     * Supprime tous les enregistrements de la base de la table des composants Sonar. Retourne le nombre d'enregistrements effacés. Reset l'incrémentation.
-     * 
-     * @return
-     */
+    @Override
     public int resetTable()
     {
         int retour = 0;

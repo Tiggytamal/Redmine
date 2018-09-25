@@ -87,7 +87,10 @@ public final class Statics
     public static final String LIENAPP = " - Application : ";
     /** Adresse générique de déserialisation */
     public static final String ADRESSEDESER = "d:\\";
+    /** Tiret */
     public static final String TIRET = "- ";
+    /** commentaire, balise @Ignore des Junit */
+    public static final String TESTMANUEL = "Test manuel - ne pas utiliser en automatique";
     
     /* ----- Objets statiques ----- */
     

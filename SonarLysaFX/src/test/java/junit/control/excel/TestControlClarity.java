@@ -5,10 +5,10 @@ import java.util.Map;
 import org.junit.Test;
 
 import control.excel.ControlClarity;
-import model.InfoClarity;
+import model.bdd.ProjetClarity;
 import model.enums.TypeColClarity;
 
-public class TestControlClarity extends TestControlExcelRead<TypeColClarity, ControlClarity, Map<String, InfoClarity>>
+public class TestControlClarity extends TestControlExcelRead<TypeColClarity, ControlClarity, Map<String, ProjetClarity>>
 {
     /*---------- ATTRIBUTS ----------*/
     

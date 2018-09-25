@@ -5,9 +5,10 @@ import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
-import model.Application;
-import model.ComposantSonar;
 import model.ModelFactory;
+import model.bdd.Application;
+import model.bdd.ComposantSonar;
+import model.bdd.LotRTC;
 
 public class TestComposantSonar extends AbstractTestModel<ComposantSonar>
 {
@@ -40,12 +41,14 @@ public class TestComposantSonar extends AbstractTestModel<ComposantSonar>
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getLot());
+        assertEquals(EMPTY, handler.getLotRTC());
         
         // Test setter et getter
         String lot = "Lot";
-        handler.setLot(lot);
-        assertEquals(lot, handler.getLot());       
+        LotRTC lotRTC = ModelFactory.getModel(LotRTC.class);
+        lotRTC.setLot(lot);
+        handler.setLotRTC(lotRTC);
+        assertEquals(lot, handler.getLotRTC());       
     }
     
     @Test
@@ -116,9 +119,9 @@ public class TestComposantSonar extends AbstractTestModel<ComposantSonar>
         assertEquals(0, handler.getSecurityRating());
         
         // Test setter et getter
-        int securite = 12345;
-        handler.setSecurityRating(securite);
-        assertEquals(securite, handler.getSecurityRating());       
+        String securiteRat = "B";
+        handler.setSecurityRating(securiteRat);
+        assertEquals(securiteRat, handler.getSecurityRating());       
     }
     
     @Test

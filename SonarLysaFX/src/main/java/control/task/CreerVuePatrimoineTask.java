@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import model.ComposantSonar;
+import model.bdd.ComposantSonar;
 import model.enums.OptionRecupCompo;
 import model.enums.Param;
 import model.sonarapi.Vue;

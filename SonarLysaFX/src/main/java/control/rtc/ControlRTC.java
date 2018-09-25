@@ -56,11 +56,9 @@ import com.ibm.team.workitem.common.model.ItemProfile;
 import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
 import com.mchange.util.AssertException;
 
-import dao.DaoInfoClarity;
 import model.Anomalie;
-import model.InfoClarity;
-import model.LotSuiviRTC;
 import model.ModelFactory;
+import model.bdd.LotRTC;
 import model.enums.EtatLot;
 import model.enums.Param;
 import model.enums.TypeEnumRTC;
@@ -534,25 +532,18 @@ public class ControlRTC extends AbstractToStringImpl
      * 
      * @param handle
      *            IItemHandle provenant de RTC.
-     * @return {@link model.LotSuiviRTC}
+     * @return {@link model.bdd.LotRTC}
      * @throws TeamRepositoryException
      */
-    public LotSuiviRTC creerLotSuiviRTCDepuisHandle(IWorkItemHandle handle) throws TeamRepositoryException
+    public LotRTC creerLotSuiviRTCDepuisHandle(IWorkItemHandle handle) throws TeamRepositoryException
     {
         
         IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, handle);
-        LotSuiviRTC retour = ModelFactory.getModel(LotSuiviRTC.class);
+        LotRTC retour = ModelFactory.getModel(LotRTC.class);
         retour.setLot(String.valueOf(workItem.getId()));
         retour.setLibelle(workItem.getHTMLSummary().getPlainText());
         retour.setCpiProjet(recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
-        
-        // Code Clarity
-        String codeClarity = recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem);        
-        Map<String, InfoClarity> mapClarity = new DaoInfoClarity().readAllMap();
-        // On récupère le code Clarity des infos du composant et si on ne trouve pas le code Clarity dans la base de données, 
-        // on crée une nouvelle en spécifiant qu'elle ne fait pas partie du référentiel      
-        retour.setProjetClarity(mapClarity.computeIfAbsent(codeClarity, code -> ModelFactory.getModelWithParams(InfoClarity.class, code)));
-        
+        retour.setProjetClarityString(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem));                
         retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem));
         retour.setEtatLot(EtatLot.from(recupEtatElement(workItem)));
         retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());

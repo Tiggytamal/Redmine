@@ -45,8 +45,8 @@ public final class MenuViewControl extends AbstractViewControl
     // Constantes statiques
     private static final short WIDTHALERT = 640;
     private static final short HEIGHTALERT = 480;
-    private static final String OUTILS = "/Outils/";
-    private static final String FONCTIONS = "/Fonctions/";
+    private static final String OUTILS = "Outils/";
+    private static final String FONCTIONS = "Fonctions/";
 
     /** Element du ménu lançant les contrôles mensuels */
     @FXML

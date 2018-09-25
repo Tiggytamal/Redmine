@@ -17,8 +17,8 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlAppsW;
-import model.Application;
 import model.ModelFactory;
+import model.bdd.Application;
 import model.enums.Param;
 import model.enums.TypeColAppsW;
 import utilities.Statics;

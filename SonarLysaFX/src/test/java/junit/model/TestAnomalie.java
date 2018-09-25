@@ -14,9 +14,9 @@ import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.junit.Test;
 
 import model.Anomalie;
-import model.InfoClarity;
-import model.LotSuiviRTC;
 import model.ModelFactory;
+import model.bdd.ProjetClarity;
+import model.bdd.LotRTC;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
@@ -41,7 +41,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
     public void testAnomlieWithLot()
     {
         // Test création anomalie depuis LotSuiviRTC
-        handler = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotSuiviRTC.class));
+        handler = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotRTC.class));
         assertNotNull(handler);
     }
     
@@ -49,7 +49,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
     public void testMajDepuisPic()
     {
         // Création lotPic
-        LotSuiviRTC lotRTC = ModelFactory.getModel(LotSuiviRTC.class);
+        LotRTC lotRTC = ModelFactory.getModel(LotRTC.class);
         String cpi = "cpi";
         lotRTC.setCpiProjet(cpi);
         String edition = "edition";
@@ -57,7 +57,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
         String libProjet = "libProjet";
         lotRTC.setLibelle(libProjet);
         String clarity = "clarity";
-        lotRTC.setProjetClarity(ModelFactory.getModelWithParams(InfoClarity.class, clarity));
+        lotRTC.setProjetClarity(ModelFactory.getModelWithParams(ProjetClarity.class, clarity));
         String lot = "123456";
         lotRTC.setLot(lot);
         lotRTC.setEtatLot(EtatLot.NOUVEAU);
@@ -76,7 +76,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
     public void testMajDepuisClarity()
     {
         // Création Clarity
-        InfoClarity infoClarity = ModelFactory.getModel(InfoClarity.class);
+        ProjetClarity infoClarity = ModelFactory.getModel(ProjetClarity.class);
         String direction = "direction";
         infoClarity.setDirection(direction);
         String departement = "departement";

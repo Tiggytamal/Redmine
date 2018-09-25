@@ -1,12 +1,8 @@
-package model;
+package model.bdd;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -16,7 +12,6 @@ import javax.persistence.Table;
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
-import model.utilities.AbstractModele;
 import utilities.Statics;
 
 /**
@@ -27,25 +22,23 @@ import utilities.Statics;
  *
  */
 @Entity
-@Table(name = "infos_clarity")
+@Table(name = "projets_clarity")
 //@formatter:off
 @NamedQueries (value = {
-      @NamedQuery(name="InfoClarity.findAll", query="SELECT distinct(ic) FROM InfoClarity ic "
-              + "JOIN FETCH ic.chefService cs"),
-      @NamedQuery(name="InfoClarity.resetTable", query="DELETE FROM InfoClarity"),
-      @NamedQuery(name="InfoClarity.findByCode", query="SELECT ic FROM InfoClarity ic WHERE ic.codeClarity = :code")
+      @NamedQuery(name="ProjetClarity.findAll", query="SELECT distinct(pc) FROM ProjetClarity pc "
+              + "JOIN FETCH pc.chefService cs"),
+      @NamedQuery(name="ProjetClarity.resetTable", query="DELETE FROM ProjetClarity"),
+      @NamedQuery(name="ProjetClarity.findByCode", query="SELECT pc FROM ProjetClarity pc WHERE pc.code = :code")
 })
 //@formatter:on
-public class InfoClarity extends AbstractModele
+public class ProjetClarity extends AbstractBDDModele
 {
     /*---------- ATTRIBUTS ----------*/
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idBase;
+    public static final String INCONNU = "Code Clarity inconnu du réferentiel";
 
-    @Column(name = "code_Clarity", nullable = false)
-    private String codeClarity;
+    @Column(name = "code", nullable = false)
+    private String code;
     
     @Column(name = "actif", nullable = false)
     private boolean actif;
@@ -69,7 +62,7 @@ public class InfoClarity extends AbstractModele
     private String service;
     
     @BatchFetch(value = BatchFetchType.JOIN)    
-    @ManyToOne (targetEntity = ChefService.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToOne (targetEntity = ChefService.class, cascade = CascadeType.MERGE)
     @JoinColumn (name = "chef_service")
     private ChefService chefService;
     
@@ -77,28 +70,32 @@ public class InfoClarity extends AbstractModele
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    InfoClarity() { }
+    ProjetClarity() { }
     
-    /**
-     * Costructeur pour projet Clarity inconnu
-     * 
-     * @param codeClarity
-     */
-    InfoClarity(String codeClarity)
+    public static ProjetClarity getProjetClarityInconnu(String code)
     {
-        this.codeClarity = codeClarity;
-        actif = false;
-        libelleProjet = "Code Clarity inconnu du réferentiel";
-        chefProjet = Statics.EMPTY;
-        edition = Statics.EMPTY;
-        direction = Statics.EMPTY;
-        departement = Statics.EMPTY;
-        service = Statics.EMPTY;
+        ProjetClarity retour = new ProjetClarity();
+        retour.code = code;
+        retour.actif = false;
+        retour.libelleProjet = INCONNU;
+        retour.chefProjet = Statics.INCONNU;
+        retour.edition = Statics.INCONNU;
+        retour.direction = Statics.INCONNU;
+        retour.departement = Statics.INCONNU;
+        retour.service = Statics.INCONNU;
+        return retour;
+        
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
     
-    public InfoClarity update(InfoClarity update)
+    @Override
+    public String getMapIndex()
+    {
+        return getCode();
+    }
+    
+    public ProjetClarity update(ProjetClarity update)
     {
         actif = update.actif;
         libelleProjet = update.libelleProjet;
@@ -112,16 +109,6 @@ public class InfoClarity extends AbstractModele
     
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
-
-    public int getIdBase()
-    {
-        return idBase;
-    }
-
-    public void setIdBase(int idBase)
-    {
-        this.idBase = idBase;
-    }
     
     public boolean isActif()
     {
@@ -133,14 +120,14 @@ public class InfoClarity extends AbstractModele
         this.actif = actif;
     }
 
-    public String getCodeClarity()
+    public String getCode()
     {
-        return getString(codeClarity);
+        return getString(code);
     }
 
-    public void setCodeClarity(String codeClarity)
+    public void setCode(String code)
     {
-        this.codeClarity = codeClarity;
+        this.code = code;
     }
 
     public String getLibelleProjet()
@@ -173,9 +160,6 @@ public class InfoClarity extends AbstractModele
         this.edition = edition;
     }
 
-    /**
-     * @return the direction
-     */
     public String getDirection()
     {
         return getString(direction);

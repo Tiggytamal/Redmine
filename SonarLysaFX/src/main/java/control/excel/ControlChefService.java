@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import model.ModelFactory;
-import model.ChefService;
+import model.bdd.ChefService;
 import model.enums.TypeColChefServ;
 
 /**

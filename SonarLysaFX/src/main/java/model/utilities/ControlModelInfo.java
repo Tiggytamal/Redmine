@@ -11,12 +11,11 @@ import com.ibm.team.workitem.common.model.IWorkItem;
 
 import control.rtc.ControlRTC;
 import control.word.ControlRapport;
-import dao.DaoChefService;
-import dao.DaoInfoClarity;
+import dao.DaoFactory;
 import model.Anomalie;
-import model.ChefService;
 import model.CompoPbApps;
-import model.InfoClarity;
+import model.bdd.ChefService;
+import model.bdd.ProjetClarity;
 import model.enums.EtatLot;
 import model.enums.TypeAction;
 import model.enums.TypeInfo;
@@ -35,10 +34,10 @@ public class ControlModelInfo
 
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
-    
+
     /** logger composants avec application INCONNUE */
     private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
-    
+
     private static final short CLARITYMINI = 5;
     private static final short CLARITYMAX = 9;
     private static final short CLARITY7 = 7;
@@ -55,50 +54,51 @@ public class ControlModelInfo
     {
         // Récupération infox Clarity depuis fichier Excel
         String anoClarity = ano.getProjetClarity();
-        if (anoClarity.isEmpty())
-            return;
-        Map<String, InfoClarity> map = new DaoInfoClarity().readAllMap();
+        // Récupération des données en base
+        Map<String, ProjetClarity> map = DaoFactory.getDao(ProjetClarity.class).readAllMap();
+        ProjetClarity projet = testProjetClarity(anoClarity, map);
+        ano.majDepuisClarity(projet);
 
-        // Vérification si le code Clarity de l'anomalie est bien dans la map
-        if (map.containsKey(anoClarity))
+        // Gestion des erreurs
+        if (!projet.isActif())
         {
-            ano.majDepuisClarity(map.get(anoClarity));
-            return;
+            LOGINCONNUE.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLot());
+            controlRapport.addInfo(TypeInfo.CLARITYINCONNU, ano.getLot(), anoClarity);
+        }
+    }
+
+    public ProjetClarity testProjetClarity(String codeClarity, Map<String, ProjetClarity> mapClarity)
+    {
+        // Vérification si le code Clarity est bien dans la map
+        if (mapClarity.containsKey(codeClarity))
+        {
+            return mapClarity.get(codeClarity);
         }
 
         String temp = Statics.EMPTY;
-        boolean testT7 = anoClarity.startsWith("T") && anoClarity.length() == CLARITY7;
+        boolean testT7 = codeClarity.startsWith("T") && codeClarity.length() == CLARITY7;
 
         // Sinon on itère sur les clefs en supprimant les indices de lot, et on prend la première clef correspondante
-        for (Map.Entry<String, InfoClarity> entry : map.entrySet())
+        for (Map.Entry<String, ProjetClarity> entry : mapClarity.entrySet())
         {
             String key = entry.getKey();
 
             // On retire les deux dernières lettres pour les clefs de plus de 6 caractères finissants par 0[1-9]
-            if (controleKey(anoClarity, key))
-            {
-                ano.majDepuisClarity(entry.getValue());
-                return;
-            }
+            if (controleKey(codeClarity, key))
+                return entry.getValue();
 
             // On récupère la clef correxpondante la plus élevée dans le cas des clef commençants par T avec 2 caractères manquants
-            if (testT7 && key.contains(anoClarity) && key.compareTo(temp) > 0)
+            if (testT7 && key.contains(codeClarity) && key.compareTo(temp) > 0)
                 temp = key;
         }
 
         if (!temp.isEmpty())
-        {
-            ano.majDepuisClarity(map.get(temp));
-            return;
-        }
-
-        // Si on ne trouve pas, on renvoie juste l'anomalie avec le log d'erreur
-        LOGINCONNUE.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLot());
-        controlRapport.addInfo(TypeInfo.CLARITYINCONNU, ano.getLot(), anoClarity);
-        ano.setDepartement(Statics.INCONNU);
-        ano.setService(Statics.INCONNU);
-        ano.setDirection(Statics.INCONNUE);
-        ano.setResponsableService(Statics.INCONNU);
+            return mapClarity.get(temp);
+        
+        // Si on trouve rien, ajout d'un projet Clarity inconnu
+        ProjetClarity inconnu = ProjetClarity.getProjetClarityInconnu(codeClarity);
+        mapClarity.put(inconnu.getMapIndex(), inconnu);
+        return inconnu;
     }
 
     /**
@@ -111,8 +111,8 @@ public class ControlModelInfo
         // Récupération infox Clarity depuis fichier Excel
         if (anoClarity.isEmpty())
             return;
-        
-        Map<String, InfoClarity> map = new DaoInfoClarity().readAllMap();
+
+        Map<String, ProjetClarity> map = DaoFactory.getDao(ProjetClarity.class).readAllMap();
 
         // Vérification si le code Clarity de l'anomalie est bien dans la map
         if (map.containsKey(anoClarity))
@@ -126,7 +126,7 @@ public class ControlModelInfo
         boolean testT7 = anoClarity.startsWith("T") && anoClarity.length() == CLARITY7;
 
         // Sinon on itère sur les clefs en supprimant les indices de lot, et on prend la première clef correspondante
-        for (Map.Entry<String, InfoClarity> entry : map.entrySet())
+        for (Map.Entry<String, ProjetClarity> entry : map.entrySet())
         {
             String key = entry.getKey();
 
@@ -155,7 +155,7 @@ public class ControlModelInfo
         pbApps.setService(Statics.INCONNU);
         pbApps.setChefService(Statics.INCONNU);
     }
-    
+
     /**
      * @param ano
      * @return
@@ -165,11 +165,11 @@ public class ControlModelInfo
     {
         // Controle sur l'état de l'anomalie (projet Clarity, lot et numéro anomalie renseignée
         String anoLot = ano.getLot().substring(Statics.SBTRINGLOT);
-        
+
         // Protection contre les numéros de lot vide
         if (anoLot == Statics.EMPTY)
             return;
-        
+
         int anoLotInt = Integer.parseInt(anoLot);
 
         // Controle si le projet RTC est renseigné. Sinon on le récupère depuis Jazz avec le numéro de lot
@@ -210,7 +210,7 @@ public class ControlModelInfo
         }
         ano.setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));
     }
-    
+
     /**
      * Met à jour le responsable de service depuis les informations du fichier XML, si le service est renseigné.<br>
      * Remonte un warning si le service n'est pas connu
@@ -226,7 +226,7 @@ public class ControlModelInfo
             return;
 
         // Recherche du responsable dans les paramètres et remontée d'info si non trouvé.
-        Map<String, ChefService> mapRespService = new DaoChefService().readAllMap();
+        Map<String, ChefService> mapRespService = DaoFactory.getDao(ChefService.class).readAllMap();
         if (mapRespService.containsKey(anoServ))
             ano.setResponsableService(mapRespService.get(anoServ).getNom());
         else
@@ -235,7 +235,7 @@ public class ControlModelInfo
             controlMail.addInfo(TypeInfo.SERVICESSANSRESP, ano.getLot(), ano.getService());
         }
     }
-    
+
     /**
      * Met à jour le champ NPC si le projet en fait parti
      * 
@@ -254,7 +254,7 @@ public class ControlModelInfo
 
     private void initChefService(CompoPbApps pbApps, String service)
     {
-        ChefService respService = new DaoChefService().readAllMap().get(service);
+        ChefService respService = DaoFactory.getDao(ChefService.class).readAllMap().get(service);
         if (respService != null)
             pbApps.setChefService(respService.getNom());
         else

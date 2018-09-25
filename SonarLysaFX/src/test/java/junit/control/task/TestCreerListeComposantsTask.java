@@ -4,28 +4,30 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.powermock.reflect.Whitebox.invokeMethod;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
+import static org.powermock.reflect.Whitebox.invokeMethod;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import control.task.CreerListeComposantsTask;
 import de.saxsys.javafx.test.JfxRunner;
-import model.ComposantSonar;
 import model.ModelFactory;
+import model.bdd.ComposantSonar;
 import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Periode;
+import utilities.Statics;
 
 @RunWith(JfxRunner.class)
 public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeComposantsTask>
@@ -45,6 +47,16 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
 
     /*---------- METHODES PUBLIQUES ----------*/
     
+    @Test
+//    @Ignore(Statics.TESTMANUEL)
+    public void testCall() throws Exception
+    {
+        // Réinitialisation de l'API
+        initAPI(CreerListeComposantsTask.class, false);
+        
+        // Appel de la méthode
+        assertTrue(invokeMethod(handler, "call"));
+    }
     @Test
     public void testCreerListeComposants() throws Exception
     {        

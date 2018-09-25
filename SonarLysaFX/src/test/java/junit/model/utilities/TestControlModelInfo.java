@@ -10,11 +10,12 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.word.ControlRapport;
-import dao.DaoChefService;
+import dao.DaoFactory;
 import junit.JunitBase;
 import model.Anomalie;
 import model.CompoPbApps;
 import model.ModelFactory;
+import model.bdd.ChefService;
 import model.enums.TypeRapport;
 import model.utilities.ControlModelInfo;
 import utilities.Statics;
@@ -135,7 +136,7 @@ public class TestControlModelInfo extends JunitBase
         
         // Test avec bon service
         Whitebox.invokeMethod(handler, methode, compo, service);
-        assertEquals(new DaoChefService().readAllMap().get(service).getNom(), compo.getChefService());
+        assertEquals(DaoFactory.getDao(ChefService.class).readAllMap().get(service).getNom(), compo.getChefService());
         
         // Test avec service non existant
         Whitebox.invokeMethod(handler, methode, compo, serviceNonExistant);

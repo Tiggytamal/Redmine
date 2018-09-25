@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import control.task.CreerVueParEditionTask;
-import model.ComposantSonar;
+import model.bdd.ComposantSonar;
 import model.sonarapi.Vue;
 
 public class TestCreerVueParEditionTask extends AbstractTestTask<CreerVueParEditionTask>

@@ -13,12 +13,12 @@ import java.util.Map;
 import org.junit.Test;
 
 import junit.TestXML;
-import model.Application;
 import model.FichiersXML;
-import model.InfoClarity;
-import model.LotSuiviRTC;
 import model.ModelFactory;
-import model.ChefService;
+import model.bdd.Application;
+import model.bdd.ChefService;
+import model.bdd.ProjetClarity;
+import model.bdd.LotRTC;
 import model.enums.TypeFichier;
 import utilities.Statics;
 
@@ -128,8 +128,8 @@ public class TestFichierXML extends AbstractTestModel<FichiersXML> implements Te
      */
     private void initMaps()
     {
-        Map<String, InfoClarity> mapClarity = new HashMap<>();
-        mapClarity.put("a", ModelFactory.getModel(InfoClarity.class));
+        Map<String, ProjetClarity> mapClarity = new HashMap<>();
+        mapClarity.put("a", ModelFactory.getModel(ProjetClarity.class));
         handler.majMapDonnees(TypeFichier.CLARITY, mapClarity);
 
         Map<String, Application> mapApplis = new HashMap<>();
@@ -150,12 +150,12 @@ public class TestFichierXML extends AbstractTestModel<FichiersXML> implements Te
         mapEditions.put("d", "edition");
         handler.majMapDonnees(TypeFichier.EDITION, mapEditions);
 
-        Map<String, LotSuiviRTC> mapLotsRTC = new HashMap<>();
-        mapLotsRTC.put("a", ModelFactory.getModel(LotSuiviRTC.class));
-        mapLotsRTC.put("b", ModelFactory.getModel(LotSuiviRTC.class));
-        mapLotsRTC.put("c", ModelFactory.getModel(LotSuiviRTC.class));
-        mapLotsRTC.put("d", ModelFactory.getModel(LotSuiviRTC.class));
-        mapLotsRTC.put("e", ModelFactory.getModel(LotSuiviRTC.class));
+        Map<String, LotRTC> mapLotsRTC = new HashMap<>();
+        mapLotsRTC.put("a", ModelFactory.getModel(LotRTC.class));
+        mapLotsRTC.put("b", ModelFactory.getModel(LotRTC.class));
+        mapLotsRTC.put("c", ModelFactory.getModel(LotRTC.class));
+        mapLotsRTC.put("d", ModelFactory.getModel(LotRTC.class));
+        mapLotsRTC.put("e", ModelFactory.getModel(LotRTC.class));
         handler.majMapDonnees(TypeFichier.LOTSRTC, mapLotsRTC);
         
         Map<String, String> mapProjetsNpc = new HashMap<>();

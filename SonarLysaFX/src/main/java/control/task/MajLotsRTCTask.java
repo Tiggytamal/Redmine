@@ -9,8 +9,11 @@ import com.ibm.team.workitem.common.model.IWorkItemHandle;
 import com.mchange.util.AssertException;
 
 import control.rtc.ControlRTC;
-import dao.DaoLotSuiviRTC;
-import model.LotSuiviRTC;
+import dao.DaoFactory;
+import dao.DaoLotRTC;
+import model.bdd.LotRTC;
+import model.bdd.ProjetClarity;
+import model.utilities.ControlModelInfo;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
@@ -29,7 +32,7 @@ public class MajLotsRTCTask extends AbstractTask
     private static final String TITRE = "Mise à jour des Lots RTC";
     private LocalDate date;
     private boolean remiseAZero;
-    private DaoLotSuiviRTC dao;
+    private DaoLotRTC dao;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -38,7 +41,7 @@ public class MajLotsRTCTask extends AbstractTask
         super(1, TITRE);
         this.date = date;
         this.remiseAZero = remiseAZero;
-        dao = new DaoLotSuiviRTC();
+        dao = DaoFactory.getDao(LotRTC.class);
     }
 
     /**
@@ -55,7 +58,7 @@ public class MajLotsRTCTask extends AbstractTask
     @Override
     protected Boolean call() throws Exception
     {
-        Map<String, LotSuiviRTC> map = majLotsRTC();
+        Map<String, LotRTC> map = majLotsRTC();
         return sauvegarde(map);
     }
 
@@ -67,7 +70,7 @@ public class MajLotsRTCTask extends AbstractTask
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private Map<String, LotSuiviRTC> majLotsRTC() throws TeamRepositoryException
+    private Map<String, LotRTC> majLotsRTC() throws TeamRepositoryException
     {
         ControlRTC control = ControlRTC.INSTANCE;
         List<IWorkItemHandle> handles = control.recupLotsRTC(remiseAZero, date);
@@ -83,25 +86,33 @@ public class MajLotsRTCTask extends AbstractTask
         long debut = System.currentTimeMillis();
 
         // Initialisation de la map depuis les informations de la base de données
-        Map<String, LotSuiviRTC> retour = dao.readAllMap();
+        Map<String, LotRTC> retour = dao.readAllMap();
+        Map<String, ProjetClarity> mapClarity = DaoFactory.getDao(ProjetClarity.class).readAllMap();
 
         for (IWorkItemHandle handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête
-            LotSuiviRTC lotRTC = control.creerLotSuiviRTCDepuisHandle(handle);
-
-            String lot = lotRTC.getLot();
-
-            // ON saute tous les lotRTC sans numéro de lot.
+            LotRTC lotRTC = control.creerLotSuiviRTCDepuisHandle(handle);
+            
+            // On saute tous les lotRTC sans numéro de lot.
             if (lotRTC.getLot().isEmpty())
                 continue;
+
+            // Récupération du code Clarity depuis RTC
+            String codeClarity = lotRTC.getProjetClarityString();
+
+            // Test du projet Clarity par rapport à la base de données et valorisation de la donnée
+            ProjetClarity projetClarity = new ControlModelInfo().testProjetClarity(codeClarity, mapClarity);
+            lotRTC.setProjetClarity(projetClarity);
+
+            String lot = lotRTC.getLot();
 
             // On rajoute les lots non éxistants à la map et on mets à jour les autres avec les nouvelles données
             if (!retour.containsKey(lot))
                 retour.put(lot, lotRTC);
             else
                 retour.get(lot).update(lotRTC);
-            
+
             // Affichage
             i++;
             updateProgress(i, size);
@@ -115,11 +126,11 @@ public class MajLotsRTCTask extends AbstractTask
      * 
      * @return
      */
-    private boolean sauvegarde(Map<String, LotSuiviRTC> map)
+    private boolean sauvegarde(Map<String, LotRTC> map)
     {
         if (remiseAZero)
             dao.resetTable();
-        return dao.update(map.values());
+        return dao.persist(map.values()) > 0;
     }
 
     /*---------- ACCESSEURS ----------*/

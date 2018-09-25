@@ -26,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mchange.util.AssertException;
 
-import model.ComposantSonar;
+import model.bdd.ComposantSonar;
 import model.enums.Param;
 import model.sonarapi.AjouterProjet;
 import model.sonarapi.AjouterVueLocale;

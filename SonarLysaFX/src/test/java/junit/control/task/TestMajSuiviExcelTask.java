@@ -23,15 +23,14 @@ import org.powermock.reflect.Whitebox;
 import control.rtc.ControlRTC;
 import control.task.MajSuiviExcelTask;
 import model.Anomalie;
-import model.ComposantSonar;
-import model.LotSuiviRTC;
 import model.ModelFactory;
+import model.bdd.ComposantSonar;
+import model.bdd.LotRTC;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.QG;
 import model.enums.TypeMajSuivi;
 import model.enums.TypeMetrique;
-import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Periode;
 import model.sonarapi.QualityGate;
@@ -152,7 +151,9 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
         assertEquals(0, retour.get(entryKey).size());
 
         // Initialisation du lot
-        compo.setLot(NUMEROLOT1);
+        LotRTC lotRTC = ModelFactory.getModel(LotRTC.class);
+        lotRTC.setLot(NUMEROLOT1);
+        compo.setLotRTC(lotRTC);
 
         // Invocation avec composant en erreur ni sécurité ni release
         Whitebox.invokeMethod(handler, "traitementProjet", compo, retour, entryKey, lotSecurite, lotRelease, base);
@@ -201,7 +202,7 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
     public void testCreationNumerosLots() throws Exception
     {
         List<Anomalie> listeLotenAno = new ArrayList<>();
-        Map<String, LotSuiviRTC> lotsRTC = new HashMap<>();
+        Map<String, LotRTC> lotsRTC = new HashMap<>();
         String numerolot2 = "654321";
 
         // Ajout objets
@@ -213,7 +214,7 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
         ano2.setLot("Lot " + numerolot2);
         listeLotenAno.add(ano2);
 
-        LotSuiviRTC lotRTC = ModelFactory.getModel(LotSuiviRTC.class);
+        LotRTC lotRTC = ModelFactory.getModel(LotRTC.class);
         lotRTC.setLot(NUMEROLOT1);
         lotRTC.setCpiProjet("cpi");
         lotRTC.setEdition("edition");

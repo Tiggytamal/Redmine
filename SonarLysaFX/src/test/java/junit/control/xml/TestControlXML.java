@@ -8,12 +8,13 @@ import org.junit.runner.RunWith;
 import org.powermock.reflect.Whitebox;
 
 import control.xml.ControlXML;
-import dao.DaoEdition;
+import dao.DaoFactory;
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.javafx.test.TestInJfxThread;
 import junit.JunitBase;
 import model.FichiersXML;
 import model.ProprietesXML;
+import model.bdd.Edition;
 import model.enums.TypeColChefServ;
 import model.enums.TypeFichier;
 import utilities.Statics;
@@ -47,7 +48,7 @@ public class TestControlXML extends JunitBase
     @Test
     public void testRecupEditionDepuisExcel()
     {
-        new DaoEdition().recupDonneesDepuisExcel(new File(getClass().getResource(Statics.ROOT + "Codification_des_Editions.xlsx").getFile()));
+        DaoFactory.getDao(Edition.class).recupDonneesDepuisExcel(new File(getClass().getResource(Statics.ROOT + "Codification_des_Editions.xlsx").getFile()));
     }
     
     @Test

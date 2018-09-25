@@ -7,9 +7,9 @@ import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
-import model.InfoClarity;
+import model.bdd.ProjetClarity;
 
-public class TestInfoClarity extends AbstractTestModel<InfoClarity>
+public class TestInfoClarity extends AbstractTestModel<ProjetClarity>
 {
     /*---------- ATTRIBUTS ----------*/
     /*---------- CONSTRUCTEURS ----------*/    
@@ -30,12 +30,12 @@ public class TestInfoClarity extends AbstractTestModel<InfoClarity>
     public void testGetCodeClarity()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getCodeClarity());
+        assertEquals(EMPTY, handler.getCode());
         
         // Test setter et getter
         String codeClarity = "codeClarity";
-        handler.setCodeClarity(codeClarity);
-        assertEquals(codeClarity, handler.getCodeClarity());       
+        handler.setCode(codeClarity);
+        assertEquals(codeClarity, handler.getCode());       
     }
     
     @Test

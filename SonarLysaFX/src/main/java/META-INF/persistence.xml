@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	<persistence-unit name="SonarLysaFX" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<class>model.ComposantSonar</class>
-		<class>model.Application</class>
-		<class>model.ChefService</class>
-		<class>model.InfoClarity</class>
-		<class>model.Edition</class>
-		<class>model.LotSuiviRTC</class>
+		<class>model.bdd.ComposantSonar</class>
+		<class>model.bdd.Application</class>
+		<class>model.bdd.ChefService</class>
+		<class>model.bdd.ProjetClarity</class>
+		<class>model.bdd.Edition</class>
+		<class>model.bdd.LotRTC</class>
 		<class>utilities.adapter.LocalDateConverter</class>
 		<class>utilities.adapter.LocalDateTimeConverter</class>
 		<properties>

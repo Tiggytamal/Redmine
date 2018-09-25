@@ -32,9 +32,9 @@ import control.excel.ExcelFactory;
 import control.rtc.ControlRTC;
 import control.xml.ControlXML;
 import model.Anomalie;
-import model.ComposantSonar;
-import model.LotSuiviRTC;
 import model.ModelFactory;
+import model.bdd.ComposantSonar;
+import model.bdd.LotRTC;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamBool;
@@ -163,7 +163,7 @@ public class MajSuiviExcelTask extends AbstractTask
     {
         // Variables
         ControlRTC control = ControlRTC.INSTANCE;
-        Map<String, LotSuiviRTC> map = new HashMap<>();
+        Map<String, LotRTC> map = new HashMap<>();
         map.putAll(fichiersXML.getMapLotsRTC());
         List<IWorkItemHandle> handles = control.recupLotsRTC(false, null);
         if (handles.isEmpty())
@@ -178,7 +178,7 @@ public class MajSuiviExcelTask extends AbstractTask
         for (IWorkItemHandle handle : handles)
         {
             // Récupération de l'objet complet depuis l'handle de la requête
-            LotSuiviRTC lot = control.creerLotSuiviRTCDepuisHandle(handle);
+            LotRTC lot = control.creerLotSuiviRTCDepuisHandle(handle);
             if (!lot.getLot().isEmpty())
                 map.put(lot.getLot(), lot);
             
@@ -430,7 +430,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private void majFichierAnomalies(Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere) throws IOException
     {
         // Fichier des lots édition
-        Map<String, LotSuiviRTC> lotsRTC = fichiersXML.getMapLotsRTC();
+        Map<String, LotRTC> lotsRTC = fichiersXML.getMapLotsRTC();
 
         // Controleur
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;
@@ -463,7 +463,7 @@ public class MajSuiviExcelTask extends AbstractTask
             for (String numeroLot : entry.getValue())
             {
                 // On va chercher les informations de ce lot dans le fichier des lots de la PIC. Si on ne les trouve pas, il faudra mettre à jour ce fichier
-                LotSuiviRTC lot = lotsRTC.get(numeroLot);
+                LotRTC lot = lotsRTC.get(numeroLot);
                 if (lot == null)
                 {
                     LOGNONLISTEE.warn("Un lot du fichier Excel n'est pas connu : " + numeroLot);
@@ -512,7 +512,7 @@ public class MajSuiviExcelTask extends AbstractTask
      */
     private void traitementProjet(ComposantSonar compo, Map<String, Set<String>> retour, String entryKey, Set<String> lotsSecurite, Set<String> lotsRelease, String base)
     {
-        String lot = compo.getLot();
+        String lot = compo.getLotRTC().getLot();
         updateMessage(base + compo.getNom());
 
         // Vérification que le lot est bien valorisé et controle le QG
@@ -551,7 +551,7 @@ public class MajSuiviExcelTask extends AbstractTask
      *            map des lots connus de la Pic.
      * @return
      */
-    private Map<String, Anomalie> creationNumerosLots(List<Anomalie> listeLotenAno, Map<String, LotSuiviRTC> lotsRTC)
+    private Map<String, Anomalie> creationNumerosLots(List<Anomalie> listeLotenAno, Map<String, LotRTC> lotsRTC)
     {
         Map<String, Anomalie> retour = new HashMap<>();
 
@@ -564,7 +564,7 @@ public class MajSuiviExcelTask extends AbstractTask
                 anoLot = anoLot.substring(Statics.SBTRINGLOT);
 
             // Mise à jour des données depuis la PIC
-            LotSuiviRTC lotRTC = lotsRTC.get(anoLot);
+            LotRTC lotRTC = lotsRTC.get(anoLot);
 
             if (lotRTC != null)
                 ano.majDepuisRTC(lotRTC);

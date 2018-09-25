@@ -1,4 +1,4 @@
-package model;
+package model.bdd;
 
 import java.io.Serializable;
 
@@ -7,10 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -22,7 +18,6 @@ import org.eclipse.persistence.annotations.BatchFetchType;
 
 import model.enums.EtatAppli;
 import model.enums.QG;
-import model.utilities.AbstractModele;
 
 /**
  * Classe de modèle réprésentant un composant SonarQube du fichier XML
@@ -36,25 +31,24 @@ import model.utilities.AbstractModele;
 //@formatter:off
 @NamedQueries (value = {
         @NamedQuery(name="ComposantSonar.findAll", query="SELECT distinct(c) FROM ComposantSonar c "
-                + "JOIN FETCH c.appli a"),
+                + "JOIN FETCH c.appli a "
+                + "JOIN FETCH c.lotRTC l"),
         @NamedQuery(name="ComposantSonar.resetTable", query="DELETE FROM ComposantSonar")
 })
 //@formatter:on
-public class ComposantSonar extends AbstractModele implements Serializable
+public class ComposantSonar extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idBase;
-
     @Column(name = "nom", nullable = false, length = 128)
     private String nom;
 
-    @Column(name = "lot", nullable = true, length = 6)
-    private String lot;
+    @BatchFetch(value = BatchFetchType.JOIN) 
+    @ManyToOne (targetEntity = LotRTC.class, cascade = CascadeType.MERGE)
+    @JoinColumn (name = "lotRTC")
+    private LotRTC lotRTC;
 
     @Column(name = "composantKey", nullable = false, length = 256)
     private String key;
@@ -63,7 +57,7 @@ public class ComposantSonar extends AbstractModele implements Serializable
     private String id;
 
     @BatchFetch(value = BatchFetchType.JOIN)    
-    @ManyToOne (targetEntity = Application.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToOne (targetEntity = Application.class, cascade = CascadeType.MERGE)
     @JoinColumn (name = "appli")
     private Application appli;
 
@@ -77,8 +71,8 @@ public class ComposantSonar extends AbstractModele implements Serializable
     @Column(name = "ldc", nullable = true)
     private int ldc;
 
-    @Column(name = "securityRating", nullable = true)
-    private int securityRating;
+    @Column(name = "securityRating", nullable = true, length = 1)
+    private String securityRating;
 
     @Column(name = "vulnerabilites", nullable = true)
     private int vulnerabilites;
@@ -125,7 +119,7 @@ public class ComposantSonar extends AbstractModele implements Serializable
     ComposantSonar(ComposantSonar clone)
     {
         this.nom = clone.nom;
-        this.lot = clone.lot;
+        this.lotRTC = clone.lotRTC;
         this.key = clone.key;
         this.id = clone.id;
         this.appli = clone.appli;
@@ -137,18 +131,15 @@ public class ComposantSonar extends AbstractModele implements Serializable
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-    /*---------- METHODES PRIVEES ----------*/
+    
+    @Override
+    public String getMapIndex()
+    {
+        return getKey();
+    }
+    
+    /*---------- METHODES PRIVEES ----------*/    
     /*---------- ACCESSEURS ----------*/
-
-    public int getIdBase()
-    {
-        return idBase;
-    }
-
-    public void setIdBase(int idBase)
-    {
-        this.idBase = idBase;
-    }
 
     public String getNom()
     {
@@ -160,14 +151,14 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.nom = nom;
     }
 
-    public String getLot()
+    public LotRTC getLotRTC()
     {
-        return getString(lot);
+        return lotRTC;
     }
 
-    public void setLot(String lot)
+    public void setLotRTC(LotRTC lotRTC)
     {
-        this.lot = lot;
+        this.lotRTC = lotRTC;
     }
 
     public String getKey()
@@ -230,14 +221,51 @@ public class ComposantSonar extends AbstractModele implements Serializable
         this.ldc = Integer.parseInt(ldc);
     }
 
-    public int getSecurityRating()
+    public String getSecurityRating()
     {
         return securityRating;
     }
 
-    public void setSecurityRating(int securityRating)
+    public void setSecurityRating(String securityRating)
     {
         this.securityRating = securityRating;
+    }
+    
+    public void setSecurityRatingDepuisSonar(String securityRating)
+    {
+        switch (securityRating)
+        {
+            case "0":
+                setSecurityRating("A");
+                break;
+                
+            case "1":
+                setSecurityRating("A");
+                break;
+                
+            case "2":
+                setSecurityRating("B");
+                break;
+                
+            case "3":
+                setSecurityRating("C");
+                break;
+                
+            case "4":
+                setSecurityRating("D");
+                break;
+                
+            case "5":
+                setSecurityRating("E");
+                break;
+                
+            case "6":
+                setSecurityRating("F");
+                break;
+                
+            default:
+                setSecurityRating("F");
+        }
     }
 
     public int getVulnerabilites()

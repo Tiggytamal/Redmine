@@ -12,10 +12,10 @@ import com.mchange.util.AssertException;
 
 import application.Main;
 import control.excel.ControlExtractVul;
-import dao.DaoComposantSonar;
-import model.ComposantSonar;
-import model.LotSuiviRTC;
+import dao.DaoFactory;
 import model.Vulnerabilite;
+import model.bdd.ComposantSonar;
+import model.bdd.LotRTC;
 import model.enums.OptionRecupCompo;
 import model.enums.TypeVulnerabilite;
 import model.sonarapi.Issue;
@@ -114,13 +114,13 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
         retour.setDateCreation(issue.getCreationDate());
         retour.setSeverite(issue.getSeverity());
         retour.setMessage(issue.getMessage());
-        retour.setLot(composant.getLot());
+        retour.setLot(composant.getLotRTC().getLot());
         retour.setAppli(composant.getAppli().getCode());
         retour.setLib(extractLib(retour.getMessage()));
 
-        LotSuiviRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(retour.getLot());
+        LotRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(retour.getLot());
         if (lotRTC != null)
-            retour.setClarity(lotRTC.getProjetClarity().getCodeClarity());
+            retour.setClarity(lotRTC.getProjetClarity().getCode());
 
         return retour;
     }
@@ -142,7 +142,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
         // Variables
         List<Vulnerabilite> retour = new ArrayList<>();
         int i = 0;
-        Map<String, ComposantSonar> composants = new DaoComposantSonar().readAllMap();
+        Map<String, ComposantSonar> composants = DaoFactory.getDao(ComposantSonar.class).readAllMap();
 
         // Paramètres
         List<Parametre> params = new ArrayList<>();

@@ -17,7 +17,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
-import model.ComposantSonar;
+import model.bdd.ComposantSonar;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.OptionVueProduction;
@@ -232,7 +232,7 @@ public class CreerVueProductionTask extends AbstractTask
             int i = 0;
             for (ComposantSonar composantSonar : liste)
             {
-                List<Projet> projets = api.getVuesParNom("Lot " + composantSonar.getLot());
+                List<Projet> projets = api.getVuesParNom("Lot " + composantSonar.getLotRTC());
                 map.put(projets.get(0).getNom().substring(Statics.SBTRINGLOT), new Vue(projets.get(0).getKey(), projets.get(0).getNom()));
                 i++;
                 updateProgress(i, size);

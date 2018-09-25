@@ -41,8 +41,8 @@ import control.rtc.ControlRTC;
 import junit.JunitBase;
 import junit.TestUtils;
 import model.Anomalie;
-import model.LotSuiviRTC;
 import model.ModelFactory;
+import model.bdd.LotRTC;
 import model.enums.EtatLot;
 import model.enums.Param;
 import model.enums.TypeColSuivi;
@@ -272,7 +272,7 @@ public class TestControlRTC extends JunitBase
     public void testCreerLotSuiviRTCDepuisHandle() throws TeamRepositoryException
     {
         List<IWorkItemHandle> liste = handler.recupLotsRTC(true, LocalDate.of(2016, 01, 01));       
-        LotSuiviRTC lot = handler.creerLotSuiviRTCDepuisHandle(liste.get(0));
+        LotRTC lot = handler.creerLotSuiviRTCDepuisHandle(liste.get(0));
         IWorkItem workItem = handler.recupererItemDepuisHandle(IWorkItem.class, liste.get(0));
         assertEquals(String.valueOf(workItem.getId()), lot.getLot());
         assertEquals(workItem.getHTMLSummary().getPlainText(), lot.getLibelle());
@@ -282,7 +282,7 @@ public class TestControlRTC extends JunitBase
         assertNotNull(lot.getEdition());
         assertFalse(lot.getEdition().isEmpty());
         assertNotNull(lot.getProjetClarity());
-        assertFalse(lot.getProjetClarity().getCodeClarity().isEmpty());
+        assertFalse(lot.getProjetClarity().getCode().isEmpty());
     }
 
     @Test

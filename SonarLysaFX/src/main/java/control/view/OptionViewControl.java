@@ -10,10 +10,7 @@ import java.util.function.Consumer;
 import javax.xml.bind.JAXBException;
 
 import control.xml.ControlXML;
-import dao.DaoApplication;
-import dao.DaoChefService;
-import dao.DaoEdition;
-import dao.DaoInfoClarity;
+import dao.DaoFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -30,6 +27,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import model.Colonne;
+import model.bdd.Application;
+import model.bdd.ChefService;
+import model.bdd.Edition;
+import model.bdd.ProjetClarity;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
@@ -219,19 +220,19 @@ public final class OptionViewControl extends AbstractViewControl
         switch (id)
         {
             case "apps":
-                charger("Applications", new DaoApplication()::recupDonneesDepuisExcel);
+                charger("Applications", DaoFactory.getDao(Application.class)::recupDonneesDepuisExcel);
                 break;
 
             case "clarity":
-                charger("Referentiel Clarity", new DaoInfoClarity()::recupDonneesDepuisExcel);
+                charger("Referentiel Clarity", DaoFactory.getDao(ProjetClarity.class)::recupDonneesDepuisExcel);
                 break;
 
             case "chefSrev":
-                charger("Chefs de Service", new DaoChefService()::recupDonneesDepuisExcel);
+                charger("Chefs de Service", DaoFactory.getDao(ChefService.class)::recupDonneesDepuisExcel);
                 break;
 
             case "edition":
-                charger("Editions CDM", new DaoEdition()::recupDonneesDepuisExcel);
+                charger("Editions CDM", DaoFactory.getDao(Edition.class)::recupDonneesDepuisExcel);
                 break;
                 
             case "npc":

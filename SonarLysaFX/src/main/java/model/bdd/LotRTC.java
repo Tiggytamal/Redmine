@@ -1,6 +1,8 @@
-package model;
+package model.bdd;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -8,20 +10,19 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
 import model.enums.EtatLot;
-import model.utilities.AbstractModele;
+import utilities.Statics;
 
 /**
  * Classe répresentant l'extraction d'un lot depuis RTC
@@ -33,18 +34,14 @@ import model.utilities.AbstractModele;
 @Table(name = "lots_RTC")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="LotSuiviRTC.findAll", query="SELECT l FROM LotSuiviRTC l "
+        @NamedQuery(name="LotRTC.findAll", query="SELECT l FROM LotRTC l "
                 + "JOIN FETCH l.projetClarity p"),
-        @NamedQuery(name="LotSuiviRTC.resetTable", query="DELETE FROM LotSuiviRTC")
+        @NamedQuery(name="LotRTC.resetTable", query="DELETE FROM LotRTC")
 })
 //@formatter:on
-public class LotSuiviRTC extends AbstractModele
+public class LotRTC extends AbstractBDDModele
 {
     /*---------- ATTRIBUTS ----------*/
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idBase;
 
     @Column(name = "lot", nullable = false, length = 6)
     private String lot;
@@ -53,9 +50,15 @@ public class LotSuiviRTC extends AbstractModele
     private String libelle;
     
     @BatchFetch(value = BatchFetchType.JOIN)    
-    @ManyToOne (targetEntity = InfoClarity.class, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne (targetEntity = ProjetClarity.class, cascade = CascadeType.MERGE)
     @JoinColumn (name = "projet_Clarity")
-    private InfoClarity projetClarity;
+    private ProjetClarity projetClarity;
+    
+    @OneToMany (targetEntity = ComposantSonar.class, fetch = FetchType.LAZY, mappedBy = "lotRTC")
+    private List<ComposantSonar> composants;
+
+    @Transient
+    private String projetClarityString;
 
     @Column(name = "cpi_projet", nullable = false, length = 128)
     private String cpiProjet;
@@ -75,11 +78,32 @@ public class LotSuiviRTC extends AbstractModele
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    LotSuiviRTC() {}
+    LotRTC() 
+    {
+        composants = new ArrayList<>();
+    }
 
     /*---------- METHODES PUBLIQUES ----------*/
     
-    public LotSuiviRTC update(LotSuiviRTC update)
+    @Override
+    public String getMapIndex()
+    {
+        return getLot();
+    }
+    
+    public static LotRTC getLotRTCInconnu(String lot)
+    {
+        LotRTC retour = new LotRTC();
+        retour.lot = lot;
+        retour.libelle = Statics.EMPTY;
+        retour.projetClarityString = Statics.EMPTY;
+        retour.cpiProjet = Statics.EMPTY;
+        retour.etatLot = EtatLot.NOUVEAU;
+        retour.projetRTC = Statics.EMPTY;    
+        retour.edition = Statics.EMPTY;
+        return retour;       
+    }
+    public LotRTC update(LotRTC update)
     {
         libelle = update.libelle;
         projetClarity = update.projetClarity;
@@ -93,11 +117,6 @@ public class LotSuiviRTC extends AbstractModele
     }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
-
-    public int getIdBase()
-    {
-        return idBase;
-    }
     
     public String getLot()
     {
@@ -119,12 +138,12 @@ public class LotSuiviRTC extends AbstractModele
         this.libelle = libelle;
     }
 
-    public InfoClarity getProjetClarity()
+    public ProjetClarity getProjetClarity()
     {
         return projetClarity;
     }
 
-    public void setProjetClarity(InfoClarity projetClarity)
+    public void setProjetClarity(ProjetClarity projetClarity)
     {
         this.projetClarity = projetClarity;
     }
@@ -177,5 +196,25 @@ public class LotSuiviRTC extends AbstractModele
     public void setDateMajEtat(LocalDate dateMajEtat)
     {
         this.dateMajEtat = dateMajEtat;
+    }
+
+    public String getProjetClarityString()
+    {
+        return projetClarityString;
+    }
+
+    public void setProjetClarityString(String projetClarityString)
+    {
+        this.projetClarityString = projetClarityString;
+    }
+    
+    public List<ComposantSonar> getComposants()
+    {
+        return composants;
+    }
+
+    public void setComposants(List<ComposantSonar> composants)
+    {
+        this.composants = composants;
     }
 }

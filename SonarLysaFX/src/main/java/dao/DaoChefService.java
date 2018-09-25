@@ -2,13 +2,12 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import control.excel.ControlChefService;
 import control.excel.ExcelFactory;
-import model.ChefService;
+import model.bdd.ChefService;
 import model.enums.TypeColChefServ;
 
 /**
@@ -24,13 +23,10 @@ public class DaoChefService extends AbstractDao<ChefService> implements Serializ
     private static final long serialVersionUID = 1L;
 
     /*---------- CONSTRUCTEURS ----------*/
+    
+    DaoChefService() { }
+    
     /*---------- METHODES PUBLIQUES ----------*/
-
-    @Override
-    public List<ChefService> readAll()
-    {
-        return em.createNamedQuery("ChefService.findAll", ChefService.class).getResultList();
-    }
 
     @Override
     public int recupDonneesDepuisExcel(File file)
@@ -39,46 +35,36 @@ public class DaoChefService extends AbstractDao<ChefService> implements Serializ
         ControlChefService control = ExcelFactory.getReader(TypeColChefServ.class, file);
         Map<String, ChefService> mapExcel = control.recupDonneesDepuisExcel();
 
+        // Récupération des données en  base
         Map<String, ChefService> mapBase = readAllMap();
 
+        // Mise à jour des données avec celles du fichier Excel
         for (Map.Entry<String, ChefService> entry : mapExcel.entrySet())
         {            
             mapBase.put(entry.getKey(), mapBase.computeIfAbsent(entry.getKey(), key -> entry.getValue()).update(entry.getValue()));
         }
 
-        em.getTransaction().begin();
-        for (ChefService appli : mapBase.values())
-        {
-            if (em.contains(appli))
-                em.merge(appli);
-            else
-                em.persist(appli);
-        }
-        em.getTransaction().commit();
-        return mapBase.values().size();
+        // Persistance en base de données
+        return persist(mapBase.values());
     }
 
-    /**
-     * Retourne tous les éléments sous forme d'une map
-     * 
-     * @return
-     */
-    public Map<String, ChefService> readAllMap()
+    @Override
+    public List<ChefService> readAll()
     {
-        Map<String, ChefService> retour = new HashMap<>();
-
-        for (ChefService chefService : readAll())
-        {
-            retour.put(chefService.getService(), chefService);
-        }
-        return retour;
+        return em.createNamedQuery("ChefService.findAll", ChefService.class).getResultList();
+    }
+    
+    @Override
+    public ChefService recupEltParCode(String nom)
+    {
+        List<ChefService> liste = em.createNamedQuery("ChefService.findByCode", ChefService.class).setParameter("code", nom).getResultList();
+        if (liste.isEmpty())
+            return null;
+        else
+            return liste.get(0);
     }
 
-    /**
-     * Supprime tous les enregistrements de la base de la table des composants Sonar. Retourne le nombre d'enregistrements effacés. Reset l'incrémentation.
-     * 
-     * @return
-     */
+    @Override
     public int resetTable()
     {
         int retour = 0;

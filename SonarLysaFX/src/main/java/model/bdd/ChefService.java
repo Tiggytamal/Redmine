@@ -1,17 +1,14 @@
-package model;
+package model.bdd;
 
 import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import model.utilities.AbstractModele;
+import utilities.Statics;
 
 /**
  * Classe de modèle du fichier Excel des chefs de services
@@ -25,19 +22,16 @@ import model.utilities.AbstractModele;
 //@formatter:off
 @NamedQueries (value = {
         @NamedQuery(name="ChefService.findAll", query="SELECT c FROM ChefService c"),
+        @NamedQuery(name="ChefService.findByNom", query="SELECT c FROM ChefService c WHERE c.nom = :nom"),
         @NamedQuery(name="ChefService.resetTable", query="DELETE FROM ChefService")
 })
 //@formatter:on
-public class ChefService extends AbstractModele implements Serializable
+public class ChefService extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
     private static final String INCONNU = "Chef de Service inconnu";
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idBase;
 
     @Column(name = "filière", nullable = false)
     private String filiere;
@@ -56,48 +50,38 @@ public class ChefService extends AbstractModele implements Serializable
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    ChefService()
+    ChefService() { }
+    
+    public static ChefService getChefServiceInconnu(String service)
     {
-    }
-
-    /**
-     * Constructeur d'un chef de service inconnu
-     * 
-     * @param service
-     */
-    ChefService(String service)
-    {
-        nom = INCONNU;
-        filiere = INCONNU;
-        direction = INCONNU;
-        departement = INCONNU;
-        this.service = service;
+        ChefService retour = new ChefService();
+        retour.nom = INCONNU;
+        retour.filiere = Statics.EMPTY;
+        retour.direction = Statics.EMPTY;
+        retour.departement = Statics.EMPTY;
+        retour.service = service;
+        return retour;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
+    @Override
+    public String getMapIndex()
+    {
+        return getService();
+    }
+    
     public ChefService update(ChefService chef)
     {
         filiere = chef.filiere;
         direction = chef.direction;
         service = chef.service;
         departement = chef.departement;
-
         return this;
     }
 
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
-
-    public int getIdBase()
-    {
-        return idBase;
-    }
-
-    public void setIdBase(int idBase)
-    {
-        this.idBase = idBase;
-    }
 
     public String getFiliere()
     {

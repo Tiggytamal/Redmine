@@ -11,8 +11,8 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import model.Edition;
 import model.ModelFactory;
+import model.bdd.Edition;
 import model.enums.TypeColEdition;
 import utilities.FunctionalException;
 import utilities.enums.Severity;

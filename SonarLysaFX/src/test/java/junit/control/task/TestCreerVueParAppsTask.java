@@ -25,7 +25,7 @@ import com.mchange.util.AssertException;
 
 import control.rtc.ControlRTC;
 import control.task.CreerVueParAppsTask;
-import model.ComposantSonar;
+import model.bdd.ComposantSonar;
 import model.enums.OptionCreerVueParAppsTask;
 import model.enums.OptionRecupCompo;
 import model.sonarapi.Projet;

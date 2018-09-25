@@ -22,7 +22,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import model.Application;
+import model.bdd.Application;
 import model.enums.Param;
 import model.enums.TypeColAppsW;
 import utilities.Statics;

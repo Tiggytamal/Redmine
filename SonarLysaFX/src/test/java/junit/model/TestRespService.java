@@ -5,7 +5,7 @@ import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
-import model.ChefService;
+import model.bdd.ChefService;
 
 public class TestRespService extends AbstractTestModel<ChefService>
 {

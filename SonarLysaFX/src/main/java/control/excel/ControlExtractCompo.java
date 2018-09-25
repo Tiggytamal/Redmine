@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import model.ComposantSonar;
+import model.bdd.ComposantSonar;
 import model.enums.TypeColCompo;
 import utilities.Statics;
 import utilities.TechnicalException;

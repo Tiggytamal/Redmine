@@ -7,7 +7,7 @@ import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
 
-import model.Application;
+import model.bdd.Application;
 
 public class TestApplication extends AbstractTestModel<Application>
 {
@@ -42,24 +42,31 @@ public class TestApplication extends AbstractTestModel<Application>
     @Test
     public void testMajValSecurite()
     {
+        final String A = "A";
+        final String B = "B";
+        final String C = "C";
+        final String D = "D";
+        final String E = "E";
+        final String F = "F";
+        
         // Mise à jour de la valeur de sécurité et vérification que l'on retrouve bine toujours la valeur maximale
         assertEquals(EMPTY, handler.getValSecurite());
-        handler.majValSecurite(1);
-        assertEquals("A", handler.getValSecurite());
-        handler.majValSecurite(3);
-        assertEquals("C", handler.getValSecurite());
-        handler.majValSecurite(2);
-        assertEquals("C", handler.getValSecurite());
-        handler.majValSecurite(5);
-        assertEquals("E", handler.getValSecurite());
-        handler.majValSecurite(4);
-        assertEquals("E", handler.getValSecurite());
-        handler.majValSecurite(6);
-        assertEquals("F", handler.getValSecurite());
-        handler.majValSecurite(0);
-        assertEquals("F", handler.getValSecurite()); 
-        handler.majValSecurite(12);
-        assertEquals("F", handler.getValSecurite()); 
+        handler.majValSecurite(A);
+        assertEquals(A, handler.getValSecurite());
+        handler.majValSecurite(C);
+        assertEquals(C, handler.getValSecurite());
+        handler.majValSecurite(B);
+        assertEquals(C, handler.getValSecurite());
+        handler.majValSecurite(E);
+        assertEquals(E, handler.getValSecurite());
+        handler.majValSecurite(D);
+        assertEquals(E, handler.getValSecurite());
+        handler.majValSecurite(F);
+        assertEquals(F, handler.getValSecurite());
+        handler.majValSecurite(A);
+        assertEquals(F, handler.getValSecurite()); 
+        handler.majValSecurite(F);
+        assertEquals(F, handler.getValSecurite()); 
     }
     
     @Test

@@ -6,7 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import dao.DaoComposantSonar;
+import dao.DaoFactory;
 import junit.JunitBase;
+import model.bdd.ComposantSonar;
 
 public class TestDaoComposantSonar extends JunitBase
 {
@@ -19,7 +21,7 @@ public class TestDaoComposantSonar extends JunitBase
     @Override
     public void init() throws Exception
     {
-        handler = new DaoComposantSonar();
+        handler = DaoFactory.getDao(ComposantSonar.class);
         
     }
     

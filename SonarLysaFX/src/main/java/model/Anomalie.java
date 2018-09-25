@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Comment;
 
+import model.bdd.ProjetClarity;
+import model.bdd.LotRTC;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
@@ -85,7 +87,7 @@ public class Anomalie extends AbstractModele
         matieres = new HashSet<>();
     }
 
-    Anomalie(LotSuiviRTC lot)
+    Anomalie(LotRTC lot)
     {
         this();
         majDepuisRTC(lot);
@@ -93,12 +95,12 @@ public class Anomalie extends AbstractModele
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public final Anomalie majDepuisRTC(LotSuiviRTC lotRTC)
+    public final Anomalie majDepuisRTC(LotRTC lotRTC)
     {
         setCpiProjet(lotRTC.getCpiProjet());
         setEdition(lotRTC.getEdition());
         setLibelleProjet(lotRTC.getLibelle());
-        setProjetClarity(lotRTC.getProjetClarity().getCodeClarity());
+        setProjetClarity(lotRTC.getProjetClarity().getCode());
         setLot("Lot " + lotRTC.getLot());
         setEtatLot(lotRTC.getEtatLot());
         setProjetRTC(lotRTC.getProjetRTC());
@@ -106,11 +108,12 @@ public class Anomalie extends AbstractModele
         return this;
     }
 
-    public Anomalie majDepuisClarity(InfoClarity info)
+    public Anomalie majDepuisClarity(ProjetClarity projet)
     {
-        setDepartement(info.getDepartement());
-        setDirection(info.getDirection());
-        setService(info.getService());
+        setDepartement(projet.getDepartement());
+        setDirection(projet.getDirection());
+        setService(projet.getService());
+        setResponsableService(projet.getChefService().getNom());
         return this;
     }
 

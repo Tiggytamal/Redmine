@@ -13,8 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import control.word.ControlRapport;
-import dao.DaoComposantSonar;
-import model.ComposantSonar;
+import dao.DaoFactory;
+import model.bdd.ComposantSonar;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
@@ -194,7 +194,7 @@ public class PurgeSonarTask extends AbstractTask
     private Map<String, List<ComposantSonar>> compileMap()
     {
         // Récupération composants depuis fichier XML
-        List<ComposantSonar> compos = new DaoComposantSonar().readAll();
+        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
 
         // Contrôle si la liste des composants est vide.
         if (compos.isEmpty())

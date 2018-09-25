@@ -18,13 +18,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import control.sonar.SonarAPI;
-import dao.DaoComposantSonar;
+import dao.DaoFactory;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
-import model.ComposantSonar;
-import model.LotSuiviRTC;
+import model.bdd.ComposantSonar;
+import model.bdd.LotRTC;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.OptionRecupCompo;
@@ -104,7 +104,7 @@ public abstract class AbstractTask extends Task<Boolean>
         updateProgress(-1, -1);
 
         // Récupération des composants Sonar depuis la base de donnèes
-        List<ComposantSonar> composantsSonar = new DaoComposantSonar().readAll();
+        List<ComposantSonar> composantsSonar = DaoFactory.getDao(ComposantSonar.class).readAll();
 
         // Triage ascendant de la liste par nom de projet
         composantsSonar.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
@@ -158,7 +158,7 @@ public abstract class AbstractTask extends Task<Boolean>
         String[] versions = proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONS).split(";");
 
         // Récupération composants depuis fichier XML
-        List<ComposantSonar> compos = new DaoComposantSonar().readAll();
+        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
 
         // Création de la map de retour en utilisant les versions données
         Map<String, List<ComposantSonar>> retour = new HashMap<>();
@@ -349,7 +349,7 @@ public abstract class AbstractTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                LotSuiviRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLot());
+                LotRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLotRTC().getLot());
 
                 // On vérfie qu'on trouve bien le lotRTC dans la map
                 if (lotRTC != null)
@@ -386,7 +386,7 @@ public abstract class AbstractTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                LotSuiviRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLot());
+                LotRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLotRTC().getLot());
 
                 // On saute les composants sans lot RTC
                 if (lotRTC == null)
@@ -434,7 +434,7 @@ public abstract class AbstractTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                LotSuiviRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLot());
+                LotRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLotRTC().getLot());
                 EtatLot etatLot = null;
 
                 if (lotRTC != null)
@@ -475,7 +475,7 @@ public abstract class AbstractTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                LotSuiviRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLot());
+                LotRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLotRTC().getLot());
                 EtatLot etatLot = null;
 
                 if (lotRTC != null)

@@ -8,10 +8,10 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import dao.DaoChefService;
-import model.ChefService;
-import model.InfoClarity;
+import dao.DaoFactory;
 import model.ModelFactory;
+import model.bdd.ChefService;
+import model.bdd.ProjetClarity;
 import model.enums.TypeColClarity;
 
 /**
@@ -20,7 +20,7 @@ import model.enums.TypeColClarity;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlClarity extends AbstractControlExcelRead<TypeColClarity, Map<String, InfoClarity>>
+public class ControlClarity extends AbstractControlExcelRead<TypeColClarity, Map<String, ProjetClarity>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -52,32 +52,41 @@ public class ControlClarity extends AbstractControlExcelRead<TypeColClarity, Map
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public Map<String, InfoClarity> recupDonneesDepuisExcel()
+    public Map<String, ProjetClarity> recupDonneesDepuisExcel()
     {
         // Récupération de la première feuille
         Sheet sheet = wb.getSheetAt(0);
 
-        //Map de retour
-        Map<String, InfoClarity> retour = new HashMap<>();
-        
+        // Map de retour
+        Map<String, ProjetClarity> retour = new HashMap<>();
+
         // Liste des chef de service depuis la base de données - clef = service
-        Map<String, ChefService> mapChefService = new DaoChefService().readAllMap();
+        Map<String, ChefService> mapChefService = DaoFactory.getDao(ChefService.class).readAllMap();
 
         // Itération sur la feuille hormis la ligne des titres, et récupération des lignes qui ont un code Clarity
         for (int i = 1; i < sheet.getLastRowNum(); i++)
         {
             Row row = sheet.getRow(i);
+
+            // On contrôle que la cellule avec le code Clarity existe bien et est bien valorisée, sinon on saute l'élément
+            if (getCellStringValue(row, colClarity).isEmpty())
+                continue;
             
-            // On contrôle que la cellule avec le code Clarity existe bien et est bien valorisée.
-            if (!getCellStringValue(row, colClarity).isEmpty())
+            // Initialisation projet depuis les données Excel
+            ProjetClarity projet = creerInfoClarityDepuisExcel(row);
+            String service = projet.getService();
+
+            // Récupération du chef de service depuis la map issu de la base de données et création d'un chef inconnu si on n'en a pas trouvé
+            if (mapChefService.containsKey(service))
+                projet.setChefService(mapChefService.get(service));
+            else
             {
-                InfoClarity info = creerInfoClarityDepuisExcel(row);
-                
-                // Récupération du chef de service depuis la map et création d'un chef inconnu si on n'en a pas trouvé
-                ChefService chefService = mapChefService.computeIfAbsent(info.getService(), key -> ModelFactory.getModelWithParams(ChefService.class, info.getService()));
-                info.setChefService(chefService);
-                retour.put(info.getCodeClarity(), info);
+                ChefService chefService = ChefService.getChefServiceInconnu(service);
+                projet.setChefService(chefService);
+                mapChefService.put(service, chefService);
             }
+
+            retour.put(projet.getCode(), projet);
         }
         return retour;
     }
@@ -89,13 +98,13 @@ public class ControlClarity extends AbstractControlExcelRead<TypeColClarity, Map
      * 
      * @param row
      *            Ligne du fichier Excel utilisée pour créer l'Objet JAVA
-     * @return {@link model.InfoClarity} - Modèle de données du fichier excel
+     * @return {@link model.bdd.ProjetClarity} - Modèle de données du fichier excel
      */
-    private InfoClarity creerInfoClarityDepuisExcel(Row row)
+    private ProjetClarity creerInfoClarityDepuisExcel(Row row)
     {
-        InfoClarity retour = ModelFactory.getModel(InfoClarity.class);
+        ProjetClarity retour = ModelFactory.getModel(ProjetClarity.class);
         retour.setChefProjet(getCellStringValue(row, colCpi));
-        retour.setCodeClarity(getCellStringValue(row, colClarity));
+        retour.setCode(getCellStringValue(row, colClarity));
         retour.setDepartement(getCellStringValue(row, colDepart));
         retour.setDirection(getCellStringValue(row, colDir));
         retour.setEdition(getCellStringValue(row, colEdition));

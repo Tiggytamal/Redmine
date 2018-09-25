@@ -9,7 +9,7 @@ import java.util.Map;
 import com.mchange.util.AssertException;
 
 import control.excel.ControlExtractCompo;
-import model.ComposantSonar;
+import model.bdd.ComposantSonar;
 import model.enums.OptionRecupCompo;
 import model.enums.TypeColCompo;
 

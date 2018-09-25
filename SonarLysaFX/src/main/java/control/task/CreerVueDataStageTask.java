@@ -3,8 +3,8 @@ package control.task;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.DaoComposantSonar;
-import model.ComposantSonar;
+import dao.DaoFactory;
+import model.bdd.ComposantSonar;
 import model.sonarapi.Vue;
 import utilities.Statics;
 
@@ -73,7 +73,7 @@ public class CreerVueDataStageTask extends AbstractTask
         String baseMessage = builder.append(" OK.").append(Statics.NL).append("Ajout : ").toString();
 
         // Récupération composants depuis fichier XML
-        List<ComposantSonar> compos = new DaoComposantSonar().readAll();
+        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
         
         // Itération sur les projets pour ajouter tous les composants DataStage, puis itération sur la nouvelle liste pour traitement et affichage progression
         List<ComposantSonar> listeDS = new ArrayList<>();

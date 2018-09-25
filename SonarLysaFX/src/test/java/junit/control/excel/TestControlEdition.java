@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlEdition;
-import model.Edition;
+import model.bdd.Edition;
 import model.enums.TypeColEdition;
 import utilities.FunctionalException;
 

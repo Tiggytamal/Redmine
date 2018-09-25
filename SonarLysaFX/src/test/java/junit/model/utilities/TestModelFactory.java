@@ -7,8 +7,8 @@ import org.junit.Test;
 import junit.JunitBase;
 import model.Anomalie;
 import model.LotSuiviPic;
-import model.LotSuiviRTC;
 import model.ModelFactory;
+import model.bdd.LotRTC;
 import model.utilities.AbstractModele;
 import utilities.TechnicalException;
 
@@ -50,7 +50,7 @@ public class TestModelFactory extends JunitBase
     public void testGetModelWithParams()
     {
         // Test création objet depuis constructeur avec paramètres
-        Anomalie ano = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotSuiviRTC.class));
+        Anomalie ano = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotRTC.class));
         assertNotNull(ano);
     }
     

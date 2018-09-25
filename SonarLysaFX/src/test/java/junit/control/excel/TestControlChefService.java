@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlChefService;
-import model.ChefService;
+import model.bdd.ChefService;
 import model.enums.TypeColChefServ;
 import utilities.FunctionalException;
 

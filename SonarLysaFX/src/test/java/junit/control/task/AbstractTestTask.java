@@ -103,22 +103,25 @@ public abstract class AbstractTestTask<T extends AbstractTask> extends JunitBase
         if (mock)
         {
             api = Mockito.mock(SonarAPI.class);
-            
+
             // Init du codeUser
             StringBuilder builder = new StringBuilder(Statics.info.getPseudo());
             builder.append(":");
             builder.append(Statics.info.getMotDePasse());
             Whitebox.getField(SonarAPI.class, "codeUser").set(api, Base64.getEncoder().encodeToString(builder.toString().getBytes()));
-            
+
             // init du webtarget
             WebTarget webTarget = ClientBuilder.newClient().target(Statics.proprietesXML.getMapParams().get(Param.URLSONAR));
             Whitebox.getField(SonarAPI.class, "webTarget").set(api, webTarget);
-            
+
             // Ajout du mock à l'instance de la classe testée
             Whitebox.getField(clazz, "api").set(handler, api);
         }
         else
+        {
             api = SonarAPI.INSTANCE;
+            Whitebox.getField(clazz, "api").set(handler, api);
+        }
     }
 
     /**
@@ -135,7 +138,7 @@ public abstract class AbstractTestTask<T extends AbstractTask> extends JunitBase
         // Vrai appel getComposant
         Mockito.when(supplier.get()).thenCallRealMethod();
     }
-    
+
     /**
      * Permet d'utiliser une vrai méthode get de l'api SonarAPI avec le mock. ex: getComposants, getVues(). La méthode doit avoir un objet en retour
      * 

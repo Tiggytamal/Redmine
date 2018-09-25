@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import junit.JunitBase;
+import model.bdd.LotRTC;
 import model.enums.TypeFichier;
 import model.utilities.AbstractModele;
 import model.utilities.XML;
@@ -37,7 +38,7 @@ public class FichiersXML extends AbstractModele implements XML
     private static final String RESOURCE = "/fichiers.xml";
     
     private Map<TypeFichier, String> dateMaj;
-    private Map<String, LotSuiviRTC> mapLotsRTC;
+    private Map<String, LotRTC> mapLotsRTC;
     private Map<String, String> mapProjetsNpc;
 
     private boolean controleOK;
@@ -151,7 +152,7 @@ public class FichiersXML extends AbstractModele implements XML
 
     @XmlElementWrapper
     @XmlElement(name = "mapLotsRTC", required = false)
-    public Map<String, LotSuiviRTC> getMapLotsRTC()
+    public Map<String, LotRTC> getMapLotsRTC()
     {
         return mapLotsRTC;
     }

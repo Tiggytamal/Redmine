@@ -1,17 +1,12 @@
-package model;
+package model.bdd;
 
 import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-import model.utilities.AbstractModele;
 
 /**
  * Classe de modèle des Edition de la PIC
@@ -28,15 +23,11 @@ import model.utilities.AbstractModele;
         @NamedQuery(name="Edition.resetTable", query="DELETE FROM Edition")
 })
 //@formatter:on
-public class Edition extends AbstractModele implements Serializable
+public class Edition extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
     
     private static final long serialVersionUID = 1L;
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idBase;
 
     @Column(name="nom", unique = true, nullable = false, length = 64)
     private String nom;
@@ -57,6 +48,12 @@ public class Edition extends AbstractModele implements Serializable
         this.numero = numero;
     }
     /*---------- METHODES PUBLIQUES ----------*/
+    
+    @Override
+    public String getMapIndex()
+    {
+        return getNumero();
+    }
     
     public Edition update(Edition update)
     {

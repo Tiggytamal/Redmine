@@ -15,11 +15,12 @@ import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlExtractVul;
 import control.task.CreerExtractVulnerabiliteTask;
-import dao.DaoComposantSonar;
-import model.Application;
-import model.ComposantSonar;
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.Vulnerabilite;
+import model.bdd.Application;
+import model.bdd.ComposantSonar;
+import model.bdd.LotRTC;
 import model.enums.TypeVulnerabilite;
 import model.sonarapi.Issue;
 import utilities.Statics;
@@ -60,7 +61,9 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
         ComposantSonar composant = ModelFactory.getModel(ComposantSonar.class);
         composant.setNom("nom");      
         composant.setAppli(ModelFactory.getModel(Application.class));
-        composant.setLot("123456");
+        LotRTC lotRTC = ModelFactory.getModel(LotRTC.class);
+        lotRTC.setLot("123456");
+        composant.setLotRTC(lotRTC);
         Vulnerabilite retour = Whitebox.invokeMethod(handler, "convertIssueToVul", issue, composant);
         
         // Controleur que les valeurs sont bonnes après conversion
@@ -80,7 +83,7 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
         
         // Compteur pour limiter la taille de la liste et le temps de traitement.
         int i = 0;
-        for (ComposantSonar compo : new DaoComposantSonar().readAll())
+        for (ComposantSonar compo : DaoFactory.getDao(ComposantSonar.class).readAll())
         {
             nomsComposPatrimoine.add(compo.getNom());
             if (++i == 20)
