@@ -10,13 +10,12 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.junit.Test;
 
-import model.Anomalie;
 import model.ModelFactory;
-import model.bdd.ProjetClarity;
+import model.bdd.Anomalie;
 import model.bdd.LotRTC;
+import model.bdd.ProjetClarity;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
@@ -24,17 +23,8 @@ import utilities.Statics;
 
 public class TestAnomalie extends AbstractTestModel<Anomalie>
 {
-    /*---------- ATTRIBUTS ----------*/
-
-    private XSSFComment comment;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-
-    public TestAnomalie()
-    {
-        comment = new XSSFComment(null, null, null);
-    }
-    
+    /*---------- ATTRIBUTS ----------*/    
+    /*---------- CONSTRUCTEURS ----------*/    
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
@@ -68,7 +58,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
         assertEquals(edition, handler.getEdition());
         assertEquals(libProjet, handler.getLibelleProjet());
         assertEquals(clarity, handler.getProjetClarity());
-        assertEquals("Lot " + lot, handler.getLot());
+        assertEquals("Lot " + lot, handler.getLotRTC());
         assertEquals(EtatLot.NOUVEAU, handler.getEtatLot());       
     }
     
@@ -156,7 +146,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
         handler.setMatieresString("JAVA");
         handler.setProjetRTC("RTC");
         handler.setAction(TypeAction.ABANDONNER);
-        handler.setNpc("npc");
+        handler.setGroupe("npc");
         
         string = handler.toString();
         System.out.println(string);
@@ -355,12 +345,12 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getLot());
+        assertEquals(EMPTY, handler.getLotRTC());
         
         // Test setter et getter
         String string = "lot";
         handler.setLot(string);
-        assertEquals(string, handler.getLot());       
+        assertEquals(string, handler.getLotRTC());       
     }
     
     @Test
@@ -391,12 +381,12 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
     public void testGetSecurite()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getSecurite());
+        assertEquals(EMPTY, handler.isSecurite());
         
         // Test setter et getter
         String string = "securite";
         handler.setSecurite(string);
-        assertEquals(string, handler.getSecurite());       
+        assertEquals(string, handler.isSecurite());       
     }
     
     @Test
@@ -554,311 +544,12 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
     public void testGetNpc()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getNpc());
+        assertEquals(EMPTY, handler.getGroupe());
         
         // Test setter et getter
         String npc = "npc";
-        handler.setNpc(npc);
-        assertEquals(npc, handler.getNpc());       
-    }
-    
-    /* ---------- TEST COMMENTAIRES ---------- */
-    
-    @Test
-    public void testGetDirectionComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getDirectionComment());
-        
-        // Test setter et getter
-        handler.setDirectionComment(comment);
-        assertEquals(comment, handler.getDirectionComment());   
-    }
-    
-    @Test
-    public void testGetDepartementComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getDepartementComment());
-        
-        // Test setter et getter
-        handler.setDepartementComment(comment);
-        assertEquals(comment, handler.getDepartementComment());   
-    }
-    
-    @Test
-    public void testGetServiceComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getServiceComment());
-        
-        // Test setter et getter
-        handler.setServiceComment(comment);
-        assertEquals(comment, handler.getServiceComment());   
-    }
-    
-    @Test
-    public void testGetResponsableServiceComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getResponsableServiceComment());
-        
-        // Test setter et getter
-        handler.setResponsableServiceComment(comment);
-        assertEquals(comment, handler.getResponsableServiceComment());   
-    }
-    
-    @Test
-    public void testGetProjetClarityComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getProjetClarityComment());
-        
-        // Test setter et getter
-        handler.setProjetClarityComment(comment);
-        assertEquals(comment, handler.getProjetClarityComment());   
-    }
-    
-    @Test
-    public void testGetLibelleProjetComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getLibelleProjetComment());
-        
-        // Test setter et getter
-        handler.setLibelleProjetComment(comment);
-        assertEquals(comment, handler.getLibelleProjetComment());   
-    }
-    
-    @Test
-    public void testGetCpiProjetComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getCpiProjetComment());
-        
-        // Test setter et getter
-        handler.setCpiProjetComment(comment);
-        assertEquals(comment, handler.getCpiProjetComment());   
-    }
-    
-    @Test
-    public void testGetEditionComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getEditionComment());
-        
-        // Test setter et getter
-        handler.setEditionComment(comment);
-        assertEquals(comment, handler.getEditionComment());   
-    }
-    
-    @Test
-    public void testGetLotComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getLotComment());
-        
-        // Test setter et getter
-        handler.setLotComment(comment);
-        assertEquals(comment, handler.getLotComment());   
-    }
-    
-    @Test
-    public void testGetLiensLotComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getLiensLotComment());
-        
-        // Test setter et getter
-        handler.setLiensLotComment(comment);
-        assertEquals(comment, handler.getLiensLotComment());   
-    }
-    
-    @Test
-    public void testGetEnvironnementComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getEtatLotComment());
-        
-        // Test setter et getter
-        handler.setEtatLotComment(comment);
-        assertEquals(comment, handler.getEtatLotComment());   
-    }
-    
-    @Test
-    public void testGetNumeroAnomalieComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getNumeroAnomalieComment());
-        
-        // Test setter et getter
-        handler.setNumeroAnomalieComment(comment);
-        assertEquals(comment, handler.getNumeroAnomalieComment());   
-    }
-    
-    @Test
-    public void testGetLiensAnoComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getLiensAnoComment());
-        
-        // Test setter et getter
-        handler.setLiensAnoComment(comment);
-        assertEquals(comment, handler.getLiensAnoComment());   
-    }
-    
-    @Test
-    public void testGetEtatComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getEtatComment());
-        
-        // Test setter et getter
-        handler.setEtatComment(comment);
-        assertEquals(comment, handler.getEtatComment());   
-    }
-    
-    @Test
-    public void testGetTypeAssemblageComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getTypeAssemblageComment());
-        
-        // Test setter et getter
-        handler.setTypeAssemblageComment(comment);
-        assertEquals(comment, handler.getTypeAssemblageComment());   
-    }
-    
-    @Test
-    public void testGetSecuriteComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getSecuriteComment());
-        
-        // Test setter et getter
-        handler.setSecuriteComment(comment);
-        assertEquals(comment, handler.getSecuriteComment());   
-    }
-    
-    @Test
-    public void testGetRemarqueComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getRemarqueComment());
-        
-        // Test setter et getter
-        handler.setRemarqueComment(comment);
-        assertEquals(comment, handler.getRemarqueComment());   
-    }
-    
-    @Test
-    public void testGetVersionComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getVersionComment());
-        
-        // Test setter et getter
-        handler.setVersionComment(comment);
-        assertEquals(comment, handler.getVersionComment());   
-    }
-    
-    @Test
-    public void testGetDateCreationComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getDateCreationComment());
-        
-        // Test setter et getter
-        handler.setDateCreationComment(comment);
-        assertEquals(comment, handler.getDateCreationComment());   
-    }
-    
-    @Test
-    public void testGetDateDetectionComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getDateDetectionComment());
-        
-        // Test setter et getter
-        handler.setDateDetectionComment(comment);
-        assertEquals(comment, handler.getDateDetectionComment());   
-    }
-    
-    @Test
-    public void testGetDateResoComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getDateResoComment());
-        
-        // Test setter et getter
-        handler.setDateResoComment(comment);
-        assertEquals(comment, handler.getDateResoComment());   
-    }
-    
-    @Test
-    public void testGetDateMajEtatComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getDateMajEtatComment());
-        
-        // Test setter et getter
-        handler.setDateMajEtatComment(comment);
-        assertEquals(comment, handler.getDateMajEtatComment());   
-    }
-    
-    @Test
-    public void testGetDateRelanceComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getDateRelanceComment());
-        
-        // Test setter et getter
-        handler.setDateRelanceComment(comment);
-        assertEquals(comment, handler.getDateRelanceComment());   
-    }
-    
-    @Test
-    public void testGetMatieresComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getMatieresComment());
-        
-        // Test setter et getter
-        handler.setMatieresComment(comment);
-        assertEquals(comment, handler.getMatieresComment());   
-    }
-    
-    @Test
-    public void testGetProjetRTCComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getProjetRTCComment());
-        
-        // Test setter et getter
-        handler.setProjetRTCComment(comment);
-        assertEquals(comment, handler.getProjetRTCComment());   
-    }
-    
-    @Test
-    public void testGetActionComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getActionComment());
-        
-        // Test setter et getter
-        handler.setActionComment(comment);
-        assertEquals(comment, handler.getActionComment());   
-    }
-    
-    @Test
-    public void testGetNpcComment()
-    {
-        // test valeur vide ou nulle
-        assertEquals(null, handler.getNpcComment());
-        
-        // Test setter et getter
-        handler.setNpcComment(comment);
-        assertEquals(comment, handler.getNpcComment());   
+        handler.setGroupe(npc);
+        assertEquals(npc, handler.getGroupe());       
     }
     
     /*---------- METHODES PRIVEES ----------*/

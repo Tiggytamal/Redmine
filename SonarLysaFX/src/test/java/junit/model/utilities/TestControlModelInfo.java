@@ -12,9 +12,9 @@ import org.powermock.reflect.Whitebox;
 import control.word.ControlRapport;
 import dao.DaoFactory;
 import junit.JunitBase;
-import model.Anomalie;
 import model.CompoPbApps;
 import model.ModelFactory;
+import model.bdd.Anomalie;
 import model.bdd.ChefService;
 import model.enums.TypeRapport;
 import model.utilities.ControlModelInfo;
@@ -89,11 +89,11 @@ public class TestControlModelInfo extends JunitBase
 
         // Test 1 nulle
         handler.controleChefDeService(ano, controlRapport);
-        assertEquals(EMPTY, ano.getSecurite());
+        assertEquals(EMPTY, ano.isSecurite());
 
         // Test 2 empty
         ano.setService(EMPTY);
-        assertEquals(EMPTY, ano.getSecurite());
+        assertEquals(EMPTY, ano.isSecurite());
 
         // Test 3 ok
         ano.setService("Projets Credits");
@@ -116,12 +116,12 @@ public class TestControlModelInfo extends JunitBase
         // Test NPC
         ano.setProjetRTC(Statics.fichiersXML.getMapProjetsNpc().values().iterator().next());
         handler.controleNPC(ano);
-        assertEquals(Statics.X, ano.getNpc());
+        assertEquals(Statics.X, ano.getGroupe());
         
         // Test non NPC
         ano.setProjetRTC("pas NPC");
         handler.controleNPC(ano);
-        assertEquals(Statics.EMPTY, ano.getNpc());
+        assertEquals(Statics.EMPTY, ano.getGroupe());
     }
     
     @Test

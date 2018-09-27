@@ -1,4 +1,4 @@
-package control.mail;
+package control;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,22 +14,6 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.ibm.team.repository.common.TeamRepositoryException;
-
-import control.rtc.ControlRTC;
-import model.InfoMail;
-import model.ModelFactory;
-import model.enums.Param;
-import model.enums.ParamSpec;
-import model.enums.TypeInfo;
-import model.enums.TypeMail;
-import utilities.AbstractToStringImpl;
-import utilities.DateConvert;
-import utilities.Statics;
 
 /**
  * Classe de contrôle pour l'envoi des mails

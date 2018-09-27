@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
+import model.bdd.Application;
 import model.bdd.ComposantSonar;
+import model.bdd.LotRTC;
 
 /**
  * Classe de DOA pour la sauvegarde des composants Sonar en base de données
@@ -41,10 +43,13 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     {
         if (compo.getIdBase() == 0)
         {
-            if (compo.getAppli().getIdBase() == 0)
-                em.persist(compo.getAppli());
-            if (compo.getLotRTC().getIdBase() == 0)
-                em.persist(compo.getLotRTC());
+            Application appli = compo.getAppli();
+            if (appli != null && appli.getIdBase() == 0)
+                em.persist(appli);
+            
+            LotRTC lotRTC = compo.getLotRTC();
+            if (lotRTC != null && lotRTC.getIdBase() == 0)
+                em.persist(lotRTC);
             em.persist(compo);
             return true;
         }

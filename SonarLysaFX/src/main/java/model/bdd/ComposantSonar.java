@@ -33,6 +33,7 @@ import model.enums.QG;
         @NamedQuery(name="ComposantSonar.findAll", query="SELECT distinct(c) FROM ComposantSonar c "
                 + "JOIN FETCH c.appli a "
                 + "JOIN FETCH c.lotRTC l"),
+        @NamedQuery(name="ComposantSonar.findByIndex", query="SELECT c FROM ComposantSonar c WHERE c.key = :index"),
         @NamedQuery(name="ComposantSonar.resetTable", query="DELETE FROM ComposantSonar")
 })
 //@formatter:on
@@ -50,7 +51,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @JoinColumn (name = "lotRTC")
     private LotRTC lotRTC;
 
-    @Column(name = "composantKey", nullable = false, length = 256)
+    @Column(name = "composant_key", nullable = false, length = 256)
     private String key;
 
     @Column(name = "id", nullable = false)
@@ -65,7 +66,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     private String edition;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "etatAppli", nullable = true)
+    @Column(name = "etat_appli", nullable = true)
     private EtatAppli etatAppli;
 
     @Column(name = "ldc", nullable = true)
@@ -93,7 +94,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @Column(name = "duplication", nullable = true)
     private float duplication;
 
-    @Column(name = "versionRelease", nullable = true)
+    @Column(name = "version_release", nullable = true)
     private boolean versionRelease;
 
     /*---------- CONSTRUCTEURS ----------*/

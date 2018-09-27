@@ -1,5 +1,6 @@
 package model.bdd;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +37,20 @@ import utilities.Statics;
 @NamedQueries (value = {
         @NamedQuery(name="LotRTC.findAll", query="SELECT l FROM LotRTC l "
                 + "JOIN FETCH l.projetClarity p"),
+        @NamedQuery(name="LotRTC.findByIndex", query="SELECT l FROM LotRTC l WHERE l.lot = :index"),
         @NamedQuery(name="LotRTC.resetTable", query="DELETE FROM LotRTC")
 })
 //@formatter:on
-public class LotRTC extends AbstractBDDModele
+public class LotRTC extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
+
+    private static final long serialVersionUID = 1L;
 
     @Column(name = "lot", nullable = false, length = 6)
     private String lot;
     
-    @Column(name = "libellé", nullable = false)
+    @Column(name = "libelle", nullable = false)
     private String libelle;
     
     @BatchFetch(value = BatchFetchType.JOIN)    

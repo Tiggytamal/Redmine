@@ -24,8 +24,8 @@ import com.ibm.team.workitem.common.model.IWorkItemType;
 import control.rtc.ControlRTC;
 import control.rtc.WorkItemInitialization;
 import junit.JunitBase;
-import model.Anomalie;
 import model.ModelFactory;
+import model.bdd.Anomalie;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamSpec;
@@ -151,7 +151,7 @@ public class TestWorkItemInitialization extends JunitBase
 
         // Détails
         assertTrue(
-                workingCopy.getWorkItem().getHTMLDescription().toString().contains("Bonjour,<br/>L'analyse SonarQube de ce jour du lot projet " + ano.getLot().substring(Statics.SBTRINGLOT) + " fait apparaitre un quality Gate non conforme."));
+                workingCopy.getWorkItem().getHTMLDescription().toString().contains("Bonjour,<br/>L'analyse SonarQube de ce jour du lot projet " + ano.getLotRTC().substring(Statics.SBTRINGLOT) + " fait apparaitre un quality Gate non conforme."));
 
         // Environnement
         if ("E32".equals(ano.getVersion()))
@@ -182,9 +182,9 @@ public class TestWorkItemInitialization extends JunitBase
         assertEquals(workItemTest.getOwner(), controlRTC.recupContributorDepuisNom(ano.getCpiProjet()));
 
         // Tags
-        assertTrue(workItemTest.getTags2().contains("lot=" + ano.getLot().substring(Statics.SBTRINGLOT)));
+        assertTrue(workItemTest.getTags2().contains("lot=" + ano.getLotRTC().substring(Statics.SBTRINGLOT)));
         
-        if (!ano.getSecurite().isEmpty())
+        if (!ano.isSecurite().isEmpty())
             assertTrue(workItemTest.getTags2().contains("sécurité"));
         else
             assertEquals(3, workItemTest.getTags2().size());   

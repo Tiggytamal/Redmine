@@ -22,7 +22,7 @@ import utilities.Statics;
 //@formatter:off
 @NamedQueries (value = {
         @NamedQuery(name="ChefService.findAll", query="SELECT c FROM ChefService c"),
-        @NamedQuery(name="ChefService.findByNom", query="SELECT c FROM ChefService c WHERE c.nom = :nom"),
+        @NamedQuery(name="ChefService.findByIndex", query="SELECT c FROM ChefService c WHERE c.service = :index"),
         @NamedQuery(name="ChefService.resetTable", query="DELETE FROM ChefService")
 })
 //@formatter:on
@@ -42,7 +42,7 @@ public class ChefService extends AbstractBDDModele implements Serializable
     @Column(name = "service", nullable = false)
     private String service;
 
-    @Column(name = "département", nullable = false)
+    @Column(name = "departement", nullable = false)
     private String departement;
 
     @Column(name = "nom", nullable = false)

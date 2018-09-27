@@ -165,37 +165,37 @@ public final class MenuViewControl extends AbstractViewControl
 
             case "planificateur":
                 load("/view/Planificateur.fxml");
-                majTitre(box, OUTILS  + texte);
+                majTitre(box, OUTILS + texte);
                 break;
 
             case "autres":
                 load("/view/AutresVues.fxml");
-                majTitre(box, FONCTIONS  + texte);
+                majTitre(box, FONCTIONS + texte);
                 break;
 
             case "maintenance":
                 load("/view/Maintenance.fxml");
-                majTitre(box, FONCTIONS  + texte);
+                majTitre(box, FONCTIONS + texte);
                 break;
 
             case "suivi":
                 load("/view/Suivi.fxml");
-                majTitre(box, FONCTIONS  + texte);
+                majTitre(box, FONCTIONS + texte);
                 break;
 
             case "appli":
                 load("/view/Applications.fxml");
-                majTitre(box, FONCTIONS  + texte);
+                majTitre(box, FONCTIONS + texte);
                 break;
 
             case "rtc":
                 load("/view/FichierRTC.fxml");
-                majTitre(box, FONCTIONS  + texte);
+                majTitre(box, FONCTIONS + texte);
                 break;
 
             case "extraction":
                 load("/view/Extraction.fxml");
-                majTitre(box, FONCTIONS  + texte);
+                majTitre(box, FONCTIONS + texte);
                 break;
 
             // Demande confirmations pour traitements
@@ -268,6 +268,22 @@ public final class MenuViewControl extends AbstractViewControl
 
             box.getChildren().remove(connexion);
             box.getChildren().add(deConnexion);
+
+            // Démarrage du serveur MySQl si besoin
+            ProcessBuilder pb = new ProcessBuilder("D:\\mysql\\bin\\mysqladmin.exe", "-u", "root", "-pAQPadmin01", "ping");
+
+            try
+            {
+                Process p = pb.start();
+                
+                if (p.waitFor() == 1)
+                    new ProcessBuilder("D:\\mysql\\bin\\mysqld.exe", "--console", "--default-time-zone=Europe/Paris").start();
+            }
+            catch (IOException | InterruptedException e)
+            {
+                throw new TechnicalException("Problème lors du démarrage du serveur MySQL.", e);
+            }
+
         }
         else
             throw new FunctionalException(Severity.INFO, "Utilisateur incorrect");
@@ -303,6 +319,6 @@ public final class MenuViewControl extends AbstractViewControl
         if (result.isPresent() && result.get().equals(ButtonType.OK))
             startTask(task);
     }
-    
+
     /* ---------- ACCESSEURS ---------- */
 }

@@ -20,6 +20,7 @@ import javax.persistence.Table;
 //@formatter:off
 @NamedQueries (value = {
         @NamedQuery(name="Edition.findAll", query="SELECT e FROM Edition e"),
+        @NamedQuery(name="Edition.findByIndex", query="SELECT e FROM Edition e WHERE e.numero = :index"),
         @NamedQuery(name="Edition.resetTable", query="DELETE FROM Edition")
 })
 //@formatter:on
@@ -32,7 +33,7 @@ public class Edition extends AbstractBDDModele implements Serializable
     @Column(name="nom", unique = true, nullable = false, length = 64)
     private String nom;
     
-    @Column(name="numéro", unique = true, nullable = false, length = 32)
+    @Column(name="numero", unique = true, nullable = false, length = 32)
     private String numero;
     
     @Column(name="commentaire", nullable = false)

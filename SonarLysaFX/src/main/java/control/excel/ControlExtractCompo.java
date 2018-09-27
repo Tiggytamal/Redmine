@@ -62,7 +62,7 @@ public class ControlExtractCompo extends AbstractControlExcelWrite<TypeColCompo,
 
         for (TypeColCompo typeColCompo : TypeColCompo.values())
         {
-            valoriserCellule(row, getNumCol(typeColCompo), centre, Statics.proprietesXML.getEnumMapColW(TypeColCompo.class).get(typeColCompo).getNom(), null);
+            valoriserCellule(row, getNumCol(typeColCompo), centre, Statics.proprietesXML.getEnumMapColW(TypeColCompo.class).get(typeColCompo).getNom());
         }
     }
 
@@ -96,12 +96,12 @@ public class ControlExtractCompo extends AbstractControlExcelWrite<TypeColCompo,
                     break;
 
                 default:
-                    throw new TechnicalException("control.excel.ControlExtractCompo.eregistrerDonnees - TypeColCompo Inconnu : " + entry.getKey(), null);
+                    throw new TechnicalException("control.excel.ControlExtractCompo.eregistrerDonnees - TypeColCompo Inconnu : " + entry.getKey());
             }
 
             for (int i = 0; i < entry.getValue().size(); i++)
             {
-                valoriserCellule(getRow(i + 1, sheet), numCol, centre, entry.getValue().get(i).getNom(), null);
+                valoriserCellule(getRow(i + 1, sheet), numCol, centre, entry.getValue().get(i).getNom());
             }
         }
 

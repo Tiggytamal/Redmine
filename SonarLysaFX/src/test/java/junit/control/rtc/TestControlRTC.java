@@ -40,8 +40,8 @@ import control.excel.ExcelFactory;
 import control.rtc.ControlRTC;
 import junit.JunitBase;
 import junit.TestUtils;
-import model.Anomalie;
 import model.ModelFactory;
+import model.bdd.Anomalie;
 import model.bdd.LotRTC;
 import model.enums.EtatLot;
 import model.enums.Param;
@@ -252,11 +252,11 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testRecupLotsRTC() throws TeamRepositoryException
     {
-        List<IWorkItemHandle> liste = handler.recupLotsRTC(true, LocalDate.of(2016, 01, 01));
+        List<IWorkItemHandle> liste = handler.recupLotsRTC(LocalDate.of(2016, 01, 01));
         assertNotNull(liste);
         assertFalse(liste.isEmpty());
 
-        List<IWorkItemHandle> liste2 = handler.recupLotsRTC(false, null);
+        List<IWorkItemHandle> liste2 = handler.recupLotsRTC(null);
         assertNotNull(liste2);
         assertFalse(liste2.isEmpty());
 
@@ -265,13 +265,13 @@ public class TestControlRTC extends JunitBase
     @Test(expected = TechnicalException.class)
     public void testRecupLotsRTCException() throws TeamRepositoryException
     {
-        handler.recupLotsRTC(true, null);
+        handler.recupLotsRTC(null);
     }
 
     @Test
     public void testCreerLotSuiviRTCDepuisHandle() throws TeamRepositoryException
     {
-        List<IWorkItemHandle> liste = handler.recupLotsRTC(true, LocalDate.of(2016, 01, 01));       
+        List<IWorkItemHandle> liste = handler.recupLotsRTC(LocalDate.of(2016, 01, 01));       
         LotRTC lot = handler.creerLotSuiviRTCDepuisHandle(liste.get(0));
         IWorkItem workItem = handler.recupererItemDepuisHandle(IWorkItem.class, liste.get(0));
         assertEquals(String.valueOf(workItem.getId()), lot.getLot());

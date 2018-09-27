@@ -87,7 +87,7 @@ public final class Main extends Application
         {
             createAlert(Severity.ERROR, e, e.getClass().getSimpleName() + e.getMessage());
         }
-        
+
         LOGPLANTAGE.error(e);
     }
 

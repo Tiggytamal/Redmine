@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import control.excel.ControlSuivi;
-import model.Anomalie;
+import model.bdd.Anomalie;
 import model.enums.TypeColSuivi;
 import utilities.Statics;
 

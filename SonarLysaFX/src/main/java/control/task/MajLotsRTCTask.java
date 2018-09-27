@@ -31,16 +31,14 @@ public class MajLotsRTCTask extends AbstractTask
 
     private static final String TITRE = "Mise à jour des Lots RTC";
     private LocalDate date;
-    private boolean remiseAZero;
     private DaoLotRTC dao;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public MajLotsRTCTask(LocalDate date, boolean remiseAZero)
+    public MajLotsRTCTask(LocalDate date)
     {
         super(1, TITRE);
         this.date = date;
-        this.remiseAZero = remiseAZero;
         dao = DaoFactory.getDao(LotRTC.class);
     }
 
@@ -56,7 +54,7 @@ public class MajLotsRTCTask extends AbstractTask
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    protected Boolean call() throws Exception
+    public Boolean call() throws Exception
     {
         Map<String, LotRTC> map = majLotsRTC();
         return sauvegarde(map);
@@ -73,7 +71,7 @@ public class MajLotsRTCTask extends AbstractTask
     private Map<String, LotRTC> majLotsRTC() throws TeamRepositoryException
     {
         ControlRTC control = ControlRTC.INSTANCE;
-        List<IWorkItemHandle> handles = control.recupLotsRTC(remiseAZero, date);
+        List<IWorkItemHandle> handles = control.recupLotsRTC(date);
         if (handles.isEmpty())
             throw new FunctionalException(Severity.ERROR, "La liste des lots RTC est vide!");
 
@@ -128,8 +126,6 @@ public class MajLotsRTCTask extends AbstractTask
      */
     private boolean sauvegarde(Map<String, LotRTC> map)
     {
-        if (remiseAZero)
-            dao.resetTable();
         return dao.persist(map.values()) > 0;
     }
 

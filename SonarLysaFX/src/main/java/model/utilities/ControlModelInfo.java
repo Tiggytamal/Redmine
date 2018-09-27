@@ -12,11 +12,12 @@ import com.ibm.team.workitem.common.model.IWorkItem;
 import control.rtc.ControlRTC;
 import control.word.ControlRapport;
 import dao.DaoFactory;
-import model.Anomalie;
 import model.CompoPbApps;
+import model.bdd.Anomalie;
 import model.bdd.ChefService;
 import model.bdd.ProjetClarity;
 import model.enums.EtatLot;
+import model.enums.GroupeComposant;
 import model.enums.TypeAction;
 import model.enums.TypeInfo;
 import utilities.DateConvert;
@@ -53,17 +54,16 @@ public class ControlModelInfo
     public void controleClarity(Anomalie ano, ControlRapport controlRapport)
     {
         // Récupération infox Clarity depuis fichier Excel
-        String anoClarity = ano.getProjetClarity();
+        String anoClarity = ano.getLotRTC().getProjetClarity().getCode();
         // Récupération des données en base
         Map<String, ProjetClarity> map = DaoFactory.getDao(ProjetClarity.class).readAllMap();
         ProjetClarity projet = testProjetClarity(anoClarity, map);
-        ano.majDepuisClarity(projet);
 
         // Gestion des erreurs
         if (!projet.isActif())
         {
-            LOGINCONNUE.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLot());
-            controlRapport.addInfo(TypeInfo.CLARITYINCONNU, ano.getLot(), anoClarity);
+            LOGINCONNUE.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLotRTC());
+            controlRapport.addInfo(TypeInfo.CLARITYINCONNU, ano.getLotRTC().getLot(), anoClarity);
         }
     }
 
@@ -161,20 +161,16 @@ public class ControlModelInfo
      * @return
      * @throws TeamRepositoryException
      */
-    public void controleRTC(Anomalie ano, ControlRapport controlMail, ControlRTC controlRTC) throws TeamRepositoryException
+    public void controleRTC(Anomalie ano, ControlRapport controlRapport, ControlRTC controlRTC) throws TeamRepositoryException
     {
         // Controle sur l'état de l'anomalie (projet Clarity, lot et numéro anomalie renseignée
-        String anoLot = ano.getLot().substring(Statics.SBTRINGLOT);
+        String anoLot = ano.getLotRTC().getLot();
 
         // Protection contre les numéros de lot vide
         if (anoLot == Statics.EMPTY)
             return;
 
         int anoLotInt = Integer.parseInt(anoLot);
-
-        // Controle si le projet RTC est renseigné. Sinon on le récupère depuis Jazz avec le numéro de lot
-        if (ano.getProjetRTC().isEmpty())
-            ano.setProjetRTC(controlRTC.recupProjetRTCDepuisWiLot(anoLotInt));
 
         // Mise à jour de l'état de l'anomalie ainsi que les dates de résolution et de création
         if (ano.getNumeroAnomalie() != 0)
@@ -184,7 +180,7 @@ public class ControlModelInfo
             if (!newEtat.equals(ano.getEtat()))
             {
                 LOGGER.info("Lot : " + anoLot + " - nouvel etat anomalie : " + newEtat);
-                controlMail.addInfo(TypeInfo.ANOMAJ, anoLot, newEtat);
+                controlRapport.addInfo(TypeInfo.ANOMAJ, anoLot, newEtat);
                 ano.setEtat(newEtat);
             }
             ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
@@ -195,20 +191,20 @@ public class ControlModelInfo
         // Mise à jour de l'état du lot et de la date de mise à jour
         IWorkItem lotRTC = controlRTC.recupWorkItemDepuisId(anoLotInt);
         EtatLot etatLot = EtatLot.from(controlRTC.recupEtatElement(lotRTC));
-        if (ano.getEtatLot() != etatLot)
+        if (ano.getLotRTC().getEtatLot() != etatLot)
         {
             LOGGER.info("Lot : " + anoLot + " - nouvel etat Lot : " + etatLot);
-            controlMail.addInfo(TypeInfo.LOTMAJ, anoLot, etatLot.toString());
+            controlRapport.addInfo(TypeInfo.LOTMAJ, anoLot, etatLot.toString());
 
             // Si on arrive en VMOA ou que l'on passe à livré à l'édition directement, on met l'anomalie à relancer
-            if (etatLot == EtatLot.VMOA || (ano.getEtatLot() != EtatLot.VMOA && etatLot == EtatLot.EDITION))
+            if (etatLot == EtatLot.VMOA || (ano.getLotRTC().getEtatLot() != EtatLot.VMOA && etatLot == EtatLot.EDITION))
             {
                 ano.setAction(TypeAction.RELANCER);
-                controlMail.addInfo(TypeInfo.ANOARELANCER, anoLot, null);
+                controlRapport.addInfo(TypeInfo.ANOARELANCER, anoLot, null);
             }
-            ano.setEtatLot(etatLot);
+            ano.getLotRTC().setEtatLot(etatLot);
         }
-        ano.setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));
+        ano.getLotRTC().setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));
     }
 
     /**
@@ -221,18 +217,18 @@ public class ControlModelInfo
     public void controleChefDeService(Anomalie ano, ControlRapport controlMail)
     {
         // Controle définition du service pour l'anomalie
-        String anoServ = ano.getService();
+        String anoServ = ano.getLotRTC().getProjetClarity().getService();
         if (anoServ.isEmpty())
             return;
 
         // Recherche du responsable dans les paramètres et remontée d'info si non trouvé.
         Map<String, ChefService> mapRespService = DaoFactory.getDao(ChefService.class).readAllMap();
         if (mapRespService.containsKey(anoServ))
-            ano.setResponsableService(mapRespService.get(anoServ).getNom());
+            ano.getLotRTC().getProjetClarity().setChefService(mapRespService.get(anoServ));
         else
         {
-            LOGINCONNUE.warn("Pas de responsable de service trouvé pour ce service : " + ano.getService());
-            controlMail.addInfo(TypeInfo.SERVICESSANSRESP, ano.getLot(), ano.getService());
+            LOGINCONNUE.warn("Pas de responsable de service trouvé pour ce service : " + ano.getLotRTC().getProjetClarity().getService());
+            controlMail.addInfo(TypeInfo.SERVICESSANSRESP, ano.getLotRTC().getLot(), ano.getLotRTC().getProjetClarity().getService());
         }
     }
 
@@ -244,10 +240,10 @@ public class ControlModelInfo
      */
     public void controleNPC(Anomalie ano)
     {
-        if (Statics.fichiersXML.getMapProjetsNpc().containsKey(ano.getProjetRTC()))
-            ano.setNpc(Statics.X);
+        if (Statics.fichiersXML.getMapProjetsNpc().containsKey(ano.getLotRTC().getProjetRTC()))
+            ano.setGroupe(GroupeComposant.NPC);
         else
-            ano.setNpc(Statics.EMPTY);
+            ano.setGroupe(GroupeComposant.NPC);
     }
 
     /*---------- METHODES PRIVEES ----------*/

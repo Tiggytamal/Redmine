@@ -21,7 +21,7 @@ import com.ibm.team.workitem.common.model.ISubscriptions;
 import com.ibm.team.workitem.common.model.IWorkItem;
 import com.ibm.team.workitem.common.model.IWorkItemType;
 
-import model.Anomalie;
+import model.bdd.Anomalie;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamSpec;
@@ -51,12 +51,12 @@ public final class WorkItemInitialization extends WorkItemOperation
 
     public WorkItemInitialization(IWorkItemType type, ICategory cat, IProjectArea projet, Anomalie ano)
     {
-        super("Initializing Work Item"); 
+        super("Initializing Work Item");
         this.type = type;
         this.cat = cat;
         this.projet = projet;
         this.ano = ano;
-        lotAno = Integer.parseInt(this.ano.getLot().substring(Statics.SBTRINGLOT));
+        lotAno = Integer.parseInt(this.ano.getLotRTC().getLot().substring(Statics.SBTRINGLOT));
         controlRTC = ControlRTC.INSTANCE;
         client = controlRTC.getClient();
     }
@@ -74,7 +74,7 @@ public final class WorkItemInitialization extends WorkItemOperation
 
         // Environnement
         IAttribute attribut = client.findAttribute(projet, TypeEnumRTC.ENVIRONNEMENT.getValeur(), null);
-        if (calculPariteEdition(ano.getVersion()) || calculPariteEdition(proprietesXML.getMapParams().get(Param.RTCLOTCHC)))
+        if (calculPariteEdition(ano.getLotRTC().getEdition()) || calculPariteEdition(proprietesXML.getMapParams().get(Param.RTCLOTCHC)))
             workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Br A VMOE", attribut));
         else
             workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Br B VMOE", attribut));
@@ -96,13 +96,13 @@ public final class WorkItemInitialization extends WorkItemOperation
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("MOE", attribut));
 
         // Edition
-        String edition = ano.getEdition();
+        String edition = ano.getLotRTC().getEdition();
         attribut = client.findAttribute(projet, TypeEnumRTC.EDITION.getValeur(), null);
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString(calculEditionRTC(edition), attribut));
 
         // Subscriptions
         ISubscriptions subscription = workItem.getSubscriptions();
-        subscription.add(controlRTC.recupContributorDepuisNom(ano.getCpiProjet()));
+        subscription.add(controlRTC.recupContributorDepuisNom(ano.getLotRTC().getCpiProjet()));
         subscription.add(controlRTC.getRepo().loggedInContributor());
 
         // Contributeurs JAVA
@@ -127,7 +127,7 @@ public final class WorkItemInitialization extends WorkItemOperation
         workItem.setCreator(controlRTC.getRepo().loggedInContributor());
 
         // Owner
-        workItem.setOwner(controlRTC.recupContributorDepuisNom(ano.getCpiProjet()));
+        workItem.setOwner(controlRTC.recupContributorDepuisNom(ano.getLotRTC().getCpiProjet()));
 
         // Maj item
         client.updateWorkItemType(workItem, type, type, monitor);
@@ -180,7 +180,7 @@ public final class WorkItemInitialization extends WorkItemOperation
     {
         List<String> tags = workItem.getTags2();
         tags.add("lot=" + lotAno);
-        if (Statics.X.equals(ano.getSecurite()))
+        if (ano.isSecurite())
             tags.add("sécurité");
         workItem.setTags2(tags);
     }
@@ -188,7 +188,7 @@ public final class WorkItemInitialization extends WorkItemOperation
     private String creerDescription()
     {
         String retour = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEDEFECT).replace("-lot-", String.valueOf(lotAno));
-        if (Statics.X.equals(ano.getSecurite()))
+        if (ano.isSecurite())
             retour = retour.replace("Merci", Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTESECURITE));
         return retour;
     }

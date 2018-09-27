@@ -21,7 +21,7 @@ import javax.persistence.Transient;
 //@formatter:off
 @NamedQueries (value = {
         @NamedQuery(name="Application.findAll", query="SELECT a FROM Application a"),
-        @NamedQuery(name="Application.findByCode", query="SELECT a FROM Application a WHERE a.code = :code"),
+        @NamedQuery(name="Application.findByIndex", query="SELECT a FROM Application a WHERE a.code = :index"),
         @NamedQuery(name="Application.resetTable", query="DELETE FROM Application")
 })
 //@formatter:on

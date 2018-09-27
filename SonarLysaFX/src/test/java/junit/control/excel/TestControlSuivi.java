@@ -30,8 +30,8 @@ import org.powermock.api.mockito.PowerMockito;
 import control.excel.ControlSuivi;
 import control.rtc.ControlRTC;
 import junit.TestUtils;
-import model.Anomalie;
 import model.ModelFactory;
+import model.bdd.Anomalie;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
@@ -275,11 +275,11 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         ano.setNumeroAnomalie(307402);
         ano.setLot(LOT);
         ano.setEtatLot(EtatLot.NOUVEAU);
-        anoClose.put(ano.getLot(), ano);
+        anoClose.put(ano.getLotRTC(), ano);
         ano = ModelFactory.getModel(Anomalie.class);
         ano.setNumeroAnomalie(0);
         ano.setLot("Lot 316089");
-        anoClose.put(ano.getLot(), ano);
+        anoClose.put(ano.getLotRTC(), ano);
 
         // Appel méthode et controle
         int nbreLignes = sheet.getPhysicalNumberOfRows();
@@ -420,7 +420,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
         assertEquals(1, sheet.getPhysicalNumberOfRows());
         assertEquals(today, ano1.getDateDetection());
-        assertEquals(EMPTY, ano1.getSecurite());
+        assertEquals(EMPTY, ano1.isSecurite());
         assertEquals(SNAPSHOT, ano1.getVersion());
 
         // Test 3. securite / release
@@ -444,7 +444,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
         assertEquals(4, sheet.getPhysicalNumberOfRows());
         assertEquals(anoClose.getNumeroAnomalie(), ano1.getNumeroAnomalie());
-        assertEquals(anoClose.getLot(), ano1.getLot());
+        assertEquals(anoClose.getLotRTC(), ano1.getLotRTC());
         assertEquals(anoClose.getNumeroAnomalie(), ano1.getNumeroAnomalie());
     }
 

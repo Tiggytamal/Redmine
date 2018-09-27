@@ -92,7 +92,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColAppsW, Collec
             try
             {
                 valoriserCellule(row, (Integer) getClass().getDeclaredField(typeColAppsW.getNomCol()).get(this), 
-                        centre, Statics.proprietesXML.getEnumMapColW(TypeColAppsW.class).get(typeColAppsW).getNom(), null);
+                        centre, Statics.proprietesXML.getEnumMapColW(TypeColAppsW.class).get(typeColAppsW).getNom());
             }
             catch (IllegalAccessException | NoSuchFieldException | SecurityException e)
             {

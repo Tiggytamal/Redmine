@@ -23,20 +23,13 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private EntityManagerFactory emf;
+    private static EntityManagerFactory emf= Persistence.createEntityManagerFactory("SonarLysaFX");
     protected EntityManager em;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     public AbstractDao()
     {
-        emf = Persistence.createEntityManagerFactory("SonarLysaFX");
-        em = emf.createEntityManager();
-    }
-
-    public AbstractDao(Map<String, String> map)
-    {
-        emf = Persistence.createEntityManagerFactory("SonarLysaFX", map);
         em = emf.createEntityManager();
     }
 

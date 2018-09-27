@@ -17,7 +17,7 @@ public class TestMajLotsRTCTask extends AbstractTestTask<MajLotsRTCTask>
     @Override
     public void init() throws Exception
     {
-        handler = new MajLotsRTCTask(null, false);
+        handler = new MajLotsRTCTask(null);
         ControlRTC.INSTANCE.connexion();
     }
 

@@ -1,5 +1,7 @@
 package model.bdd;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,14 +29,17 @@ import utilities.Statics;
 @NamedQueries (value = {
       @NamedQuery(name="ProjetClarity.findAll", query="SELECT distinct(pc) FROM ProjetClarity pc "
               + "JOIN FETCH pc.chefService cs"),
-      @NamedQuery(name="ProjetClarity.resetTable", query="DELETE FROM ProjetClarity"),
-      @NamedQuery(name="ProjetClarity.findByCode", query="SELECT pc FROM ProjetClarity pc WHERE pc.code = :code")
+      @NamedQuery(name="ProjetClarity.findByIndex", query="SELECT pc FROM ProjetClarity pc WHERE pc.code = :index"),
+      @NamedQuery(name="ProjetClarity.resetTable", query="DELETE FROM ProjetClarity")
+
 })
 //@formatter:on
-public class ProjetClarity extends AbstractBDDModele
+public class ProjetClarity extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
+    private static final long serialVersionUID = 1L;
+
     public static final String INCONNU = "Code Clarity inconnu du réferentiel";
 
     @Column(name = "code", nullable = false)
@@ -43,19 +48,19 @@ public class ProjetClarity extends AbstractBDDModele
     @Column(name = "actif", nullable = false)
     private boolean actif;
     
-    @Column(name = "libellé_projet", nullable = false)
+    @Column(name = "libelle_projet", nullable = false)
     private String libelleProjet;
     
     @Column(name = "chef_de_projet", nullable = false)
     private String chefProjet;
     
-    @Column(name = "édition", nullable = false)
+    @Column(name = "edition", nullable = false)
     private String edition;
     
     @Column(name = "direction", nullable = false)
     private String direction;
     
-    @Column(name = "département", nullable = false)
+    @Column(name = "departement", nullable = false)
     private String departement;
     
     @Column(name = "service", nullable = false)

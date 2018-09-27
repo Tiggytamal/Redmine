@@ -28,7 +28,7 @@ public final class FichierRTCViewControl extends AbstractLaunchTask
     public void majFichierRTC()
     {
         if (datePicker.getValue() != null)
-            startTask(new MajLotsRTCTask(datePicker.getValue(), true), "Initialisation fichier lots RTC");
+            startTask(new MajLotsRTCTask(datePicker.getValue()), "Initialisation fichier lots RTC");
         else
             throw new FunctionalException(Severity.ERROR, "La date limite de création des lots doit être renseignée.");
     }

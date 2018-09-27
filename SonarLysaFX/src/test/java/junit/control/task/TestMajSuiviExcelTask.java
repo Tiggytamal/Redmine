@@ -22,8 +22,8 @@ import org.powermock.reflect.Whitebox;
 
 import control.rtc.ControlRTC;
 import control.task.MajSuiviExcelTask;
-import model.Anomalie;
 import model.ModelFactory;
+import model.bdd.Anomalie;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
 import model.enums.Matiere;

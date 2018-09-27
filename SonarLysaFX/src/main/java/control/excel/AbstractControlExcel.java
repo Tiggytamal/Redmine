@@ -14,7 +14,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import model.enums.EtatAppli;
 import model.enums.EtatLot;
 import model.enums.TypeAction;
 import utilities.AbstractToStringImpl;
@@ -98,59 +97,7 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
     }
     
     /**
-     * Permet de créer et de valoriser une cellule. Seul le style, le texte et le commentaire peuvent être nuls. Le texte peut-être de type {@link String},
-     * {@linkplain model.enum.Environnement}, {@link LocalDate}.
-     * 
-     * @param row
-     *            Ligne dans laquelle on veut créer la cellule
-     * @param indexCol
-     *            Index de colonne pour créer la cellule
-     * @param style
-     *            Style utilisé pour la cellule
-     * @param texte
-     *            Texte de la cellule
-     * @param commentaire
-     *            Commentaire de la cellule
-     * @return
-     */
-    protected Cell valoriserCellule(Row row, Integer indexCol, CellStyle style, Object texte, Comment commentaire)
-    {
-        // Contrôle
-        if (row == null || indexCol == null)
-            throw new IllegalArgumentException("row null pour la méthode control.parent.ControlExcel.valoriserCellule.");
-
-        // Création cellule
-        Cell cell = row.createCell(indexCol);
-
-        // Commentaire
-        if (commentaire != null)
-            copieComment(commentaire, cell);
-
-        // Style
-        if (style != null)
-            cell.setCellStyle(style);
-
-        // Ajout du texte non null dans le bon format
-        if (texte == null)
-            return cell;
-
-        if (texte instanceof String)
-            cell.setCellValue((String) texte);
-        else if (texte instanceof EtatLot)
-            cell.setCellValue(((EtatLot) texte).getValeur());
-        else if (texte instanceof TypeAction)
-            cell.setCellValue(((TypeAction) texte).getValeur());
-        else if (texte instanceof LocalDate)
-            cell.setCellValue(DateConvert.convertToOldDate(texte));
-        else
-            throw new IllegalArgumentException("Le texte n'est pas d'un type supporté par la méthode control.parent.ControlExcel.valoriserCellule.");
-
-        return cell;
-    }
-    
-    /**
-     * Permet de créer et de valoriser une cellule sans commentaire. Seul le style et le texte. Le texte peut-être de type {@link String},
-     * {@linkplain model.enum.Environnement}, {@link LocalDate}.
+     * Permet de créer et de valoriser une cellule. Le texte peut-être de type {@link String}, {@linkplain model.enum.Environnement}, {@link LocalDate}.
      * 
      * @param row
      *            Ligne dans laquelle on veut créer la cellule
@@ -187,12 +134,10 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
             cell.setCellValue(((EtatLot) texte).getValeur());
         else if (texte instanceof TypeAction)
             cell.setCellValue(((TypeAction) texte).getValeur());
-        else if (texte instanceof EtatAppli)
-            cell.setCellValue(((EtatAppli) texte).toString());
         else if (texte instanceof LocalDate)
             cell.setCellValue(DateConvert.convertToOldDate(texte));
         else
-            throw new IllegalArgumentException("Le texte n'est pas d'un type supporté par la méthode control.parent.ControlExcel.valoriserCellule.");
+            cell.setCellValue(texte.toString());
 
         return cell;
     }

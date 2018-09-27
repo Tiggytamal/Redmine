@@ -12,7 +12,7 @@
 		<class>utilities.adapter.LocalDateConverter</class>
 		<class>utilities.adapter.LocalDateTimeConverter</class>
 		<properties>
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://10.156.33.85:3306/sonarlysa" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://10.156.33.85:3306/sonarlysa?useSSL=false" />
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password" value="AQPadmin01" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />

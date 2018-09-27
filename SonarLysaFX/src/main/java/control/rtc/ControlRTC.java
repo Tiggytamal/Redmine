@@ -56,8 +56,8 @@ import com.ibm.team.workitem.common.model.ItemProfile;
 import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
 import com.mchange.util.AssertException;
 
-import model.Anomalie;
 import model.ModelFactory;
+import model.bdd.Anomalie;
 import model.bdd.LotRTC;
 import model.enums.EtatLot;
 import model.enums.Param;
@@ -66,7 +66,6 @@ import model.enums.TypeFichier;
 import utilities.AbstractToStringImpl;
 import utilities.DateConvert;
 import utilities.Statics;
-import utilities.TechnicalException;
 
 /**
  * Classe de controle des accès RTC sous forme se singleton
@@ -281,7 +280,7 @@ public class ControlRTC extends AbstractToStringImpl
 
         try
         {
-            IProjectArea projet = pareas.get(ano.getProjetRTC());
+            IProjectArea projet = pareas.get(ano.getLotRTC().getProjetRTC());
 
             // Type de l'objet
             IWorkItemType itemType = workItemClient.findWorkItemType(projet, "defect", monitor);
@@ -315,14 +314,14 @@ public class ControlRTC extends AbstractToStringImpl
         }
         catch (TeamRepositoryException e)
         {
-            LOGGER.error("Erreur traitement RTC création de Defect. Lot : " + ano.getLot());
+            LOGGER.error("Erreur traitement RTC création de Defect. Lot : " + ano.getLotRTC());
             LOGPLANTAGE.error(e);
         }
 
         if (workItem == null)
             return 0;
 
-        LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + ano.getLot());
+        LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + ano.getLotRTC());
         return workItem.getId();
 
     }
@@ -452,15 +451,9 @@ public class ControlRTC extends AbstractToStringImpl
      * @throws TeamRepositoryException
      */
     @SuppressWarnings("unchecked")
-    public List<IWorkItemHandle> recupLotsRTC(boolean remiseAZero, LocalDate dateCreation) throws TeamRepositoryException
+    public List<IWorkItemHandle> recupLotsRTC(LocalDate dateCreation) throws TeamRepositoryException
     {
-        // 1. Contrôle
-
-        // On retourne une erreur si l'on souhaite une remise à zéro mais que la date de création n'est pas renseignée
-        if (remiseAZero && dateCreation == null)
-            throw new TechnicalException("méthode control.rts.ControlRTC.recupLotsRTC : date Creation non renseignée lors d'une remise à zéro.", null);
-
-        // 2. Requetage sur RTC pour récupérer tous les Lots
+        // Requetage sur RTC pour récupérer tous les Lots
 
         // Creation Query depuis ContributorQueryModel
         IItemQuery query = IItemQuery.FACTORY.newInstance(WorkItemQueryModel.ROOT);
@@ -475,8 +468,8 @@ public class ControlRTC extends AbstractToStringImpl
             predicatFinal = predicatFinal._and(predicatCreation);
         }
 
-        // Dans le cas où l'on ne fait pas une remise à zéro du fichier, on ne prend que les lots qui ont été modifiés ou créées depuis la dernière mise à jour.
-        if (!remiseAZero)
+        // Sinon, on ne prend que les lots qui ont été modifiées ou créées depuis la dernière mise à jour.
+        else
         {
             String dateMajFichierRTC = Statics.fichiersXML.getDateMaj().get(TypeFichier.LOTSRTC);
             if (dateMajFichierRTC != null && !dateMajFichierRTC.isEmpty())
@@ -545,8 +538,10 @@ public class ControlRTC extends AbstractToStringImpl
         retour.setCpiProjet(recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
         retour.setProjetClarityString(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem));                
         retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem));
-        retour.setEtatLot(EtatLot.from(recupEtatElement(workItem)));
+        EtatLot etatLot = EtatLot.from(recupEtatElement(workItem));
+        retour.setEtatLot(etatLot);
         retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
+        retour.setDateMajEtat(recupDatesEtatsLot(workItem).get(etatLot));
         return retour;
     }
 

@@ -2,7 +2,7 @@
 <Configuration status="info">
 
 	<Properties>
-		<Property name="log-path">s:/SER_ASSURANCE_QUALITE/COMMUN/Qualimétrie/Suivi des anomalies qualimétriques/logs</Property>
+		<Property name="log-path">d:/logs</Property>
 	</Properties>
 
 	<Appenders>

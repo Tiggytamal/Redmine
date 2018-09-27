@@ -72,7 +72,7 @@ public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, Lis
                 try
                 {
                     valoriserCellule(row, (Integer) getClass().getDeclaredField(typeColVul.getNomCol()).get(this), 
-                            centre, Statics.proprietesXML.getEnumMapColW(TypeColVul.class).get(typeColVul).getNom(), null);
+                            centre, Statics.proprietesXML.getEnumMapColW(TypeColVul.class).get(typeColVul).getNom());
                 }
                 catch (IllegalAccessException | NoSuchFieldException | SecurityException e)
                 {
@@ -95,15 +95,15 @@ public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, Lis
         for (Vulnerabilite vulnerabilite : donnes)
         {
             row = sheet.createRow(sheet.getLastRowNum() + 1);
-            valoriserCellule(row, colSeverity, centre, vulnerabilite.getSeverite(), null);
-            valoriserCellule(row, colStatus, centre, vulnerabilite.getStatus(), null);
-            valoriserCellule(row, colMess, gauche, vulnerabilite.getMessage(), null);
-            valoriserCellule(row, colDateCrea, centre, vulnerabilite.getDateCreation(), null);
-            valoriserCellule(row, colLot, centre, vulnerabilite.getLot(), null);
-            valoriserCellule(row, colClarity, centre, vulnerabilite.getClarity(), null);
-            valoriserCellule(row, colAppli, centre, vulnerabilite.getAppli(), null);
-            valoriserCellule(row, colComp, gauche, vulnerabilite.getComposant(), null);
-            valoriserCellule(row, colLib, gauche, vulnerabilite.getLib(), null);
+            valoriserCellule(row, colSeverity, centre, vulnerabilite.getSeverite());
+            valoriserCellule(row, colStatus, centre, vulnerabilite.getStatus());
+            valoriserCellule(row, colMess, gauche, vulnerabilite.getMessage());
+            valoriserCellule(row, colDateCrea, centre, vulnerabilite.getDateCreation());
+            valoriserCellule(row, colLot, centre, vulnerabilite.getLot());
+            valoriserCellule(row, colClarity, centre, vulnerabilite.getClarity());
+            valoriserCellule(row, colAppli, centre, vulnerabilite.getAppli());
+            valoriserCellule(row, colComp, gauche, vulnerabilite.getComposant());
+            valoriserCellule(row, colLib, gauche, vulnerabilite.getLib());
         }
 
         autosizeColumns(sheet);

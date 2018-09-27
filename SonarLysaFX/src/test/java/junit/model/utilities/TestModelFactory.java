@@ -5,9 +5,9 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import junit.JunitBase;
-import model.Anomalie;
 import model.LotSuiviPic;
 import model.ModelFactory;
+import model.bdd.Anomalie;
 import model.bdd.LotRTC;
 import model.utilities.AbstractModele;
 import utilities.TechnicalException;
