@@ -4,6 +4,7 @@ import static utilities.Statics.proprietesXML;
 import static utilities.Statics.EMPTY;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -192,7 +193,7 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
         // Création du workbook depuis le fichier excel
         try
         {
-            wb = WorkbookFactory.create(file);
+            wb = WorkbookFactory.create(new FileInputStream(file));
         } 
         catch (IOException | InvalidFormatException e)
         {
