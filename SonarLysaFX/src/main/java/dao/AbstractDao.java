@@ -1,6 +1,7 @@
 package dao;
 
 import java.io.File;
+import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import model.bdd.AbstractBDDModele;
+import model.bdd.LotRTC;
+import utilities.TechnicalException;
 
 /**
  * Classe abstraite de création de l'Entity Manager Toutes les classes de DAO vont hériter de cette classe
@@ -23,8 +29,14 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
 {
     /*---------- ATTRIBUTS ----------*/
 
+    /** logger de debug console */
+    private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
+    /** logger plantages de l'application */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+    
     private static EntityManagerFactory emf= Persistence.createEntityManagerFactory("SonarLysaFX");
     protected EntityManager em;
+    private Class<T> modele;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -75,7 +87,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
     {
         Map<String, T> retour = new HashMap<>();
 
-        for (T t : readAll())
+        for (T t : readAllcache())
         {
             retour.put(t.getMapIndex(), t);
         }
@@ -121,5 +133,44 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
     }
 
     /*---------- METHODES PRIVEES ----------*/
+    
+    @SuppressWarnings("unchecked")
+    private List<T> readAllcache()
+    {
+        long debut = System.nanoTime();
+        
+        // Permet de récuperer la classe sous forme de type paramétré
+        ParameterizedType pt = (ParameterizedType) getClass().getGenericSuperclass();
+        
+        // On récupère les paramètres de classe (ici T), et le split permet d'enlever le "classe" devant le nom
+        String parameterClassName = pt.getActualTypeArguments()[0].toString().split("\\s")[1];
+        
+        // Instanciation du paramètre avec la bonne classe
+        try
+        {
+            modele = (Class<T>) Class.forName(parameterClassName);
+        } 
+        catch (ClassNotFoundException e)
+        {
+            LOGPLANTAGE.error(e);
+            throw new TechnicalException("Impossible d'instancier l'énumération - control.excel.ControlExcelRead", e);
+        }
+        
+        long middle = System.nanoTime();
+        
+        modele = (Class<T>) LotRTC.class;
+        
+        long fin = System.nanoTime();
+        
+        List<T> retour = em.createNamedQuery(modele.getSimpleName() +  ".findAll", modele).getResultList();
+        
+
+        
+        // Affichage des temps de traitement
+        LOGCONSOLE.info("instanciation = " + (middle - debut) + " - temps requête = " + (fin - middle));
+        
+        return retour;
+        
+    }
     /*---------- ACCESSEURS ----------*/
 }

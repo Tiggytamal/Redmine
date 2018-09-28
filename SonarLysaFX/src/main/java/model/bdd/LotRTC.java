@@ -36,7 +36,7 @@ import utilities.Statics;
 //@formatter:off
 @NamedQueries (value = {
         @NamedQuery(name="LotRTC.findAll", query="SELECT l FROM LotRTC l "
-                + "JOIN FETCH l.projetClarity p"),
+                + "LEFT JOIN FETCH l.projetClarity p"),
         @NamedQuery(name="LotRTC.findByIndex", query="SELECT l FROM LotRTC l WHERE l.lot = :index"),
         @NamedQuery(name="LotRTC.resetTable", query="DELETE FROM LotRTC")
 })
