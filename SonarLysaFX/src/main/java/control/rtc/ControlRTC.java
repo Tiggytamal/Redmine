@@ -541,7 +541,7 @@ public class ControlRTC extends AbstractToStringImpl
         EtatLot etatLot = EtatLot.from(recupEtatElement(workItem));
         retour.setEtatLot(etatLot);
         retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
-        retour.setDateMajEtat(recupDatesEtatsLot(workItem).get(etatLot));
+//        retour.setDateMajEtat(recupDatesEtatsLot(workItem).get(etatLot));
         return retour;
     }
 

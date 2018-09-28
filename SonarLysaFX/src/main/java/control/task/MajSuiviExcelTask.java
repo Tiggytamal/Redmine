@@ -1,6 +1,5 @@
 package control.task;
 
-import static utilities.Statics.fichiersXML;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
@@ -27,6 +26,7 @@ import com.mchange.util.AssertException;
 
 import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Anomalie;
 import model.bdd.ComposantSonar;
@@ -264,14 +264,14 @@ public class MajSuiviExcelTask extends AbstractTask
 
         etapePlus();
 
-        Map<String, Set<String>> mapLotsSonar = lotSonarQGError(composants, lotsSecurite, lotsRelease);
+        Map<String, Set<String>> lotsSonarQGError = lotSonarQGError(composants, lotsSecurite, lotsRelease);
 
         etapePlus();
         updateMessage("Mise à jour du fichier Excel...");
         updateProgress(-1, 1);
 
         // 3. Supression des lots déjà créés et création des feuille Excel avec les nouvelles erreurs
-        majFichierAnomalies(mapLotsSonar, lotsSecurite, lotsRelease, fichier, matiere);
+        majFichierAnomalies(lotsSonarQGError, lotsSecurite, lotsRelease, fichier, matiere);
 
         updateProgress(1, 1);
         etapePlus();
@@ -279,7 +279,7 @@ public class MajSuiviExcelTask extends AbstractTask
         // 4. Création des vues si le paramètrage est activé
         if (proprietesXML.getMapParamsBool().get(ParamBool.VUESSUIVI))
         {
-            for (Map.Entry<String, Set<String>> entry : mapLotsSonar.entrySet())
+            for (Map.Entry<String, Set<String>> entry : lotsSonarQGError.entrySet())
             {
                 // Création de la vue, gestion du message et ajout à la liste de vues créées en cas d'annulation
                 String nom = fichier.replace("_", Statics.SPACE).split("\\.")[0];
@@ -305,7 +305,7 @@ public class MajSuiviExcelTask extends AbstractTask
 
         // Traitement liste de retour
         List<String> retour = new ArrayList<>();
-        for (Set<String> liste : mapLotsSonar.values())
+        for (Set<String> liste : lotsSonarQGError.values())
         {
             retour.addAll(liste);
         }
@@ -349,7 +349,7 @@ public class MajSuiviExcelTask extends AbstractTask
     /**
      * Permet de mettre à jour le fichier des anomalies Sonar, en allant chercher les nouvelles dans Sonar et en vérifiant celles qui ne sont plus d'actualité.
      *
-     * @param mapLotsSonar
+     * @param lotsSonarQGError
      *            map des lots Sonar avec une quality Gate en erreur
      * @param lotsSecurite
      * @param lotRelease
@@ -358,10 +358,11 @@ public class MajSuiviExcelTask extends AbstractTask
      * @throws IOException
      * @throws TeamRepositoryException
      */
-    private void majFichierAnomalies(Map<String, Set<String>> mapLotsSonar, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere) throws IOException
+    private void majFichierAnomalies(Map<String, Set<String>> lotsSonarQGError, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere) throws IOException
     {
         // Fichier des lots édition
-        Map<String, LotRTC> lotsRTC = fichiersXML.getMapLotsRTC();
+        Map<String, LotRTC> lotsRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
+        Map<String, Anomalie> anoEnBase = DaoFactory.getDao(Anomalie.class).readAllMap();
 
         // Controleur
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;
@@ -376,13 +377,13 @@ public class MajSuiviExcelTask extends AbstractTask
 
         // Mise dans un Set de tous les lots en erreur venus de Sonar indépendement de la version des composants.
         Set<String> lotsEnErreur = new TreeSet<>();
-        for (Set<String> value : mapLotsSonar.values())
+        for (Set<String> value : lotsSonarQGError.values())
         {
             lotsEnErreur.addAll(value);
         }
 
         // Itération sur les lots en erreurs venant de Sonar pour chaque version de composants (13, 14, ...)
-        for (Entry<String, Set<String>> entry : mapLotsSonar.entrySet())
+        for (Entry<String, Set<String>> entry : lotsSonarQGError.entrySet())
         {
             List<Anomalie> anoACreer = new ArrayList<>();
             List<Anomalie> anoDejacrees = new ArrayList<>();
@@ -394,14 +395,14 @@ public class MajSuiviExcelTask extends AbstractTask
                 LotRTC lot = lotsRTC.get(numeroLot);
                 if (lot == null)
                 {
-                    LOGNONLISTEE.warn("Un lot du fichier Excel n'est pas connu : " + numeroLot);
+                    LOGNONLISTEE.warn("Un lot Sonar n'est pas connu dasn RTC : " + numeroLot);
                     controlAno.getControlRapport().addInfo(TypeInfo.LOTNONRTC, numeroLot, null);
                     continue;
                 }
 
                 // On ajoute, soit le lot dans la liste des anos déjà créées soit, on ajoute une nouvelle anomalie dans la liste des anoACeer.
-                if (lotsDejaDansFichier.containsKey(numeroLot))
-                    anoDejacrees.add(lotsDejaDansFichier.get(numeroLot));
+                if (anoEnBase.containsKey(numeroLot))
+                    anoDejacrees.add(anoEnBase.get(numeroLot));
                 else
                     anoACreer.add(ModelFactory.getModelWithParams(Anomalie.class, lot));
             }
@@ -468,35 +469,6 @@ public class MajSuiviExcelTask extends AbstractTask
     private boolean controleQGBloquant(ComposantSonar compo)
     {
         return compo.getQualityGate() == QG.ERROR && (compo.getBloquants() > 0 || compo.getCritiques() > 0 || compo.getDuplication() > DUPLI);
-    }
-
-    /**
-     * Permet de créer une map numéros de lots déjà en anomalie et met à jour les {@code Anomalie} depuis les infos de la Pic
-     *
-     * @param listeAnoExcel
-     *            liste des {@code Anomalie} déjà connues
-     * @param lotsRTC
-     *            map des lots connus de la Pic.
-     * @return
-     */
-    private Map<String, Anomalie> creationNumerosLots(List<Anomalie> listeAnoExcel, Map<String, LotRTC> lotsRTC)
-    {
-        Map<String, Anomalie> retour = new HashMap<>();
-
-        // Iteration sur la liste des anomalies
-        for (Anomalie ano : listeAnoExcel)
-        {
-            String anoLot = ano.getLotRTC().getLot();
-
-            // Mise à jour des données depuis la PIC
-            LotRTC lotRTC = lotsRTC.get(anoLot);
-
-            if (lotRTC != null)
-                ano.setLotRTC(lotRTC);
-
-            retour.put(anoLot, ano);
-        }
-        return retour;
     }
 
     /**

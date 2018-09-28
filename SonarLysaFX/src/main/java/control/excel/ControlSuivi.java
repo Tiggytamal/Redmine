@@ -38,8 +38,10 @@ import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.rtc.ControlRTC;
 import control.word.ControlRapport;
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Anomalie;
+import model.bdd.LotRTC;
 import model.enums.EtatLot;
 import model.enums.GroupeComposant;
 import model.enums.Matiere;
@@ -143,7 +145,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
         // Liste de retour
         List<Anomalie> retour = new ArrayList<>();
-        
+        Map<String, LotRTC> lotsRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
         
 
         // Itération sur chaque ligne pour créer les anomalies
@@ -155,7 +157,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             if (row == null)
                 continue;
 
-            retour.add(creerAnodepuisExcel(row));
+            retour.add(creerAnodepuisExcel(row, lotsRTC));
         }
         return retour;
     }
@@ -774,39 +776,17 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * Crée une anomalie depuis les informatiosn du fichier Excel
      * 
      * @param row
+     * @param lotsRTC 
      * @return
      */
-    private Anomalie creerAnodepuisExcel(Row row)
+    private Anomalie creerAnodepuisExcel(Row row, Map<String, LotRTC> lotsRTC)
     {
-        Anomalie retour = ModelFactory.getModel(Anomalie.class);
-        retour.getLotRTC().getProjetClarity().setDirection(getCellStringValue(row, colDir));
-        retour.getLotRTC().getProjetClarity().setDepartement(getCellStringValue(row, colDepart));
-        retour.getLotRTC().getProjetClarity().setService(getCellStringValue(row, colService));
-        retour.getLotRTC().getProjetClarity().getChefService().setNom(getCellStringValue(row, colResp));
-        retour.getLotRTC().getProjetClarity().setCode(getCellStringValue(row, colClarity));
-        retour.getLotRTC().setLibelle(getCellStringValue(row, colLib));
-        retour.getLotRTC().setCpiProjet(getCellStringValue(row, colCpi));
-        retour.getLotRTC().setEdition(getCellStringValue(row, colEdition));
-        retour.getLotRTC().setLot(getCellStringValue(row, colLot));
-        retour.getLotRTC().setEtatLot(EtatLot.from(getCellStringValue(row, colEnv)));
-        retour.setNumeroAnomalie(getCellNumericValue(row, colAno));
-        retour.setEtat(getCellStringValue(row, colEtat));
-        String securite = getCellStringValue(row, colSec);
-        if (securite.equals(Statics.X))
-            retour.setSecurite(true);
-        else
-            retour.setSecurite(false);
+        Anomalie retour = ModelFactory.getModel(Anomalie.class);        
+        retour.setLotRTC(lotsRTC.get(getCellStringValue(row, colLot)));
+        retour.setNumeroAnomalie(getCellNumericValue(row, colAno));        
         retour.setRemarque(getCellStringValue(row, colRemarque));
-        retour.setTypeVersion(TypeVersion.valueOf(getCellStringValue(row, colVer)));
-        retour.setDateCreation(getCellDateValue(row, colDateCrea));
-        retour.setDateDetection(getCellDateValue(row, colDateDetec));
         retour.setDateRelance(getCellDateValue(row, colDateRel));
-        retour.setDateReso(getCellDateValue(row, colDateRes));
-        retour.getLotRTC().setDateMajEtat(getCellDateValue(row, colDateMajEtat));
-        retour.setMatieresString(getCellStringValue(row, colMatiere));
         retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));
-        retour.getLotRTC().setProjetRTC(getCellStringValue(row, colProjetRTC));
-        retour.setGroupe(GroupeComposant.valueOf(getCellStringValue(row, colNpc)));
         retour.calculTraitee();
         return retour;
     }

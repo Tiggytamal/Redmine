@@ -27,8 +27,8 @@ import utilities.Statics;
 @Table(name = "projets_clarity")
 //@formatter:off
 @NamedQueries (value = {
-      @NamedQuery(name="ProjetClarity.findAll", query="SELECT distinct(pc) FROM ProjetClarity pc "
-              + "JOIN FETCH pc.chefService cs"),
+      @NamedQuery(name="ProjetClarity.findAll", query="SELECT pc FROM ProjetClarity pc "
+              + "LEFT JOIN FETCH pc.chefService cs"),
       @NamedQuery(name="ProjetClarity.findByIndex", query="SELECT pc FROM ProjetClarity pc WHERE pc.code = :index"),
       @NamedQuery(name="ProjetClarity.resetTable", query="DELETE FROM ProjetClarity")
 

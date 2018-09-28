@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IWorkItemHandle;
 import com.mchange.util.AssertException;
@@ -29,6 +32,7 @@ public class MajLotsRTCTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 
+    private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
     private static final String TITRE = "Mise à jour des Lots RTC";
     private LocalDate date;
     private DaoLotRTC dao;
@@ -96,6 +100,8 @@ public class MajLotsRTCTask extends AbstractTask
             if (lotRTC.getLot().isEmpty())
                 continue;
 
+            LOGCONSOLE.debug("Traitement lots RTC : " + i + " - " + size + " - lot : " + lotRTC.getLot());
+            
             // Récupération du code Clarity depuis RTC
             String codeClarity = lotRTC.getProjetClarityString();
 

@@ -35,7 +35,7 @@ public class TestMajLotsRTCTask extends AbstractTestTask<MajLotsRTCTask>
     }
     
     @Test
-    public void testMajFichierRTC() throws Exception
+    public void testMajLotsRTC() throws Exception
     {
         assertTrue(Whitebox.invokeMethod(handler, "call"));
     }
