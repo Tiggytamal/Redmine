@@ -9,6 +9,7 @@ import control.excel.ControlClarity;
 import control.excel.ExcelFactory;
 import model.bdd.ProjetClarity;
 import model.enums.TypeColClarity;
+import model.enums.TypeDonnee;
 
 /**
  * Classe de DAO pour la sauvegarde des infoClarity en base de données
@@ -25,7 +26,10 @@ public class DaoProjetClarity extends AbstractDao<ProjetClarity> implements Seri
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    DaoProjetClarity() { }
+    DaoProjetClarity()
+    {
+        typeDonnee = TypeDonnee.CLARITY;
+    }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -49,13 +53,9 @@ public class DaoProjetClarity extends AbstractDao<ProjetClarity> implements Seri
         }
 
         // Persistance des données
-        return persist(mapBase.values());
-    }
-
-    @Override
-    public List<ProjetClarity> readAll()
-    {
-        return em.createNamedQuery("ProjetClarity.findAll", ProjetClarity.class).getResultList();
+        int retour = persist(mapBase.values());
+        majDateDonnee();
+        return retour;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class DaoProjetClarity extends AbstractDao<ProjetClarity> implements Seri
     @Override
     public ProjetClarity recupEltParCode(String codeClarity)
     {
-        List<ProjetClarity> liste = em.createNamedQuery("ProjetClarity.findByCode", ProjetClarity.class).setParameter("code", codeClarity).getResultList();
+        List<ProjetClarity> liste = em.createNamedQuery("ProjetClarity.findByIndex", ProjetClarity.class).setParameter("index", codeClarity).getResultList();
         if (liste.isEmpty())
             return null;
         else

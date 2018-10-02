@@ -24,7 +24,6 @@
 		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
 			<RadioButton fx:id="radioDataStage" text="Vue Datastage" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 			<RadioButton fx:id="radioPat" text="Vue Patrimoine" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
-			<RadioButton fx:id="radioEditions" text="Vues par Editions" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 		</VBox>
 
 		<!-- VBox -->
@@ -32,7 +31,6 @@
 			<children>
 				<Button text="Créer Vue DataStage" fx:id="creerDataStage" onAction="#creerDataStage" alignment="CENTER" />
 				<Button text="Créer Vue Patrimoine" fx:id="creerPat" onAction="#creerPat" alignment="CENTER" />
-				<Button text="Créer Vues par Editions" fx:id="creerEdition" onAction="#creerEdition" alignment="CENTER" />
 			</children>
 		</VBox>
 	</children>

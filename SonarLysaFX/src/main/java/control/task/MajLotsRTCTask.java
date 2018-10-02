@@ -82,7 +82,7 @@ public class MajLotsRTCTask extends AbstractTask
         // VAriables
         int i = 0;
         int size = handles.size();
-        String base = "Récupération RTC - Traitement lot : ";
+        baseMessage = "Récupération RTC - Traitement lot : ";
         String fin = "Nbre de lots traités : ";
         String sur = " sur ";
         long debut = System.currentTimeMillis();
@@ -95,13 +95,13 @@ public class MajLotsRTCTask extends AbstractTask
         {
             // Récupération de l'objet complet depuis l'handle de la requête
             LotRTC lotRTC = control.creerLotSuiviRTCDepuisHandle(handle);
-            
+
             // On saute tous les lotRTC sans numéro de lot.
             if (lotRTC.getLot().isEmpty())
                 continue;
 
             LOGCONSOLE.debug("Traitement lots RTC : " + i + " - " + size + " - lot : " + lotRTC.getLot());
-            
+
             // Récupération du code Clarity depuis RTC
             String codeClarity = lotRTC.getProjetClarityString();
 
@@ -120,7 +120,7 @@ public class MajLotsRTCTask extends AbstractTask
             // Affichage
             i++;
             updateProgress(i, size);
-            updateMessage(new StringBuilder(base).append(lot).append(Statics.NL).append(fin).append(i).append(sur).append(size).append(affichageTemps(debut, i, size)).toString());
+            updateMessage(new StringBuilder(lot).append(Statics.NL).append(fin).append(i).append(sur).append(size).append(affichageTemps(debut, i, size)).toString());
         }
         return retour;
     }
@@ -132,7 +132,9 @@ public class MajLotsRTCTask extends AbstractTask
      */
     private boolean sauvegarde(Map<String, LotRTC> map)
     {
-        return dao.persist(map.values()) > 0;
+        boolean retour = dao.persist(map.values()) > 0;
+        dao.majDateDonnee();
+        return retour;
     }
 
     /*---------- ACCESSEURS ----------*/

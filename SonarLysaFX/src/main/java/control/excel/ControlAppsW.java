@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import control.task.AbstractTask;
 import model.bdd.Application;
 import model.enums.Param;
 import model.enums.TypeColAppsW;
@@ -68,10 +69,10 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColAppsW, Collec
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public void creerfeuilleSonar(Set<Application> applisOpenSonar)
+    public void creerfeuilleSonar(Set<Application> applisOpenSonar, AbstractTask task)
     {
         Sheet sheet = wb.getSheet(APPLIGEREES);
-        enregistrerDonnees(applisOpenSonar, sheet);
+        enregistrerDonnees(applisOpenSonar, sheet, task);
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -104,12 +105,16 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColAppsW, Collec
     }
 
     @Override
-    protected void enregistrerDonnees(Collection<Application> donnees, Sheet sheet)
+    protected void enregistrerDonnees(Collection<Application> donnees, Sheet sheet, AbstractTask task)
     {
         List<String> codeApps = new ArrayList<>();
         CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.VIDE, HorizontalAlignment.CENTER);
         centre.setWrapText(false);
         Row row;
+        
+        // Affichage
+        int i = 0;
+        int size = donnees.size();
 
         for (Application app : donnees)
         {
@@ -124,6 +129,9 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColAppsW, Collec
             valoriserCellule(row, colLDCSonar, centre, String.valueOf(app.getLdcSonar()));
             valoriserCellule(row, colLDCMain, centre, String.valueOf(app.getLdcMainframe()));
             codeApps.add(app.getCode());
+            
+            i++;
+            task.updateProgress(i, size);
         }
         autosizeColumns(sheet);
         calculDeuxiemeFeuille(codeApps);

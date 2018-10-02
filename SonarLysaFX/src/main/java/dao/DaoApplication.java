@@ -9,6 +9,7 @@ import control.excel.ControlApps;
 import control.excel.ExcelFactory;
 import model.bdd.Application;
 import model.enums.TypeColApps;
+import model.enums.TypeDonnee;
 
 /**
  * Classe de DOA pour la sauvegarde des composants Sonar en base de données
@@ -24,7 +25,10 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
 
     /*---------- CONSTRUCTEURS ----------*/
     
-    DaoApplication() { }
+    DaoApplication() 
+    { 
+        typeDonnee = TypeDonnee.APPS;
+    }
     
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -45,19 +49,15 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
         }
 
         // Persistance en base
-        return persist(mapBase.values());
-    }
-    
-    @Override
-    public List<Application> readAll()
-    {
-        return em.createNamedQuery("Application.findAll", Application.class).getResultList();
-    }    
+        int retour = persist(mapBase.values());
+        majDateDonnee();
+        return retour;
+    } 
 
     @Override
     public Application recupEltParCode(String codeAppli)
     {
-        List<Application> liste = em.createNamedQuery("Application.findByCode", Application.class).setParameter("code", codeAppli).getResultList();
+        List<Application> liste = em.createNamedQuery("Application.findByIndex", Application.class).setParameter("index", codeAppli).getResultList();
         if (liste.isEmpty())
             return null;
         else

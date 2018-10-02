@@ -21,7 +21,7 @@ import javafx.stage.StageStyle;
 import model.ModelFactory;
 import model.enums.TypeColNPC;
 import model.enums.TypeColR;
-import model.enums.TypeFichier;
+import model.enums.TypeDonnee;
 import model.utilities.AbstractModele;
 import model.utilities.XML;
 import utilities.TechnicalException;
@@ -144,24 +144,24 @@ public class ControlXML
      */
     public void recupProjetsNPCDepuisExcel(File file)
     {
-        saveInfos(TypeFichier.NPC, TypeColNPC.class, file);
+        saveInfos(TypeDonnee.GROUPE, TypeColNPC.class, file);
     }
 
     /**
      * Sauvegarde les informations d'un fichier XML
      * 
      * @param typeFichier
-     *            Type de fichier à suavegarder, énumaration {@link model.enums.TypeFichier}.
+     *            Type de fichier à suavegarder, énumaration {@link model.enums.TypeDonnee}.
      * @param typeCol
      *            Type de colonnes de fichiers, énumération
      * @param file
      */
-    private <T extends Enum<T> & TypeColR> void saveInfos(TypeFichier typeFichier, Class<T> typeCol, File file)
+    private <T extends Enum<T> & TypeColR> void saveInfos(TypeDonnee typeFichier, Class<T> typeCol, File file)
     {
         switch (typeFichier)
         {
                 
-            case NPC:
+            case GROUPE:
                 fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getReader(typeCol, file).recupDonneesDepuisExcel());
                 saveParam(fichiersXML);
                 break;

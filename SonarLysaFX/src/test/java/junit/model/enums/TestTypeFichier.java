@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import model.enums.TypeFichier;
+import model.enums.TypeDonnee;
 
 public class TestTypeFichier implements TestEnums
 {
@@ -12,13 +12,13 @@ public class TestTypeFichier implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(7, TypeFichier.values().length);
+        assertEquals(7, TypeDonnee.values().length);
     }
 
     @Test
     @Override
     public void testConstructeur()
     {
-        assertEquals(TypeFichier.APPS, TypeFichier.valueOf(TypeFichier.APPS.toString()));    
+        assertEquals(TypeDonnee.APPS, TypeDonnee.valueOf(TypeDonnee.APPS.toString()));    
     }
 }

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import model.bdd.LotRTC;
+import model.enums.TypeDonnee;
 
 /**
  * Classe de DOA pour la sauvegarde des composants Sonar en base de données
@@ -20,7 +21,10 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
 
     /*---------- CONSTRUCTEURS ----------*/
     
-    DaoLotRTC() { }
+    DaoLotRTC() 
+    {
+        typeDonnee = TypeDonnee.LOTSRTC;
+    }
     
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -28,12 +32,6 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
     public int recupDonneesDepuisExcel(File file)
     {
         return 0;
-    }
-    
-    @Override
-    public List<LotRTC> readAll()
-    {
-        return em.createNamedQuery("LotRTC.findAll", LotRTC.class).getResultList();
     }
 
     @Override
@@ -54,7 +52,7 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
     @Override
     public LotRTC recupEltParCode(String lot)
     {
-        List<LotRTC> liste = em.createNamedQuery("LotRTC.findByCode", LotRTC.class).setParameter("code", lot).getResultList();
+        List<LotRTC> liste = em.createNamedQuery("LotRTC.findByIndex", LotRTC.class).setParameter("index", lot).getResultList();
         if (liste.isEmpty())
             return null;
         else

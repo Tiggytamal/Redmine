@@ -17,8 +17,10 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlAppsW;
+import control.task.CreerVueParAppsTask;
 import model.ModelFactory;
 import model.bdd.Application;
+import model.enums.OptionCreerVueParAppsTask;
 import model.enums.Param;
 import model.enums.TypeColAppsW;
 import utilities.Statics;
@@ -57,7 +59,7 @@ public class TestControlAppsW extends TestControlExcelWrite<TypeColAppsW, Contro
     {
         Set<Application> applisOpenSonar = new HashSet<>();
         applisOpenSonar.add(appli);
-        handler.creerfeuilleSonar(applisOpenSonar);
+        handler.creerfeuilleSonar(applisOpenSonar, new CreerVueParAppsTask(OptionCreerVueParAppsTask.ALL, file));
         Sheet sheet = wb.getSheet("Périmètre Couverts SonarQbe");
         assertNotNull(sheet);
         assertEquals(1, sheet.getLastRowNum());

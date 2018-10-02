@@ -16,7 +16,7 @@ import model.FichiersXML;
 import model.ProprietesXML;
 import model.bdd.Edition;
 import model.enums.TypeColChefServ;
-import model.enums.TypeFichier;
+import model.enums.TypeDonnee;
 import utilities.Statics;
 import utilities.TechnicalException;
 
@@ -60,7 +60,7 @@ public class TestControlXML extends JunitBase
     @Test (expected = TechnicalException.class)
     public void testSaveInfosException() throws Exception
     {        
-        Whitebox.invokeMethod(handler, "saveInfos", TypeFichier.RESPSERVICE, TypeColChefServ.class, new File("аз&;:["));
+        Whitebox.invokeMethod(handler, "saveInfos", TypeDonnee.RESPSERVICE, TypeColChefServ.class, new File("аз&;:["));
     }
     
     /*---------- METHODES PRIVEES ----------*/

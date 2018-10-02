@@ -56,13 +56,15 @@ import com.ibm.team.workitem.common.model.ItemProfile;
 import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
 import com.mchange.util.AssertException;
 
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Anomalie;
+import model.bdd.DateMaj;
 import model.bdd.LotRTC;
 import model.enums.EtatLot;
 import model.enums.Param;
 import model.enums.TypeEnumRTC;
-import model.enums.TypeFichier;
+import model.enums.TypeDonnee;
 import utilities.AbstractToStringImpl;
 import utilities.DateConvert;
 import utilities.Statics;
@@ -471,12 +473,10 @@ public class ControlRTC extends AbstractToStringImpl
         // Sinon, on ne prend que les lots qui ont été modifiées ou créées depuis la dernière mise à jour.
         else
         {
-            String dateMajFichierRTC = Statics.fichiersXML.getDateMaj().get(TypeFichier.LOTSRTC);
-            if (dateMajFichierRTC != null && !dateMajFichierRTC.isEmpty())
+            // Récupération de la date de mise à jour depuis la base de données
+            LocalDate lastUpdate = DaoFactory.getDao(DateMaj.class).recupEltParCode(TypeDonnee.LOTSRTC.toString()).getDate();
+            if (lastUpdate != null)
             {
-                // Date de la dernière mise à jour
-                LocalDate lastUpdate = DateConvert.FORMATTER.parse(dateMajFichierRTC, LocalDate::from);
-
                 // Periode entre la dernière mise à jour et aujourd'hui
                 Period periode = Period.between(lastUpdate, today);
                 Date datePredicat = DateConvert.convertToOldDate(today.minusDays(periode.getDays()));
@@ -541,7 +541,7 @@ public class ControlRTC extends AbstractToStringImpl
         EtatLot etatLot = EtatLot.from(recupEtatElement(workItem));
         retour.setEtatLot(etatLot);
         retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
-//        retour.setDateMajEtat(recupDatesEtatsLot(workItem).get(etatLot));
+        retour.setDateMajEtat(recupDatesEtatsLot(workItem).get(etatLot));
         return retour;
     }
 

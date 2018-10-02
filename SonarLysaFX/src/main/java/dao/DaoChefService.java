@@ -9,6 +9,7 @@ import control.excel.ControlChefService;
 import control.excel.ExcelFactory;
 import model.bdd.ChefService;
 import model.enums.TypeColChefServ;
+import model.enums.TypeDonnee;
 
 /**
  * Classe de DOA pour la sauvegarde des composants Sonar en base de données
@@ -24,7 +25,10 @@ public class DaoChefService extends AbstractDao<ChefService> implements Serializ
 
     /*---------- CONSTRUCTEURS ----------*/
     
-    DaoChefService() { }
+    DaoChefService() 
+    { 
+        typeDonnee = TypeDonnee.RESPSERVICE;
+    }
     
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -45,19 +49,15 @@ public class DaoChefService extends AbstractDao<ChefService> implements Serializ
         }
 
         // Persistance en base de données
-        return persist(mapBase.values());
-    }
-
-    @Override
-    public List<ChefService> readAll()
-    {
-        return em.createNamedQuery("ChefService.findAll", ChefService.class).getResultList();
+        int retour = persist(mapBase.values());
+        majDateDonnee();
+        return retour;
     }
     
     @Override
     public ChefService recupEltParCode(String nom)
     {
-        List<ChefService> liste = em.createNamedQuery("ChefService.findByCode", ChefService.class).setParameter("code", nom).getResultList();
+        List<ChefService> liste = em.createNamedQuery("ChefService.findByIndex", ChefService.class).setParameter("index", nom).getResultList();
         if (liste.isEmpty())
             return null;
         else

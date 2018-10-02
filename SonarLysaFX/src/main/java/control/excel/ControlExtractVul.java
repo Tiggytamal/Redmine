@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import control.task.AbstractTask;
 import model.Vulnerabilite;
 import model.enums.TypeColVul;
 import model.enums.TypeVulnerabilite;
@@ -48,10 +49,10 @@ public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, Lis
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public void ajouterExtraction(List<Vulnerabilite> liste, TypeVulnerabilite type)
+    public void ajouterExtraction(List<Vulnerabilite> liste, TypeVulnerabilite type, AbstractTask task)
     {
         Sheet sheet = wb.getSheet(type.getNomSheet());
-        enregistrerDonnees(liste, sheet);
+        enregistrerDonnees(liste, sheet, task);
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -71,8 +72,8 @@ public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, Lis
             {
                 try
                 {
-                    valoriserCellule(row, (Integer) getClass().getDeclaredField(typeColVul.getNomCol()).get(this), 
-                            centre, Statics.proprietesXML.getEnumMapColW(TypeColVul.class).get(typeColVul).getNom());
+                    valoriserCellule(row, (Integer) getClass().getDeclaredField(typeColVul.getNomCol()).get(this), centre,
+                            Statics.proprietesXML.getEnumMapColW(TypeColVul.class).get(typeColVul).getNom());
                 }
                 catch (IllegalAccessException | NoSuchFieldException | SecurityException e)
                 {
@@ -83,7 +84,7 @@ public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, Lis
     }
 
     @Override
-    protected void enregistrerDonnees(List<Vulnerabilite> donnes, Sheet sheet)
+    protected void enregistrerDonnees(List<Vulnerabilite> donnees, Sheet sheet, AbstractTask task)
     {
 
         CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.VIDE, HorizontalAlignment.CENTER);
@@ -91,8 +92,12 @@ public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, Lis
         centre.setWrapText(false);
         gauche.setWrapText(false);
         Row row;
+        
+        // Données affichage
+        int i = 0;
+        int size = donnees.size();
 
-        for (Vulnerabilite vulnerabilite : donnes)
+        for (Vulnerabilite vulnerabilite : donnees)
         {
             row = sheet.createRow(sheet.getLastRowNum() + 1);
             valoriserCellule(row, colSeverity, centre, vulnerabilite.getSeverite());
@@ -104,6 +109,10 @@ public class ControlExtractVul extends AbstractControlExcelWrite<TypeColVul, Lis
             valoriserCellule(row, colAppli, centre, vulnerabilite.getAppli());
             valoriserCellule(row, colComp, gauche, vulnerabilite.getComposant());
             valoriserCellule(row, colLib, gauche, vulnerabilite.getLib());
+
+            // Affichage
+            i++;
+            task.updateProgress(i, size);
         }
 
         autosizeColumns(sheet);

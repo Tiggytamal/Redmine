@@ -1,7 +1,6 @@
 package control.view;
 
 import control.task.CreerVueDataStageTask;
-import control.task.CreerVueParEditionTask;
 import control.task.CreerVuePatrimoineTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,8 +37,6 @@ public final class AutresVuesViewControl extends AbstractViewControl
     @FXML
     private Button creerDataStage;
     @FXML
-    private Button creerEdition;
-    @FXML
     private VBox selectPane;
     @FXML
     private CheckBox excelSeul;
@@ -67,12 +64,6 @@ public final class AutresVuesViewControl extends AbstractViewControl
     {
         startTask(new CreerVueDataStageTask());
     }
-    
-    @FXML
-    public void creerEdition()
-    {
-        startTask(new CreerVueParEditionTask());
-    }
 
     @Override
     protected void afficher(ActionEvent event)
@@ -93,10 +84,6 @@ public final class AutresVuesViewControl extends AbstractViewControl
                     
                 case "radioPat" :
                     selectPane.getChildren().add(creerPat);
-                    break;
-                    
-                case "radioEditions" :
-                    selectPane.getChildren().add(creerEdition);
                     break;
                     
                 default :

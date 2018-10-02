@@ -70,7 +70,7 @@ public class CreerVueDataStageTask extends AbstractTask
         StringBuilder builder = new StringBuilder("Création vue ");
         updateMessage(builder.append(nom).toString());
         vue = creerVue("DSDataStageListeKey", nom, "Vue regroupant tous les composants Datastage", true);
-        String baseMessage = builder.append(" OK.").append(Statics.NL).append("Ajout : ").toString();
+        baseMessage = builder.append(" OK.").append(Statics.NL).append("Ajout : ").toString();
 
         // Récupération composants depuis fichier XML
         List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
@@ -97,7 +97,7 @@ public class CreerVueDataStageTask extends AbstractTask
             // Affichage
             i++;
             updateProgress(i, size);
-            updateMessage(baseMessage + compo.getNom() + affichageTemps(debut, i, size));
+            updateMessage(compo.getNom() + affichageTemps(debut, i, size));
         }
         return true;
     }

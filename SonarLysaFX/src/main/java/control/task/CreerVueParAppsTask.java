@@ -154,9 +154,9 @@ public class CreerVueParAppsTask extends AbstractTask
         /* ----- 3. Suppression des vues existantes ----- */
 
         // Message
-        String base = "Suppression des vues existantes :" + NL;
+        baseMessage = "Suppression des vues existantes :" + NL;
         etapePlus();
-        updateMessage(base);
+        updateMessage("");
         updateProgress(0, 1);
 
         // Suppression anciennes vues
@@ -171,19 +171,19 @@ public class CreerVueParAppsTask extends AbstractTask
             api.supprimerVue(projet.getKey(), false);
 
             // Affichage
-            updateMessage(base + projet.getNom() + affichageTemps(debut, i, size));
+            updateMessage(projet.getNom() + affichageTemps(debut, i, size));
             updateProgress(i, size);
         }
 
         /* ----- 4. Creation des nouvelles vues ----- */
 
         // Affichage et variables
-        base = "Creation des nouvelles vues :" + NL;
+        baseMessage = "Creation des nouvelles vues :\n";
         int i = 0;
         size = mapApplication.entrySet().size();
         debut = System.currentTimeMillis();
         etapePlus();
-        updateMessage(base);
+        updateMessage("");
         updateProgress(0, size);
 
         // Parcours de la liste pour créer chaque vue applicative avec ses composants
@@ -194,12 +194,12 @@ public class CreerVueParAppsTask extends AbstractTask
 
             // Affichage
             i++;
-            String baseVue = base + "traitement : " + vue.getName() + NL;
+            baseMessage = new StringBuilder(baseMessage).append("traitement : ").append(vue.getName()).append(NL).toString();
             updateProgress(i, size);
-            updateMessage(baseVue + affichageTemps(debut, i, size));
+            updateMessage(affichageTemps(debut, i, size));
             for (ComposantSonar composantSonar : entry.getValue())
             {
-                updateMessage(baseVue + "Ajout : " + composantSonar.getNom());
+                updateMessage("Ajout : " + composantSonar.getNom());
                 api.ajouterProjet(composantSonar, vue);
             }
         }
@@ -232,8 +232,8 @@ public class CreerVueParAppsTask extends AbstractTask
         HashMap<String, List<ComposantSonar>> retour = new HashMap<>();
 
         // Message
-        String base = "Traitements des composants :" + NL;
-        updateMessage(base);
+        baseMessage = "Traitements des composants :" + NL;
+        updateMessage("");
         int i = 0;
         inconnues = 0;
 
@@ -243,7 +243,7 @@ public class CreerVueParAppsTask extends AbstractTask
             ComposantSonar compo = ModelFactory.getModelWithParams(ComposantSonar.class, baseCompo);
 
             // Message
-            updateMessage(base + compo.getNom());
+            updateMessage(compo.getNom());
             i++;
             updateProgress(i, mapCompos.size());
 
@@ -303,8 +303,6 @@ public class CreerVueParAppsTask extends AbstractTask
             LOGINCONNUE.warn("Application : INCONNUE - Composant : " + nom);
             compo.setEtatAppli(EtatAppli.KO);
             inconnues++;
-
-            ;
 
             composPbAppli.add(testVersionPrec(compo));
             return true;
@@ -375,7 +373,7 @@ public class CreerVueParAppsTask extends AbstractTask
             if (compo2 != null)
             {
                 // Si on a un composant du lot 315765, on prend le nouveau composant
-                if (compo.getLotRTC().equals(LOT315765))
+                if (compo.getLotRTC().getLot().equals(LOT315765))
                 {
                     retour = compo2;
                     retour.setEtatAppli(EtatAppli.KO);
@@ -403,12 +401,12 @@ public class CreerVueParAppsTask extends AbstractTask
             throw new TechnicalException("Control.task.CreerVueParAppsTask.creerFichierExtraction - Demande de création d'extraction sans fichier", null);
 
         etapePlus();
-        updateProgress(-1, 0);
+        updateProgress(0, 1);
         updateMessage("Création du fichier de contrôle des applications gérées dans Sonar.");
 
         // Fichier Sonar
         ControlAppsW controlAppsW = ExcelFactory.getWriter(TypeColAppsW.class, file);
-        controlAppsW.creerfeuilleSonar(applisOpenSonar);
+        controlAppsW.creerfeuilleSonar(applisOpenSonar, this);
         return controlAppsW.write();
     }
 
@@ -449,7 +447,7 @@ public class CreerVueParAppsTask extends AbstractTask
             pbApps.setCodeAppli(compo.getAppli().getCode());
 
             // CPI Lot depuis la map RTC
-            LotRTC lotSuiviRTC = fichiersXML.getMapLotsRTC().get(compo.getLotRTC().getLot());
+            LotRTC lotSuiviRTC = DaoFactory.getDao(LotRTC.class).readAllMap().get(compo.getLotRTC().getLot());
             if (lotSuiviRTC == null)
                 pbApps.setCpiLot("Lot inaccessible depuis RTC");
             else
@@ -469,7 +467,7 @@ public class CreerVueParAppsTask extends AbstractTask
 
         // Ecriture fichier
         ControlPbApps controlPbApps = ExcelFactory.getWriter(TypeColPbApps.class, new File(Statics.proprietesXML.getMapParams().get(Param.NOMFICHIERPBAPPLI)));
-        controlPbApps.creerfeuille(listePbApps);
+        controlPbApps.creerfeuille(listePbApps, this);
         return controlPbApps.write();
     }
 

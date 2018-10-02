@@ -34,6 +34,12 @@ public class DaoFactory
                 
             case "model.bdd.ProjetClarity":
                 return (T) new DaoProjetClarity();
+                
+            case "model.bdd.Anomalie":
+                return (T) new DaoAnomalie();
+                
+            case "model.bdd.DateMaj":
+                return (T) new DaoDateMaj();
 
             default:
                 throw new TechnicalException("Création Dao impossible - classe : " + daoClass.getName());

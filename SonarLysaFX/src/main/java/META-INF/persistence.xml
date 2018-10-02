@@ -9,6 +9,8 @@
 		<class>model.bdd.ProjetClarity</class>
 		<class>model.bdd.Edition</class>
 		<class>model.bdd.LotRTC</class>
+		<class>model.bdd.Anomalie</class>
+		<class>model.bdd.DateMaj</class>
 		<class>utilities.adapter.LocalDateConverter</class>
 		<class>utilities.adapter.LocalDateTimeConverter</class>
 		<properties>

@@ -1,6 +1,5 @@
 package model.bdd;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
 import model.enums.EtatLot;
+import model.enums.QG;
 import utilities.Statics;
 
 /**
@@ -41,11 +41,9 @@ import utilities.Statics;
         @NamedQuery(name="LotRTC.resetTable", query="DELETE FROM LotRTC")
 })
 //@formatter:on
-public class LotRTC extends AbstractBDDModele implements Serializable
+public class LotRTC extends AbstractBDDModele
 {
     /*---------- ATTRIBUTS ----------*/
-
-    private static final long serialVersionUID = 1L;
 
     @Column(name = "lot", nullable = false, length = 6)
     private String lot;
@@ -79,12 +77,16 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     
     @Column(name = "date_maj_etat", nullable = true)
     private LocalDate dateMajEtat;
+    
+    @Column(name = "qualityGate", nullable = false)   
+    private QG qualityGate;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     LotRTC() 
     {
         composants = new ArrayList<>();
+        qualityGate = QG.NONE;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -220,5 +222,15 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     public void setComposants(List<ComposantSonar> composants)
     {
         this.composants = composants;
+    }
+
+    public QG getQualityGate()
+    {
+        return qualityGate;
+    }
+
+    public void setQualityGate(QG qualityGate)
+    {
+        this.qualityGate = qualityGate;
     }
 }

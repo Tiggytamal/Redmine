@@ -12,7 +12,6 @@ import com.mchange.util.AssertException;
 
 import application.Main;
 import control.excel.ControlExtractVul;
-import dao.DaoFactory;
 import model.Vulnerabilite;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
@@ -77,21 +76,16 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
     private void creerExtract()
     {
         // Création liste des noms des composants du patrimoine
-        List<String> nomsComposPatrimoine = new ArrayList<>();
-        for (ComposantSonar compo : recupererComposantsSonar(OptionRecupCompo.PATRIMOINE).values())
-        {
-            nomsComposPatrimoine.add(compo.getNom());
-        }
 
         for (TypeVulnerabilite type : TypeVulnerabilite.values())
         {
             @SuppressWarnings("unchecked")
-            List<Vulnerabilite> vulnerabilites = Utilities.recuperation(Main.DESER, List.class, "vulnera" + type.toString() + ".ser", () -> recupVulnerabilitesSonar(type, nomsComposPatrimoine));
+            List<Vulnerabilite> vulnerabilites = Utilities.recuperation(Main.DESER, List.class, "vulnera" + type.toString() + ".ser", () -> recupVulnerabilitesSonar(type));
 
             // Création de la feuille excel
             updateMessage("Traitement fichier Excel");
-            updateProgress(-1, -1);
-            control.ajouterExtraction(vulnerabilites, type);
+            updateProgress(0, 1);
+            control.ajouterExtraction(vulnerabilites, type, this);
             etapePlus();
         }
 
@@ -109,18 +103,22 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
     private Vulnerabilite convertIssueToVul(Issue issue, ComposantSonar composant)
     {
         Vulnerabilite retour = new Vulnerabilite();
+        
         retour.setComposant(composant.getNom());
         retour.setStatus(issue.getStatus());
         retour.setDateCreation(issue.getCreationDate());
         retour.setSeverite(issue.getSeverity());
         retour.setMessage(issue.getMessage());
-        retour.setLot(composant.getLotRTC().getLot());
         retour.setAppli(composant.getAppli().getCode());
         retour.setLib(extractLib(retour.getMessage()));
+        
+        LotRTC lotRTC = composant.getLotRTC();
 
-        LotRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(retour.getLot());
         if (lotRTC != null)
+        {
             retour.setClarity(lotRTC.getProjetClarity().getCode());
+            retour.setLot(lotRTC.getLot());
+        }
 
         return retour;
     }
@@ -129,20 +127,22 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
      * Récupère toutes les vulnérabilitès du patrimoine depuis Sonar pour un type particulier
      * 
      * @param type
-     * @param nomsComposPatrimoine
+     * @param composants
      * @return
      */
-    private List<Vulnerabilite> recupVulnerabilitesSonar(TypeVulnerabilite type, List<String> nomsComposPatrimoine)
+    private List<Vulnerabilite> recupVulnerabilitesSonar(TypeVulnerabilite type)
     {
+        // Liste des composants du patrimoine
+        Map<String, ComposantSonar> composants = recupererComposantsSonar(OptionRecupCompo.PATRIMOINE);
+        
         // Affichage avancée
-        String basetype = "Vulnérabilitès " + type.getNomSheet() + Statics.NL;
-        updateMessage(basetype + "récupération des vulnérabilités dans SonarQube.");
+        baseMessage = "Vulnérabilitès " + type.getNomSheet() + Statics.NL;
+        updateMessage("récupération des vulnérabilités dans SonarQube.");
         updateProgress(-1, -1);
 
         // Variables
         List<Vulnerabilite> retour = new ArrayList<>();
         int i = 0;
-        Map<String, ComposantSonar> composants = DaoFactory.getDao(ComposantSonar.class).readAllMap();
 
         // Paramètres
         List<Parametre> params = new ArrayList<>();
@@ -163,7 +163,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
             String clefProjet = issue.getProjet();
 
             // Affichage avancée
-            updateMessage(basetype + base + clefProjet);
+            updateMessage(base + clefProjet);
             updateProgress(i, size);
             i++;
 
@@ -175,9 +175,8 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
                 continue;
             }
 
-            // Vérification que le lot est bien dans les composants du patrimoine puis conversion dans le format pour créer le fichier Excel
-            if (nomsComposPatrimoine.contains(composant.getNom()))
-                retour.add(convertIssueToVul(issue, composant));
+            // Conversion dans le format pour créer le fichier Excel
+            retour.add(convertIssueToVul(issue, composant));
         }
 
         return retour;

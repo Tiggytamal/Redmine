@@ -5,7 +5,7 @@ import java.util.List;
 import model.sonarapi.Vue;
 
 /**
- * Tâche permettant de mettre à jour les vues Sonar avec une valeur mauelle égale au numéro du lot.
+ * Tâche permettant de mettre à jour les vues Sonar avec une valeur manuelle égale au numéro du lot.
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0

@@ -22,10 +22,13 @@ import javax.persistence.Transient;
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
+import model.enums.EtatAnoSuivi;
 import model.enums.GroupeComposant;
 import model.enums.Matiere;
+import model.enums.Param;
 import model.enums.TypeAction;
 import model.enums.TypeVersion;
+import utilities.Statics;
 
 /**
  * Classe de modèle qui correspond aux données du fichier Excel des anomalies.
@@ -37,10 +40,9 @@ import model.enums.TypeVersion;
 @Table(name = "anomalies")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="Anomalie.findAll", query="SELECT a FROM Anomalie a "
-                + "JOIN FETCH a.lotRTC l"),
-        @NamedQuery(name="Anomalie.findByindex", query="SELECT a FROM Anomalie a WHERE a.lotRTC.lot = :index"),
-        @NamedQuery(name="Anomalie.resetTable", query="DELETE FROM Anomalie")
+        @NamedQuery(name="Anomalie" + AbstractBDDModele.FINDALL, query="SELECT a FROM Anomalie a LEFT JOIN FETCH a.lotRTC l"),
+        @NamedQuery(name="Anomalie" + AbstractBDDModele.FINDINDEX, query="SELECT a FROM Anomalie a WHERE a.lotRTC.lot = :index"),
+        @NamedQuery(name="Anomalie" + AbstractBDDModele.RESETTABLE, query="DELETE FROM Anomalie")
 })
 //@formatter:on
 public class Anomalie extends AbstractBDDModele
@@ -55,14 +57,14 @@ public class Anomalie extends AbstractBDDModele
     @Column(name = "liens_lot", nullable = true)
     private String liensLot;
 
-    @Column(name = "numero_anomalie", nullable = true, length = 6)
-    private int numeroAnomalie;
+    @Column(name = "numero_anoRTC", nullable = true, length = 6)
+    private int numeroAnoRTC;
 
     @Column(name = "liens_ano", nullable = true)
     private String liensAno;
 
-    @Column(name = "etat", nullable = true, length = 32)
-    private String etat;
+    @Column(name = "etatRTC", nullable = true, length = 32)
+    private String etatRTC;
 
     @Column(name = "securite", nullable = false)
     private boolean securite;
@@ -86,6 +88,10 @@ public class Anomalie extends AbstractBDDModele
     @Column(name = "date_resolution", nullable = true)
     private LocalDate dateReso;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "etat_ano_suivi", nullable = false)
+    private EtatAnoSuivi etatAnoSuivi;
+
     @Transient
     private boolean traitee;
 
@@ -107,12 +113,19 @@ public class Anomalie extends AbstractBDDModele
     Anomalie()
     {
         matieres = new HashSet<>();
+        typeVersion = TypeVersion.SNAPSHOT;
+        groupe = GroupeComposant.VIDE;
+        etatAnoSuivi = EtatAnoSuivi.NOUVELLE;
+        action = TypeAction.VIDE;
+        remarque = Statics.EMPTY;
+        dateDetection = LocalDate.now();
     }
 
     Anomalie(LotRTC lotRTC)
     {
         this();
         this.lotRTC = lotRTC;
+        creerLiensLotRTC();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -130,7 +143,9 @@ public class Anomalie extends AbstractBDDModele
      */
     public boolean calculTraitee()
     {
-        traitee = (!getRemarque().isEmpty()) || (numeroAnomalie != 0);
+        traitee = !getRemarque().isEmpty() || numeroAnoRTC != 0;
+        if (traitee)
+            etatAnoSuivi = EtatAnoSuivi.TRAITEE;
         return traitee;
     }
 
@@ -169,6 +184,22 @@ public class Anomalie extends AbstractBDDModele
 
     /*---------- METHODES PRIVEES ----------*/
 
+    /**
+     * Création du liens vers l'anomalie dans RTC
+     */
+    private void creerLiensAnoRTC()
+    {
+        liensAno = Statics.proprietesXML.getMapParams().get(Param.LIENSANOS) + getLotRTC().getProjetRTC().replace(Statics.SPACE, "%20") + Statics.FINLIENSANO + String.valueOf(numeroAnoRTC);
+    }
+
+    /**
+     * Création du liens vers le lot dans RTC
+     */
+    private void creerLiensLotRTC()
+    {
+        liensLot = Statics.proprietesXML.getMapParams().get(Param.LIENSLOTS) + getLotRTC().getLot();
+    }
+
     /*---------- ACCESSEURS ----------*/
 
     public LotRTC getLotRTC()
@@ -179,26 +210,28 @@ public class Anomalie extends AbstractBDDModele
     public void setLotRTC(LotRTC lotRTC)
     {
         this.lotRTC = lotRTC;
+        creerLiensLotRTC();
     }
 
-    public int getNumeroAnomalie()
+    public int getNumeroAnoRTC()
     {
-        return numeroAnomalie;
+        return numeroAnoRTC;
     }
 
-    public void setNumeroAnomalie(int numeroAnomalie)
+    public void setNumeroAnoRTC(int numeroAnoRTC)
     {
-        this.numeroAnomalie = numeroAnomalie;
+        this.numeroAnoRTC = numeroAnoRTC;
+        creerLiensAnoRTC();
     }
 
-    public String getEtat()
+    public String getEtatRTC()
     {
-        return getString(etat);
+        return getString(etatRTC);
     }
 
-    public void setEtat(String etat)
+    public void setEtatRTC(String etatRTC)
     {
-        this.etat = etat;
+        this.etatRTC = etatRTC;
     }
 
     public boolean isSecurite()
@@ -324,5 +357,15 @@ public class Anomalie extends AbstractBDDModele
     public void setGroupe(GroupeComposant groupe)
     {
         this.groupe = groupe;
+    }
+
+    public EtatAnoSuivi getEtatAnoSuivi()
+    {
+        return etatAnoSuivi;
+    }
+
+    public void setEtatAnoSuivi(EtatAnoSuivi etatAnoSuivi)
+    {
+        this.etatAnoSuivi = etatAnoSuivi;
     }
 }

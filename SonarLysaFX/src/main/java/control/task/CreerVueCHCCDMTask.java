@@ -90,8 +90,8 @@ public class CreerVueCHCCDMTask extends AbstractTask
      */
     private void suppressionVuesMaintenance(CHCouCDM chccdm, List<String> annees)
     {
-        String base;
-        String baseMessage = "Suppression des vues existantes :" + NL;
+        String baseClef;
+        baseMessage = "Suppression des vues existantes :" + NL;
         int j = 1;
         long debut = System.currentTimeMillis();
         int size = NBRESEMAINES * annees.size();
@@ -101,21 +101,21 @@ public class CreerVueCHCCDMTask extends AbstractTask
         {
             // préparation de la base de la clef
             if (chccdm == CHCouCDM.CDM)
-                base = "CHC_CDM" + annee;
+                baseClef = "CHC_CDM" + annee;
             else
-                base = "CHC" + annee;
+                baseClef = "CHC" + annee;
 
             // Suprression des vues existantes possibles
             for (int i = 1; i <= NBRESEMAINES; i++)
             {
-                StringBuilder builder = new StringBuilder(base).append("-S").append(String.format("%02d", i));
+                StringBuilder builder = new StringBuilder(baseClef).append("-S").append(String.format("%02d", i));
                 String message = builder.toString();
                 api.supprimerProjet(builder.append("Key").toString(), false);
                 
                 //Affichage
                 j++;
                 updateProgress(j, (long) size);
-                updateMessage(baseMessage + message + affichageTemps(debut, j, size));
+                updateMessage(message + affichageTemps(debut, j, size));
             }
         }
     }
@@ -134,27 +134,24 @@ public class CreerVueCHCCDMTask extends AbstractTask
     {
         Map<String, Set<String>> retour = new HashMap<>();
 
-        Map<String, List<ComposantSonar>> mapProjets = recupererComposantsSonarVersion(Matiere.JAVA);
+        Map<String, ComposantSonar> mapProjets = recupererComposantsSonar(Matiere.JAVA);
 
         // Transfert de la map en une liste avec tous les projets
-        List<ComposantSonar> tousLesProjets = new ArrayList<>();
-        for (List<ComposantSonar> compos : mapProjets.values())
-        {
-            tousLesProjets.addAll(compos);
-        }
+        List<ComposantSonar> tousLesProjets = new ArrayList<>(mapProjets.values());
 
         etapePlus();
+        baseMessage = "Traitement des composants :\n";
 
         for (int i = 0; i < tousLesProjets.size(); i++)
         {
             ComposantSonar compo = tousLesProjets.get(i);
 
             // MAJ progression
-            updateMessage("Traitement des composants :" + NL + compo.getNom());
+            updateMessage(compo.getNom());
             updateProgress(i, tousLesProjets.size());
 
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
-            if (!compo.getLotRTC().getLot().isEmpty() && mapEditions.containsKey(compo.getEdition()))
+            if (compo.getLotRTC() != null && mapEditions.containsKey(compo.getEdition()))
             {
                 String keyCHC = mapEditions.get(compo.getEdition()).getNom();
 
@@ -191,9 +188,6 @@ public class CreerVueCHCCDMTask extends AbstractTask
      */
     private void creerVuesMaintenance(Map<String, Set<String>> mapVuesACreer)
     {
-        String base = "Création des vues :" + NL;
-        etapePlus();
-
         // Calcul du nombere total d'objets dans la map
         int sizeComplete = 0;
         for (Set<String> lots : mapVuesACreer.values())
@@ -201,13 +195,17 @@ public class CreerVueCHCCDMTask extends AbstractTask
             sizeComplete += lots.size();
         }
 
+        // Affichage
+        etapePlus();
         int i = 0;
+        long debut = System.currentTimeMillis();
+        
         for (Map.Entry<String, Set<String>> entry : mapVuesACreer.entrySet())
         {
             Vue parent = new Vue(entry.getKey() + "Key", entry.getKey());
             api.creerVue(parent);
-            String baseVue = base + entry.getKey();
-            updateMessage(baseVue);
+            baseMessage = "Création des vues :\n" + entry.getKey();
+            updateMessage("");
 
             for (String lot : entry.getValue())
             {
@@ -215,7 +213,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
                 i++;
 
                 // MAJ progression
-                updateMessage(baseVue + NL + "ajout lot " + lot);
+                updateMessage(NL + "ajout lot " + lot + affichageTemps(debut, i, sizeComplete));
                 updateProgress(i, sizeComplete);
             }
         }

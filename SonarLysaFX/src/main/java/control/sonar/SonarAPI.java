@@ -253,7 +253,7 @@ public class SonarAPI extends AbstractToStringImpl
     }
 
     /**
-     * Appel une rehcerche d'Issues avec les paramètres choisis sans prédéfinition
+     * Appel une recherche d'Issues avec les paramètres choisis sans prédéfinition
      * 
      * @param parametres
      * @return

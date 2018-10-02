@@ -9,6 +9,7 @@ import control.excel.ControlEdition;
 import control.excel.ExcelFactory;
 import model.bdd.Edition;
 import model.enums.TypeColEdition;
+import model.enums.TypeDonnee;
 
 /**
  * Classe de DOA pour la sauvegarde des composants Sonar en base de données
@@ -23,9 +24,12 @@ public class DaoEdition extends AbstractDao<Edition> implements Serializable
     private static final long serialVersionUID = 1L;
 
     /*---------- CONSTRUCTEURS ----------*/
-    
-    DaoEdition() { }
-    
+
+    DaoEdition()
+    {
+        typeDonnee = TypeDonnee.EDITION;
+    }
+
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
@@ -40,24 +44,20 @@ public class DaoEdition extends AbstractDao<Edition> implements Serializable
 
         // Mise à jour des données
         for (Map.Entry<String, Edition> entry : mapExcel.entrySet())
-        {            
+        {
             mapBase.put(entry.getKey(), mapBase.computeIfAbsent(entry.getKey(), key -> entry.getValue()).update(entry.getValue()));
         }
 
         // PErsistance des données
-        return persist(mapBase.values());
+        int retour = persist(mapBase.values());
+        majDateDonnee();
+        return retour;
     }
 
     @Override
-    public List<Edition> readAll()
-    {
-        return em.createNamedQuery("Edition.findAll", Edition.class).getResultList();
-    }
-    
-    @Override
     public Edition recupEltParCode(String numero)
     {
-        List<Edition> liste = em.createNamedQuery("Edition.findByCode", Edition.class).setParameter("code", numero).getResultList();
+        List<Edition> liste = em.createNamedQuery("Edition.findByIndex", Edition.class).setParameter("index", numero).getResultList();
         if (liste.isEmpty())
             return null;
         else

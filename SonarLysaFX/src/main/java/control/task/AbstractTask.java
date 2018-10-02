@@ -29,15 +29,12 @@ import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.OptionRecupCompo;
 import model.enums.Param;
-import model.enums.ParamSpec;
 import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
-import utilities.Statics;
 import utilities.TechnicalException;
-import utilities.Utilities;
 import utilities.enums.Severity;
 
 /**
@@ -57,11 +54,13 @@ public abstract class AbstractTask extends Task<Boolean>
     private static final String RESTANT = "\nTemps restant : ";
 
     protected SonarAPI api;
-    private StringProperty etape = new SimpleStringProperty(this, "etape", EMPTY);
-    private String titre;
+    protected String baseMessage;
     protected int debut;
     protected int fin;
     protected boolean annulable;
+    
+    private StringProperty etape = new SimpleStringProperty(this, "etape", EMPTY);
+    private String titre;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -75,14 +74,30 @@ public abstract class AbstractTask extends Task<Boolean>
         api = SonarAPI.INSTANCE;
         initEtape(fin);
         this.titre = titre;
+        baseMessage = "";
     }
-
-    /*---------- METHODES PUBLIQUES ----------*/
-
+    
+    /*---------- METHODES ABSTRAITES ----------*/
+        
     /**
      * Utilisée pour permettre le retour arrière si possible du traitement
      */
     public abstract void annuler();
+
+    /*---------- METHODES PUBLIQUES ----------*/
+
+
+    @Override
+    public final void updateMessage(String message)
+    {
+        super.updateMessage(baseMessage + message);
+    }
+    
+    @Override
+    public void updateProgress(double effectue, double total)
+    {
+        super.updateProgress(effectue, total);
+    }
 
     @Override
     public String toString()
@@ -146,47 +161,23 @@ public abstract class AbstractTask extends Task<Boolean>
     }
 
     /**
-     * Permet de récupérer les composants de Sonar triés par version avec séparation des composants datastage
+     * Permet de récupérer les composants de Sonar avec séparation des composants datastage
      *
      * @return
      */
-    protected final Map<String, List<ComposantSonar>> recupererComposantsSonarVersion(Matiere matiere)
+    protected final Map<String, ComposantSonar> recupererComposantsSonar(Matiere matiere)
     {
         updateMessage(RECUPCOMPOSANTS);
+        
+        // Map de retour
+        Map<String, ComposantSonar> retour = new HashMap<>();
 
-        // Récupération des versions en paramètre
-        String[] versions = proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONS).split(";");
-
-        // Récupération composants depuis fichier XML
-        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
-
-        // Création de la map de retour en utilisant les versions données
-        Map<String, List<ComposantSonar>> retour = new HashMap<>();
-
-        for (String version : versions)
+        // Itération sur les composants issus de la base de données
+        for (ComposantSonar compo : DaoFactory.getDao(ComposantSonar.class).readAll())
         {
-            retour.put(version, new ArrayList<>());
-        }
-
-        // Itération sur les projets pour remplir la liste de retour
-        for (ComposantSonar compo : compos)
-        {
-            String versionCompo = EMPTY;
-            for (String version : versions)
-            {
-                // Pour chaque version, on teste si le composant fait parti de celle-ci. par ex : composant 15 dans version E32
-                if (compo.getNom().endsWith(Utilities.transcoEdition(version)))
-                    versionCompo = version;
-            }
-
-            // Si le composant ne fait pas partie des versions paramétrée, on passe au suivant.
-            if (versionCompo.isEmpty())
-                continue;
-
             // Test de la matiere du composant et des filtres des composants pour rajouter à la map de retour.
             if (testFiltreEtMatiere(matiere, compo))
-                retour.get(versionCompo).add(compo);
-
+                retour.put(compo.getLotRTC().getLot(), compo);
         }
 
         updateMessage(RECUPCOMPOSANTS + "OK");
@@ -247,22 +238,6 @@ public abstract class AbstractTask extends Task<Boolean>
     }
 
     /**
-     * Mets à jour le message dans la fénêtre d'avancée de la tâche.
-     * 
-     * @param message
-     *            Message à afficher
-     * @param etape
-     *            Numéro de l'étape en cours
-     * @param nbreEtapes
-     *            Nombres d'étapes de la tâche
-     */
-    protected final void updateMessage(String message, int etape, int nbreEtapes)
-    {
-        StringBuilder base = new StringBuilder("Etape ").append(etape).append("/").append(nbreEtapes).append(Statics.NL);
-        updateMessage(base.append(message).toString());
-    }
-
-    /**
      * Initilisa le compteur d'étapes (début et fin).
      * 
      * @param fin
@@ -275,7 +250,7 @@ public abstract class AbstractTask extends Task<Boolean>
     }
 
     /**
-     * Incrémente le compteur d'étapes ded la tâche.
+     * Incrémente le compteur d'étapes de la tâche.
      */
     protected void etapePlus()
     {
@@ -340,7 +315,7 @@ public abstract class AbstractTask extends Task<Boolean>
         // Map des composants qui ont une version
         Map<String, ComposantSonar> composOK = new HashMap<>();
 
-        // Map de retour des composants qui n'ont pas une version en production
+        // Map de retour des composants qui n'ont pas de lot RTC
         Map<String, ComposantSonar> retour = new HashMap<>();
 
         for (ComposantSonar compo : composantsSonar)
@@ -349,7 +324,7 @@ public abstract class AbstractTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                LotRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLotRTC().getLot());
+                LotRTC lotRTC = compo.getLotRTC();
 
                 // On vérfie qu'on trouve bien le lotRTC dans la map
                 if (lotRTC != null)
@@ -361,12 +336,12 @@ public abstract class AbstractTask extends Task<Boolean>
             }
         }
 
-        // On itère sur la map temporaire pour enlever tous les élments que l'on a déjà dans la map de retour.
-        Iterator<Map.Entry<String, ComposantSonar>> iter = retour.entrySet().iterator();
+        // On supprime de la map de retour les composants qui ont une version avec un lotRTC
+        Iterator<String> iter = retour.keySet().iterator();
         while (iter.hasNext())
         {
-            Map.Entry<String, ComposantSonar> entry = iter.next();
-            if (composOK.containsKey(entry.getKey()))
+            String key = iter.next();
+            if (composOK.containsKey(key))
                 iter.remove();
         }
         return retour;
@@ -374,7 +349,7 @@ public abstract class AbstractTask extends Task<Boolean>
 
     private Map<String, ComposantSonar> recupererComposNonProd(List<ComposantSonar> composantsSonar, Pattern pattern)
     {
-        // Map des composants qui ont bine un lot terminé
+        // Map des composants qui ont bien un lot terminé
         Map<String, ComposantSonar> compoOK = new HashMap<>();
 
         // Map de retour des composants qui ont un lot RTC mais pas terminé
@@ -386,7 +361,7 @@ public abstract class AbstractTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                LotRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLotRTC().getLot());
+                LotRTC lotRTC = compo.getLotRTC();
 
                 // On saute les composants sans lot RTC
                 if (lotRTC == null)
@@ -404,14 +379,12 @@ public abstract class AbstractTask extends Task<Boolean>
             }
         }
 
-        // Comparaison des deux maps pour enlever les lots qui otn uen entrée dans la map des compos OK.
-        Iterator<Map.Entry<String, ComposantSonar>> iter = retour.entrySet().iterator();
+        // Comparaison des deux maps pour enlever les lots qui ont une entrée dans la map des compos OK.
+        Iterator<String> iter = retour.keySet().iterator();
         while (iter.hasNext())
         {
-            Map.Entry<String, ComposantSonar> entry = iter.next();
-            if (!compoOK.containsKey(entry.getKey()))
-                compoOK.put(entry.getKey(), entry.getValue());
-            else
+            String key = iter.next();
+            if (compoOK.containsKey(key))
                 iter.remove();
         }
 
@@ -422,7 +395,7 @@ public abstract class AbstractTask extends Task<Boolean>
     {
         // Création de la map de retour et parcours de la liste des projets pour remplir celle-ci. On utilise la chaine
         // de caractères créées par la regex comme clef dans la map.
-        // Les compossant étant triès par ordre alphabétique, on va écraser tous les composants qui ont un numéro de version obsolète.
+        // Les composants étant triès par ordre alphabétique, on va écraser tous les composants qui ont un numéro de version obsolète.
         Map<String, ComposantSonar> retour = new HashMap<>();
 
         // Liste temporaire des composants qui n'ont pas une version en production
@@ -434,7 +407,7 @@ public abstract class AbstractTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                LotRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLotRTC().getLot());
+                LotRTC lotRTC = compo.getLotRTC();
                 EtatLot etatLot = null;
 
                 if (lotRTC != null)
@@ -451,14 +424,10 @@ public abstract class AbstractTask extends Task<Boolean>
 
         // Comparaison des deux maps pour rajouter les composants qui ne sont pas dans la map de retour, pour être sûr d'avoir tous les composants.
         // En effet certains composants n'ont plus la dernière version mise en production dans SonarQube
-        Iterator<Map.Entry<String, List<ComposantSonar>>> iter = temp.entrySet().iterator();
-        while (iter.hasNext())
+        for (Map.Entry<String, List<ComposantSonar>> entry : temp.entrySet())
         {
-            Map.Entry<String, List<ComposantSonar>> entry = iter.next();
             if (!retour.containsKey(entry.getKey()))
                 retour.put(entry.getKey(), entry.getValue().get(0));
-            else
-                iter.remove();
         }
 
         return retour;
@@ -475,7 +444,7 @@ public abstract class AbstractTask extends Task<Boolean>
 
             if (matcher.find())
             {
-                LotRTC lotRTC = Statics.fichiersXML.getMapLotsRTC().get(compo.getLotRTC().getLot());
+                LotRTC lotRTC = compo.getLotRTC();
                 EtatLot etatLot = null;
 
                 if (lotRTC != null)
@@ -531,5 +500,10 @@ public abstract class AbstractTask extends Task<Boolean>
     public boolean isAnnulable()
     {
         return annulable;
+    }
+    
+    public String getBaseMessage()
+    {
+        return baseMessage == null ? "" : baseMessage;
     }
 }

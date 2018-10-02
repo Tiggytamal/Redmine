@@ -40,8 +40,6 @@ public class CreerVueProductionTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private static final String TITRE = "Vue MEP/TEP";
-
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
     /** logger général */
@@ -51,6 +49,7 @@ public class CreerVueProductionTask extends AbstractTask
     private static final short ETAPES = 3;
     private static final short TRIMESTRIEL = 3;
     private static final short MENSUEL = 1;
+    private static final String TITRE = "Vue MEP/TEP";
 
     private String vueKey;
     private LocalDate dateDebut;
@@ -116,15 +115,15 @@ public class CreerVueProductionTask extends AbstractTask
             case DATASTAGE:
                 mapSonar = recupererLotsSonarQubeDataStage();
                 break;
-                
+
             case ALL:
                 mapSonar = recupererLotsSonarQube();
                 break;
-                
+
             default:
                 throw new TechnicalException("control.task.CreerVueProductionTask.creerVueProduction : option inconnue - " + option);
         }
- 
+
         // Récupération des lots mis en production dans les dates données depuis RTC
         mapLot = recupLotRTCPourMEP(dateDebut, dateFin, mapSonar);
 
@@ -154,7 +153,7 @@ public class CreerVueProductionTask extends AbstractTask
         Map<LocalDate, List<Vue>> retour = new HashMap<>();
 
         // Affichage et variables
-        String base = "Traitement RTC :";
+        baseMessage = "Traitement RTC :\n";
         int size = mapSonar.size();
         int i = 0;
         long debut = System.currentTimeMillis();
@@ -167,11 +166,11 @@ public class CreerVueProductionTask extends AbstractTask
             {
                 // Récupération des états du lot depuis RTC
                 map = ControlRTC.INSTANCE.recupDatesEtatsLot(ControlRTC.INSTANCE.recupWorkItemDepuisId(Integer.parseInt(entry.getKey())));
-                
+
                 // Affichage
                 i++;
                 updateProgress(i, size);
-                updateMessage(base + Statics.NL + "Lot " + entry.getKey() + affichageTemps(debut, i, size));
+                updateMessage("Lot " + entry.getKey() + affichageTemps(debut, i, size));
 
             }
             catch (TeamRepositoryException e)
@@ -201,14 +200,15 @@ public class CreerVueProductionTask extends AbstractTask
      */
     private Map<String, Vue> recupererLotsSonarQube()
     {
-        updateMessage("Récupérations des lots dans Sonar...");
+        baseMessage = "Récupérations des lots dans Sonar";
+        updateMessage(baseMessage + "...");
         Map<String, Vue> map = new HashMap<>();
         List<Vue> views = api.getVues();
         for (Vue view : views)
         {
             if (view.getName().startsWith("Lot "))
                 map.put(view.getName().substring(Statics.SBTRINGLOT), view);
-            updateMessage("Récupérations des lots dans Sonar OK");
+            updateMessage(baseMessage + " OK");
         }
         return map;
     }
@@ -220,26 +220,27 @@ public class CreerVueProductionTask extends AbstractTask
      */
     private Map<String, Vue> recupererLotsSonarQubeDataStage()
     {
-        updateMessage("Récupérations des lots dans Sonar...");
-        
+        baseMessage = "Récupérations des lots dans Sonar";
+        updateMessage(baseMessage + "...");
+
         Map<String, Vue> map = new HashMap<>();
+
+        Map<String, ComposantSonar> composDataStage = recupererComposantsSonar(Matiere.DATASTAGE);
         
-        Map<String, List<ComposantSonar>> composDataStage = recupererComposantsSonarVersion(Matiere.DATASTAGE);
-        for (List<ComposantSonar> liste : composDataStage.values())
+        // Message
+        int size = composDataStage.size();
+        updateProgress(0, size);
+        int i = 0;
+        
+        for (ComposantSonar composantSonar : composDataStage.values())
         {
-            int size = liste.size();
-            updateProgress(0, size);
-            int i = 0;
-            for (ComposantSonar composantSonar : liste)
-            {
-                List<Projet> projets = api.getVuesParNom("Lot " + composantSonar.getLotRTC());
-                map.put(projets.get(0).getNom().substring(Statics.SBTRINGLOT), new Vue(projets.get(0).getKey(), projets.get(0).getNom()));
-                i++;
-                updateProgress(i, size);
-            }
+            List<Projet> projets = api.getVuesParNom("Lot " + composantSonar.getLotRTC());
+            map.put(projets.get(0).getNom().substring(Statics.SBTRINGLOT), new Vue(projets.get(0).getKey(), projets.get(0).getNom()));
+            i++;
+            updateProgress(i, size);
         }
-        
-        updateMessage("Récupérations des lots dans Sonar OK");
+
+        updateMessage(baseMessage + " OK");
         return map;
     }
 
@@ -262,8 +263,8 @@ public class CreerVueProductionTask extends AbstractTask
         String nomVue = new StringBuilder("MEP ").append(DateConvert.dateFrancais(entry.getKey(), "yyyy.MM - MMMM")).append(option.getTitre()).toString();
         vueKey = new StringBuilder("MEPMEP").append(DateConvert.dateFrancais(entry.getKey(), "MMyyyy")).append("Key").append(option.toString()).toString();
         etapePlus();
-        String base = "Vue " + nomVue + Statics.NL;
-        updateMessage(base);
+        baseMessage = "Vue " + nomVue + Statics.NL;
+        updateMessage("");
         Vue vueParent = creerVue(vueKey, nomVue, new StringBuilder("Vue des lots mis en production pendant le mois de ").append(DateConvert.dateFrancais(entry.getKey(), "MMMM yyyy")).toString(),
                 true);
 
@@ -275,7 +276,7 @@ public class CreerVueProductionTask extends AbstractTask
             if (isCancelled())
                 return;
 
-            updateMessage(base + "ajout : " + vue.getName());
+            updateMessage("ajout : " + vue.getName());
             i++;
             updateProgress(i, size);
             api.ajouterSousVue(vue, vueParent);

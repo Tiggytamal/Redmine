@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import control.task.AbstractTask;
 import model.bdd.ComposantSonar;
 import model.enums.TypeColCompo;
 import utilities.Statics;
@@ -44,10 +45,10 @@ public class ControlExtractCompo extends AbstractControlExcelWrite<TypeColCompo,
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public void ajouterExtraction(Map<TypeColCompo, List<ComposantSonar>> composSonar)
+    public void ajouterExtraction(Map<TypeColCompo, List<ComposantSonar>> composSonar, AbstractTask task)
     {
         Sheet sheet = wb.getSheet(NOMSHEET);
-        enregistrerDonnees(composSonar, sheet);
+        enregistrerDonnees(composSonar, sheet, task);
     }
 
     /*---------- METHODES PROTECTED ----------*/
@@ -67,7 +68,7 @@ public class ControlExtractCompo extends AbstractControlExcelWrite<TypeColCompo,
     }
 
     @Override
-    protected void enregistrerDonnees(Map<TypeColCompo, List<ComposantSonar>> composSonar, Sheet sheet)
+    protected void enregistrerDonnees(Map<TypeColCompo, List<ComposantSonar>> composSonar, Sheet sheet, AbstractTask task)
     {
 
         CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.VIDE, HorizontalAlignment.CENTER);
@@ -98,10 +99,13 @@ public class ControlExtractCompo extends AbstractControlExcelWrite<TypeColCompo,
                 default:
                     throw new TechnicalException("control.excel.ControlExtractCompo.eregistrerDonnees - TypeColCompo Inconnu : " + entry.getKey());
             }
+            
+            int size = entry.getValue().size();
 
-            for (int i = 0; i < entry.getValue().size(); i++)
+            for (int i = 0; i < size; i++)
             {
                 valoriserCellule(getRow(i + 1, sheet), numCol, centre, entry.getValue().get(i).getNom());
+                task.updateProgress(i, size);
             }
         }
 

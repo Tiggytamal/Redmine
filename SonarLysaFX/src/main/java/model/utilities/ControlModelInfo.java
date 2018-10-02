@@ -94,7 +94,7 @@ public class ControlModelInfo
 
         if (!temp.isEmpty())
             return mapClarity.get(temp);
-        
+
         // Si on trouve rien, ajout d'un projet Clarity inconnu
         ProjetClarity inconnu = ProjetClarity.getProjetClarityInconnu(codeClarity);
         mapClarity.put(inconnu.getMapIndex(), inconnu);
@@ -173,15 +173,15 @@ public class ControlModelInfo
         int anoLotInt = Integer.parseInt(anoLot);
 
         // Mise à jour de l'état de l'anomalie ainsi que les dates de résolution et de création
-        if (ano.getNumeroAnomalie() != 0)
+        if (ano.getNumeroAnoRTC() != 0)
         {
-            IWorkItem anoRTC = controlRTC.recupWorkItemDepuisId(ano.getNumeroAnomalie());
+            IWorkItem anoRTC = controlRTC.recupWorkItemDepuisId(ano.getNumeroAnoRTC());
             String newEtat = controlRTC.recupEtatElement(anoRTC);
-            if (!newEtat.equals(ano.getEtat()))
+            if (!newEtat.equals(ano.getEtatRTC()))
             {
                 LOGGER.info("Lot : " + anoLot + " - nouvel etat anomalie : " + newEtat);
                 controlRapport.addInfo(TypeInfo.ANOMAJ, anoLot, newEtat);
-                ano.setEtat(newEtat);
+                ano.setEtatRTC(newEtat);
             }
             ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
             if (anoRTC.getResolutionDate() != null)
@@ -205,6 +205,20 @@ public class ControlModelInfo
             ano.getLotRTC().setEtatLot(etatLot);
         }
         ano.getLotRTC().setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));
+    }
+
+    public void controleAnoRTC(Anomalie ano) throws TeamRepositoryException
+    {
+        ControlRTC controlRTC = ControlRTC.INSTANCE;
+        if (ano.getNumeroAnoRTC() != 0)
+        {
+            IWorkItem anoRTC = controlRTC.recupWorkItemDepuisId(ano.getNumeroAnoRTC());
+            ano.setEtatRTC(controlRTC.recupEtatElement(anoRTC));
+            ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
+            if (anoRTC.getResolutionDate() != null)
+                ano.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
+        }
+
     }
 
     /**
@@ -243,7 +257,7 @@ public class ControlModelInfo
         if (Statics.fichiersXML.getMapProjetsNpc().containsKey(ano.getLotRTC().getProjetRTC()))
             ano.setGroupe(GroupeComposant.NPC);
         else
-            ano.setGroupe(GroupeComposant.NPC);
+            ano.setGroupe(GroupeComposant.VIDE);
     }
 
     /*---------- METHODES PRIVEES ----------*/

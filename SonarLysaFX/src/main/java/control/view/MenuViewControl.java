@@ -8,6 +8,7 @@ import java.util.Optional;
 import control.rtc.ControlRTC;
 import control.sonar.SonarAPI;
 import control.task.CreerListeComposantsTask;
+import control.task.InitBaseAnosTask;
 import control.task.MajVuesTask;
 import control.task.PurgeSonarTask;
 import control.task.AbstractTask;
@@ -76,6 +77,8 @@ public final class MenuViewControl extends AbstractViewControl
     @FXML
     private MenuItem majCompos;
     @FXML
+    private MenuItem majAnos;
+    @FXML
     private Button connexion;
     @FXML
     private Button deConnexion;
@@ -119,6 +122,7 @@ public final class MenuViewControl extends AbstractViewControl
         purge.setDisable(true);
         majVues.setDisable(true);
         majCompos.setDisable(true);
+        majAnos.setDisable(true);
         rtc.setDisable(true);
         extraction.setDisable(true);
         planificateur.setDisable(true);
@@ -206,6 +210,10 @@ public final class MenuViewControl extends AbstractViewControl
             case "majCompos":
                 alertConfirmation(new CreerListeComposantsTask(), "Cela lancera la mise à jour de tous les composants Sonar.");
                 break;
+                
+            case "majAnos" :
+                alertConfirmation(new InitBaseAnosTask(), "Réinitialisation de la base des anomalies depuis le fichier Excel.");
+                break;
 
             case "purger":
                 alertConfirmation(new PurgeSonarTask(), "Cela lancera la purge des composants Sonar.");
@@ -259,6 +267,7 @@ public final class MenuViewControl extends AbstractViewControl
             appli.setDisable(false);
             majVues.setDisable(false);
             majCompos.setDisable(false);
+            majAnos.setDisable(false);
             extraction.setDisable(false);
             suivi.setDisable(false);
             maintenance.setDisable(false);

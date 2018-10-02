@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import control.task.AbstractTask;
 import model.Colonne;
 import model.enums.TypeColCompo;
 import model.enums.TypeColW;
@@ -65,7 +66,7 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
      * @param donnees
      * @param sheet
      */
-    protected abstract void enregistrerDonnees(R donnees, Sheet sheet);
+    protected abstract void enregistrerDonnees(R donnees, Sheet sheet, AbstractTask task);
 
     /*---------- METHODES PUBLIQUES ----------*/
 

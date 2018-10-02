@@ -26,6 +26,7 @@ import com.mchange.util.AssertException;
 
 import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
+import dao.DaoAnomalie;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Anomalie;
@@ -39,6 +40,7 @@ import model.enums.TypeColSuivi;
 import model.enums.TypeInfo;
 import model.enums.TypeMajSuivi;
 import model.enums.TypeRapport;
+import model.enums.TypeVersion;
 import model.sonarapi.QualityGate;
 import model.sonarapi.Vue;
 import utilities.Statics;
@@ -197,7 +199,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private List<String> majFichierSuiviExcelDataStage() throws IOException
     {
         // Appel de la récupération des composants datastage avec les vesions en paramètre
-        Map<String, List<ComposantSonar>> composants = recupererComposantsSonarVersion(Matiere.DATASTAGE);
+        Map<String, ComposantSonar> composants = recupererComposantsSonar(Matiere.DATASTAGE);
 
         // Mise à jour des liens des composants datastage avec le bon QG
         etapePlus();
@@ -217,7 +219,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private List<String> majFichierSuiviExcelCOBOL() throws IOException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
-        Map<String, List<ComposantSonar>> composants = recupererComposantsSonarVersion(Matiere.COBOL);
+        Map<String, ComposantSonar> composants = recupererComposantsSonar(Matiere.COBOL);
         etapePlus();
 
         // Traitement du fichier de suivi
@@ -235,7 +237,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private List<String> majFichierSuiviExcelJAVA() throws IOException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
-        Map<String, List<ComposantSonar>> composants = recupererComposantsSonarVersion(Matiere.JAVA);
+        Map<String, ComposantSonar> composants = recupererComposantsSonar(Matiere.JAVA);
         etapePlus();
 
         // Traitement du fichier de suivi
@@ -253,25 +255,18 @@ public class MajSuiviExcelTask extends AbstractTask
      * @throws IOException
      * @throws TeamRepositoryException
      */
-    private List<String> traitementFichierSuivi(Map<String, List<ComposantSonar>> composants, String fichier, Matiere matiere) throws IOException
+    private List<String> traitementFichierSuivi(Map<String, ComposantSonar> composants, String fichier, Matiere matiere) throws IOException
     {
-        // 1. Récupération des données depuis les fichiers Excel.
 
-        // 2. Récupération des lots Sonar en erreur.
-
-        Set<String> lotsSecurite = new HashSet<>();
-        Set<String> lotsRelease = new HashSet<>();
-
-        etapePlus();
-
-        Map<String, Set<String>> lotsSonarQGError = lotSonarQGError(composants, lotsSecurite, lotsRelease);
+        // 1. Mise à jour de la base des anomalies
+        lotSonarQGError(composants);
 
         etapePlus();
         updateMessage("Mise à jour du fichier Excel...");
         updateProgress(-1, 1);
 
         // 3. Supression des lots déjà créés et création des feuille Excel avec les nouvelles erreurs
-        majFichierAnomalies(lotsSonarQGError, lotsSecurite, lotsRelease, fichier, matiere);
+        majFichierAnomalies(fichier, matiere);
 
         updateProgress(1, 1);
         etapePlus();
@@ -279,6 +274,7 @@ public class MajSuiviExcelTask extends AbstractTask
         // 4. Création des vues si le paramètrage est activé
         if (proprietesXML.getMapParamsBool().get(ParamBool.VUESSUIVI))
         {
+            
             for (Map.Entry<String, Set<String>> entry : lotsSonarQGError.entrySet())
             {
                 // Création de la vue, gestion du message et ajout à la liste de vues créées en cas d'annulation
@@ -313,36 +309,37 @@ public class MajSuiviExcelTask extends AbstractTask
     }
 
     /**
-     * Récupère tous les composants Sonar des versions choisies avec une qualityGate en erreur.<br>
-     * la clef de la map correspond à la version, et la valeur, à la liste des lots en erreur de cette version.
+     * Met à jour et crée les nouvelles anomalies depuis les informations de la table des composants
      *
      * @param versions
      * @return
      */
-    private Map<String, Set<String>> lotSonarQGError(Map<String, List<ComposantSonar>> composants, Set<String> lotsSecurite, Set<String> lotsRelease)
+    private Set<String> lotSonarQGError(Map<String, ComposantSonar> composants)
     {
         // Création de la map de retour
-        HashMap<String, Set<String>> retour = new HashMap<>();
+        Set<String> retour = new HashSet<>();
+
+        DaoAnomalie dao = DaoFactory.getDao(Anomalie.class);
+        Map<String, Anomalie> anoEnBase = dao.readAllMap();
+        Collection<ComposantSonar> collec = composants.values();
+
+        // Message
+        baseMessage = "Composant : ";
+        int i = 0;
+        int size = collec.size();
 
         // Itération sur les composants pour remplir la map de retour avec les lot en erreur par version
-        for (Map.Entry<String, List<ComposantSonar>> entry : composants.entrySet())
+        for (ComposantSonar compo : collec)
         {
-            String entryKey = entry.getKey();
-            retour.put(entryKey, new TreeSet<>());
+            // Message
+            i++;
+            updateProgress(i, size);
+            updateMessage(compo.getNom());
 
-            String base = "Traitement Version : " + entryKey + Statics.NL;
-            updateMessage(base);
-            int i = 0;
-            int size = entry.getValue().size();
-
-            // Iteration sur la liste des projets
-            for (ComposantSonar compo : entry.getValue())
-            {
-                traitementProjet(compo, retour, entryKey, lotsSecurite, lotsRelease, base);
-                i++;
-                updateProgress(i, size);
-            }
+            traitementCompo(compo, retour, anoEnBase);
         }
+
+        dao.persist(anoEnBase.values());
         return retour;
     }
 
@@ -358,11 +355,11 @@ public class MajSuiviExcelTask extends AbstractTask
      * @throws IOException
      * @throws TeamRepositoryException
      */
-    private void majFichierAnomalies(Map<String, Set<String>> lotsSonarQGError, Set<String> lotsSecurite, Set<String> lotRelease, String fichier, Matiere matiere) throws IOException
+    private void majFichierAnomalies(String fichier, Matiere matiere) throws IOException
     {
-        // Fichier des lots édition
-        Map<String, LotRTC> lotsRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
-        Map<String, Anomalie> anoEnBase = DaoFactory.getDao(Anomalie.class).readAllMap();
+        // Récupération des anomalies en base
+        DaoAnomalie dao = DaoFactory.getDao(Anomalie.class);
+        Map<String, Anomalie> anoEnBase = dao.readAllMap();
 
         // Controleur
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;
@@ -372,51 +369,29 @@ public class MajSuiviExcelTask extends AbstractTask
         // Lecture du fichier pour remonter les anomalies en cours.
         List<Anomalie> listeAnoExcel = controlAno.recupDonneesDepuisExcel();
 
-        // Liste des anomalies à ajouter après traitement
-        List<Anomalie> anoAajouter = new ArrayList<>();
-
-        // Mise dans un Set de tous les lots en erreur venus de Sonar indépendement de la version des composants.
-        Set<String> lotsEnErreur = new TreeSet<>();
-        for (Set<String> value : lotsSonarQGError.values())
+        // Mise à jour de la base de donnée depuis les information du fichier Excel
+        for (Anomalie anoExcel : listeAnoExcel)
         {
-            lotsEnErreur.addAll(value);
-        }
-
-        // Itération sur les lots en erreurs venant de Sonar pour chaque version de composants (13, 14, ...)
-        for (Entry<String, Set<String>> entry : lotsSonarQGError.entrySet())
-        {
-            List<Anomalie> anoACreer = new ArrayList<>();
-            List<Anomalie> anoDejacrees = new ArrayList<>();
-
-            // Iteration sur toutes les anomalies venant de Sonar pour chaque version
-            for (String numeroLot : entry.getValue())
+            Anomalie anoBase = anoEnBase.get(anoExcel.getLotRTC().getLot());
+            if (anoBase == null)
             {
-                // On va chercher les informations de ce lot dans le fichier des lots de la PIC. Si on ne les trouve pas, il faudra mettre à jour ce fichier
-                LotRTC lot = lotsRTC.get(numeroLot);
-                if (lot == null)
-                {
-                    LOGNONLISTEE.warn("Un lot Sonar n'est pas connu dasn RTC : " + numeroLot);
-                    controlAno.getControlRapport().addInfo(TypeInfo.LOTNONRTC, numeroLot, null);
-                    continue;
-                }
-
-                // On ajoute, soit le lot dans la liste des anos déjà créées soit, on ajoute une nouvelle anomalie dans la liste des anoACeer.
-                if (anoEnBase.containsKey(numeroLot))
-                    anoDejacrees.add(anoEnBase.get(numeroLot));
-                else
-                    anoACreer.add(ModelFactory.getModelWithParams(Anomalie.class, lot));
+                System.out.println("Ano du fichier excel inconnue en base : " + anoExcel.getLotRTC().getLot());
+                continue;
             }
 
-            // Mise à jour de la feuille des anomalies pour chaque version de composants
-            anoAajouter.addAll(controlAno.createSheetError(entry.getKey(), anoACreer, anoDejacrees));
-            write(controlAno);
+            anoBase.setRemarque(anoExcel.getRemarque());
+            anoBase.setAction(anoExcel.getAction());
+            anoBase.setDateRelance(anoExcel.getDateRelance());
         }
+
+        // Persistance des données
+        dao.persist(anoEnBase.values());
 
         // Sauvegarde fichier et maj feuille principale
         Sheet sheet = controlAno.sauvegardeFichier(fichier);
 
         // Mis à jour de la feuille principale
-        controlAno.majFeuillePrincipale(listeAnoExcel, anoAajouter, lotsEnErreur, lotsSecurite, lotRelease, sheet, matiere);
+        controlAno.majFeuillePrincipale(anoEnBase.values(), sheet, matiere);
 
         // Ecriture et Fermeture controleur
         write(controlAno);
@@ -438,26 +413,38 @@ public class MajSuiviExcelTask extends AbstractTask
      *            Lots qui sont en version RELEASE
      * @param base
      *            Base pour l'affichage du message dans la fenêtre d'execution
+     * @param anoEnBase
      */
-    private void traitementProjet(ComposantSonar compo, Map<String, Set<String>> retour, String entryKey, Set<String> lotsSecurite, Set<String> lotsRelease, String base)
+    private void traitementCompo(ComposantSonar compo, Set<String> retour, Map<String, Anomalie> anoEnBase)
     {
         LotRTC lotRTC = compo.getLotRTC();
-        updateMessage(base + compo.getNom());
 
         // Vérification que le lot est bien valorisé et controle le QG
-        if (lotRTC != null && controleQGBloquant(compo))
+        if (lotRTC == null || !controleQGBloquant(compo))
+            return;
+
+        Anomalie ano;
+
+        if (anoEnBase.containsKey(lotRTC.getLot()))
+            ano = anoEnBase.get(lotRTC.getLot());
+        else
         {
-            // Ajout du lot à la liste de retour s'il y a des défaults critiques ou bloquants ou de duplication de code
-            retour.get(entryKey).add(lotRTC.getLot());
-
-            // Contrôle pour vérifier si le composant a une erreur de sécurité, ce qui ajoute le lot à la listeSecurite
-            if (compo.isSecurite())
-                lotsSecurite.add(lotRTC.getLot());
-
-            // Contrôle du composant pour voir s'il a une version release ou SNAPSHOT
-            if (compo.isVersionRelease())
-                lotsRelease.add(lotRTC.getLot());
+            ano = ModelFactory.getModel(Anomalie.class);
+            ano.setLotRTC(lotRTC);
         }
+
+        // Ajout du lot à la liste de retour s'il y a des défaults critiques ou bloquants ou de duplication de code
+        retour.add(lotRTC.getLot());
+
+        // Contrôle pour vérifier si le composant a une erreur de sécurité
+        if (compo.isSecurite())
+            ano.setSecurite(true);
+
+        // Contrôle du composant pour voir s'il a une version RELEASE ou SNAPSHOT
+        if (compo.isVersionRelease())
+            ano.setTypeVersion(TypeVersion.RELEASE);
+
+        anoEnBase.put(ano.getLotRTC().getLot(), ano);
     }
 
     /**
@@ -477,7 +464,7 @@ public class MajSuiviExcelTask extends AbstractTask
      * @param composants
      * @param nomQG
      */
-    private void liensQG(Collection<List<ComposantSonar>> composants, String nomQG)
+    private void liensQG(Collection<ComposantSonar> composants, String nomQG)
     {
         // Récupération de l'Id de la QualityGate
         QualityGate qg = api.getQualityGate(nomQG);
@@ -485,25 +472,19 @@ public class MajSuiviExcelTask extends AbstractTask
         // Préparation message
         String base = "Association avec le QG DataStage :" + Statics.NL;
         int i = 0;
-        int size = 0;
-        for (List<ComposantSonar> liste : composants)
-        {
-            size += liste.size();
-        }
+        int size = composants.size();
 
         // Iteration sur tous les composants pour les associer au QualityGate
-        for (List<ComposantSonar> liste : composants)
+        for (ComposantSonar compo : composants)
         {
-            for (ComposantSonar compo : liste)
-            {
-                // Message
-                updateMessage(base + compo.getNom());
-                i++;
-                updateProgress(i, size);
+            // Message
+            updateMessage(base + compo.getNom());
+            i++;
+            updateProgress(i, size);
 
-                api.associerQualitygate(compo, qg);
-            }
+            api.associerQualitygate(compo, qg);
         }
+
     }
 
     /**

@@ -89,7 +89,7 @@ public class CreerExtractComposantsSonarTask extends AbstractTask
         map.put(TypeColCompo.TERMINE, termines);
         
         // Mise à jour du fichier Excel
-        control.ajouterExtraction(map);
+        control.ajouterExtraction(map, this);
     }
     
     private boolean sauvegarde()

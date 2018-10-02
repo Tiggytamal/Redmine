@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlExtractVul;
+import control.task.CreerExtractVulnerabiliteTask;
 import model.Vulnerabilite;
 import model.enums.TypeColVul;
 import model.enums.TypeVulnerabilite;
@@ -44,10 +45,10 @@ public class TestControlExtractVul extends TestControlExcelWrite<TypeColVul, Con
         liste.add(vul1);
         
         // Appel méthode avec liste différente
-        handler.ajouterExtraction(liste, TypeVulnerabilite.OUVERTE);
+        handler.ajouterExtraction(liste, TypeVulnerabilite.OUVERTE, new CreerExtractVulnerabiliteTask(file));
 
         liste.add(vul2);
-        handler.ajouterExtraction(liste, TypeVulnerabilite.RESOLUE);
+        handler.ajouterExtraction(liste, TypeVulnerabilite.RESOLUE, new CreerExtractVulnerabiliteTask(file));
                
         // Controle de la taille des feuilles
         assertEquals(1, wb.getSheet(TypeVulnerabilite.OUVERTE.getNomSheet()).getLastRowNum());

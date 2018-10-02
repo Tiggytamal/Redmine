@@ -7,13 +7,15 @@ package model.enums;
  * @since 1.0
  * 
  */
-public enum TypeFichier implements TypeKey
+public enum TypeDonnee implements TypeKey
 {
     APPS, 
     CLARITY, 
     RESPSERVICE, 
     EDITION,
-    SONAR,
+    COMPOSANT,
     LOTSRTC,
-    NPC;
+    GROUPE,
+    ANOMALIE,
+    DATEMAJ;
 }

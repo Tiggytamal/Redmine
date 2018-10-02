@@ -7,6 +7,7 @@ import java.util.List;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
+import model.enums.TypeDonnee;
 
 /**
  * Classe de DOA pour la sauvegarde des composants Sonar en base de données
@@ -22,7 +23,10 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
 
     /*---------- CONSTRUCTEURS ----------*/
     
-    DaoComposantSonar() { }
+    DaoComposantSonar() 
+    { 
+        typeDonnee = TypeDonnee.COMPOSANT;
+    }
     
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -30,12 +34,6 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     public int recupDonneesDepuisExcel(File file)
     {
         return 0;       
-    }
-    
-    @Override
-    public List<ComposantSonar> readAll()
-    {
-        return em.createNamedQuery("ComposantSonar.findAll", ComposantSonar.class).getResultList();
     }
 
     @Override
@@ -72,7 +70,7 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     @Override
     public ComposantSonar recupEltParCode(String key)
     {
-        List<ComposantSonar> liste = em.createNamedQuery("ComposantSonar.findByCode", ComposantSonar.class).setParameter("code", key).getResultList();
+        List<ComposantSonar> liste = em.createNamedQuery("ComposantSonar.findByIndex", ComposantSonar.class).setParameter("index", key).getResultList();
         if (liste.isEmpty())
             return null;
         else

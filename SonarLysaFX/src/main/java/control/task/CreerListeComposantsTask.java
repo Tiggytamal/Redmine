@@ -1,6 +1,6 @@
 package control.task;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,8 +51,8 @@ public class CreerListeComposantsTask extends AbstractTask
     @Override
     protected Boolean call() throws Exception
     {
-        Map<String, ComposantSonar> mapSonar = creerListeComposants();
-        return sauvegarde(mapSonar) >= mapSonar.size();
+        List<ComposantSonar> listeSonar = creerListeComposants();
+        return sauvegarde(listeSonar) >= listeSonar.size();
     }
 
     @Override
@@ -63,22 +63,22 @@ public class CreerListeComposantsTask extends AbstractTask
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private Map<String, ComposantSonar> creerListeComposants()
+    private List<ComposantSonar> creerListeComposants()
     {
         // Affichage
-        String base = "Création de la liste des composants :\n";
-        updateMessage(base + "Récupération des composants depuis Sonar...\n");
+        baseMessage = "Création de la liste des composants :\n";
+        updateMessage("Récupération des composants depuis Sonar...\n");
         updateProgress(0, -1);
 
         // Récupération des composants Sonar
-        Map<String, ComposantSonar> retour = new HashMap<>();
+        List<ComposantSonar> retour = new ArrayList<>();
         Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
         Map<String, LotRTC> mapLotRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
         @SuppressWarnings("unchecked")
         List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
 
         // Affichage
-        updateMessage(base + "Récupération OK.");
+        updateMessage("Récupération OK.");
         etapePlus();
         int i = 0;
         int size = projets.size();
@@ -132,24 +132,29 @@ public class CreerListeComposantsTask extends AbstractTask
                 composantSonar.setAppli(appli);
                 mapAppli.put(codeAppli, appli);
             }
+            
+            // Qualityt Gate, avec mise à jour de celui du lot si l'on a un QG en erreur.
+            composantSonar.setQualityGate(getValueMetrique(composant, TypeMetrique.QG, QG.NONE.getValeur()));            
+            if (composantSonar.getQualityGate() == QG.ERROR)
+                composantSonar.getLotRTC().setQualityGate(QG.ERROR);
 
+            // Données restantes
             composantSonar.setEdition(getValueMetrique(composant, TypeMetrique.EDITION, null));
             composantSonar.setLdc(getValueMetrique(composant, TypeMetrique.LDC, "0"));
             composantSonar.setSecurityRatingDepuisSonar(getValueMetrique(composant, TypeMetrique.SECURITY, "0"));
-            composantSonar.setQualityGate(getValueMetrique(composant, TypeMetrique.QG, QG.NONE.getValeur()));
             composantSonar.setVulnerabilites(getValueMetrique(composant, TypeMetrique.VULNERABILITIES, "0"));
             composantSonar.setBloquants(recupLeakPeriod(getListPeriode(composant, TypeMetrique.BLOQUANT)));
             composantSonar.setCritiques(recupLeakPeriod(getListPeriode(composant, TypeMetrique.CRITIQUE)));
             composantSonar.setDuplication(recupLeakPeriod(getListPeriode(composant, TypeMetrique.DUPLICATION)));
             composantSonar.setVersionRelease(checkVersion(projet.getKey()));
-            retour.put(composantSonar.getKey(), composantSonar);
+            retour.add(composantSonar);
 
             if (api.getSecuriteComposant(projet.getKey()) > 0)
                 composantSonar.setSecurite(true);
 
             // Affichage
             i++;
-            updateMessage(base + projet.getNom() + affichageTemps(debut, i, size));
+            updateMessage(projet.getNom() + affichageTemps(debut, i, size));
             updateProgress(i, size);
         }
 
@@ -202,18 +207,17 @@ public class CreerListeComposantsTask extends AbstractTask
     }
 
     /**
-     * Sauvegarde les donnèes en base avec retour ud nombre de lignes ajoutèes
+     * Sauvegarde les donnèes en base avec retour du nombre de lignes ajoutèes
      * 
-     * @param mapSonar
+     * @param listeSonar
      */
-    private int sauvegarde(Map<String, ComposantSonar> mapSonar)
+    private int sauvegarde(List<ComposantSonar> listeSonar)
     {
-        // Controleur de persistance SQL
+        // Ajout des donnèes et mise à jour de la date de modification de la table
         DaoComposantSonar dao = DaoFactory.getDao(ComposantSonar.class);
-
-        // Initialisation de la table et ajout des donnèes
-        dao.resetTable();
-        return dao.persist(mapSonar.values());
+        int retour = dao.persist(listeSonar);
+        dao.majDateDonnee();
+        return retour;
     }
 
     /*---------- ACCESSEURS ----------*/

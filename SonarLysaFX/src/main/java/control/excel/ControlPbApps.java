@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import control.task.AbstractTask;
 import model.CompoPbApps;
 import model.enums.TypeColPbApps;
 import utilities.Statics;
@@ -51,10 +52,10 @@ public class ControlPbApps extends AbstractControlExcelWrite<TypeColPbApps, List
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-    public void creerfeuille(List<CompoPbApps> composPbApps)
+    public void creerfeuille(List<CompoPbApps> composPbApps, AbstractTask task)
     {
         Sheet sheet = wb.getSheet(PBAPPLI);
-        enregistrerDonnees(composPbApps, sheet);
+        enregistrerDonnees(composPbApps, sheet, task);
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -86,11 +87,15 @@ public class ControlPbApps extends AbstractControlExcelWrite<TypeColPbApps, List
     }
 
     @Override
-    protected void enregistrerDonnees(List<CompoPbApps> donnees, Sheet sheet)
+    protected void enregistrerDonnees(List<CompoPbApps> donnees, Sheet sheet, AbstractTask task)
     {
         CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.VIDE, HorizontalAlignment.CENTER);
         centre.setWrapText(false);
         Row row;
+        
+        // Affichage
+        int i = 0;
+        int size = donnees.size();
 
         for (CompoPbApps compo : donnees)
         {
@@ -103,6 +108,8 @@ public class ControlPbApps extends AbstractControlExcelWrite<TypeColPbApps, List
             valoriserCellule(row, colDep, centre, compo.getDepart());
             valoriserCellule(row, colService, centre, compo.getService());
             valoriserCellule(row, colChefServ, centre, compo.getChefService());
+            
+            task.updateProgress(i, size);
         }
         autosizeColumns(sheet);
     }
