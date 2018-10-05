@@ -1,5 +1,6 @@
 package model.sonarapi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -63,7 +64,7 @@ public class Retour extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "views", required = false)
     public List<Vue> getListeVues()
     {
-        return getList(listeVues);
+        return listeVues == null ? listeVues = new ArrayList<>() : listeVues;
     }
 
     @XmlAttribute(name = "projectStatus", required = false)
@@ -77,7 +78,7 @@ public class Retour extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "results", required = false)
     public List<Vue> getResults()
     {
-        return getList(results);
+        return results == null ? results = new ArrayList<>() : results;
     }
 
     @XmlAttribute(name = "more", required = false)
@@ -89,13 +90,13 @@ public class Retour extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "errors", required = false)
     public List<Message> getErrors()
     {
-        return getList(errors);
+        return errors == null ? errors = new ArrayList<>() : errors;
     }
 
     @XmlAttribute(name = "qualitygates", required = false)
     public List<QualityGate> getQualityGates()
     {
-        return getList(qualityGates);
+        return qualityGates == null ? qualityGates = new ArrayList<>() : qualityGates;
     }
 
     @XmlAttribute(name = "default", required = false)

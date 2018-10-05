@@ -30,6 +30,7 @@ import model.Colonne;
 import model.bdd.Application;
 import model.bdd.ChefService;
 import model.bdd.Edition;
+import model.bdd.GroupementProjet;
 import model.bdd.ProjetClarity;
 import model.enums.Param;
 import model.enums.ParamBool;
@@ -40,7 +41,7 @@ import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColCompo;
 import model.enums.TypeColEdition;
-import model.enums.TypeColNPC;
+import model.enums.TypeColGrProjet;
 import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
@@ -100,7 +101,6 @@ public final class OptionViewControl extends AbstractViewControl
 
     private Map<Param, String> mapParams;
     private Map<ParamBool, Boolean> mapParamsBool;
-    private ControlXML control;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -117,7 +117,6 @@ public final class OptionViewControl extends AbstractViewControl
         alert.setHeaderText(null);
         mapParams = proprietesXML.getMapParams();
         mapParamsBool = proprietesXML.getMapParamsBool();
-        control = new ControlXML();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -176,7 +175,7 @@ public final class OptionViewControl extends AbstractViewControl
                 break;
                 
             case "NPC":
-                afficherColonnes(TypeColNPC.class, root);
+                afficherColonnes(TypeColGrProjet.class, root);
                 break;
                 
             case "UA":
@@ -236,7 +235,7 @@ public final class OptionViewControl extends AbstractViewControl
                 break;
                 
             case "npc":
-                charger("Projets NPC", file -> control.recupProjetsNPCDepuisExcel(file));
+                charger("Projets NPC", DaoFactory.getDao(GroupementProjet.class)::recupDonneesDepuisExcel);
                 break;
 
             default:

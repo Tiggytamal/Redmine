@@ -1,18 +1,19 @@
 package junit.control.excel;
 
-import java.util.Map;
+import java.util.List;
 
 import org.junit.Test;
 
-import control.excel.ControlTypeProjets;
-import model.enums.TypeColNPC;
+import control.excel.ControlGroupeProjets;
+import model.bdd.GroupementProjet;
+import model.enums.TypeColGrProjet;
 
-public class TestControlTypeProjets extends TestControlExcelRead<TypeColNPC, ControlTypeProjets, Map<String, String>>
+public class TestControlTypeProjets extends TestControlExcelRead<TypeColGrProjet, ControlGroupeProjets, List<GroupementProjet>>
 {
 
     public TestControlTypeProjets()
     {
-        super(TypeColNPC.class, "projets_npc.xlsx");
+        super(TypeColGrProjet.class, "projets_npc.xlsx");
     }
 
     @Test

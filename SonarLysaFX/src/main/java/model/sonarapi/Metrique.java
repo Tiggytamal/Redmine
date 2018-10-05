@@ -72,7 +72,7 @@ public class Metrique extends AbstractModele implements ModeleSonar
     {
         return getString(valeur);
     }
-    
+
     public void setValue(String value)
     {
         valeur = value;
@@ -82,9 +82,9 @@ public class Metrique extends AbstractModele implements ModeleSonar
     @XmlElement(name = "periods", required = false)
     public List<Periode> getListePeriodes()
     {
-        return getList(listePeriodes);
+        return listePeriodes == null ? listePeriodes = new ArrayList<>() : listePeriodes;
     }
-    
+
     public void setListePeriodes(List<Periode> listePeriodes)
     {
         this.listePeriodes = listePeriodes;

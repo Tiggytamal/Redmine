@@ -24,7 +24,7 @@ import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
-import model.enums.TypeColNPC;
+import model.enums.TypeColGrProjet;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
@@ -123,7 +123,7 @@ public class TestProprieteXML extends AbstractTestModel<ProprietesXML> implement
         handler.getEnumMapColR(TypeColChefServ.class).putAll(proprietesXML.getEnumMapColR(TypeColChefServ.class));
         handler.getEnumMapColR(TypeColEdition.class).putAll(proprietesXML.getEnumMapColR(TypeColEdition.class));
         handler.getEnumMapColR(TypeColSuivi.class).putAll(proprietesXML.getEnumMapColR(TypeColSuivi.class));
-        handler.getEnumMapColR(TypeColNPC.class).putAll(proprietesXML.getEnumMapColR(TypeColNPC.class));
+        handler.getEnumMapColR(TypeColGrProjet.class).putAll(proprietesXML.getEnumMapColR(TypeColGrProjet.class));
         
         // Appel du contrôle
         retour = handler.controleDonnees();
@@ -153,7 +153,7 @@ public class TestProprieteXML extends AbstractTestModel<ProprietesXML> implement
         {
             regexControleAtLeast(type.getValeur() + NL, 0, retour);
         }
-        for (TypeColNPC type : TypeColNPC.values())
+        for (TypeColGrProjet type : TypeColGrProjet.values())
         {
             regexControleAtLeast(type.getValeur() + NL, 0, retour);
         }

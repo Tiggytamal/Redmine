@@ -8,49 +8,47 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-import com.ibm.team.repository.common.PermissionDeniedException;
 import com.ibm.team.repository.common.TeamRepositoryException;
 
-import control.rtc.ControlRTC;
 import control.task.AbstractTask;
 import control.word.ControlRapport;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Anomalie;
+import model.bdd.ChefService;
 import model.bdd.LotRTC;
+import model.bdd.ProjetClarity;
 import model.enums.EtatAnoSuivi;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamSpec;
+import model.enums.QG;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
-import model.enums.TypeInfo;
 import model.enums.TypeRapport;
 import model.enums.TypeVersion;
 import model.utilities.ControlModelInfo;
@@ -58,6 +56,7 @@ import utilities.CellHelper;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
+import utilities.Utilities;
 import utilities.enums.Bordure;
 import utilities.enums.Severity;
 
@@ -72,14 +71,13 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 {
     /*---------- ATTRIBUTS ----------*/
 
-    /** logger général */
-    private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
     // Constantes statiques
     private static final String SQ = "SUIVI Qualité";
     private static final String AC = "Anomalies closes";
+    private static final String STATS = "Statistiques";
 
     // Liste des indices des colonnes
     // Les noms des champs doivent correspondre aux valeurs dans l'énumération TypeCol
@@ -108,16 +106,8 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     private int colDateMajEtat;
     private int colNpc;
 
-    // Liens vers Sonar et RTC
-    private String lienslots;
-    private String liensAnos;
-
-    // Date du jour
-    private final LocalDate today = LocalDate.now();
-
     // Controleurs
     private ControlRapport controlRapport;
-    private ControlRTC controlRTC;
     private ControlModelInfo controlModelInfo;
 
     /** contrainte de validitée de la colonne Action */
@@ -130,10 +120,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         super(file);
 
         // Initialisation des parties constantes des liens
-        Map<Param, String> proprietes = proprietesXML.getMapParams();
-        lienslots = proprietes.get(Param.LIENSLOTS);
-        liensAnos = proprietes.get(Param.LIENSANOS);
-        controlRTC = ControlRTC.INSTANCE;
         controlModelInfo = new ControlModelInfo();
         initContraintes();
     }
@@ -168,8 +154,8 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * Récupère les anomalies en corus depuis le fichier Excel
      * 
      * @param matiere
-     * @param lotsRTC 
-     * @param task 
+     * @param lotsRTC
+     * @param task
      * @return
      */
     public List<Anomalie> recupAnoEnCoursDepuisExcel(Map<String, LotRTC> lotsRTC, AbstractTask task)
@@ -201,12 +187,12 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     public Collection<Anomalie> controlAnoAbandon(Iterable<Anomalie> liste, Map<String, LotRTC> lotsRTC)
     {
         Map<String, Anomalie> map = new HashMap<>();
-        
+
         for (Anomalie ano : liste)
         {
             map.put(ano.getLotRTC().getLot(), ano);
         }
-        
+
         // Récupération des versions en paramètre
         String[] versions = proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONS).split(";");
         for (String version : versions)
@@ -220,8 +206,8 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             while (iter.hasNext())
             {
                 Row row = iter.next();
-                String lot = getCellStringValue(row, Index.LOTI.ordinal()).substring(Statics.SBTRINGLOT);
-                String traite = getCellStringValue(row, Index.TRAITEI.ordinal());
+                String lot = Utilities.testLot(getCellStringValue(row, Index.DONNEEI.ordinal()));
+                String traite = getCellStringValue(row, Index.TOTALI.ordinal());
                 if ("A".equals(traite) && map.containsKey(lot))
                     map.get(lot).setEtatAnoSuivi(EtatAnoSuivi.ABANDONNEE);
                 else if ("A".equals(traite))
@@ -238,79 +224,112 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         return map.values();
     }
 
-    /**
-     * Permet de créer les feuille des anomalies par version et retourne les anomalies à créer
-     * 
-     * @param nomSheet
-     * @param anoAcreer
-     * @param anoDejacrees
-     * @return
-     */
-    public List<Anomalie> createSheetError(String nomSheet, Iterable<Anomalie> anoAcreer, Iterable<Anomalie> anoDejacrees)
+    public void calculStatistiques(List<Anomalie> anosEnBase)
     {
-        // 1. Variables
-
-        // Création de la feuille de calcul
-        Sheet sheet = wb.getSheet(nomSheet);
-
-        // Liste retour des anomalies à créer
-        List<Anomalie> retour = new ArrayList<>();
-
-        // 2. Sauvegarde données existantes. On itère pour récupérer tous les numéros de lot déjà abandonés, puis suppression de la feuille
-        List<String> lotsAbandon = new ArrayList<>();
+        // Réinitialisation de la feuille
+        Sheet sheet = wb.getSheet(STATS);
         if (sheet != null)
-        {
-            Iterator<Row> iter = sheet.rowIterator();
-            while (iter.hasNext())
-            {
-                Row row = iter.next();
-                Cell cellLot = row.getCell(Index.LOTI.ordinal());
-                Cell cellT = row.getCell(Index.TRAITEI.ordinal());
-                if (cellLot.getCellTypeEnum() == CellType.STRING && cellT.getCellTypeEnum() == CellType.STRING && "A".equals(cellT.getStringCellValue()))
-                    lotsAbandon.add(row.getCell(Index.LOTI.ordinal()).getStringCellValue());
-            }
             wb.removeSheetAt(wb.getSheetIndex(sheet));
-        }
+        sheet = wb.createSheet(STATS);
+        creerTitresStats(sheet);
 
-        // 3. Génération de la nouvelle feuille
+        // Données calculées
+        int erreursQG = 0;
+        int erreursQGSecu = 0;
+        int erreursQGM = 0;
+        int erreursQGMSecu = 0;
+        int erreursQGT = 0;
+        int erreursQGTSecu = 0;
 
-        // Recréation de la feuille
-        sheet = wb.createSheet(nomSheet);
-        Row row;
+        int anoRTCOuvertes = 0;
+        int anoRTCOuvertesSecu = 0;
+        int anoRTCOuvertesM = 0;
+        int anoRTCOuvertesMSecu = 0;
+        int anoRTCOuvertesT = 0;
+        int anoRTCOuvertesTSecu = 0;
 
-        // Création des titres
-        creerTitresSE(sheet);
+        int anoRTCResolues = 0;
+        int anoRTCResoluesSecu = 0;
+        int anoRTCResoluesM = 0;
+        int anoRTCResoluesMSecu = 0;
+        int anoRTCResoluesT = 0;
+        int anoRTCResoluesTSecu = 0;
 
-        // 4. Ajout anomalies déjà créées
-        for (Anomalie ano : anoDejacrees)
+        // calcul des dates
+        LocalDate today = LocalDate.now();
+        LocalDate debutMois = LocalDate.of(today.getYear(), today.getMonth(), 1).minusMonths(1).minusDays(1L);
+        LocalDate fin = LocalDate.of(today.getYear(), today.getMonth(), 1);
+        LocalDate debutTrim = LocalDate.of(today.getYear(), today.getMonth(), 1).minusMonths(3).minusDays(1L);
+
+        for (Anomalie ano : anosEnBase)
         {
-            row = sheet.createRow(sheet.getLastRowNum() + 1);
-            if (TypeAction.ABANDONNER == ano.getAction())
-                creerLigneVersion(row, ano, IndexedColors.WHITE, "A");
-            else
-                creerLigneVersion(row, ano, IndexedColors.WHITE, "O");
-        }
 
-        // 5. Itération sur les anomalies à créer. Si elles sont déjà dans les anomalies abandonnées, on créée une ligne
-        // à l'état abandon, sinon on crée une ligne à l'état non traité et on ajoute celle-ci aux anomalies à créer.
-        for (Anomalie ano : anoAcreer)
-        {
-            row = sheet.createRow(sheet.getLastRowNum() + 1);
-            if (lotsAbandon.contains(ano.getLotRTC().getLot()))
-                creerLigneVersion(row, ano, IndexedColors.WHITE, "A");
-            else
+            erreursQG++;
+            if (ano.isSecurite())
+                erreursQGSecu++;
+            
+            if (ano.getDateDetection().isAfter(debutMois) && ano.getDateDetection().isBefore(fin))
             {
-                creerLigneVersion(row, ano, IndexedColors.LIGHT_YELLOW, "N");
-                retour.add(ano);
+                erreursQGM++;
+                if (ano.isSecurite())
+                    erreursQGMSecu++;
+            }
+            if (ano.getDateDetection().isAfter(debutTrim) && ano.getDateDetection().isBefore(fin))
+            {
+                erreursQGT++;
+                if (ano.isSecurite())
+                    erreursQGTSecu++;
+            }
+
+            if (ano.getDateCreation() != null)
+            {
+                anoRTCOuvertes++;
+                if (ano.isSecurite())
+                    anoRTCOuvertesSecu++;
+                
+                if (ano.getDateCreation().isAfter(debutMois) && ano.getDateCreation().isBefore(fin))
+                {
+                    anoRTCOuvertesM++;
+                    if (ano.isSecurite())
+                        anoRTCOuvertesSecu++;
+                }
+                
+                if (ano.getDateCreation().isAfter(debutTrim) && ano.getDateCreation().isBefore(fin))
+                {
+                    anoRTCOuvertesT++;
+                    if (ano.isSecurite())
+                        anoRTCOuvertesTSecu++;
+                }
+            }
+
+            if (ano.getDateReso() != null)
+            {
+                anoRTCResolues++;
+                if (ano.isSecurite())
+                    anoRTCResoluesSecu++;
+                if (ano.getDateReso().isAfter(debutMois) && ano.getDateReso().isBefore(fin))
+                {
+                    anoRTCResoluesM++;
+                    if (ano.isSecurite())
+                        anoRTCResoluesMSecu++;
+                }
+                if (ano.getDateReso().isAfter(debutTrim) && ano.getDateReso().isBefore(fin))
+                {
+                    anoRTCResoluesT++;
+                    if (ano.isSecurite())
+                        anoRTCResoluesTSecu++;
+                }
             }
         }
 
-        sheet.autoSizeColumn(Index.LOTI.ordinal());
-        sheet.autoSizeColumn(Index.EDITIONI.ordinal());
-        sheet.autoSizeColumn(Index.ENVI.ordinal());
-        sheet.autoSizeColumn(Index.TRAITEI.ordinal());
+        Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+        creerLigneVersion(row, "Erreur SonarQube detectées", erreursQGM, erreursQGMSecu, erreursQGT, erreursQGTSecu, erreursQG, erreursQGSecu);
+        row = sheet.createRow(sheet.getLastRowNum() + 1);
+        creerLigneVersion(row, "anomalies RTC créées", anoRTCOuvertesM, anoRTCOuvertesMSecu, anoRTCOuvertesT, anoRTCOuvertesTSecu, anoRTCOuvertes, anoRTCOuvertesSecu);
+        row = sheet.createRow(sheet.getLastRowNum() + 1);
+        creerLigneVersion(row, "anomalies RTC résolues", anoRTCResoluesM, anoRTCResoluesMSecu, anoRTCResoluesT, anoRTCResoluesTSecu, anoRTCResolues, anoRTCResoluesSecu);
 
-        return retour;
+        autosizeColumns(sheet);
     }
 
     /**
@@ -341,7 +360,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     /**
      * Gestion de la feuille principale des anomalies. Maj des anciennes plus création des nouvelles
      * 
-     * @param anoEnBase
+     * @param anosATraiter
      * @param anoAajouter
      * @param lotsEnErreurSonar
      * @param lotsSecurite
@@ -350,15 +369,16 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param matiere
      * @throws IOException
      */
-    public void majFeuillePrincipale(Iterable<Anomalie> anoEnBase, Sheet sheet, Matiere matiere)
+    public void majFeuillePrincipale(List<Anomalie> anosATraiter, Sheet sheet, Matiere matiere)
     {
-        // Mise à jour anomalies déjà créées
-        for (Anomalie ano : anoEnBase)
-        {
-            String anoLot = ano.getLotRTC().getLot();
+        // Rangement anomalies par date de détection
+        Collections.sort(anosATraiter, (o1, o2) -> o1.getDateDetection().compareTo(o2.getDateDetection()));
 
-            // Gestion des actions demandées sur l'anomalie et quitte le traitment en cas d'action de fin (abandon ou clôture)
-            if (!gestionAction(ano, anoLot))
+        // Mise à jour anomalies déjà créées
+        for (Anomalie ano : anosATraiter)
+        {
+            // Quitte le traitment si l'anomalie n'est pas à remonter dans le fichier
+            if (testAnoOK(ano))
                 continue;
 
             // Calcul de la couleur de la ligne dans le fichier Excel
@@ -369,43 +389,63 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             creerLigneSQ(row, ano, couleur);
         }
 
-        ajouterNouvellesAnos(sheet, matiere);
-
         if (sheet.getLastRowNum() > 0)
             ajouterDataValidation(sheet);
         autosizeColumns(sheet);
-        if (sheetClose.getLastRowNum() > 0)
-            ajouterDataValidation(sheetClose);
-        autosizeColumns(sheetClose);
 
         wb.setActiveSheet(wb.getSheetIndex(sheet));
         controlRapport.creerFichier();
     }
 
-    /**
-     * Mise à jour des fichiers pour les anomalies comprenant plusieures type de matière
-     * 
-     * @param anoMultiple
-     * @throws IOException
-     */
-    public void majMultiMatiere(Collection<String> anoMultiple)
+    /*---------- METHODES PROTECTED ----------*/
+
+    @Override
+    protected Sheet initSheet()
     {
+        // Récupération de la feuille principale
         Sheet sheet = wb.getSheet(SQ);
-
         if (sheet == null)
-            throw new FunctionalException(Severity.ERROR, "Problème récupération feuille Excel principale");
-
-        for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
-        {
-            Row row = sheet.getRow(i);
-            String lot = getCellStringValue(row, colLot);
-            if (anoMultiple.contains(lot.length() < Statics.SBTRINGLOT ? lot : lot.substring(Statics.SBTRINGLOT)))
-                row.getCell(colMatiere, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(Matiere.JAVA + " - " + Matiere.DATASTAGE);
-        }
+            throw new FunctionalException(Severity.ERROR, "Le fichier n'a pas de page Suivi Qualité");
+        return sheet;
     }
 
     /*---------- METHODES PRIVEES ----------*/
 
+    private boolean testAnoOK(Anomalie ano)
+    {
+        // Données
+        EtatAnoSuivi etatAno = ano.getEtatAnoSuivi();
+        LotRTC lotRTC = ano.getLotRTC();
+        EtatLot etatLot = lotRTC.getEtatLot();
+        QG qg = lotRTC.getQualityGate();
+
+        // On considère les anomalies abandonnées comme bonnes
+        if (etatAno == EtatAnoSuivi.ABANDONNEE)
+            return true;
+
+        // On ne reprend pas les anomalies closes avec un lot terminé ou livré à l'édition
+        if ((etatLot == EtatLot.EDITION || etatLot == EtatLot.TERMINE) && etatAno == EtatAnoSuivi.CLOSE)
+            return true;
+
+        // Si l'anomalie est close mais que le QG est toujours en erreur, on met l'anomalie à vérifier et nouvelle
+        if (etatAno == EtatAnoSuivi.CLOSE && qg == QG.ERROR)
+        {
+            ano.setAction(TypeAction.VERIFIER);
+            ano.setDateDetection(LocalDate.now());
+            ano.setEtatAnoSuivi(EtatAnoSuivi.NOUVELLE);
+            return false;
+        }
+
+        return etatAno == EtatAnoSuivi.CLOSE;
+    }
+
+    /**
+     * 
+     * @param feuille
+     * @param lotsRTC
+     * @param task
+     * @return
+     */
     private List<Anomalie> recupListeAnomaliesDepuisFeuille(String feuille, Map<String, LotRTC> lotsRTC, AbstractTask task)
     {
         // Récupération de la première feuille
@@ -413,7 +453,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
         // Liste de retour
         List<Anomalie> retour = new ArrayList<>();
-        
+
         int size = sheet.getLastRowNum();
 
         // Itération sur chaque ligne pour créer les anomalies
@@ -424,7 +464,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             // protection pour les lignes vides
             if (row == null)
                 continue;
-            
+
             task.updateProgress(i, size);
 
             retour.add(creerAnodepuisExcelFull(row, lotsRTC));
@@ -433,11 +473,11 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     }
 
     /**
-     * Crée la ligne de titre des feuilles par édition
+     * Crée la ligne de titre des statistiques
      * 
      * @param sheet
      */
-    private void creerTitresSE(Sheet sheet)
+    private void creerTitresStats(Sheet sheet)
     {
         // Création du style des titres
         CellStyle styleTitre = helper.getStyle(IndexedColors.AQUA, Bordure.VIDE, HorizontalAlignment.CENTER);
@@ -450,20 +490,20 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             cell.setCellStyle(styleTitre);
             switch (index)
             {
-                case LOTI:
-                    cell.setCellValue(Index.LOTI.toString());
+                case DONNEEI:
+                    cell.setCellValue(Index.DONNEEI.getValeur());
                     break;
 
-                case EDITIONI:
-                    cell.setCellValue(Index.EDITIONI.toString());
+                case MENSUELI:
+                    cell.setCellValue(Index.MENSUELI.getValeur());
                     break;
 
-                case ENVI:
-                    cell.setCellValue(Index.ENVI.toString());
+                case TRIMI:
+                    cell.setCellValue(Index.TRIMI.getValeur());
                     break;
 
-                case TRAITEI:
-                    cell.setCellValue(Index.TRAITEI.toString());
+                case TOTALI:
+                    cell.setCellValue(Index.TOTALI.getValeur());
                     break;
 
                 default:
@@ -494,16 +534,18 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         IndexedColors couleur;
 
         // Mise en vert des anomalies avec un Quality Gate bon
-        if (!lotsEnErreurSonar.contains(anoLot))
+        if (ano.getLotRTC().getQualityGate() != QG.ERROR)
             couleur = IndexedColors.LIGHT_GREEN;
+
         // Les lots qui ont besoin juste d'un réassemblage sont en bleu
         else if (TypeAction.ASSEMBLER == ano.getAction())
             couleur = IndexedColors.LIGHT_TURQUOISE;
+
         // Le reste est en blanc
         else
             couleur = IndexedColors.WHITE;
 
-        // Les lots déjà traité une première fois sont en gris
+        // Les lots déjà traités une première fois sont en gris
         if (TypeAction.VERIFIER == ano.getAction())
             couleur = IndexedColors.GREY_25_PERCENT;
 
@@ -512,77 +554,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             couleur = IndexedColors.LIGHT_ORANGE;
 
         return couleur;
-    }
-
-    /**
-     * Gestion des actions possibles pour une anomalie (Creer, Clôturer, Abandonner)
-     * 
-     * @param ano
-     *            Anomalie à traiter
-     * @param anoLot
-     *            Numéro de lot l'anomalie
-     * @param sheetClose
-     *            Feuille des anomalies closes
-     * @return {@code true} si l'on doit continuer le traitement<br>
-     *         {@code false} si l'anomalie est à clôturer ou abandonner
-     */
-    private boolean gestionAction(Anomalie ano, String anoLot)
-    {       
-        
-        // Modification de l'état de l'anomalie delon l'action demandée
-        if (TypeAction.CLOTURER == ano.getAction() || TypeAction.ABANDONNER == ano.getAction())
-        {
-            if (controlRTC.testSiAnomalieClose(ano.getNumeroAnoRTC()))
-            {
-                controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
-                if (TypeAction.CLOTURER == ano.getAction())
-                    ano.setEtatAnoSuivi(EtatAnoSuivi.CLOSE);
-                else
-                    ano.setEtatAnoSuivi(EtatAnoSuivi.ABANDONNEE);
-                return false;
-            }
-            else
-            {
-                LOGGER.warn("L'anomalie " + ano.getNumeroAnoRTC() + " n'a pas été clôturée. Impossible de la supprimer du fichier de suivi.");
-                controlRapport.addInfo(TypeInfo.ANOABANDONRATE, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
-                return true;
-            }
-        }
-        
-        // Contrôle si besoin de créer une anomalie Sonar
-        else if (TypeAction.CREER == ano.getAction())
-        {
-            int numeroAno = controlRTC.creerDefect(ano);
-            if (numeroAno != 0)
-            {
-                ano.setAction(null);
-                ano.setNumeroAnoRTC(numeroAno);
-                ano.setDateCreation(today);
-                ano.calculTraitee();
-                LOGGER.info("Création anomalie " + numeroAno + " pour le lot " + anoLot);
-                controlRapport.addInfo(TypeInfo.ANOSRTCCREES, ano.getLotRTC().getLot(), null);
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Ajoute les anomalies closes à la feuille correspondante. On ne sauvegarde pas les lignes qui n'ont pas données suite à une anomalie Sonar.
-     * 
-     * @param sheetClose
-     * @param anoClose
-     */
-    private void ajouterAnomaliesCloses(Sheet sheetClose, Map<String, Anomalie> anoClose)
-    {
-        Row row;
-        for (Anomalie ano : anoClose.values())
-        {
-            if (ano.getNumeroAnoRTC() == 0)
-                continue;
-
-            row = sheetClose.createRow(sheetClose.getLastRowNum() + 1);
-            creerLigneSQ(row, ano, IndexedColors.WHITE);
-        }
     }
 
     /**
@@ -598,32 +569,14 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         if (couleur == null || row == null || ano == null)
             throw new IllegalArgumentException("Les arguments ne peuvent pas être nuls - méthode control.excel.ControlSuivi.creerLigneSQ");
 
-        // 2. Contrôle des données
-
-        // Contrôle Clarity et mise à jour données
-        controlModelInfo.controleClarity(ano, controlRapport);
-
-        // Contrôle chef de service et mise à jour des données
-        controlModelInfo.controleChefDeService(ano, controlRapport);
-
-        // Contrôle si le projet est un projet NPC
-        controlModelInfo.controleNPC(ano);
-
-        // Controle informations RTC
-        try
-        {
-            controlModelInfo.controleRTC(ano, controlRapport, controlRTC);
-        }
-        catch (PermissionDeniedException e)
-        {
-            LOGGER.error("Problème authorisation accès lot : " + ano.getLotRTC());
-            LOGPLANTAGE.error(e);
-
-        }
-        catch (TeamRepositoryException e)
-        {
-            throw new TechnicalException("Erreur RTC depuis mise à jour anomalie : " + ano.getLotRTC(), e);
-        }
+        // 2. Données de l'anomalie
+        LotRTC lotRTC = ano.getLotRTC();
+        ProjetClarity projetClarity = lotRTC.getProjetClarity();
+        if (projetClarity == null)
+            projetClarity = ProjetClarity.getProjetClarityInconnu(Statics.INCONNU);
+        ChefService chefService = projetClarity.getChefService();
+        if (chefService == null)
+            chefService = ChefService.getChefServiceInconnu(Statics.INCONNU);
 
         // 3. Création des styles
         CellHelper helper = new CellHelper(wb);
@@ -636,35 +589,35 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         // 4. Valorisation des cellules avec les données de l'anomalie
 
         // Direction
-        valoriserCellule(row, colDir, normal, ano.getLotRTC().getProjetClarity().getDirection());
+        valoriserCellule(row, colDir, normal, projetClarity.getDirection());
 
         // Département
-        valoriserCellule(row, colDepart, normal, ano.getLotRTC().getProjetClarity().getDepartement());
+        valoriserCellule(row, colDepart, normal, projetClarity.getDepartement());
 
         // Service
-        valoriserCellule(row, colService, normal, ano.getLotRTC().getProjetClarity().getService());
+        valoriserCellule(row, colService, normal, projetClarity.getService());
 
         // Responsable service
-        valoriserCellule(row, colResp, normal, ano.getLotRTC().getProjetClarity().getChefService());
+        valoriserCellule(row, colResp, normal, chefService.getNom());
 
         // code projet Clarity
-        valoriserCellule(row, colClarity, normal, ano.getLotRTC().getProjetClarity().getCode());
+        valoriserCellule(row, colClarity, normal, projetClarity.getCode());
 
         // libelle projet
-        valoriserCellule(row, colLib, normal, ano.getLotRTC().getLibelle());
+        valoriserCellule(row, colLib, normal, lotRTC.getLibelle());
 
         // Cpi du lot
-        valoriserCellule(row, colCpi, normal, ano.getLotRTC().getCpiProjet());
+        valoriserCellule(row, colCpi, normal, lotRTC.getCpiProjet());
 
         // Edition
-        valoriserCellule(row, colEdition, centre, ano.getLotRTC().getEdition());
+        valoriserCellule(row, colEdition, centre, lotRTC.getEdition());
 
         // Numéro du lot
-        Cell cell = valoriserCellule(row, colLot, centre, ano.getLotRTC().getLot());
-        ajouterLiens(cell, lienslots, ano.getLotRTC().getLot());
+        Cell cell = valoriserCellule(row, colLot, centre, lotRTC.getLot());
+        ajouterLiens(cell, ano.getLiensLot());
 
         // Environnement
-        valoriserCellule(row, colEnv, centre, ano.getLotRTC().getEtatLot());
+        valoriserCellule(row, colEnv, centre, lotRTC.getEtatLot());
 
         // Numéros anomalie
         cell = row.createCell(colAno);
@@ -675,14 +628,17 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             cell.setCellValue(numeroAno);
 
             // Rajout de "&id=", car cela fait planter la désérialisation du fichier de paramètres
-            ajouterLiens(cell, liensAnos + ano.getLotRTC().getProjetRTC().replace(Statics.SPACE, "%20") + Statics.FINLIENSANO, String.valueOf(numeroAno));
+            ajouterLiens(cell, ano.getLiensAno());
         }
 
         // Etat anomalie
         valoriserCellule(row, colEtat, normal, ano.getEtatRTC());
 
         // Anomalie de sécurite
-        valoriserCellule(row, colSec, centre, ano.isSecurite());
+        if (ano.isSecurite())
+            valoriserCellule(row, colSec, centre, Statics.X);
+        else
+            valoriserCellule(row, colSec, centre, Statics.EMPTY);
 
         // Remarques
         valoriserCellule(row, colRemarque, normal, ano.getRemarque());
@@ -703,37 +659,43 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         valoriserCellule(row, colDateRes, date, ano.getDateReso());
 
         // Date mise à jour de l'état de l'anomalie
-        valoriserCellule(row, colDateMajEtat, date, ano.getLotRTC().getDateMajEtat());
+        valoriserCellule(row, colDateMajEtat, date, lotRTC.getDateMajEtat());
 
         // Matiere
-        valoriserCellule(row, colMatiere, centre, ano.getMatieresString());
+        valoriserCellule(row, colMatiere, centre, lotRTC.getMatieresString());
 
         // Projet RTC
-        valoriserCellule(row, colProjetRTC, centre, ano.getLotRTC().getProjetRTC());
+        valoriserCellule(row, colProjetRTC, centre, lotRTC.getProjetRTC());
 
         // Action
         valoriserCellule(row, colAction, centre, ano.getAction());
 
         // Groupe composant
-        valoriserCellule(row, colNpc, centre, ano.getGroupe());
+        valoriserCellule(row, colNpc, centre, lotRTC.getGroupe().getValeur());
     }
 
     /**
      * CRée une ligne pour une anomalie dans les feuilles de version
      * 
      * @param row
+     * @param totelSecu 
+     * @param trimSecu 
+     * @param menseulSecu 
      * @param ano
      * @param couleur
      * @param traite
      */
-    private void creerLigneVersion(Row row, Anomalie ano, IndexedColors couleur, String traite)
+    private void creerLigneVersion(Row row, String stat, int mensuel, int menseulSecu, int trim, int trimSecu, int total, int totelSecu)
     {
-        CellStyle centre = helper.getStyle(couleur, Bordure.VIDE, HorizontalAlignment.CENTER);
+        CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.BAS, HorizontalAlignment.CENTER);
+        
+        final String DONT = " dont ";
+        final String SECURITE = " de sécurité";
 
-        valoriserCellule(row, Index.LOTI.ordinal(), centre, ano.getLotRTC());
-        valoriserCellule(row, Index.EDITIONI.ordinal(), helper.getStyle(couleur), ano.getLotRTC().getEdition());
-        valoriserCellule(row, Index.ENVI.ordinal(), centre, ano.getLotRTC().getEtatLot().getValeur());
-        valoriserCellule(row, Index.TRAITEI.ordinal(), centre, traite);
+        valoriserCellule(row, Index.DONNEEI.ordinal(), centre, stat);
+        valoriserCellule(row, Index.MENSUELI.ordinal(), centre, mensuel + DONT + menseulSecu + SECURITE);
+        valoriserCellule(row, Index.TRIMI.ordinal(), centre, trim + DONT + trimSecu + SECURITE);
+        valoriserCellule(row, Index.TOTALI.ordinal(), centre, total + DONT + totelSecu + SECURITE);
     }
 
     /**
@@ -763,9 +725,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param baseAdresse
      * @param variable
      */
-    private void ajouterLiens(Cell cell, String baseAdresse, String variable)
+    private void ajouterLiens(Cell cell, String adresse)
     {
-        if (cell == null || baseAdresse == null || baseAdresse.isEmpty())
+        if (cell == null || adresse == null)
             throw new IllegalArgumentException("La cellule ou l'adresse ne peuvent être nulles");
 
         Hyperlink link = createHelper.createHyperlink(HyperlinkType.URL);
@@ -776,50 +738,8 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         style.cloneStyleFrom(cell.getCellStyle());
         style.setFont(font);
         cell.setCellStyle(style);
-        link.setAddress(baseAdresse + variable);
+        link.setAddress(adresse);
         cell.setHyperlink(link);
-    }
-
-    /**
-     * Ajoute les nouvelles anomalies au fichier Excel
-     * 
-     * @param sheet
-     * @param anoAajouter
-     * @param lotsSecurite
-     * @param lotsRelease
-     * @param matiere
-     */
-    private void ajouterNouvellesAnos(Sheet sheet, Map<String, Anomalie> mapAnoCloses, Matiere matiere)
-    {
-        for (Anomalie ano : anoAajouter)
-        {
-            ano.getMatieres().add(matiere);
-
-            // Ajout de la date de détection à la date du jour
-            ano.setDateDetection(LocalDate.now());
-
-            // Ajout ligne à vérifier si l'anomalie était déjà dans les closes et qu'elle n'est ni à l'édition, ni terminée
-            if (mapAnoCloses.containsKey(ano.getLotRTC().getLot()) && ano.getLotRTC().getEtatLot() != EtatLot.EDITION && ano.getLotRTC().getEtatLot() != EtatLot.TERMINE)
-            {
-                Anomalie anoClose = mapAnoCloses.get(ano.getLotRTC().getLot());
-                ano.setDateDetection(today);
-                ano.setDateCreation(anoClose.getDateCreation());
-                ano.setDateRelance(anoClose.getDateRelance());
-                ano.setRemarque(anoClose.getRemarque());
-                ano.setNumeroAnoRTC(anoClose.getNumeroAnoRTC());
-                ano.setAction(TypeAction.VERIFIER);
-                Row row = sheet.createRow(sheet.getLastRowNum() + 1);
-                creerLigneSQ(row, ano, IndexedColors.GREY_25_PERCENT);
-                mapAnoCloses.remove(ano.getLotRTC().getLot());
-            }
-            // Ajoute une ligne orange si la ligne ne provient pas des anomalies closes
-            else if (!mapAnoCloses.containsKey(ano.getLotRTC().getLot()))
-            {
-                Row row = sheet.createRow(sheet.getLastRowNum() + 1);
-                creerLigneSQ(row, ano, IndexedColors.LIGHT_ORANGE);
-                controlRapport.addInfo(TypeInfo.ANONEW, ano.getLotRTC().getLot(), null);
-            }
-        }
     }
 
     /**
@@ -832,7 +752,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     private Anomalie creerAnodepuisExcel(Row row, Map<String, LotRTC> lotsRTC)
     {
         Anomalie retour = ModelFactory.getModel(Anomalie.class);
-        retour.setLotRTC(lotsRTC.get(getCellStringValue(row, colLot).substring(Statics.SBTRINGLOT)));
+        retour.setLotRTC(lotsRTC.get(getCellStringValue(row, colLot)));
         retour.setRemarque(getCellStringValue(row, colRemarque));
         retour.setDateRelance(getCellDateValue(row, colDateRel));
         retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));
@@ -851,7 +771,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     private Anomalie creerAnodepuisExcelFull(Row row, Map<String, LotRTC> lotsRTC)
     {
         Anomalie retour = ModelFactory.getModel(Anomalie.class);
-        retour.setLotRTC(lotsRTC.get(getCellStringValue(row, colLot).substring(Statics.SBTRINGLOT)));
+        retour.setLotRTC(lotsRTC.get(Utilities.testLot(getCellStringValue(row, colLot))));
         retour.setNumeroAnoRTC(getCellNumericValue(row, colAno));
         retour.setRemarque(getCellStringValue(row, colRemarque));
         retour.setDateRelance(getCellDateValue(row, colDateRel));
@@ -873,7 +793,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         {
             LOGPLANTAGE.error(e);
         }
-        retour.setMatieresString(getCellStringValue(row, colMatiere));
         retour.calculTraitee();
         return retour;
     }
@@ -885,16 +804,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             return getCellDateValue(row, colDateDetec);
         else
             return LocalDate.of(2016, 1, 1);
-    }
-
-    @Override
-    protected Sheet initSheet()
-    {
-        // Récupération de la feuille principale
-        Sheet sheet = wb.getSheet(SQ);
-        if (sheet == null)
-            throw new FunctionalException(Severity.ERROR, "Le fichier n'a pas de page Suivi Qualité");
-        return sheet;
     }
 
     /**
@@ -945,10 +854,13 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         return controlRapport;
     }
 
-    public void createControlRapport(TypeRapport type)
+    public ControlRapport createControlRapport(TypeRapport type)
     {
         controlRapport = new ControlRapport(type);
+        return controlRapport;
     }
+
+    /*---------- CLASSE PRIVEE ----------*/
 
     /**
      * Liste des numéros de colonnes des feuilles d'environnement
@@ -956,20 +868,24 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @author ETP8137 - Grégoire mathon
      * @since 1.0
      */
-    private enum Index {
-        LOTI("Lot projet RTC"), EDITIONI("Edition"), ENVI("Etat du lot"), TRAITEI("Traitée");
+    // @formatter:off
+    private enum Index 
+    {
+        DONNEEI(""), 
+        MENSUELI("Mensuel"), 
+        TRIMI("Trimestrielle"), 
+        TOTALI("Total");
 
-        private String string;
+        private String valeur;
 
-        private Index(String string)
+        private Index(String valeur)
         {
-            this.string = string;
+            this.valeur = valeur;
         }
 
-        @Override
-        public String toString()
+        public String getValeur()
         {
-            return string;
+            return valeur;
         }
     }
 }

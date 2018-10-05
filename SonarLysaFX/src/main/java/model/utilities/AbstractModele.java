@@ -1,8 +1,5 @@
 package model.utilities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import utilities.AbstractToStringImpl;
 import utilities.Statics;
 
@@ -26,15 +23,5 @@ public abstract class AbstractModele extends AbstractToStringImpl
     protected String getString(String val)
     {
         return val == null ? Statics.EMPTY : val;
-    }
-    
-    /**
-     * Protège les listes pour renvoyer une {@code ArrayList} en cas d'objet null.
-     * @param liste
-     * @return
-     */
-    protected <T> List<T> getList(List<T> liste)
-    {
-        return liste == null ? new ArrayList<>() : liste;
     }
 }

@@ -22,18 +22,18 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     private static final long serialVersionUID = 1L;
 
     /*---------- CONSTRUCTEURS ----------*/
-    
-    DaoComposantSonar() 
-    { 
+
+    DaoComposantSonar()
+    {
         typeDonnee = TypeDonnee.COMPOSANT;
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
     public int recupDonneesDepuisExcel(File file)
     {
-        return 0;       
+        return 0;
     }
 
     @Override
@@ -44,10 +44,15 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
             Application appli = compo.getAppli();
             if (appli != null && appli.getIdBase() == 0)
                 em.persist(appli);
-            
+
             LotRTC lotRTC = compo.getLotRTC();
-            if (lotRTC != null && lotRTC.getIdBase() == 0)
-                em.persist(lotRTC);
+            if (lotRTC != null)
+            {
+                if (lotRTC.getIdBase() == 0)
+                    em.persist(lotRTC);
+                else
+                    em.merge(lotRTC);
+            }
             em.persist(compo);
             return true;
         }

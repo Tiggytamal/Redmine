@@ -107,7 +107,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
         long fin = System.currentTimeMillis();
 
         // Affichage des temps de traitement
-        LOGCONSOLE.info("temps requête = " + (fin - debut) + " ms");
+        LOGCONSOLE.info("temps requête ReadAll " + modele + " = " + (fin - debut) + " ms");
 
         return retour;
     }

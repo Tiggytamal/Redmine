@@ -2,7 +2,6 @@ package control.task;
 
 import static utilities.Statics.NL;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -134,21 +133,19 @@ public class CreerVueCHCCDMTask extends AbstractTask
     {
         Map<String, Set<String>> retour = new HashMap<>();
 
-        Map<String, ComposantSonar> mapProjets = recupererComposantsSonar(Matiere.JAVA);
-
-        // Transfert de la map en une liste avec tous les projets
-        List<ComposantSonar> tousLesProjets = new ArrayList<>(mapProjets.values());
+        // Récupératoin des composants en base
+        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.JAVA);
 
         etapePlus();
         baseMessage = "Traitement des composants :\n";
 
-        for (int i = 0; i < tousLesProjets.size(); i++)
+        for (int i = 0; i < composants.size(); i++)
         {
-            ComposantSonar compo = tousLesProjets.get(i);
+            ComposantSonar compo = composants.get(i);
 
             // MAJ progression
             updateMessage(compo.getNom());
-            updateProgress(i, tousLesProjets.size());
+            updateProgress(i, composants.size());
 
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
             if (compo.getLotRTC() != null && mapEditions.containsKey(compo.getEdition()))

@@ -168,26 +168,6 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
 //        handler.majFeuillePrincipale(lotsEnAno, anoAajouter, lotsEnErreurSonar, lotsSecurite, lotsRelease, sheet, matiere);
     }
 
-    @Test(expected = FunctionalException.class)
-    public void testMajMultiMatiereException()
-    {
-        removeSheet(SQ);
-        handler.majMultiMatiere(new ArrayList<>());
-    }
-
-    @Test
-    public void testMajMultiMatiere()
-    {
-        // intialisation
-        List<String> anoMultiple = new ArrayList<>();
-        anoMultiple.add("258058");
-        anoMultiple.add("10");
-        anoMultiple.add("298491");
-
-        // test
-        handler.majMultiMatiere(anoMultiple);
-    }
-
     @Test
     public void testCalculerCouleurLigne() throws Exception
     {

@@ -225,14 +225,14 @@ public class CreerVueProductionTask extends AbstractTask
 
         Map<String, Vue> map = new HashMap<>();
 
-        Map<String, ComposantSonar> composDataStage = recupererComposantsSonar(Matiere.DATASTAGE);
+        List<ComposantSonar> composDataStage = recupererComposantsSonar(Matiere.DATASTAGE);
         
         // Message
         int size = composDataStage.size();
         updateProgress(0, size);
         int i = 0;
         
-        for (ComposantSonar composantSonar : composDataStage.values())
+        for (ComposantSonar composantSonar : composDataStage)
         {
             List<Projet> projets = api.getVuesParNom("Lot " + composantSonar.getLotRTC());
             map.put(projets.get(0).getNom().substring(Statics.SBTRINGLOT), new Vue(projets.get(0).getKey(), projets.get(0).getNom()));

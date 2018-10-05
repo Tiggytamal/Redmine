@@ -2,13 +2,16 @@ package control.excel;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import model.enums.TypeColNPC;
+import model.ModelFactory;
+import model.bdd.GroupementProjet;
+import model.enums.GroupeProjet;
+import model.enums.TypeColGrProjet;
 
 /**
  * Classe de contrôle du fichier des applications
@@ -17,12 +20,13 @@ import model.enums.TypeColNPC;
  * @since 1.0
  * 
  */
-public class ControlTypeProjets extends AbstractControlExcelRead<TypeColNPC, Map<String, String>>
+public class ControlGroupeProjets extends AbstractControlExcelRead<TypeColGrProjet, List<GroupementProjet>>
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     private int colNom;
-    
+    private int colGroupe;
+
     /*---------- CONSTRUCTEURS ----------*/
 
     /**
@@ -33,7 +37,7 @@ public class ControlTypeProjets extends AbstractControlExcelRead<TypeColNPC, Map
      * @throws IOException
      *             Exception lors des accès lecture/écriture
      */
-    ControlTypeProjets(File file)
+    ControlGroupeProjets(File file)
     {
         super(file);
     }
@@ -41,16 +45,19 @@ public class ControlTypeProjets extends AbstractControlExcelRead<TypeColNPC, Map
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public Map<String, String> recupDonneesDepuisExcel()
+    public List<GroupementProjet> recupDonneesDepuisExcel()
     {
         Sheet sheet = wb.getSheetAt(0);
-        Map<String, String> retour = new HashMap<>();
+        List<GroupementProjet> retour = new ArrayList<>();
 
         // Iterateur depuis la ligne 1 - sans les titres
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
-            Row row = sheet.getRow(i);            
-            retour.put(getCellStringValue(row, colNom), getCellStringValue(row, colNom));
+            Row row = sheet.getRow(i);
+            GroupementProjet gp = ModelFactory.getModel(GroupementProjet.class);
+            gp.setNomProjet(getCellStringValue(row, colNom));
+            gp.setGroupe(GroupeProjet.valueOf(getCellStringValue(row, colGroupe)));
+            retour.add(gp);
         }
         return retour;
     }

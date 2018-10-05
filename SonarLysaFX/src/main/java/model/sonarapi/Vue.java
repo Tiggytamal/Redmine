@@ -1,5 +1,6 @@
 package model.sonarapi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -127,7 +128,7 @@ public class Vue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "projects", required = false)
     public List<String> getListeClefsComposants()
     {
-        return getList(listeClefsComposants);
+        return listeClefsComposants == null ? listeClefsComposants = new ArrayList<>() : listeClefsComposants;
     }
 
     public void setListeClefsComposants(List<String> listeClefsComposants)

@@ -208,42 +208,42 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
         assertTrue(handler.isTraitee());
     }
     
-    @Test
-    public void testGetMatieresString()
-    {
-        // Initialisation
-        Set<Matiere> matieres = new HashSet<>();
-        matieres.add(Matiere.JAVA);
-        matieres.add(Matiere.DATASTAGE);
-        handler.setMatieres(matieres);
-        
-        // Test
-        assertTrue(handler.getMatieresString().contains(Matiere.JAVA.toString()));
-        assertTrue(handler.getMatieresString().contains(Matiere.DATASTAGE.toString()));
-        assertTrue(handler.getMatieresString().contains(" - "));
-    }
-    
-    @Test
-    public void testSetMatieresString()
-    {
-        // Test avec string vide ou null
-        handler.setMatieresString(null);
-        assertEquals(0, handler.getMatieres().size());
-        handler.setMatieresString(EMPTY);
-        assertEquals(0, handler.getMatieres().size());
-        
-        
-        // Test avec une matière
-        String matiere = "JAVA";
-        handler.setMatieresString(matiere);
-        assertEquals(Matiere.JAVA, handler.getMatieres().iterator().next());
-        
-        // Test avec deux matières
-        String matieres = "JAVA - DATASTAGE";
-        handler.setMatieresString(matieres);
-        assertTrue(handler.getMatieres().contains(Matiere.JAVA));
-        assertTrue(handler.getMatieres().contains(Matiere.DATASTAGE));
-    }
+//    @Test
+//    public void testGetMatieresString()
+//    {
+//        // Initialisation
+//        Set<Matiere> matieres = new HashSet<>();
+//        matieres.add(Matiere.JAVA);
+//        matieres.add(Matiere.DATASTAGE);
+//        handler.setMatieres(matieres);
+//        
+//        // Test
+//        assertTrue(handler.getMatieresString().contains(Matiere.JAVA.toString()));
+//        assertTrue(handler.getMatieresString().contains(Matiere.DATASTAGE.toString()));
+//        assertTrue(handler.getMatieresString().contains(" - "));
+//    }
+//    
+//    @Test
+//    public void testSetMatieresString()
+//    {
+//        // Test avec string vide ou null
+//        handler.setMatieresString(null);
+//        assertEquals(0, handler.getMatieres().size());
+//        handler.setMatieresString(EMPTY);
+//        assertEquals(0, handler.getMatieres().size());
+//        
+//        
+//        // Test avec une matière
+//        String matiere = "JAVA";
+//        handler.setMatieresString(matiere);
+//        assertEquals(Matiere.JAVA, handler.getMatieres().iterator().next());
+//        
+//        // Test avec deux matières
+//        String matieres = "JAVA - DATASTAGE";
+//        handler.setMatieresString(matieres);
+//        assertTrue(handler.getMatieres().contains(Matiere.JAVA));
+//        assertTrue(handler.getMatieres().contains(Matiere.DATASTAGE));
+//    }
     
 //    @Test
 //    public void testGetDirection()

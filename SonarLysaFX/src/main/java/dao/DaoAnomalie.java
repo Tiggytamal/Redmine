@@ -2,34 +2,36 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.bdd.AbstractBDDModele;
 import model.bdd.Anomalie;
+import model.enums.Matiere;
 import model.enums.TypeDonnee;
 
 public class DaoAnomalie extends AbstractDao<Anomalie> implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     /*---------- CONSTRUCTEURS ----------*/
-    
-    DaoAnomalie() 
-    { 
+
+    DaoAnomalie()
+    {
         typeDonnee = TypeDonnee.ANOMALIE;
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     @Override
     public int recupDonneesDepuisExcel(File file)
     {
-        // TODO Auto-generated method stub
         return 0;
     }
-    
+
     @Override
     public Anomalie recupEltParCode(String lot)
     {
@@ -39,7 +41,7 @@ public class DaoAnomalie extends AbstractDao<Anomalie> implements Serializable
         else
             return liste.get(0);
     }
-    
+
     @Override
     public int resetTable()
     {
@@ -50,7 +52,21 @@ public class DaoAnomalie extends AbstractDao<Anomalie> implements Serializable
         em.getTransaction().commit();
         return retour;
     }
-    
+
+    public Map<String, Anomalie> readAllMapMatiere(Matiere matiere)
+    {
+        Map<String, Anomalie> retour = new HashMap<>();
+
+        // Itération pour ne prendre que les anomalies de la matière désirée
+        for (Anomalie ano : readAll())
+        {
+            if (ano.getLotRTC().getMatieres().contains(matiere))
+                retour.put(ano.getMapIndex(), ano);
+        }
+
+        return retour;
+    }
+
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

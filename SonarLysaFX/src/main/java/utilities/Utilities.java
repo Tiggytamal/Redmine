@@ -280,6 +280,11 @@ public final class Utilities
         return retour;
     }
     
+    /**
+     * 
+     * @param valeur
+     * @return
+     */
     public static int stringToInt(String valeur)
     {
         int retour = 0;
@@ -295,5 +300,16 @@ public final class Utilities
         }
         
         return retour;
+    }
+    
+    public static String testLot(String lot)
+    {
+        if (lot == null)
+            throw new TechnicalException("utilities.Utilities.testLot - paramètre nul.");
+        
+        if (lot.startsWith("Lot "))
+            return lot.substring(Statics.SBTRINGLOT);
+        
+        return lot;
     }
 }

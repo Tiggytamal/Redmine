@@ -58,7 +58,7 @@ public abstract class AbstractTask extends Task<Boolean>
     protected int debut;
     protected int fin;
     protected boolean annulable;
-    
+
     private StringProperty etape = new SimpleStringProperty(this, "etape", EMPTY);
     private String titre;
 
@@ -76,9 +76,9 @@ public abstract class AbstractTask extends Task<Boolean>
         this.titre = titre;
         baseMessage = "";
     }
-    
+
     /*---------- METHODES ABSTRAITES ----------*/
-        
+
     /**
      * Utilisée pour permettre le retour arrière si possible du traitement
      */
@@ -86,13 +86,12 @@ public abstract class AbstractTask extends Task<Boolean>
 
     /*---------- METHODES PUBLIQUES ----------*/
 
-
     @Override
     public final void updateMessage(String message)
     {
         super.updateMessage(baseMessage + message);
     }
-    
+
     @Override
     public void updateProgress(double effectue, double total)
     {
@@ -161,23 +160,22 @@ public abstract class AbstractTask extends Task<Boolean>
     }
 
     /**
-     * Permet de récupérer les composants de Sonar avec séparation des composants datastage
+     * Permet de récupérer les composants de Sonar par matière
      *
      * @return
      */
-    protected final Map<String, ComposantSonar> recupererComposantsSonar(Matiere matiere)
+    protected final List<ComposantSonar> recupererComposantsSonar(Matiere matiere)
     {
         updateMessage(RECUPCOMPOSANTS);
-        
-        // Map de retour
-        Map<String, ComposantSonar> retour = new HashMap<>();
 
-        // Itération sur les composants issus de la base de données
-        for (ComposantSonar compo : DaoFactory.getDao(ComposantSonar.class).readAll())
+        // Liste de retour avec initialement tous les composants SonarQube
+        List<ComposantSonar> retour = DaoFactory.getDao(ComposantSonar.class).readAll();
+
+        // Itération pour retiter les composants qui ne sont pas de la bonne matière
+        for (Iterator<ComposantSonar> iter = retour.iterator(); iter.hasNext();)
         {
-            // Test de la matiere du composant et des filtres des composants pour rajouter à la map de retour.
-            if (testFiltreEtMatiere(matiere, compo))
-                retour.put(compo.getLotRTC().getLot(), compo);
+            if (!testMatiereCompo(matiere, iter.next()))
+                iter.remove();
         }
 
         updateMessage(RECUPCOMPOSANTS + "OK");
@@ -279,16 +277,36 @@ public abstract class AbstractTask extends Task<Boolean>
         return new StringBuilder(ECOULE).append(ecoule).append(RESTANT).append(restant).toString();
     }
 
+    /**
+     * Teste un composant et retourne la matière de celui-ci
+     * 
+     * @param compo
+     * @return
+     */
+    protected Matiere testMatiereCompo(String nom)
+    {
+        String filtreDataStage = proprietesXML.getMapParams().get(Param.FILTREDATASTAGE);
+        String filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
+
+        if (nom.startsWith(filtreDataStage))
+            return Matiere.DATASTAGE;
+
+        if (nom.startsWith(filtreCobol))
+            return Matiere.COBOL;
+
+        return Matiere.JAVA;
+    }
+
     /*---------- METHODES PRIVEES ----------*/
 
     /**
-     * Contrôle la matière et les filtres paramétrés
+     * Contrôle la matière d'un composant en utilisant les filtres paramétrés.
      * 
      * @param matiere
      * @param compo
      * @return
      */
-    private boolean testFiltreEtMatiere(Matiere matiere, ComposantSonar compo)
+    private boolean testMatiereCompo(Matiere matiere, ComposantSonar compo)
     {
         String filtreDataStage = proprietesXML.getMapParams().get(Param.FILTREDATASTAGE);
         String filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
@@ -303,7 +321,7 @@ public abstract class AbstractTask extends Task<Boolean>
                 return !compo.getNom().startsWith(filtreDataStage) && !compo.getNom().startsWith(filtreCobol);
 
             case COBOL:
-                throw new FunctionalException(Severity.ERROR, "COBOL pas pris en compte!");
+                return compo.getNom().startsWith(filtreCobol);
 
             default:
                 throw new FunctionalException(Severity.ERROR, "Nouvelle matière pas prise en compte");
@@ -501,7 +519,7 @@ public abstract class AbstractTask extends Task<Boolean>
     {
         return annulable;
     }
-    
+
     public String getBaseMessage()
     {
         return baseMessage == null ? "" : baseMessage;

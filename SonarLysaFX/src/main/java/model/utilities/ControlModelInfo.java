@@ -15,9 +15,11 @@ import dao.DaoFactory;
 import model.CompoPbApps;
 import model.bdd.Anomalie;
 import model.bdd.ChefService;
+import model.bdd.GroupementProjet;
+import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
 import model.enums.EtatLot;
-import model.enums.GroupeComposant;
+import model.enums.GroupeProjet;
 import model.enums.TypeAction;
 import model.enums.TypeInfo;
 import utilities.DateConvert;
@@ -36,36 +38,12 @@ public class ControlModelInfo
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
 
-    /** logger composants avec application INCONNUE */
-    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
-
     private static final short CLARITYMINI = 5;
     private static final short CLARITYMAX = 9;
     private static final short CLARITY7 = 7;
 
     /*---------- CONSTRUCTEURS ----------*/
     /*---------- METHODES PUBLIQUES ----------*/
-
-    /**
-     * Contrôle si le code clarity de l'anomalie est bien dans le fichier Excel et renseigne les informations depuis celui-ci
-     * 
-     * @param ano
-     */
-    public void controleClarity(Anomalie ano, ControlRapport controlRapport)
-    {
-        // Récupération infox Clarity depuis fichier Excel
-        String anoClarity = ano.getLotRTC().getProjetClarity().getCode();
-        // Récupération des données en base
-        Map<String, ProjetClarity> map = DaoFactory.getDao(ProjetClarity.class).readAllMap();
-        ProjetClarity projet = testProjetClarity(anoClarity, map);
-
-        // Gestion des erreurs
-        if (!projet.isActif())
-        {
-            LOGINCONNUE.warn("Code Clarity inconnu : " + anoClarity + " - " + ano.getLotRTC());
-            controlRapport.addInfo(TypeInfo.CLARITYINCONNU, ano.getLotRTC().getLot(), anoClarity);
-        }
-    }
 
     public ProjetClarity testProjetClarity(String codeClarity, Map<String, ProjetClarity> mapClarity)
     {
@@ -156,6 +134,36 @@ public class ControlModelInfo
         pbApps.setChefService(Statics.INCONNU);
     }
 
+
+    public void controleAnoRTC(Anomalie ano) throws TeamRepositoryException
+    {
+        ControlRTC controlRTC = ControlRTC.INSTANCE;
+        if (ano.getNumeroAnoRTC() != 0)
+        {
+            IWorkItem anoRTC = controlRTC.recupWorkItemDepuisId(ano.getNumeroAnoRTC());
+            ano.setEtatRTC(controlRTC.recupEtatElement(anoRTC));
+            if (ano.getDateCreation() == null)
+                ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
+            if (anoRTC.getResolutionDate() != null)
+                ano.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
+        }
+
+    }
+    
+    /**
+     * Met à jour le champ NPC si le projet en fait parti
+     * 
+     * @param ano
+     * 
+     */
+    public void controleProjet(LotRTC lot, Map<String, GroupementProjet> mapGroupe)
+    {
+        if (mapGroupe.containsKey(lot.getProjetRTC()))
+            lot.setGroupe(mapGroupe.get(lot.getProjetRTC()).getGroupe());
+        else
+            lot.setGroupe(GroupeProjet.VIDE);
+    }
+    
     /**
      * @param ano
      * @return
@@ -205,59 +213,6 @@ public class ControlModelInfo
             ano.getLotRTC().setEtatLot(etatLot);
         }
         ano.getLotRTC().setDateMajEtat(controlRTC.recupDatesEtatsLot(lotRTC).get(etatLot));
-    }
-
-    public void controleAnoRTC(Anomalie ano) throws TeamRepositoryException
-    {
-        ControlRTC controlRTC = ControlRTC.INSTANCE;
-        if (ano.getNumeroAnoRTC() != 0)
-        {
-            IWorkItem anoRTC = controlRTC.recupWorkItemDepuisId(ano.getNumeroAnoRTC());
-            ano.setEtatRTC(controlRTC.recupEtatElement(anoRTC));
-            ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
-            if (anoRTC.getResolutionDate() != null)
-                ano.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
-        }
-
-    }
-
-    /**
-     * Met à jour le responsable de service depuis les informations du fichier XML, si le service est renseigné.<br>
-     * Remonte un warning si le service n'est pas connu
-     * 
-     * @param ano
-     * @param mapRespService
-     */
-    public void controleChefDeService(Anomalie ano, ControlRapport controlMail)
-    {
-        // Controle définition du service pour l'anomalie
-        String anoServ = ano.getLotRTC().getProjetClarity().getService();
-        if (anoServ.isEmpty())
-            return;
-
-        // Recherche du responsable dans les paramètres et remontée d'info si non trouvé.
-        Map<String, ChefService> mapRespService = DaoFactory.getDao(ChefService.class).readAllMap();
-        if (mapRespService.containsKey(anoServ))
-            ano.getLotRTC().getProjetClarity().setChefService(mapRespService.get(anoServ));
-        else
-        {
-            LOGINCONNUE.warn("Pas de responsable de service trouvé pour ce service : " + ano.getLotRTC().getProjetClarity().getService());
-            controlMail.addInfo(TypeInfo.SERVICESSANSRESP, ano.getLotRTC().getLot(), ano.getLotRTC().getProjetClarity().getService());
-        }
-    }
-
-    /**
-     * Met à jour le champ NPC si le projet en fait parti
-     * 
-     * @param ano
-     * 
-     */
-    public void controleNPC(Anomalie ano)
-    {
-        if (Statics.fichiersXML.getMapProjetsNpc().containsKey(ano.getLotRTC().getProjetRTC()))
-            ano.setGroupe(GroupeComposant.NPC);
-        else
-            ano.setGroupe(GroupeComposant.VIDE);
     }
 
     /*---------- METHODES PRIVEES ----------*/

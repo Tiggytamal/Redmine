@@ -4,7 +4,6 @@ import static utilities.Statics.fichiersXML;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
-import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -13,15 +12,11 @@ import javax.xml.bind.Marshaller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import control.excel.ExcelFactory;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import model.ModelFactory;
-import model.enums.TypeColNPC;
-import model.enums.TypeColR;
-import model.enums.TypeDonnee;
 import model.utilities.AbstractModele;
 import model.utilities.XML;
 import utilities.TechnicalException;
@@ -134,42 +129,6 @@ public class ControlXML
             LOGPLANTAGE.error(e);
             throw new TechnicalException("Impossible de sauvegarder le fichier de propriété", e);
         }
-    }
-
-    /**
-     * Récupère depuis le fichier Excel toutes les édition CHC/CDM, aver leurs numéros de version, pour l'annèe en cours, la précedente et la suivante.
-     * 
-     * @param file
-     *            Fichier à utiliser
-     */
-    public void recupProjetsNPCDepuisExcel(File file)
-    {
-        saveInfos(TypeDonnee.GROUPE, TypeColNPC.class, file);
-    }
-
-    /**
-     * Sauvegarde les informations d'un fichier XML
-     * 
-     * @param typeFichier
-     *            Type de fichier à suavegarder, énumaration {@link model.enums.TypeDonnee}.
-     * @param typeCol
-     *            Type de colonnes de fichiers, énumération
-     * @param file
-     */
-    private <T extends Enum<T> & TypeColR> void saveInfos(TypeDonnee typeFichier, Class<T> typeCol, File file)
-    {
-        switch (typeFichier)
-        {
-                
-            case GROUPE:
-                fichiersXML.majMapDonnees(typeFichier, (Map) ExcelFactory.getReader(typeCol, file).recupDonneesDepuisExcel());
-                saveParam(fichiersXML);
-                break;
-                
-            default:
-                throw new TechnicalException("control.xml.ControlXML.saveInfos - TypeFichier inconnu : " + typeFichier);
-        }
-
     }
 
     /*---------- METHODES PRIVEES ----------*/

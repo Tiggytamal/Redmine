@@ -57,7 +57,7 @@ public class StatusProjet extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "conditions")
     public List<Condition> getConditions()
     {
-        return getList(conditions);
+        return conditions == null ? conditions = new ArrayList<>() : conditions;
     }
 
     public void setConditions(List<Condition> conditions)
@@ -68,7 +68,7 @@ public class StatusProjet extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "periods")
     public List<StatusPeriode> getPeriodes()
     {
-        return getList(periodes);
+        return periodes == null ? periodes = new ArrayList<>() : periodes;
     }
 
     public void setPeriodes(List<StatusPeriode> periodes)

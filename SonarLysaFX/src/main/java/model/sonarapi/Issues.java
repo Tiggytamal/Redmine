@@ -1,5 +1,6 @@
 package model.sonarapi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -19,7 +20,7 @@ import model.utilities.ModeleSonar;
  * 
  */
 @XmlRootElement
-@JsonIgnoreProperties({"components"})
+@JsonIgnoreProperties({ "components" })
 public class Issues extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
@@ -32,7 +33,7 @@ public class Issues extends AbstractModele implements ModeleSonar
     private List<Issue> listIssues;
 
     /*---------- CONSTRUCTEURS ----------*/
-    
+
     public Issues(int total, int p, int ps, Paging paging, List<Composant> composants, List<Issue> listIssues)
     {
         this.total = total;
@@ -42,12 +43,12 @@ public class Issues extends AbstractModele implements ModeleSonar
         this.composants = composants;
         this.listIssues = listIssues;
     }
-    
+
     public Issues()
     {
-        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML        
+        // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
@@ -82,13 +83,13 @@ public class Issues extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "components", required = false)
     public List<Composant> getComposants()
     {
-        return getList(composants);
+        return composants == null ? composants = new ArrayList<>() : composants;
     }
 
     @XmlElementWrapper
     @XmlAttribute(name = "issues", required = false)
     public List<Issue> getListIssues()
     {
-        return getList(listIssues);
+        return listIssues == null ? listIssues = new ArrayList<>() : listIssues;
     }
 }

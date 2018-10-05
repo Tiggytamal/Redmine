@@ -14,6 +14,7 @@ import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
+import model.enums.Matiere;
 import model.enums.QG;
 import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
@@ -43,7 +44,7 @@ public class CreerListeComposantsTask extends AbstractTask
     public CreerListeComposantsTask()
     {
         super(ETAPES, TITRE);
-        annulable = false;
+        annulable = true;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -58,7 +59,7 @@ public class CreerListeComposantsTask extends AbstractTask
     @Override
     public void annuler()
     {
-        // Pas de traitement d'annulation
+        // Pas de traitement à l'annulation
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -70,12 +71,18 @@ public class CreerListeComposantsTask extends AbstractTask
         updateMessage("Récupération des composants depuis Sonar...\n");
         updateProgress(0, -1);
 
-        // Récupération des composants Sonar
+        // Récupération des données de la base de données et de Sonar
         List<ComposantSonar> retour = new ArrayList<>();
         Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
         Map<String, LotRTC> mapLotRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
         @SuppressWarnings("unchecked")
         List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
+
+        // Réinitialisation des matières des lots pour le cas d'un composant qui serait retiré et qui enléverait un type de matière.
+        for (LotRTC lotRTC : mapLotRTC.values())
+        {
+            lotRTC.getMatieres().clear();
+        }
 
         // Affichage
         updateMessage("Récupération OK.");
@@ -86,13 +93,18 @@ public class CreerListeComposantsTask extends AbstractTask
 
         for (Projet projet : projets)
         {
+            // Arrêt de a boucle en cas d'annulation
+            if (isCancelled())
+                break;
+
             LOGCONSOLE.debug("Traitement composants Sonar : " + i + " - " + size);
 
-            // Récupération du numéro de lot et de l'applicaitond e chaque composant.
+            // Récupération du numéro de lot et de l'applicaiton de chaque composant.
             Composant composant = api.getMetriquesComposant(projet.getKey(),
                     new String[] { TypeMetrique.LOT.getValeur(), TypeMetrique.APPLI.getValeur(), TypeMetrique.EDITION.getValeur(), TypeMetrique.LDC.getValeur(), TypeMetrique.SECURITY.getValeur(),
                             TypeMetrique.VULNERABILITIES.getValeur(), TypeMetrique.QG.getValeur(), TypeMetrique.DUPLICATION.getValeur(), TypeMetrique.BLOQUANT.getValeur(),
                             TypeMetrique.CRITIQUE.getValeur() });
+
             if (composant == null)
                 continue;
 
@@ -104,15 +116,21 @@ public class CreerListeComposantsTask extends AbstractTask
             // Lot RTC
             String numeroLot = getValueMetrique(composant, TypeMetrique.LOT, Statics.EMPTY);
 
+            // Gestion de la matière
+            Matiere matiere = testMatiereCompo(composantSonar.getNom());
+            composantSonar.setMatiere(matiere);
+
             // On récupère le numéro de lot des infos du composant et si on ne trouve pas la valeur dans la base de données
-            // on crée un nouveau lot en spécifiant qu'il ne fait pas parti du référentiel
-            if (numeroLot.isEmpty())
-                composantSonar.setLotRTC(null);
-            else if (mapLotRTC.containsKey(numeroLot))
+            // on crée un nouveau lot en spécifiant qu'il ne fait pas parti du référentiel. Les composants sans numéro de lot auront un lotRTC nul.
+            if (mapLotRTC.containsKey(numeroLot))
+            {
                 composantSonar.setLotRTC(mapLotRTC.get(numeroLot));
+                composantSonar.getLotRTC().addMatiere(matiere);
+            }
             else
             {
                 LotRTC lotRTC = LotRTC.getLotRTCInconnu(numeroLot);
+                lotRTC.addMatiere(matiere);
                 composantSonar.setLotRTC(lotRTC);
                 mapLotRTC.put(numeroLot, lotRTC);
             }
@@ -121,10 +139,8 @@ public class CreerListeComposantsTask extends AbstractTask
             String codeAppli = getValueMetrique(composant, TypeMetrique.APPLI, Statics.EMPTY);
 
             // On récupère le code appli des infos du composant et si on ne trouve pas le code application dans la base de données,
-            // on crée une nouvelle en spécifiant qu'elle ne fait pas partie du référentiel
-            if (codeAppli.isEmpty())
-                composantSonar.setAppli(null);
-            else if (mapAppli.containsKey(codeAppli))
+            // on crée une nouvelle en spécifiant qu'elle ne fait pas partie du référentiel. Les composants sans code appli auront une application nulle.
+            if (mapAppli.containsKey(codeAppli))
                 composantSonar.setAppli(mapAppli.get(codeAppli));
             else
             {
@@ -132,13 +148,9 @@ public class CreerListeComposantsTask extends AbstractTask
                 composantSonar.setAppli(appli);
                 mapAppli.put(codeAppli, appli);
             }
-            
-            // Qualityt Gate, avec mise à jour de celui du lot si l'on a un QG en erreur.
-            composantSonar.setQualityGate(getValueMetrique(composant, TypeMetrique.QG, QG.NONE.getValeur()));            
-            if (composantSonar.getQualityGate() == QG.ERROR)
-                composantSonar.getLotRTC().setQualityGate(QG.ERROR);
 
             // Données restantes
+            composantSonar.setQualityGate(getValueMetrique(composant, TypeMetrique.QG, QG.NONE.getValeur()));
             composantSonar.setEdition(getValueMetrique(composant, TypeMetrique.EDITION, null));
             composantSonar.setLdc(getValueMetrique(composant, TypeMetrique.LDC, "0"));
             composantSonar.setSecurityRatingDepuisSonar(getValueMetrique(composant, TypeMetrique.SECURITY, "0"));

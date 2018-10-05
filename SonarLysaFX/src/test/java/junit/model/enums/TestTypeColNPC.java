@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import model.enums.TypeColNPC;
+import model.enums.TypeColGrProjet;
 
 public class TestTypeColNPC implements TestEnums
 {
@@ -12,25 +12,25 @@ public class TestTypeColNPC implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(1, TypeColNPC.values().length);
+        assertEquals(1, TypeColGrProjet.values().length);
     }
     
     @Test
     public void testGetValeur()
     {
-        assertEquals("Nom Projet", TypeColNPC.NOM.getValeur());
+        assertEquals("Nom Projet", TypeColGrProjet.NOM.getValeur());
     }
     
     @Test
     public void testGetNomCol()
     {
-        assertEquals("colNom", TypeColNPC.NOM.getNomCol());
+        assertEquals("colNom", TypeColGrProjet.NOM.getNomCol());
     }
 
     @Test
     @Override
     public void testConstructeur()
     {
-        assertEquals(TypeColNPC.NOM, TypeColNPC.valueOf(TypeColNPC.NOM.toString()));    
+        assertEquals(TypeColGrProjet.NOM, TypeColGrProjet.valueOf(TypeColGrProjet.NOM.toString()));    
     }
 }

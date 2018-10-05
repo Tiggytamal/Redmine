@@ -5,7 +5,6 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.reflect.Whitebox;
 
 import control.xml.ControlXML;
 import dao.DaoFactory;
@@ -15,10 +14,7 @@ import junit.JunitBase;
 import model.FichiersXML;
 import model.ProprietesXML;
 import model.bdd.Edition;
-import model.enums.TypeColChefServ;
-import model.enums.TypeDonnee;
 import utilities.Statics;
-import utilities.TechnicalException;
 
 @RunWith (JfxRunner.class)
 public class TestControlXML extends JunitBase
@@ -49,18 +45,6 @@ public class TestControlXML extends JunitBase
     public void testRecupEditionDepuisExcel()
     {
         DaoFactory.getDao(Edition.class).recupDonneesDepuisExcel(new File(getClass().getResource(Statics.ROOT + "Codification_des_Editions.xlsx").getFile()));
-    }
-    
-    @Test
-    public void testRecupProjetsNPCDepuisExcel()
-    {
-        handler.recupProjetsNPCDepuisExcel(new File(getClass().getResource(Statics.ROOT + "projets_npc.xlsx").getFile()));
-    }
-    
-    @Test (expected = TechnicalException.class)
-    public void testSaveInfosException() throws Exception
-    {        
-        Whitebox.invokeMethod(handler, "saveInfos", TypeDonnee.RESPSERVICE, TypeColChefServ.class, new File("аз&;:["));
     }
     
     /*---------- METHODES PRIVEES ----------*/

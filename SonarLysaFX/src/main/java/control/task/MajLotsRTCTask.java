@@ -14,6 +14,7 @@ import com.mchange.util.AssertException;
 import control.rtc.ControlRTC;
 import dao.DaoFactory;
 import dao.DaoLotRTC;
+import model.bdd.GroupementProjet;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
 import model.utilities.ControlModelInfo;
@@ -44,6 +45,7 @@ public class MajLotsRTCTask extends AbstractTask
         super(1, TITRE);
         this.date = date;
         dao = DaoFactory.getDao(LotRTC.class);
+        annulable = true;
     }
 
     /**
@@ -90,9 +92,14 @@ public class MajLotsRTCTask extends AbstractTask
         // Initialisation de la map depuis les informations de la base de données
         Map<String, LotRTC> retour = dao.readAllMap();
         Map<String, ProjetClarity> mapClarity = DaoFactory.getDao(ProjetClarity.class).readAllMap();
+        Map<String, GroupementProjet> mapGroupe = DaoFactory.getDao(GroupementProjet.class).readAllMap();
+        ControlModelInfo controlModel = new ControlModelInfo();
 
         for (IWorkItemHandle handle : handles)
         {
+            if (isCancelled())
+                break;
+            
             // Récupération de l'objet complet depuis l'handle de la requête
             LotRTC lotRTC = control.creerLotSuiviRTCDepuisHandle(handle);
 
@@ -106,8 +113,11 @@ public class MajLotsRTCTask extends AbstractTask
             String codeClarity = lotRTC.getProjetClarityString();
 
             // Test du projet Clarity par rapport à la base de données et valorisation de la donnée
-            ProjetClarity projetClarity = new ControlModelInfo().testProjetClarity(codeClarity, mapClarity);
+            ProjetClarity projetClarity = controlModel.testProjetClarity(codeClarity, mapClarity);
             lotRTC.setProjetClarity(projetClarity);
+            
+            //Controle du groupe
+            controlModel.controleProjet(lotRTC, mapGroupe);
 
             String lot = lotRTC.getLot();
 
@@ -119,8 +129,8 @@ public class MajLotsRTCTask extends AbstractTask
 
             // Affichage
             i++;
-            updateProgress(i, size);
-            updateMessage(new StringBuilder(lot).append(Statics.NL).append(fin).append(i).append(sur).append(size).append(affichageTemps(debut, i, size)).toString());
+            super.updateProgress(i, size);
+            super.updateMessage(new StringBuilder(lot).append(Statics.NL).append(fin).append(i).append(sur).append(size).append(affichageTemps(debut, i, size)).toString());
         }
         return retour;
     }

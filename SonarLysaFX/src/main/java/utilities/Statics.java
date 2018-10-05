@@ -89,6 +89,8 @@ public final class Statics
     public static final String ADRESSEDESER = "d:\\";
     /** Tiret */
     public static final String TIRET = "- ";
+    /** Anomalie CLose */
+    public static final String ANOCLOSE = "Close";
     /** commentaire, balise @Ignore des Junit */
     public static final String TESTMANUEL = "Test manuel - ne pas utiliser en automatique";
     

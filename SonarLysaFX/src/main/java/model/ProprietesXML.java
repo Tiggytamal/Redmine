@@ -19,7 +19,7 @@ import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColCompo;
 import model.enums.TypeColEdition;
-import model.enums.TypeColNPC;
+import model.enums.TypeColGrProjet;
 import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
@@ -59,7 +59,7 @@ public class ProprietesXML extends AbstractModele implements XML
     private Map<TypeColPic, String> mapColsPic;
     private Map<TypeColEdition, String> mapColsEdition;
     private Map<TypeColApps, String> mapColsApps;
-    private Map<TypeColNPC, String> mapColsNPC;
+    private Map<TypeColGrProjet, String> mapColsNPC;
     private Map<TypeColUA, String> mapColsUA;
     
     // Map des colonnes avec indice pour écriture
@@ -82,7 +82,7 @@ public class ProprietesXML extends AbstractModele implements XML
         mapColsPic = new EnumMap<>(TypeColPic.class);
         mapColsEdition = new EnumMap<>(TypeColEdition.class);
         mapColsApps = new EnumMap<>(TypeColApps.class);
-        mapColsNPC = new EnumMap<>(TypeColNPC.class);
+        mapColsNPC = new EnumMap<>(TypeColGrProjet.class);
         mapColsUA = new EnumMap<>(TypeColUA.class);
         mapColsVul = new EnumMap<>(TypeColVul.class);
         mapColsPbApps = new EnumMap<>(TypeColPbApps.class);
@@ -270,7 +270,7 @@ public class ProprietesXML extends AbstractModele implements XML
     
     @XmlElementWrapper
     @XmlElement(name = "mapColsNPC", required = false)
-    private Map<TypeColNPC, String> getMapColsNPC()
+    private Map<TypeColGrProjet, String> getMapColsNPC()
     {
         return mapColsNPC;
     }
@@ -335,7 +335,7 @@ public class ProprietesXML extends AbstractModele implements XML
         controleMap(builderErreurs, TypeColPic.class, mapColsPic);
         controleMap(builderErreurs, TypeColEdition.class, mapColsEdition);
         controleMap(builderErreurs, TypeColApps.class, mapColsApps);
-        controleMap(builderErreurs, TypeColNPC.class, mapColsNPC);
+        controleMap(builderErreurs, TypeColGrProjet.class, mapColsNPC);
 
         // Renvoi du booleen
         if (builderErreurs.length() == 0)

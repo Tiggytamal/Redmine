@@ -1,5 +1,6 @@
 package model.sonarapi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -11,14 +12,13 @@ import model.utilities.AbstractModele;
 import model.utilities.ModeleSonar;
 
 /**
- * Classe de modèle pour les erreurs remontées dans SonarQube
- * les propriétés flows et components sont ignorées pour diminuer la taille des flux XML traités.
+ * Classe de modèle pour les erreurs remontées dans SonarQube les propriétés flows et components sont ignorées pour diminuer la taille des flux XML traités.
  * 
  * @author ETP8137 - Grégoire Mathon
  *
  */
 @XmlRootElement
-@JsonIgnoreProperties({"flows","components"})
+@JsonIgnoreProperties({ "flows", "components" })
 public class Issue extends AbstractModele implements ModeleSonar
 {
     /*---------- ATTRIBUTS ----------*/
@@ -53,7 +53,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     private List<User> users;
 
     /*---------- CONSTRUCTEURS ----------*/
-    
+
     public Issue(String key, String resolution, int line, TextRange textRange, String effort, String debt, List<Commentaire> commentaires, String attr, List<String> transitions, List<String> actions,
             String rule, String severity, String composant, String composantId, String projet, String subProject, String status, String message, String auteur, List<String> tags, List<Flow> flows,
             String creationDate, String updateDate, String closeDate, String type, List<Composant> composants, List<Rule> rules, List<User> users)
@@ -87,12 +87,12 @@ public class Issue extends AbstractModele implements ModeleSonar
         this.rules = rules;
         this.users = users;
     }
-    
+
     public Issue()
     {
         // Constructeur vide pour initialiser des objets sans paramètre et la création depuis le XML
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
@@ -102,7 +102,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(key);
     }
-    
+
     public void setKey(String key)
     {
         this.key = key;
@@ -113,7 +113,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(rule);
     }
-    
+
     public void setRule(String rule)
     {
         this.rule = rule;
@@ -124,7 +124,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(severity);
     }
-    
+
     public void setSeverity(String severity)
     {
         this.severity = severity;
@@ -135,7 +135,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(composant);
     }
-    
+
     public void setComposant(String composant)
     {
         this.composant = composant;
@@ -146,7 +146,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(composantId);
     }
-    
+
     public void setComposantId(String composantId)
     {
         this.composantId = composantId;
@@ -157,7 +157,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(projet);
     }
-    
+
     public void setProjet(String projet)
     {
         this.projet = projet;
@@ -168,7 +168,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(status);
     }
-    
+
     public void setStatus(String status)
     {
         this.status = status;
@@ -179,7 +179,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(message);
     }
-    
+
     public void setMessage(String message)
     {
         this.message = message;
@@ -190,7 +190,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(auteur);
     }
-    
+
     public void setAutheur(String auteur)
     {
         this.auteur = auteur;
@@ -199,9 +199,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "tags", required = false)
     public List<String> getTags()
     {
-        return getList(tags);
+        return tags == null ? tags = new ArrayList<>() : tags;
     }
-    
+
     public void setTags(List<String> tags)
     {
         this.tags = tags;
@@ -212,7 +212,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(creationDate);
     }
-    
+
     public void setCreationDate(String creationDate)
     {
         this.creationDate = creationDate;
@@ -223,7 +223,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(updateDate);
     }
-    
+
     public void setUpdateDate(String updateDate)
     {
         this.updateDate = updateDate;
@@ -234,7 +234,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(type);
     }
-    
+
     public void setType(String type)
     {
         this.type = type;
@@ -245,7 +245,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(resolution);
     }
-    
+
     public void setResolution(String resolution)
     {
         this.resolution = resolution;
@@ -256,7 +256,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return line;
     }
-    
+
     public void setLine(int line)
     {
         this.line = line;
@@ -265,11 +265,11 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "textRange", required = false)
     public TextRange getTextRange()
     {
-        if( textRange == null)
+        if (textRange == null)
             return new TextRange();
         return textRange;
     }
-    
+
     public void setTextRange(TextRange textRange)
     {
         this.textRange = textRange;
@@ -280,7 +280,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(effort);
     }
-    
+
     public void setEffort(String effort)
     {
         this.effort = effort;
@@ -289,9 +289,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "comments", required = false)
     public List<Commentaire> getCommentaires()
     {
-        return getList(commentaires);
+        return commentaires == null ? commentaires = new ArrayList<>() : commentaires;
     }
-    
+
     public void setCommentaires(List<Commentaire> commentaires)
     {
         this.commentaires = commentaires;
@@ -302,7 +302,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(attr);
     }
-    
+
     public void setAttr(String attr)
     {
         this.attr = attr;
@@ -311,9 +311,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "transitions", required = false)
     public List<String> getTransitions()
     {
-        return getList(transitions);
+        return transitions == null ? transitions = new ArrayList<>() : transitions;
     }
-    
+
     public void setTransitions(List<String> transitions)
     {
         this.transitions = transitions;
@@ -322,9 +322,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "actions", required = false)
     public List<String> getActions()
     {
-        return getList(actions);
+        return actions == null ? actions = new ArrayList<>() : actions;
     }
-    
+
     public void setActions(List<String> actions)
     {
         this.actions = actions;
@@ -333,9 +333,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "components", required = false)
     public List<Composant> getComposants()
     {
-        return getList(composants);
+        return composants == null ? composants = new ArrayList<>() : composants;
     }
-    
+
     public void setComposants(List<Composant> composants)
     {
         this.composants = composants;
@@ -344,31 +344,31 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "rules", required = false)
     public List<Rule> getRules()
     {
-        return getList(rules);
+        return rules == null ? rules = new ArrayList<>() : rules;
     }
-    
+
     public void setRules(List<Rule> rules)
     {
         this.rules = rules;
     }
-    
+
     @XmlAttribute(name = "users", required = false)
     public List<User> getUsers()
     {
-        return getList(users);
+        return users == null ? users = new ArrayList<>() : users;
     }
-    
+
     public void setUsers(List<User> users)
     {
         this.users = users;
-    }   
+    }
 
     @XmlAttribute(name = "subProject", required = false)
     public String getSubProject()
     {
         return getString(subProject);
     }
-    
+
     public void setSubProject(String subProject)
     {
         this.subProject = subProject;
@@ -379,7 +379,7 @@ public class Issue extends AbstractModele implements ModeleSonar
     {
         return getString(debt);
     }
-    
+
     public void setDebt(String debt)
     {
         this.debt = debt;
@@ -388,9 +388,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "flows", required = false)
     public List<Flow> getFlows()
     {
-        return getList(flows);
+        return flows == null ? flows = new ArrayList<>() : flows;
     }
-    
+
     public void setFlows(List<Flow> flows)
     {
         this.flows = flows;

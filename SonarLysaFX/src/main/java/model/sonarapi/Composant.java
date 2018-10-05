@@ -1,5 +1,6 @@
 package model.sonarapi;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -171,7 +172,7 @@ public class Composant extends AbstractModele implements ModeleSonar
     @XmlElement(name = "measures", required = false)
     public List<Metrique> getMetriques()
     {
-        return getList(metriques);
+        return metriques == null ? metriques = new ArrayList<>() : metriques;
     }
 
     public void setMetriques(List<Metrique> metriques)

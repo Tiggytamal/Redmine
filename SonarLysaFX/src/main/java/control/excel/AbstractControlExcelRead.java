@@ -73,7 +73,7 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
     /*---------- METHODES ABSTRAITES ----------*/
 
     /**
-     * Remonte les données depuisle fichier Excel selon l'implémentation choisie.
+     * Remonte les données depuis le fichier Excel selon l'implémentation choisie.
      * 
      * @return
      */

@@ -1,14 +1,9 @@
 package model.bdd;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,14 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
 import model.enums.EtatAnoSuivi;
-import model.enums.GroupeComposant;
-import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.TypeAction;
 import model.enums.TypeVersion;
@@ -92,29 +84,15 @@ public class Anomalie extends AbstractBDDModele
     @Column(name = "etat_ano_suivi", nullable = false)
     private EtatAnoSuivi etatAnoSuivi;
 
-    @Transient
-    private boolean traitee;
-
-    @ElementCollection(targetClass = Matiere.class)
-    @CollectionTable(name = "anomalies_matieres", joinColumns = @JoinColumn(name = "anomalie"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "matiere", nullable = true)
-    private Set<Matiere> matieres;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "action", nullable = true)
     private TypeAction action;
-
-    @Column(name = "groupe", nullable = false)
-    private GroupeComposant groupe;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     Anomalie()
     {
-        matieres = new HashSet<>();
         typeVersion = TypeVersion.SNAPSHOT;
-        groupe = GroupeComposant.VIDE;
         etatAnoSuivi = EtatAnoSuivi.NOUVELLE;
         action = TypeAction.VIDE;
         remarque = Statics.EMPTY;
@@ -143,43 +121,9 @@ public class Anomalie extends AbstractBDDModele
      */
     public boolean calculTraitee()
     {
-        traitee = !getRemarque().isEmpty() || numeroAnoRTC != 0;
-        if (traitee)
+        if (!getRemarque().isEmpty() || numeroAnoRTC != 0 && etatAnoSuivi == EtatAnoSuivi.NOUVELLE)
             etatAnoSuivi = EtatAnoSuivi.TRAITEE;
-        return traitee;
-    }
-
-    /**
-     * Retourne la liste des matieres de l'anomalie sous forme d'une chaine de caractères enregistrable dans Excel
-     * 
-     * @return
-     */
-    public String getMatieresString()
-    {
-        StringBuilder builder = new StringBuilder();
-
-        for (Iterator<Matiere> iter = matieres.iterator(); iter.hasNext();)
-        {
-            builder.append(iter.next().toString());
-            if (iter.hasNext())
-                builder.append(" - ");
-        }
-        return builder.toString();
-    }
-
-    /**
-     * Remplie la liste des matières depuis une chaine de caractères. Cahque matière doit être séparées par un "-".
-     * 
-     */
-    public void setMatieresString(String matieresString)
-    {
-        if (matieresString == null || matieresString.isEmpty())
-            return;
-        matieres.clear();
-        for (String matiere : matieresString.split("-"))
-        {
-            matieres.add(Matiere.from(matiere.trim()));
-        }
+        return isTraitee();
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -336,27 +280,7 @@ public class Anomalie extends AbstractBDDModele
 
     public boolean isTraitee()
     {
-        return traitee;
-    }
-
-    public Set<Matiere> getMatieres()
-    {
-        return matieres == null ? new HashSet<>() : matieres;
-    }
-
-    public void setMatieres(Set<Matiere> matieres)
-    {
-        this.matieres = matieres;
-    }
-
-    public GroupeComposant getGroupe()
-    {
-        return groupe;
-    }
-
-    public void setGroupe(GroupeComposant groupe)
-    {
-        this.groupe = groupe;
+        return etatAnoSuivi != EtatAnoSuivi.NOUVELLE;
     }
 
     public EtatAnoSuivi getEtatAnoSuivi()

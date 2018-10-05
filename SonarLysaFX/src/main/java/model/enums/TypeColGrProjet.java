@@ -7,18 +7,19 @@ package model.enums;
  * @since 1.0
  *
  */
-public enum TypeColNPC implements TypeColR 
+public enum TypeColGrProjet implements TypeColR 
 {
     /*---------- ATTRIBUTS ----------*/
 
-    NOM("Nom Projet", "colNom");
+    NOM("Nom Projet", "colNom"),
+    GROUPE("Groupe", "colGroupe");
 
     private String valeur;
     private String nomCol;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private TypeColNPC(String valeur, String nomCol)
+    private TypeColGrProjet(String valeur, String nomCol)
     {
         this.valeur = valeur;
         this.nomCol = nomCol;

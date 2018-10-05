@@ -17,6 +17,7 @@ import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
 import model.enums.EtatAppli;
+import model.enums.Matiere;
 import model.enums.QG;
 
 /**
@@ -46,9 +47,9 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @Column(name = "nom", nullable = false, length = 128)
     private String nom;
 
-    @BatchFetch(value = BatchFetchType.JOIN) 
-    @ManyToOne (targetEntity = LotRTC.class, cascade = CascadeType.MERGE)
-    @JoinColumn (name = "lotRTC")
+    @BatchFetch(value = BatchFetchType.JOIN)
+    @ManyToOne(targetEntity = LotRTC.class, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "lotRTC")
     private LotRTC lotRTC;
 
     @Column(name = "composant_key", nullable = false, length = 256)
@@ -57,9 +58,9 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @Column(name = "id", nullable = false)
     private String id;
 
-    @BatchFetch(value = BatchFetchType.JOIN)    
-    @ManyToOne (targetEntity = Application.class, cascade = CascadeType.MERGE)
-    @JoinColumn (name = "appli")
+    @BatchFetch(value = BatchFetchType.JOIN)
+    @ManyToOne(targetEntity = Application.class, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "appli")
     private Application appli;
 
     @Column(name = "edition", nullable = true, length = 20)
@@ -97,6 +98,10 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @Column(name = "version_release", nullable = true)
     private boolean versionRelease;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "matiere", nullable = false)
+    private Matiere matiere;
+
     /*---------- CONSTRUCTEURS ----------*/
 
     ComposantSonar()
@@ -132,14 +137,14 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     @Override
     public String getMapIndex()
     {
         return getKey();
     }
-    
-    /*---------- METHODES PRIVEES ----------*/    
+
+    /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
     public String getNom()
@@ -149,7 +154,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setNom(String nom)
     {
-        this.nom = nom;
+        if (nom != null)
+            this.nom = nom;
     }
 
     public LotRTC getLotRTC()
@@ -159,7 +165,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setLotRTC(LotRTC lotRTC)
     {
-        this.lotRTC = lotRTC;
+        if (lotRTC != null)
+            this.lotRTC = lotRTC;
     }
 
     public String getKey()
@@ -169,7 +176,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setKey(String key)
     {
-        this.key = key;
+        if (key != null)
+            this.key = key;
     }
 
     public Application getAppli()
@@ -179,7 +187,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setAppli(Application appli)
     {
-        this.appli = appli;
+        if (appli != null)
+            this.appli = appli;
     }
 
     public String getEdition()
@@ -189,7 +198,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setEdition(String edition)
     {
-        this.edition = edition;
+        if (edition != null)
+            this.edition = edition;
     }
 
     public String getId()
@@ -199,7 +209,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setId(String id)
     {
-        this.id = id;
+        if (id != null)
+            this.id = id;
     }
 
     public int getLdc()
@@ -229,44 +240,46 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setSecurityRating(String securityRating)
     {
-        this.securityRating = securityRating;
+        if (securityRating != null)
+            this.securityRating = securityRating;
     }
-    
+
     public void setSecurityRatingDepuisSonar(String securityRating)
     {
-        switch (securityRating)
-        {
-            case "0":
-                setSecurityRating("A");
-                break;
-                
-            case "1":
-                setSecurityRating("A");
-                break;
-                
-            case "2":
-                setSecurityRating("B");
-                break;
-                
-            case "3":
-                setSecurityRating("C");
-                break;
-                
-            case "4":
-                setSecurityRating("D");
-                break;
-                
-            case "5":
-                setSecurityRating("E");
-                break;
-                
-            case "6":
-                setSecurityRating("F");
-                break;
-                
-            default:
-                setSecurityRating("F");
-        }
+        if (securityRating != null)
+            switch (securityRating)
+            {
+                case "0":
+                    setSecurityRating("A");
+                    break;
+
+                case "1":
+                    setSecurityRating("A");
+                    break;
+
+                case "2":
+                    setSecurityRating("B");
+                    break;
+
+                case "3":
+                    setSecurityRating("C");
+                    break;
+
+                case "4":
+                    setSecurityRating("D");
+                    break;
+
+                case "5":
+                    setSecurityRating("E");
+                    break;
+
+                case "6":
+                    setSecurityRating("F");
+                    break;
+
+                default:
+                    setSecurityRating("F");
+            }
     }
 
     public int getVulnerabilites()
@@ -286,7 +299,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
      */
     public void setVulnerabilites(String vulnerabilites)
     {
-        this.vulnerabilites = Integer.parseInt(vulnerabilites);
+        if (vulnerabilites != null)
+            this.vulnerabilites = Integer.parseInt(vulnerabilites);
     }
 
     public EtatAppli getEtatAppli()
@@ -296,7 +310,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setEtatAppli(EtatAppli etatAppli)
     {
-        this.etatAppli = etatAppli;
+        if (etatAppli != null)
+            this.etatAppli = etatAppli;
     }
 
     public boolean isSecurite()
@@ -316,7 +331,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setQualityGate(QG qualityGate)
     {
-        this.qualityGate = qualityGate;
+        if (qualityGate != null)
+            this.qualityGate = qualityGate;
     }
 
     /**
@@ -326,7 +342,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
      */
     public void setQualityGate(String qualityGate)
     {
-        this.qualityGate = QG.from(qualityGate);
+        if (qualityGate != null)
+            this.qualityGate = QG.from(qualityGate);
     }
 
     public float getBloquants()
@@ -367,5 +384,16 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     public void setVersionRelease(boolean versionRelease)
     {
         this.versionRelease = versionRelease;
+    }
+
+    public Matiere getMatiere()
+    {
+        return matiere;
+    }
+
+    public void setMatiere(Matiere matiere)
+    {
+        if (matiere != null)
+            this.matiere = matiere;
     }
 }

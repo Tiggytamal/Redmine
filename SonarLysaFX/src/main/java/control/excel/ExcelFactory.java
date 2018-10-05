@@ -51,7 +51,7 @@ public interface ExcelFactory
                 return (R) new ControlSuivi(file);
                 
             case "model.enums.TypeColNPC" :
-                return (R) new ControlTypeProjets(file);
+                return (R) new ControlGroupeProjets(file);
                 
             case "model.enums.TypeColUA" :
                 return (R) new ControlUA(file);
