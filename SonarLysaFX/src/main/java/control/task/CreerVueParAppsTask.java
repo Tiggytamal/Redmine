@@ -1,10 +1,10 @@
 package control.task;
 
 import static utilities.Statics.NL;
-import static utilities.Statics.fichiersXML;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,15 +12,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import control.excel.ControlAppsW;
 import control.excel.ControlPbApps;
 import control.excel.ControlUA;
 import control.excel.ExcelFactory;
-import control.word.ControlRapport;
-import control.xml.ControlXML;
 import dao.DaoFactory;
 import model.CompoPbApps;
 import model.ModelFactory;
@@ -34,11 +29,8 @@ import model.enums.Param;
 import model.enums.TypeColAppsW;
 import model.enums.TypeColPbApps;
 import model.enums.TypeColUA;
-import model.enums.TypeInfo;
-import model.enums.TypeRapport;
 import model.sonarapi.Projet;
 import model.sonarapi.Vue;
-import model.utilities.ControlModelInfo;
 import utilities.Statics;
 import utilities.TechnicalException;
 
@@ -56,23 +48,12 @@ public class CreerVueParAppsTask extends AbstractTask
 
     private static final String TITRE = "Création Vues par Application";
 
-    /** logger composants sans applications */
-    private static final Logger LOGSANSAPP = LogManager.getLogger("sansapp-log");
-    /** logger composants avec application INCONNUE */
-    private static final Logger LOGINCONNUE = LogManager.getLogger("inconnue-log");
-    /** logger applications non listée dans le référentiel */
-    private static final Logger LOGNONLISTEE = LogManager.getLogger("nonlistee-log");
-
     private static final short ETAPES = 5;
-    /** compo sans lot */
+    /** Compo sans lot */
     private static final String COMPOSANSLOT = "Composant sans numéro de lot";
-
+    /** Lot de platefore de fab. pour TomCat */
     private static final String LOT315765 = "315765";
 
-    /** Nombre de composants avec application inconnues */
-    private int inconnues;
-    /** Controleur des rapports */
-    private ControlRapport controlRapport;
     /** Liste des apllications Dans SonarQube */
     private Set<Application> applisOpenSonar;
     /** Map de toutes les apllications */
@@ -90,9 +71,7 @@ public class CreerVueParAppsTask extends AbstractTask
     {
         super(ETAPES, TITRE);
         annulable = false;
-        inconnues = 0;
         applications = DaoFactory.getDao(Application.class).readAllMap();
-        controlRapport = new ControlRapport(TypeRapport.VUEAPPS);
         applisOpenSonar = new HashSet<>();
         composPbAppli = new ArrayList<>();
         this.option = option;
@@ -121,32 +100,25 @@ public class CreerVueParAppsTask extends AbstractTask
     private boolean creerVueParApplication()
     {
         boolean fichiersOK = true;
-        
-        /* -----  1 .Création de la liste des composants par application ----- */
-        Map<String, List<ComposantSonar>>  mapApplication = new HashMap<>();
-        
+
+        /* ----- 1 .Création de la liste des composants par application ----- */
+
+        Map<String, List<ComposantSonar>> mapApplication = analyseCompoSonar(OptionRecupCompo.DERNIERE);
+
         /* ----- 2. Création des fichiers d'extraction ----- */
-        
+
         // On ne crée pas les fichiers avec l'option VUE
         if (option != OptionCreerVueParAppsTask.VUE)
         {
-
-            // Récupération des donnèes sur le patrimoine
-            controlerSonarQube(OptionRecupCompo.PATRIMOINE);
-            
             // Création des fichiers avec mise à jour du booléen.
             if (!creerFichierExtractionAppli())
                 fichiersOK = false;
-            
+
             // Récupération des donnèes sur la dernière version des composants et instanciation de la map des application
-            mapApplication = controlerSonarQube(OptionRecupCompo.DERNIERE);
             if (!creerFichierProblemesAppli())
-                fichiersOK = false;            
+                fichiersOK = false;
         }
 
-        // Création du fichier de rapport word
-        controlRapport.creerFichier();
-        
         // On ne crée pas les vues avec l'option fichier
         if (option == OptionCreerVueParAppsTask.FICHIERS)
             return false;
@@ -163,7 +135,7 @@ public class CreerVueParAppsTask extends AbstractTask
         List<Projet> listeVuesExistantes = api.getVuesParNom("APPLI MASTER ");
         int size = listeVuesExistantes.size();
         long debut = System.currentTimeMillis();
-        
+
         for (int i = 0; i < size; i++)
         {
             Projet projet = listeVuesExistantes.get(i);
@@ -203,7 +175,7 @@ public class CreerVueParAppsTask extends AbstractTask
                 api.ajouterProjet(composantSonar, vue);
             }
         }
-        
+
         return fichiersOK;
     }
 
@@ -212,21 +184,21 @@ public class CreerVueParAppsTask extends AbstractTask
      *
      * @return map des composants SonarQube par application
      */
-    public Map<String, List<ComposantSonar>> controlerSonarQube(OptionRecupCompo option)
+    public Map<String, List<ComposantSonar>> analyseCompoSonar(OptionRecupCompo option)
     {
         // Récupération des composants Sonar
         Map<String, ComposantSonar> mapCompos = recupererComposantsSonar(option);
-        return creerMapApplication(mapCompos);
+        return creerMapApplication(mapCompos.values());
     }
 
     /**
      * Crée une map de toutes les applications dans Sonar avec pour chacunes la liste des composants liés. Enregistre aussi la liste des composants avec problème
      * sur el code application
      *
-     * @param mapCompos
+     * @param compos
      * @return
      */
-    private HashMap<String, List<ComposantSonar>> creerMapApplication(Map<String, ComposantSonar> mapCompos)
+    private HashMap<String, List<ComposantSonar>> creerMapApplication(Collection<ComposantSonar> compos)
     {
         // Initialisation de la map
         HashMap<String, List<ComposantSonar>> retour = new HashMap<>();
@@ -235,50 +207,22 @@ public class CreerVueParAppsTask extends AbstractTask
         baseMessage = "Traitements des composants :" + NL;
         updateMessage("");
         int i = 0;
-        inconnues = 0;
 
         // Itération sur la liste des projets
-        for (ComposantSonar baseCompo : mapCompos.values())
+        for (ComposantSonar compo : compos)
         {
-            ComposantSonar compo = ModelFactory.getModelWithParams(ComposantSonar.class, baseCompo);
-
             // Message
             updateMessage(compo.getNom());
             i++;
-            updateProgress(i, mapCompos.size());
+            updateProgress(i, compos.size());
 
-            // Test si le code application est vide, cela veut dire que le projet n'a pas de code application.
-            if (!compo.getAppli().getCode().isEmpty())
-            {
-                String application = compo.getAppli().getCode().trim().toUpperCase(Locale.FRANCE);
+            // Si l'application n'est pas dans la PIC, on continue au projet suivant.
+            if (!testAppli(compo))
+                continue;
 
-                // Si l'application n'est pas dans la PIC, on continue au projet suivant.
-                if (!testAppli(application, compo))
-                    continue;
-
-                // Mise à jour de la map de retour avec en clef, le code application et en valeur : la liste des projets liés.
-                if (retour.containsKey(application))
-                    retour.get(application).add(compo);
-                else
-                {
-                    List<ComposantSonar> liste = new ArrayList<>();
-                    liste.add(compo);
-                    retour.put(application, liste);
-                }
-            }
-            else
-            {
-                LOGSANSAPP.warn("Application non renseignée - Composant : " + compo.getNom());
-                controlRapport.addInfo(TypeInfo.COMPOSANSAPP, compo.getNom(), null);
-                compo.setEtatAppli(EtatAppli.KO);
-                composPbAppli.add(compo);
-            }
+            retour.computeIfAbsent(compo.getAppli().getCode(), k -> new ArrayList<>()).add(compo);
         }
 
-        LOGINCONNUE.info("Nombre d'applis inconnues : " + inconnues);
-
-        // Sauvegarde des applications après mise à jour des données
-        new ControlXML().saveParam(fichiersXML);
         return retour;
     }
 
@@ -293,58 +237,42 @@ public class CreerVueParAppsTask extends AbstractTask
      *            Nom du composant Sonar.
      * @param inconnues
      */
-    private boolean testAppli(String application, ComposantSonar compo)
+    private boolean testAppli(ComposantSonar compo)
     {
-        String nom = compo.getNom();
+        Application application = compo.getAppli();
+        String codeAppli = application.getCode();
 
-        // Gestion des composants avec application INCONNUE
-        if (Statics.INCONNUE.equalsIgnoreCase(application))
+        // Gestion des composants avec application non référencée
+        if (!application.isReferentiel())
         {
-            LOGINCONNUE.warn("Application : INCONNUE - Composant : " + nom);
-            compo.setEtatAppli(EtatAppli.KO);
-            inconnues++;
+            if (Statics.EMPTY.equals(codeAppli) || Statics.INCONNUE.equalsIgnoreCase(codeAppli))
+                compo.setEtatAppli(EtatAppli.KO);
+            else
+                compo.setEtatAppli(EtatAppli.FALSE);
 
+            // Ajout à la liste des composants à problème avec test sur les version précedente de celui-ci
             composPbAppli.add(testVersionPrec(compo));
-            return true;
+            return false;
         }
 
-        // Gestion des composants avec application connue
-        if (applications.containsKey(application))
+        // Gestion des applications obsolètes
+        if (!application.isActif())
         {
-            Application app = applications.get(application);
-
-            // Maj rapport et logs pour les applications obsolètes
-            if (!app.isActif())
-            {
-                LOGNONLISTEE.warn("Application obsolète : " + application + " - composant : " + nom);
-                compo.setEtatAppli(EtatAppli.OBS);
-                controlRapport.addInfo(TypeInfo.APPLIOBSOLETE, nom, application);
-                composPbAppli.add(compo);
-                return false;
-            }
-
-            // Maj données de l'application
-            app.ajouterldcSonar(compo.getLdc());
-            app.majValSecurite(compo.getSecurityRating());
-            app.ajouterVulnerabilites(compo.getVulnerabilites());
-            applisOpenSonar.add(app);
-            return true;
+            composPbAppli.add(compo);
+            compo.setEtatAppli(EtatAppli.OBS);
         }
 
-        // Gestion des composants sans application
-        LOGNONLISTEE.warn("Application n'existant pas dans le référenciel : " + application + " - composant : " + nom);
-        controlRapport.addInfo(TypeInfo.APPLINONREF, nom, application);
-        compo.setEtatAppli(EtatAppli.FALSE);
-
-        testVersionPrec(compo);
-
-        composPbAppli.add(compo);
-        return false;
+        // Maj données de l'application
+        application.ajouterldcSonar(compo.getLdc());
+        application.majValSecurite(compo.getSecurityRating());
+        application.ajouterVulnerabilites(compo.getVulnerabilites());
+        applisOpenSonar.add(application);
+        return true;
     }
 
     /**
-     * Test si l'on trouve un bon code application sur une version précedente du composant Prends en compte le lot 315765 pour avoir le nom du cpi de la version
-     * precédente. Ce lot a été créé par la plateforme defab pour mettre à jour l'IHM SOA pour Tomcat.
+     * Test si l'on trouve un bon code application sur une version précedente du composant. Prends en compte le lot 315765 pour avoir le nom du cpi de la version
+     * precédente. Ce lot a été créé par la plateforme de fab. pour mettre à jour l'IHM SOA pour Tomcat.
      * 
      * @param compo
      */
@@ -367,25 +295,22 @@ public class CreerVueParAppsTask extends AbstractTask
         for (; i > 0; i--)
         {
             String newKey = compo.getKey().replace(compo.getKey().charAt(compo.getKey().length() - 1) + "", String.valueOf(i));
-            ComposantSonar compo2 = DaoFactory.getDao(ComposantSonar.class).readAllMap().get(newKey);
+            ComposantSonar compo2 = mapCompos.get(newKey);
 
             // Si on trouve un composant, on va tester l'application
             if (compo2 != null)
             {
                 // Si on a un composant du lot 315765, on prend le nouveau composant
                 if (compo.getLotRTC().getLot().equals(LOT315765))
-                {
                     retour = compo2;
-                    retour.setEtatAppli(EtatAppli.KO);
-                }
 
                 // On tag le code appli si la nouvelle application est bien référencée.
                 if (applications.containsKey(compo2.getAppli().getCode()))
                 {
-                    retour.setEtatAppli(EtatAppli.PREC);
                     retour.setAppli(compo2.getAppli());
-                    controlRapport.addInfo(TypeInfo.APPLICOMPOPRECOK, compo.getNom(), compo2.getAppli().getCode());
+                    retour.setEtatAppli(EtatAppli.PREC);
                 }
+
                 return retour;
             }
         }
@@ -415,16 +340,19 @@ public class CreerVueParAppsTask extends AbstractTask
      */
     private boolean creerFichierProblemesAppli()
     {
+        // Affichage
         etapePlus();
         int size = composPbAppli.size();
         int i = 0;
         updateProgress(0, size);
-        updateMessage("création du fichier des composants sans code appli.");
+        baseMessage = "création du fichier des composants sans code appli\n";
+        updateMessage("");
 
         // Fichier des problèmes des codes apllication
         List<CompoPbApps> listePbApps = new ArrayList<>();
 
-        // Récupération
+        // Récupération données catalogue UA
+        updateMessage("Récupération des données du fichier catalogue UA");
         ControlUA controlUA = ExcelFactory.getReader(TypeColUA.class, new File(Statics.RESSTEST + "CatalogueUA.xlsx"));
         Map<String, String> mapUA = controlUA.recupDonneesDepuisExcel();
 
@@ -433,36 +361,35 @@ public class CreerVueParAppsTask extends AbstractTask
             i++;
             updateProgress(i, size);
             CompoPbApps pbApps = ModelFactory.getModel(CompoPbApps.class);
+            LotRTC lotSuiviRTC = compo.getLotRTC();
 
-            // Infos depuis le composant
+            // Code composant
             pbApps.setCodeComposant(compo.getNom());
-            if (compo.getLotRTC().getLot().isEmpty())
+            
+            // Traitement des composants plantés dans SonarQube sans lot 
+            if (lotSuiviRTC.getLot().isEmpty())
             {
                 pbApps.setLotRTC(COMPOSANSLOT);
                 listePbApps.add(pbApps);
                 continue;
             }
-            pbApps.setLotRTC(compo.getLotRTC().getLot());
-            pbApps.setEtatAppli(compo.getEtatAppli());
+
+            pbApps.setLotRTC(lotSuiviRTC.getLot());
             pbApps.setCodeAppli(compo.getAppli().getCode());
 
-            // CPI Lot depuis la map RTC
-            LotRTC lotSuiviRTC = DaoFactory.getDao(LotRTC.class).readAllMap().get(compo.getLotRTC().getLot());
-            if (lotSuiviRTC == null)
+
+            if (lotSuiviRTC.getCpiProjet().isEmpty())
                 pbApps.setCpiLot("Lot inaccessible depuis RTC");
             else
-            {
                 pbApps.setCpiLot(lotSuiviRTC.getCpiProjet());
 
-                // Departement, service et chef de service depuis la map Clarity
-                new ControlModelInfo().controleClarity(pbApps, lotSuiviRTC.getProjetClarity().getCode());
-            }
+            // Mise à jour depuis Clarity
+            pbApps.majDepuisClarity(lotSuiviRTC.getProjetClarity());
 
             listePbApps.add(pbApps);
 
             if (pbApps.getCodeComposant().startsWith("Composant ua_"))
                 controleUADepuisExcel(pbApps, mapUA);
-
         }
 
         // Ecriture fichier
@@ -488,11 +415,10 @@ public class CreerVueParAppsTask extends AbstractTask
             {
                 pbApps.setCodeAppli(entry.getValue());
                 pbApps.setEtatAppli(EtatAppli.CAT);
-                controlRapport.addInfo(TypeInfo.COMPOUAEXCEL, pbApps.getCodeComposant(), entry.getValue());
                 break;
             }
         }
     }
-    
+
     /*---------- ACCESSEURS ----------*/
 }

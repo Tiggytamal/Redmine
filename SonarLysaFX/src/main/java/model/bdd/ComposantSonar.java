@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
@@ -52,7 +53,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @JoinColumn(name = "lotRTC")
     private LotRTC lotRTC;
 
-    @Column(name = "composant_key", nullable = false, length = 256)
+    @Column(name = "composant_key", nullable = false, length = 255)
     private String key;
 
     @Column(name = "id", nullable = false)
@@ -65,10 +66,6 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     @Column(name = "edition", nullable = true, length = 20)
     private String edition;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "etat_appli", nullable = true)
-    private EtatAppli etatAppli;
 
     @Column(name = "ldc", nullable = true)
     private int ldc;
@@ -101,13 +98,15 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @Enumerated(EnumType.STRING)
     @Column(name = "matiere", nullable = false)
     private Matiere matiere;
+    
+    @Transient
+    private EtatAppli etatAppli;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    ComposantSonar()
-    {
-        if (etatAppli == null)
-            etatAppli = EtatAppli.OK;
+    ComposantSonar() 
+    { 
+        etatAppli = EtatAppli.OK;
     }
 
     ComposantSonar(String id, String key, String nom)
@@ -115,25 +114,6 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.id = id;
         this.key = key;
         this.nom = nom;
-    }
-
-    /**
-     * Constructeur pour créer un clone d'un composant Sonar
-     * 
-     * @param clone
-     */
-    ComposantSonar(ComposantSonar clone)
-    {
-        this.nom = clone.nom;
-        this.lotRTC = clone.lotRTC;
-        this.key = clone.key;
-        this.id = clone.id;
-        this.appli = clone.appli;
-        this.edition = clone.edition;
-        this.etatAppli = clone.etatAppli;
-        this.ldc = clone.ldc;
-        this.securityRating = clone.securityRating;
-        this.vulnerabilites = clone.vulnerabilites;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -303,17 +283,6 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
             this.vulnerabilites = Integer.parseInt(vulnerabilites);
     }
 
-    public EtatAppli getEtatAppli()
-    {
-        return etatAppli;
-    }
-
-    public void setEtatAppli(EtatAppli etatAppli)
-    {
-        if (etatAppli != null)
-            this.etatAppli = etatAppli;
-    }
-
     public boolean isSecurite()
     {
         return securite;
@@ -395,5 +364,15 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     {
         if (matiere != null)
             this.matiere = matiere;
+    }
+
+    public EtatAppli getEtatAppli()
+    {
+        return etatAppli;
+    }
+
+    public void setEtatAppli(EtatAppli etatAppli)
+    {
+        this.etatAppli = etatAppli;
     }
 }

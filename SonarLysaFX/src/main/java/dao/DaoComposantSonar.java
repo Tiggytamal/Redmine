@@ -2,7 +2,10 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
@@ -42,8 +45,13 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
         if (compo.getIdBase() == 0)
         {
             Application appli = compo.getAppli();
-            if (appli != null && appli.getIdBase() == 0)
-                em.persist(appli);
+            if (appli != null)
+            {
+                if (appli.getIdBase() == 0)
+                    em.persist(appli);
+                else
+                    em.merge(appli);
+            }
 
             LotRTC lotRTC = compo.getLotRTC();
             if (lotRTC != null)
@@ -80,6 +88,29 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
             return null;
         else
             return liste.get(0);
+    }
+
+    public void controleDoublons()
+    {
+        List<ComposantSonar> aSupprimer = new ArrayList<>();
+        Map<String, ComposantSonar> map = new HashMap<>();
+
+        for (ComposantSonar compo : readAll())
+        {
+            ComposantSonar compoMap = map.get(compo.getMapIndex());
+            if (compoMap == null)
+                map.put(compo.getMapIndex(), compo);
+            else
+            {
+                if (compoMap.getIdBase() > compo.getIdBase())
+                    aSupprimer.add(compoMap);
+                else
+                    aSupprimer.add(compo);
+            }
+        }
+
+        delete(aSupprimer);
+
     }
 
     /*---------- METHODES PRIVEES ----------*/

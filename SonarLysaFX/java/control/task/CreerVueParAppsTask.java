@@ -195,7 +195,7 @@ public class CreerVueParAppsTask extends AbstractSonarTask
             // Test si le code application est vide, cela veut dire que le projet n'a pas de code application.
             if (!compo.getAppli().isEmpty())
             {
-                String application = compo.getAppli().trim().toUpperCase(Locale.FRANCE);
+                String application = compo.getAppli().toUpperCase(Locale.FRANCE);
 
                 // Si l'application n'est pas dans la PIC, on continue au projet suivant.
                 if (!testAppli(application, compo))

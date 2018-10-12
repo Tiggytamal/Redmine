@@ -5,7 +5,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import model.utilities.AbstractModele;
+import model.interfaces.AbstractModele;
 
 @MappedSuperclass
 public abstract class AbstractBDDModele extends AbstractModele

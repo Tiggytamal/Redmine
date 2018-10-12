@@ -14,7 +14,8 @@ public enum TypeMajSuivi
     JAVA("Maj Fichier de Suivi JAVA"), 
     DATASTAGE("Maj Fichier de Suivi DataStage"), 
     MULTI("Maj Fichiers de Suivi"), 
-    COBOL("Maj Fichier de Suivi COBOL");
+    COBOL("Maj Fichier de Suivi COBOL"),
+    NUIT("Maj Fichier de Suivi avec Sonar");
 
     private String valeur;
 

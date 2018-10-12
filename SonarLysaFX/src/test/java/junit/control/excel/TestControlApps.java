@@ -1,6 +1,6 @@
 package junit.control.excel;
 
-import java.util.Map;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import model.bdd.Application;
 import model.enums.Switch;
 import model.enums.TypeColApps;
 
-public class TestControlApps extends TestControlExcelRead<TypeColApps, ControlApps, Map<String, Application>>
+public class TestControlApps extends TestControlExcelRead<TypeColApps, ControlApps, List<Application>>
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -38,7 +38,7 @@ public class TestControlApps extends TestControlExcelRead<TypeColApps, ControlAp
     @Test
     public void testRecupDonneesDepuisExcel()
     {
-        testRecupDonneesDepuisExcel(map -> map.size() == 1897);
+        testRecupDonneesDepuisExcel(liste -> liste.size() == 1897);
     }
     
     /*---------- METHODES PRIVEES ----------*/

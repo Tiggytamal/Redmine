@@ -1,4 +1,4 @@
-package model.utilities;
+package model.interfaces;
 
 /**
  * interface permettant de définir les classes de modèle de l'API

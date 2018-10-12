@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.powermock.reflect.Whitebox;
 
 import control.xml.ControlXML;
-import model.FichiersXML;
 import model.Info;
 import model.ProprietesXML;
 import utilities.Statics;
@@ -20,7 +19,6 @@ import utilities.Statics;
 public abstract class JunitBase
 {   
     protected static final ProprietesXML proprietes = new ControlXML().recupererXMLResources(ProprietesXML.class);
-    protected static final FichiersXML fichiers = new ControlXML().recupererXMLResources(FichiersXML.class);
     protected static final Info info = new ControlXML().recupererXMLResources(Info.class);
     protected final LocalDate today = LocalDate.now();
     
@@ -28,7 +26,6 @@ public abstract class JunitBase
     {
         // Mock des fichiers de paramètres depuis les ressources
         Whitebox.setInternalState(Statics.class, proprietes);
-        Whitebox.setInternalState(Statics.class, fichiers);
         Whitebox.setInternalState(Statics.class, info);
     }
     

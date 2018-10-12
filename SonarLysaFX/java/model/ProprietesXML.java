@@ -16,6 +16,7 @@ import model.enums.TypeColApps;
 import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColEdition;
+import model.enums.TypeColGrProjet;
 import model.enums.TypeColPic;
 import model.enums.TypeColSuivi;
 import model.enums.Param;
@@ -47,6 +48,7 @@ public class ProprietesXML implements XML, Modele
     private Map<TypeColPic, String> mapColsPic;
     private Map<TypeColEdition, String> mapColsEdition;
     private Map<TypeColApps, String> mapColsApps;
+    private Map<TypeColGrProjet, String> mapColsGrProjet;
 
     // Map planificateurs
     private Map<TypePlan, Planificateur> mapPlans;
@@ -65,6 +67,7 @@ public class ProprietesXML implements XML, Modele
         mapColsPic = new EnumMap<>(TypeColPic.class);
         mapColsEdition = new EnumMap<>(TypeColEdition.class);
         mapColsApps = new EnumMap<>(TypeColApps.class);
+        mapColsGrProjet = new EnumMap<>(TypeColGrProjet.class);
         mapPlans = new EnumMap<>(TypePlan.class);
         mapParamsBool = new EnumMap<>(ParamBool.class);
         mapParamsSpec = new EnumMap<>(ParamSpec.class);
@@ -112,6 +115,9 @@ public class ProprietesXML implements XML, Modele
 
             case "model.enums.TypeColApps":
                 return mapColsApps;
+                
+            case "model.enums.TypeColGrProjet":
+                return mapColsGrProjet;
 
             default:
                 throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);

@@ -3,7 +3,7 @@ package model;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import model.utilities.AbstractModele;
+import model.interfaces.AbstractModele;
 
 /**
  * Classe de modèle des colonnes avec indice pour les fichier Excel en écriture

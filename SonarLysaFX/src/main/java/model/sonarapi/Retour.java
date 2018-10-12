@@ -6,8 +6,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import model.utilities.AbstractModele;
-import model.utilities.ModeleSonar;
+import model.interfaces.AbstractModele;
+import model.interfaces.ModeleSonar;
 
 /**
  * Classe de wrapping des retour JSON. tous les attibuts sont optionnels,pour permettre le retour de n'importe quel type d'objet.

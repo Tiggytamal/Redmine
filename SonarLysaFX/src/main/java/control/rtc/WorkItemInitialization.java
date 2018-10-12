@@ -76,31 +76,31 @@ public final class WorkItemInitialization extends WorkItemOperation
         LotRTC lotRTC = ano.getLotRTC();
 
         // Environnement
-        IAttribute attribut = client.findAttribute(projet, TypeEnumRTC.ENVIRONNEMENT.getValeur(), null);
+        IAttribute attribut = client.findAttribute(projet, TypeEnumRTC.ENVIRONNEMENT.getValeur(), monitor);
         if (calculPariteEdition(lotRTC.getEdition()) || calculPariteEdition(proprietesXML.getMapParams().get(Param.RTCLOTCHC)))
             workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Br A VMOE", attribut));
         else
             workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Br B VMOE", attribut));
 
         // Importance
-        attribut = client.findAttribute(projet, TypeEnumRTC.IMPORTANCE.getValeur(), null);
+        attribut = client.findAttribute(projet, TypeEnumRTC.IMPORTANCE.getValeur(), monitor);
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Bloquante", attribut));
 
         // Origine
-        attribut = client.findAttribute(projet, TypeEnumRTC.ORIGINE.getValeur(), null);
+        attribut = client.findAttribute(projet, TypeEnumRTC.ORIGINE.getValeur(), monitor);
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Qualimétrie", attribut));
 
         // Nature
-        attribut = client.findAttribute(projet, TypeEnumRTC.NATURE.getValeur(), null);
+        attribut = client.findAttribute(projet, TypeEnumRTC.NATURE.getValeur(), monitor);
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Qualité", attribut));
 
         // Entité responsable
-        attribut = client.findAttribute(projet, TypeEnumRTC.ENTITERESPCORRECTION.getValeur(), null);
+        attribut = client.findAttribute(projet, TypeEnumRTC.ENTITERESPCORRECTION.getValeur(), monitor);
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("MOE", attribut));
 
         // Edition
         String edition = lotRTC.getEdition();
-        attribut = client.findAttribute(projet, TypeEnumRTC.EDITION.getValeur(), null);
+        attribut = client.findAttribute(projet, TypeEnumRTC.EDITION.getValeur(), monitor);
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString(calculEditionRTC(edition), attribut));
 
         // Subscriptions

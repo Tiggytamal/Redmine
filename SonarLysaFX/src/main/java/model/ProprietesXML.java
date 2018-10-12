@@ -27,8 +27,8 @@ import model.enums.TypeColSuivi;
 import model.enums.TypeColUA;
 import model.enums.TypeColVul;
 import model.enums.TypePlan;
-import model.utilities.AbstractModele;
-import model.utilities.XML;
+import model.interfaces.AbstractModele;
+import model.interfaces.XML;
 import utilities.Statics;
 import utilities.TechnicalException;
 
@@ -59,7 +59,7 @@ public class ProprietesXML extends AbstractModele implements XML
     private Map<TypeColPic, String> mapColsPic;
     private Map<TypeColEdition, String> mapColsEdition;
     private Map<TypeColApps, String> mapColsApps;
-    private Map<TypeColGrProjet, String> mapColsNPC;
+    private Map<TypeColGrProjet, String> mapColsGrProjet;
     private Map<TypeColUA, String> mapColsUA;
     
     // Map des colonnes avec indice pour écriture
@@ -82,7 +82,7 @@ public class ProprietesXML extends AbstractModele implements XML
         mapColsPic = new EnumMap<>(TypeColPic.class);
         mapColsEdition = new EnumMap<>(TypeColEdition.class);
         mapColsApps = new EnumMap<>(TypeColApps.class);
-        mapColsNPC = new EnumMap<>(TypeColGrProjet.class);
+        mapColsGrProjet = new EnumMap<>(TypeColGrProjet.class);
         mapColsUA = new EnumMap<>(TypeColUA.class);
         mapColsVul = new EnumMap<>(TypeColVul.class);
         mapColsPbApps = new EnumMap<>(TypeColPbApps.class);
@@ -140,14 +140,14 @@ public class ProprietesXML extends AbstractModele implements XML
             case "model.enums.TypeColApps" :
                 return (Map<T, String>) getMapColsApps();
                 
-            case "model.enums.TypeColNPC" :
+            case "model.enums.TypeColGrProjet" :
                 return (Map<T, String>) getMapColsNPC();
                 
             case "model.enums.TypeColUA" :
                 return (Map<T, String>) getMapColsUA();
 
             default:
-                throw new TechnicalException("Type non géré :" + typeColClass.toString(), null);
+                throw new TechnicalException("model.ProprietesXML.getEnumColR - Type non géré :" + typeColClass.toString(), null);
         }
     }
     
@@ -272,7 +272,7 @@ public class ProprietesXML extends AbstractModele implements XML
     @XmlElement(name = "mapColsNPC", required = false)
     private Map<TypeColGrProjet, String> getMapColsNPC()
     {
-        return mapColsNPC;
+        return mapColsGrProjet;
     }
     
     @XmlElementWrapper
@@ -335,7 +335,7 @@ public class ProprietesXML extends AbstractModele implements XML
         controleMap(builderErreurs, TypeColPic.class, mapColsPic);
         controleMap(builderErreurs, TypeColEdition.class, mapColsEdition);
         controleMap(builderErreurs, TypeColApps.class, mapColsApps);
-        controleMap(builderErreurs, TypeColGrProjet.class, mapColsNPC);
+        controleMap(builderErreurs, TypeColGrProjet.class, mapColsGrProjet);
 
         // Renvoi du booleen
         if (builderErreurs.length() == 0)

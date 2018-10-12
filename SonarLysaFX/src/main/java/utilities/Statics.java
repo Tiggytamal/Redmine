@@ -3,7 +3,6 @@ package utilities;
 import application.Main;
 import control.xml.ControlXML;
 import javafx.stage.FileChooser;
-import model.FichiersXML;
 import model.Info;
 import model.ModelFactory;
 import model.ProprietesXML;
@@ -100,8 +99,6 @@ public final class Statics
     public static final Info info = ModelFactory.getModel(Info.class);
     /** Controleur XML */
     private static final ControlXML controlXML = new ControlXML();
-    /** Sauvegarde des fichiers Excel de paramètre */
-    public static final FichiersXML fichiersXML = controlXML.recupererXML(FichiersXML.class);
     /** Sauvegarde des fichiers Excel de paramètre */
     public static final ProprietesXML proprietesXML = controlXML.recupererXML(ProprietesXML.class);
     

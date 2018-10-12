@@ -9,7 +9,7 @@ import model.LotSuiviPic;
 import model.ModelFactory;
 import model.bdd.Anomalie;
 import model.bdd.LotRTC;
-import model.utilities.AbstractModele;
+import model.interfaces.AbstractModele;
 import utilities.TechnicalException;
 
 /**

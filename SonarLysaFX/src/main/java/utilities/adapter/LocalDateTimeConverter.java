@@ -11,9 +11,9 @@ public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime,
 {
 
     @Override
-    public Timestamp convertToDatabaseColumn(LocalDateTime LocalDateTime)
+    public Timestamp convertToDatabaseColumn(LocalDateTime localDateTime)
     {
-        return (LocalDateTime == null ? null : Timestamp.valueOf(LocalDateTime));
+        return (localDateTime == null ? null : Timestamp.valueOf(localDateTime));
     }
 
     @Override

@@ -45,14 +45,18 @@ public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implement
         
         // Mise à des lots en focntion des groupes
         Map<String, GroupementProjet> map = readAllMap();
+        DaoLotRTC daoLotRTC = DaoFactory.getDao(LotRTC.class);
+        List<LotRTC> lotsRTC = daoLotRTC.readAll();
         
-        for (LotRTC lotRTC : DaoFactory.getDao(LotRTC.class).readAll())
+        for (LotRTC lotRTC : lotsRTC)
         {
             if (map.containsKey(lotRTC.getProjetRTC()))
                 lotRTC.setGroupe(map.get(lotRTC.getProjetRTC()).getGroupe());
             else
-                lotRTC.setGroupe(GroupeProjet.VIDE);
+                lotRTC.setGroupe(GroupeProjet.AUCUN);
         }
+        
+        daoLotRTC.persist(lotsRTC);
         majDateDonnee();
         return retour;
     }

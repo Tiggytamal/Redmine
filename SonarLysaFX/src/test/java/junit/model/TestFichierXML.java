@@ -5,36 +5,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 
 import junit.TestXML;
 import model.FichiersXML;
-import model.ModelFactory;
-import model.bdd.Application;
-import model.bdd.ChefService;
-import model.bdd.LotRTC;
-import model.bdd.ProjetClarity;
-import model.enums.TypeDonnee;
 import utilities.Statics;
 
 public class TestFichierXML extends AbstractTestModel<FichiersXML> implements TestXML
 {
     /*---------- ATTRIBUTS ----------*/
-
-    private String date;
-
     /*---------- CONSTRUCTEURS ----------*/
-
-    public TestFichierXML()
-    {
-        date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-    }
-
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Test
@@ -59,92 +40,9 @@ public class TestFichierXML extends AbstractTestModel<FichiersXML> implements Te
         assertTrue(file.isFile());
     }
 
-    @Test
-    public void testControleDonnees()
-    {
-        // Contrôle avec tous les fichiers vides
-        String controle = handler.controleDonnees();
-
-        // Affichage des données de chaque map
-        regexControleEquals("Liste des applications", 1, controle);
-        regexControleEquals("Referentiel Clarity", 1, controle);
-        regexControleEquals("Responsables de services", 1, controle);
-        regexControleEquals("Editions Pic", 1, controle);
-        regexControleEquals("lots RTC", 1, controle);
-        regexControleEquals("Composants Sonar", 1, controle);
-
-        // les 6 fichiers ne doivent pas être chargés
-        regexControleEquals(" non chargé(e).", 6, controle);
-
-        // On doit afficher la demande de rechargement
-        regexControleEquals("Merci de recharger le(s) fichier(s) de paramétrage.", 1, controle);
-
-        // Chargement des maps
-        initMaps();
-
-        // Nouveau test du contrôle
-        controle = handler.controleDonnees();
-
-        // Test sur la maj de chaque map
-        regexControleEquals("Referentiel Clarity chargé(e)s. Dernière Maj : " + date, 1, controle);
-        regexControleEquals("Liste des applications chargé(e)s. Dernière Maj : " + date, 1, controle);
-        regexControleEquals("Responsables de services chargé(e)s. Dernière Maj : " + date, 1, controle);
-        regexControleEquals("Editions Pic chargé(e)s. Dernière Maj : " + date, 1, controle);
-        regexControleEquals("lots RTC chargé(e)s. Dernière Maj : " + date, 1, controle);
-        regexControleEquals("Composants Sonar chargé(e)s. Dernière Maj : " + date, 1, controle);
-
-        // On ne doit plus afficher la demande de rechargement
-        regexControleEquals("Merci de recharger le(s) fichier(s) de paramétrage.", 0, controle);
-
-    }
 
     /*---------- METHODES PRIVEES ----------*/
 
-    /**
-     * Initialisation des maps du fichier pour les tests
-     */
-    private void initMaps()
-    {
-        Map<String, ProjetClarity> mapClarity = new HashMap<>();
-        mapClarity.put("a", ModelFactory.getModel(ProjetClarity.class));
-        handler.majMapDonnees(TypeDonnee.CLARITY, mapClarity);
-
-        Map<String, Application> mapApplis = new HashMap<>();
-        mapApplis.put("a", ModelFactory.getModel(Application.class));
-        mapApplis.put("b", ModelFactory.getModel(Application.class));
-        handler.majMapDonnees(TypeDonnee.APPS, mapApplis);
-
-        Map<String, ChefService> mapRespService = new HashMap<>();
-        mapRespService.put("a", ModelFactory.getModel(ChefService.class));
-        mapRespService.put("b", ModelFactory.getModel(ChefService.class));
-        mapRespService.put("c", ModelFactory.getModel(ChefService.class));
-        handler.majMapDonnees(TypeDonnee.RESPSERVICE, mapRespService);
-
-        Map<String, String> mapEditions = new HashMap<>();
-        mapEditions.put("a", "edition");
-        mapEditions.put("b", "edition");
-        mapEditions.put("c", "edition");
-        mapEditions.put("d", "edition");
-        handler.majMapDonnees(TypeDonnee.EDITION, mapEditions);
-
-        Map<String, LotRTC> mapLotsRTC = new HashMap<>();
-        mapLotsRTC.put("a", ModelFactory.getModel(LotRTC.class));
-        mapLotsRTC.put("b", ModelFactory.getModel(LotRTC.class));
-        mapLotsRTC.put("c", ModelFactory.getModel(LotRTC.class));
-        mapLotsRTC.put("d", ModelFactory.getModel(LotRTC.class));
-        mapLotsRTC.put("e", ModelFactory.getModel(LotRTC.class));
-        handler.majMapDonnees(TypeDonnee.LOTSRTC, mapLotsRTC);
-        
-        Map<String, String> mapProjetsNpc = new HashMap<>();
-        mapProjetsNpc.put("a", "a");
-        mapProjetsNpc.put("b", "b");
-        mapProjetsNpc.put("c", "c");
-        mapProjetsNpc.put("d", "d");
-        mapProjetsNpc.put("e", "e");
-        mapProjetsNpc.put("f", "f");
-        mapProjetsNpc.put("g", "g");
-        handler.majMapDonnees(TypeDonnee.GROUPE, mapProjetsNpc);
-    }
 
     /*---------- ACCESSEURS ----------*/
 }

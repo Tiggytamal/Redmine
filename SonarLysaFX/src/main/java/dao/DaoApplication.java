@@ -24,12 +24,12 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
     private static final long serialVersionUID = 1L;
 
     /*---------- CONSTRUCTEURS ----------*/
-    
-    DaoApplication() 
-    { 
+
+    DaoApplication()
+    {
         typeDonnee = TypeDonnee.APPS;
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
@@ -37,22 +37,26 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
     {
         // Récupération des données du fichier Excel
         ControlApps control = ExcelFactory.getReader(TypeColApps.class, file);
-        Map<String, Application> mapExcel = control.recupDonneesDepuisExcel();
+        List<Application> mapExcel = control.recupDonneesDepuisExcel();
 
         // Récupération des données en base
         Map<String, Application> mapBase = readAllMap();
 
         // Mise à jour des applications déjà enregistrées et ajout des nouvelles.
-        for (Map.Entry<String, Application> entry : mapExcel.entrySet())
-        {            
-            mapBase.put(entry.getKey(), mapBase.computeIfAbsent(entry.getKey(), key -> entry.getValue()).update(entry.getValue()));
+        for (Application appli : mapExcel)
+        {
+            String key = appli.getMapIndex();
+            if (mapBase.containsKey(key))
+                mapBase.get(key).update(appli);
+            else
+                mapBase.put(key, appli);
         }
 
         // Persistance en base
         int retour = persist(mapBase.values());
         majDateDonnee();
         return retour;
-    } 
+    }
 
     @Override
     public Application recupEltParCode(String codeAppli)

@@ -8,7 +8,6 @@
 }
 
 .button {
-    -fx-text-fill: white;
     -fx-font-family: "Comic Sans MS";
     -fx-background-color: linear-gradient(#61a2b1, #2A5058);
     -fx-effect: dropshadow( three-pass-box , rgba(0.0,0.0,0.0,0.6) , 5.0, 0.0 , 0.0 , 1.0 );
@@ -26,7 +25,6 @@
 }
 
 .label {
-    -fx-text-fill: white;
     -fx-font-family: "Comic Sans MS";
     -fx-font-size: 14.0;
 }
@@ -34,13 +32,17 @@
 .menu-item 
 { 
     -fx-background-color: linear-gradient(#61a2b1, #2A5058);
-	-fx-text-fill: white;
 }
 
 .menu-item:hover
 { 
 	-fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
+
+.menu-item:clic {
+	
+}
+
 
 .menu
 { 
@@ -52,7 +54,6 @@
 }
 
 .radio-button {
-    -fx-text-fill: white;
     -fx-font-family: "Comic Sans MS";
     -fx-font-size: 14.0;
 }
@@ -80,12 +81,4 @@
 
 .tree-cell:filled:selected{
     -fx-background-color: linear-gradient(#c1dbe1, #8cbdc8);
-}
-
-.date-chooser.label {
-	    -fx-text-fill: black;
-}
-
-.date-picker.label {
-	    -fx-text-fill: black;
 }

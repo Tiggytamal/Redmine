@@ -28,6 +28,7 @@ import com.mchange.util.AssertException;
 
 import model.bdd.ComposantSonar;
 import model.enums.Param;
+import model.interfaces.ModeleSonar;
 import model.sonarapi.AjouterProjet;
 import model.sonarapi.AjouterVueLocale;
 import model.sonarapi.AssocierQG;
@@ -45,7 +46,6 @@ import model.sonarapi.QualityGate;
 import model.sonarapi.Retour;
 import model.sonarapi.Validation;
 import model.sonarapi.Vue;
-import model.utilities.ModeleSonar;
 import utilities.AbstractToStringImpl;
 import utilities.FunctionalException;
 import utilities.Statics;

@@ -11,6 +11,7 @@
 		<class>model.bdd.LotRTC</class>
 		<class>model.bdd.Anomalie</class>
 		<class>model.bdd.DateMaj</class>
+		<class>model.bdd.GroupementProjet</class>
 		<class>utilities.adapter.LocalDateConverter</class>
 		<class>utilities.adapter.LocalDateTimeConverter</class>
 		<properties>

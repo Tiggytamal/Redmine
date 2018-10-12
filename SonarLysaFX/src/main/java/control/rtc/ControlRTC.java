@@ -2,6 +2,7 @@ package control.rtc;
 
 import static utilities.Statics.EMPTY;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -53,18 +54,21 @@ import com.ibm.team.workitem.common.model.IWorkItemHandle;
 import com.ibm.team.workitem.common.model.IWorkItemType;
 import com.ibm.team.workitem.common.model.Identifier;
 import com.ibm.team.workitem.common.model.ItemProfile;
+import com.ibm.team.workitem.common.workflow.IWorkflowAction;
 import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
 import com.mchange.util.AssertException;
 
+import control.task.AbstractTask;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Anomalie;
 import model.bdd.DateMaj;
 import model.bdd.LotRTC;
+import model.enums.EtatAnoRTC;
 import model.enums.EtatLot;
 import model.enums.Param;
-import model.enums.TypeEnumRTC;
 import model.enums.TypeDonnee;
+import model.enums.TypeEnumRTC;
 import utilities.AbstractToStringImpl;
 import utilities.DateConvert;
 import utilities.Statics;
@@ -89,7 +93,7 @@ public class ControlRTC extends AbstractToStringImpl
     private static final int PAGESIZE = 512;
 
     private final LocalDate today = LocalDate.now();
-    
+
     /** Instance du controleur */
     public static final ControlRTC INSTANCE = new ControlRTC();
 
@@ -240,7 +244,7 @@ public class ControlRTC extends AbstractToStringImpl
         if (item == null)
             return EMPTY;
         IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(item, monitor);
-        return workflowInfo.getStateName(item.getState2());
+        return workflowInfo.getStateName(item.getState2()).trim();
     }
 
     /**
@@ -323,9 +327,37 @@ public class ControlRTC extends AbstractToStringImpl
         if (workItem == null)
             return 0;
 
-        LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + ano.getLotRTC());
+        LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + ano.getLotRTC().getLot());
         return workItem.getId();
 
+    }
+
+    public void controleAnoRTC(Anomalie ano)
+    {
+        if (ano.getNumeroAnoRTC() == 0)
+            return;
+
+        IWorkItem anoRTC;
+        try
+        {
+            anoRTC = recupWorkItemDepuisId(ano.getNumeroAnoRTC());
+            ano.setEtatRTC(recupEtatElement(anoRTC));
+
+            // Correction si l'on a pas déjà la date de création du Defect
+            if (ano.getDateCreation() == null)
+                ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
+
+            // Mise à jour de la date de résolution
+            if (anoRTC.getResolutionDate() != null)
+                ano.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
+            else
+                ano.setDateReso(null);
+        }
+        catch (TeamRepositoryException e)
+        {
+            LOGGER.error("Erreur récupération information Defect. Lot : " + ano.getLotRTC());
+            LOGPLANTAGE.error(e);
+        }
     }
 
     /**
@@ -349,11 +381,11 @@ public class ControlRTC extends AbstractToStringImpl
             {
                 ILiteral iLiteral = iterator.next();
                 if (iLiteral.getIdentifier2().equals(literalID))
-                    return iLiteral.getName();
+                    return iLiteral.getName().trim();
             }
         }
         else if (objet instanceof String)
-            return (String) objet;
+            return ((String) objet).trim();
 
         return null;
     }
@@ -365,7 +397,7 @@ public class ControlRTC extends AbstractToStringImpl
      */
     public String recupNomContributorConnecte()
     {
-        return repo.loggedInContributor().getName();
+        return repo.loggedInContributor().getName().trim();
     }
 
     /**
@@ -436,7 +468,7 @@ public class ControlRTC extends AbstractToStringImpl
         final List<?> handles = page.getItemHandles();
         if (handles.isEmpty())
             return null;
-        
+
         return (IContributor) repo.itemManager().fetchCompleteItem((IContributorHandle) handles.get(0), IItemManager.DEFAULT, monitor);
     }
 
@@ -453,7 +485,7 @@ public class ControlRTC extends AbstractToStringImpl
      * @throws TeamRepositoryException
      */
     @SuppressWarnings("unchecked")
-    public List<IWorkItemHandle> recupLotsRTC(LocalDate dateCreation) throws TeamRepositoryException
+    public List<LotRTC> recupLotsRTC(LocalDate dateCreation, AbstractTask task) throws TeamRepositoryException
     {
         // Requetage sur RTC pour récupérer tous les Lots
 
@@ -504,8 +536,8 @@ public class ControlRTC extends AbstractToStringImpl
         IItemQueryPage page = qs.queryItems(filtered, new Object[] {}, pageSize);
 
         // Liste de tous les lots trouvés. ON peut utiliser des IWorkItemHandles directement car la requête ne remonte que des WorkItems
-        List<IWorkItemHandle> retour = new ArrayList<>();
-        retour.addAll(page.getItemHandles());
+        List<IWorkItemHandle> handles = new ArrayList<>();
+        handles.addAll(page.getItemHandles());
         int nextPosition = page.getNextStartPosition();
         UUID token = page.getToken();
 
@@ -514,34 +546,33 @@ public class ControlRTC extends AbstractToStringImpl
         {
             IItemQueryPage nextPage = (IItemQueryPage) qs.fetchPage(token, nextPosition, pageSize);
             nextPosition = nextPage.getNextStartPosition();
-            retour.addAll(nextPage.getItemHandles());
+            handles.addAll(nextPage.getItemHandles());
         }
 
-        return retour;
-    }
+        // trasnformation des IWorkItemHandle en LotRTC
 
-    /**
-     * Création d'un LotSuiviRTC regroupant les informations depuis RTC. Ne prend en compte que les IWorkItemHandle
-     * 
-     * @param handle
-     *            IItemHandle provenant de RTC.
-     * @return {@link model.bdd.LotRTC}
-     * @throws TeamRepositoryException
-     */
-    public LotRTC creerLotSuiviRTCDepuisHandle(IWorkItemHandle handle) throws TeamRepositoryException
-    {
-        
-        IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, handle);
-        LotRTC retour = ModelFactory.getModel(LotRTC.class);
-        retour.setLot(String.valueOf(workItem.getId()));
-        retour.setLibelle(workItem.getHTMLSummary().getPlainText());
-        retour.setCpiProjet(recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
-        retour.setProjetClarityString(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem));                
-        retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem));
-        EtatLot etatLot = EtatLot.from(recupEtatElement(workItem));
-        retour.setEtatLot(etatLot);
-        retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
-        retour.setDateMajEtat(recupDatesEtatsLot(workItem).get(etatLot));
+        // Variables
+        int i = 0;
+        int size = handles.size();
+        task.setBaseMessage("Récupération lots RTC...");
+        long debut = System.currentTimeMillis();
+
+        // valorisation de al liste de retour
+        List<LotRTC> retour = new ArrayList<>();
+        for (IWorkItemHandle handle : handles)
+        {
+            if (task.isCancelled())
+                break;
+
+            // Récupération de l'objet complet depuis l'handle de la requête
+            retour.add(creerLotSuiviRTCDepuisHandle(handle));
+
+            // Affichage
+            i++;
+            task.updateProgress(i, size);
+            task.updateMessage(task.affichageTemps(debut, i, size));
+        }
+
         return retour;
     }
 
@@ -615,7 +646,197 @@ public class ControlRTC extends AbstractToStringImpl
         }
     }
 
+    /**
+     * Listage de tous les type de workItem d'un projet.
+     * 
+     * @return
+     */
+    public List<IWorkItemType> recupListeTypeWorkItem(String projet) throws TeamRepositoryException
+    {
+        List<IWorkItemType> liste = workItemClient.findWorkItemTypes(pareas.get(projet), monitor);
+        for (IWorkItemType type : liste)
+        {
+            LOGGER.info("nom : " + type.getDisplayName());
+            LOGGER.info("identifiant : " + type.getIdentifier() + Statics.NL);
+        }
+        return workItemClient.findWorkItemTypes(pareas.get(projet), monitor);
+    }
+
+    /**
+     * Listage de tous les type de workItem d'un projet.
+     * 
+     * @return
+     * @throws TeamRepositoryException
+     */
+    public List<IAttributeHandle> recupListeCustomAttributes(int id) throws TeamRepositoryException
+    {
+        List<IAttributeHandle> liste = recupWorkItemDepuisId(id).getCustomAttributes();
+        for (IAttributeHandle handle : liste)
+        {
+            IAttribute attribut = recupererItemDepuisHandle(IAttribute.class, handle);
+
+            LOGGER.info("attribut : " + attribut.getDisplayName());
+            LOGGER.info("identifiant : " + attribut.getIdentifier() + Statics.NL);
+        }
+        return liste;
+    }
+
+    /**
+     * 
+     * @param id
+     * @return
+     * @throws TeamRepositoryException
+     */
+    public boolean fermerAnoRTC(int id) throws TeamRepositoryException
+    {
+        // récupération du workItem puis du workflow depuis le numéro de l'anomalie
+        IWorkItem wi = recupWorkItemDepuisId(id);
+        IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(wi, monitor);
+        if (workflowInfo == null)
+        {
+            LOGPLANTAGE.error("control.rtc.ControlRTC.fermerAnomalieRTC - impossible de trouver le workflow de l'anomalie : " + id);
+            return false;
+        }
+
+        // Création du copyManager pour pouvoir modifier les données de l'anomalie
+        workItemClient.getWorkItemWorkingCopyManager().connect(wi, IWorkItem.FULL_PROFILE, monitor);
+        WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(wi);
+
+        // Ajout des données necessaires pour clôturer si elles ne sont pas présentes
+        
+        // Date de livraison / homolation
+        IAttribute date = workItemClient.findAttribute(wi.getProjectArea(), TypeEnumRTC.DATELIVHOMO.getValeur(), monitor);
+        
+        if (wi.getValue(date) == null)
+        {
+            workingCopy.getWorkItem().setValue(date, new Timestamp(System.currentTimeMillis()));
+            workingCopy.save(monitor);
+        }
+        
+        // Entité responsable correction
+        IAttribute resp = workItemClient.findAttribute(wi.getProjectArea(), TypeEnumRTC.ENTITERESPCORRECTION.getValeur(), monitor);
+        
+        if (wi.getValue(resp).equals(recupLiteralDepuisString("-", resp)))
+        {
+            workingCopy.getWorkItem().setValue(resp, recupLiteralDepuisString("MOE", resp));
+            workingCopy.save(monitor);
+        }
+
+            
+        // Boucle pour passer arriver jusqu'à l'anomalie close.
+        while (true)
+        {
+            EtatAnoRTC etatLot = EtatAnoRTC.from(workflowInfo.getStateName(wi.getState2()).trim());
+
+            switch (etatLot)
+            {
+                case CLOSE:
+                    workItemClient.getWorkItemWorkingCopyManager().disconnect(wi);
+                    return true;
+
+                case ENCOURS:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.ENCOURS.getAction());
+                    break;
+
+                case NOUVELLE:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.NOUVELLE.getAction());
+                    break;
+
+                case OUVERTE:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.OUVERTE.getAction());
+                    break;
+
+                case REOUVERTE:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.REOUVERTE.getAction());
+                    break;
+
+                case VMOE:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.VMOE.getAction());
+                    break;
+
+                case VMOA:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.VMOA.getAction());
+                    break;
+
+                case RESOLUE:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.RESOLUE.getAction());
+                    break;
+
+                case VERIFIEE:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.VERIFIEE.getAction());
+                    break;
+            }
+        }
+    }
+
     /*---------- METHODES PRIVEES ----------*/
+
+    /**
+     * Création d'un LotSuiviRTC regroupant les informations depuis RTC. Ne prend en compte que les IWorkItemHandle
+     * 
+     * @param handle
+     *            IItemHandle provenant de RTC.
+     * @return {@link model.bdd.LotRTC}
+     * @throws TeamRepositoryException
+     */
+    private LotRTC creerLotSuiviRTCDepuisHandle(IWorkItemHandle handle) throws TeamRepositoryException
+    {
+
+        IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, handle);
+        LotRTC retour = ModelFactory.getModel(LotRTC.class);
+        retour.setLot(String.valueOf(workItem.getId()));
+        retour.setLibelle(workItem.getHTMLSummary().getPlainText());
+        retour.setCpiProjet(recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
+        retour.setProjetClarityString(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem));
+        retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem));
+        EtatLot etatLot = EtatLot.from(recupEtatElement(workItem));
+        retour.setEtatLot(etatLot);
+        retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
+        retour.setDateMajEtat(recupDatesEtatsLot(workItem).get(etatLot));
+        return retour;
+    }
+
+    /**
+     * Récupère l'identifiant d'une action à partir de son nom
+     * 
+     * @param workflowInfo
+     * @param workItem
+     * @param actionName
+     * @return
+     */
+    private String getAction(IWorkflowInfo workflowInfo, IWorkItem workItem, String actionName)
+    {
+        Identifier<IWorkflowAction>[] actionIds = workflowInfo.getActionIds(workItem.getState2());
+
+        for (Identifier<IWorkflowAction> id : actionIds)
+        {
+            if (workflowInfo.getActionName(id).equals(actionName))
+                return id.getStringIdentifier();
+        }
+        return "";
+    }
+
+    /**
+     * Modifie l'état d'une anomalie suivant l'action donnée
+     * 
+     * @param workflowInfo
+     * @param workItem
+     * @param actionName
+     * @throws TeamRepositoryException
+     */
+    private void changerEtatAno(WorkItemWorkingCopy workingCopy, IWorkflowInfo workflowInfo, IWorkItem workItem, String actionName)
+    {
+        workingCopy.setWorkflowAction(getAction(workflowInfo, workItem, actionName));
+        workingCopy.save(monitor);
+    }
+    
+    public void relancerAno(int id) throws TeamRepositoryException
+    {
+        IWorkItem wi = recupWorkItemDepuisId(id);
+        workItemClient.getWorkItemWorkingCopyManager().connect(wi, IWorkItem.FULL_PROFILE, monitor);
+        WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(wi);
+        
+    }
 
     /*---------- ACCESSEURS ----------*/
 
@@ -628,4 +849,6 @@ public class ControlRTC extends AbstractToStringImpl
     {
         return workItemClient;
     }
+
+    /*---------- CLASSES PRIVEES **********/
 }

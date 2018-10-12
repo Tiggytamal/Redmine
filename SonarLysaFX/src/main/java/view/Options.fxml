@@ -75,7 +75,7 @@
 					<Region prefHeight="20" />
 					<Button fx:id="chefSrev" text="Charger Chef de Service" onAction="#chargerFichier" alignment="CENTER" />
 					<Region prefHeight="20" />
-					<Button fx:id="npc" text="Charger Projets NPC" onAction="#chargerFichier" alignment="CENTER" />
+					<Button fx:id="grProjet" text="Charger Groupes Projets" onAction="#chargerFichier" alignment="CENTER" />
 					<Region prefHeight="20" />
 					<Button fx:id="edition" text="Charger Edition" onAction="#chargerFichier" alignment="CENTER" />
 					<Region prefHeight="20" VBox.vgrow="ALWAYS" />

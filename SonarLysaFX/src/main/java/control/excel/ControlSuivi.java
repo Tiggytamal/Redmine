@@ -14,8 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -31,8 +29,7 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-import com.ibm.team.repository.common.TeamRepositoryException;
-
+import control.rtc.ControlRTC;
 import control.task.AbstractTask;
 import control.word.ControlRapport;
 import dao.DaoFactory;
@@ -51,7 +48,6 @@ import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import model.enums.TypeRapport;
 import model.enums.TypeVersion;
-import model.utilities.ControlModelInfo;
 import utilities.CellHelper;
 import utilities.FunctionalException;
 import utilities.Statics;
@@ -70,9 +66,6 @@ import utilities.enums.Severity;
 public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<Anomalie>>
 {
     /*---------- ATTRIBUTS ----------*/
-
-    /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
     // Constantes statiques
     private static final String SQ = "SUIVI Qualité";
@@ -108,7 +101,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
     // Controleurs
     private ControlRapport controlRapport;
-    private ControlModelInfo controlModelInfo;
 
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
@@ -120,7 +112,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         super(file);
 
         // Initialisation des parties constantes des liens
-        controlModelInfo = new ControlModelInfo();
         initContraintes();
     }
 
@@ -220,7 +211,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
                 }
             }
         }
-
         return map.values();
     }
 
@@ -234,26 +224,10 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         creerTitresStats(sheet);
 
         // Données calculées
-        int erreursQG = 0;
-        int erreursQGSecu = 0;
-        int erreursQGM = 0;
-        int erreursQGMSecu = 0;
-        int erreursQGT = 0;
-        int erreursQGTSecu = 0;
-
-        int anoRTCOuvertes = 0;
-        int anoRTCOuvertesSecu = 0;
-        int anoRTCOuvertesM = 0;
-        int anoRTCOuvertesMSecu = 0;
-        int anoRTCOuvertesT = 0;
-        int anoRTCOuvertesTSecu = 0;
-
-        int anoRTCResolues = 0;
-        int anoRTCResoluesSecu = 0;
-        int anoRTCResoluesM = 0;
-        int anoRTCResoluesMSecu = 0;
-        int anoRTCResoluesT = 0;
-        int anoRTCResoluesTSecu = 0;
+        int[] valeurs = new int[] { 0, 0, 0, 0, 0, 0 };
+        int[] valeursM = new int[] { 0, 0, 0, 0, 0, 0 };
+        int[] valeursT = new int[] { 0, 0, 0, 0, 0, 0 };
+        int[] valeursE = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 
         // calcul des dates
         LocalDate today = LocalDate.now();
@@ -261,74 +235,39 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         LocalDate fin = LocalDate.of(today.getYear(), today.getMonth(), 1);
         LocalDate debutTrim = LocalDate.of(today.getYear(), today.getMonth(), 1).minusMonths(3).minusDays(1L);
 
+        // Itération sur les anomalies
         for (Anomalie ano : anosEnBase)
         {
-
-            erreursQG++;
-            if (ano.isSecurite())
-                erreursQGSecu++;
-            
-            if (ano.getDateDetection().isAfter(debutMois) && ano.getDateDetection().isBefore(fin))
-            {
-                erreursQGM++;
-                if (ano.isSecurite())
-                    erreursQGMSecu++;
-            }
-            if (ano.getDateDetection().isAfter(debutTrim) && ano.getDateDetection().isBefore(fin))
-            {
-                erreursQGT++;
-                if (ano.isSecurite())
-                    erreursQGTSecu++;
-            }
+            calculDonnee(ano, debutMois, debutTrim, fin, valeurs);
 
             if (ano.getDateCreation() != null)
-            {
-                anoRTCOuvertes++;
-                if (ano.isSecurite())
-                    anoRTCOuvertesSecu++;
-                
-                if (ano.getDateCreation().isAfter(debutMois) && ano.getDateCreation().isBefore(fin))
-                {
-                    anoRTCOuvertesM++;
-                    if (ano.isSecurite())
-                        anoRTCOuvertesSecu++;
-                }
-                
-                if (ano.getDateCreation().isAfter(debutTrim) && ano.getDateCreation().isBefore(fin))
-                {
-                    anoRTCOuvertesT++;
-                    if (ano.isSecurite())
-                        anoRTCOuvertesTSecu++;
-                }
-            }
+                calculDonnee(ano, debutMois, debutTrim, fin, valeursM);
 
             if (ano.getDateReso() != null)
-            {
-                anoRTCResolues++;
-                if (ano.isSecurite())
-                    anoRTCResoluesSecu++;
-                if (ano.getDateReso().isAfter(debutMois) && ano.getDateReso().isBefore(fin))
-                {
-                    anoRTCResoluesM++;
-                    if (ano.isSecurite())
-                        anoRTCResoluesMSecu++;
-                }
-                if (ano.getDateReso().isAfter(debutTrim) && ano.getDateReso().isBefore(fin))
-                {
-                    anoRTCResoluesT++;
-                    if (ano.isSecurite())
-                        anoRTCResoluesTSecu++;
-                }
-            }
+                calculDonnee(ano, debutMois, debutTrim, fin, valeursT);
+
+            if (ano.getDateCreation() != null && ano.getDateReso() == null)
+                calculEnCours(ano, today, valeursE);
         }
 
+        CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.VIDE, HorizontalAlignment.CENTER);
         Row row = sheet.createRow(sheet.getLastRowNum() + 1);
-        creerLigneVersion(row, "Erreur SonarQube detectées", erreursQGM, erreursQGMSecu, erreursQGT, erreursQGTSecu, erreursQG, erreursQGSecu);
+        creerLigneCalcul(row, "Erreur SonarQube detectées", valeurs);
         row = sheet.createRow(sheet.getLastRowNum() + 1);
-        creerLigneVersion(row, "anomalies RTC créées", anoRTCOuvertesM, anoRTCOuvertesMSecu, anoRTCOuvertesT, anoRTCOuvertesTSecu, anoRTCOuvertes, anoRTCOuvertesSecu);
+        creerLigneCalcul(row, "anomalies RTC créées", valeursM);
         row = sheet.createRow(sheet.getLastRowNum() + 1);
-        creerLigneVersion(row, "anomalies RTC résolues", anoRTCResoluesM, anoRTCResoluesMSecu, anoRTCResoluesT, anoRTCResoluesTSecu, anoRTCResolues, anoRTCResoluesSecu);
+        creerLigneCalcul(row, "anomalies RTC résolues", valeursT);
+        row = sheet.createRow(sheet.getLastRowNum() + 1);
+        valoriserCellule(row, 0, centre, "Anomalies en cours : ");
 
+        row = sheet.createRow(sheet.getLastRowNum() + 2);
+        creerLigneTotalAno(row, "Total : ", valeursE[Calcul.TOTAL.ordinal()], valeursE[Calcul.TOTALSEC.ordinal()]);
+        row = sheet.createRow(sheet.getLastRowNum() + 1);
+        creerLigneTotalAno(row, "Anomalies de plus d'une semaine : ", valeursE[Calcul.TOTALS.ordinal()], valeursE[Calcul.TOTALSSEC.ordinal()]);
+        row = sheet.createRow(sheet.getLastRowNum() + 1);
+        creerLigneTotalAno(row, "Anomalies de plus d'un mois : ", valeursE[Calcul.TOTALM.ordinal()], valeursE[Calcul.TOTALMSEC.ordinal()]);
+        row = sheet.createRow(sheet.getLastRowNum() + 1);
+        creerLigneTotalAno(row, "Anomalies de plus de 3 mois : ", valeursE[Calcul.TOTALT.ordinal()], valeursE[Calcul.TOTALTSEC.ordinal()]);
         autosizeColumns(sheet);
     }
 
@@ -367,6 +306,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param lotsRelease
      * @param sheet
      * @param matiere
+     * @param task
      * @throws IOException
      */
     public void majFeuillePrincipale(List<Anomalie> anosATraiter, Sheet sheet, Matiere matiere)
@@ -374,7 +314,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         // Rangement anomalies par date de détection
         Collections.sort(anosATraiter, (o1, o2) -> o1.getDateDetection().compareTo(o2.getDateDetection()));
 
-        // Mise à jour anomalies déjà créées
+        // Mise à jour anomalies
         for (Anomalie ano : anosATraiter)
         {
             // Quitte le traitment si l'anomalie n'est pas à remonter dans le fichier
@@ -410,6 +350,54 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     }
 
     /*---------- METHODES PRIVEES ----------*/
+
+    private void calculDonnee(Anomalie ano, LocalDate debutMois, LocalDate debutTrim, LocalDate fin, int[] valeurs)
+    {
+
+        valeurs[Calcul.TOTAL.ordinal()]++;
+        if (ano.isSecurite())
+            valeurs[Calcul.TOTALSEC.ordinal()]++;
+
+        if (ano.getDateDetection().isAfter(debutMois) && ano.getDateDetection().isBefore(fin))
+        {
+            valeurs[Calcul.TOTALM.ordinal()]++;
+            if (ano.isSecurite())
+                valeurs[Calcul.TOTALMSEC.ordinal()]++;
+        }
+        if (ano.getDateDetection().isAfter(debutTrim) && ano.getDateDetection().isBefore(fin))
+        {
+            valeurs[Calcul.TOTALT.ordinal()]++;
+            if (ano.isSecurite())
+                valeurs[Calcul.TOTALTSEC.ordinal()]++;
+        }
+    }
+
+    private void calculEnCours(Anomalie ano, LocalDate today, int[] valeursE)
+    {
+        valeursE[Calcul.TOTAL.ordinal()]++;
+
+        if (ano.isSecurite())
+            valeursE[Calcul.TOTALSEC.ordinal()]++;
+
+        if (ano.getDateCreation().isBefore(today.minusMonths(3L)))
+        {
+            valeursE[Calcul.TOTALT.ordinal()]++;
+            if (ano.isSecurite())
+                valeursE[Calcul.TOTALTSEC.ordinal()]++;
+        }
+        else if (ano.getDateCreation().isBefore(today.minusMonths(1L)))
+        {
+            valeursE[Calcul.TOTALM.ordinal()]++;
+            if (ano.isSecurite())
+                valeursE[Calcul.TOTALMSEC.ordinal()]++;
+        }
+        else if (ano.getDateCreation().isBefore(today.minusWeeks(1L)))
+        {
+            valeursE[Calcul.TOTALS.ordinal()]++;
+            if (ano.isSecurite())
+                valeursE[Calcul.TOTALSSEC.ordinal()]++;
+        }
+    }
 
     private boolean testAnoOK(Anomalie ano)
     {
@@ -675,30 +663,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     }
 
     /**
-     * CRée une ligne pour une anomalie dans les feuilles de version
-     * 
-     * @param row
-     * @param totelSecu 
-     * @param trimSecu 
-     * @param menseulSecu 
-     * @param ano
-     * @param couleur
-     * @param traite
-     */
-    private void creerLigneVersion(Row row, String stat, int mensuel, int menseulSecu, int trim, int trimSecu, int total, int totelSecu)
-    {
-        CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.BAS, HorizontalAlignment.CENTER);
-        
-        final String DONT = " dont ";
-        final String SECURITE = " de sécurité";
-
-        valoriserCellule(row, Index.DONNEEI.ordinal(), centre, stat);
-        valoriserCellule(row, Index.MENSUELI.ordinal(), centre, mensuel + DONT + menseulSecu + SECURITE);
-        valoriserCellule(row, Index.TRIMI.ordinal(), centre, trim + DONT + trimSecu + SECURITE);
-        valoriserCellule(row, Index.TOTALI.ordinal(), centre, total + DONT + totelSecu + SECURITE);
-    }
-
-    /**
      * Crée la ligne de titres de la feuille principale
      * 
      * @param sheet
@@ -716,6 +680,40 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
             copierCellule(newCell, oldCell);
         }
+    }
+
+    /**
+     * CRée une ligne pour une anomalie dans les feuilles de version
+     * 
+     * @param row
+     * @param totelSecu
+     * @param trimSecu
+     * @param menseulSecu
+     * @param ano
+     * @param couleur
+     * @param traite
+     */
+    private void creerLigneCalcul(Row row, String stat, int[] valeurs)
+    {
+        CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.VIDE, HorizontalAlignment.CENTER);
+
+        final String DONT = " dont ";
+        final String SECURITE = " de sécurité";
+
+        valoriserCellule(row, Index.DONNEEI.ordinal(), centre, stat);
+        valoriserCellule(row, Index.TOTALI.ordinal(), centre, valeurs[Calcul.TOTAL.ordinal()] + DONT + valeurs[Calcul.TOTALSEC.ordinal()] + SECURITE);
+        valoriserCellule(row, Index.MENSUELI.ordinal(), centre, valeurs[Calcul.TOTALM.ordinal()] + DONT + valeurs[Calcul.TOTALMSEC.ordinal()] + SECURITE);
+        valoriserCellule(row, Index.TRIMI.ordinal(), centre, valeurs[Calcul.TOTALT.ordinal()] + DONT + valeurs[Calcul.TOTALTSEC.ordinal()] + SECURITE);
+    }
+
+    private void creerLigneTotalAno(Row row, String texte, int total, int secu)
+    {
+        CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.VIDE, HorizontalAlignment.CENTER);
+
+        final String DONT = " dont ";
+        final String SECURITE = " de sécurité";
+        
+        valoriserCellule(row, 0, centre, new StringBuilder(texte).append(total).append(DONT).append(secu).append(SECURITE));
     }
 
     /**
@@ -752,7 +750,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     private Anomalie creerAnodepuisExcel(Row row, Map<String, LotRTC> lotsRTC)
     {
         Anomalie retour = ModelFactory.getModel(Anomalie.class);
-        retour.setLotRTC(lotsRTC.get(getCellStringValue(row, colLot)));
+        retour.setLotRTC(lotsRTC.get(Utilities.testLot(getCellStringValue(row, colLot))));
         retour.setRemarque(getCellStringValue(row, colRemarque));
         retour.setDateRelance(getCellDateValue(row, colDateRel));
         retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));
@@ -785,14 +783,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             retour.setTypeVersion(TypeVersion.SNAPSHOT);
         else
             retour.setTypeVersion(TypeVersion.RELEASE);
-        try
-        {
-            controlModelInfo.controleAnoRTC(retour);
-        }
-        catch (TeamRepositoryException e)
-        {
-            LOGPLANTAGE.error(e);
-        }
+
+        ControlRTC.INSTANCE.controleAnoRTC(retour);
+
         retour.calculTraitee();
         return retour;
     }
@@ -888,4 +881,18 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             return valeur;
         }
     }
+    
+    private enum Calcul
+    {
+        TOTAL,
+        TOTALSEC,
+        TOTALM,
+        TOTALMSEC,
+        TOTALT,
+        TOTALTSEC,
+        TOTALS,
+        TOTALSSEC;
+    }
+    
+    // @formatter:on
 }

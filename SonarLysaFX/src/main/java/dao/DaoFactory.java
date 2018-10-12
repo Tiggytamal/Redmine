@@ -40,9 +40,12 @@ public class DaoFactory
                 
             case "model.bdd.DateMaj":
                 return (T) new DaoDateMaj();
+                
+            case "model.bdd.GroupementProjet":
+                return (T) new DaoGroupementProjet();
 
             default:
-                throw new TechnicalException("Création Dao impossible - classe : " + daoClass.getName());
+                throw new TechnicalException("dao.DaoFactory - Création Dao impossible - classe : " + daoClass.getName());
         }
     }
 }

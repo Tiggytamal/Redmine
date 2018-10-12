@@ -3,7 +3,7 @@ package model;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import model.utilities.AbstractModele;
+import model.interfaces.AbstractModele;
 import utilities.TechnicalException;
 
 public interface ModelFactory

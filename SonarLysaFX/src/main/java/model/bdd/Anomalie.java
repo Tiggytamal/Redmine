@@ -175,7 +175,7 @@ public class Anomalie extends AbstractBDDModele
 
     public void setEtatRTC(String etatRTC)
     {
-        this.etatRTC = etatRTC;
+        this.etatRTC = etatRTC.trim();
     }
 
     public boolean isSecurite()

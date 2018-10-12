@@ -1,4 +1,4 @@
-package model.utilities;
+package model.interfaces;
 
 import java.io.File;
 

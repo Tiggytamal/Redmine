@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-import model.utilities.AbstractModele;
+import model.interfaces.AbstractModele;
 
 /**
  * Classe de modèle pour l'extraction des vulnérabilités CVE

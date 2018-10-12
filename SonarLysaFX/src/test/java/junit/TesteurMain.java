@@ -1,7 +1,6 @@
 package junit;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Base64;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
@@ -24,15 +23,6 @@ public class TesteurMain
         builder = new StringBuilder("admin");
         builder.append(":");
         builder.append("admin");
-        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));   
-        
-        LocalDate today = LocalDate.now();
-        System.out.println(today);
-        LocalDate debutMois = LocalDate.of(today.getYear(), today.getMonth(), 1).minusMonths(1).minusDays(1L);
-        System.out.println(debutMois);
-        LocalDate fin = LocalDate.of(today.getYear(), today.getMonth(), 1);
-        System.out.println(fin);
-        LocalDate debutTrim = LocalDate.of(today.getYear(), today.getMonth(), 1).minusMonths(3).minusDays(1L);
-        System.out.println(debutTrim);
+        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));  
     }
 }

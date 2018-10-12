@@ -1,6 +1,5 @@
 package control.xml;
 
-import static utilities.Statics.fichiersXML;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
@@ -17,8 +16,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import model.ModelFactory;
-import model.utilities.AbstractModele;
-import model.utilities.XML;
+import model.interfaces.AbstractModele;
+import model.interfaces.XML;
 import utilities.TechnicalException;
 
 /**
@@ -33,8 +32,8 @@ public class ControlXML
 
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
-    private static final short WIDTHALERT = 600;
-    private static final short HEIGHTALERT = 360;
+    private static final short WIDTHALERT = 300;
+    private static final short HEIGHTALERT = 200;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -108,7 +107,7 @@ public class ControlXML
      * Sauvegarde le fichier de paramètres. Retourne vrai si le fichier a bien été mis à jour.
      * 
      * @param fichier
-     *            Fichier à suvagarder, doit implémenter l'interface {@link model.utilities.XML}.
+     *            Fichier à suvagarder, doit implémenter l'interface {@link model.interfaces.XML}.
      * @throws JAXBException
      */
     public boolean saveParam(XML fichier)
@@ -138,7 +137,7 @@ public class ControlXML
      */
     public void createAlert()
     {
-        String texte = fichiersXML.controleDonnees() + proprietesXML.controleDonnees();
+        String texte = proprietesXML.controleDonnees();
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.getDialogPane().getStylesheets().add("application.css");
 

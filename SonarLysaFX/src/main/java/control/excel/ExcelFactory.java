@@ -50,14 +50,14 @@ public interface ExcelFactory
             case "model.enums.TypeColSuivi" :
                 return (R) new ControlSuivi(file);
                 
-            case "model.enums.TypeColNPC" :
+            case "model.enums.TypeColGrProjet" :
                 return (R) new ControlGroupeProjets(file);
                 
             case "model.enums.TypeColUA" :
                 return (R) new ControlUA(file);
                 
             default:
-                throw new TechnicalException("ExcelFactory.getReader - type non géré : " + type.toString(), null);
+                throw new TechnicalException("control.excel.ExcelFactory.getReader - type non géré : " + type.toString(), null);
         }
     }
     

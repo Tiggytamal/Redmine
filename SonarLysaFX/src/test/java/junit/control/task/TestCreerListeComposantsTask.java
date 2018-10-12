@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
-import control.task.CreerListeComposantsTask;
+import control.task.MajComposantsSonarTask;
 import de.saxsys.javafx.test.JfxRunner;
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
@@ -30,7 +30,7 @@ import model.sonarapi.Periode;
 import utilities.Statics;
 
 @RunWith(JfxRunner.class)
-public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeComposantsTask>
+public class TestCreerListeComposantsTask extends AbstractTestTask<MajComposantsSonarTask>
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -41,8 +41,8 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
     @Before
     public void init() throws IllegalAccessException
     {
-        handler = new CreerListeComposantsTask();
-        initAPI(CreerListeComposantsTask.class, true);
+        handler = new MajComposantsSonarTask();
+        initAPI(MajComposantsSonarTask.class, true);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -52,7 +52,7 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<CreerListeCom
     public void testCall() throws Exception
     {
         // Réinitialisation de l'API
-        initAPI(CreerListeComposantsTask.class, false);
+        initAPI(MajComposantsSonarTask.class, false);
         
         // Appel de la méthode
         assertTrue(invokeMethod(handler, "call"));

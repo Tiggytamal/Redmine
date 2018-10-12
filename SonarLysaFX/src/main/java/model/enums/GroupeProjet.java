@@ -10,7 +10,7 @@ package model.enums;
 public enum GroupeProjet 
 {
     NPC("NPC"), 
-    VIDE("");
+    AUCUN("");
 
     private String valeur;
 

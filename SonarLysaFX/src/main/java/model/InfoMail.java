@@ -1,6 +1,6 @@
 package model;
 
-import model.utilities.AbstractModele;
+import model.interfaces.AbstractModele;
 
 /**
  * Classe de modèle pour les informations extraites des traitements à envoyer par mail.

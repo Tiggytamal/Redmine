@@ -6,8 +6,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import junit.JunitBase;
-import model.utilities.AbstractModele;
-import model.utilities.XML;
+import model.interfaces.AbstractModele;
+import model.interfaces.XML;
 import utilities.Statics;
 
 /**

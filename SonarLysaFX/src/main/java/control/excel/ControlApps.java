@@ -2,8 +2,8 @@ package control.excel;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -21,7 +21,7 @@ import model.enums.TypeColApps;
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
  */
-public class ControlApps extends AbstractControlExcelRead<TypeColApps, Map<String, Application>>
+public class ControlApps extends AbstractControlExcelRead<TypeColApps, List<Application>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -52,10 +52,10 @@ public class ControlApps extends AbstractControlExcelRead<TypeColApps, Map<Strin
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public Map<String, Application> recupDonneesDepuisExcel()
+    public List<Application> recupDonneesDepuisExcel()
     {
         Sheet sheet = wb.getSheetAt(0);
-        Map<String, Application> retour = new HashMap<>();
+        List<Application> retour = new ArrayList<>();
 
         // Iterateur depuis la ligne 1 - sans les titres
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
@@ -88,7 +88,7 @@ public class ControlApps extends AbstractControlExcelRead<TypeColApps, Map<Strin
             // Mise du référentiel à oui
             app.setReferentiel(true);
             
-            retour.put(app.getCode(), app);
+            retour.add(app);
         }
         return retour;
     }

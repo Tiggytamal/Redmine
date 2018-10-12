@@ -8,8 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import model.utilities.AbstractModele;
-import model.utilities.ModeleSonar;
+import model.interfaces.AbstractModele;
+import model.interfaces.ModeleSonar;
 
 /**
  * Classe de modèle pour les erreurs remontées dans SonarQube les propriétés flows et components sont ignorées pour diminuer la taille des flux XML traités.

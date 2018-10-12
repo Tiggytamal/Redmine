@@ -173,6 +173,36 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
             em.getTransaction().commit();
         return retour;
     }
+    
+    /**
+     * Suppression d'une liste d'éléments de la base de données. Retourne le nombre d'éléments supprimés
+     * 
+     * @param collection
+     * @return
+     */
+    public int delete(Iterable<T> collection)
+    {
+        em.getTransaction().begin();
+        int i = 0;
+        for (T t : collection)
+        {
+            delete(t);
+            i++;
+        }
+        em.getTransaction().commit();
+        return i;
+        
+    }
+    
+    /**
+     * Supprime un élément de la base de données
+     * @param t
+     */
+    public void delete(T t)
+    {
+        if (t.getIdBase() != 0)
+            em.remove(t);
+    }
 
     /**
      * Mise à jour de la date de modification de la table

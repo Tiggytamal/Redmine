@@ -8,6 +8,8 @@ package model.enums;
  */
 public enum EtatLot
 {
+    /*---------- ATTRIBUTS ----------*/
+
     NOUVEAU(Valeur.NOUVEAU),
     DEVTU(Valeur.DEVTU),
     TFON(Valeur.TFON),
@@ -21,15 +23,14 @@ public enum EtatLot
     
     private final String valeur;
     
+    /*---------- CONSTRUCTEURS ----------*/
+
     private EtatLot(String valeur)
     {
         this.valeur = valeur;
     }
     
-    public String getValeur()
-    {
-        return valeur;
-    }
+    /*---------- METHODES PUBLIQUES ----------*/
     
     public static EtatLot from(String envString)
     {
@@ -69,6 +70,16 @@ public enum EtatLot
                 return INCONNU;
         }      
     }
+    
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
+    
+    public String getValeur()
+    {
+        return valeur;
+    }
+    
+    /*---------- CLASSES PRIVEES ----------*/
     
     private static final class Valeur
     {

@@ -238,7 +238,7 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
     {
         Cell cell = row.getCell(cellIndex, MissingCellPolicy.CREATE_NULL_AS_BLANK);
         if (cell.getCellTypeEnum() == CellType.STRING)
-            return cell.getStringCellValue();
+            return cell.getStringCellValue().trim();
         return EMPTY;
     }
 

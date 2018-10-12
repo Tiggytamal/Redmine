@@ -3,8 +3,8 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import model.utilities.AbstractModele;
-import model.utilities.ModeleSonar;
+import model.interfaces.AbstractModele;
+import model.interfaces.ModeleSonar;
 
 /**
  * Classe modèle pour ajouter un projet dans Sonar depuis le WebService.

@@ -1,4 +1,4 @@
-package model.utilities;
+package model.interfaces;
 
 import utilities.AbstractToStringImpl;
 import utilities.Statics;

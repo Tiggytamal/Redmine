@@ -30,7 +30,7 @@ public enum Matiere
     
     public static Matiere from(String matiere)
     {
-        switch(matiere.trim())
+        switch(matiere)
         {
             case Valeur.JAVA :
                 return JAVA;

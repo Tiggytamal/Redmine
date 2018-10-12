@@ -91,7 +91,8 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     @Column(name = "matiere", nullable = true)
     private Set<Matiere> matieres;
     
-    @Column(name = "groupe", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "groupe", nullable = true)
     private GroupeProjet groupe;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -100,7 +101,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     {
         qualityGate = QG.NONE;
         matieres = new HashSet<>();
-        groupe = GroupeProjet.VIDE;
+        groupe = GroupeProjet.AUCUN;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

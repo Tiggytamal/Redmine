@@ -3,8 +3,8 @@ package model.sonarapi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import model.utilities.AbstractModele;
-import model.utilities.ModeleSonar;
+import model.interfaces.AbstractModele;
+import model.interfaces.ModeleSonar;
 
 /**
  * Classe de modèle représentant la pagination des retours des webservices Sonar.

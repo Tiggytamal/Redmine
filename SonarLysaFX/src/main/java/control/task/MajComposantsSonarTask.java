@@ -7,7 +7,6 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import application.Main;
 import dao.DaoComposantSonar;
 import dao.DaoFactory;
 import model.ModelFactory;
@@ -22,7 +21,6 @@ import model.sonarapi.Metrique;
 import model.sonarapi.Periode;
 import model.sonarapi.Projet;
 import utilities.Statics;
-import utilities.Utilities;
 
 /**
  * Tâche de création de la liste des composants SonarQube avec sauvegarde sous forme de fichier XML
@@ -31,17 +29,18 @@ import utilities.Utilities;
  * @since 1.0
  *
  */
-public class CreerListeComposantsTask extends AbstractTask
+public class MajComposantsSonarTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 
     private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
     private static final short ETAPES = 2;
     private static final String TITRE = "Création liste des composants";
+    private static final String LOT0 = "000000";
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public CreerListeComposantsTask()
+    public MajComposantsSonarTask()
     {
         super(ETAPES, TITRE);
         annulable = true;
@@ -75,8 +74,7 @@ public class CreerListeComposantsTask extends AbstractTask
         List<ComposantSonar> retour = new ArrayList<>();
         Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
         Map<String, LotRTC> mapLotRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
-        @SuppressWarnings("unchecked")
-        List<Projet> projets = Utilities.recuperation(Main.DESER, List.class, "composants.ser", () -> api.getComposants());
+        List<Projet> projets = api.getComposants();
 
         // Réinitialisation des matières des lots pour le cas d'un composant qui serait retiré et qui enléverait un type de matière.
         for (LotRTC lotRTC : mapLotRTC.values())
@@ -90,6 +88,8 @@ public class CreerListeComposantsTask extends AbstractTask
         int i = 0;
         int size = projets.size();
         long debut = System.currentTimeMillis();
+        
+        List<String> test = new ArrayList<>();
 
         for (Projet projet : projets)
         {
@@ -108,13 +108,11 @@ public class CreerListeComposantsTask extends AbstractTask
             if (composant == null)
                 continue;
 
-            ComposantSonar composantSonar = ModelFactory.getModel(ComposantSonar.class);
-            composantSonar.setKey(projet.getKey());
-            composantSonar.setNom(projet.getNom());
-            composantSonar.setId(projet.getId());
-
+            // Initialisation composant
+            ComposantSonar composantSonar = initCompoDepuisProjet(mapCompos, projet);
+            
             // Lot RTC
-            String numeroLot = getValueMetrique(composant, TypeMetrique.LOT, Statics.EMPTY);
+            String numeroLot = getValueMetrique(composant, TypeMetrique.LOT, LOT0);
 
             // Gestion de la matière
             Matiere matiere = testMatiereCompo(composantSonar.getNom());
@@ -158,8 +156,11 @@ public class CreerListeComposantsTask extends AbstractTask
             composantSonar.setBloquants(recupLeakPeriod(getListPeriode(composant, TypeMetrique.BLOQUANT)));
             composantSonar.setCritiques(recupLeakPeriod(getListPeriode(composant, TypeMetrique.CRITIQUE)));
             composantSonar.setDuplication(recupLeakPeriod(getListPeriode(composant, TypeMetrique.DUPLICATION)));
-            composantSonar.setVersionRelease(checkVersion(projet.getKey()));
             retour.add(composantSonar);
+            if (test.contains(composantSonar.getKey()))
+                System.out.println("doublon : " + composantSonar.getKey());
+            else
+                test.add(composantSonar.getKey());
 
             if (api.getSecuriteComposant(projet.getKey()) > 0)
                 composantSonar.setSecurite(true);
@@ -171,6 +172,22 @@ public class CreerListeComposantsTask extends AbstractTask
         }
 
         // Sauvegarde des données
+        return retour;
+    }
+
+    private ComposantSonar initCompoDepuisProjet(Map<String, ComposantSonar> mapCompos, Projet projet)
+    {
+        ComposantSonar retour;
+        if (mapCompos.containsKey(projet.getKey()))
+            retour = mapCompos.get(projet.getKey());
+        else
+            retour = ModelFactory.getModel(ComposantSonar.class);
+        
+        retour.setKey(projet.getKey());
+        retour.setNom(projet.getNom());
+        retour.setId(projet.getId());
+        retour.setVersionRelease(checkVersion(projet.getKey()));
+        
         return retour;
     }
 

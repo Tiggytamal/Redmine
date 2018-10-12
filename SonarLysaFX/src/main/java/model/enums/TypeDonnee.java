@@ -1,7 +1,7 @@
 package model.enums;
 
 /**
- * Types des fichiers Excel utilisés
+ * Types des données utlisées par l'applications
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
@@ -9,13 +9,33 @@ package model.enums;
  */
 public enum TypeDonnee implements TypeKey
 {
-    APPS, 
-    CLARITY, 
-    RESPSERVICE, 
-    EDITION,
-    COMPOSANT,
-    LOTSRTC,
-    GROUPE,
-    ANOMALIE,
-    DATEMAJ;
+    /*---------- ATTRIBUTS ----------*/
+
+    APPS ("Applications"), 
+    CLARITY("Projets Clarity"), 
+    RESPSERVICE("Chefs de Service"), 
+    EDITION("Editions"),
+    COMPOSANT("Composants"),
+    LOTSRTC("Lots RTC"),
+    GROUPE("Groupement de Projets"),
+    ANOMALIE("Anomalies"),
+    DATEMAJ(" Dates de mise à jour des tables");
+    
+    private String valeur;
+    
+    /*---------- CONSTRUCTEURS ----------*/
+
+    private TypeDonnee(String valeur)
+    {
+        this.valeur = valeur;
+    }
+    
+    /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
+    
+    public String getValeur()
+    {
+        return valeur;
+    }
 }

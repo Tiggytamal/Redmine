@@ -10,8 +10,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import model.enums.TypeMetrique;
-import model.utilities.AbstractModele;
-import model.utilities.ModeleSonar;
+import model.interfaces.AbstractModele;
+import model.interfaces.ModeleSonar;
 import utilities.adapter.TypeMetriqueAdapter;
 
 /**

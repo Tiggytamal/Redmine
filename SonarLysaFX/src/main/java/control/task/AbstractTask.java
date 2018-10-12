@@ -58,6 +58,8 @@ public abstract class AbstractTask extends Task<Boolean>
     protected int debut;
     protected int fin;
     protected boolean annulable;
+    protected AbstractTask tacheParente;
+    protected Map<String, ComposantSonar> mapCompos;
 
     private StringProperty etape = new SimpleStringProperty(this, "etape", EMPTY);
     private String titre;
@@ -75,6 +77,7 @@ public abstract class AbstractTask extends Task<Boolean>
         initEtape(fin);
         this.titre = titre;
         baseMessage = "";
+        mapCompos = DaoFactory.getDao(ComposantSonar.class).readAllMap();
     }
 
     /*---------- METHODES ABSTRAITES ----------*/
@@ -89,13 +92,19 @@ public abstract class AbstractTask extends Task<Boolean>
     @Override
     public final void updateMessage(String message)
     {
-        super.updateMessage(baseMessage + message);
+        if (tacheParente != null)
+            tacheParente.updateMessage(baseMessage + message);
+        else
+            super.updateMessage(baseMessage + message);
     }
 
     @Override
     public void updateProgress(double effectue, double total)
     {
-        super.updateProgress(effectue, total);
+        if (tacheParente != null)
+            tacheParente.updateProgress(effectue, total);
+        else
+            super.updateProgress(effectue, total);
     }
 
     @Override
@@ -117,11 +126,9 @@ public abstract class AbstractTask extends Task<Boolean>
         updateMessage(RECUPCOMPOSANTS);
         updateProgress(-1, -1);
 
-        // Récupération des composants Sonar depuis la base de donnèes
-        List<ComposantSonar> composantsSonar = DaoFactory.getDao(ComposantSonar.class).readAll();
-
         // Triage ascendant de la liste par nom de projet
-        composantsSonar.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
+        List<ComposantSonar> compos = new ArrayList<>(mapCompos.values());
+        compos.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
 
         // Création de la regex pour retirer les numéros de version des composants
         Pattern pattern = Pattern.compile("^\\D+(\\d+\\D+){0,1}");
@@ -131,23 +138,23 @@ public abstract class AbstractTask extends Task<Boolean>
         switch (option)
         {
             case INCONNU:
-                retour = recupererComposInconnus(composantsSonar, pattern);
+                retour = recupererComposInconnus(compos, pattern);
                 break;
 
             case NONPROD:
-                retour = recupererComposNonProd(composantsSonar, pattern);
+                retour = recupererComposNonProd(compos, pattern);
                 break;
 
             case PATRIMOINE:
-                retour = recupererPatrimoine(composantsSonar, pattern);
+                retour = recupererPatrimoine(compos, pattern);
                 break;
 
             case TERMINE:
-                retour = recupererComposTermines(composantsSonar, pattern);
+                retour = recupererComposTermines(compos, pattern);
                 break;
 
             case DERNIERE:
-                retour = recupererComposDerniereVersion(composantsSonar, pattern);
+                retour = recupererComposDerniereVersion(compos, pattern);
                 break;
 
             default:
@@ -169,7 +176,7 @@ public abstract class AbstractTask extends Task<Boolean>
         updateMessage(RECUPCOMPOSANTS);
 
         // Liste de retour avec initialement tous les composants SonarQube
-        List<ComposantSonar> retour = DaoFactory.getDao(ComposantSonar.class).readAll();
+        List<ComposantSonar> retour = new ArrayList<>(mapCompos.values());
 
         // Itération pour retiter les composants qui ne sont pas de la bonne matière
         for (Iterator<ComposantSonar> iter = retour.iterator(); iter.hasNext();)
@@ -267,7 +274,7 @@ public abstract class AbstractTask extends Task<Boolean>
      *            Taille de la liste parcourue.
      * @return
      */
-    protected final String affichageTemps(long debut, int i, int size)
+    public final String affichageTemps(long debut, int i, int size)
     {
         long actuel = System.currentTimeMillis();
         long ecoute = actuel - debut;
@@ -295,6 +302,16 @@ public abstract class AbstractTask extends Task<Boolean>
             return Matiere.COBOL;
 
         return Matiere.JAVA;
+    }
+
+    /**
+     * Permet de lier cette tâche à une tâche parente pour mettre à jour le message et la progression.
+     * 
+     * @param parent
+     */
+    protected void affilierTache(AbstractTask parent)
+    {
+        tacheParente = parent;
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -518,6 +535,11 @@ public abstract class AbstractTask extends Task<Boolean>
     public boolean isAnnulable()
     {
         return annulable;
+    }
+    
+    public void setBaseMessage(String baseMessage)
+    {
+        this.baseMessage = baseMessage;
     }
 
     public String getBaseMessage()

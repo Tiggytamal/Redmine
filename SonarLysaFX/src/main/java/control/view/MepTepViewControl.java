@@ -24,7 +24,7 @@ import utilities.enums.Severity;
  * @since 1.0
  *
  */
-public final class MensuelViewControl extends AbstractViewControl
+public final class MepTepViewControl extends AbstractViewControl
 {
     /* ---------- ATTIBUTS ---------- */
 

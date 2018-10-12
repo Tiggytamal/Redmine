@@ -3,15 +3,18 @@ package control.view;
 import static utilities.Statics.info;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import control.rtc.ControlRTC;
 import control.sonar.SonarAPI;
-import control.task.CreerListeComposantsTask;
+import control.task.AbstractTask;
+import control.task.MajComposantsSonarTask;
 import control.task.InitBaseAnosTask;
 import control.task.MajVuesTask;
 import control.task.PurgeSonarTask;
-import control.task.AbstractTask;
+import dao.DaoDateMaj;
+import dao.DaoFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,8 +27,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
+import model.bdd.DateMaj;
+import utilities.DateConvert;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -44,8 +50,8 @@ public final class MenuViewControl extends AbstractViewControl
     /* ---------- ATTIBUTS ---------- */
 
     // Constantes statiques
-    private static final short WIDTHALERT = 640;
-    private static final short HEIGHTALERT = 480;
+    private static final short WIDTHAIDE = 640;
+    private static final short HEIGHTAIDE = 480;
     private static final String OUTILS = "Outils/";
     private static final String FONCTIONS = "Fonctions/";
 
@@ -208,10 +214,10 @@ public final class MenuViewControl extends AbstractViewControl
                 break;
 
             case "majCompos":
-                alertConfirmation(new CreerListeComposantsTask(), "Cela lancera la mise à jour de tous les composants Sonar.");
+                alertConfirmation(new MajComposantsSonarTask(), "Cela lancera la mise à jour de tous les composants Sonar.");
                 break;
-                
-            case "majAnos" :
+
+            case "majAnos":
                 alertConfirmation(new InitBaseAnosTask(), "Réinitialisation de la base des anomalies depuis le fichier Excel.");
                 break;
 
@@ -235,7 +241,7 @@ public final class MenuViewControl extends AbstractViewControl
         aidePanel.setContentText(null);
         WebView webView = new WebView();
         webView.getEngine().load(getClass().getResource("/aide/menu.html").toString());
-        webView.setPrefSize(WIDTHALERT, HEIGHTALERT);
+        webView.setPrefSize(WIDTHAIDE, HEIGHTAIDE);
         aidePanel.setResizable(true);
         aidePanel.getDialogPane().setContent(webView);
         aidePanel.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
@@ -257,45 +263,65 @@ public final class MenuViewControl extends AbstractViewControl
         info.setMotDePasse(mdp);
 
         // Contrôle connexion RTC et SonarQube
-        if (ControlRTC.INSTANCE.connexion() && SonarAPI.INSTANCE.verificationUtilisateur())
-        {
-            mensuel.setDisable(false);
-            purge.setDisable(false);
-            majVues.setDisable(false);
-            planificateur.setDisable(false);
-            autres.setDisable(false);
-            appli.setDisable(false);
-            majVues.setDisable(false);
-            majCompos.setDisable(false);
-            majAnos.setDisable(false);
-            extraction.setDisable(false);
-            suivi.setDisable(false);
-            maintenance.setDisable(false);
-            rtc.setDisable(false);
-            info.setNom(ControlRTC.INSTANCE.recupNomContributorConnecte());
-            deConnexion.setText(info.getNom());
-
-            box.getChildren().remove(connexion);
-            box.getChildren().add(deConnexion);
-
-            // Démarrage du serveur MySQl si besoin
-            ProcessBuilder pb = new ProcessBuilder("D:\\mysql\\bin\\mysqladmin.exe", "-u", "root", "-pAQPadmin01", "ping");
-
-            try
-            {
-                Process p = pb.start();
-                
-                if (p.waitFor() == 1)
-                    new ProcessBuilder("D:\\mysql\\bin\\mysqld.exe", "--console", "--default-time-zone=Europe/Paris").start();
-            }
-            catch (IOException | InterruptedException e)
-            {
-                throw new TechnicalException("Problème lors du démarrage du serveur MySQL.", e);
-            }
-
-        }
-        else
+        if (!ControlRTC.INSTANCE.connexion() || !SonarAPI.INSTANCE.verificationUtilisateur())
             throw new FunctionalException(Severity.INFO, "Utilisateur incorrect");
+
+        mensuel.setDisable(false);
+        purge.setDisable(false);
+        majVues.setDisable(false);
+        planificateur.setDisable(false);
+        autres.setDisable(false);
+        appli.setDisable(false);
+        majVues.setDisable(false);
+        majCompos.setDisable(false);
+        majAnos.setDisable(false);
+        extraction.setDisable(false);
+        suivi.setDisable(false);
+        maintenance.setDisable(false);
+        rtc.setDisable(false);
+        info.setNom(ControlRTC.INSTANCE.recupNomContributorConnecte());
+        deConnexion.setText(info.getNom());
+
+        box.getChildren().remove(connexion);
+        box.getChildren().add(deConnexion);
+
+        // Démarrage du serveur MySQl si besoin
+        ProcessBuilder pb = new ProcessBuilder("D:\\mysql\\bin\\mysqladmin.exe", "-u", "root", "-pAQPadmin01", "ping");
+
+        try
+        {
+            Process p = pb.start();
+
+            if (p.waitFor() == 1)
+                new ProcessBuilder("D:\\mysql\\bin\\mysqld.exe", "--console", "--default-time-zone=Europe/Paris").start();
+        }
+        catch (IOException | InterruptedException e)
+        {
+            throw new TechnicalException("Problème lors du démarrage du serveur MySQL.", e);
+        }
+
+        DaoDateMaj dao = DaoFactory.getDao(DateMaj.class);
+        List<DateMaj> liste = dao.readAll();
+
+        StringBuilder builder = new StringBuilder("Dates de mises à jour de la base :\n");
+        final String TIRET = " - ";
+
+        for (DateMaj dateMaj : liste)
+        {
+            builder.append(Statics.TIRET).append(dateMaj.getTypeDonnee().getValeur()).append(TIRET).append(DateConvert.dateFrancais(dateMaj.getDate(), "dd/MM/YYYY")).append(Statics.NL);
+        }
+
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.getDialogPane().getStylesheets().add("application.css");
+        alert.initStyle(StageStyle.UTILITY);
+        alert.initModality(Modality.NONE);
+        alert.setResizable(true);
+        alert.setContentText(builder.toString());
+        alert.setHeaderText(null);
+        alert.show();
+        alert.setWidth(400);
+        alert.setHeight(300);
+
     }
 
     /**

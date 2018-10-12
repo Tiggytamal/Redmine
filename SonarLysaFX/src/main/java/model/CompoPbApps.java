@@ -2,7 +2,8 @@ package model;
 
 import model.bdd.ProjetClarity;
 import model.enums.EtatAppli;
-import model.utilities.AbstractModele;
+import model.interfaces.AbstractModele;
+import utilities.Statics;
 
 /**
  * Classe de modèle représentant les informations des composants avec un problème de code application
@@ -28,7 +29,9 @@ public class CompoPbApps extends AbstractModele
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    CompoPbApps() { }
+    CompoPbApps()
+    {
+    }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -38,22 +41,18 @@ public class CompoPbApps extends AbstractModele
      * @param info
      * @return
      */
-    public boolean majDepuisClarity(ProjetClarity info)
+    public void majDepuisClarity(ProjetClarity info)
     {
-        // Indique un manque d'info si le département est vide.
-        if (info.getDepartement().isEmpty())
-            setDepart(DEPARTVIDE);
-        else
-            setDepart(info.getDepartement());
+        if (info == null)
+            return;
 
-        // Indique un manque d'info si le service est vide et renvoie "faux".
-        if (info.getService().isEmpty())
-        {
-            setService(SERVVIDE);
-            return false;
-        }
-        setService(info.getDepartement());
-        return true;
+        setDepart(info.getDepartement());
+        setService(info.getService());
+
+        if (info.getChefService() != null)
+            setChefService(info.getChefService().getNom());
+        else
+            setChefService(Statics.INCONNU);
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -128,7 +127,7 @@ public class CompoPbApps extends AbstractModele
     {
         this.lotRTC = lotRTC;
     }
-    
+
     public EtatAppli getEtatAppli()
     {
         return etatAppli;

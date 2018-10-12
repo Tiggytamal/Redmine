@@ -16,7 +16,8 @@ public enum TypeEnumRTC
     EDITIONSICIBLE("fr.ca.cat.attribut.editionsicible"),
     IMPORTANCE("NiveauImportance"),
     ORIGINE("Origine"),
-    CLARITY("fr.ca.cat.attribut.codeprojetclarity");
+    CLARITY("fr.ca.cat.attribut.codeprojetclarity"),
+    DATELIVHOMO("fr.ca.cat.attribut.datedelivraison");
     
     private String valeur;
     

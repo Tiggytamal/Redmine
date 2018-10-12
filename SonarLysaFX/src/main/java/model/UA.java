@@ -1,6 +1,6 @@
 package model;
 
-import model.utilities.AbstractModele;
+import model.interfaces.AbstractModele;
 
 public class UA extends AbstractModele
 {

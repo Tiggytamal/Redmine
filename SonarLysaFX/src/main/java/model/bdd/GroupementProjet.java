@@ -65,7 +65,7 @@ public class GroupementProjet extends AbstractBDDModele
     public GroupeProjet getGroupe()
     {
         if (groupe == null)
-            return GroupeProjet.VIDE;
+            return GroupeProjet.AUCUN;
         return groupe;
     }
 

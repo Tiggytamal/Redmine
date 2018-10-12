@@ -224,14 +224,8 @@ public class TestSonarAPI extends JunitBase
     }
 
     @Test(expected = FunctionalException.class)
-    public void testGetComposants() throws Exception
+    public void testGetComposantsException() throws Exception
     {
-        // Appel du webservice
-        List<Projet> liste = handler.getComposants();
-        assertFalse(liste == null);
-        assertFalse(liste.isEmpty());
-        testNoLogger();
-
         // Mock de la réponse pour renvoyer un status non OK et passer dans le logger
         appelGetMockErreurWithParam();
 
@@ -244,6 +238,22 @@ public class TestSonarAPI extends JunitBase
             testLoggerErreur();
             throw e;
         }
+    }
+    
+    @Test
+    public void testGetComposants()
+    {
+        // Appel du webservice
+        List<Projet> liste = handler.getComposants();
+        assertFalse(liste == null);
+        assertFalse(liste.isEmpty());
+        
+        for (Projet projet : liste)
+        {
+            if (projet.getKey().startsWith("fr.ca.cat.srvtgererblocnotesrisqueetcommercial:SRVT_GererBlocNot"))
+                System.out.println(projet.getKey());
+        }
+        testNoLogger();
     }
 
     @Test(expected = FunctionalException.class)
@@ -394,6 +404,18 @@ public class TestSonarAPI extends JunitBase
     public void testSupprimerVue()
     {
 
+    }
+    
+    @Test
+    public void testManuel()
+    {
+        List<Projet> liste = handler.getComposants();
+        for (Projet projet : liste)
+        {
+            if (projet.getNom().contains("RESS_SdjOpenApi"))
+                System.out.println(projet.getKey());
+        }
+        
     }
 
     /*---------- METHODES PRIVEES ----------*/

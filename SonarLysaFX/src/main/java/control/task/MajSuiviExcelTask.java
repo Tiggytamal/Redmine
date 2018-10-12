@@ -37,14 +37,12 @@ import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.QG;
-import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import model.enums.TypeInfo;
 import model.enums.TypeMajSuivi;
 import model.enums.TypeVersion;
 import model.sonarapi.QualityGate;
 import model.sonarapi.Vue;
-import model.utilities.ControlModelInfo;
 import utilities.Statics;
 import utilities.TechnicalException;
 
@@ -63,8 +61,6 @@ public class MajSuiviExcelTask extends AbstractTask
 
     /** logger plantage */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
-    /** logger général */
-    private static final Logger LOGGER = LogManager.getLogger("complet-log");
 
     private static final short ETAPES = 6;
     private static final short DUPLI = 3;
@@ -114,7 +110,9 @@ public class MajSuiviExcelTask extends AbstractTask
     private boolean majSuiviExcel() throws Exception
     {
         // Mise à jour du fichier RTC à la date du jour.
-        new MajLotsRTCTask(null).call();
+        MajLotsRTCTask task = new MajLotsRTCTask(null);
+        task.affilierTache(this);
+        task.call();
 
         updateProgress(-1, 0);
         etapePlus();
@@ -137,16 +135,32 @@ public class MajSuiviExcelTask extends AbstractTask
             case MULTI:
                 traitementSuiviExcelToutFichiers();
                 break;
+
+            case NUIT:
+                traitementSuiviExcelNuit();
+                break;
         }
         return true;
     }
 
     /**
+     * @throws Exception
+     * 
+     */
+    private void traitementSuiviExcelNuit() throws Exception
+    {
+        // Mise à jour du fichier RTC à la date du jour.
+        MajComposantsSonarTask task = new MajComposantsSonarTask();
+        task.affilierTache(this);
+        task.call();
+
+        traitementSuiviExcelToutFichiers();
+    }
+
+    /**
      * Traitement des deux fichiers Excel de Suivi.
      * 
-     * @throws InvalidFormatException
      * @throws IOException
-     * @throws TeamRepositoryException
      */
     private void traitementSuiviExcelToutFichiers() throws IOException
     {
@@ -155,7 +169,7 @@ public class MajSuiviExcelTask extends AbstractTask
 
         // Traitement anomalies Java
         majFichierSuiviExcelJAVA();
-        
+
         // Traitement fichier COBOL
         majFichierSuiviExcelCOBOL();
     }
@@ -232,7 +246,8 @@ public class MajSuiviExcelTask extends AbstractTask
         Set<String> lotsSonarQGError = lotSonarQGError(composants);
 
         etapePlus();
-        updateMessage("Mise à jour du fichier Excel...");
+        baseMessage = "Mise à jour du fichier Excel";
+        updateMessage("");
         updateProgress(-1, 1);
 
         // 3. Mise à jour du fichier Excel
@@ -266,9 +281,6 @@ public class MajSuiviExcelTask extends AbstractTask
 
             }
         }
-        
-        
-
         return lotsSonarQGError;
     }
 
@@ -343,9 +355,15 @@ public class MajSuiviExcelTask extends AbstractTask
         // Lecture du fichier pour remonter les anomalies en cours.
         List<Anomalie> listeAnoExcel = controlAno.recupDonneesDepuisExcel();
 
+        // Affichage
+        int size = listeAnoExcel.size();
+        int i = 0;
+        long debut = System.currentTimeMillis();
+
         // Mise à jour de la base de donnée des anomalies
         for (Anomalie anoExcel : listeAnoExcel)
         {
+
             Anomalie anoBase = mapAnosEnBase.get(anoExcel.getLotRTC().getLot());
             if (anoBase == null)
             {
@@ -359,29 +377,26 @@ public class MajSuiviExcelTask extends AbstractTask
             anoBase.setDateRelance(anoExcel.getDateRelance());
 
             // Mise à jour des données des anomalies RTC
-            try
-            {
-                new ControlModelInfo().controleAnoRTC(anoBase);
-            }
-            catch (TeamRepositoryException e)
-            {
-                throw new TechnicalException("Impossible de mettre l'anomalie à jour depuis RTC : " + anoBase.getNumeroAnoRTC(), e);
-            }
-            
+            ControlRTC.INSTANCE.controleAnoRTC(anoBase);
+
             // Gestion des action de création et de cloture des anomalies
             gestionAction(anoBase, controlRapport);
+
+            // Affichage
+            i++;
+            updateProgress(i, size);
+            updateMessage("" + affichageTemps(debut, i, size));
         }
 
         // Sauvegarde fichier et maj feuille principale
         Sheet sheet = controlAno.sauvegardeFichier(fichier);
 
         // Mis à jour de la feuille principale
-        
         controlAno.majFeuillePrincipale(new ArrayList<>(mapAnosEnBase.values()), sheet, matiere);
-        
+
         // Persistance des données
         dao.persist(mapAnosEnBase.values());
-        
+
         controlAno.calculStatistiques(new ArrayList<>(mapAnosEnBase.values()));
 
         // Ecriture et Fermeture controleur
@@ -477,57 +492,94 @@ public class MajSuiviExcelTask extends AbstractTask
         }
 
     }
-    
+
     /**
      * Gestion des actions possibles pour une anomalie (Creer, Clôturer, Abandonner)
      * 
      * @param ano
      *            Anomalie à traiter
-     * @param controlRapport 
+     * @param controlRapport
      * @param anoLot
      *            Numéro de lot l'anomalie
      * @param sheetClose
      *            Feuille des anomalies closes
      * @return {@code true} si l'on doit continuer le traitement<br>
      *         {@code false} si l'anomalie est à clôturer ou abandonner
+     * @throws TeamRepositoryException 
      */
     private void gestionAction(Anomalie ano, ControlRapport controlRapport)
     {
-
-        // Cloture ou abandon de l'anomalie si l'anomalie RTC est déjà close.
-        if (TypeAction.CLOTURER == ano.getAction() || TypeAction.ABANDONNER == ano.getAction())
+        switch (ano.getAction())
         {
-            if (ano.getNumeroAnoRTC() == 0 || Statics.ANOCLOSE.equals(ano.getEtatRTC()))
-            {
-                controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
-                if (TypeAction.CLOTURER == ano.getAction())
-                    ano.setEtatAnoSuivi(EtatAnoSuivi.CLOSE);
-                else
+            case ABANDONNER:
+                if (controlAno(ano))
+                {
                     ano.setEtatAnoSuivi(EtatAnoSuivi.ABANDONNEE);
+                    controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
+                }
+                break;
 
-                ano.setAction(TypeAction.VIDE);
-            }
-            else
-            {
-                LOGGER.warn("L'anomalie " + ano.getNumeroAnoRTC() + " n'a pas été clôturée. Impossible de la supprimer du fichier de suivi.");
-                controlRapport.addInfo(TypeInfo.ANOABANDONRATE, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
-            }
-        }
+            case ASSEMBLER:
+                break;
 
-        // Contrôle si besoin de créer une anomalie Sonar
-        else if (TypeAction.CREER == ano.getAction())
-        {
-            int numeroAno = ControlRTC.INSTANCE.creerDefect(ano);
-            if (numeroAno != 0)
-            {
-                ano.setAction(null);
-                ano.setNumeroAnoRTC(numeroAno);
-                ano.setDateCreation(LocalDate.now());
-                ano.calculTraitee();
-                LOGGER.info("Création anomalie " + numeroAno + " pour le lot " + ano.getLotRTC().getLot());
-                controlRapport.addInfo(TypeInfo.ANOSRTCCREES, ano.getLotRTC().getLot(), null);
-            }
+            case CLOTURER:
+                if (controlAno(ano))
+                {
+                    ano.setEtatAnoSuivi(EtatAnoSuivi.CLOSE);
+                    controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
+                }
+                break;
+
+            case CREER:
+
+                int numeroAno = ControlRTC.INSTANCE.creerDefect(ano);
+                if (numeroAno != 0)
+                {
+                    ano.setAction(null);
+                    ano.setNumeroAnoRTC(numeroAno);
+                    ano.setDateCreation(LocalDate.now());
+                    ano.calculTraitee();
+                    controlRapport.addInfo(TypeInfo.ANOSRTCCREES, ano.getLotRTC().getLot(), null);
+                }
+                break;
+
+            case RELANCER:
+                try
+                {
+                    ControlRTC.INSTANCE.relancerAno(ano.getNumeroAnoRTC());
+                }
+                catch (TeamRepositoryException e)
+                {
+                    LOGPLANTAGE.error(e);
+                }
+                break;
+
+            case VERIFIER:
+                break;
+
+            case VIDE:
+                break;
+
+            default:
+                throw new TechnicalException("control.task.MajSuiviExcelTask.gestionAction - type d'action inconnue : " + ano.getAction());
+
         }
+    }
+
+    private boolean controlAno(Anomalie ano)
+    {
+        if (ano.getNumeroAnoRTC() == 0 || Statics.ANOCLOSE.equals(ano.getEtatRTC()))
+            return true;
+        else
+            try
+            {
+                return ControlRTC.INSTANCE.fermerAnoRTC(ano.getNumeroAnoRTC());
+            }
+            catch (TeamRepositoryException e)
+            {
+                LOGPLANTAGE.error(e);
+                return false;
+            }
     }
 
     /**
