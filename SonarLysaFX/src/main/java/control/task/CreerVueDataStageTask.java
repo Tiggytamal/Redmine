@@ -35,7 +35,7 @@ public class CreerVueDataStageTask extends AbstractTask
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public void annuler()
+    public void annulerImpl()
     {
         if (vue != null)
         {

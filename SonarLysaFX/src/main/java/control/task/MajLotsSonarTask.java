@@ -29,7 +29,7 @@ public class MajLotsSonarTask extends AbstractTask
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public void annuler()
+    public void annulerImpl()
     {
         cancel();
     }

@@ -58,7 +58,7 @@ public class CreerExtractComposantsSonarTask extends AbstractTask
     }
 
     @Override
-    public void annuler()
+    public void annulerImpl()
     {
         cancel();
     }

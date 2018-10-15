@@ -16,7 +16,10 @@ public enum EtatAnoRTC
     CLOSE(Valeur.CLOSE, ""),
     REOUVERTE(Valeur.REOUVERTE, "Commencer à travailler");
     
+    // valeur dans RTC de l'état
     private String valeur;
+    
+    // non de l'action permettant de faire avancer le workflow
     private String action;
     
     /*---------- CONSTRUCTEURS ----------*/

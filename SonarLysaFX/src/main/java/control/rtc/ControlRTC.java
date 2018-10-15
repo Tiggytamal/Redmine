@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
+import com.ibm.team.foundation.common.text.XMLString;
 import com.ibm.team.process.client.IProcessClientService;
 import com.ibm.team.process.client.IProcessItemService;
 import com.ibm.team.process.common.IProjectArea;
@@ -61,12 +62,13 @@ import com.mchange.util.AssertException;
 import control.task.AbstractTask;
 import dao.DaoFactory;
 import model.ModelFactory;
-import model.bdd.Anomalie;
+import model.bdd.DefaultQualite;
 import model.bdd.DateMaj;
 import model.bdd.LotRTC;
 import model.enums.EtatAnoRTC;
 import model.enums.EtatLot;
 import model.enums.Param;
+import model.enums.ParamSpec;
 import model.enums.TypeDonnee;
 import model.enums.TypeEnumRTC;
 import utilities.AbstractToStringImpl;
@@ -145,7 +147,7 @@ public class ControlRTC extends AbstractToStringImpl
 
             // Récupérationd e tous les projets si la iste est vide. Effectuée normalemetn une seule fois par instance.
             if (pareas.isEmpty())
-                recupererTousLesProjets();
+                recupTousLesProjets();
         }
         catch (TeamRepositoryException e)
         {
@@ -186,7 +188,7 @@ public class ControlRTC extends AbstractToStringImpl
      * @return
      * @throws TeamRepositoryException
      */
-    public <R extends T, T extends IAuditableHandle> R recupererItemDepuisHandle(Class<R> classRetour, T handle) throws TeamRepositoryException
+    public <R extends T, T extends IAuditableHandle> R recupItemDepuisHandle(Class<R> classRetour, T handle) throws TeamRepositoryException
     {
         return classRetour.cast(repo.itemManager().fetchCompleteItem(handle, IItemManager.DEFAULT, monitor));
     }
@@ -199,7 +201,7 @@ public class ControlRTC extends AbstractToStringImpl
      * @return
      * @throws TeamRepositoryException
      */
-    public <R extends T, T extends IAuditableHandle> R recupererEltDepuisHandle(Class<R> classRetour, T handle, ItemProfile<? extends T> profil) throws TeamRepositoryException
+    public <R extends T, T extends IAuditableHandle> R recupEltDepuisHandle(Class<R> classRetour, T handle, ItemProfile<? extends T> profil) throws TeamRepositoryException
     {
         return classRetour.cast(auditableClient.fetchCurrentAuditable(handle, profil, monitor));
     }
@@ -274,19 +276,19 @@ public class ControlRTC extends AbstractToStringImpl
     }
 
     /**
-     * Création du Defect dans RTC
+     * Création d'une anomalie dans RTC
      * 
-     * @param ano
+     * @param dq
      *            anomalie servant d'origine au Defect
      * @return
      */
-    public int creerDefect(Anomalie ano)
+    public int creerAnoRTC(DefaultQualite dq)
     {
         IWorkItem workItem = null;
 
         try
         {
-            IProjectArea projet = pareas.get(ano.getLotRTC().getProjetRTC());
+            IProjectArea projet = pareas.get(dq.getLotRTC().getProjetRTC());
 
             // Type de l'objet
             IWorkItemType itemType = workItemClient.findWorkItemType(projet, "defect", monitor);
@@ -314,48 +316,48 @@ public class ControlRTC extends AbstractToStringImpl
             }
 
             // Création
-            WorkItemInitialization init = new WorkItemInitialization(itemType, cat, projet, ano);
+            WorkItemInitialization init = new WorkItemInitialization(itemType, cat, projet, dq);
             IWorkItemHandle handle = init.run(itemType, monitor);
             workItem = auditableClient.fetchCurrentAuditable(handle, WorkItem.FULL_PROFILE, monitor);
         }
         catch (TeamRepositoryException e)
         {
-            LOGGER.error("Erreur traitement RTC création de Defect. Lot : " + ano.getLotRTC());
+            LOGGER.error("Erreur traitement RTC création de Defect. Lot : " + dq.getLotRTC());
             LOGPLANTAGE.error(e);
         }
 
         if (workItem == null)
             return 0;
 
-        LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + ano.getLotRTC().getLot());
+        LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + dq.getLotRTC().getLot());
         return workItem.getId();
 
     }
 
-    public void controleAnoRTC(Anomalie ano)
+    public void controleAnoRTC(DefaultQualite dq)
     {
-        if (ano.getNumeroAnoRTC() == 0)
+        if (dq.getNumeroAnoRTC() == 0)
             return;
 
         IWorkItem anoRTC;
         try
         {
-            anoRTC = recupWorkItemDepuisId(ano.getNumeroAnoRTC());
-            ano.setEtatRTC(recupEtatElement(anoRTC));
+            anoRTC = recupWorkItemDepuisId(dq.getNumeroAnoRTC());
+            dq.setEtatRTC(recupEtatElement(anoRTC));
 
             // Correction si l'on a pas déjà la date de création du Defect
-            if (ano.getDateCreation() == null)
-                ano.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
+            if (dq.getDateCreation() == null)
+                dq.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
 
             // Mise à jour de la date de résolution
             if (anoRTC.getResolutionDate() != null)
-                ano.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
+                dq.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
             else
-                ano.setDateReso(null);
+                dq.setDateReso(null);
         }
         catch (TeamRepositoryException e)
         {
-            LOGGER.error("Erreur récupération information Defect. Lot : " + ano.getLotRTC());
+            LOGGER.error("Erreur récupération information Defect. Lot : " + dq.getLotRTC());
             LOGPLANTAGE.error(e);
         }
     }
@@ -368,7 +370,7 @@ public class ControlRTC extends AbstractToStringImpl
      * @return
      * @throws TeamRepositoryException
      */
-    public String recupererValeurAttribut(IAttribute attrb, IWorkItem item) throws TeamRepositoryException
+    public String recupValeurAttribut(IAttribute attrb, IWorkItem item) throws TeamRepositoryException
     {
         Object objet = attrb.getValue(auditableCommon, item, monitor);
         if (objet instanceof Identifier)
@@ -431,7 +433,7 @@ public class ControlRTC extends AbstractToStringImpl
         final List<?> handles = page.getItemHandles();
         if (!handles.isEmpty())
         {
-            return recupererItemDepuisHandle(IContributor.class, (IContributorHandle) handles.get(0));
+            return recupItemDepuisHandle(IContributor.class, (IContributorHandle) handles.get(0));
         }
 
         return null;
@@ -555,6 +557,8 @@ public class ControlRTC extends AbstractToStringImpl
         int i = 0;
         int size = handles.size();
         task.setBaseMessage("Récupération lots RTC...");
+        String lot = "Lot ";
+        String sur = " sur ";
         long debut = System.currentTimeMillis();
 
         // valorisation de al liste de retour
@@ -570,7 +574,7 @@ public class ControlRTC extends AbstractToStringImpl
             // Affichage
             i++;
             task.updateProgress(i, size);
-            task.updateMessage(task.affichageTemps(debut, i, size));
+            task.updateMessage(new StringBuilder(lot).append(i).append(sur).append(size).append(task.affichageTemps(debut, i, size)).toString());
         }
 
         return retour;
@@ -636,7 +640,7 @@ public class ControlRTC extends AbstractToStringImpl
      * 
      * @throws TeamRepositoryException
      */
-    public void recupererTousLesProjets() throws TeamRepositoryException
+    public void recupTousLesProjets() throws TeamRepositoryException
     {
         IProcessItemService pis = (IProcessItemService) repo.getClientLibrary(IProcessItemService.class);
         for (Object pareaObj : pis.findAllProjectAreas(IProcessClientService.ALL_PROPERTIES, null))
@@ -673,7 +677,7 @@ public class ControlRTC extends AbstractToStringImpl
         List<IAttributeHandle> liste = recupWorkItemDepuisId(id).getCustomAttributes();
         for (IAttributeHandle handle : liste)
         {
-            IAttribute attribut = recupererItemDepuisHandle(IAttribute.class, handle);
+            IAttribute attribut = recupItemDepuisHandle(IAttribute.class, handle);
 
             LOGGER.info("attribut : " + attribut.getDisplayName());
             LOGGER.info("identifiant : " + attribut.getIdentifier() + Statics.NL);
@@ -782,16 +786,16 @@ public class ControlRTC extends AbstractToStringImpl
     private LotRTC creerLotSuiviRTCDepuisHandle(IWorkItemHandle handle) throws TeamRepositoryException
     {
 
-        IWorkItem workItem = recupererItemDepuisHandle(IWorkItem.class, handle);
+        IWorkItem workItem = recupItemDepuisHandle(IWorkItem.class, handle);
         LotRTC retour = ModelFactory.getModel(LotRTC.class);
         retour.setLot(String.valueOf(workItem.getId()));
         retour.setLibelle(workItem.getHTMLSummary().getPlainText());
-        retour.setCpiProjet(recupererItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
-        retour.setProjetClarityString(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem));
-        retour.setEdition(recupererValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem));
+        retour.setCpiProjet(recupItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
+        retour.setProjetClarityString(recupValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem));
+        retour.setEdition(recupValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem));
         EtatLot etatLot = EtatLot.from(recupEtatElement(workItem));
         retour.setEtatLot(etatLot);
-        retour.setProjetRTC(recupererItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
+        retour.setProjetRTC(recupItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());
         retour.setDateMajEtat(recupDatesEtatsLot(workItem).get(etatLot));
         return retour;
     }
@@ -834,8 +838,10 @@ public class ControlRTC extends AbstractToStringImpl
     {
         IWorkItem wi = recupWorkItemDepuisId(id);
         workItemClient.getWorkItemWorkingCopyManager().connect(wi, IWorkItem.FULL_PROFILE, monitor);
-        WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(wi);
-        
+        WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(wi);    
+        workingCopy.getWorkItem().getComments().append(workingCopy.getWorkItem().getComments().createComment(repo.loggedInContributor(), XMLString.createFromPlainText(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTERELANCE))));
+        workingCopy.save(monitor);
+        workItemClient.getWorkItemWorkingCopyManager().disconnect(wi);
     }
 
     /*---------- ACCESSEURS ----------*/

@@ -34,6 +34,7 @@ import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
+import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
 
@@ -49,7 +50,6 @@ public abstract class AbstractTask extends Task<Boolean>
     /*---------- ATTRIBUTS ----------*/
 
     protected static final String RECUPCOMPOSANTS = "Récupération des composants Sonar";
-    private static final int MILLITOSECOND = 1000;
     private static final String ECOULE = "\nTemps écoulé : ";
     private static final String RESTANT = "\nTemps restant : ";
 
@@ -62,7 +62,9 @@ public abstract class AbstractTask extends Task<Boolean>
     protected Map<String, ComposantSonar> mapCompos;
 
     private StringProperty etape = new SimpleStringProperty(this, "etape", EMPTY);
+    private StringProperty tempsEcoule = new SimpleStringProperty(this, "ecoule", EMPTY); 
     private String titre;
+    private TimerTask timer;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -78,14 +80,16 @@ public abstract class AbstractTask extends Task<Boolean>
         this.titre = titre;
         baseMessage = "";
         mapCompos = DaoFactory.getDao(ComposantSonar.class).readAllMap();
+        timer = new TimerTask();
+        timer.affilierTache(this);
     }
 
     /*---------- METHODES ABSTRAITES ----------*/
-
+    
     /**
-     * Utilisée pour permettre le retour arrière si possible du traitement
+     * Implémentation des classes filles de la méthode annuler, s'il y a beosin de rajouter des traitements.
      */
-    public abstract void annuler();
+    public abstract void annulerImpl();
 
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -111,6 +115,15 @@ public abstract class AbstractTask extends Task<Boolean>
     public String toString()
     {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
+    
+    /**
+     * Utilisée pour permettre le retour arrière si possible du traitement
+     */
+    public final void annuler()
+    {
+        timer.annuler();
+        annulerImpl();
     }
 
     /*---------- METHODES PROTECTED ----------*/
@@ -277,11 +290,10 @@ public abstract class AbstractTask extends Task<Boolean>
     public final String affichageTemps(long debut, int i, int size)
     {
         long actuel = System.currentTimeMillis();
-        long ecoute = actuel - debut;
-        long prevu = ecoute / i * size;
-        String ecoule = LocalTime.ofSecondOfDay(ecoute / MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME);
-        String restant = LocalTime.ofSecondOfDay(Math.abs((prevu - ecoute)) / MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME);
-        return new StringBuilder(ECOULE).append(ecoule).append(RESTANT).append(restant).toString();
+        long millisEcoulees = actuel - debut;
+        long prevu = millisEcoulees / i * size;
+        String restant = LocalTime.ofSecondOfDay(Math.abs((prevu - millisEcoulees)) / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME);
+        return new StringBuilder(getTempsEcoule()).append(RESTANT).append(restant).toString();
     }
 
     /**
@@ -521,15 +533,30 @@ public abstract class AbstractTask extends Task<Boolean>
     {
         return titre;
     }
+    
+    public String getTempsEcoule()
+    {
+        return tempsEcoule.get();
+    }
 
     public void setEtape(int debut, int fin)
     {
         Platform.runLater(() -> etape.set("Etape " + debut + " / " + fin));
     }
+    
+    public void setTempsEcoule(long millis)
+    {
+        Platform.runLater(() -> tempsEcoule.set(ECOULE + LocalTime.ofSecondOfDay(millis / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME)));
+    }
 
     public StringProperty etapeProperty()
     {
         return etape;
+    }
+    
+    public StringProperty tempsEcouleProperty()
+    {
+        return tempsEcoule;
     }
 
     public boolean isAnnulable()

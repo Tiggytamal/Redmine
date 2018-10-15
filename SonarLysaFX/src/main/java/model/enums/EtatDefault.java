@@ -1,6 +1,6 @@
 package model.enums;
 
-public enum EtatAnoSuivi 
+public enum EtatDefault 
 {
     NOUVELLE,
     ABANDONNEE,

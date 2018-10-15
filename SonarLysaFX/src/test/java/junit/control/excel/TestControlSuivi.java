@@ -31,7 +31,7 @@ import control.excel.ControlSuivi;
 import control.rtc.ControlRTC;
 import junit.TestUtils;
 import model.ModelFactory;
-import model.bdd.Anomalie;
+import model.bdd.DefaultQualite;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
@@ -39,7 +39,7 @@ import model.enums.TypeColSuivi;
 import model.enums.TypeRapport;
 import utilities.FunctionalException;
 
-public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<Anomalie>>
+public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<DefaultQualite>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -174,37 +174,37 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         // Vérification de al couleur de sortie de la méthode
 
         // Initialisation
-        Anomalie ano = ModelFactory.getModel(Anomalie.class);
+        DefaultQualite dq = ModelFactory.getModel(DefaultQualite.class);
         String methode = "calculCouleurLigne";
         Set<String> lotsEnErreurSonar = new HashSet<>();
         String anoLot = "123456";
 
         // Test 1 = Vert
-        ano.setEtatRTC(EMPTY);
-        ano.setNumeroAnoRTC(1);
-        ano.calculTraitee();
-        IndexedColors couleur = invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
+        dq.setEtatRTC(EMPTY);
+        dq.setNumeroAnoRTC(1);
+        dq.calculTraitee();
+        IndexedColors couleur = invokeMethod(handler, methode, dq, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.LIGHT_GREEN, couleur);
 
         // Test 3 = Blanc
         lotsEnErreurSonar.add(anoLot);
-        couleur = invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
+        couleur = invokeMethod(handler, methode, dq, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.WHITE, couleur);
 
         // Test 3 = Turquoise
-        ano.setAction(TypeAction.ASSEMBLER);
-        couleur = invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
+        dq.setAction(TypeAction.ASSEMBLER);
+        couleur = invokeMethod(handler, methode, dq, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.LIGHT_TURQUOISE, couleur);
 
         // Test 4 = Gris
-        ano.setAction(TypeAction.VERIFIER);
-        couleur = invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
+        dq.setAction(TypeAction.VERIFIER);
+        couleur = invokeMethod(handler, methode, dq, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.GREY_25_PERCENT, couleur);
 
         // Test 5 = Orange
-        ano.setNumeroAnoRTC(0);
-        ano.calculTraitee();
-        couleur = invokeMethod(handler, methode, ano, lotsEnErreurSonar, anoLot);
+        dq.setNumeroAnoRTC(0);
+        dq.calculTraitee();
+        couleur = invokeMethod(handler, methode, dq, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.LIGHT_ORANGE, couleur);
     }
     
@@ -270,10 +270,10 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException1() throws IllegalAccessException
     {
-        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefaultQualite.class, IndexedColors.class);
         try
         {
-            method.invoke(handler, null, ModelFactory.getModel(Anomalie.class), IndexedColors.AQUA);
+            method.invoke(handler, null, ModelFactory.getModel(DefaultQualite.class), IndexedColors.AQUA);
 
         } catch (InvocationTargetException e)
         {
@@ -285,7 +285,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException2() throws IllegalAccessException
     {
-        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefaultQualite.class, IndexedColors.class);
         try
         {
             method.invoke(handler, wb.getSheetAt(0).getRow(0), null, IndexedColors.AQUA);
@@ -299,10 +299,10 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException3() throws IllegalAccessException
     {
-        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefaultQualite.class, IndexedColors.class);
         try
         {
-            method.invoke(handler, wb.getSheetAt(0).getRow(0), ModelFactory.getModel(Anomalie.class), null);
+            method.invoke(handler, wb.getSheetAt(0).getRow(0), ModelFactory.getModel(DefaultQualite.class), null);
 
         } catch (InvocationTargetException e)
         {
@@ -314,7 +314,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException4() throws IllegalAccessException
     {
-        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, Anomalie.class, IndexedColors.class);
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefaultQualite.class, IndexedColors.class);
         try
         {
             method.invoke(handler, null, null, null);
@@ -432,19 +432,19 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     public void testSaveAnomaliesCloses() throws Exception
     {
         // Initialisation
-        Map<String, Anomalie> anoClose = new HashMap<>();
+        Map<String, DefaultQualite> dqClos = new HashMap<>();
 
         // Test 1
-        Sheet sheet = invokeMethod(handler, "saveAnomaliesCloses", anoClose);
+        Sheet sheet = invokeMethod(handler, "saveAnomaliesCloses", dqClos);
         assertEquals(1, sheet.getPhysicalNumberOfRows());
-        assertEquals(13, anoClose.size()); 
+        assertEquals(13, dqClos.size()); 
 
         // Test 2 - à partir d'une feuille vide
         removeSheet(AC);
-        anoClose.clear();
-        sheet = invokeMethod(handler, "saveAnomaliesCloses", anoClose);
+        dqClos.clear();
+        sheet = invokeMethod(handler, "saveAnomaliesCloses", dqClos);
         assertEquals(1, sheet.getPhysicalNumberOfRows());
-        assertEquals(0, anoClose.size());
+        assertEquals(0, dqClos.size());
     }
 
     @Test

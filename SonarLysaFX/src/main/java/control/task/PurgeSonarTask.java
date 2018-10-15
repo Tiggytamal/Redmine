@@ -58,7 +58,7 @@ public class PurgeSonarTask extends AbstractTask
     }
     
     @Override
-    public void annuler()
+    public void annulerImpl()
     {
         // Pas de traitement d'annulation        
     }

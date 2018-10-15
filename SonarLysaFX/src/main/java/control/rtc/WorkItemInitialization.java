@@ -21,7 +21,7 @@ import com.ibm.team.workitem.common.model.ISubscriptions;
 import com.ibm.team.workitem.common.model.IWorkItem;
 import com.ibm.team.workitem.common.model.IWorkItemType;
 
-import model.bdd.Anomalie;
+import model.bdd.DefaultQualite;
 import model.bdd.LotRTC;
 import model.enums.Matiere;
 import model.enums.Param;
@@ -43,21 +43,21 @@ public final class WorkItemInitialization extends WorkItemOperation
     private IWorkItemType type;
     private ICategory cat;
     private IProjectArea projet;
-    private Anomalie ano;
+    private DefaultQualite dq;
     private int lotAno;
     private ControlRTC controlRTC;
     private IWorkItemClient client;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public WorkItemInitialization(IWorkItemType type, ICategory cat, IProjectArea projet, Anomalie ano)
+    public WorkItemInitialization(IWorkItemType type, ICategory cat, IProjectArea projet, DefaultQualite dq)
     {
         super("Initializing Work Item");
         this.type = type;
         this.cat = cat;
         this.projet = projet;
-        this.ano = ano;
-        lotAno = Integer.parseInt(this.ano.getLotRTC().getLot());
+        this.dq = dq;
+        lotAno = Integer.parseInt(this.dq.getLotRTC().getLot());
         controlRTC = ControlRTC.INSTANCE;
         client = controlRTC.getClient();
     }
@@ -73,7 +73,7 @@ public final class WorkItemInitialization extends WorkItemOperation
         workItem.setHTMLDescription(XMLString.createFromPlainText(creerDescription()));
         workItem.setCategory(cat);
         
-        LotRTC lotRTC = ano.getLotRTC();
+        LotRTC lotRTC = dq.getLotRTC();
 
         // Environnement
         IAttribute attribut = client.findAttribute(projet, TypeEnumRTC.ENVIRONNEMENT.getValeur(), monitor);
@@ -183,7 +183,7 @@ public final class WorkItemInitialization extends WorkItemOperation
     {
         List<String> tags = workItem.getTags2();
         tags.add("lot=" + lotAno);
-        if (ano.isSecurite())
+        if (dq.isSecurite())
             tags.add("sécurité");
         workItem.setTags2(tags);
     }
@@ -191,7 +191,7 @@ public final class WorkItemInitialization extends WorkItemOperation
     private String creerDescription()
     {
         String retour = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEDEFECT).replace("-lot-", String.valueOf(lotAno));
-        if (ano.isSecurite())
+        if (dq.isSecurite())
             retour = retour.replace("Merci", Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTESECURITE));
         return retour;
     }

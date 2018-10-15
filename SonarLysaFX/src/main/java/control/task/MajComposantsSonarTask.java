@@ -56,7 +56,7 @@ public class MajComposantsSonarTask extends AbstractTask
     }
 
     @Override
-    public void annuler()
+    public void annulerImpl()
     {
         // Pas de traitement à l'annulation
     }
@@ -88,8 +88,6 @@ public class MajComposantsSonarTask extends AbstractTask
         int i = 0;
         int size = projets.size();
         long debut = System.currentTimeMillis();
-        
-        List<String> test = new ArrayList<>();
 
         for (Projet projet : projets)
         {
@@ -157,10 +155,6 @@ public class MajComposantsSonarTask extends AbstractTask
             composantSonar.setCritiques(recupLeakPeriod(getListPeriode(composant, TypeMetrique.CRITIQUE)));
             composantSonar.setDuplication(recupLeakPeriod(getListPeriode(composant, TypeMetrique.DUPLICATION)));
             retour.add(composantSonar);
-            if (test.contains(composantSonar.getKey()))
-                System.out.println("doublon : " + composantSonar.getKey());
-            else
-                test.add(composantSonar.getKey());
 
             if (api.getSecuriteComposant(projet.getKey()) > 0)
                 composantSonar.setSecurite(true);

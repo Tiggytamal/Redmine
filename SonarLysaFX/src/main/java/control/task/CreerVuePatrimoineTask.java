@@ -49,7 +49,7 @@ public class CreerVuePatrimoineTask extends AbstractTask
     }
 
     @Override
-    public void annuler()
+    public void annulerImpl()
     {
         cancel();
         if (key != null && !key.isEmpty())

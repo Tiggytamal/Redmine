@@ -11,6 +11,7 @@ public enum ParamSpec implements TypeKey
     /*---------- ATTRIBUTS ----------*/
 
     RECAPDEFECT("Récapitulatif Defect RTC", TypeParamSpec.TEXTAREA),
+    TEXTERELANCE("Texte de relance des anomalies", TypeParamSpec.TEXTAREA),
     TEXTEDEFECT("Description Defect RTC", TypeParamSpec.TEXTAREA),
     TEXTESECURITE("Texte Sécurité RTC", TypeParamSpec.TEXTAREA),
     VERSIONS("Versions", TypeParamSpec.LISTVIEWVERSION),

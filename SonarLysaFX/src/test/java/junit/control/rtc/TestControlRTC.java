@@ -199,12 +199,12 @@ public class TestControlRTC extends JunitBase
         // Iération sur la liste des attriuts pour révupérer les valeurs
         for (IAttributeHandle handle : liste)
         {
-            IAttribute attrb = handler.recupererEltDepuisHandle(IAttribute.class, handle, IAttribute.FULL_PROFILE);
+            IAttribute attrb = handler.recupEltDepuisHandle(IAttribute.class, handle, IAttribute.FULL_PROFILE);
             attrbs.add(attrb);
             if (attrb.getAttributeType().equals(TypeEnumRTC.IMPORTANCE.toString()))
-                assertEquals("Bloquante", handler.recupererValeurAttribut(attrb, item));
+                assertEquals("Bloquante", handler.recupValeurAttribut(attrb, item));
             else if (attrb.getAttributeType().equals(TypeEnumRTC.ORIGINE.toString()))
-                assertEquals("Qualimétrie", handler.recupererValeurAttribut(attrb, item));
+                assertEquals("Qualimétrie", handler.recupValeurAttribut(attrb, item));
         }
     }
 
@@ -319,10 +319,10 @@ public class TestControlRTC extends JunitBase
         List<IAttributeHandle> liste = item.getCustomAttributes();
         for (IAttributeHandle handle : liste)
         {
-            IAttribute attrb = handler.recupererEltDepuisHandle(IAttribute.class, handle, IAttribute.FULL_PROFILE);
+            IAttribute attrb = handler.recupEltDepuisHandle(IAttribute.class, handle, IAttribute.FULL_PROFILE);
             if (attrb.getIdentifier().equals(TypeEnumRTC.ORIGINE.toString()))
             {
-                handler.recupererValeurAttribut(attrb, item);
+                handler.recupValeurAttribut(attrb, item);
             }
         }
     }
@@ -353,6 +353,12 @@ public class TestControlRTC extends JunitBase
     {
         handler.fermerAnoRTC(356839);
     }
+    
+    @Test
+    public void testRelancerAno() throws TeamRepositoryException
+    {
+        handler.relancerAno(356839);
+    }
 
     @Test
     public void testGetRepo() throws IllegalArgumentException, IllegalAccessException, Exception
@@ -365,8 +371,6 @@ public class TestControlRTC extends JunitBase
     {
         assertEquals(Whitebox.getField(ControlRTC.class, "workItemClient").get(handler), Whitebox.invokeMethod(handler, "getClient"));
     }
-
-
 
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
-import model.enums.EtatAnoSuivi;
+import model.enums.EtatDefault;
 import model.enums.Param;
 import model.enums.TypeAction;
 import model.enums.TypeVersion;
@@ -29,15 +29,15 @@ import utilities.Statics;
  * @since 1.0
  */
 @Entity
-@Table(name = "anomalies")
+@Table(name = "defaults_qualite")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="Anomalie" + AbstractBDDModele.FINDALL, query="SELECT a FROM Anomalie a LEFT JOIN FETCH a.lotRTC l"),
-        @NamedQuery(name="Anomalie" + AbstractBDDModele.FINDINDEX, query="SELECT a FROM Anomalie a WHERE a.lotRTC.lot = :index"),
-        @NamedQuery(name="Anomalie" + AbstractBDDModele.RESETTABLE, query="DELETE FROM Anomalie")
+        @NamedQuery(name="Anomalie" + AbstractBDDModele.FINDALL, query="SELECT dq FROM DefaultQualite dq LEFT JOIN FETCH dq.lotRTC l"),
+        @NamedQuery(name="Anomalie" + AbstractBDDModele.FINDINDEX, query="SELECT dq FROM DefaultQualite dq WHERE dq.lotRTC.lot = :index"),
+        @NamedQuery(name="Anomalie" + AbstractBDDModele.RESETTABLE, query="DELETE FROM DefaultQualite")
 })
 //@formatter:on
-public class Anomalie extends AbstractBDDModele
+public class DefaultQualite extends AbstractBDDModele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -81,8 +81,8 @@ public class Anomalie extends AbstractBDDModele
     private LocalDate dateReso;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "etat_ano_suivi", nullable = false)
-    private EtatAnoSuivi etatAnoSuivi;
+    @Column(name = "etat_default", nullable = false)
+    private EtatDefault etatDefault;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "action", nullable = true)
@@ -90,16 +90,16 @@ public class Anomalie extends AbstractBDDModele
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    Anomalie()
+    DefaultQualite()
     {
         typeVersion = TypeVersion.SNAPSHOT;
-        etatAnoSuivi = EtatAnoSuivi.NOUVELLE;
+        etatDefault = EtatDefault.NOUVELLE;
         action = TypeAction.VIDE;
         remarque = Statics.EMPTY;
         dateDetection = LocalDate.now();
     }
 
-    Anomalie(LotRTC lotRTC)
+    DefaultQualite(LotRTC lotRTC)
     {
         this();
         this.lotRTC = lotRTC;
@@ -121,8 +121,8 @@ public class Anomalie extends AbstractBDDModele
      */
     public boolean calculTraitee()
     {
-        if (!getRemarque().isEmpty() || numeroAnoRTC != 0 && etatAnoSuivi == EtatAnoSuivi.NOUVELLE)
-            etatAnoSuivi = EtatAnoSuivi.TRAITEE;
+        if (!getRemarque().isEmpty() || numeroAnoRTC != 0 && etatDefault == EtatDefault.NOUVELLE)
+            etatDefault = EtatDefault.TRAITEE;
         return isTraitee();
     }
 
@@ -280,16 +280,16 @@ public class Anomalie extends AbstractBDDModele
 
     public boolean isTraitee()
     {
-        return etatAnoSuivi != EtatAnoSuivi.NOUVELLE;
+        return etatDefault != EtatDefault.NOUVELLE;
     }
 
-    public EtatAnoSuivi getEtatAnoSuivi()
+    public EtatDefault getEtatDefault()
     {
-        return etatAnoSuivi;
+        return etatDefault;
     }
 
-    public void setEtatAnoSuivi(EtatAnoSuivi etatAnoSuivi)
+    public void setEtatDefault(EtatDefault etatAnoSuivi)
     {
-        this.etatAnoSuivi = etatAnoSuivi;
+        this.etatDefault = etatAnoSuivi;
     }
 }

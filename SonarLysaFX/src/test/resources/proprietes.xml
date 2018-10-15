@@ -486,6 +486,12 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>RECAPDEFECT</key>
             <value>Anomalie Qualimétrie : Quality Gate non conforme</value>
         </entry>
+		<entry>
+			<key>TEXTERELANCE</key>
+			<value>Bonjour,
+Pourriez vous prendre en compte les défauts qualité restants pour correction ?
+Merci</value>
+		</entry>
         <entry>
             <key>TEXTEDEFECT</key>
             <value>Bonjour,

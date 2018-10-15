@@ -29,10 +29,10 @@ import control.word.ControlRapport;
 import dao.DaoAnomalie;
 import dao.DaoFactory;
 import model.ModelFactory;
-import model.bdd.Anomalie;
+import model.bdd.DefaultQualite;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
-import model.enums.EtatAnoSuivi;
+import model.enums.EtatDefault;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamBool;
@@ -94,7 +94,7 @@ public class MajSuiviExcelTask extends AbstractTask
     }
 
     @Override
-    public void annuler()
+    public void annulerImpl()
     {
         // Pas de traitement d'annulation
     }
@@ -295,8 +295,8 @@ public class MajSuiviExcelTask extends AbstractTask
         // Création de la map de retour
         Set<String> retour = new HashSet<>();
 
-        DaoAnomalie dao = DaoFactory.getDao(Anomalie.class);
-        Map<String, Anomalie> anoEnBase = dao.readAllMap();
+        DaoAnomalie dao = DaoFactory.getDao(DefaultQualite.class);
+        Map<String, DefaultQualite> dqsEnBase = dao.readAllMap();
 
         // Message
         baseMessage = "Composant : ";
@@ -311,10 +311,10 @@ public class MajSuiviExcelTask extends AbstractTask
             updateProgress(i, size);
             updateMessage(compo.getNom());
 
-            traitementCompo(compo, retour, anoEnBase);
+            traitementCompo(compo, retour, dqsEnBase);
         }
 
-        dao.persist(anoEnBase.values());
+        dao.persist(dqsEnBase.values());
         return retour;
     }
 
@@ -335,16 +335,16 @@ public class MajSuiviExcelTask extends AbstractTask
     private void majFichierAnomalies(Set<String> lotSonarQGError, String fichier, Matiere matiere) throws IOException
     {
         // Récupération des anomalies en base
-        DaoAnomalie dao = DaoFactory.getDao(Anomalie.class);
-        Map<String, Anomalie> mapAnosEnBase = dao.readAllMapMatiere(matiere);
+        DaoAnomalie dao = DaoFactory.getDao(DefaultQualite.class);
+        Map<String, DefaultQualite> mapDqsEnBase = dao.readAllMapMatiere(matiere);
 
         // Mise à jour des lots en ereur
-        for (Anomalie ano : mapAnosEnBase.values())
+        for (DefaultQualite dq : mapDqsEnBase.values())
         {
-            if (lotSonarQGError.contains(ano.getLotRTC().getLot()))
-                ano.getLotRTC().setQualityGate(QG.ERROR);
+            if (lotSonarQGError.contains(dq.getLotRTC().getLot()))
+                dq.getLotRTC().setQualityGate(QG.ERROR);
             else
-                ano.getLotRTC().setQualityGate(QG.OK);
+                dq.getLotRTC().setQualityGate(QG.OK);
         }
 
         // Controleur
@@ -353,34 +353,34 @@ public class MajSuiviExcelTask extends AbstractTask
         ControlRapport controlRapport = controlAno.createControlRapport(matiere.getTypeRapport());
 
         // Lecture du fichier pour remonter les anomalies en cours.
-        List<Anomalie> listeAnoExcel = controlAno.recupDonneesDepuisExcel();
+        List<DefaultQualite> listeDqExcel = controlAno.recupDonneesDepuisExcel();
 
         // Affichage
-        int size = listeAnoExcel.size();
+        int size = listeDqExcel.size();
         int i = 0;
         long debut = System.currentTimeMillis();
 
         // Mise à jour de la base de donnée des anomalies
-        for (Anomalie anoExcel : listeAnoExcel)
+        for (DefaultQualite anoExcel : listeDqExcel)
         {
 
-            Anomalie anoBase = mapAnosEnBase.get(anoExcel.getLotRTC().getLot());
-            if (anoBase == null)
+            DefaultQualite dqBase = mapDqsEnBase.get(anoExcel.getLotRTC().getLot());
+            if (dqBase == null)
             {
                 LOGPLANTAGE.error("Ano du fichier excel inconnue en base : " + anoExcel.getLotRTC().getLot());
                 continue;
             }
 
             // Mise à jour des données depuis Excel
-            anoBase.setRemarque(anoExcel.getRemarque());
-            anoBase.setAction(anoExcel.getAction());
-            anoBase.setDateRelance(anoExcel.getDateRelance());
+            dqBase.setRemarque(anoExcel.getRemarque());
+            dqBase.setAction(anoExcel.getAction());
+            dqBase.setDateRelance(anoExcel.getDateRelance());
 
             // Mise à jour des données des anomalies RTC
-            ControlRTC.INSTANCE.controleAnoRTC(anoBase);
+            ControlRTC.INSTANCE.controleAnoRTC(dqBase);
 
             // Gestion des action de création et de cloture des anomalies
-            gestionAction(anoBase, controlRapport);
+            gestionAction(dqBase, controlRapport);
 
             // Affichage
             i++;
@@ -392,12 +392,12 @@ public class MajSuiviExcelTask extends AbstractTask
         Sheet sheet = controlAno.sauvegardeFichier(fichier);
 
         // Mis à jour de la feuille principale
-        controlAno.majFeuillePrincipale(new ArrayList<>(mapAnosEnBase.values()), sheet, matiere);
+        controlAno.majFeuillePrincipale(new ArrayList<>(mapDqsEnBase.values()), sheet, matiere);
 
         // Persistance des données
-        dao.persist(mapAnosEnBase.values());
+        dao.persist(mapDqsEnBase.values());
 
-        controlAno.calculStatistiques(new ArrayList<>(mapAnosEnBase.values()));
+        controlAno.calculStatistiques(new ArrayList<>(mapDqsEnBase.values()));
 
         // Ecriture et Fermeture controleur
         write(controlAno);
@@ -419,9 +419,9 @@ public class MajSuiviExcelTask extends AbstractTask
      *            Lots qui sont en version RELEASE
      * @param base
      *            Base pour l'affichage du message dans la fenêtre d'execution
-     * @param anoEnBase
+     * @param dqEnBase
      */
-    private void traitementCompo(ComposantSonar compo, Set<String> retour, Map<String, Anomalie> anoEnBase)
+    private void traitementCompo(ComposantSonar compo, Set<String> retour, Map<String, DefaultQualite> dqEnBase)
     {
         LotRTC lotRTC = compo.getLotRTC();
 
@@ -429,14 +429,14 @@ public class MajSuiviExcelTask extends AbstractTask
         if (lotRTC == null || !controleQGBloquant(compo))
             return;
 
-        Anomalie ano;
+        DefaultQualite dq;
 
-        if (anoEnBase.containsKey(lotRTC.getLot()))
-            ano = anoEnBase.get(lotRTC.getLot());
+        if (dqEnBase.containsKey(lotRTC.getLot()))
+            dq = dqEnBase.get(lotRTC.getLot());
         else
         {
-            ano = ModelFactory.getModel(Anomalie.class);
-            ano.setLotRTC(lotRTC);
+            dq = ModelFactory.getModel(DefaultQualite.class);
+            dq.setLotRTC(lotRTC);
         }
 
         // Ajout du lot à la liste de retour s'il y a des défaults critiques ou bloquants ou de duplication de code
@@ -444,13 +444,13 @@ public class MajSuiviExcelTask extends AbstractTask
 
         // Contrôle pour vérifier si le composant a une erreur de sécurité
         if (compo.isSecurite())
-            ano.setSecurite(true);
+            dq.setSecurite(true);
 
         // Contrôle du composant pour voir s'il a une version RELEASE ou SNAPSHOT
         if (compo.isVersionRelease())
-            ano.setTypeVersion(TypeVersion.RELEASE);
+            dq.setTypeVersion(TypeVersion.RELEASE);
 
-        anoEnBase.put(ano.getLotRTC().getLot(), ano);
+        dqEnBase.put(dq.getLotRTC().getLot(), dq);
     }
 
     /**
@@ -507,14 +507,14 @@ public class MajSuiviExcelTask extends AbstractTask
      *         {@code false} si l'anomalie est à clôturer ou abandonner
      * @throws TeamRepositoryException 
      */
-    private void gestionAction(Anomalie ano, ControlRapport controlRapport)
+    private void gestionAction(DefaultQualite ano, ControlRapport controlRapport)
     {
         switch (ano.getAction())
         {
             case ABANDONNER:
                 if (controlAno(ano))
                 {
-                    ano.setEtatAnoSuivi(EtatAnoSuivi.ABANDONNEE);
+                    ano.setEtatDefault(EtatDefault.ABANDONNEE);
                     controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
                 }
                 break;
@@ -525,14 +525,14 @@ public class MajSuiviExcelTask extends AbstractTask
             case CLOTURER:
                 if (controlAno(ano))
                 {
-                    ano.setEtatAnoSuivi(EtatAnoSuivi.CLOSE);
+                    ano.setEtatDefault(EtatDefault.CLOSE);
                     controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
                 }
                 break;
 
             case CREER:
 
-                int numeroAno = ControlRTC.INSTANCE.creerDefect(ano);
+                int numeroAno = ControlRTC.INSTANCE.creerAnoRTC(ano);
                 if (numeroAno != 0)
                 {
                     ano.setAction(null);
@@ -547,6 +547,7 @@ public class MajSuiviExcelTask extends AbstractTask
                 try
                 {
                     ControlRTC.INSTANCE.relancerAno(ano.getNumeroAnoRTC());
+                    ano.setDateRelance(LocalDate.now());
                 }
                 catch (TeamRepositoryException e)
                 {
@@ -558,6 +559,7 @@ public class MajSuiviExcelTask extends AbstractTask
                 break;
 
             case VIDE:
+                // Pas d'action
                 break;
 
             default:
@@ -566,14 +568,14 @@ public class MajSuiviExcelTask extends AbstractTask
         }
     }
 
-    private boolean controlAno(Anomalie ano)
+    private boolean controlAno(DefaultQualite dq)
     {
-        if (ano.getNumeroAnoRTC() == 0 || Statics.ANOCLOSE.equals(ano.getEtatRTC()))
+        if (dq.getNumeroAnoRTC() == 0 || Statics.ANOCLOSE.equals(dq.getEtatRTC()))
             return true;
         else
             try
             {
-                return ControlRTC.INSTANCE.fermerAnoRTC(ano.getNumeroAnoRTC());
+                return ControlRTC.INSTANCE.fermerAnoRTC(dq.getNumeroAnoRTC());
             }
             catch (TeamRepositoryException e)
             {

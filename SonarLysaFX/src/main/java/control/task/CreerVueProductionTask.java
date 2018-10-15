@@ -77,7 +77,7 @@ public class CreerVueProductionTask extends AbstractTask
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public void annuler()
+    public void annulerImpl()
     {
         if (vueKey != null && !vueKey.isEmpty())
         {

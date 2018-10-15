@@ -70,7 +70,7 @@ public class MajLotsRTCTask extends AbstractTask
     }
 
     @Override
-    public void annuler()
+    public void annulerImpl()
     {
         // Pas de traitement d'annulation
     }
@@ -126,7 +126,7 @@ public class MajLotsRTCTask extends AbstractTask
 
             // Affichage
             i++;
-            updateProgress(i, size);
+            updateProgress((double)i, (double)size);
             updateMessage(new StringBuilder(lot).append(Statics.NL).append(affichageTemps(debut, i, size)).toString());
         }
         return retour;

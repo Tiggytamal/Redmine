@@ -31,6 +31,8 @@ public final class Statics
     public static final double CARAC_WIDTH = 7;
     /** Taille du substring pour les lots */
     public static final short SBTRINGLOT = 4;
+    /** Divisuer millisecondes */
+    public static final int MILLITOSECOND = 1000;
     
     /** Adresse générale pour les resources */
     public static final String ROOT = "/";

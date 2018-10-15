@@ -1,5 +1,8 @@
 package model.bdd;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +22,9 @@ public abstract class AbstractBDDModele extends AbstractModele
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int idBase;
+    
+    @Column(name = "timestamp")
+    protected LocalDateTime timeStamp;
 
     /*---------- CONSTRUCTEURS ----------*/
     /*---------- METHODES ABSTRAITES ----------*/
@@ -37,5 +43,10 @@ public abstract class AbstractBDDModele extends AbstractModele
     public int getIdBase()
     {
         return idBase;
+    }
+    
+    public LocalDateTime getTimeStamp()
+    {
+        return timeStamp;
     }
 }

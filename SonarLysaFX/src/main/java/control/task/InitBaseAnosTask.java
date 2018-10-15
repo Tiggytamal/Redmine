@@ -11,7 +11,7 @@ import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
 import dao.DaoAnomalie;
 import dao.DaoFactory;
-import model.bdd.Anomalie;
+import model.bdd.DefaultQualite;
 import model.bdd.LotRTC;
 import model.enums.Param;
 import model.enums.TypeColSuivi;
@@ -33,7 +33,7 @@ public class InitBaseAnosTask extends AbstractTask
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public void annuler()
+    public void annulerImpl()
     {
         // Pas d'annulation pour le momment
     }
@@ -42,29 +42,29 @@ public class InitBaseAnosTask extends AbstractTask
     public Boolean call() throws Exception
     {
         updateMessage("Remise à zéro de la table des anomalies");
-        DaoFactory.getDao(Anomalie.class).resetTable();
+        DaoFactory.getDao(DefaultQualite.class).resetTable();
         
         etapePlus();
         String base = "Traitement du fichier JAVA :\n";
         updateMessage(base);
-        boolean java = sauvegarde(initialisationAnomalies(proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA), base));
+        boolean java = sauvegarde(initDefaults(proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA), base));
         
         etapePlus();
         base = "Traitement du fichier DATASTAGE :\n";
         updateMessage(base);
-        boolean dataStage = sauvegarde(initialisationAnomalies(proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE), base));
+        boolean dataStage = sauvegarde(initDefaults(proprietesXML.getMapParams().get(Param.NOMFICHIERDATASTAGE), base));
         
         etapePlus();
         base = "Traitement du fichier COBOL :\n";
         updateMessage(base);
-        boolean cobol =  sauvegarde(initialisationAnomalies(proprietesXML.getMapParams().get(Param.NOMFICHIERCOBOL), base));
+        boolean cobol =  sauvegarde(initDefaults(proprietesXML.getMapParams().get(Param.NOMFICHIERCOBOL), base));
         
         return java && dataStage && cobol;
     }
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private Collection<Anomalie> initialisationAnomalies(String fichier, String base)
+    private Collection<DefaultQualite> initDefaults(String fichier, String base)
     {
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;
         ControlSuivi controlAno = ExcelFactory.getReader(TypeColSuivi.class, new File(name));
@@ -72,19 +72,19 @@ public class InitBaseAnosTask extends AbstractTask
         updateMessage(base + "Récupération des lots en base...");
         Map<String, LotRTC> lotsRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
         
-        updateMessage(base + "Traitement des anomalies en cours");
-        List<Anomalie> liste = controlAno.recupAnoEnCoursDepuisExcel(lotsRTC, this);
+        updateMessage(base + "Traitement des défaults en cours");
+        List<DefaultQualite> liste = controlAno.recupAnoEnCoursDepuisExcel(lotsRTC, this);
         
-        updateMessage(base + "Traitement des anomalies closes");
+        updateMessage(base + "Traitement des défaults clos");
         liste.addAll(controlAno.recupAnoClosesDepuisExcel(lotsRTC, this));
         
-        updateMessage(base + "Traitement des anomalies abandonnées");
+        updateMessage(base + "Traitement des défaults abandonnés");
         return controlAno.controlAnoAbandon(liste, lotsRTC);
     }
     
-    private boolean sauvegarde(Collection<Anomalie> liste)
+    private boolean sauvegarde(Collection<DefaultQualite> liste)
     {
-        DaoAnomalie dao = DaoFactory.getDao(Anomalie.class);
+        DaoAnomalie dao = DaoFactory.getDao(DefaultQualite.class);
         int taille = dao.persist(liste);
         dao.majDateDonnee();
         return taille > 0;

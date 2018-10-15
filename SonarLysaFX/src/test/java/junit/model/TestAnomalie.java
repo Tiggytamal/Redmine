@@ -13,7 +13,7 @@ import java.util.Set;
 import org.junit.Test;
 
 import model.ModelFactory;
-import model.bdd.Anomalie;
+import model.bdd.DefaultQualite;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
 import model.enums.EtatLot;
@@ -21,7 +21,7 @@ import model.enums.Matiere;
 import model.enums.TypeAction;
 import utilities.Statics;
 
-public class TestAnomalie extends AbstractTestModel<Anomalie>
+public class TestAnomalie extends AbstractTestModel<DefaultQualite>
 {
     /*---------- ATTRIBUTS ----------*/    
     /*---------- CONSTRUCTEURS ----------*/    
@@ -31,7 +31,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
     public void testAnomlieWithLot()
     {
         // Test création anomalie depuis LotSuiviRTC
-        handler = ModelFactory.getModelWithParams(Anomalie.class, ModelFactory.getModel(LotRTC.class));
+        handler = ModelFactory.getModelWithParams(DefaultQualite.class, ModelFactory.getModel(LotRTC.class));
         assertNotNull(handler);
     }
     
@@ -85,7 +85,7 @@ public class TestAnomalie extends AbstractTestModel<Anomalie>
     public void testToString()
     {
         // Test sans initialisation
-        handler = ModelFactory.getModel(Anomalie.class);
+        handler = ModelFactory.getModel(DefaultQualite.class);
         String string = handler.toString();
         System.out.println(string);
         assertTrue(string.contains("direction=<null>"));

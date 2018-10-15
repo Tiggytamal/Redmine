@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import model.bdd.AbstractBDDModele;
-import model.bdd.Anomalie;
+import model.bdd.DefaultQualite;
 import model.enums.Matiere;
 import model.enums.TypeDonnee;
 
-public class DaoAnomalie extends AbstractDao<Anomalie> implements Serializable
+public class DaoAnomalie extends AbstractDao<DefaultQualite> implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -33,9 +33,9 @@ public class DaoAnomalie extends AbstractDao<Anomalie> implements Serializable
     }
 
     @Override
-    public Anomalie recupEltParCode(String lot)
+    public DefaultQualite recupEltParCode(String lot)
     {
-        List<Anomalie> liste = em.createNamedQuery("Anomalie" + AbstractBDDModele.FINDINDEX, Anomalie.class).setParameter("code", lot).getResultList();
+        List<DefaultQualite> liste = em.createNamedQuery("Anomalie" + AbstractBDDModele.FINDINDEX, DefaultQualite.class).setParameter("code", lot).getResultList();
         if (liste.isEmpty())
             return null;
         else
@@ -47,21 +47,21 @@ public class DaoAnomalie extends AbstractDao<Anomalie> implements Serializable
     {
         int retour = 0;
         em.getTransaction().begin();
-        retour = em.createNamedQuery("Anomalie.resetTable").executeUpdate();
-        em.createNativeQuery("ALTER TABLE anomalies AUTO_INCREMENT = 0").executeUpdate();
+        retour = em.createNamedQuery("DefaultQualite.resetTable").executeUpdate();
+        em.createNativeQuery("ALTER TABLE defaults_qualite AUTO_INCREMENT = 0").executeUpdate();
         em.getTransaction().commit();
         return retour;
     }
 
-    public Map<String, Anomalie> readAllMapMatiere(Matiere matiere)
+    public Map<String, DefaultQualite> readAllMapMatiere(Matiere matiere)
     {
-        Map<String, Anomalie> retour = new HashMap<>();
+        Map<String, DefaultQualite> retour = new HashMap<>();
 
         // Itération pour ne prendre que les anomalies de la matière désirée
-        for (Anomalie ano : readAll())
+        for (DefaultQualite dq : readAll())
         {
-            if (ano.getLotRTC().getMatieres().contains(matiere))
-                retour.put(ano.getMapIndex(), ano);
+            if (dq.getLotRTC().getMatieres().contains(matiere))
+                retour.put(dq.getMapIndex(), dq);
         }
 
         return retour;

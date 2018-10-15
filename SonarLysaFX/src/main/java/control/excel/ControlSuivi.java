@@ -34,11 +34,11 @@ import control.task.AbstractTask;
 import control.word.ControlRapport;
 import dao.DaoFactory;
 import model.ModelFactory;
-import model.bdd.Anomalie;
+import model.bdd.DefaultQualite;
 import model.bdd.ChefService;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
-import model.enums.EtatAnoSuivi;
+import model.enums.EtatDefault;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.Param;
@@ -63,7 +63,7 @@ import utilities.enums.Severity;
  * @since 1.0
  * 
  */
-public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<Anomalie>>
+public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<DefaultQualite>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -118,13 +118,13 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public List<Anomalie> recupDonneesDepuisExcel()
+    public List<DefaultQualite> recupDonneesDepuisExcel()
     {
         // Récupération de la première feuille
         Sheet sheet = wb.getSheet(SQ);
 
         // Liste de retour
-        List<Anomalie> retour = new ArrayList<>();
+        List<DefaultQualite> retour = new ArrayList<>();
         Map<String, LotRTC> lotsRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
 
         // Itération sur chaque ligne pour créer les anomalies
@@ -149,7 +149,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param task
      * @return
      */
-    public List<Anomalie> recupAnoEnCoursDepuisExcel(Map<String, LotRTC> lotsRTC, AbstractTask task)
+    public List<DefaultQualite> recupAnoEnCoursDepuisExcel(Map<String, LotRTC> lotsRTC, AbstractTask task)
     {
         return recupListeAnomaliesDepuisFeuille(SQ, lotsRTC, task);
     }
@@ -160,12 +160,12 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param matiere
      * @return
      */
-    public List<Anomalie> recupAnoClosesDepuisExcel(Map<String, LotRTC> lotsRTC, AbstractTask task)
+    public List<DefaultQualite> recupAnoClosesDepuisExcel(Map<String, LotRTC> lotsRTC, AbstractTask task)
     {
-        List<Anomalie> retour = recupListeAnomaliesDepuisFeuille(AC, lotsRTC, task);
-        for (Anomalie ano : retour)
+        List<DefaultQualite> retour = recupListeAnomaliesDepuisFeuille(AC, lotsRTC, task);
+        for (DefaultQualite dq : retour)
         {
-            ano.setEtatAnoSuivi(EtatAnoSuivi.CLOSE);
+            dq.setEtatDefault(EtatDefault.CLOSE);
         }
         return retour;
     }
@@ -175,13 +175,13 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * 
      * @param liste
      */
-    public Collection<Anomalie> controlAnoAbandon(Iterable<Anomalie> liste, Map<String, LotRTC> lotsRTC)
+    public Collection<DefaultQualite> controlAnoAbandon(Iterable<DefaultQualite> liste, Map<String, LotRTC> lotsRTC)
     {
-        Map<String, Anomalie> map = new HashMap<>();
+        Map<String, DefaultQualite> map = new HashMap<>();
 
-        for (Anomalie ano : liste)
+        for (DefaultQualite dq : liste)
         {
-            map.put(ano.getLotRTC().getLot(), ano);
+            map.put(dq.getLotRTC().getLot(), dq);
         }
 
         // Récupération des versions en paramètre
@@ -200,21 +200,21 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
                 String lot = Utilities.testLot(getCellStringValue(row, Index.DONNEEI.ordinal()));
                 String traite = getCellStringValue(row, Index.TOTALI.ordinal());
                 if ("A".equals(traite) && map.containsKey(lot))
-                    map.get(lot).setEtatAnoSuivi(EtatAnoSuivi.ABANDONNEE);
+                    map.get(lot).setEtatDefault(EtatDefault.ABANDONNEE);
                 else if ("A".equals(traite))
                 {
-                    Anomalie ano = ModelFactory.getModel(Anomalie.class);
-                    ano.setEtatAnoSuivi(EtatAnoSuivi.ABANDONNEE);
-                    ano.setDateDetection(LocalDate.of(2016, 1, 1));
-                    ano.setLotRTC(lotsRTC.get(lot));
-                    map.put(ano.getLotRTC().getLot(), ano);
+                    DefaultQualite dq = ModelFactory.getModel(DefaultQualite.class);
+                    dq.setEtatDefault(EtatDefault.ABANDONNEE);
+                    dq.setDateDetection(LocalDate.of(2016, 1, 1));
+                    dq.setLotRTC(lotsRTC.get(lot));
+                    map.put(dq.getLotRTC().getLot(), dq);
                 }
             }
         }
         return map.values();
     }
 
-    public void calculStatistiques(List<Anomalie> anosEnBase)
+    public void calculStatistiques(List<DefaultQualite> dqsEnBase)
     {
         // Réinitialisation de la feuille
         Sheet sheet = wb.getSheet(STATS);
@@ -236,18 +236,18 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         LocalDate debutTrim = LocalDate.of(today.getYear(), today.getMonth(), 1).minusMonths(3).minusDays(1L);
 
         // Itération sur les anomalies
-        for (Anomalie ano : anosEnBase)
+        for (DefaultQualite dq : dqsEnBase)
         {
-            calculDonnee(ano, debutMois, debutTrim, fin, valeurs);
+            calculDonnee(dq, debutMois, debutTrim, fin, valeurs);
 
-            if (ano.getDateCreation() != null)
-                calculDonnee(ano, debutMois, debutTrim, fin, valeursM);
+            if (dq.getDateCreation() != null)
+                calculDonnee(dq, debutMois, debutTrim, fin, valeursM);
 
-            if (ano.getDateReso() != null)
-                calculDonnee(ano, debutMois, debutTrim, fin, valeursT);
+            if (dq.getDateReso() != null)
+                calculDonnee(dq, debutMois, debutTrim, fin, valeursT);
 
-            if (ano.getDateCreation() != null && ano.getDateReso() == null)
-                calculEnCours(ano, today, valeursE);
+            if (dq.getDateCreation() != null && dq.getDateReso() == null)
+                calculEnCours(dq, today, valeursE);
         }
 
         CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.VIDE, HorizontalAlignment.CENTER);
@@ -299,7 +299,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
     /**
      * Gestion de la feuille principale des anomalies. Maj des anciennes plus création des nouvelles
      * 
-     * @param anosATraiter
+     * @param dqsATraiter
      * @param anoAajouter
      * @param lotsEnErreurSonar
      * @param lotsSecurite
@@ -309,24 +309,24 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param task
      * @throws IOException
      */
-    public void majFeuillePrincipale(List<Anomalie> anosATraiter, Sheet sheet, Matiere matiere)
+    public void majFeuillePrincipale(List<DefaultQualite> dqsATraiter, Sheet sheet, Matiere matiere)
     {
         // Rangement anomalies par date de détection
-        Collections.sort(anosATraiter, (o1, o2) -> o1.getDateDetection().compareTo(o2.getDateDetection()));
+        Collections.sort(dqsATraiter, (o1, o2) -> o1.getDateDetection().compareTo(o2.getDateDetection()));
 
         // Mise à jour anomalies
-        for (Anomalie ano : anosATraiter)
+        for (DefaultQualite dq : dqsATraiter)
         {
             // Quitte le traitment si l'anomalie n'est pas à remonter dans le fichier
-            if (testAnoOK(ano))
+            if (testAnoOK(dq))
                 continue;
 
             // Calcul de la couleur de la ligne dans le fichier Excel
-            IndexedColors couleur = calculCouleurLigne(ano);
+            IndexedColors couleur = calculCouleurLigne(dq);
 
             // Création de la ligne
             Row row = sheet.createRow(sheet.getLastRowNum() + 1);
-            creerLigneSQ(row, ano, couleur);
+            creerLigneSQ(row, dq, couleur);
         }
 
         if (sheet.getLastRowNum() > 0)
@@ -351,80 +351,80 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private void calculDonnee(Anomalie ano, LocalDate debutMois, LocalDate debutTrim, LocalDate fin, int[] valeurs)
+    private void calculDonnee(DefaultQualite dq, LocalDate debutMois, LocalDate debutTrim, LocalDate fin, int[] valeurs)
     {
 
         valeurs[Calcul.TOTAL.ordinal()]++;
-        if (ano.isSecurite())
+        if (dq.isSecurite())
             valeurs[Calcul.TOTALSEC.ordinal()]++;
 
-        if (ano.getDateDetection().isAfter(debutMois) && ano.getDateDetection().isBefore(fin))
+        if (dq.getDateDetection().isAfter(debutMois) && dq.getDateDetection().isBefore(fin))
         {
             valeurs[Calcul.TOTALM.ordinal()]++;
-            if (ano.isSecurite())
+            if (dq.isSecurite())
                 valeurs[Calcul.TOTALMSEC.ordinal()]++;
         }
-        if (ano.getDateDetection().isAfter(debutTrim) && ano.getDateDetection().isBefore(fin))
+        if (dq.getDateDetection().isAfter(debutTrim) && dq.getDateDetection().isBefore(fin))
         {
             valeurs[Calcul.TOTALT.ordinal()]++;
-            if (ano.isSecurite())
+            if (dq.isSecurite())
                 valeurs[Calcul.TOTALTSEC.ordinal()]++;
         }
     }
 
-    private void calculEnCours(Anomalie ano, LocalDate today, int[] valeursE)
+    private void calculEnCours(DefaultQualite dq, LocalDate today, int[] valeursE)
     {
         valeursE[Calcul.TOTAL.ordinal()]++;
 
-        if (ano.isSecurite())
+        if (dq.isSecurite())
             valeursE[Calcul.TOTALSEC.ordinal()]++;
 
-        if (ano.getDateCreation().isBefore(today.minusMonths(3L)))
+        if (dq.getDateCreation().isBefore(today.minusMonths(3L)))
         {
             valeursE[Calcul.TOTALT.ordinal()]++;
-            if (ano.isSecurite())
+            if (dq.isSecurite())
                 valeursE[Calcul.TOTALTSEC.ordinal()]++;
         }
-        else if (ano.getDateCreation().isBefore(today.minusMonths(1L)))
+        else if (dq.getDateCreation().isBefore(today.minusMonths(1L)))
         {
             valeursE[Calcul.TOTALM.ordinal()]++;
-            if (ano.isSecurite())
+            if (dq.isSecurite())
                 valeursE[Calcul.TOTALMSEC.ordinal()]++;
         }
-        else if (ano.getDateCreation().isBefore(today.minusWeeks(1L)))
+        else if (dq.getDateCreation().isBefore(today.minusWeeks(1L)))
         {
             valeursE[Calcul.TOTALS.ordinal()]++;
-            if (ano.isSecurite())
+            if (dq.isSecurite())
                 valeursE[Calcul.TOTALSSEC.ordinal()]++;
         }
     }
 
-    private boolean testAnoOK(Anomalie ano)
+    private boolean testAnoOK(DefaultQualite dq)
     {
         // Données
-        EtatAnoSuivi etatAno = ano.getEtatAnoSuivi();
-        LotRTC lotRTC = ano.getLotRTC();
+        EtatDefault etatAno = dq.getEtatDefault();
+        LotRTC lotRTC = dq.getLotRTC();
         EtatLot etatLot = lotRTC.getEtatLot();
         QG qg = lotRTC.getQualityGate();
 
         // On considère les anomalies abandonnées comme bonnes
-        if (etatAno == EtatAnoSuivi.ABANDONNEE)
+        if (etatAno == EtatDefault.ABANDONNEE)
             return true;
 
         // On ne reprend pas les anomalies closes avec un lot terminé ou livré à l'édition
-        if ((etatLot == EtatLot.EDITION || etatLot == EtatLot.TERMINE) && etatAno == EtatAnoSuivi.CLOSE)
+        if ((etatLot == EtatLot.EDITION || etatLot == EtatLot.TERMINE) && etatAno == EtatDefault.CLOSE)
             return true;
 
         // Si l'anomalie est close mais que le QG est toujours en erreur, on met l'anomalie à vérifier et nouvelle
-        if (etatAno == EtatAnoSuivi.CLOSE && qg == QG.ERROR)
+        if (etatAno == EtatDefault.CLOSE && qg == QG.ERROR)
         {
-            ano.setAction(TypeAction.VERIFIER);
-            ano.setDateDetection(LocalDate.now());
-            ano.setEtatAnoSuivi(EtatAnoSuivi.NOUVELLE);
+            dq.setAction(TypeAction.VERIFIER);
+            dq.setDateDetection(LocalDate.now());
+            dq.setEtatDefault(EtatDefault.NOUVELLE);
             return false;
         }
 
-        return etatAno == EtatAnoSuivi.CLOSE;
+        return etatAno == EtatDefault.CLOSE;
     }
 
     /**
@@ -434,13 +434,13 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param task
      * @return
      */
-    private List<Anomalie> recupListeAnomaliesDepuisFeuille(String feuille, Map<String, LotRTC> lotsRTC, AbstractTask task)
+    private List<DefaultQualite> recupListeAnomaliesDepuisFeuille(String feuille, Map<String, LotRTC> lotsRTC, AbstractTask task)
     {
         // Récupération de la première feuille
         Sheet sheet = wb.getSheet(feuille);
 
         // Liste de retour
-        List<Anomalie> retour = new ArrayList<>();
+        List<DefaultQualite> retour = new ArrayList<>();
 
         int size = sheet.getLastRowNum();
 
@@ -507,7 +507,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * - gris = anomalie déjà traitée une première fois avec un QG redevenu rouge<br>
      * - vert = lot dont le QG est devenu vert<br>
      * 
-     * @param ano
+     * @param dq
      *            anomalie
      * @param lotsEnErreurSonar
      *            Liste des lots en erreur
@@ -517,16 +517,16 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      *            Liste des lots en version Release
      * @return
      */
-    private IndexedColors calculCouleurLigne(Anomalie ano)
+    private IndexedColors calculCouleurLigne(DefaultQualite dq)
     {
         IndexedColors couleur;
 
         // Mise en vert des anomalies avec un Quality Gate bon
-        if (ano.getLotRTC().getQualityGate() != QG.ERROR)
+        if (dq.getLotRTC().getQualityGate() != QG.ERROR)
             couleur = IndexedColors.LIGHT_GREEN;
 
         // Les lots qui ont besoin juste d'un réassemblage sont en bleu
-        else if (TypeAction.ASSEMBLER == ano.getAction())
+        else if (TypeAction.ASSEMBLER == dq.getAction())
             couleur = IndexedColors.LIGHT_TURQUOISE;
 
         // Le reste est en blanc
@@ -534,11 +534,11 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
             couleur = IndexedColors.WHITE;
 
         // Les lots déjà traités une première fois sont en gris
-        if (TypeAction.VERIFIER == ano.getAction())
+        if (TypeAction.VERIFIER == dq.getAction())
             couleur = IndexedColors.GREY_25_PERCENT;
 
         // Remise de la couleur à orange si le lot n'a pas encore été traité
-        if (!ano.isTraitee())
+        if (!dq.isTraitee())
             couleur = IndexedColors.LIGHT_ORANGE;
 
         return couleur;
@@ -548,17 +548,17 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * Crée une ligne correspondante à une anomalie dans le fichier Excel
      * 
      * @param row
-     * @param ano
+     * @param dq
      * @param couleur
      */
-    private void creerLigneSQ(Row row, Anomalie ano, IndexedColors couleur)
+    private void creerLigneSQ(Row row, DefaultQualite dq, IndexedColors couleur)
     {
         // 1. Contrôles des entrées
-        if (couleur == null || row == null || ano == null)
+        if (couleur == null || row == null || dq == null)
             throw new IllegalArgumentException("Les arguments ne peuvent pas être nuls - méthode control.excel.ControlSuivi.creerLigneSQ");
 
         // 2. Données de l'anomalie
-        LotRTC lotRTC = ano.getLotRTC();
+        LotRTC lotRTC = dq.getLotRTC();
         ProjetClarity projetClarity = lotRTC.getProjetClarity();
         if (projetClarity == null)
             projetClarity = ProjetClarity.getProjetClarityInconnu(Statics.INCONNU);
@@ -602,7 +602,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
 
         // Numéro du lot
         Cell cell = valoriserCellule(row, colLot, centre, lotRTC.getLot());
-        ajouterLiens(cell, ano.getLiensLot());
+        ajouterLiens(cell, dq.getLiensLot());
 
         // Environnement
         valoriserCellule(row, colEnv, centre, lotRTC.getEtatLot());
@@ -610,41 +610,41 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         // Numéros anomalie
         cell = row.createCell(colAno);
         cell.setCellStyle(centre);
-        int numeroAno = ano.getNumeroAnoRTC();
+        int numeroAno = dq.getNumeroAnoRTC();
         if (numeroAno != 0)
         {
             cell.setCellValue(numeroAno);
 
             // Rajout de "&id=", car cela fait planter la désérialisation du fichier de paramètres
-            ajouterLiens(cell, ano.getLiensAno());
+            ajouterLiens(cell, dq.getLiensAno());
         }
 
         // Etat anomalie
-        valoriserCellule(row, colEtat, normal, ano.getEtatRTC());
+        valoriserCellule(row, colEtat, normal, dq.getEtatRTC());
 
         // Anomalie de sécurite
-        if (ano.isSecurite())
+        if (dq.isSecurite())
             valoriserCellule(row, colSec, centre, Statics.X);
         else
             valoriserCellule(row, colSec, centre, Statics.EMPTY);
 
         // Remarques
-        valoriserCellule(row, colRemarque, normal, ano.getRemarque());
+        valoriserCellule(row, colRemarque, normal, dq.getRemarque());
 
         // Version composants
-        valoriserCellule(row, colVer, centre, ano.getTypeVersion());
+        valoriserCellule(row, colVer, centre, dq.getTypeVersion());
 
         // Date création
-        valoriserCellule(row, colDateCrea, date, ano.getDateCreation());
+        valoriserCellule(row, colDateCrea, date, dq.getDateCreation());
 
         // Date création
-        valoriserCellule(row, colDateDetec, date, ano.getDateDetection());
+        valoriserCellule(row, colDateDetec, date, dq.getDateDetection());
 
         // Date relance
-        valoriserCellule(row, colDateRel, date, ano.getDateRelance());
+        valoriserCellule(row, colDateRel, date, dq.getDateRelance());
 
         // Date resolution
-        valoriserCellule(row, colDateRes, date, ano.getDateReso());
+        valoriserCellule(row, colDateRes, date, dq.getDateReso());
 
         // Date mise à jour de l'état de l'anomalie
         valoriserCellule(row, colDateMajEtat, date, lotRTC.getDateMajEtat());
@@ -656,7 +656,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
         valoriserCellule(row, colProjetRTC, centre, lotRTC.getProjetRTC());
 
         // Action
-        valoriserCellule(row, colAction, centre, ano.getAction());
+        valoriserCellule(row, colAction, centre, dq.getAction());
 
         // Groupe composant
         valoriserCellule(row, colNpc, centre, lotRTC.getGroupe().getValeur());
@@ -747,9 +747,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param lotsRTC
      * @return
      */
-    private Anomalie creerAnodepuisExcel(Row row, Map<String, LotRTC> lotsRTC)
+    private DefaultQualite creerAnodepuisExcel(Row row, Map<String, LotRTC> lotsRTC)
     {
-        Anomalie retour = ModelFactory.getModel(Anomalie.class);
+        DefaultQualite retour = ModelFactory.getModel(DefaultQualite.class);
         retour.setLotRTC(lotsRTC.get(Utilities.testLot(getCellStringValue(row, colLot))));
         retour.setRemarque(getCellStringValue(row, colRemarque));
         retour.setDateRelance(getCellDateValue(row, colDateRel));
@@ -766,9 +766,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<An
      * @param matiere
      * @return
      */
-    private Anomalie creerAnodepuisExcelFull(Row row, Map<String, LotRTC> lotsRTC)
+    private DefaultQualite creerAnodepuisExcelFull(Row row, Map<String, LotRTC> lotsRTC)
     {
-        Anomalie retour = ModelFactory.getModel(Anomalie.class);
+        DefaultQualite retour = ModelFactory.getModel(DefaultQualite.class);
         retour.setLotRTC(lotsRTC.get(Utilities.testLot(getCellStringValue(row, colLot))));
         retour.setNumeroAnoRTC(getCellNumericValue(row, colAno));
         retour.setRemarque(getCellStringValue(row, colRemarque));
