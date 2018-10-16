@@ -12,30 +12,18 @@ import org.junit.Test;
 import control.excel.ControlApps;
 import control.excel.ExcelFactory;
 import dao.DaoApplication;
-import dao.DaoFactory;
-import junit.JunitBase;
 import model.bdd.Application;
 import model.enums.TypeColApps;
 import utilities.Statics;
 
-public class TestDaoApplication extends JunitBase
+public class TestDaoApplication extends AbstractTestDao<DaoApplication, Application>
 {
-    /*---------- ATTRIBUTS ----------*/
-    
-    private DaoApplication handler;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-    
-    @Override
-    public void init() throws Exception
-    {
-        handler = DaoFactory.getDao(Application.class);
-        
-    }
-    
+    /*---------- ATTRIBUTS ----------*/    
+    /*---------- CONSTRUCTEURS ----------*/    
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
+    @Override
     public void testReadAll()
     {
         assertNotNull(handler.readAll());
@@ -43,12 +31,14 @@ public class TestDaoApplication extends JunitBase
     
     @Test
     @Ignore ("test manuel pour effacer la table")
+    @Override
     public void testResetTable()
     {
         assertEquals(handler.readAll().size(), handler.resetTable());
     }
     
     @Test
+    @Override
     public void testRecupDonneesDepuisExcel()
     {
         // Appel fichier de test

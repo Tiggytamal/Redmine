@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
@@ -30,6 +32,12 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     {
         typeDonnee = TypeDonnee.COMPOSANT;
     }
+    
+    DaoComposantSonar(EntityManager em)
+    {
+        super(em);
+        typeDonnee = TypeDonnee.COMPOSANT;
+    }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -44,28 +52,34 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     {
         if (compo.getIdBase() == 0)
         {
+            compo.initTimeStamp();
+            
+            // Presistance applications liées
             Application appli = compo.getAppli();
             if (appli != null)
             {
                 if (appli.getIdBase() == 0)
-                    em.persist(appli);
+                    DaoFactory.getDao(Application.class, em).persist(appli);
                 else
                     em.merge(appli);
             }
 
+            // Persistance lots liés
             LotRTC lotRTC = compo.getLotRTC();
             if (lotRTC != null)
             {
                 if (lotRTC.getIdBase() == 0)
-                    em.persist(lotRTC);
+                    DaoFactory.getDao(LotRTC.class, em).persist(lotRTC);
                 else
                     em.merge(lotRTC);
             }
+            
             em.persist(compo);
             return true;
         }
         else
             em.merge(compo);
+        
         return false;
     }
 

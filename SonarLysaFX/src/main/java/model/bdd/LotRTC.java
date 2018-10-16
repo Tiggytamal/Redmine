@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -40,7 +41,8 @@ import utilities.Statics;
 //@formatter:off
 @NamedQueries (value = {
         @NamedQuery(name="LotRTC.findAll", query="SELECT l FROM LotRTC l "
-                + "LEFT JOIN FETCH l.projetClarity p "),
+                + "LEFT JOIN FETCH l.projetClarity p "
+                + "LEFT JOIN FETCH l.defaultQualite dq"),
         @NamedQuery(name="LotRTC.findByIndex", query="SELECT l FROM LotRTC l WHERE l.lot = :index"),
         @NamedQuery(name="LotRTC.resetTable", query="DELETE FROM LotRTC")
 })
@@ -94,6 +96,10 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     @Enumerated(EnumType.STRING)
     @Column(name = "groupe", nullable = true)
     private GroupeProjet groupe;
+        
+    @BatchFetch(value = BatchFetchType.JOIN)
+    @OneToOne (targetEntity = DefaultQualite.class, mappedBy = "lotRTC")
+    private DefaultQualite defaultQualite;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -305,5 +311,15 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     public void setGroupe(GroupeProjet groupe)
     {
         this.groupe = groupe;
+    }
+
+    public DefaultQualite getDefaultQualite()
+    {
+        return defaultQualite;
+    }
+
+    public void setDefaultQualite(DefaultQualite defaultQualite)
+    {
+        this.defaultQualite = defaultQualite;
     }
 }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import model.bdd.DateMaj;
 import model.enums.TypeDonnee;
 
@@ -17,6 +19,12 @@ public class DaoDateMaj extends AbstractDao<DateMaj> implements Serializable
 
     DaoDateMaj()
     {
+        typeDonnee = TypeDonnee.DATEMAJ;
+    }
+    
+    DaoDateMaj(EntityManager em) 
+    { 
+        super(em);
         typeDonnee = TypeDonnee.DATEMAJ;
     }
 

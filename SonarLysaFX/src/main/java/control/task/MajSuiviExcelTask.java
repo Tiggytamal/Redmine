@@ -26,7 +26,7 @@ import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
 import control.rtc.ControlRTC;
 import control.word.ControlRapport;
-import dao.DaoAnomalie;
+import dao.DaoDefaultQualite;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.DefaultQualite;
@@ -295,7 +295,7 @@ public class MajSuiviExcelTask extends AbstractTask
         // Création de la map de retour
         Set<String> retour = new HashSet<>();
 
-        DaoAnomalie dao = DaoFactory.getDao(DefaultQualite.class);
+        DaoDefaultQualite dao = DaoFactory.getDao(DefaultQualite.class);
         Map<String, DefaultQualite> dqsEnBase = dao.readAllMap();
 
         // Message
@@ -335,7 +335,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private void majFichierAnomalies(Set<String> lotSonarQGError, String fichier, Matiere matiere) throws IOException
     {
         // Récupération des anomalies en base
-        DaoAnomalie dao = DaoFactory.getDao(DefaultQualite.class);
+        DaoDefaultQualite dao = DaoFactory.getDao(DefaultQualite.class);
         Map<String, DefaultQualite> mapDqsEnBase = dao.readAllMapMatiere(matiere);
 
         // Mise à jour des lots en ereur
@@ -384,8 +384,9 @@ public class MajSuiviExcelTask extends AbstractTask
 
             // Affichage
             i++;
+            calculTempsRestant(debut, i, size);
             updateProgress(i, size);
-            updateMessage("" + affichageTemps(debut, i, size));
+            updateMessage("");
         }
 
         // Sauvegarde fichier et maj feuille principale

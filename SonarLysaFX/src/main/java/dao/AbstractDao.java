@@ -44,27 +44,16 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    @SuppressWarnings("unchecked")
     public AbstractDao()
     {
-        em = emf.createEntityManager();
-
-        // Permet de récuperer la classe sous forme de type paramétré
-        ParameterizedType pt = (ParameterizedType) getClass().getGenericSuperclass();
-
-        // On récupère les paramètres de classe (ici T), et le split permet d'enlever le "classe" devant le nom
-        String parameterClassName = pt.getActualTypeArguments()[0].toString().split("\\s")[1];
-
-        // Instanciation du paramètre avec la bonne classe
-        try
-        {
-            modele = (Class<T>) Class.forName(parameterClassName);
-        }
-        catch (ClassNotFoundException e)
-        {
-            LOGPLANTAGE.error(e);
-            throw new TechnicalException("Impossible d'instancier l'énumération - control.excel.ControlExcelRead", e);
-        }
+        em = emf.createEntityManager();       
+        buildDao();
+    }
+    
+    public AbstractDao(EntityManager em)
+    {
+        this.em = em;       
+        buildDao();
     }
 
     /*---------- METHODES ABSTRAITES ----------*/
@@ -164,6 +153,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
 
         if (t.getIdBase() == 0)
         {
+            t.initTimeStamp();
             em.persist(t);
             retour = true;
         }
@@ -225,6 +215,27 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
     }
 
     /*---------- METHODES PRIVEES ----------*/
+    
+    @SuppressWarnings("unchecked")
+    private void buildDao()
+    {
+        // Permet de récuperer la classe sous forme de type paramétré
+        ParameterizedType pt = (ParameterizedType) getClass().getGenericSuperclass();
+
+        // On récupère les paramètres de classe (ici T), et le split permet d'enlever le "classe" devant le nom
+        String parameterClassName = pt.getActualTypeArguments()[0].toString().split("\\s")[1];
+
+        // Instanciation du paramètre avec la bonne classe
+        try
+        {
+            modele = (Class<T>) Class.forName(parameterClassName);
+        }
+        catch (ClassNotFoundException e)
+        {
+            LOGPLANTAGE.error(e);
+            throw new TechnicalException("Impossible d'instancier l'énumération - control.excel.ControlExcelRead", e);
+        }
+    }
 
     /*---------- ACCESSEURS ----------*/
 }

@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
 import control.excel.ControlChefService;
 import control.excel.ExcelFactory;
 import model.bdd.ChefService;
@@ -27,6 +29,12 @@ public class DaoChefService extends AbstractDao<ChefService> implements Serializ
     
     DaoChefService() 
     { 
+        typeDonnee = TypeDonnee.RESPSERVICE;
+    }
+    
+    DaoChefService(EntityManager em) 
+    { 
+        super(em);
         typeDonnee = TypeDonnee.RESPSERVICE;
     }
     

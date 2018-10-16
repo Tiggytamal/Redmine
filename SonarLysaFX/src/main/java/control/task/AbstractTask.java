@@ -50,7 +50,7 @@ public abstract class AbstractTask extends Task<Boolean>
     /*---------- ATTRIBUTS ----------*/
 
     protected static final String RECUPCOMPOSANTS = "Récupération des composants Sonar";
-    private static final String ECOULE = "\nTemps écoulé : ";
+    private static final String ECOULE = "Temps écoulé : ";
     private static final String RESTANT = "\nTemps restant : ";
 
     protected SonarAPI api;
@@ -62,9 +62,12 @@ public abstract class AbstractTask extends Task<Boolean>
     protected Map<String, ComposantSonar> mapCompos;
 
     private StringProperty etape = new SimpleStringProperty(this, "etape", EMPTY);
-    private StringProperty tempsEcoule = new SimpleStringProperty(this, "ecoule", EMPTY); 
+    private StringProperty tempsEcoule = new SimpleStringProperty(this, "ecoule", EMPTY);
+    private StringProperty tempsRestant = new SimpleStringProperty(this, "restant", EMPTY);
+    private StringProperty affTimer = new SimpleStringProperty(this, "affTimer", EMPTY);
     private String titre;
-    private TimerTask timer;
+    private TimerTask timerTask;
+    private AffichageTempsTask affTimerTask;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -80,12 +83,15 @@ public abstract class AbstractTask extends Task<Boolean>
         this.titre = titre;
         baseMessage = "";
         mapCompos = DaoFactory.getDao(ComposantSonar.class).readAllMap();
-        timer = new TimerTask();
-        timer.affilierTache(this);
+        setTempsRestant(0);
+        timerTask = new TimerTask(this);
+        affTimerTask = new AffichageTempsTask(this);
+        new Thread(timerTask).start();
+        new Thread(affTimerTask).start();
     }
 
     /*---------- METHODES ABSTRAITES ----------*/
-    
+
     /**
      * Implémentation des classes filles de la méthode annuler, s'il y a beosin de rajouter des traitements.
      */
@@ -116,13 +122,14 @@ public abstract class AbstractTask extends Task<Boolean>
     {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
-    
+
     /**
      * Utilisée pour permettre le retour arrière si possible du traitement
      */
     public final void annuler()
     {
-        timer.annuler();
+        timerTask.annuler();
+        affTimerTask.annuler();
         annulerImpl();
     }
 
@@ -287,13 +294,15 @@ public abstract class AbstractTask extends Task<Boolean>
      *            Taille de la liste parcourue.
      * @return
      */
-    public final String affichageTemps(long debut, int i, int size)
+    public final void calculTempsRestant(long debut, int i, int size)
     {
         long actuel = System.currentTimeMillis();
         long millisEcoulees = actuel - debut;
-        long prevu = millisEcoulees / i * size;
-        String restant = LocalTime.ofSecondOfDay(Math.abs((prevu - millisEcoulees)) / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME);
-        return new StringBuilder(getTempsEcoule()).append(RESTANT).append(restant).toString();
+        long prevu = millisEcoulees * size / i;
+        if (tacheParente != null)
+            tacheParente.setTempsRestant(prevu - millisEcoulees);
+        else
+            setTempsRestant(prevu - millisEcoulees);
     }
 
     /**
@@ -533,37 +542,72 @@ public abstract class AbstractTask extends Task<Boolean>
     {
         return titre;
     }
-    
+
     public String getTempsEcoule()
     {
         return tempsEcoule.get();
+    }
+
+    public String getTempsRestant()
+    {
+        return tempsRestant.get();
+    }
+
+    public String getAffTimer()
+    {
+        return affTimer.get();
     }
 
     public void setEtape(int debut, int fin)
     {
         Platform.runLater(() -> etape.set("Etape " + debut + " / " + fin));
     }
-    
+
     public void setTempsEcoule(long millis)
     {
         Platform.runLater(() -> tempsEcoule.set(ECOULE + LocalTime.ofSecondOfDay(millis / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME)));
+    }
+
+    public void setTempsRestant(long millis)
+    {
+        Platform.runLater(() -> {
+            if (millis == 0)
+                tempsRestant.set("");
+            else
+                tempsRestant.set(RESTANT + LocalTime.ofSecondOfDay(Math.abs(millis) / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME));
+        });
+    }
+
+    public void setAffTimer(String ecoule, String restant)
+    {
+        Platform.runLater(() -> affTimer.set(ecoule + restant));
     }
 
     public StringProperty etapeProperty()
     {
         return etape;
     }
-    
+
     public StringProperty tempsEcouleProperty()
     {
         return tempsEcoule;
+    }
+
+    public StringProperty tempsRestantProperty()
+    {
+        return tempsRestant;
+    }
+
+    public StringProperty affTimerProperty()
+    {
+        return affTimer;
     }
 
     public boolean isAnnulable()
     {
         return annulable;
     }
-    
+
     public void setBaseMessage(String baseMessage)
     {
         this.baseMessage = baseMessage;

@@ -49,4 +49,9 @@ public abstract class AbstractBDDModele extends AbstractModele
     {
         return timeStamp;
     }
+    
+    public void initTimeStamp()
+    {
+        timeStamp = LocalDateTime.now();
+    }
 }

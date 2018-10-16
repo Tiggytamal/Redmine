@@ -3,28 +3,16 @@ package junit.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import dao.DaoComposantSonar;
-import dao.DaoFactory;
-import junit.JunitBase;
 import model.bdd.ComposantSonar;
 
-public class TestDaoComposantSonar extends JunitBase
+public class TestDaoComposantSonar extends AbstractTestDao<DaoComposantSonar, ComposantSonar>
 {
-    /*---------- ATTRIBUTS ----------*/
-    
-    private DaoComposantSonar handler;
-    
-    /*---------- CONSTRUCTEURS ----------*/
-    
-    @Override
-    public void init() throws Exception
-    {
-        handler = DaoFactory.getDao(ComposantSonar.class);
-        
-    }
-    
+    /*---------- ATTRIBUTS ----------*/    
+    /*---------- CONSTRUCTEURS ----------*/    
     /*---------- METHODES PUBLIQUES ----------*/
     
     @Test
@@ -34,7 +22,7 @@ public class TestDaoComposantSonar extends JunitBase
     }
     
     @Test
-//    @Ignore ("test manuel pour effacer la table")
+    @Ignore ("test manuel pour effacer la table")
     public void testResetTable()
     {
         int size = handler.resetTable();
@@ -43,4 +31,11 @@ public class TestDaoComposantSonar extends JunitBase
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
+    @Test
+    @Ignore ("pas d'implemntaiton dans cette classe de la méthode testée")
+    @Override
+    public void testRecupDonneesDepuisExcel()
+    {
+
+    }
 }

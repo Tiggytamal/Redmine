@@ -72,6 +72,7 @@ public class MajComposantsSonarTask extends AbstractTask
 
         // Récupération des données de la base de données et de Sonar
         List<ComposantSonar> retour = new ArrayList<>();
+        List<ComposantSonar> composPlantes = new ArrayList<>();
         Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
         Map<String, LotRTC> mapLotRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
         List<Projet> projets = api.getComposants();
@@ -105,7 +106,8 @@ public class MajComposantsSonarTask extends AbstractTask
 
             if (composant == null)
                 continue;
-
+            
+            
             // Initialisation composant
             ComposantSonar composantSonar = initCompoDepuisProjet(mapCompos, projet);
             
@@ -144,6 +146,10 @@ public class MajComposantsSonarTask extends AbstractTask
                 composantSonar.setAppli(appli);
                 mapAppli.put(codeAppli, appli);
             }
+            
+            // Securite du composant
+            if (api.getSecuriteComposant(projet.getKey()) > 0)
+                composantSonar.setSecurite(true);
 
             // Données restantes
             composantSonar.setQualityGate(getValueMetrique(composant, TypeMetrique.QG, QG.NONE.getValeur()));
@@ -156,13 +162,19 @@ public class MajComposantsSonarTask extends AbstractTask
             composantSonar.setDuplication(recupLeakPeriod(getListPeriode(composant, TypeMetrique.DUPLICATION)));
             retour.add(composantSonar);
 
-            if (api.getSecuriteComposant(projet.getKey()) > 0)
-                composantSonar.setSecurite(true);
+            if (LOT0.equals(composantSonar.getLotRTC().getLot()))
+                    composPlantes.add(composantSonar);
 
             // Affichage
             i++;
-            updateMessage(projet.getNom() + affichageTemps(debut, i, size));
+            calculTempsRestant(debut, i, size);
+            updateMessage(projet.getNom());
             updateProgress(i, size);
+        }
+        
+        for (ComposantSonar compo : composPlantes)
+        {
+            LOGCONSOLE.info(compo.getLotRTC().getLot());
         }
 
         // Sauvegarde des données

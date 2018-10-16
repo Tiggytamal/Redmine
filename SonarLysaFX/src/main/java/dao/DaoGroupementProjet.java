@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
 import control.excel.ControlGroupeProjets;
 import control.excel.ExcelFactory;
 import model.bdd.GroupementProjet;
@@ -23,6 +25,12 @@ public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implement
     
     DaoGroupementProjet()
     {
+        typeDonnee = TypeDonnee.GROUPE;
+    }
+    
+    DaoGroupementProjet(EntityManager em)
+    {
+        super(em);
         typeDonnee = TypeDonnee.GROUPE;
     }
     

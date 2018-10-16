@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import model.bdd.LotRTC;
+import model.bdd.ProjetClarity;
 import model.enums.TypeDonnee;
 
 /**
@@ -20,12 +23,18 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
     private static final long serialVersionUID = 1L;
 
     /*---------- CONSTRUCTEURS ----------*/
-    
-    DaoLotRTC() 
+
+    DaoLotRTC()
     {
         typeDonnee = TypeDonnee.LOTSRTC;
     }
-    
+
+    DaoLotRTC(EntityManager em)
+    {
+        super(em);
+        typeDonnee = TypeDonnee.LOTSRTC;
+    }
+
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
@@ -39,8 +48,17 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
     {
         if (lot.getIdBase() == 0)
         {
-            if (lot.getProjetClarity().getIdBase() == 0)
-                em.persist(lot.getProjetClarity());
+            lot.initTimeStamp();
+
+            if (lot.getProjetClarity() != null)
+            {
+                // Persistance lots RTC liés
+                if (lot.getProjetClarity().getIdBase() == 0)
+                    DaoFactory.getDao(ProjetClarity.class, em).persist(lot.getProjetClarity());
+                else
+                    em.merge(lot.getProjetClarity());
+            }
+
             em.persist(lot);
             return true;
         }
@@ -48,7 +66,7 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
             em.merge(lot);
         return false;
     }
-    
+
     @Override
     public LotRTC recupEltParCode(String lot)
     {

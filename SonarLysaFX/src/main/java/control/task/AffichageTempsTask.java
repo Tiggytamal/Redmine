@@ -5,26 +5,19 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.concurrent.Task;
 
-/**
- * Timer des tâches executées
- * 
- * @author ETP8137 - Gregoire Mathon
- * @since 1.0
- *
- */
-public class TimerTask extends Task<Boolean>
+public class AffichageTempsTask extends Task<Boolean>
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     /** logger plantage */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
-    
+
     private boolean stop;
     private AbstractTask tacheParente;
-    
+
     /*---------- CONSTRUCTEURS ----------*/
 
-    protected TimerTask(AbstractTask tacheParente)
+    protected AffichageTempsTask(AbstractTask tacheParente)
     {
         this.tacheParente = tacheParente;
     }
@@ -34,9 +27,9 @@ public class TimerTask extends Task<Boolean>
     @Override
     protected Boolean call() throws Exception
     {
-        return decompteSecondes();
+        return majAffTemps();
     }
-    
+
     public void annuler()
     {
         stop = true;
@@ -44,27 +37,25 @@ public class TimerTask extends Task<Boolean>
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private boolean decompteSecondes()
+    private boolean majAffTemps()
     {
-        long debut = System.currentTimeMillis();
-        
         while (!stop)
         {
             if (tacheParente == null)
-                return false;    
-            
-            tacheParente.setTempsEcoule(System.currentTimeMillis() - debut); 
-                try
-                {
-                    Thread.sleep(1000);
-                }
-                catch (InterruptedException e)
-                {
-                    LOGPLANTAGE.error(e);
-                    stop = true;
-                    Thread.currentThread().interrupt();
-                }
+                return false;
+
+            tacheParente.setAffTimer(tacheParente.getTempsEcoule(), tacheParente.getTempsRestant());
+            try
+            {
+                Thread.sleep(1000);
             }
+            catch (InterruptedException e)
+            {
+                LOGPLANTAGE.error(e);
+                stop = true;
+                Thread.currentThread().interrupt();
+            }
+        }
 
         return true;
     }

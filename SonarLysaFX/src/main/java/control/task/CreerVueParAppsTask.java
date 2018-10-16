@@ -143,7 +143,8 @@ public class CreerVueParAppsTask extends AbstractTask
             api.supprimerVue(projet.getKey(), false);
 
             // Affichage
-            updateMessage(projet.getNom() + affichageTemps(debut, i, size));
+            calculTempsRestant(debut, i, size);
+            updateMessage(projet.getNom());
             updateProgress(i, size);
         }
 
@@ -168,7 +169,7 @@ public class CreerVueParAppsTask extends AbstractTask
             i++;
             baseMessage = new StringBuilder(baseMessage).append("traitement : ").append(vue.getName()).append(NL).toString();
             updateProgress(i, size);
-            updateMessage(affichageTemps(debut, i, size));
+            calculTempsRestant(debut, i, size);
             for (ComposantSonar composantSonar : entry.getValue())
             {
                 updateMessage("Ajout : " + composantSonar.getNom());

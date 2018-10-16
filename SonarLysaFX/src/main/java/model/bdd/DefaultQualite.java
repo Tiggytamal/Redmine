@@ -1,5 +1,6 @@
 package model.bdd;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
@@ -8,9 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.BatchFetch;
@@ -32,17 +33,19 @@ import utilities.Statics;
 @Table(name = "defaults_qualite")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="Anomalie" + AbstractBDDModele.FINDALL, query="SELECT dq FROM DefaultQualite dq LEFT JOIN FETCH dq.lotRTC l"),
-        @NamedQuery(name="Anomalie" + AbstractBDDModele.FINDINDEX, query="SELECT dq FROM DefaultQualite dq WHERE dq.lotRTC.lot = :index"),
-        @NamedQuery(name="Anomalie" + AbstractBDDModele.RESETTABLE, query="DELETE FROM DefaultQualite")
+        @NamedQuery(name="DefaultQualite" + AbstractBDDModele.FINDALL, query="SELECT dq FROM DefaultQualite dq LEFT JOIN FETCH dq.lotRTC l"),
+        @NamedQuery(name="DefaultQualite" + AbstractBDDModele.FINDINDEX, query="SELECT dq FROM DefaultQualite dq WHERE dq.lotRTC.lot = :index"),
+        @NamedQuery(name="DefaultQualite" + AbstractBDDModele.RESETTABLE, query="DELETE FROM DefaultQualite")
 })
 //@formatter:on
-public class DefaultQualite extends AbstractBDDModele
+public class DefaultQualite extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
+    
+    private static final long serialVersionUID = 1L;
 
     @BatchFetch(value = BatchFetchType.JOIN)
-    @ManyToOne(targetEntity = LotRTC.class, cascade = CascadeType.MERGE)
+    @OneToOne(targetEntity = LotRTC.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "lotRTC")
     private LotRTC lotRTC;
 
@@ -85,7 +88,7 @@ public class DefaultQualite extends AbstractBDDModele
     private EtatDefault etatDefault;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "action", nullable = true)
+    @Column(name = "action", nullable = false)
     private TypeAction action;
 
     /*---------- CONSTRUCTEURS ----------*/

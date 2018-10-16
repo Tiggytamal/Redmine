@@ -35,6 +35,7 @@ public class ProgressDialog extends Dialog<Boolean>
     private ProgressBar bar;
     private ProgressIndicator indicator;
     private Label label;
+    private Label timer;
     private Label stage;
     private AbstractTask task;
 
@@ -97,11 +98,17 @@ public class ProgressDialog extends Dialog<Boolean>
         label.setPrefWidth(grid.getPrefWidth());
         label.textProperty().bind(task.messageProperty());
         grid.add(label, 0, 2, GridPane.REMAINING, 1);
+        
+        // Timer
+        timer = new Label();
+        timer.setPrefWidth(grid.getPrefWidth());
+        timer.textProperty().bind(task.affTimerProperty());
+        grid.add(timer, 0, 3, GridPane.REMAINING, 1);
 
         // Cancel
         Button cancel = new Button("Annuler");
         cancel.setOnAction(event -> annuler());
-        grid.add(cancel, 1, 3);
+        grid.add(cancel, 1, 4);
         if (!task.isAnnulable())
         {
             cancel.setDisable(true);
@@ -116,7 +123,7 @@ public class ProgressDialog extends Dialog<Boolean>
 
         // Bouton OK actif lorsque le traitement est fini.
         Button ok = new Button("OK");
-        grid.add(ok, 0, 3);
+        grid.add(ok, 0, 4);
         ok.setOnAction(event -> fermer());
         GridPane.setHalignment(ok, HPos.RIGHT);
         ok.setDisable(true);

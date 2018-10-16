@@ -5,8 +5,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
 import control.excel.ControlClarity;
 import control.excel.ExcelFactory;
+import model.bdd.ChefService;
 import model.bdd.ProjetClarity;
 import model.enums.TypeColClarity;
 import model.enums.TypeDonnee;
@@ -28,6 +31,12 @@ public class DaoProjetClarity extends AbstractDao<ProjetClarity> implements Seri
 
     DaoProjetClarity()
     {
+        typeDonnee = TypeDonnee.CLARITY;
+    }
+
+    DaoProjetClarity(EntityManager em)
+    {
+        super(em);
         typeDonnee = TypeDonnee.CLARITY;
     }
 
@@ -63,8 +72,17 @@ public class DaoProjetClarity extends AbstractDao<ProjetClarity> implements Seri
     {
         if (projet.getIdBase() == 0)
         {
-            if (projet.getChefService().getIdBase() == 0)
-                em.persist(projet.getChefService());
+            projet.initTimeStamp();
+
+            // Persistance chef de service
+            if (projet.getChefService() != null)
+            {
+                if (projet.getChefService().getIdBase() == 0)
+                    DaoFactory.getDao(ChefService.class, em).persist(projet.getChefService());
+                else
+                    em.merge(projet.getChefService());
+            }
+
             em.persist(projet);
             return true;
         }

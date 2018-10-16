@@ -96,8 +96,9 @@ public class CreerVueDataStageTask extends AbstractTask
             
             // Affichage
             i++;
+            calculTempsRestant(debut, i, size);
             updateProgress(i, size);
-            updateMessage(compo.getNom() + affichageTemps(debut, i, size));
+            updateMessage(compo.getNom());
         }
         return true;
     }

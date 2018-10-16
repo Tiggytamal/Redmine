@@ -126,8 +126,9 @@ public class MajLotsRTCTask extends AbstractTask
 
             // Affichage
             i++;
+            calculTempsRestant(debut, i, size);
             updateProgress((double)i, (double)size);
-            updateMessage(new StringBuilder(lot).append(Statics.NL).append(affichageTemps(debut, i, size)).toString());
+            updateMessage(lot);
         }
         return retour;
     }

@@ -339,7 +339,7 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testRecupListeTypeWorkItem() throws TeamRepositoryException
     {
-        handler.recupListeTypeWorkItem("PRJF_T300703");
+        handler.recupListeTypeWorkItem("PRJM_FE000018_GSI PLA Titres");
     }
     
     @Test
@@ -370,6 +370,13 @@ public class TestControlRTC extends JunitBase
     public void testGetClient() throws IllegalArgumentException, IllegalAccessException, Exception
     {
         assertEquals(Whitebox.getField(ControlRTC.class, "workItemClient").get(handler), Whitebox.invokeMethod(handler, "getClient"));
+    }
+    
+    @Test
+    public void testTest() throws TeamRepositoryException
+    {
+        IWorkItem wi = handler.recupWorkItemDepuisId(288016);
+        System.out.println(wi.getWorkItemType());
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -1,5 +1,7 @@
 package dao;
 
+import javax.persistence.EntityManager;
+
 import model.bdd.AbstractBDDModele;
 import utilities.TechnicalException;
 
@@ -35,14 +37,51 @@ public class DaoFactory
             case "model.bdd.ProjetClarity":
                 return (T) new DaoProjetClarity();
                 
-            case "model.bdd.Anomalie":
-                return (T) new DaoAnomalie();
+            case "model.bdd.DefaultQualite":
+                return (T) new DaoDefaultQualite();
                 
             case "model.bdd.DateMaj":
                 return (T) new DaoDateMaj();
                 
             case "model.bdd.GroupementProjet":
                 return (T) new DaoGroupementProjet();
+
+            default:
+                throw new TechnicalException("dao.DaoFactory - Création Dao impossible - classe : " + daoClass.getName());
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T extends AbstractDao<M>, M extends AbstractBDDModele> T getDao(Class<M> daoClass, EntityManager em)
+    {
+        switch (daoClass.getName())
+        {
+            case "model.bdd.Application":
+                return (T) new DaoApplication(em);
+
+            case "model.bdd.ChefService":
+                return (T) new DaoChefService(em);
+
+            case "model.bdd.ComposantSonar":
+                return (T) new DaoComposantSonar(em);
+
+            case "model.bdd.Edition":
+                return (T) new DaoEdition(em);
+
+            case "model.bdd.LotRTC":
+                return (T) new DaoLotRTC(em);
+                
+            case "model.bdd.ProjetClarity":
+                return (T) new DaoProjetClarity(em);
+                
+            case "model.bdd.DefaultQualite":
+                return (T) new DaoDefaultQualite(em);
+                
+            case "model.bdd.DateMaj":
+                return (T) new DaoDateMaj(em);
+                
+            case "model.bdd.GroupementProjet":
+                return (T) new DaoGroupementProjet(em);
 
             default:
                 throw new TechnicalException("dao.DaoFactory - Création Dao impossible - classe : " + daoClass.getName());

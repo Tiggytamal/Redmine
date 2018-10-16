@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
 import model.bdd.AbstractBDDModele;
 import model.bdd.DefaultQualite;
 import model.enums.Matiere;
 import model.enums.TypeDonnee;
 
-public class DaoAnomalie extends AbstractDao<DefaultQualite> implements Serializable
+public class DaoDefaultQualite extends AbstractDao<DefaultQualite> implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -19,8 +21,14 @@ public class DaoAnomalie extends AbstractDao<DefaultQualite> implements Serializ
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    DaoAnomalie()
+    DaoDefaultQualite()
     {
+        typeDonnee = TypeDonnee.ANOMALIE;
+    }
+    
+    DaoDefaultQualite(EntityManager em)
+    {
+        super(em);
         typeDonnee = TypeDonnee.ANOMALIE;
     }
 
@@ -35,7 +43,7 @@ public class DaoAnomalie extends AbstractDao<DefaultQualite> implements Serializ
     @Override
     public DefaultQualite recupEltParCode(String lot)
     {
-        List<DefaultQualite> liste = em.createNamedQuery("Anomalie" + AbstractBDDModele.FINDINDEX, DefaultQualite.class).setParameter("code", lot).getResultList();
+        List<DefaultQualite> liste = em.createNamedQuery("DefaultQualite" + AbstractBDDModele.FINDINDEX, DefaultQualite.class).setParameter("code", lot).getResultList();
         if (liste.isEmpty())
             return null;
         else

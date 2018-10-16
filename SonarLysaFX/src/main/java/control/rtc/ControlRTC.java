@@ -62,8 +62,8 @@ import com.mchange.util.AssertException;
 import control.task.AbstractTask;
 import dao.DaoFactory;
 import model.ModelFactory;
-import model.bdd.DefaultQualite;
 import model.bdd.DateMaj;
+import model.bdd.DefaultQualite;
 import model.bdd.LotRTC;
 import model.enums.EtatAnoRTC;
 import model.enums.EtatLot;
@@ -573,8 +573,9 @@ public class ControlRTC extends AbstractToStringImpl
 
             // Affichage
             i++;
+            task.calculTempsRestant(debut, i, size);
             task.updateProgress(i, size);
-            task.updateMessage(new StringBuilder(lot).append(i).append(sur).append(size).append(task.affichageTemps(debut, i, size)).toString());
+            task.updateMessage(new StringBuilder(lot).append(i).append(sur).append(size).toString());
         }
 
         return retour;
@@ -707,26 +708,25 @@ public class ControlRTC extends AbstractToStringImpl
         WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(wi);
 
         // Ajout des données necessaires pour clôturer si elles ne sont pas présentes
-        
+
         // Date de livraison / homolation
         IAttribute date = workItemClient.findAttribute(wi.getProjectArea(), TypeEnumRTC.DATELIVHOMO.getValeur(), monitor);
-        
+
         if (wi.getValue(date) == null)
         {
             workingCopy.getWorkItem().setValue(date, new Timestamp(System.currentTimeMillis()));
             workingCopy.save(monitor);
         }
-        
+
         // Entité responsable correction
         IAttribute resp = workItemClient.findAttribute(wi.getProjectArea(), TypeEnumRTC.ENTITERESPCORRECTION.getValeur(), monitor);
-        
+
         if (wi.getValue(resp).equals(recupLiteralDepuisString("-", resp)))
         {
             workingCopy.getWorkItem().setValue(resp, recupLiteralDepuisString("MOE", resp));
             workingCopy.save(monitor);
         }
 
-            
         // Boucle pour passer arriver jusqu'à l'anomalie close.
         while (true)
         {
@@ -833,13 +833,14 @@ public class ControlRTC extends AbstractToStringImpl
         workingCopy.setWorkflowAction(getAction(workflowInfo, workItem, actionName));
         workingCopy.save(monitor);
     }
-    
+
     public void relancerAno(int id) throws TeamRepositoryException
     {
         IWorkItem wi = recupWorkItemDepuisId(id);
         workItemClient.getWorkItemWorkingCopyManager().connect(wi, IWorkItem.FULL_PROFILE, monitor);
-        WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(wi);    
-        workingCopy.getWorkItem().getComments().append(workingCopy.getWorkItem().getComments().createComment(repo.loggedInContributor(), XMLString.createFromPlainText(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTERELANCE))));
+        WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(wi);
+        workingCopy.getWorkItem().getComments().append(
+                workingCopy.getWorkItem().getComments().createComment(repo.loggedInContributor(), XMLString.createFromPlainText(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTERELANCE))));
         workingCopy.save(monitor);
         workItemClient.getWorkItemWorkingCopyManager().disconnect(wi);
     }

@@ -10,6 +10,7 @@
 		<class>model.bdd.Edition</class>
 		<class>model.bdd.LotRTC</class>
 		<class>model.bdd.DefaultQualite</class>
+		<class>model.bdd.DefaultAppli</class>
 		<class>model.bdd.DateMaj</class>
 		<class>model.bdd.GroupementProjet</class>
 		<class>utilities.adapter.LocalDateConverter</class>

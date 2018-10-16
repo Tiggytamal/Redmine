@@ -61,8 +61,9 @@ public class MajLotsSonarTask extends AbstractTask
                     ok = false;
                 
                 // Affichage
+                calculTempsRestant(debut, i, size);
                 updateProgress(i, size);
-                updateMessage(base + "vue " + i + " / " + size + affichageTemps(debut, i, size));
+                updateMessage(base + "vue " + i + " / " + size);
             }
         }
 

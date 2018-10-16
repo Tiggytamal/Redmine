@@ -85,8 +85,9 @@ public class PurgeSonarTask extends AbstractTask
             
             // Affichage
             i++;
+            calculTempsRestant(i, i, size);
             updateProgress(i, size);
-            updateMessage(new StringBuilder(base).append(compo.getNom()).append("\n").append(i).append(" sur").append(size).append(affichageTemps(i, i, size)).toString());
+            updateMessage(new StringBuilder(base).append(compo.getNom()).append("\n").append(i).append(" sur").append(size).toString());
         }
 
         updateMessage("Fin du traitement.");

@@ -106,7 +106,8 @@ public class CreerVuePatrimoineTask extends AbstractTask
             
             // Affichage
             updateProgress(i, size);
-            updateMessage(projet.getNom() + affichageTemps(debut, i, size));
+            calculTempsRestant(debut, i, size);
+            updateMessage(projet.getNom());
         }
         return true;
     }

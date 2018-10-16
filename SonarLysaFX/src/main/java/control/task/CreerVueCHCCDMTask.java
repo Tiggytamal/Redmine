@@ -114,7 +114,8 @@ public class CreerVueCHCCDMTask extends AbstractTask
                 //Affichage
                 j++;
                 updateProgress(j, (long) size);
-                updateMessage(message + affichageTemps(debut, j, size));
+                calculTempsRestant(debut, j, size);
+                updateMessage(message);
             }
         }
     }
@@ -210,7 +211,8 @@ public class CreerVueCHCCDMTask extends AbstractTask
                 i++;
 
                 // MAJ progression
-                updateMessage(NL + "ajout lot " + lot + affichageTemps(debut, i, sizeComplete));
+                calculTempsRestant(debut, i, sizeComplete);
+                updateMessage(NL + "ajout lot " + lot);
                 updateProgress(i, sizeComplete);
             }
         }

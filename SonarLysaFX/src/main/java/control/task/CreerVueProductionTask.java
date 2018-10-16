@@ -169,8 +169,9 @@ public class CreerVueProductionTask extends AbstractTask
 
                 // Affichage
                 i++;
+                calculTempsRestant(debut, i, size);
                 updateProgress(i, size);
-                updateMessage("Lot " + entry.getKey() + affichageTemps(debut, i, size));
+                updateMessage("Lot " + entry.getKey());
 
             }
             catch (TeamRepositoryException e)

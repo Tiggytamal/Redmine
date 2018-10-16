@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
 import control.excel.ControlEdition;
 import control.excel.ExcelFactory;
 import model.bdd.Edition;
@@ -27,6 +29,12 @@ public class DaoEdition extends AbstractDao<Edition> implements Serializable
 
     DaoEdition()
     {
+        typeDonnee = TypeDonnee.EDITION;
+    }
+    
+    DaoEdition(EntityManager em)
+    {
+        super(em);
         typeDonnee = TypeDonnee.EDITION;
     }
 

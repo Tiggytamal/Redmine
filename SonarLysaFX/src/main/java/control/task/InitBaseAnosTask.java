@@ -9,7 +9,7 @@ import java.util.Map;
 
 import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
-import dao.DaoAnomalie;
+import dao.DaoDefaultQualite;
 import dao.DaoFactory;
 import model.bdd.DefaultQualite;
 import model.bdd.LotRTC;
@@ -84,7 +84,7 @@ public class InitBaseAnosTask extends AbstractTask
     
     private boolean sauvegarde(Collection<DefaultQualite> liste)
     {
-        DaoAnomalie dao = DaoFactory.getDao(DefaultQualite.class);
+        DaoDefaultQualite dao = DaoFactory.getDao(DefaultQualite.class);
         int taille = dao.persist(liste);
         dao.majDateDonnee();
         return taille > 0;
