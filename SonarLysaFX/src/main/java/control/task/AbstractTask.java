@@ -124,6 +124,34 @@ public abstract class AbstractTask extends Task<Boolean>
     }
 
     /**
+     * Permet de fermer les sous-tâches de gestion du temps en cas de réussite de la tâche
+     */
+    @Override
+    protected void succeeded()
+    {
+        timerTask.cancel(true);
+        affTimerTask.cancel(true);
+    }
+
+    /**
+     * Permet de fermer les sous-tâches de gestion du temps en cas d'annulation de la tâche
+     */
+    @Override
+    protected void cancelled()
+    {
+        succeeded();
+    }
+
+    /**
+     * Permet de fermer les sous-tâches de gestion du temps en cas d'echec de la tâche
+     */
+    @Override
+    protected void failed()
+    {
+        succeeded();
+    }
+
+    /**
      * Utilisée pour permettre le retour arrière si possible du traitement
      */
     public final void annuler()

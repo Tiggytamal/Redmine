@@ -8,6 +8,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import dao.AbstractDao;
 import model.enums.GroupeProjet;
 
 /**
@@ -20,9 +21,9 @@ import model.enums.GroupeProjet;
 @Table(name = "projets_groupe")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="GroupementProjet" + AbstractBDDModele.FINDALL, query="SELECT gp FROM GroupementProjet gp"),
-        @NamedQuery(name="GroupementProjet" + AbstractBDDModele.FINDINDEX, query="SELECT gp FROM GroupementProjet gp WHERE gp.nomProjet = :index"),
-        @NamedQuery(name="GroupementProjet" + AbstractBDDModele.RESETTABLE, query="DELETE FROM GroupementProjet")
+        @NamedQuery(name="GroupementProjet" + AbstractDao.FINDALL, query="SELECT gp FROM GroupementProjet gp"),
+        @NamedQuery(name="GroupementProjet" + AbstractDao.FINDINDEX, query="SELECT gp FROM GroupementProjet gp WHERE gp.nomProjet = :index"),
+        @NamedQuery(name="GroupementProjet" + AbstractDao.RESET, query="DELETE FROM GroupementProjet")
 })
 //@formatter:on
 public class GroupementProjet extends AbstractBDDModele
@@ -30,17 +31,19 @@ public class GroupementProjet extends AbstractBDDModele
 
     /*---------- ATTRIBUTS ----------*/
 
-    @Column (name = "projet", nullable = false, length = 128)
+    @Column(name = "projet", nullable = false, length = 128)
     private String nomProjet;
-    
+
     @Enumerated(EnumType.STRING)
-    @Column (name = "groupe")
+    @Column(name = "groupe")
     private GroupeProjet groupe;
-    
+
     /*---------- CONSTRUCTEURS ----------*/
-    
-    GroupementProjet() { }
-    
+
+    GroupementProjet()
+    {
+    }
+
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
@@ -51,7 +54,7 @@ public class GroupementProjet extends AbstractBDDModele
 
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
-    
+
     public String getNomProjet()
     {
         return getString(nomProjet);

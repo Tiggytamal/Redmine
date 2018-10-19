@@ -9,6 +9,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import dao.AbstractDao;
+
 /**
  * Classe de modèle pour les applications CATS
  * 
@@ -20,9 +22,9 @@ import javax.persistence.Transient;
 @Table(name = "applications")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="Application.findAll", query="SELECT a FROM Application a"),
-        @NamedQuery(name="Application.findByIndex", query="SELECT a FROM Application a WHERE a.code = :index"),
-        @NamedQuery(name="Application.resetTable", query="DELETE FROM Application")
+        @NamedQuery(name="Application" + AbstractDao.FINDALL, query="SELECT a FROM Application a"),
+        @NamedQuery(name="Application" + AbstractDao.FINDINDEX, query="SELECT a FROM Application a WHERE a.code = :index"),
+        @NamedQuery(name="Application" + AbstractDao.RESET, query="DELETE FROM Application")
 })
 //@formatter:on
 public class Application extends AbstractBDDModele implements Serializable

@@ -13,13 +13,16 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
+import dao.AbstractDao;
 import model.enums.EtatDefault;
 import model.enums.Param;
 import model.enums.TypeAction;
+import model.enums.TypeDefault;
 import model.enums.TypeVersion;
 import utilities.Statics;
 
@@ -33,15 +36,15 @@ import utilities.Statics;
 @Table(name = "defaults_qualite")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="DefaultQualite" + AbstractBDDModele.FINDALL, query="SELECT dq FROM DefaultQualite dq LEFT JOIN FETCH dq.lotRTC l"),
-        @NamedQuery(name="DefaultQualite" + AbstractBDDModele.FINDINDEX, query="SELECT dq FROM DefaultQualite dq WHERE dq.lotRTC.lot = :index"),
-        @NamedQuery(name="DefaultQualite" + AbstractBDDModele.RESETTABLE, query="DELETE FROM DefaultQualite")
+        @NamedQuery(name="DefaultQualite" + AbstractDao.FINDALL, query="SELECT dq FROM DefaultQualite dq LEFT JOIN FETCH dq.lotRTC l"),
+        @NamedQuery(name="DefaultQualite" + AbstractDao.FINDINDEX, query="SELECT dq FROM DefaultQualite dq WHERE dq.lotRTC.lot = :index"),
+        @NamedQuery(name="DefaultQualite" + AbstractDao.RESET, query="DELETE FROM DefaultQualite")
 })
 //@formatter:on
 public class DefaultQualite extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     private static final long serialVersionUID = 1L;
 
     @BatchFetch(value = BatchFetchType.JOIN)
@@ -90,6 +93,16 @@ public class DefaultQualite extends AbstractBDDModele implements Serializable
     @Enumerated(EnumType.STRING)
     @Column(name = "action", nullable = false)
     private TypeAction action;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type_default", nullable = false)
+    private TypeDefault typeDefault;
+    
+    @Transient
+    private String nomCompoAppli;
+    
+    @Transient
+    private String newCodeAppli;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -100,6 +113,7 @@ public class DefaultQualite extends AbstractBDDModele implements Serializable
         action = TypeAction.VIDE;
         remarque = Statics.EMPTY;
         dateDetection = LocalDate.now();
+        typeDefault = TypeDefault.SONAR;
     }
 
     DefaultQualite(LotRTC lotRTC)
@@ -124,9 +138,9 @@ public class DefaultQualite extends AbstractBDDModele implements Serializable
      */
     public boolean calculTraitee()
     {
-        if (!getRemarque().isEmpty() || numeroAnoRTC != 0 && etatDefault == EtatDefault.NOUVELLE)
+        if ((!getRemarque().isEmpty() || numeroAnoRTC != 0 || action != TypeAction.VIDE) && etatDefault == EtatDefault.NOUVELLE)
             etatDefault = EtatDefault.TRAITEE;
-        return isTraitee();
+        return etatDefault != EtatDefault.NOUVELLE;
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -281,11 +295,6 @@ public class DefaultQualite extends AbstractBDDModele implements Serializable
         this.action = action;
     }
 
-    public boolean isTraitee()
-    {
-        return etatDefault != EtatDefault.NOUVELLE;
-    }
-
     public EtatDefault getEtatDefault()
     {
         return etatDefault;
@@ -294,5 +303,34 @@ public class DefaultQualite extends AbstractBDDModele implements Serializable
     public void setEtatDefault(EtatDefault etatAnoSuivi)
     {
         this.etatDefault = etatAnoSuivi;
+    }
+
+    public TypeDefault getTypeDefault()
+    {
+        return typeDefault;
+    }
+
+    public void setTypeDefault(TypeDefault typeDefault)
+    {
+        this.typeDefault = typeDefault;
+    }
+
+    public String getNomCompoAppli()
+    {
+        return getString(nomCompoAppli);
+    }
+
+    public void setNomCompoAppli(String nomCompoAppli)
+    {
+        this.nomCompoAppli = nomCompoAppli;
+    }
+    public String getNewCodeAppli()
+    {
+        return newCodeAppli;
+    }
+
+    public void setNewCodeAppli(String newCodeAppli)
+    {
+        this.newCodeAppli = newCodeAppli;
     }
 }

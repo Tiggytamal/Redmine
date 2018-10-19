@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeColSuivi;
 
+/**
+ * Classe de test de l'énumération TypeColSuivi
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeColSuivi implements TestEnums
 {
     @Test

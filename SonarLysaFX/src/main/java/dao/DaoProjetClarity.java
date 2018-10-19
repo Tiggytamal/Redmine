@@ -2,7 +2,6 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -26,17 +25,19 @@ public class DaoProjetClarity extends AbstractDao<ProjetClarity> implements Seri
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
+    private static final String TABLE = "projets_clarity";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     DaoProjetClarity()
     {
+        super(TABLE);
         typeDonnee = TypeDonnee.CLARITY;
     }
 
     DaoProjetClarity(EntityManager em)
     {
-        super(em);
+        super(TABLE, em);
         typeDonnee = TypeDonnee.CLARITY;
     }
 
@@ -68,7 +69,7 @@ public class DaoProjetClarity extends AbstractDao<ProjetClarity> implements Seri
     }
 
     @Override
-    public boolean persist(ProjetClarity projet)
+    public boolean persistImpl(ProjetClarity projet)
     {
         if (projet.getIdBase() == 0)
         {
@@ -88,27 +89,6 @@ public class DaoProjetClarity extends AbstractDao<ProjetClarity> implements Seri
         }
         em.merge(projet);
         return false;
-    }
-
-    @Override
-    public ProjetClarity recupEltParCode(String codeClarity)
-    {
-        List<ProjetClarity> liste = em.createNamedQuery("ProjetClarity.findByIndex", ProjetClarity.class).setParameter("index", codeClarity).getResultList();
-        if (liste.isEmpty())
-            return null;
-        else
-            return liste.get(0);
-    }
-
-    @Override
-    public int resetTable()
-    {
-        int retour = 0;
-        em.getTransaction().begin();
-        retour = em.createNamedQuery("InfoClarity.resetTable").executeUpdate();
-        em.createNativeQuery("ALTER TABLE applications AUTO_INCREMENT = 0").executeUpdate();
-        em.getTransaction().commit();
-        return retour;
     }
 
     /*---------- METHODES PRIVEES ----------*/

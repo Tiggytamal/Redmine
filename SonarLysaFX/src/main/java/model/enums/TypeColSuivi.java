@@ -1,7 +1,7 @@
 package model.enums;
 
 /**
- * Colonnes du fichier de Suivi des anomalies
+ * Colonnes du fichier de Suivi des défaults de qualité
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0

@@ -70,9 +70,9 @@ public final class WorkItemInitialization extends WorkItemOperation
     {
         IWorkItem workItem = workingCopy.getWorkItem();
         workItem.setHTMLSummary(XMLString.createFromPlainText(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.RECAPDEFECT)));
-        workItem.setHTMLDescription(XMLString.createFromPlainText(creerDescription()));
+        workItem.setHTMLDescription(XMLString.createFromPlainText(creerDescription(dq)));
         workItem.setCategory(cat);
-        
+
         LotRTC lotRTC = dq.getLotRTC();
 
         // Environnement
@@ -188,11 +188,21 @@ public final class WorkItemInitialization extends WorkItemOperation
         workItem.setTags2(tags);
     }
 
-    private String creerDescription()
+    private String creerDescription(DefaultQualite dq)
     {
-        String retour = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEDEFECT).replace("-lot-", String.valueOf(lotAno));
-        if (dq.isSecurite())
-            retour = retour.replace("Merci", Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTESECURITE));
+        String retour;
+        if (dq.getNomCompoAppli().isEmpty())
+        {
+            retour = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEDEFECT).replace("-lot-", String.valueOf(lotAno));
+            if (dq.isSecurite())
+                retour = retour.replace("Merci", Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTESECURITE));
+        }
+        else
+        {
+            retour = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEAPPLI).replaceAll("xxxxx", dq.getNomCompoAppli());            
+            if (!dq.getNewCodeAppli().isEmpty())
+                retour += Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTENEWAPPLI).replaceAll("-code-", dq.getNewCodeAppli());
+        }
         return retour;
     }
 

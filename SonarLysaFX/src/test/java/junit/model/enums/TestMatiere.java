@@ -11,6 +11,13 @@ import org.powermock.reflect.Whitebox;
 import model.enums.Matiere;
 import model.enums.TypeRapport;
 
+/**
+ * Classe de test de l'énumération Matiere
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestMatiere implements TestEnums
 {
     

@@ -34,9 +34,11 @@ import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
 import model.enums.EtatDefault;
 import model.enums.Matiere;
+import model.enums.OptionMajCompos;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.QG;
+import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import model.enums.TypeInfo;
 import model.enums.TypeMajSuivi;
@@ -62,7 +64,6 @@ public class MajSuiviExcelTask extends AbstractTask
     /** logger plantage */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
-    private static final short ETAPES = 6;
     private static final short DUPLI = 3;
 
     private TypeMajSuivi typeMaj;
@@ -70,8 +71,8 @@ public class MajSuiviExcelTask extends AbstractTask
     /*---------- CONSTRUCTEURS ----------*/
 
     public MajSuiviExcelTask(TypeMajSuivi typeMaj)
-    {
-        super(ETAPES, TITRE);
+    {        
+        super(typeMaj.getNbreEtapes(), TITRE);
         this.typeMaj = typeMaj;
         annulable = false;
     }
@@ -81,7 +82,7 @@ public class MajSuiviExcelTask extends AbstractTask
      */
     public MajSuiviExcelTask()
     {
-        super(ETAPES, TITRE);
+        super(0, TITRE);
         throw new AssertException();
     }
 
@@ -122,6 +123,9 @@ public class MajSuiviExcelTask extends AbstractTask
         {
             case JAVA:
                 majFichierSuiviExcelJAVA();
+                MajSuiviAppsTask majSuiviAppsTask = new MajSuiviAppsTask();
+                majSuiviAppsTask.affilierTache(this);
+                majSuiviAppsTask.call();
                 break;
 
             case DATASTAGE:
@@ -150,7 +154,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private void traitementSuiviExcelNuit() throws Exception
     {
         // Mise à jour du fichier RTC à la date du jour.
-        MajComposantsSonarTask task = new MajComposantsSonarTask();
+        MajComposantsSonarTask task = new MajComposantsSonarTask(OptionMajCompos.COMPLETE);
         task.affilierTache(this);
         task.call();
 
@@ -297,6 +301,7 @@ public class MajSuiviExcelTask extends AbstractTask
 
         DaoDefaultQualite dao = DaoFactory.getDao(DefaultQualite.class);
         Map<String, DefaultQualite> dqsEnBase = dao.readAllMap();
+        List<DefaultQualite> dqInit = new ArrayList<>();
 
         // Message
         baseMessage = "Composant : ";
@@ -311,7 +316,7 @@ public class MajSuiviExcelTask extends AbstractTask
             updateProgress(i, size);
             updateMessage(compo.getNom());
 
-            traitementCompo(compo, retour, dqsEnBase);
+            traitementCompo(compo, retour, dqsEnBase, dqInit);
         }
 
         dao.persist(dqsEnBase.values());
@@ -361,20 +366,20 @@ public class MajSuiviExcelTask extends AbstractTask
         long debut = System.currentTimeMillis();
 
         // Mise à jour de la base de donnée des anomalies
-        for (DefaultQualite anoExcel : listeDqExcel)
+        for (DefaultQualite dqExcel : listeDqExcel)
         {
 
-            DefaultQualite dqBase = mapDqsEnBase.get(anoExcel.getLotRTC().getLot());
+            DefaultQualite dqBase = mapDqsEnBase.get(dqExcel.getLotRTC().getLot());
             if (dqBase == null)
             {
-                LOGPLANTAGE.error("Ano du fichier excel inconnue en base : " + anoExcel.getLotRTC().getLot());
+                LOGPLANTAGE.error("Ano du fichier excel inconnue en base : " + dqExcel.getLotRTC().getLot());
                 continue;
             }
 
             // Mise à jour des données depuis Excel
-            dqBase.setRemarque(anoExcel.getRemarque());
-            dqBase.setAction(anoExcel.getAction());
-            dqBase.setDateRelance(anoExcel.getDateRelance());
+            dqBase.setRemarque(dqExcel.getRemarque());
+            dqBase.setAction(dqExcel.getAction());
+            dqBase.setDateRelance(dqExcel.getDateRelance());
 
             // Mise à jour des données des anomalies RTC
             ControlRTC.INSTANCE.controleAnoRTC(dqBase);
@@ -393,7 +398,7 @@ public class MajSuiviExcelTask extends AbstractTask
         Sheet sheet = controlAno.sauvegardeFichier(fichier);
 
         // Mis à jour de la feuille principale
-        controlAno.majFeuillePrincipale(new ArrayList<>(mapDqsEnBase.values()), sheet, matiere);
+        controlAno.majFeuilleDefaultsQualite(new ArrayList<>(mapDqsEnBase.values()), sheet, matiere);
 
         // Persistance des données
         dao.persist(mapDqsEnBase.values());
@@ -421,8 +426,9 @@ public class MajSuiviExcelTask extends AbstractTask
      * @param base
      *            Base pour l'affichage du message dans la fenêtre d'execution
      * @param dqEnBase
+     * @param dqInit 
      */
-    private void traitementCompo(ComposantSonar compo, Set<String> retour, Map<String, DefaultQualite> dqEnBase)
+    private void traitementCompo(ComposantSonar compo, Set<String> retour, Map<String, DefaultQualite> dqEnBase, List<DefaultQualite> dqInit)
     {
         LotRTC lotRTC = compo.getLotRTC();
 
@@ -433,7 +439,18 @@ public class MajSuiviExcelTask extends AbstractTask
         DefaultQualite dq;
 
         if (dqEnBase.containsKey(lotRTC.getLot()))
+        {
             dq = dqEnBase.get(lotRTC.getLot());
+            
+            // Initialisation d'un défault avec les valeurs à faux pour la sécurité et à SNAPCHOT pour la version
+            // On effectue cette opération qu'une fois pour le premier composant qui mets à jour l'anomalie.
+            if (!dqInit.contains(dq))
+            {
+                dqInit.add(dq);
+                dq.setSecurite(false);
+                dq.setTypeVersion(TypeVersion.SNAPSHOT);
+            }
+        }
         else
         {
             dq = ModelFactory.getModel(DefaultQualite.class);
@@ -536,7 +553,7 @@ public class MajSuiviExcelTask extends AbstractTask
                 int numeroAno = ControlRTC.INSTANCE.creerAnoRTC(ano);
                 if (numeroAno != 0)
                 {
-                    ano.setAction(null);
+                    ano.setAction(TypeAction.VIDE);
                     ano.setNumeroAnoRTC(numeroAno);
                     ano.setDateCreation(LocalDate.now());
                     ano.calculTraitee();

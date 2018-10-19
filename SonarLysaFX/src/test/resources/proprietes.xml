@@ -22,6 +22,36 @@
             <value>MainFrame</value>
         </entry>
     </mapColsApps>
+	<mapColsSuiviApps>
+		<entry>
+			<key>COMPO</key>
+			<value>Composant</value>
+		</entry>
+		<entry>
+			<key>ACTUEL</key>
+			<value>Code appli dans le POM</value>
+		</entry>
+		<entry>
+			<key>NEW</key>
+			<value>Code corrigé</value>
+		</entry>
+		<entry>
+			<key>ACTION</key>
+			<value>Action</value>
+		</entry>
+		<entry>
+			<key>ANORTC</key>
+			<value>numéro ano RTC</value>
+		</entry>
+		<entry>
+			<key>CPILOT</key>
+			<value>Cpi du lot</value>
+		</entry>
+		<entry>
+			<key>LOT</key>
+			<value>Lot</value>
+		</entry>	
+	</mapColsSuiviApps>
     <mapColsChefServ>
         <entry>
             <key>DIRECTION</key>
@@ -484,13 +514,23 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
     <mapParamsSpec>
         <entry>
             <key>RECAPDEFECT</key>
-            <value>Anomalie Qualimétrie : Quality Gate non conforme</value>
+            <value>DEFAUT QUALITE : Anomalie Qualimétrie suite à analyse SONARQUBE</value>
         </entry>
 		<entry>
 			<key>TEXTERELANCE</key>
 			<value>Bonjour,
 Pourriez vous prendre en compte les défauts qualité restants pour correction ?
 Merci</value>
+		</entry>
+		<entry>
+			<key>TEXTEAPPLI</key>
+			<value>Suite à analyse des données SonarQube du composant xxxxx , il s'avère que ce dernier n'a pas de code application valide dans son pom.xml.
+Aussi, pourriez-vous le renseigner avant le prochain assemblage. 
+Merci.</value>
+		</entry>
+		<entry>
+			<key>TEXTENEWAPPLI</key>
+			<value>Le bon code appli est le : -code-</value>
 		</entry>
         <entry>
             <key>TEXTEDEFECT</key>

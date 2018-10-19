@@ -1,6 +1,7 @@
 package dao;
 
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -28,31 +29,45 @@ import utilities.TechnicalException;
  * @param <T>
  *            Correspond à la classe de modèle que l'on va gérer
  */
-public abstract class AbstractDao<T extends AbstractBDDModele>
+public abstract class AbstractDao<T extends AbstractBDDModele> implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
+
+    private static final long serialVersionUID = 1L;
 
     /** logger de debug console */
     private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+    /** Entitymanager */
+    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("SonarLysaFX");
 
-    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("SonarLysaFX");
-    protected EntityManager em;
+    /** Constantes de requêtes */
+    public static final String FINDALL = ".findAll";
+    public static final String FINDINDEX = ".findByIndex";
+    public static final String RESET = ".resetTable";
+    protected static final String INDEX = "index";
+    protected static final String ALTERTABLE = "ALTER TABLE ";
+    protected static final String AUTOINC = " AUTO_INCREMENT = 0";
+
+    protected transient EntityManager em;
     protected TypeDonnee typeDonnee;
-    private Class<T> modele;
+    protected Class<T> modele;
+    protected String nomTable;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public AbstractDao()
+    protected AbstractDao(String nomTable)
     {
-        em = emf.createEntityManager();       
+        this.nomTable = nomTable;
+        em = emf.createEntityManager();
         buildDao();
     }
-    
-    public AbstractDao(EntityManager em)
+
+    protected AbstractDao(String nomTable, EntityManager em)
     {
-        this.em = em;       
+        this.nomTable = nomTable;
+        this.em = em;
         buildDao();
     }
 
@@ -66,21 +81,6 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
      */
     public abstract int recupDonneesDepuisExcel(File file);
 
-    /**
-     * Remise à zéro de la table et de l'indice de clef primaire.
-     * 
-     * @return
-     */
-    public abstract int resetTable();
-
-    /**
-     * Récupère un élément de la base de donnée selon son code.
-     * 
-     * @param code
-     * @return
-     */
-    public abstract T recupEltParCode(String code);
-
     /*---------- METHODES PUBLIQUES ----------*/
 
     /**
@@ -92,7 +92,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
     {
         // Appel de la requête et calcul du temps de traitement
         long debut = System.currentTimeMillis();
-        List<T> retour = em.createNamedQuery(modele.getSimpleName() + AbstractBDDModele.FINDALL, modele).getResultList();
+        List<T> retour = em.createNamedQuery(modele.getSimpleName() + FINDALL, modele).getResultList();
         long fin = System.currentTimeMillis();
 
         // Affichage des temps de traitement
@@ -115,6 +115,22 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
             retour.put(t.getMapIndex(), t);
         }
         return retour;
+    }
+    
+
+    /**
+     * Récupère un élément de la base de donnée selon son code.
+     * 
+     * @param code
+     * @return
+     */
+    public T recupEltParIndex(String index)
+    {
+        List<T> liste = em.createNamedQuery(modele.getSimpleName() + FINDINDEX, modele).setParameter(INDEX, index).getResultList();
+        if (liste.isEmpty())
+            return null;
+        else
+            return liste.get(0);
     }
 
     /**
@@ -143,27 +159,17 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
      * 
      * @param t
      */
-    public boolean persist(T t)
+    public final boolean persist(T t)
     {
         boolean test = em.getTransaction().isActive();
-        boolean retour = false;
-
         if (!test)
             em.getTransaction().begin();
-
-        if (t.getIdBase() == 0)
-        {
-            t.initTimeStamp();
-            em.persist(t);
-            retour = true;
-        }
-        else
-            em.merge(t);
+        boolean retour = persistImpl(t);
         if (!test)
             em.getTransaction().commit();
         return retour;
     }
-    
+
     /**
      * Suppression d'une liste d'éléments de la base de données. Retourne le nombre d'éléments supprimés
      * 
@@ -181,11 +187,12 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
         }
         em.getTransaction().commit();
         return i;
-        
+
     }
-    
+
     /**
      * Supprime un élément de la base de données
+     * 
      * @param t
      */
     public void delete(T t)
@@ -204,7 +211,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
     public final boolean majDateDonnee()
     {
         DaoDateMaj dao = DaoFactory.getDao(DateMaj.class);
-        DateMaj dateMaj = dao.recupEltParCode(typeDonnee.toString());
+        DateMaj dateMaj = dao.recupEltParIndex(typeDonnee.toString());
         if (dateMaj == null)
         {
             dateMaj = ModelFactory.getModel(DateMaj.class);
@@ -214,8 +221,50 @@ public abstract class AbstractDao<T extends AbstractBDDModele>
         return dao.persist(dateMaj);
     }
 
-    /*---------- METHODES PRIVEES ----------*/
+    /**
+     * Remise à zéro de la table et de l'indice de clef primaire.
+     * 
+     * @return
+     */
+    public final int resetTable()
+    {
+        int retour = 0;
+        em.getTransaction().begin();
+        retour = em.createNamedQuery(modele.getSimpleName() + RESET).executeUpdate();
+        em.createNativeQuery(ALTERTABLE + nomTable + AUTOINC).executeUpdate();
+        em.getTransaction().commit();
+        return retour;
+    }
     
+    /*---------- METHODES PROTECTED ----------*/
+    
+    protected <O extends AbstractBDDModele>void persistSousObjet(Class<O> classObjet, O objet)
+    {
+        if (objet != null)
+        {
+            if (objet.getIdBase() == 0)
+                DaoFactory.getDao(classObjet).persist(objet);
+            else
+                em.merge(objet);
+        }
+    }
+    
+    protected boolean persistImpl(T t)
+    {
+        boolean retour = false;
+        if (t.getIdBase() == 0)
+        {
+            t.initTimeStamp();
+            em.persist(t);
+            retour = true;
+        }
+        else
+            em.merge(t);
+        return retour;        
+    }
+
+    /*---------- METHODES PRIVEES ----------*/
+
     @SuppressWarnings("unchecked")
     private void buildDao()
     {

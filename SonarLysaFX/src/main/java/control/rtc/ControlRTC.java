@@ -63,6 +63,7 @@ import control.task.AbstractTask;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.DateMaj;
+import model.bdd.DefaultAppli;
 import model.bdd.DefaultQualite;
 import model.bdd.LotRTC;
 import model.enums.EtatAnoRTC;
@@ -276,93 +277,6 @@ public class ControlRTC extends AbstractToStringImpl
     }
 
     /**
-     * Création d'une anomalie dans RTC
-     * 
-     * @param dq
-     *            anomalie servant d'origine au Defect
-     * @return
-     */
-    public int creerAnoRTC(DefaultQualite dq)
-    {
-        IWorkItem workItem = null;
-
-        try
-        {
-            IProjectArea projet = pareas.get(dq.getLotRTC().getProjetRTC());
-
-            // Type de l'objet
-            IWorkItemType itemType = workItemClient.findWorkItemType(projet, "defect", monitor);
-
-            List<ICategory> categories = workItemClient.findCategories(projet, ICategory.FULL_PROFILE, monitor);
-            ICategory cat = null;
-            for (ICategory iCategory : categories)
-            {
-                if ("Projet".equals(iCategory.getName()))
-                {
-                    cat = iCategory;
-                    break;
-                }
-            }
-            if (cat == null)
-            {
-                for (ICategory iCategory : categories)
-                {
-                    if (iCategory.getName().contains("Anomalie"))
-                    {
-                        cat = iCategory;
-                        break;
-                    }
-                }
-            }
-
-            // Création
-            WorkItemInitialization init = new WorkItemInitialization(itemType, cat, projet, dq);
-            IWorkItemHandle handle = init.run(itemType, monitor);
-            workItem = auditableClient.fetchCurrentAuditable(handle, WorkItem.FULL_PROFILE, monitor);
-        }
-        catch (TeamRepositoryException e)
-        {
-            LOGGER.error("Erreur traitement RTC création de Defect. Lot : " + dq.getLotRTC());
-            LOGPLANTAGE.error(e);
-        }
-
-        if (workItem == null)
-            return 0;
-
-        LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + dq.getLotRTC().getLot());
-        return workItem.getId();
-
-    }
-
-    public void controleAnoRTC(DefaultQualite dq)
-    {
-        if (dq.getNumeroAnoRTC() == 0)
-            return;
-
-        IWorkItem anoRTC;
-        try
-        {
-            anoRTC = recupWorkItemDepuisId(dq.getNumeroAnoRTC());
-            dq.setEtatRTC(recupEtatElement(anoRTC));
-
-            // Correction si l'on a pas déjà la date de création du Defect
-            if (dq.getDateCreation() == null)
-                dq.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
-
-            // Mise à jour de la date de résolution
-            if (anoRTC.getResolutionDate() != null)
-                dq.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
-            else
-                dq.setDateReso(null);
-        }
-        catch (TeamRepositoryException e)
-        {
-            LOGGER.error("Erreur récupération information Defect. Lot : " + dq.getLotRTC());
-            LOGPLANTAGE.error(e);
-        }
-    }
-
-    /**
      * Retourne la valeur d'un attribut d'un WorkItem RTC sous forme d'une chaine de caractères.
      * 
      * @param attrb
@@ -508,7 +422,7 @@ public class ControlRTC extends AbstractToStringImpl
         else
         {
             // Récupération de la date de mise à jour depuis la base de données
-            LocalDate lastUpdate = DaoFactory.getDao(DateMaj.class).recupEltParCode(TypeDonnee.LOTSRTC.toString()).getDate();
+            LocalDate lastUpdate = DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.LOTSRTC.toString()).getDate();
             if (lastUpdate != null)
             {
                 // Periode entre la dernière mise à jour et aujourd'hui
@@ -613,30 +527,6 @@ public class ControlRTC extends AbstractToStringImpl
     }
 
     /**
-     * Teste si l'anomalie RTC est close.
-     * 
-     * @param numeroAno
-     *            Numéro de l'anomalie à tester
-     * @return
-     */
-    public boolean testSiAnomalieClose(int numeroAno)
-    {
-        if (numeroAno == 0)
-            return true;
-
-        try
-        {
-            String etat = recupEtatElement(recupWorkItemDepuisId(numeroAno)).trim();
-            return "Close".equals(etat) || "Abandonnée".equals(etat);
-        }
-        catch (TeamRepositoryException e)
-        {
-            LOGPLANTAGE.error(e);
-            return false;
-        }
-    }
-
-    /**
      * Récupération de tous les projets RTC
      * 
      * @throws TeamRepositoryException
@@ -687,6 +577,161 @@ public class ControlRTC extends AbstractToStringImpl
     }
 
     /**
+     * Création d'une anomalie dans RTC
+     * 
+     * @param dq
+     *            anomalie servant d'origine au Defect
+     * @return
+     */
+    public int creerAnoRTC(DefaultQualite dq)
+    {
+        IWorkItem workItem = null;
+
+        try
+        {
+            IProjectArea projet = pareas.get(dq.getLotRTC().getProjetRTC());
+
+            // Type de l'objet
+            IWorkItemType itemType = workItemClient.findWorkItemType(projet, "defect", monitor);
+
+            List<ICategory> categories = workItemClient.findCategories(projet, ICategory.FULL_PROFILE, monitor);
+            ICategory cat = null;
+            for (ICategory iCategory : categories)
+            {
+                if ("Projet".equals(iCategory.getName()))
+                {
+                    cat = iCategory;
+                    break;
+                }
+            }
+
+            if (cat == null)
+            {
+                for (ICategory iCategory : categories)
+                {
+                    if (iCategory.getName().contains("Anomalie"))
+                    {
+                        cat = iCategory;
+                        break;
+                    }
+                }
+            }
+
+            // Création
+            WorkItemInitialization init = new WorkItemInitialization(itemType, cat, projet, dq);
+            IWorkItemHandle handle = init.run(itemType, monitor);
+            workItem = auditableClient.fetchCurrentAuditable(handle, WorkItem.FULL_PROFILE, monitor);
+        }
+        catch (TeamRepositoryException e)
+        {
+            LOGGER.error("Erreur traitement RTC création de Defect. Lot : " + dq.getLotRTC());
+            LOGPLANTAGE.error(e);
+        }
+
+        if (workItem == null)
+            return 0;
+
+        LOGGER.info("Creation anomalie RTC numéro : " + workItem.getId() + " pour " + dq.getLotRTC().getLot());
+        return workItem.getId();
+
+    }
+
+    /**
+     * Contrôle l'état d'une anoRTC.
+     * 
+     * @param dq
+     */
+    public void controleAnoRTC(DefaultQualite dq)
+    {
+        if (dq.getNumeroAnoRTC() == 0)
+            return;
+
+        IWorkItem anoRTC;
+        try
+        {
+            anoRTC = recupWorkItemDepuisId(dq.getNumeroAnoRTC());
+            dq.setEtatRTC(recupEtatElement(anoRTC));
+
+            // Correction si l'on a pas déjà la date de création du Defect
+            if (dq.getDateCreation() == null)
+                dq.setDateCreation(DateConvert.convert(LocalDate.class, anoRTC.getCreationDate()));
+
+            // Mise à jour de la date de résolution
+            if (anoRTC.getResolutionDate() != null)
+                dq.setDateReso(DateConvert.convert(LocalDate.class, anoRTC.getResolutionDate()));
+            else
+                dq.setDateReso(null);
+        }
+        catch (TeamRepositoryException e)
+        {
+            LOGGER.error("Erreur récupération information Defect. Lot : " + dq.getLotRTC());
+            LOGPLANTAGE.error(e);
+        }
+    }
+
+    /**
+     * Ajoute un commentaire à une anoRTC s'il y a un défault appli.
+     * 
+     * @param da
+     */
+    public boolean ajoutAppliAnoRTC(DefaultAppli da)
+    {
+        DefaultQualite dq = da.getDefaultQualite();
+        if (dq == null || dq.getNumeroAnoRTC() == 0)
+            return false;
+        try
+        {
+            String texte = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEAPPLI).replaceAll("xxxxx", da.getCompo().getNom());             
+            if (!da.getAppliCorrigee().isEmpty())
+                texte += Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTENEWAPPLI).replaceAll("-code-", da.getAppliCorrigee());
+            ajoutCommentaireAnoRTC(dq.getNumeroAnoRTC(), texte);
+            return true;
+        }
+        catch (TeamRepositoryException e)
+        {
+            LOGGER.error("control.rtc.controlRTC.ajoutAppliAnoRTC - Erreur modification Defect. Lot : " + dq.getLotRTC());
+            LOGPLANTAGE.error(e);
+            return false;
+        }
+    }
+
+    /**
+     * Teste si l'anomalie RTC est close.
+     * 
+     * @param numeroAno
+     *            Numéro de l'anomalie à tester
+     * @return
+     */
+    public boolean testSiAnoRTCClose(int numeroAno)
+    {
+        if (numeroAno == 0)
+            return true;
+
+        try
+        {
+            String etat = recupEtatElement(recupWorkItemDepuisId(numeroAno)).trim();
+            return "Close".equals(etat) || "Abandonnée".equals(etat);
+        }
+        catch (TeamRepositoryException e)
+        {
+            LOGPLANTAGE.error(e);
+            return false;
+        }
+    }
+
+    /**
+     * Ajoute u ncommentaire de relance sur une anomalie RTC
+     * 
+     * @param id
+     * @throws TeamRepositoryException
+     */
+    public void relancerAno(int id) throws TeamRepositoryException
+    {
+        ajoutCommentaireAnoRTC(id, Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTERELANCE));
+    }
+
+    /**
+     * Cloture d'une anomalie RTC peut importe l'état du workflow
      * 
      * @param id
      * @return
@@ -834,7 +879,7 @@ public class ControlRTC extends AbstractToStringImpl
         workingCopy.save(monitor);
     }
 
-    public void relancerAno(int id) throws TeamRepositoryException
+    private void ajoutCommentaireAnoRTC(int id, String commentaire) throws TeamRepositoryException
     {
         IWorkItem wi = recupWorkItemDepuisId(id);
         workItemClient.getWorkItemWorkingCopyManager().connect(wi, IWorkItem.FULL_PROFILE, monitor);

@@ -16,34 +16,41 @@ public enum QG
     ERROR(Valeur.ERROR), 
     NONE(Valeur.NONE);
 
-    private String string;
+    private String valeur;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private QG(String string)
+    private QG(String valeur)
     {
-        this.string = string;
+        this.valeur = valeur;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
     public String getValeur()
     {
-        return string;
+        return valeur;
     }
 
     public static QG from(String status)
     {
+        if (status == null || status.isEmpty())
+            throw new IllegalArgumentException("model.enums.sonarapi.Status - argument vide ou nul.");
+
         switch (status)
         {
             case Valeur.OK:
                 return OK;
+
             case Valeur.WARN:
                 return WARN;
+
             case Valeur.ERROR:
                 return ERROR;
+
             case Valeur.NONE:
                 return NONE;
+
             default:
                 throw new IllegalArgumentException("model.enums.sonarapi.Status inconnu : " + status, null);
         }
@@ -57,7 +64,7 @@ public enum QG
         private static final String NONE = "NONE";
         private static final String ERROR = "ERROR";
         private static final String WARN = "WARN";
-        
+
         private Valeur()
         {
             throw new AssertionError("Classe non instanciable : model.sonarapi.Status#Valeur");

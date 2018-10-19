@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeMail;
 
+/**
+ * Classe de test de l'énumération TypeMail
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeMail implements TestEnums
 {
 

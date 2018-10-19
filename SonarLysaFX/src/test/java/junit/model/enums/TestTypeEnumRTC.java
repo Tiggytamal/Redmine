@@ -6,13 +6,20 @@ import org.junit.Test;
 
 import model.enums.TypeEnumRTC;
 
+/**
+ * Classe de test de l'énumération TypeEnumRTC
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeEnumRTC implements TestEnums
 {
     @Test
     @Override
     public void testSize()
     {
-        assertEquals(8, TypeEnumRTC.values().length);
+        assertEquals(9, TypeEnumRTC.values().length);
     }
     
     @Test
@@ -26,6 +33,7 @@ public class TestTypeEnumRTC implements TestEnums
         assertEquals("NiveauImportance", TypeEnumRTC.IMPORTANCE.getValeur());
         assertEquals("Origine", TypeEnumRTC.ORIGINE.getValeur());
         assertEquals("fr.ca.cat.attribut.codeprojetclarity", TypeEnumRTC.CLARITY.getValeur());
+        assertEquals("fr.ca.cat.attribut.datedelivraison", TypeEnumRTC.DATELIVHOMO.getValeur());
     }
 
     @Test

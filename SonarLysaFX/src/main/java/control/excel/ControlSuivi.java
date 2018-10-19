@@ -14,13 +14,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -34,8 +31,8 @@ import control.task.AbstractTask;
 import control.word.ControlRapport;
 import dao.DaoFactory;
 import model.ModelFactory;
-import model.bdd.DefaultQualite;
 import model.bdd.ChefService;
+import model.bdd.DefaultQualite;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
 import model.enums.EtatDefault;
@@ -68,7 +65,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     /*---------- ATTRIBUTS ----------*/
 
     // Constantes statiques
-    private static final String SQ = "SUIVI Qualité";
+    private static final String SQ = "SUIVI Défaults Qualité";
     private static final String AC = "Anomalies closes";
     private static final String STATS = "Statistiques";
 
@@ -136,7 +133,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             if (row == null)
                 continue;
 
-            retour.add(creerAnodepuisExcel(row, lotsRTC));
+            retour.add(creerdqDepuisExcel(row, lotsRTC));
         }
         return retour;
     }
@@ -309,7 +306,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
      * @param task
      * @throws IOException
      */
-    public void majFeuillePrincipale(List<DefaultQualite> dqsATraiter, Sheet sheet, Matiere matiere)
+    public void majFeuilleDefaultsQualite(List<DefaultQualite> dqsATraiter, Sheet sheet, Matiere matiere)
     {
         // Rangement anomalies par date de détection
         Collections.sort(dqsATraiter, (o1, o2) -> o1.getDateDetection().compareTo(o2.getDateDetection()));
@@ -538,7 +535,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             couleur = IndexedColors.GREY_25_PERCENT;
 
         // Remise de la couleur à orange si le lot n'a pas encore été traité
-        if (!dq.isTraitee())
+        if (!dq.calculTraitee())
             couleur = IndexedColors.LIGHT_ORANGE;
 
         return couleur;
@@ -717,37 +714,13 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     }
 
     /**
-     * Ajoute un liens à une cellule, soit vers Sonar soit vers RTC
-     * 
-     * @param cell
-     * @param baseAdresse
-     * @param variable
-     */
-    private void ajouterLiens(Cell cell, String adresse)
-    {
-        if (cell == null || adresse == null)
-            throw new IllegalArgumentException("La cellule ou l'adresse ne peuvent être nulles");
-
-        Hyperlink link = createHelper.createHyperlink(HyperlinkType.URL);
-        Font font = wb.createFont();
-        font.setUnderline(Font.U_SINGLE);
-        font.setColor(IndexedColors.BLUE.index);
-        CellStyle style = wb.createCellStyle();
-        style.cloneStyleFrom(cell.getCellStyle());
-        style.setFont(font);
-        cell.setCellStyle(style);
-        link.setAddress(adresse);
-        cell.setHyperlink(link);
-    }
-
-    /**
      * Crée une anomalie depuis les informations du fichier Excel
      * 
      * @param row
      * @param lotsRTC
      * @return
      */
-    private DefaultQualite creerAnodepuisExcel(Row row, Map<String, LotRTC> lotsRTC)
+    private DefaultQualite creerdqDepuisExcel(Row row, Map<String, LotRTC> lotsRTC)
     {
         DefaultQualite retour = ModelFactory.getModel(DefaultQualite.class);
         retour.setLotRTC(lotsRTC.get(Utilities.testLot(getCellStringValue(row, colLot))));

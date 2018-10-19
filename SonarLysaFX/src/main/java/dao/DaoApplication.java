@@ -24,17 +24,19 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
+    private static final String TABLE = "applications";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     DaoApplication()
     {
+        super(TABLE);
         typeDonnee = TypeDonnee.APPS;
     }
-    
+
     DaoApplication(EntityManager em)
     {
-        super(em);
+        super(TABLE, em);
         typeDonnee = TypeDonnee.APPS;
     }
 
@@ -63,32 +65,6 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
         // Persistance en base
         int retour = persist(mapBase.values());
         majDateDonnee();
-        return retour;
-    }
-
-    @Override
-    public Application recupEltParCode(String codeAppli)
-    {
-        List<Application> liste = em.createNamedQuery("Application.findByIndex", Application.class).setParameter("index", codeAppli).getResultList();
-        if (liste.isEmpty())
-            return null;
-        else
-            return liste.get(0);
-    }
-
-    /**
-     * Supprime tous les enregistrements de la base de la table des composants Sonar. Retourne le nombre d'enregistrements effacés. Reset l'incrémentation.
-     * 
-     * @return
-     */
-    @Override
-    public int resetTable()
-    {
-        int retour = 0;
-        em.getTransaction().begin();
-        retour = em.createNamedQuery("Application.resetTable").executeUpdate();
-        em.createNativeQuery("ALTER TABLE applications AUTO_INCREMENT = 0").executeUpdate();
-        em.getTransaction().commit();
         return retour;
     }
 

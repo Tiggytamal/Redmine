@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeColApps;
 
+/**
+ * Classe de test de l'énumération TypeColApps
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeColApps implements TestEnums
 {
     @Test

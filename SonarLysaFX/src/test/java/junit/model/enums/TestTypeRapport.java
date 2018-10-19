@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeRapport;
 
+/**
+ * Classe de test de l'énumération TypeRapport
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeRapport implements TestEnums
 {
     @Test

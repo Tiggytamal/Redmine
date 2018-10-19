@@ -35,7 +35,7 @@ public enum EtatAnoRTC
     public static EtatAnoRTC from(String valeur)
     {
         if (valeur == null || valeur.isEmpty())
-            throw new TechnicalException("mocel.enums.EtatAnoRTC.from - etat envoyé nul ou vide.", null);
+            throw new TechnicalException("model.enums.EtatAnoRTC.from - etat envoyé nul ou vide.", null);
         
         switch (valeur)
         {
@@ -67,7 +67,7 @@ public enum EtatAnoRTC
                 return REOUVERTE;
 
             default:
-                throw new TechnicalException("mocel.enums.EtatAnoRTC.from - etat envoyé inconnu :" + valeur, null);
+                throw new TechnicalException("model.enums.EtatAnoRTC.from - etat envoyé inconnu :" + valeur, null);
         }
     }
     /*---------- METHODES PRIVEES ----------*/

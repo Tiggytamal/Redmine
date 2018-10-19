@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeParamSpec;
 
+/**
+ * Classe de test de l'énumération TypeParamSpec
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeParamSpec implements TestEnums
 {
     @Test

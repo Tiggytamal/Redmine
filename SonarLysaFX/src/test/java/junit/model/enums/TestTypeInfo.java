@@ -9,6 +9,13 @@ import org.junit.Test;
 
 import model.enums.TypeInfo;
 
+/**
+ * Classe de test de l'énumération TypeInfo
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeInfo implements TestEnums
 {
     @Test

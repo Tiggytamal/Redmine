@@ -31,6 +31,7 @@ import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import model.bdd.DateMaj;
+import model.enums.OptionMajCompos;
 import utilities.DateConvert;
 import utilities.FunctionalException;
 import utilities.Statics;
@@ -214,7 +215,7 @@ public final class MenuViewControl extends AbstractViewControl
                 break;
 
             case "majCompos":
-                alertConfirmation(new MajComposantsSonarTask(), "Cela lancera la mise à jour de tous les composants Sonar.");
+                alertConfirmation(new MajComposantsSonarTask(OptionMajCompos.PARTIELLE), "Cela lancera la mise à jour de tous les composants Sonar.");
                 break;
 
             case "majAnos":

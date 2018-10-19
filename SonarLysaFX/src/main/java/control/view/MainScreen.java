@@ -137,6 +137,7 @@ public final class MainScreen extends Application
                 {
                     throw new TechnicalException("Impossible de fermer le planificateur", e);
                 }
+                System.exit(0);
             }
         }
     }

@@ -296,19 +296,19 @@ public class TestControlRTC extends JunitBase
         // Test de la méthode
 
         // Test avec anomalie à zéro
-        assertTrue(handler.testSiAnomalieClose(0));
+        assertTrue(handler.testSiAnoRTCClose(0));
 
         // test close et abandonnée
-        assertTrue(handler.testSiAnomalieClose(335943));
-        assertTrue(handler.testSiAnomalieClose(335943));
+        assertTrue(handler.testSiAnoRTCClose(335943));
+        assertTrue(handler.testSiAnoRTCClose(335943));
         Mockito.verify(logMock, Mockito.never()).error(Mockito.any(TeamRepositoryException.class));
 
         // test autre retour
-        assertFalse(handler.testSiAnomalieClose(335943));
+        assertFalse(handler.testSiAnoRTCClose(335943));
         Mockito.verify(logMock, Mockito.never()).error(Mockito.any(TeamRepositoryException.class));
 
         // Test exception
-        assertFalse(handler.testSiAnomalieClose(241392));
+        assertFalse(handler.testSiAnoRTCClose(241392));
         Mockito.verify(logMock, Mockito.times(1)).error(Mockito.any(TeamRepositoryException.class));
     }
 

@@ -8,6 +8,13 @@ import org.junit.Test;
 import model.enums.ParamSpec;
 import model.enums.TypeParamSpec;
 
+/**
+ * Classe de test de l'énumération ParamSpec
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestParamSpec implements TestEnums 
 {
     @Test
@@ -21,7 +28,7 @@ public class TestParamSpec implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(8, ParamSpec.values().length);
+        assertEquals(10, ParamSpec.values().length);
     }
     
     @Test
@@ -34,6 +41,8 @@ public class TestParamSpec implements TestEnums
         assertFalse(ParamSpec.MEMBRESDATASTAGE.getNom().isEmpty());
         assertFalse(ParamSpec.RECAPDEFECT.getNom().isEmpty());
         assertFalse(ParamSpec.VERSIONSCOMPOSANTS.getNom().isEmpty());
+        assertFalse(ParamSpec.TEXTEAPPLI.getNom().isEmpty());
+        assertFalse(ParamSpec.TEXTERELANCE.getNom().isEmpty());
     }
     
     @Test
@@ -47,5 +56,7 @@ public class TestParamSpec implements TestEnums
         assertEquals(TypeParamSpec.LISTVIEWNOM, ParamSpec.MEMBRESDATASTAGE.getType());
         assertEquals(TypeParamSpec.LISTVIEWNOM, ParamSpec.MEMBRESMAIL.getType());
         assertEquals(TypeParamSpec.LISTVIEWCOMPO, ParamSpec.VERSIONSCOMPOSANTS.getType());
+        assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTEAPPLI.getType());
+        assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTERELANCE.getType());
     }
 }

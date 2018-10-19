@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeColPic;
 
+/**
+ * Classe de test de l'énumération TypeColPic
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeColPic implements TestEnums
 {
     @Test

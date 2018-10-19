@@ -18,8 +18,9 @@ public enum TypeDonnee implements TypeKey
     COMPOSANT("Composants"),
     LOTSRTC("Lots RTC"),
     GROUPE("Groupement de Projets"),
-    ANOMALIE("Anomalies"),
-    DATEMAJ(" Dates de mise à jour des tables");
+    DEFAULTQUALITE("Defaults qualité"),
+    DATEMAJ("Dates de mise à jour des tables"),
+    DEFAULTAPPLI("Defaults application");
     
     private String valeur;
     

@@ -2,11 +2,19 @@ package junit.model.enums;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 import org.junit.Test;
 
 import model.enums.TypeMajSuivi;
 
+/**
+ * Classe de test de l'énumération TypeMajSuivi
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeMajSuivi implements TestEnums
 {
     /*---------- ATTRIBUTS ----------*/
@@ -24,7 +32,7 @@ public class TestTypeMajSuivi implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(4, TypeMajSuivi.values().length);
+        assertEquals(5, TypeMajSuivi.values().length);
     }
     
     @Test
@@ -34,6 +42,17 @@ public class TestTypeMajSuivi implements TestEnums
         assertFalse("La valeur de l'énumération est vide : " + TypeMajSuivi.DATASTAGE, TypeMajSuivi.DATASTAGE.getValeur().isEmpty());  
         assertFalse("La valeur de l'énumération est vide : " + TypeMajSuivi.JAVA, TypeMajSuivi.JAVA.getValeur().isEmpty());  
         assertFalse("La valeur de l'énumération est vide : " + TypeMajSuivi.MULTI, TypeMajSuivi.MULTI.getValeur().isEmpty());  
+        assertFalse("La valeur de l'énumération est vide : " + TypeMajSuivi.NUIT, TypeMajSuivi.NUIT.getValeur().isEmpty());
+    }
+    
+    @Test
+    public void testGetNbreEtapes()
+    {
+        assertNotEquals(0, TypeMajSuivi.COBOL.getNbreEtapes());
+        assertNotEquals(0, TypeMajSuivi.DATASTAGE.getNbreEtapes());
+        assertNotEquals(0, TypeMajSuivi.JAVA.getNbreEtapes());
+        assertNotEquals(0, TypeMajSuivi.MULTI.getNbreEtapes());
+        assertNotEquals(0, TypeMajSuivi.NUIT.getNbreEtapes());
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -20,17 +20,19 @@ public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implement
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
+    private static final String TABLE = "projets_groupe";
     
     /*---------- CONSTRUCTEURS ----------*/
     
     DaoGroupementProjet()
     {
+        super(TABLE);
         typeDonnee = TypeDonnee.GROUPE;
     }
     
     DaoGroupementProjet(EntityManager em)
     {
-        super(em);
+        super(TABLE, em);
         typeDonnee = TypeDonnee.GROUPE;
     }
     
@@ -68,26 +70,4 @@ public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implement
         majDateDonnee();
         return retour;
     }
-
-    @Override
-    public GroupementProjet recupEltParCode(String nomProjet)
-    {
-        List<GroupementProjet> liste = em.createNamedQuery("GroupementProjet.findByIndex", GroupementProjet.class).setParameter("index", nomProjet).getResultList();
-        if (liste.isEmpty())
-            return null;
-        else
-            return liste.get(0);
-    }
-
-    @Override
-    public int resetTable()
-    {
-        int retour = 0;
-        em.getTransaction().begin();
-        retour = em.createNamedQuery("GroupementProjet.resetTable").executeUpdate();
-        em.createNativeQuery("ALTER TABLE projets_groupe AUTO_INCREMENT = 0").executeUpdate();
-        em.getTransaction().commit();
-        return retour;
-    }
-
 }

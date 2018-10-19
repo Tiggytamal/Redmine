@@ -2,7 +2,6 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -24,17 +23,19 @@ public class DaoEdition extends AbstractDao<Edition> implements Serializable
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
+    private static final String TABLE = "editions";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     DaoEdition()
     {
+        super(TABLE);
         typeDonnee = TypeDonnee.EDITION;
     }
-    
+
     DaoEdition(EntityManager em)
     {
-        super(em);
+        super(TABLE, em);
         typeDonnee = TypeDonnee.EDITION;
     }
 
@@ -59,27 +60,6 @@ public class DaoEdition extends AbstractDao<Edition> implements Serializable
         // PErsistance des données
         int retour = persist(mapBase.values());
         majDateDonnee();
-        return retour;
-    }
-
-    @Override
-    public Edition recupEltParCode(String numero)
-    {
-        List<Edition> liste = em.createNamedQuery("Edition.findByIndex", Edition.class).setParameter("index", numero).getResultList();
-        if (liste.isEmpty())
-            return null;
-        else
-            return liste.get(0);
-    }
-
-    @Override
-    public int resetTable()
-    {
-        int retour = 0;
-        em.getTransaction().begin();
-        retour = em.createNamedQuery("Edition.resetTable").executeUpdate();
-        em.createNativeQuery("ALTER TABLE applications AUTO_INCREMENT = 0").executeUpdate();
-        em.getTransaction().commit();
         return retour;
     }
 

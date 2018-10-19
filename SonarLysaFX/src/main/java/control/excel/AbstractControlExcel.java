@@ -3,6 +3,7 @@ package control.excel;
 import java.io.File;
 import java.time.LocalDate;
 
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -10,6 +11,9 @@ import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Hyperlink;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -140,6 +144,30 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
             cell.setCellValue(texte.toString());
 
         return cell;
+    }
+    
+    /**
+     * Ajoute un liens à une cellule, soit vers Sonar soit vers RTC
+     * 
+     * @param cell
+     * @param baseAdresse
+     * @param variable
+     */
+    protected void ajouterLiens(Cell cell, String adresse)
+    {
+        if (cell == null || adresse == null)
+            throw new IllegalArgumentException("La cellule ou l'adresse ne peuvent être nulles");
+
+        Hyperlink link = createHelper.createHyperlink(HyperlinkType.URL);
+        Font font = wb.createFont();
+        font.setUnderline(Font.U_SINGLE);
+        font.setColor(IndexedColors.BLUE.index);
+        CellStyle style = wb.createCellStyle();
+        style.cloneStyleFrom(cell.getCellStyle());
+        style.setFont(font);
+        cell.setCellStyle(style);
+        link.setAddress(adresse);
+        cell.setHyperlink(link);
     }
     
     /**

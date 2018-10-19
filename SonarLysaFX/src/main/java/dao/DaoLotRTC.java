@@ -2,7 +2,6 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -21,17 +20,19 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
+    private static final String TABLE = "projets_groupe";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     DaoLotRTC()
     {
+        super(TABLE);
         typeDonnee = TypeDonnee.LOTSRTC;
     }
 
     DaoLotRTC(EntityManager em)
     {
-        super(em);
+        super(TABLE, em);
         typeDonnee = TypeDonnee.LOTSRTC;
     }
 
@@ -44,7 +45,7 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
     }
 
     @Override
-    public boolean persist(LotRTC lot)
+    public boolean persistImpl(LotRTC lot)
     {
         if (lot.getIdBase() == 0)
         {
@@ -65,27 +66,6 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
         else
             em.merge(lot);
         return false;
-    }
-
-    @Override
-    public LotRTC recupEltParCode(String lot)
-    {
-        List<LotRTC> liste = em.createNamedQuery("LotRTC.findByIndex", LotRTC.class).setParameter("index", lot).getResultList();
-        if (liste.isEmpty())
-            return null;
-        else
-            return liste.get(0);
-    }
-
-    @Override
-    public int resetTable()
-    {
-        int retour = 0;
-        em.getTransaction().begin();
-        retour = em.createNamedQuery("LotRTC.resetTable").executeUpdate();
-        em.createNativeQuery("ALTER TABLE applications AUTO_INCREMENT = 0").executeUpdate();
-        em.getTransaction().commit();
-        return retour;
     }
 
     /*---------- METHODES PRIVEES ----------*/

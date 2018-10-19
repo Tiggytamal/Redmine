@@ -56,6 +56,9 @@ public interface ExcelFactory
             case "model.enums.TypeColUA" :
                 return (R) new ControlUA(file);
                 
+            case "model.enums.TypeColSuiviApps" :
+                return (R) new ControlSuiviApps(file);
+                
             default:
                 throw new TechnicalException("control.excel.ExcelFactory.getReader - type non géré : " + type.toString(), null);
         }

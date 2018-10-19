@@ -11,19 +11,21 @@ public enum TypeMajSuivi
 {
     /*---------- ATTRIBUTS ----------*/
 
-    JAVA("Maj Fichier de Suivi JAVA"), 
-    DATASTAGE("Maj Fichier de Suivi DataStage"), 
-    MULTI("Maj Fichiers de Suivi"), 
-    COBOL("Maj Fichier de Suivi COBOL"),
-    NUIT("Maj Fichier de Suivi avec Sonar");
+    JAVA("Maj Fichier de Suivi JAVA", 7), 
+    DATASTAGE("Maj Fichier de Suivi DataStage", 6),
+    MULTI("Maj Fichiers de Suivi", 12), 
+    COBOL("Maj Fichier de Suivi COBOL", 6),
+    NUIT("Maj Fichier de Suivi avec Sonar", 13);
 
     private String valeur;
+    private int nbreEtapes;
 
     /*---------- CONSTRUCTEURS ----------*/
     
-    private TypeMajSuivi(String valeur)
+    private TypeMajSuivi(String valeur, int nbreEtapes)
     {
         this.valeur = valeur;
+        this.nbreEtapes = nbreEtapes;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -33,5 +35,10 @@ public enum TypeMajSuivi
     public String getValeur()
     {
         return valeur;
+    }
+    
+    public int getNbreEtapes()
+    {
+        return nbreEtapes;
     }
 }

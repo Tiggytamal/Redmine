@@ -26,8 +26,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.mchange.util.AssertException;
 
+import dao.DaoFactory;
 import model.bdd.ComposantSonar;
+import model.bdd.DateMaj;
 import model.enums.Param;
+import model.enums.TypeDonnee;
 import model.interfaces.ModeleSonar;
 import model.sonarapi.AjouterProjet;
 import model.sonarapi.AjouterVueLocale;
@@ -62,7 +65,7 @@ public class SonarAPI extends AbstractToStringImpl
 {
 
     /*---------- ATTRIBUTS ----------*/
-    
+
     /** logger général */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** logger plantages de l'application */
@@ -70,6 +73,9 @@ public class SonarAPI extends AbstractToStringImpl
 
     private static final String AUTHORIZATION = "Authorization";
     private static final String HTTP = ": HTTP ";
+    private static final String RESOURCE = "resource";
+    private static final String CATEGORIES = "categories";
+    private static final String VERSION = "Version";
 
     // Liste des api utilisées
     private static final String VIEWSLIST = "api/views/list";
@@ -80,13 +86,13 @@ public class SonarAPI extends AbstractToStringImpl
     private static final String EVENTS = "api/events";
     private static final String VIEWSSHOW = "api/views/show";
     private static final String VIEWSCREATE = "api/views/create";
-    private static final String VIEWSMODE = "api/views/mode";    
+    private static final String VIEWSMODE = "api/views/mode";
     private static final String QGSELECT = "api/qualitygates/select";
     private static final String AUTHVALID = "api/authentication/validate";
-    
+
     /** Instance du controleur */
     public static final SonarAPI INSTANCE = new SonarAPI();
-    
+
     private final WebTarget webTarget;
     private final String codeUser;
 
@@ -354,8 +360,8 @@ public class SonarAPI extends AbstractToStringImpl
     public String getVersionComposant(String resource)
     {
         // 1. Création des paramètres de la requête
-        Parametre paramResource = new Parametre("resource", resource);
-        Parametre paramCategorie = new Parametre("categories", "Version");
+        Parametre paramResource = new Parametre(RESOURCE, resource);
+        Parametre paramCategorie = new Parametre(CATEGORIES, VERSION);
 
         // 2. appel du webservices
         Response response = appelWebserviceGET(EVENTS, new Parametre[] { paramResource, paramCategorie });
@@ -374,6 +380,35 @@ public class SonarAPI extends AbstractToStringImpl
     }
 
     /**
+     * Vérifie si la date de mise à jour du composant est antérieure à la dernière date de mise à jour de la base des composants. En plus met à la jour la version
+     * du composant ERLEASE ou SNAPCHOT.
+     * 
+     * @param compo
+     * @return
+     */
+    public boolean initVersionCompoEtDateMaj(ComposantSonar compo)
+    {
+        // 1. Création des paramètres de la requête
+        Parametre paramResource = new Parametre(RESOURCE, compo.getKey());
+        Parametre paramCategorie = new Parametre(CATEGORIES, VERSION);
+
+        // 2. appel du webservices
+        Response response = appelWebserviceGET(EVENTS, new Parametre[] { paramResource, paramCategorie });
+
+        // 3. Test du retour et renvoie de la dernière version si ok.
+        if (response.getStatus() == Status.OK.getStatusCode())
+        {
+            List<Event> liste = response.readEntity(new GenericType<List<Event>>() { });
+            if (liste != null && !liste.isEmpty())
+                return controleVersionEtDateMaj(liste, compo);
+        }
+        else
+            LOGGER.error(erreurAPI(EVENTS) + paramResource.getValeur());
+
+        return false;
+    }
+
+    /**
      * Retourne tous les composants présents dans SonarQube
      * 
      * @return
@@ -386,7 +421,8 @@ public class SonarAPI extends AbstractToStringImpl
         if (response.getStatus() == Status.OK.getStatusCode())
         {
             LOGGER.info("Récupération de la liste des composants OK");
-            return response.readEntity(new GenericType<List<Projet>>() { });
+            return response.readEntity(new GenericType<List<Projet>>() {
+            });
         }
         else
         {
@@ -434,11 +470,11 @@ public class SonarAPI extends AbstractToStringImpl
             throw new FunctionalException(Severity.ERROR, erreur);
         }
     }
-    
+
     public List<Event> getEventsComposant(String key)
     {
-        Parametre param = new Parametre("resource", key);
-        Parametre paramCategorie = new Parametre("categories", "Version");
+        Parametre param = new Parametre(RESOURCE, key);
+        Parametre paramCategorie = new Parametre(CATEGORIES, VERSION);
         Response response = appelWebserviceGET(EVENTS, new Parametre[] { param, paramCategorie });
 
         if (response.getStatus() == Status.OK.getStatusCode())
@@ -473,7 +509,7 @@ public class SonarAPI extends AbstractToStringImpl
         LOGGER.error(erreurAPI(VIEWSSHOW) + vueKey);
         return false;
     }
-    
+
     /**
      * Remonte toutes les informations d'une vue avec la liste des sous-vues.
      * 
@@ -484,17 +520,17 @@ public class SonarAPI extends AbstractToStringImpl
     {
         if (vueKey == null || vueKey.isEmpty())
             throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.getListSousVues a son argument nul ou vide");
-        
+
         Vue retour = new Vue(vueKey, "vue non trouvée");
-        
+
         Response response = appelWebserviceGET(VIEWSSHOW, new Parametre[] { new Parametre("key", vueKey) });
         if (response.getStatus() != Status.OK.getStatusCode())
         {
             LOGGER.error(erreurAPI(VIEWSSHOW) + vueKey);
             return retour;
         }
-        
-        return response.readEntity(Vue.class);        
+
+        return response.readEntity(Vue.class);
     }
 
     /*---------- METHODES PUBLIQUES POST ----------*/
@@ -671,7 +707,7 @@ public class SonarAPI extends AbstractToStringImpl
         LOGGER.info("Vue " + parent.getKey() + " ajout sous-projet " + compo.getNom() + HTTP + response.getStatus());
         return gestionErreur(response);
     }
-    
+
     public boolean setManualMesureView(String key)
     {
         ManualMesure entite = new ManualMesure(key);
@@ -729,7 +765,7 @@ public class SonarAPI extends AbstractToStringImpl
     {
         if (params == null)
             return appelWebserviceGET(url);
-        
+
         WebTarget requete = webTarget.path(url);
 
         for (Parametre parametre : params)
@@ -785,7 +821,7 @@ public class SonarAPI extends AbstractToStringImpl
     }
 
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Gère les retours d'erreurs des Webservices.
      * 
@@ -807,7 +843,7 @@ public class SonarAPI extends AbstractToStringImpl
         }
         return true;
     }
-
+    
     /**
      * Itération sur tous les Event retournés par le webService pour être sûr de bien retourner les informations du plus récent.
      * 
@@ -834,6 +870,35 @@ public class SonarAPI extends AbstractToStringImpl
             }
         }
         return retour;
+    }
+
+    /**
+     * Itération sur tous les Event retournés par le webService pour être sûr de bien retourner les informations du plus récent.
+     * 
+     * @param liste
+     *            liste d'{@link model.sonarapi.Event} des changements de version
+     * @return
+     */
+    private boolean controleVersionEtDateMaj(List<Event> liste, ComposantSonar compo)
+    {
+        if (liste == null)
+            throw new IllegalArgumentException("la liste ne peut pas être nulle");
+
+        LocalDateTime date = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
+        String version = EMPTY;
+
+        // Itération sur la liste pour récupérer la date la plus récente.
+        for (Event event : liste)
+        {
+            LocalDateTime temp = LocalDateTime.parse(event.getDt(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+            if (temp.isAfter(date))
+            {
+                date = temp;
+                version = event.getN();
+            }
+        }
+        compo.setVersionRelease(!version.contains("SNAPSHOT"));
+        return date.isAfter(DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.COMPOSANT.toString()).getTimeStamp());
     }
 
     /**

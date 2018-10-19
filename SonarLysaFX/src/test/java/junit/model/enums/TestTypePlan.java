@@ -9,6 +9,13 @@ import control.quartz.JobVuesCDM;
 import control.quartz.JobVuesCHC;
 import model.enums.TypePlan;
 
+/**
+ * Classe de test de l'énumération TypePlan
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypePlan implements TestEnums
 {
     @Test

@@ -10,6 +10,13 @@ import org.powermock.reflect.Whitebox;
 
 import model.enums.TypeMetrique;
 
+/**
+ * Classe de test de l'énumération TypeMetrique
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeMetrique implements TestEnums
 {
     @Test

@@ -25,17 +25,19 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
+    private static final String TABLE = "composants";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     DaoComposantSonar()
     {
+        super(TABLE);
         typeDonnee = TypeDonnee.COMPOSANT;
     }
-    
+
     DaoComposantSonar(EntityManager em)
     {
-        super(em);
+        super(TABLE, em);
         typeDonnee = TypeDonnee.COMPOSANT;
     }
 
@@ -48,12 +50,12 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     }
 
     @Override
-    public boolean persist(ComposantSonar compo)
+    public boolean persistImpl(ComposantSonar compo)
     {
         if (compo.getIdBase() == 0)
         {
             compo.initTimeStamp();
-            
+
             // Presistance applications liées
             Application appli = compo.getAppli();
             if (appli != null)
@@ -73,35 +75,14 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
                 else
                     em.merge(lotRTC);
             }
-            
+
             em.persist(compo);
             return true;
         }
         else
             em.merge(compo);
-        
+
         return false;
-    }
-
-    @Override
-    public int resetTable()
-    {
-        int retour = 0;
-        em.getTransaction().begin();
-        retour = em.createNamedQuery("ComposantSonar.resetTable").executeUpdate();
-        em.createNativeQuery("ALTER TABLE composants AUTO_INCREMENT = 0").executeUpdate();
-        em.getTransaction().commit();
-        return retour;
-    }
-
-    @Override
-    public ComposantSonar recupEltParCode(String key)
-    {
-        List<ComposantSonar> liste = em.createNamedQuery("ComposantSonar.findByIndex", ComposantSonar.class).setParameter("index", key).getResultList();
-        if (liste.isEmpty())
-            return null;
-        else
-            return liste.get(0);
     }
 
     public void controleDoublons()

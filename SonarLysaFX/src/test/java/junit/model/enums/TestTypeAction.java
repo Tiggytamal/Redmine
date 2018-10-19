@@ -11,6 +11,13 @@ import org.powermock.reflect.Whitebox;
 
 import model.enums.TypeAction;
 
+/**
+ * Classe de test de l'énumération TypeAction
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeAction implements TestEnums
 {   
     @Test

@@ -6,20 +6,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static utilities.Statics.EMPTY;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Test;
 
 import model.ModelFactory;
 import model.bdd.DefaultQualite;
 import model.bdd.LotRTC;
-import model.bdd.ProjetClarity;
-import model.enums.EtatLot;
-import model.enums.Matiere;
 import model.enums.TypeAction;
-import utilities.Statics;
 
 public class TestAnomalie extends AbstractTestModel<DefaultQualite>
 {
@@ -183,29 +175,24 @@ public class TestAnomalie extends AbstractTestModel<DefaultQualite>
     public void testCalculTraitee()
     {
         // Avec une objet juste initialisé, le booleén doit être à faux.
-        handler.calculTraitee();
-        assertFalse(handler.isTraitee());
+        assertFalse(handler.calculTraitee());
         
         // Test avec remarque non nulle.
         handler.setRemarque(EMPTY);
-        handler.calculTraitee();
-        assertFalse(handler.isTraitee());
+        assertFalse(handler.calculTraitee());
         
         // Test avec remarque non vide.
         handler.setRemarque("remarque");
-        handler.calculTraitee();
-        assertTrue(handler.isTraitee());
+        assertTrue(handler.calculTraitee());
         
         // test avec numéro d'anomalie non 0.
         handler.setRemarque(null);
         handler.setNumeroAnoRTC(10);
-        handler.calculTraitee();
-        assertTrue(handler.isTraitee());
+        assertTrue(handler.calculTraitee());
         
         // Test avec les deux bons
         handler.setRemarque("rem");
-        handler.calculTraitee();
-        assertTrue(handler.isTraitee());
+        assertTrue(handler.calculTraitee());
     }
     
 //    @Test

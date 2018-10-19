@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeVulnerabilite;
 
+/**
+ * Classe de test de l'énumération TypeVulnerabilite
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeVulnerabilite implements TestEnums
 {
 

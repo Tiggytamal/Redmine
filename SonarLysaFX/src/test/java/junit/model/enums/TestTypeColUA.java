@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeColUA;
 
+/**
+ * Classe de test de l'énumération TypeColUA
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeColUA implements TestEnums
 {
     @Test

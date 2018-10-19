@@ -6,13 +6,20 @@ import org.junit.Test;
 
 import model.enums.TypeColEdition;
 
+/**
+ * Classe de test de l'énumération TypeColEdition
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeColEdition implements TestEnums
 {
     @Test
     @Override
     public void testSize()
     {
-        assertEquals(2, TypeColEdition.values().length);
+        assertEquals(3, TypeColEdition.values().length);
     }
     
     @Test
@@ -20,6 +27,7 @@ public class TestTypeColEdition implements TestEnums
     {
         assertEquals("Libellé", TypeColEdition.LIBELLE.getValeur());
         assertEquals("Numero de version", TypeColEdition.VERSION.getValeur());
+        assertEquals("Commentaire", TypeColEdition.COMMENTAIRE.getValeur());
     }
     
     @Test
@@ -27,6 +35,7 @@ public class TestTypeColEdition implements TestEnums
     {
         assertEquals("colLib", TypeColEdition.LIBELLE.getNomCol());
         assertEquals("colVersion", TypeColEdition.VERSION.getNomCol());
+        assertEquals("colComment", TypeColEdition.COMMENTAIRE.getNomCol());
     }
 
     @Test

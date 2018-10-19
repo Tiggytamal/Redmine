@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.CHCouCDM;
 
+/**
+ * Classe de test de l'numération CDCouCDM
+ * 
+ * @author ETP8137 - Grégoier Mathon
+ * @since 1.0
+ *
+ */
 public class TestCHCouCDM implements TestEnums
 {
     @Test
@@ -14,8 +21,7 @@ public class TestCHCouCDM implements TestEnums
     {
         assertEquals(CHCouCDM.CDM, CHCouCDM.valueOf(CHCouCDM.CDM.toString()));
     }
-    
-    
+
     @Test
     @Override
     public void testSize()

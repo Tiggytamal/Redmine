@@ -24,6 +24,7 @@ import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
+import model.enums.TypeColSuiviApps;
 import model.enums.TypeColUA;
 import model.enums.TypeColVul;
 import model.enums.TypePlan;
@@ -61,6 +62,7 @@ public class ProprietesXML extends AbstractModele implements XML
     private Map<TypeColApps, String> mapColsApps;
     private Map<TypeColGrProjet, String> mapColsGrProjet;
     private Map<TypeColUA, String> mapColsUA;
+    private Map<TypeColSuiviApps, String> mapColsSuiviApps;
     
     // Map des colonnes avec indice pour écriture
     private Map<TypeColVul, Colonne> mapColsVul;
@@ -91,6 +93,7 @@ public class ProprietesXML extends AbstractModele implements XML
         mapPlans = new EnumMap<>(TypePlan.class);
         mapParamsBool = new EnumMap<>(ParamBool.class);
         mapParamsSpec = new EnumMap<>(ParamSpec.class);
+        mapColsSuiviApps = new EnumMap<>(TypeColSuiviApps.class); 
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -145,6 +148,9 @@ public class ProprietesXML extends AbstractModele implements XML
                 
             case "model.enums.TypeColUA" :
                 return (Map<T, String>) getMapColsUA();
+                
+            case "model.enums.TypeColSuiviApps" :
+                return (Map<T, String>) getMapColsSuiviApps();
 
             default:
                 throw new TechnicalException("model.ProprietesXML.getEnumColR - Type non géré :" + typeColClass.toString(), null);
@@ -194,132 +200,6 @@ public class ProprietesXML extends AbstractModele implements XML
             retour.put((String) test.getValue(), (T) test.getKey());
         }
         return retour;
-    }
-
-    /*---------- ACCESSEURS ----------*/
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapParams", required = false)
-    public Map<Param, String> getMapParams()
-    {
-        return mapParams;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapParamsBool", required = false)
-    public Map<ParamBool, Boolean> getMapParamsBool()
-    {
-        return mapParamsBool;
-    }
-    
-    @XmlElementWrapper
-    @XmlElement(name = "mapParamsSpec", required = false)
-    public Map<ParamSpec, String> getMapParamsSpec()
-    {
-        return mapParamsSpec;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapPlans", required = false)
-    public Map<TypePlan, Planificateur> getMapPlans()
-    {
-        return mapPlans;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsSuivi", required = false)
-    private Map<TypeColSuivi, String> getMapColsSuivi()
-    {
-        return mapColsSuivi;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsClarity", required = false)
-    private Map<TypeColClarity, String> getMapColsClarity()
-    {
-        return mapColsClarity;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsChefServ", required = false)
-    private Map<TypeColChefServ, String> getMapColsChefServ()
-    {
-        return mapColsChefServ;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsPic", required = false)
-    private Map<TypeColPic, String> getMapColsPic()
-    {
-        return mapColsPic;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsEdition", required = false)
-    private Map<TypeColEdition, String> getMapColsEdition()
-    {
-        return mapColsEdition;
-    }
-
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsApps", required = false)
-    private Map<TypeColApps, String> getMapColsApps()
-    {
-        return mapColsApps;
-    }
-    
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsNPC", required = false)
-    private Map<TypeColGrProjet, String> getMapColsNPC()
-    {
-        return mapColsGrProjet;
-    }
-    
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsUA", required = false)
-    private Map<TypeColUA, String> getMapColsUA()
-    {
-        return mapColsUA;
-    }
-    
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsVul", required = false)
-    private Map<TypeColVul, Colonne> getMapColsVul()
-    {
-        return mapColsVul;
-    }
-    
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsPbApps", required = false)
-    private Map<TypeColPbApps, Colonne> getMapColsPbApps()
-    {
-        return mapColsPbApps;
-    }
-    
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsAppsW", required = false)
-    private Map<TypeColAppsW, Colonne> getMapColsAppsW()
-    {
-        return mapColsAppsW;
-    }
-    
-    @XmlElementWrapper
-    @XmlElement(name = "mapColsCompo", required = false)
-    private Map<TypeColCompo, Colonne> getMapColsCompo()
-    {
-        return mapColsCompo;
-    }
-
-    @Override
-    public File getFile()
-    {
-        return new File(Statics.JARPATH + NOMFICHIER);
-    }
-
-    @Override
-    public File getResource()
-    {
-        return new File(JunitBase.class.getResource(RESOURCE).getFile());
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -433,5 +313,138 @@ public class ProprietesXML extends AbstractModele implements XML
             builder.append("Certains planificateurs ne sont pas paramétrés :").append(Statics.NL).append(builderErreurs.toString());
             return false;
         }
+    }
+    
+    /*---------- ACCESSEURS ----------*/
+
+    @XmlElementWrapper
+    @XmlElement(name = "mapParams", required = false)
+    public Map<Param, String> getMapParams()
+    {
+        return mapParams;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "mapParamsBool", required = false)
+    public Map<ParamBool, Boolean> getMapParamsBool()
+    {
+        return mapParamsBool;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapParamsSpec", required = false)
+    public Map<ParamSpec, String> getMapParamsSpec()
+    {
+        return mapParamsSpec;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "mapPlans", required = false)
+    public Map<TypePlan, Planificateur> getMapPlans()
+    {
+        return mapPlans;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsSuivi", required = false)
+    private Map<TypeColSuivi, String> getMapColsSuivi()
+    {
+        return mapColsSuivi;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsClarity", required = false)
+    private Map<TypeColClarity, String> getMapColsClarity()
+    {
+        return mapColsClarity;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsChefServ", required = false)
+    private Map<TypeColChefServ, String> getMapColsChefServ()
+    {
+        return mapColsChefServ;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsPic", required = false)
+    private Map<TypeColPic, String> getMapColsPic()
+    {
+        return mapColsPic;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsEdition", required = false)
+    private Map<TypeColEdition, String> getMapColsEdition()
+    {
+        return mapColsEdition;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsApps", required = false)
+    private Map<TypeColApps, String> getMapColsApps()
+    {
+        return mapColsApps;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsNPC", required = false)
+    private Map<TypeColGrProjet, String> getMapColsNPC()
+    {
+        return mapColsGrProjet;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsUA", required = false)
+    private Map<TypeColUA, String> getMapColsUA()
+    {
+        return mapColsUA;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsVul", required = false)
+    private Map<TypeColVul, Colonne> getMapColsVul()
+    {
+        return mapColsVul;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsPbApps", required = false)
+    private Map<TypeColPbApps, Colonne> getMapColsPbApps()
+    {
+        return mapColsPbApps;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsAppsW", required = false)
+    private Map<TypeColAppsW, Colonne> getMapColsAppsW()
+    {
+        return mapColsAppsW;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsCompo", required = false)
+    private Map<TypeColCompo, Colonne> getMapColsCompo()
+    {
+        return mapColsCompo;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "mapColsSuiviApps", required = false)
+    private Map<TypeColSuiviApps, String> getMapColsSuiviApps()
+    {
+        return mapColsSuiviApps;
+    }
+
+    @Override
+    public File getFile()
+    {
+        return new File(Statics.JARPATH + NOMFICHIER);
+    }
+
+    @Override
+    public File getResource()
+    {
+        return new File(JunitBase.class.getResource(RESOURCE).getFile());
     }
 }

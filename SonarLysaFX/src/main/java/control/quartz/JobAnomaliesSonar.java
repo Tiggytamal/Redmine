@@ -18,6 +18,6 @@ public class JobAnomaliesSonar extends AbstractJobForTask
     @Override
     public void execute(JobExecutionContext context)
     {
-        Platform.runLater(() -> startTask(new MajSuiviExcelTask(TypeMajSuivi.MULTI), context.getJobDetail().getKey().getName()));
+        Platform.runLater(() -> startTask(new MajSuiviExcelTask(TypeMajSuivi.NUIT), context.getJobDetail().getKey().getName()));
     }
 }

@@ -14,10 +14,6 @@ import model.interfaces.AbstractModele;
 public abstract class AbstractBDDModele extends AbstractModele
 {
     /*---------- ATTRIBUTS ----------*/
-    
-    public static final String FINDALL = ".findAll";
-    public static final String FINDINDEX = ".findByIndex";
-    public static final String RESETTABLE = ".resetTable";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

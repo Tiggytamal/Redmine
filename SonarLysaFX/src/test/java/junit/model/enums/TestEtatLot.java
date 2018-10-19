@@ -11,6 +11,13 @@ import org.powermock.reflect.Whitebox;
 import model.enums.EtatLot;
 import utilities.Statics;
 
+/**
+ * Classe de test de l'énumération EtatAppli
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestEtatLot implements TestEnums
 {
     @Test
@@ -19,6 +26,7 @@ public class TestEtatLot implements TestEnums
     {
         assertEquals(10, EtatLot.values().length);
     }
+    
     @Test
     public void testFrom()
     {

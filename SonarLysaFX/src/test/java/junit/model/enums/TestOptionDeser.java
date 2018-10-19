@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.OptionDeser;
 
+/**
+ * Classe de test de l'énumération OptionDeser
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestOptionDeser implements TestEnums
 {
     @Test

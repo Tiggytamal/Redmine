@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeColCompo;
 
+/**
+ * Classe de test de l'énumération TypeColCompo
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeColCompo implements TestEnums
 {
     @Test

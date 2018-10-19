@@ -14,23 +14,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.powermock.reflect.Whitebox;
 
 import control.task.MajComposantsSonarTask;
+import dao.DaoFactory;
 import de.saxsys.javafx.test.JfxRunner;
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
+import model.bdd.DefaultAppli;
+import model.enums.OptionMajCompos;
 import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Periode;
-import utilities.Statics;
 
 @RunWith(JfxRunner.class)
-public class TestCreerListeComposantsTask extends AbstractTestTask<MajComposantsSonarTask>
+public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSonarTask>
 {
     /*---------- ATTRIBUTS ----------*/
     
@@ -41,7 +43,7 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<MajComposants
     @Before
     public void init() throws IllegalAccessException
     {
-        handler = new MajComposantsSonarTask();
+        handler = new MajComposantsSonarTask(OptionMajCompos.COMPLETE);
         initAPI(MajComposantsSonarTask.class, true);
     }
 
@@ -71,7 +73,7 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<MajComposants
         when(api.getSecuriteComposant(anyString())).thenReturn(1).thenReturn(0);
         
         // Appel de la méthode
-        Map<String, ComposantSonar> retour = invokeMethod(handler, "creerListeComposants");
+        List<ComposantSonar> retour = invokeMethod(handler, "creerListeComposants");
       
         // Contrôle
         assertNotNull(retour);
@@ -80,7 +82,7 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<MajComposants
         
         // Contrôle qu'un seul composant a une valeur de sécurité à "true"
         int i = 0;
-        for (ComposantSonar compo : retour.values())
+        for (ComposantSonar compo : retour)
         {
             if (compo.isSecurite())
                 i++;
@@ -118,6 +120,20 @@ public class TestCreerListeComposantsTask extends AbstractTestTask<MajComposants
 
         // Test envoit d'un paramètre null
         assertEquals(0F, (float) invokeMethod(handler, "recupLeakPeriod", new Object[] { null }), 0.1F);
+    }
+    
+    @Test
+    public void testGestionDefaultsAppli() throws Exception
+    {
+        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
+        Map<String, DefaultAppli> mapDefAppli = DaoFactory.getDao(DefaultAppli.class).readAllMap();
+        
+        for (ComposantSonar compo : compos)
+        {
+            Whitebox.invokeMethod(handler, "gestionDefaultsAppli", compo, mapDefAppli);
+        }
+        
+        Whitebox.invokeMethod(handler, "majDefAppli", mapDefAppli);
     }
     
     @Test

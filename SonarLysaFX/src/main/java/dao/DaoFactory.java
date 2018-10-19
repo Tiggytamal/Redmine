@@ -45,6 +45,9 @@ public class DaoFactory
                 
             case "model.bdd.GroupementProjet":
                 return (T) new DaoGroupementProjet();
+                
+            case "model.bdd.DefaultAppli":
+                return (T) new DaoDefaultAppli();
 
             default:
                 throw new TechnicalException("dao.DaoFactory - Création Dao impossible - classe : " + daoClass.getName());
@@ -82,6 +85,9 @@ public class DaoFactory
                 
             case "model.bdd.GroupementProjet":
                 return (T) new DaoGroupementProjet(em);
+                
+            case "model.bdd.DefaultAppli":
+                return (T) new DaoDefaultAppli(em);
 
             default:
                 throw new TechnicalException("dao.DaoFactory - Création Dao impossible - classe : " + daoClass.getName());

@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeColClarity;
 
+/**
+ * Classe de test de l'énumération TypeColClarity
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeColClarity implements TestEnums
 {
     @Test

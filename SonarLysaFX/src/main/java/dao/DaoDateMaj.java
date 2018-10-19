@@ -14,17 +14,19 @@ public class DaoDateMaj extends AbstractDao<DateMaj> implements Serializable
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
+    private static final String TABLE = "dates_maj";
 
     /*---------- CONSTRUCTEURS ----------*/
 
     DaoDateMaj()
     {
+        super(TABLE);
         typeDonnee = TypeDonnee.DATEMAJ;
     }
-    
-    DaoDateMaj(EntityManager em) 
-    { 
-        super(em);
+
+    DaoDateMaj(EntityManager em)
+    {
+        super(TABLE, em);
         typeDonnee = TypeDonnee.DATEMAJ;
     }
 
@@ -36,26 +38,15 @@ public class DaoDateMaj extends AbstractDao<DateMaj> implements Serializable
         // Pas de récupération depuis un fichier Excel
         return 0;
     }
-
+    
     @Override
-    public DateMaj recupEltParCode(String typeDonnee)
+    public DateMaj recupEltParIndex(String typeDonnee)
     {        
-        List<DateMaj> liste = em.createNamedQuery("DateMaj.findByIndex", DateMaj.class).setParameter("index", TypeDonnee.valueOf(typeDonnee)).getResultList();
+        List<DateMaj> liste = em.createNamedQuery(modele.getSimpleName() + FINDINDEX, modele).setParameter(INDEX, TypeDonnee.valueOf(typeDonnee)).getResultList();
         if (liste.isEmpty())
             return null;
         else
             return liste.get(0);
-    }
-
-    @Override
-    public int resetTable()
-    {
-        int retour = 0;
-        em.getTransaction().begin();
-        retour = em.createNamedQuery("DateMaj.resetTable").executeUpdate();
-        em.createNativeQuery("ALTER TABLE dates_maj AUTO_INCREMENT = 0").executeUpdate();
-        em.getTransaction().commit();
-        return retour;
     }
 
     /*---------- METHODES PRIVEES ----------*/

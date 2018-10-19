@@ -6,6 +6,13 @@ import org.junit.Test;
 
 import model.enums.TypeColChefServ;
 
+/**
+ * Classe de test de l'énumération TypeColChefServ
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestTypeColChefServ implements TestEnums
 {
     @Test

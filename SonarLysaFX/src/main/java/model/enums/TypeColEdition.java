@@ -7,7 +7,7 @@ package model.enums;
  * @since 1.0
  * 
  */
-public enum TypeColEdition implements TypeColR  
+public enum TypeColEdition implements TypeColR
 {
     LIBELLE ("Libellé", "colLib"),
     VERSION ("Numero de version", "colVersion"),

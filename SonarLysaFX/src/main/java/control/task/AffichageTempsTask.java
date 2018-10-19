@@ -1,16 +1,10 @@
 package control.task;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.concurrent.Task;
 
 public class AffichageTempsTask extends Task<Boolean>
 {
     /*---------- ATTRIBUTS ----------*/
-
-    /** logger plantage */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
     private boolean stop;
     private AbstractTask tacheParente;
@@ -51,7 +45,6 @@ public class AffichageTempsTask extends Task<Boolean>
             }
             catch (InterruptedException e)
             {
-                LOGPLANTAGE.error(e);
                 stop = true;
                 Thread.currentThread().interrupt();
             }

@@ -7,6 +7,13 @@ import org.junit.Test;
 
 import model.enums.ParamBool;
 
+/**
+ * Classe de test de l'énumération ParamBool
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestParamBool implements TestEnums
 {
     @Test

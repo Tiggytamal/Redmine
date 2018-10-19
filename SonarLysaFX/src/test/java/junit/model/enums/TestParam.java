@@ -7,6 +7,13 @@ import org.junit.Test;
 
 import model.enums.Param;
 
+/**
+ * Classe de test de l'énumération Param
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
 public class TestParam implements TestEnums
 {
     @Test
