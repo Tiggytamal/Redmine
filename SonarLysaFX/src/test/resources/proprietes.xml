@@ -33,24 +33,28 @@
 		</entry>
 		<entry>
 			<key>NEW</key>
-			<value>Code corrigé</value>
+			<value>Code appli corrigé</value>
 		</entry>
 		<entry>
 			<key>ACTION</key>
 			<value>Action</value>
 		</entry>
 		<entry>
+			<key>ETAT</key>
+			<value>Etat du défault</value>
+		</entry>
+		<entry>
 			<key>ANORTC</key>
-			<value>numéro ano RTC</value>
+			<value>Numéro ano RTC</value>
 		</entry>
 		<entry>
 			<key>CPILOT</key>
 			<value>Cpi du lot</value>
-		</entry>
+		</entry>			
 		<entry>
 			<key>LOT</key>
 			<value>Lot</value>
-		</entry>	
+		</entry>
 	</mapColsSuiviApps>
     <mapColsChefServ>
         <entry>

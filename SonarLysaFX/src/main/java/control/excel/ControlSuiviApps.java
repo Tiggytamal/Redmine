@@ -82,29 +82,33 @@ public class ControlSuiviApps extends AbstractControlExcelRead<model.enums.TypeC
     {
         // Rangement anomalies par date de détection
         Collections.sort(dasATraiter, (o1, o2) -> o1.getDateDetection().compareTo(o2.getDateDetection()));
-        
+
         // Mise à jour anomalies
         for (DefaultAppli da : dasATraiter)
         {
             // Onne prend pas en compte les défaults clos et abandonnés
             if (da.getEtatDefault() == EtatDefault.CLOSE || da.getEtatDefault() == EtatDefault.ABANDONNEE)
                 continue;
-            
+
             // Calcul de la couleur de la ligne dans le fichier Excel
             IndexedColors couleur = calculCouleurLigne(da);
-            
+
             // Création de la ligne
             Row row = sheet.createRow(sheet.getLastRowNum() + 1);
             creerLigneDA(row, da, couleur);
         }
+        
+        autosizeColumns(sheet);
     }
-    
+
     public Sheet resetFeuilleDA()
     {
         Sheet sheet = wb.getSheet(DA);
         if (sheet != null)
             wb.removeSheetAt(wb.getSheetIndex(sheet));
-        return wb.createSheet(DA);       
+        Sheet retour = wb.createSheet(DA);
+        creerLigneTitres(retour);
+        return retour;
     }
 
     /*---------- METHODES PROTECTED ----------*/
@@ -170,31 +174,32 @@ public class ControlSuiviApps extends AbstractControlExcelRead<model.enums.TypeC
         valoriserCellule(row, colLot, centre, lotRTC.getLot());
 
         // Ano RTC
-        if (da.getDefaultQualite() == null)
+        if (da.getDefaultQualite() != null && da.getDefaultQualite().getNumeroAnoRTC() != 0)
         {
             Cell cell = valoriserCellule(row, colAnoRTC, centre, da.getDefaultQualite().getNumeroAnoRTC());
-            ajouterLiens(cell, da.getDefaultQualite().getLiensLot());
+            ajouterLiens(cell, da.getDefaultQualite().getLiensAno());
         }
 
     }
-    
+
     /**
      * Gestion des couleurs des lignes du fichier
+     * 
      * @param da
      * @return
      */
     private IndexedColors calculCouleurLigne(DefaultAppli da)
     {
         // Les lignes sont blanches de base
-        IndexedColors couleur = IndexedColors.WHITE;  
-        
+        IndexedColors couleur = IndexedColors.WHITE;
+
         // On met à vert les défautls dont le code applicaiton a été corrigé
         if (da.getAppliCorrigee().equals(da.getCompo().getAppli().getCode()))
             couleur = IndexedColors.LIGHT_GREEN;
         // On met à bleu les défault en cours de traitement
         else if (da.getEtatDefault() == EtatDefault.TRAITEE)
             couleur = IndexedColors.LIGHT_BLUE;
-        
+
         return couleur;
     }
 

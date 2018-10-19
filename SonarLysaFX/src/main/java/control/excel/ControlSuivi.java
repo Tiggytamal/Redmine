@@ -660,26 +660,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     }
 
     /**
-     * Crée la ligne de titres de la feuille principale
-     * 
-     * @param sheet
-     */
-    private void creerLigneTitres(Sheet sheet)
-    {
-        // Création de la ligne de titres
-        Row titresNew = sheet.createRow(0);
-
-        // On itère sur la ligne de titres
-        for (int i = 0; i < titres.getLastCellNum(); i++)
-        {
-            Cell newCell = titresNew.createCell(i);
-            Cell oldCell = titres.getCell(i);
-
-            copierCellule(newCell, oldCell);
-        }
-    }
-
-    /**
      * CRée une ligne pour une anomalie dans les feuilles de version
      * 
      * @param row

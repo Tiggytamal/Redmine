@@ -106,8 +106,7 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
      *             Exception lors d'un problème I/O
      */
     public boolean write()
-    {
-        
+    {       
         try(FileOutputStream stream = new FileOutputStream(file.getName()))
         {
             long time = file.lastModified();
@@ -138,6 +137,26 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
             throw new FunctionalException(Severity.ERROR, "Le fichier est vide");
         }
         return sheet;
+    }
+    
+    /**
+     * Crée la ligne de titres de la feuille principale
+     * 
+     * @param sheet
+     */
+    protected final void creerLigneTitres(Sheet sheet)
+    {
+        // Création de la ligne de titres
+        Row titresNew = sheet.createRow(0);
+
+        // On itère sur la ligne de titres
+        for (int i = 0; i < titres.getLastCellNum(); i++)
+        {
+            Cell newCell = titresNew.createCell(i);
+            Cell oldCell = titres.getCell(i);
+
+            copierCellule(newCell, oldCell);
+        }
     }
 
     /**
