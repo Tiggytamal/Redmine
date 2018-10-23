@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +16,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import control.task.AbstractTask;
 import model.Colonne;
-import model.enums.TypeColCompo;
 import model.enums.TypeColW;
 import utilities.CellHelper;
 import utilities.FunctionalException;
@@ -99,15 +100,12 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
 
         int nbreCol = 0;
 
-        Field field;
-
         for (Map.Entry<T, Colonne> entry : map.entrySet())
         {
             T typeCol = entry.getKey();
             try
             {
-                field = getClass().getDeclaredField(typeCol.getNomCol());
-                field.setAccessible(true);
+                Field field = getFieldAccessible(typeCol.getNomCol());
                 field.set(this, Integer.parseInt(entry.getValue().getIndice()));
                 testMax((int) field.get(this));
                 nbreCol++;
@@ -133,15 +131,14 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
         ca = createHelper.createClientAnchor();
     }
 
-    protected final int getNumCol(TypeColCompo type)
+    protected final int getNumCol(TypeColW type)
     {
         try
         {
-            Field field = getClass().getDeclaredField(type.getNomCol());
-            field.setAccessible(true);
+            Field field = getFieldAccessible(type.getNomCol());
             return (int) field.get(this);
         }
-        catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e)
+        catch (IllegalAccessException | NoSuchFieldException e)
         {
             throw new TechnicalException("Mauvaise déclaration des noms de colonnes : " + type.getNomCol(), e);
         }
@@ -168,6 +165,17 @@ public abstract class AbstractControlExcelWrite<T extends Enum<T> & TypeColW, R>
             LOGPLANTAGE.error(e);
             throw new TechnicalException("Impossible d'instancier l'énumération - control.excel.ControlExcelRead", e);
         }
+    }
+    
+    private Field getFieldAccessible(String nom) throws NoSuchFieldException
+    {
+        Field field = getClass().getDeclaredField(nom);
+        AccessController.doPrivileged((PrivilegedAction<T>) () -> 
+        { 
+            field.setAccessible(true);
+            return null;
+        });
+        return field;
     }
 
     /*---------- ACCESSEURS ----------*/

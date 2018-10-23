@@ -12,6 +12,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
@@ -63,6 +64,9 @@ public class DefaultAppli extends AbstractBDDModele
     @OneToOne(targetEntity = DefaultQualite.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "default_qualite")
     private DefaultQualite defaultQualite;
+    
+    @Transient
+    private String nomComposant;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -78,7 +82,10 @@ public class DefaultAppli extends AbstractBDDModele
     @Override
     public String getMapIndex()
     {
-        return compo.getNom();
+        if (compo != null)
+            return compo.getNom();
+        
+        return getNomComposant();        
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -143,5 +150,13 @@ public class DefaultAppli extends AbstractBDDModele
     {
         this.dateDetection = dateDetection;
     }
+    public String getNomComposant()
+    {
+        return getString(nomComposant);
+    }
 
+    public void setNomComposant(String nomComposant)
+    {
+        this.nomComposant = nomComposant;
+    }
 }

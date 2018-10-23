@@ -43,6 +43,7 @@ public class MajSuiviAppsTask extends AbstractTask
         daoDq = DaoFactory.getDao(DefaultQualite.class);
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA);
         control = ExcelFactory.getReader(TypeColSuiviApps.class, new File(name));
+        startTimers();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

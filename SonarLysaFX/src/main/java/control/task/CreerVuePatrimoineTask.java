@@ -38,6 +38,7 @@ public class CreerVuePatrimoineTask extends AbstractTask
     {
         super(ETAPES, TITRE);
         annulable = true;
+        startTimers();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -73,9 +74,6 @@ public class CreerVuePatrimoineTask extends AbstractTask
         key = "vue_patrimoine_" + today.getYear() + "_S" + today.get(woy);
         String nom = "Vue patrimoine " + today.getYear() + " S" + today.get(woy);
 
-        // Récupération des composants
-        List<ComposantSonar> composants = new ArrayList<>(recupererComposantsSonar(OptionRecupCompo.PATRIMOINE).values());
-
         if (isCancelled())
             return false;
 
@@ -89,6 +87,9 @@ public class CreerVuePatrimoineTask extends AbstractTask
         baseMessage = builder.append(" OK.\n").append("Ajout : ").toString();
         long debut = System.currentTimeMillis();
 
+        // Récupération des composants
+        List<ComposantSonar> composants = new ArrayList<>(recupererComposantsSonar(OptionRecupCompo.PATRIMOINE).values());
+        
         // Ajout des composants
         int size = composants.size();
         etapePlus();

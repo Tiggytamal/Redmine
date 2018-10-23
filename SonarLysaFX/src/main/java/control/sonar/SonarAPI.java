@@ -164,7 +164,8 @@ public class SonarAPI extends AbstractToStringImpl
         if (response.getStatus() == Status.OK.getStatusCode())
         {
             LOGGER.info("Liste des Vues triées retournées depuis Sonar");
-            return response.readEntity(new GenericType<List<Projet>>() { });
+            return response.readEntity(new GenericType<List<Projet>>() {
+            });
         }
         else
             LOGGER.error("Impossible de retourner les vues depuis Sonar = " + PROJECTSINDEX);
@@ -369,7 +370,8 @@ public class SonarAPI extends AbstractToStringImpl
         // 3. Test du retour et renvoie de la dernière version si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
         {
-            List<Event> liste = response.readEntity(new GenericType<List<Event>>() { });
+            List<Event> liste = response.readEntity(new GenericType<List<Event>>() {
+            });
             if (liste != null && !liste.isEmpty())
                 return controleVersion(liste);
         }
@@ -386,7 +388,7 @@ public class SonarAPI extends AbstractToStringImpl
      * @param compo
      * @return
      */
-    public boolean initVersionCompoEtDateMaj(ComposantSonar compo)
+    public boolean initCompoVersionEtDateMaj(ComposantSonar compo)
     {
         // 1. Création des paramètres de la requête
         Parametre paramResource = new Parametre(RESOURCE, compo.getKey());
@@ -398,7 +400,8 @@ public class SonarAPI extends AbstractToStringImpl
         // 3. Test du retour et renvoie de la dernière version si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
         {
-            List<Event> liste = response.readEntity(new GenericType<List<Event>>() { });
+            List<Event> liste = response.readEntity(new GenericType<List<Event>>() {
+            });
             if (liste != null && !liste.isEmpty())
                 return controleVersionEtDateMaj(liste, compo);
         }
@@ -478,7 +481,8 @@ public class SonarAPI extends AbstractToStringImpl
         Response response = appelWebserviceGET(EVENTS, new Parametre[] { param, paramCategorie });
 
         if (response.getStatus() == Status.OK.getStatusCode())
-            return response.readEntity(new GenericType<List<Event>>() { });
+            return response.readEntity(new GenericType<List<Event>>() {
+            });
         else
         {
             String erreur = "Impossible de remonter tous les événements de Sonar - API : " + EVENTS;
@@ -832,18 +836,17 @@ public class SonarAPI extends AbstractToStringImpl
         if (response.getStatus() != Status.OK.getStatusCode() && response.getStatus() != Status.NO_CONTENT.getStatusCode())
         {
             List<Message> erreurs = response.readEntity(Retour.class).getErrors();
-            if (erreurs != null)
+
+            for (Message message : erreurs)
             {
-                for (Message message : erreurs)
-                {
-                    LOGPLANTAGE.error(message.getMsg());
-                }
+                LOGPLANTAGE.error(message.getMsg());
             }
+
             return false;
         }
         return true;
     }
-    
+
     /**
      * Itération sur tous les Event retournés par le webService pour être sûr de bien retourner les informations du plus récent.
      * 

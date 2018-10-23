@@ -82,7 +82,9 @@ public class Metrique extends AbstractModele implements ModeleSonar
     @XmlElement(name = "periods", required = false)
     public List<Periode> getListePeriodes()
     {
-        return listePeriodes == null ? listePeriodes = new ArrayList<>() : listePeriodes;
+        if (listePeriodes == null)
+            listePeriodes = new ArrayList<>();
+        return listePeriodes;
     }
 
     public void setListePeriodes(List<Periode> listePeriodes)

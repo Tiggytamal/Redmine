@@ -28,6 +28,7 @@ public class InitBaseAnosTask extends AbstractTask
     public InitBaseAnosTask()
     {
         super(ETAPES, TITRE);
+        startTimers();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.control.Button?>
+
+<VBox fx:id="box" fx:controller="control.view.DefaultsQualiteControl" xmlns:fx="http://javafx.com/fxml" alignment="center" prefHeight="500" prefWidth="500">
+	<padding>
+		<Insets top="25" right="25" bottom="10" left="25" />
+	</padding>
+	<children>
+		<Label text="Défaults Qualité" />
+		<Region prefHeight ="20" />
+		<TableView fx:id="table">
+			<columns>
+				<TableColumn text="Projet Clarity">
+					<columns>
+						<TableColumn text="Direction">
+							<cellValueFactory>
+								<PropertyValueFactory property="direction" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Département">
+							<cellValueFactory>
+								<PropertyValueFactory property="departement" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Service">
+							<cellValueFactory>
+								<PropertyValueFactory property="service" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Responsable Service">
+							<cellValueFactory>
+								<PropertyValueFactory property="respServ" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Code Projet">
+							<cellValueFactory>
+								<PropertyValueFactory property="codeClarity" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Libellé Projet">
+							<cellValueFactory>
+								<PropertyValueFactory property="libelleClarity" />
+							</cellValueFactory>
+						</TableColumn>
+					</columns>
+				</TableColumn>
+				<TableColumn text="Projet RTC">
+					<columns>
+						<TableColumn text="Cpi du Lot">
+							<cellValueFactory>
+								<PropertyValueFactory property="cpiLot" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Edition">
+							<cellValueFactory>
+								<PropertyValueFactory property="edition" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Lot">
+							<cellValueFactory>
+								<PropertyValueFactory property="lotRTC" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Version">
+							<cellValueFactory>
+								<PropertyValueFactory property="typeVersion" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Libellé Projet">
+							<cellValueFactory>
+								<PropertyValueFactory property="codeProjetRTC" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Groupe">
+							<cellValueFactory>
+								<PropertyValueFactory property="groupe" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Date Maj">
+							<cellValueFactory>
+								<PropertyValueFactory property="dateMajRTC" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Etat">
+							<cellValueFactory>
+								<PropertyValueFactory property="etatLotRTC" />
+							</cellValueFactory>
+						</TableColumn>
+					</columns>
+				</TableColumn>
+				<TableColumn text="Anomalie">
+					<columns>
+						<TableColumn text="Numéro">
+							<cellValueFactory>
+								<PropertyValueFactory property="numeroAnoRTC" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Sécurité">
+							<cellValueFactory>
+								<PropertyValueFactory property="securite" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Action">
+							<cellValueFactory>
+								<PropertyValueFactory property="action" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Date détection">
+							<cellValueFactory>
+								<PropertyValueFactory property="dateDetection" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Date création">
+							<cellValueFactory>
+								<PropertyValueFactory property="dateCreation" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Date relance">
+							<cellValueFactory>
+								<PropertyValueFactory property="dateRelance" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Date résolution">
+							<cellValueFactory>
+								<PropertyValueFactory property="dateReso" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Etat">
+							<cellValueFactory>
+								<PropertyValueFactory property="etatRTC" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Remarques">
+							<cellValueFactory>
+								<PropertyValueFactory property="remarque" />
+							</cellValueFactory>
+						</TableColumn>
+					</columns>
+				</TableColumn>
+				<TableColumn text="Défault">
+					<columns>
+						<TableColumn text="Type default">
+							<cellValueFactory>
+								<PropertyValueFactory property="typeDefault" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Etat default">
+							<cellValueFactory>
+								<PropertyValueFactory property="etatDefault" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Matière">
+							<cellValueFactory>
+								<PropertyValueFactory property="matiere" />
+							</cellValueFactory>
+						</TableColumn>
+					</columns>
+				</TableColumn>
+			</columns>
+			<items>
+				<FXCollections fx:factory="observableArrayList">
+				</FXCollections>
+			</items>
+		</TableView>
+		<Region prefHeight ="20" />
+		<Button text="Extraire" fx:id="extraire" onAction="#extraire" />
+				<Region prefHeight ="20" />
+		<Button text="importer" fx:id="importer" onAction="#recupDonnesFichier" />
+	</children>
+</VBox>

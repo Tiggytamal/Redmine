@@ -41,11 +41,12 @@ public class CreerVueCHCCDMTask extends AbstractTask
     public CreerVueCHCCDMTask()
     {
         super(ETAPES, TITRE);
+        startTimers();
     }
 
     public CreerVueCHCCDMTask(List<String> annees, CHCouCDM chccdm)
     {
-        super(ETAPES, TITRE);
+        this();
         annulable = false;
         if (annees == null || annees.isEmpty())
             throw new FunctionalException(Severity.ERROR, "Création task CreerVueCHCCDMTask sans liste d'années");

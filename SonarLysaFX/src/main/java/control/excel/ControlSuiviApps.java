@@ -130,6 +130,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<model.enums.TypeC
         DefaultAppli retour = ModelFactory.getModel(DefaultAppli.class);
 
         retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));
+        retour.setNomComposant(getCellStringValue(row, colCompo));
 
         return retour;
     }

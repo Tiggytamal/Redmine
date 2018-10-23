@@ -24,6 +24,7 @@ public class MajLotsSonarTask extends AbstractTask
     {
         super(ETAPES, TITRE);
         annulable = true;
+        startTimers();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

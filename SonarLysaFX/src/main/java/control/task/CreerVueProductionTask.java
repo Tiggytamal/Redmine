@@ -63,6 +63,7 @@ public class CreerVueProductionTask extends AbstractTask
         super(ETAPES, TITRE);
         annulable = true;
         option = OptionVueProduction.ALL;
+        startTimers();
     }
 
     public CreerVueProductionTask(LocalDate dateDebut, LocalDate dateFin, OptionVueProduction option)
@@ -105,9 +106,9 @@ public class CreerVueProductionTask extends AbstractTask
     private boolean creerVueProduction()
     {
         // Variables
-        Map<LocalDate, List<Vue>> mapLot;
         Map<String, Vue> mapSonar;
         etapePlus();
+        Map<LocalDate, List<Vue>> mapLot;
 
         // Récupération des données
         switch (option)

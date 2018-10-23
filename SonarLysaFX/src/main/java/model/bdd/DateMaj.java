@@ -1,6 +1,7 @@
 package model.bdd;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,6 +38,9 @@ public class DateMaj extends AbstractBDDModele
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
+    
+    @Column(name = "heure", nullable = false)
+    private LocalTime heure;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -71,5 +75,15 @@ public class DateMaj extends AbstractBDDModele
     public void setDate(LocalDate date)
     {
         this.date = date;
+    }
+
+    public LocalTime getHeure()
+    {
+        return heure;
+    }
+
+    public void setHeure(LocalTime heure)
+    {
+        this.heure = heure;
     }
 }

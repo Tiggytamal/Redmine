@@ -36,6 +36,8 @@ public final class Main extends Application
 
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
+    
+    private static final int DETAILLENGTH = 256;
 
     public static void main(final String[] args)
     {
@@ -119,8 +121,8 @@ public final class Main extends Application
         }
         alert.getDialogPane().getStylesheets().add(Statics.CSS);
         alert.setHeaderText(null);
-        if (detail.length() > 256)
-            detail = detail.substring(255, detail.length()-1);
+        if (detail.length() > DETAILLENGTH)
+            detail = detail.substring(DETAILLENGTH-1, detail.length()-1);
         alert.setContentText(detail);
 
         // Création du message d'exception si celle-ci est fournie.

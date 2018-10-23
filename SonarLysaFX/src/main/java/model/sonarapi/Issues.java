@@ -83,13 +83,17 @@ public class Issues extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "components", required = false)
     public List<Composant> getComposants()
     {
-        return composants == null ? composants = new ArrayList<>() : composants;
+        if (composants == null)
+            composants = new ArrayList<>();
+        return composants;
     }
 
     @XmlElementWrapper
     @XmlAttribute(name = "issues", required = false)
     public List<Issue> getListIssues()
     {
-        return listIssues == null ? listIssues = new ArrayList<>() : listIssues;
+        if (listIssues == null)
+            listIssues = new ArrayList<>();
+        return listIssues;
     }
 }

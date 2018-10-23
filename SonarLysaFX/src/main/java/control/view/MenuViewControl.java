@@ -2,6 +2,7 @@ package control.view;
 
 import static utilities.Statics.info;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -85,6 +86,8 @@ public final class MenuViewControl extends AbstractViewControl
     private MenuItem majCompos;
     @FXML
     private MenuItem majAnos;
+    @FXML
+    private MenuItem dq;
     @FXML
     private Button connexion;
     @FXML
@@ -209,6 +212,11 @@ public final class MenuViewControl extends AbstractViewControl
                 majTitre(box, FONCTIONS + texte);
                 break;
 
+            case "dq":
+                load("/view/DefaultsQualite.fxml");
+                majTitre(box, FONCTIONS + texte);
+                break;
+
             // Demande confirmations pour traitements
             case "majVues":
                 alertConfirmation(new MajVuesTask(), "Cela lancera la mise à jour de toutes les vues Sonar.");
@@ -286,19 +294,22 @@ public final class MenuViewControl extends AbstractViewControl
         box.getChildren().remove(connexion);
         box.getChildren().add(deConnexion);
 
-        // Démarrage du serveur MySQl si besoin
-        ProcessBuilder pb = new ProcessBuilder("D:\\mysql\\bin\\mysqladmin.exe", "-u", "root", "-pAQPadmin01", "ping");
-
-        try
+        if (new File("D:\\mysql\\bin\\mysqladmin.exe").exists())
         {
-            Process p = pb.start();
+            // Démarrage du serveur MySQl si besoin
+            ProcessBuilder pb = new ProcessBuilder("D:\\mysql\\bin\\mysqladmin.exe", "-u", "root", "-pAQPadmin01", "ping");
 
-            if (p.waitFor() == 1)
-                new ProcessBuilder("D:\\mysql\\bin\\mysqld.exe", "--console", "--default-time-zone=Europe/Paris").start();
-        }
-        catch (IOException | InterruptedException e)
-        {
-            throw new TechnicalException("Problème lors du démarrage du serveur MySQL.", e);
+            try
+            {
+                Process p = pb.start();
+
+                if (p.waitFor() == 1)
+                    new ProcessBuilder("D:\\mysql\\bin\\mysqld.exe", "--console", "--default-time-zone=Europe/Paris").start();
+            }
+            catch (IOException | InterruptedException e)
+            {
+                throw new TechnicalException("Problème lors du démarrage du serveur MySQL.", e);
+            }
         }
 
         DaoDateMaj dao = DaoFactory.getDao(DateMaj.class);

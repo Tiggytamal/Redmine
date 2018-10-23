@@ -25,6 +25,11 @@
 
 					</items>
 				</Menu>
+				<Menu text="BDD">
+					<items>
+						<MenuItem fx:id="dq" text="Défaults Qualité" onAction="#afficher" disable="false" />
+					</items>				
+				</Menu>
 				<Menu text="Outils">
 					<items>
 						<MenuItem fx:id="options" text="Options" onAction="#afficher" disable="false" />

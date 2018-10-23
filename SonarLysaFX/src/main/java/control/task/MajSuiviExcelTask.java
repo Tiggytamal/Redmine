@@ -75,6 +75,7 @@ public class MajSuiviExcelTask extends AbstractTask
         super(typeMaj.getNbreEtapes(), TITRE);
         this.typeMaj = typeMaj;
         annulable = false;
+        startTimers();
     }
 
     /**
@@ -533,6 +534,7 @@ public class MajSuiviExcelTask extends AbstractTask
                 if (controlAno(ano))
                 {
                     ano.setEtatDefault(EtatDefault.ABANDONNEE);
+                    ano.setAction(TypeAction.VIDE);
                     controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
                 }
                 break;
@@ -544,6 +546,7 @@ public class MajSuiviExcelTask extends AbstractTask
                 if (controlAno(ano))
                 {
                     ano.setEtatDefault(EtatDefault.CLOSE);
+                    ano.setAction(TypeAction.VIDE);
                     controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
                 }
                 break;
@@ -566,6 +569,7 @@ public class MajSuiviExcelTask extends AbstractTask
                 {
                     ControlRTC.INSTANCE.relancerAno(ano.getNumeroAnoRTC());
                     ano.setDateRelance(LocalDate.now());
+                    ano.setAction(TypeAction.VIDE);
                 }
                 catch (TeamRepositoryException e)
                 {

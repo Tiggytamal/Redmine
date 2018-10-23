@@ -49,6 +49,7 @@ public class MajLotsRTCTask extends AbstractTask
         this.date = date;
         dao = DaoFactory.getDao(LotRTC.class);
         annulable = true;
+        startTimers();
     }
 
     /**
@@ -202,6 +203,11 @@ public class MajLotsRTCTask extends AbstractTask
      */
     private boolean sauvegarde(Map<String, LotRTC> map)
     {
+        for (LotRTC lot : map.values())
+        {
+            if (lot.getIdBase() == 0)
+                System.out.println(lot.getLot());
+        }
         boolean retour = dao.persist(map.values()) > 0;
         dao.majDateDonnee();
         return retour;

@@ -107,7 +107,7 @@ public abstract class AbstractControlExcelRead<T extends Enum<T> & TypeColR, R> 
      */
     public boolean write()
     {       
-        try(FileOutputStream stream = new FileOutputStream(file.getName()))
+        try(FileOutputStream stream = new FileOutputStream(file))
         {
             long time = file.lastModified();
             wb.write(stream);

@@ -199,7 +199,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "tags", required = false)
     public List<String> getTags()
     {
-        return tags == null ? tags = new ArrayList<>() : tags;
+        if (tags == null)
+            tags = new ArrayList<>();
+        return tags;
     }
 
     public void setTags(List<String> tags)
@@ -289,7 +291,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "comments", required = false)
     public List<Commentaire> getCommentaires()
     {
-        return commentaires == null ? commentaires = new ArrayList<>() : commentaires;
+        if (commentaires == null)
+            commentaires = new ArrayList<>();
+        return commentaires;
     }
 
     public void setCommentaires(List<Commentaire> commentaires)
@@ -311,7 +315,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "transitions", required = false)
     public List<String> getTransitions()
     {
-        return transitions == null ? transitions = new ArrayList<>() : transitions;
+        if (transitions == null)
+            transitions = new ArrayList<>();
+        return transitions;
     }
 
     public void setTransitions(List<String> transitions)
@@ -322,7 +328,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "actions", required = false)
     public List<String> getActions()
     {
-        return actions == null ? actions = new ArrayList<>() : actions;
+        if (actions == null)
+            actions = new ArrayList<>();
+        return actions;
     }
 
     public void setActions(List<String> actions)
@@ -333,7 +341,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "components", required = false)
     public List<Composant> getComposants()
     {
-        return composants == null ? composants = new ArrayList<>() : composants;
+        if (composants == null)
+            composants = new ArrayList<>();
+        return composants;
     }
 
     public void setComposants(List<Composant> composants)
@@ -344,7 +354,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "rules", required = false)
     public List<Rule> getRules()
     {
-        return rules == null ? rules = new ArrayList<>() : rules;
+        if (rules == null)
+            rules = new ArrayList<>();
+        return rules;
     }
 
     public void setRules(List<Rule> rules)
@@ -355,7 +367,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "users", required = false)
     public List<User> getUsers()
     {
-        return users == null ? users = new ArrayList<>() : users;
+        if (users == null)
+            users = new ArrayList<>();
+        return users;
     }
 
     public void setUsers(List<User> users)
@@ -388,7 +402,9 @@ public class Issue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "flows", required = false)
     public List<Flow> getFlows()
     {
-        return flows == null ? flows = new ArrayList<>() : flows;
+        if (flows == null)
+            flows = new ArrayList<>();
+        return flows;
     }
 
     public void setFlows(List<Flow> flows)

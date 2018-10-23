@@ -86,8 +86,6 @@ public abstract class AbstractTask extends Task<Boolean>
         setTempsRestant(0);
         timerTask = new TimerTask(this);
         affTimerTask = new AffichageTempsTask(this);
-        new Thread(timerTask).start();
-        new Thread(affTimerTask).start();
     }
 
     /*---------- METHODES ABSTRAITES ----------*/
@@ -159,6 +157,12 @@ public abstract class AbstractTask extends Task<Boolean>
         timerTask.annuler();
         affTimerTask.annuler();
         annulerImpl();
+    }
+    
+    public final void startTimers()
+    {
+        new Thread(timerTask).start();
+        new Thread(affTimerTask).start();
     }
 
     /*---------- METHODES PROTECTED ----------*/
@@ -342,11 +346,10 @@ public abstract class AbstractTask extends Task<Boolean>
     protected Matiere testMatiereCompo(String nom)
     {
         String filtreDataStage = proprietesXML.getMapParams().get(Param.FILTREDATASTAGE);
-        String filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
-
         if (nom.startsWith(filtreDataStage))
             return Matiere.DATASTAGE;
 
+        String filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
         if (nom.startsWith(filtreCobol))
             return Matiere.COBOL;
 
@@ -586,17 +589,17 @@ public abstract class AbstractTask extends Task<Boolean>
         return affTimer.get();
     }
 
-    public void setEtape(int debut, int fin)
+    public final void setEtape(int debut, int fin)
     {
         Platform.runLater(() -> etape.set("Etape " + debut + " / " + fin));
     }
 
-    public void setTempsEcoule(long millis)
+    public final void setTempsEcoule(long millis)
     {
         Platform.runLater(() -> tempsEcoule.set(ECOULE + LocalTime.ofSecondOfDay(millis / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME)));
     }
 
-    public void setTempsRestant(long millis)
+    public final void setTempsRestant(long millis)
     {
         Platform.runLater(() -> {
             if (millis == 0)

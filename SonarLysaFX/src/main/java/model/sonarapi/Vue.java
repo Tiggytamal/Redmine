@@ -25,8 +25,8 @@ public class Vue extends AbstractModele implements ModeleSonar
     private String name;
     private boolean selected;
     private String selectionMode;
-    private String manual_measure_key;
-    private String manual_measure_value;
+    private String manualMeasureKey;
+    private String manualMeasureValue;
     private String description;
     private List<String> listeClefsComposants;
 
@@ -128,33 +128,35 @@ public class Vue extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "projects", required = false)
     public List<String> getListeClefsComposants()
     {
-        return listeClefsComposants == null ? listeClefsComposants = new ArrayList<>() : listeClefsComposants;
+        if (listeClefsComposants == null)
+            listeClefsComposants = new ArrayList<>();
+        return listeClefsComposants;
     }
 
     public void setListeClefsComposants(List<String> listeClefsComposants)
     {
         this.listeClefsComposants = listeClefsComposants;
     }
-    
+
     @XmlAttribute(name = "manual_measure_key", required = false)
-    public String getManual_measure_key()
+    public String getManualMeasureKey()
     {
-        return manual_measure_key;
+        return manualMeasureKey;
     }
 
-    public void setManual_measure_key(String manual_measure_key)
+    public void setManualMeasureKey(String manual_measure_key)
     {
-        this.manual_measure_key = manual_measure_key;
+        this.manualMeasureKey = manual_measure_key;
     }
 
     @XmlAttribute(name = "manual_measure_value", required = false)
-    public String getManual_measure_value()
+    public String getManualMeasureValue()
     {
-        return manual_measure_value;
+        return manualMeasureValue;
     }
 
-    public void setManual_measure_value(String manual_measure_value)
+    public void setManualMeasureValue(String manual_measure_value)
     {
-        this.manual_measure_value = manual_measure_value;
+        this.manualMeasureValue = manual_measure_value;
     }
 }

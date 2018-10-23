@@ -68,7 +68,9 @@ public class StatusProjet extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "periods")
     public List<StatusPeriode> getPeriodes()
     {
-        return periodes == null ? periodes = new ArrayList<>() : periodes;
+        if (periodes == null)
+            periodes = new ArrayList<>();
+        return periodes;
     }
 
     public void setPeriodes(List<StatusPeriode> periodes)

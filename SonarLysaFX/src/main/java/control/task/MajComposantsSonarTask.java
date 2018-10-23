@@ -53,6 +53,7 @@ public class MajComposantsSonarTask extends AbstractTask
         this.option = option;
         annulable = true;
         keysComposPlantes = new ArrayList<>();
+        startTimers();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -115,7 +116,7 @@ public class MajComposantsSonarTask extends AbstractTask
             // Initialisation composant
             ComposantSonar compo = initCompoDepuisProjet(mapCompos, projet);
 
-            if (!api.initVersionCompoEtDateMaj(compo) && option == OptionMajCompos.PARTIELLE)
+            if (!api.initCompoVersionEtDateMaj(compo) && option == OptionMajCompos.PARTIELLE)
                 continue;
 
             // Récupération du numéro de lot et de l'applicaiton de chaque composant.
@@ -127,27 +128,7 @@ public class MajComposantsSonarTask extends AbstractTask
             if (composant == null || !testCompoPlante(composant))
                 continue;
 
-            // Lot RTC
-            String numeroLot = getValueMetrique(composant, TypeMetrique.LOT, LOT0);
-
-            // Gestion de la matière
-            Matiere matiere = testMatiereCompo(compo.getNom());
-            compo.setMatiere(matiere);
-
-            // On récupère le numéro de lot des infos du composant et si on ne trouve pas la valeur dans la base de données
-            // on crée un nouveau lot en spécifiant qu'il ne fait pas parti du référentiel. Les composants sans numéro de lot auront un lotRTC nul.
-            if (mapLotRTC.containsKey(numeroLot))
-            {
-                compo.setLotRTC(mapLotRTC.get(numeroLot));
-                compo.getLotRTC().addMatiere(matiere);
-            }
-            else
-            {
-                LotRTC lotRTC = LotRTC.getLotRTCInconnu(numeroLot);
-                lotRTC.addMatiere(matiere);
-                compo.setLotRTC(lotRTC);
-                mapLotRTC.put(numeroLot, lotRTC);
-            }
+            initCompoLotEtMatiere(compo, composant, mapLotRTC);
 
             // Code application
             String codeAppli = getValueMetrique(composant, TypeMetrique.APPLI, Statics.EMPTY);
@@ -186,6 +167,31 @@ public class MajComposantsSonarTask extends AbstractTask
 
         // Sauvegarde des données
         return retour;
+    }
+
+    private void initCompoLotEtMatiere(ComposantSonar compo, Composant composant, Map<String, LotRTC> mapLotRTC)
+    {
+        // Lot RTC
+        String numeroLot = getValueMetrique(composant, TypeMetrique.LOT, LOT0);
+        
+        // Gestion de la matière
+        Matiere matiere = testMatiereCompo(compo.getNom());
+        compo.setMatiere(matiere);
+        
+        // On récupère le numéro de lot des infos du composant et si on ne trouve pas la valeur dans la base de données
+        // on crée un nouveau lot en spécifiant qu'il ne fait pas parti du référentiel. Les composants sans numéro de lot auront un lotRTC nul.
+        if (mapLotRTC.containsKey(numeroLot))
+        {
+            compo.setLotRTC(mapLotRTC.get(numeroLot));
+            compo.getLotRTC().addMatiere(matiere);
+        }
+        else
+        {
+            LotRTC lotRTC = LotRTC.getLotRTCInconnu(numeroLot);
+            lotRTC.addMatiere(matiere);
+            compo.setLotRTC(lotRTC);
+            mapLotRTC.put(numeroLot, lotRTC);
+        }        
     }
 
     /**

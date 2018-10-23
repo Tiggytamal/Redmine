@@ -4,7 +4,7 @@ import static utilities.Statics.EMPTY;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumMap;
@@ -94,8 +94,6 @@ public class ControlRTC extends AbstractToStringImpl
 
     /** Taille de la pagination */
     private static final int PAGESIZE = 512;
-
-    private final LocalDate today = LocalDate.now();
 
     /** Instance du controleur */
     public static final ControlRTC INSTANCE = new ControlRTC();
@@ -422,12 +420,11 @@ public class ControlRTC extends AbstractToStringImpl
         else
         {
             // Récupération de la date de mise à jour depuis la base de données
-            LocalDate lastUpdate = DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.LOTSRTC.toString()).getDate();
+            LocalDateTime lastUpdate = DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.LOTSRTC.toString()).getTimeStamp();
             if (lastUpdate != null)
             {
                 // Periode entre la dernière mise à jour et aujourd'hui
-                Period periode = Period.between(lastUpdate, today);
-                Date datePredicat = DateConvert.convertToOldDate(today.minusDays(periode.getDays()));
+                Date datePredicat = DateConvert.convertToOldDate(lastUpdate);
 
                 // Prédicat des lots qui ont été modifiés depuis la dernière mise à jour
                 IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(datePredicat);
@@ -885,7 +882,7 @@ public class ControlRTC extends AbstractToStringImpl
         workItemClient.getWorkItemWorkingCopyManager().connect(wi, IWorkItem.FULL_PROFILE, monitor);
         WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(wi);
         workingCopy.getWorkItem().getComments().append(
-                workingCopy.getWorkItem().getComments().createComment(repo.loggedInContributor(), XMLString.createFromPlainText(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTERELANCE))));
+                workingCopy.getWorkItem().getComments().createComment(repo.loggedInContributor(), XMLString.createFromPlainText(commentaire)));
         workingCopy.save(monitor);
         workItemClient.getWorkItemWorkingCopyManager().disconnect(wi);
     }

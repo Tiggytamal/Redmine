@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -218,6 +219,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
             dateMaj.setTypeDonnee(typeDonnee);
         }
         dateMaj.setDate(LocalDate.now());
+        dateMaj.setHeure(LocalTime.now());
         return dao.persist(dateMaj);
     }
 

@@ -19,10 +19,16 @@ public abstract class AbstractBDDModele extends AbstractModele
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int idBase;
     
-    @Column(name = "timestamp")
+    @Column(name = "timestamp", nullable = false)
     protected LocalDateTime timeStamp;
 
-    /*---------- CONSTRUCTEURS ----------*/
+    /*---------- CONSTRUCTEURS ----------*/    
+    
+    protected AbstractBDDModele()
+    {
+        initTimeStamp();
+    }
+    
     /*---------- METHODES ABSTRAITES ----------*/
 
     /**
@@ -43,6 +49,8 @@ public abstract class AbstractBDDModele extends AbstractModele
     
     public LocalDateTime getTimeStamp()
     {
+        if (timeStamp == null)
+            timeStamp = LocalDateTime.now();
         return timeStamp;
     }
     

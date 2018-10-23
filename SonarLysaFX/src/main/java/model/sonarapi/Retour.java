@@ -64,7 +64,9 @@ public class Retour extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "views", required = false)
     public List<Vue> getListeVues()
     {
-        return listeVues == null ? listeVues = new ArrayList<>() : listeVues;
+        if (listeVues == null)
+            listeVues = new ArrayList<>();
+        return listeVues;
     }
 
     @XmlAttribute(name = "projectStatus", required = false)
@@ -78,7 +80,9 @@ public class Retour extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "results", required = false)
     public List<Vue> getResults()
     {
-        return results == null ? results = new ArrayList<>() : results;
+        if (results == null)
+            results = new ArrayList<>();
+        return results;
     }
 
     @XmlAttribute(name = "more", required = false)
@@ -90,13 +94,17 @@ public class Retour extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "errors", required = false)
     public List<Message> getErrors()
     {
-        return errors == null ? errors = new ArrayList<>() : errors;
+        if (errors == null)
+            errors = new ArrayList<>();
+        return errors;
     }
 
     @XmlAttribute(name = "qualitygates", required = false)
     public List<QualityGate> getQualityGates()
     {
-        return qualityGates == null ? qualityGates = new ArrayList<>() : qualityGates;
+        if (qualityGates == null)
+            qualityGates = new ArrayList<>();
+        return qualityGates;
     }
 
     @XmlAttribute(name = "default", required = false)

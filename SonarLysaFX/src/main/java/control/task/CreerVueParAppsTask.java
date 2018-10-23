@@ -76,6 +76,7 @@ public class CreerVueParAppsTask extends AbstractTask
         composPbAppli = new ArrayList<>();
         this.option = option;
         this.file = file;
+        startTimers();
 
         if (option != OptionCreerVueParAppsTask.VUE && file == null)
             throw new TechnicalException("Control.task.CreerVueParAppsTask - Demande de création d'extraction sans fichier", null);
@@ -302,7 +303,7 @@ public class CreerVueParAppsTask extends AbstractTask
             if (compo2 != null)
             {
                 // Si on a un composant du lot 315765, on prend le nouveau composant
-                if (compo.getLotRTC().getLot().equals(LOT315765))
+                if (LOT315765.equals(compo.getLotRTC().getLot()))
                     retour = compo2;
 
                 // On tag le code appli si la nouvelle application est bien référencée.

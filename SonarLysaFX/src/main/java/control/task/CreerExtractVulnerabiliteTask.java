@@ -45,6 +45,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
     {
         super(TypeVulnerabilite.values().length, TITRE);
         control = new ControlExtractVul(file);
+        startTimers();
     }
 
     /**
@@ -103,7 +104,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
     private Vulnerabilite convertIssueToVul(Issue issue, ComposantSonar composant)
     {
         Vulnerabilite retour = new Vulnerabilite();
-        
+
         retour.setComposant(composant.getNom());
         retour.setStatus(issue.getStatus());
         retour.setDateCreation(issue.getCreationDate());
@@ -111,7 +112,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
         retour.setMessage(issue.getMessage());
         retour.setAppli(composant.getAppli().getCode());
         retour.setLib(extractLib(retour.getMessage()));
-        
+
         LotRTC lotRTC = composant.getLotRTC();
 
         if (lotRTC != null)
@@ -134,7 +135,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
     {
         // Liste des composants du patrimoine
         Map<String, ComposantSonar> composants = recupererComposantsSonar(OptionRecupCompo.PATRIMOINE);
-        
+
         // Affichage avancée
         baseMessage = "Vulnérabilitès " + type.getNomSheet() + Statics.NL;
         updateMessage("récupération des vulnérabilités dans SonarQube.");

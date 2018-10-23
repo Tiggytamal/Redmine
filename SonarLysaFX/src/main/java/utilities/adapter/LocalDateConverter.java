@@ -11,9 +11,9 @@ public class LocalDateConverter implements AttributeConverter<LocalDate, Date>
 {
 
     @Override
-    public Date convertToDatabaseColumn(LocalDate LocalDate)
+    public Date convertToDatabaseColumn(LocalDate localDate)
     {
-        return (LocalDate == null ? null : Date.valueOf(LocalDate));
+        return (localDate == null ? null : Date.valueOf(localDate));
     }
 
     @Override

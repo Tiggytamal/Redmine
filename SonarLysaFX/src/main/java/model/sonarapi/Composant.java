@@ -42,8 +42,8 @@ public class Composant extends AbstractModele implements ModeleSonar
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public Composant(String id, String key, String nom, String descritpion, String qualifier, String langage, String path, List<Metrique> metriques, String uuid, boolean enabled,
-            String longName, int projectId, int subProjectId)
+    public Composant(String id, String key, String nom, String descritpion, String qualifier, String langage, String path, List<Metrique> metriques, String uuid, boolean enabled, String longName,
+            int projectId, int subProjectId)
     {
         this.id = id;
         this.key = key;
@@ -172,7 +172,9 @@ public class Composant extends AbstractModele implements ModeleSonar
     @XmlElement(name = "measures", required = false)
     public List<Metrique> getMetriques()
     {
-        return metriques == null ? metriques = new ArrayList<>() : metriques;
+        if (metriques == null)
+            metriques = new ArrayList<>();
+        return metriques;
     }
 
     public void setMetriques(List<Metrique> metriques)

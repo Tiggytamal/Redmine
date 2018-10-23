@@ -30,6 +30,7 @@ public class CreerVueDataStageTask extends AbstractTask
     {
         super(ETAPES, TITRE);
         annulable = true;
+        startTimers();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

@@ -45,7 +45,9 @@ public class Flow extends AbstractModele implements ModeleSonar
     @XmlAttribute(name = "locations", required = false)
     public List<Location> getLocations()
     {
-        return locations == null ? locations = new ArrayList<>() : locations;
+        if (locations == null)
+            locations = new ArrayList<>();
+        return locations;
     }
 
     public void setLocations(List<Location> locations)

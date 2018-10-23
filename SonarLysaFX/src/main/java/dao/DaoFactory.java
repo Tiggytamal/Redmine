@@ -14,6 +14,8 @@ import utilities.TechnicalException;
  */
 public class DaoFactory
 {
+    DaoFactory() { }
+    
     @SuppressWarnings("unchecked")
     public static <T extends AbstractDao<M>, M extends AbstractBDDModele> T getDao(Class<M> daoClass)
     {

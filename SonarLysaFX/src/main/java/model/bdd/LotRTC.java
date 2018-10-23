@@ -294,7 +294,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     public Set<Matiere> getMatieres()
     {
         if (matieres == null)
-            return matieres = new HashSet<>();
+            matieres = new HashSet<>();
         return matieres;
     }
 

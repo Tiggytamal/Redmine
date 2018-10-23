@@ -68,6 +68,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     private static final String SQ = "SUIVI Défaults Qualité";
     private static final String AC = "Anomalies closes";
     private static final String STATS = "Statistiques";
+    private static final int DATEINCONNUE = 2016;
 
     // Liste des indices des colonnes
     // Les noms des champs doivent correspondre aux valeurs dans l'énumération TypeCol
@@ -202,7 +203,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
                 {
                     DefaultQualite dq = ModelFactory.getModel(DefaultQualite.class);
                     dq.setEtatDefault(EtatDefault.ABANDONNEE);
-                    dq.setDateDetection(LocalDate.of(2016, 1, 1));
+                    dq.setDateDetection(LocalDate.of(DATEINCONNUE, 1, 1));
                     dq.setLotRTC(lotsRTC.get(lot));
                     map.put(dq.getLotRTC().getLot(), dq);
                 }
@@ -211,7 +212,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         return map.values();
     }
 
-    public void calculStatistiques(List<DefaultQualite> dqsEnBase)
+    public void calculStatistiques(Iterable<DefaultQualite> dqsEnBase)
     {
         // Réinitialisation de la feuille
         Sheet sheet = wb.getSheet(STATS);
@@ -749,7 +750,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         if (date != null)
             return getCellDateValue(row, colDateDetec);
         else
-            return LocalDate.of(2016, 1, 1);
+            return LocalDate.of(DATEINCONNUE, 1, 1);
     }
 
     /**

@@ -47,6 +47,7 @@ public class PurgeSonarTask extends AbstractTask
         super(ETAPES, TITRE);
         annulable = true;
         controlRapport = new ControlRapport(TypeRapport.PURGESONAR);
+        startTimers();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

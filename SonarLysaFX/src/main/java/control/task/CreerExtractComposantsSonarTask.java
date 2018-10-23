@@ -37,6 +37,7 @@ public class CreerExtractComposantsSonarTask extends AbstractTask
         super(ETAPES, TITRE);
         annulable = false;
         control = new ControlExtractCompo(file);
+        startTimers();
     }
     
     /**
