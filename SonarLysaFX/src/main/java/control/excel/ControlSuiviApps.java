@@ -7,10 +7,15 @@ import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.usermodel.XSSFDataValidation;
+import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
@@ -18,12 +23,13 @@ import model.bdd.DefaultAppli;
 import model.bdd.LotRTC;
 import model.enums.EtatDefault;
 import model.enums.TypeAction;
+import model.enums.TypeColSuiviApps;
 import utilities.CellHelper;
 import utilities.FunctionalException;
 import utilities.enums.Bordure;
 import utilities.enums.Severity;
 
-public class ControlSuiviApps extends AbstractControlExcelRead<model.enums.TypeColSuiviApps, List<DefaultAppli>>
+public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps, List<DefaultAppli>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -50,6 +56,8 @@ public class ControlSuiviApps extends AbstractControlExcelRead<model.enums.TypeC
     ControlSuiviApps(File file)
     {
         super(file);
+        
+        initContraintes();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -98,6 +106,8 @@ public class ControlSuiviApps extends AbstractControlExcelRead<model.enums.TypeC
             creerLigneDA(row, da, couleur);
         }
         
+        if (sheet.getLastRowNum() > 0)
+            ajouterDataValidation(sheet);
         autosizeColumns(sheet);
     }
 
@@ -204,6 +214,42 @@ public class ControlSuiviApps extends AbstractControlExcelRead<model.enums.TypeC
         return couleur;
     }
 
+    /**
+     * Initialisation liste des contraintes depuis les paramètres
+     */
+    private void initContraintes()
+    {
+        contraintes = new String[TypeAction.values().length];
+        for (int i = 0; i < contraintes.length; i++)
+        {
+            contraintes[i] = TypeAction.values()[i].getValeur();
+        }
+    }
+    
+    /**
+     * Ajoute les contrôles de validation de la colonne Action de la feuille
+     * 
+     * @param sheet
+     */
+    private void ajouterDataValidation(Sheet sheet)
+    {
+        // Protection pour les veuilles qui ne sont pas des .xlsx
+        XSSFSheet xssfSheet = null;
+        if (sheet instanceof XSSFSheet)
+            xssfSheet = (XSSFSheet) sheet;
+        else
+            return;
+
+        XSSFDataValidationConstraint dvContraintes = (XSSFDataValidationConstraint) xssfSheet.getDataValidationHelper().createExplicitListConstraint(contraintes);
+        CellRangeAddressList addressList = new CellRangeAddressList(1, xssfSheet.getLastRowNum(), colAction, colAction);
+        XSSFDataValidation dataValidation = (XSSFDataValidation) xssfSheet.getDataValidationHelper().createValidation(dvContraintes, addressList);
+        dataValidation.setSuppressDropDownArrow(true);
+        dataValidation.setErrorStyle(DataValidation.ErrorStyle.STOP);
+        dataValidation.createErrorBox("Erreur Action", "Valeur pour l'action interdite");
+        dataValidation.setShowErrorBox(true);
+        sheet.addValidationData(dataValidation);
+    }
+    
     /*---------- ACCESSEURS ----------*/
 
 }

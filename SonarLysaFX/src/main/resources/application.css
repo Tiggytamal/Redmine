@@ -1,6 +1,6 @@
 .bar {
 	-fx-background-color: linear-gradient(#61a2b1, #2A5058);
-	-fx-min-height: 31px;
+	-fx-min-height: 31.0px;
 }
 
 .bgimage{
@@ -20,8 +20,8 @@
 
 .button.connexion {
     -fx-effect: none;
-    -fx-background-radius: 0;
-	-fx-min-height: 31px;
+    -fx-background-radius: 0.0;
+	-fx-min-height: 31.0px;
 }
 
 .label {
@@ -43,6 +43,21 @@
 	
 }
 
+.table-view .column-header.tableBlue {
+	-fx-border-color: rgb(0,128,255);
+}
+
+.table-view .column-header.tableGreen {
+	-fx-border-color: rgb(128,255,128);
+}
+
+.table-view .column-header.tableYellow {
+	-fx-border-color: rgb(255,255,128);
+}
+
+.table-view .column-header.tableBrown {
+	-fx-border-color: rgb(128,64,0);
+}
 
 .menu
 { 

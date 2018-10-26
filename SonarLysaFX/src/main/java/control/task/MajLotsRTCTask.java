@@ -10,14 +10,15 @@ import org.apache.logging.log4j.Logger;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.mchange.util.AssertException;
 
+import application.Main;
 import control.rtc.ControlRTC;
 import dao.DaoFactory;
 import dao.DaoLotRTC;
+import javafx.application.Platform;
 import model.bdd.GroupementProjet;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
 import model.enums.GroupeProjet;
-import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;
 
@@ -83,7 +84,7 @@ public class MajLotsRTCTask extends AbstractTask
         ControlRTC control = ControlRTC.INSTANCE;
         List<LotRTC> lotsRTC = control.recupLotsRTC(date, this);
         if (lotsRTC.isEmpty())
-            throw new FunctionalException(Severity.ERROR, "La liste des lots RTC est vide!");
+            Platform.runLater(() -> Main.createAlert(Severity.INFO, null, "Pas de nouveaux lots RTC mis à jour depuis le dernier traitement."));
 
         // VAriables
         int i = 0;
@@ -203,11 +204,6 @@ public class MajLotsRTCTask extends AbstractTask
      */
     private boolean sauvegarde(Map<String, LotRTC> map)
     {
-        for (LotRTC lot : map.values())
-        {
-            if (lot.getIdBase() == 0)
-                System.out.println(lot.getLot());
-        }
         boolean retour = dao.persist(map.values()) > 0;
         dao.majDateDonnee();
         return retour;

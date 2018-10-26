@@ -16,6 +16,7 @@ import model.bdd.Application;
 import model.bdd.ComposantSonar;
 import model.bdd.DefaultAppli;
 import model.bdd.LotRTC;
+import model.enums.EtatDefault;
 import model.enums.Matiere;
 import model.enums.OptionMajCompos;
 import model.enums.QG;
@@ -38,6 +39,7 @@ public class MajComposantsSonarTask extends AbstractTask
     /*---------- ATTRIBUTS ----------*/
 
     private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
+    private static final Logger LOGGER = LogManager.getLogger("complet-log");
     private static final short ETAPES = 2;
     private static final String TITRE = "Création liste des composants";
     private static final String LOT0 = "000000";
@@ -173,11 +175,11 @@ public class MajComposantsSonarTask extends AbstractTask
     {
         // Lot RTC
         String numeroLot = getValueMetrique(composant, TypeMetrique.LOT, LOT0);
-        
+
         // Gestion de la matière
         Matiere matiere = testMatiereCompo(compo.getNom());
         compo.setMatiere(matiere);
-        
+
         // On récupère le numéro de lot des infos du composant et si on ne trouve pas la valeur dans la base de données
         // on crée un nouveau lot en spécifiant qu'il ne fait pas parti du référentiel. Les composants sans numéro de lot auront un lotRTC nul.
         if (mapLotRTC.containsKey(numeroLot))
@@ -191,7 +193,7 @@ public class MajComposantsSonarTask extends AbstractTask
             lotRTC.addMatiere(matiere);
             compo.setLotRTC(lotRTC);
             mapLotRTC.put(numeroLot, lotRTC);
-        }        
+        }
     }
 
     /**
@@ -220,6 +222,12 @@ public class MajComposantsSonarTask extends AbstractTask
             defAppli.setCompo(compo);
             defAppli.setDateDetection(LocalDate.now());
             mapDefAppli.put(compo.getNom(), defAppli);
+        }
+        else if (compo.getAppli().isReferentiel() && mapDefAppli.containsKey(compo.getNom()))
+        {
+            DefaultAppli defAppli = mapDefAppli.get(compo.getNom());
+            defAppli.setEtatDefault(EtatDefault.CLOSE);
+            defAppli.setAppliCorrigee(compo.getAppli().getCode());
         }
     }
 
@@ -320,6 +328,8 @@ public class MajComposantsSonarTask extends AbstractTask
             // Suppression dans SonarQube
             api.supprimerProjet(key, false);
             api.supprimerVue(key, false);
+
+            LOGGER.debug("suppression composant : {0}", key);
 
             // Suppression dans la base
             dao.delete(dao.recupEltParIndex(key));

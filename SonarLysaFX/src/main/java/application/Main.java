@@ -103,7 +103,7 @@ public final class Main extends Application
      * @param detail
      *            message à afficher dans la fenetre de l'exception
      */
-    private static void createAlert(Severity severity, Throwable ex, String detail)
+    public static void createAlert(Severity severity, Throwable ex, String detail)
     {
 
         Alert alert;

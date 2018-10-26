@@ -66,7 +66,12 @@ public class MajSuiviAppsTask extends AbstractTask
     {
         Map<String, DefaultAppli> mapDefaults = dao.readAllMap();
 
+        etapePlus();
         List<DefaultAppli> das = control.recupDonneesDepuisExcel();
+        
+        int i = 0;
+        int size= das.size();
+        baseMessage = "Traitement Défaults Qualité :";
 
         for (DefaultAppli da : das)
         {
@@ -76,7 +81,11 @@ public class MajSuiviAppsTask extends AbstractTask
                 daBase.setAction(da.getAction());
                 gestionAction(da);
             }
+            i++;
+            calculTempsRestant(debut, i, size);
+            updateProgress(i, size);
         }
+        
 
         control.majFeuilleDefaultsAppli(new ArrayList<>(mapDefaults.values()), control.resetFeuilleDA());
         control.write();
@@ -86,12 +95,11 @@ public class MajSuiviAppsTask extends AbstractTask
 
     private void gestionAction(DefaultAppli da)
     {
-        if (da.getAction() == TypeAction.CREER)
+        if (da.getAction() == TypeAction.CREER && creerAnoRTC(da))
         {
+            da.setAction(TypeAction.VIDE);
             da.setEtatDefault(EtatDefault.TRAITEE);
-            if (creerAnoRTC(da))
-                da.setAction(TypeAction.VIDE);
-        }            
+        }
     }
 
     private boolean creerAnoRTC(DefaultAppli da)
@@ -101,38 +109,38 @@ public class MajSuiviAppsTask extends AbstractTask
         ControlRTC controlRTC = ControlRTC.INSTANCE;
         if (dq == null)
         {
-            dq = ModelFactory.getModel(DefaultQualite.class);
-            dq.setEtatDefault(EtatDefault.TRAITEE);
-            dq.setSecurite(false);
-            dq.setDateDetection(da.getDateDetection());
-            dq.setTypeDefault(TypeDefault.APPLI);
-            dq.setLotRTC(da.getCompo().getLotRTC());
-            da.setDefaultQualite(dq);
-
-            int numeroAno = controlRTC.creerAnoRTC(dq);
-            if (numeroAno != 0)
-            {
-                dq.setAction(TypeAction.VIDE);
-                dq.setNumeroAnoRTC(numeroAno);
-                dq.setDateCreation(LocalDate.now());
-                dq.calculTraitee();
-                return true;
-            }
+//            dq = ModelFactory.getModel(DefaultQualite.class);
+//            dq.setEtatDefault(EtatDefault.TRAITEE);
+//            dq.setSecurite(false);
+//            dq.setDateDetection(da.getDateDetection());
+//            dq.setTypeDefault(TypeDefault.APPLI);
+//            dq.setLotRTC(da.getCompo().getLotRTC());
+//            da.setDefaultQualite(dq);
+//
+//            int numeroAno = controlRTC.creerAnoRTC(dq);
+//            if (numeroAno != 0)
+//            {
+//                dq.setAction(TypeAction.VIDE);
+//                dq.setNumeroAnoRTC(numeroAno);
+//                dq.setDateCreation(LocalDate.now());
+//                dq.calculTraitee();
+//                return true;
+//            }
         }
         else if (dq.getNumeroAnoRTC() == 0)
         {
-            dq.setTypeDefault(TypeDefault.MIXTE);
-            da.setDefaultQualite(dq);
-            dq.setNomCompoAppli(da.getCompo().getNom());
-            int numeroAno = controlRTC.creerAnoRTC(dq);
-            if (numeroAno != 0)
-            {
-                dq.setAction(TypeAction.VIDE);
-                dq.setNumeroAnoRTC(numeroAno);
-                dq.setDateCreation(LocalDate.now());
-                dq.calculTraitee();
-                return true;
-            }
+//            dq.setTypeDefault(TypeDefault.MIXTE);
+//            da.setDefaultQualite(dq);
+//            dq.setNomCompoAppli(da.getCompo().getNom());
+//            int numeroAno = controlRTC.creerAnoRTC(dq);
+//            if (numeroAno != 0)
+//            {
+//                dq.setAction(TypeAction.VIDE);
+//                dq.setNumeroAnoRTC(numeroAno);
+//                dq.setDateCreation(LocalDate.now());
+//                dq.calculTraitee();
+//                return true;
+//            }
         }
         else
         {

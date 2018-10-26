@@ -16,16 +16,19 @@ import control.excel.ControlAppsW;
 import control.excel.ControlPbApps;
 import control.excel.ControlUA;
 import control.excel.ExcelFactory;
+import dao.DaoApplication;
 import dao.DaoFactory;
 import model.CompoPbApps;
 import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
+import model.bdd.DefaultAppli;
 import model.bdd.LotRTC;
 import model.enums.EtatAppli;
 import model.enums.OptionCreerVueParAppsTask;
 import model.enums.OptionRecupCompo;
 import model.enums.Param;
+import model.enums.TypeAction;
 import model.enums.TypeColAppsW;
 import model.enums.TypeColPbApps;
 import model.enums.TypeColUA;
@@ -64,6 +67,9 @@ public class CreerVueParAppsTask extends AbstractTask
     private OptionCreerVueParAppsTask option;
     /** Nom du fichier de suavegarde de l'extraction */
     private File file;
+    
+    private Application appliInconnue;
+    private DaoApplication daoApplication;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -71,7 +77,9 @@ public class CreerVueParAppsTask extends AbstractTask
     {
         super(ETAPES, TITRE);
         annulable = false;
-        applications = DaoFactory.getDao(Application.class).readAllMap();
+        daoApplication = DaoFactory.getDao(Application.class);
+        applications = daoApplication.readAllMap();
+        initAppliInconnue();
         applisOpenSonar = new HashSet<>();
         composPbAppli = new ArrayList<>();
         this.option = option;
@@ -144,7 +152,7 @@ public class CreerVueParAppsTask extends AbstractTask
             api.supprimerVue(projet.getKey(), false);
 
             // Affichage
-            calculTempsRestant(debut, i, size);
+            calculTempsRestant(debut, i+1, size);
             updateMessage(projet.getNom());
             updateProgress(i, size);
         }
@@ -168,7 +176,7 @@ public class CreerVueParAppsTask extends AbstractTask
 
             // Affichage
             i++;
-            baseMessage = new StringBuilder(baseMessage).append("traitement : ").append(vue.getName()).append(NL).toString();
+            baseMessage = new StringBuilder("traitement : ").append(vue.getName()).append(NL).toString();
             updateProgress(i, size);
             calculTempsRestant(debut, i, size);
             for (ComposantSonar composantSonar : entry.getValue())
@@ -204,6 +212,8 @@ public class CreerVueParAppsTask extends AbstractTask
     {
         // Initialisation de la map
         HashMap<String, List<ComposantSonar>> retour = new HashMap<>();
+        
+        Map<String, DefaultAppli> mapDefaultAppli = DaoFactory.getDao(DefaultAppli.class).readAllMap();
 
         // Message
         baseMessage = "Traitements des composants :" + NL;
@@ -219,8 +229,7 @@ public class CreerVueParAppsTask extends AbstractTask
             updateProgress(i, compos.size());
 
             // Si l'application n'est pas dans la PIC, on continue au projet suivant.
-            if (!testAppli(compo))
-                continue;
+            testAppli(compo, mapDefaultAppli);
 
             retour.computeIfAbsent(compo.getAppli().getCode(), k -> new ArrayList<>()).add(compo);
         }
@@ -230,6 +239,7 @@ public class CreerVueParAppsTask extends AbstractTask
 
     /**
      * Vérifie qu'une application d'un composant Sonar est présente dans la liste des applications de la PIC.
+     * @param mapDefaultAppli 
      *
      * @param application
      *            Application enregistrée pour le composant dans Sonar.
@@ -239,7 +249,7 @@ public class CreerVueParAppsTask extends AbstractTask
      *            Nom du composant Sonar.
      * @param inconnues
      */
-    private boolean testAppli(ComposantSonar compo)
+    private void testAppli(ComposantSonar compo, Map<String, DefaultAppli> mapDefaultAppli)
     {
         Application application = compo.getAppli();
         String codeAppli = application.getCode();
@@ -254,7 +264,20 @@ public class CreerVueParAppsTask extends AbstractTask
 
             // Ajout à la liste des composants à problème avec test sur les version précedente de celui-ci
             composPbAppli.add(testVersionPrec(compo));
-            return false;
+            
+            DefaultAppli da = mapDefaultAppli.get(compo.getNom());
+            if( da == null)
+                compo.setAppli(appliInconnue);
+            
+            else if( da.getAppliCorrigee().isEmpty())
+            {
+                if (da.getAction() != TypeAction.VERIFIER)
+                    compo.setAppli(appliInconnue);
+                else
+                    compo.setAppli(daoApplication.recupEltParIndex(da.getAppliCorrigee()));
+            }
+            else
+                compo.setAppli(daoApplication.recupEltParIndex(da.getAppliCorrigee()));
         }
 
         // Gestion des applications obsolètes
@@ -269,7 +292,6 @@ public class CreerVueParAppsTask extends AbstractTask
         application.majValSecurite(compo.getSecurityRating());
         application.ajouterVulnerabilites(compo.getVulnerabilites());
         applisOpenSonar.add(application);
-        return true;
     }
 
     /**
@@ -282,6 +304,7 @@ public class CreerVueParAppsTask extends AbstractTask
     {
         int i = 0;
         ComposantSonar retour = compo;
+        
         // Récupération du dernier chiffre de la verion du composant. On retourne faux si on a pas un chiffre.
         // Soustraction de 1 pour obtenier la version précedente du composant.
         try
@@ -420,6 +443,20 @@ public class CreerVueParAppsTask extends AbstractTask
                 break;
             }
         }
+    }
+    
+    /**
+     * Initialisation de l'applicaiton inconnue
+     */
+    private void initAppliInconnue()
+    {
+        appliInconnue = daoApplication.recupEltParIndex("inconnue");
+        if (appliInconnue == null)
+        {
+            appliInconnue = Application.getApplicationInconnue("inconnue");
+            applications.put(appliInconnue.getMapIndex(), appliInconnue);
+            daoApplication.persist(appliInconnue);
+        }        
     }
 
     /*---------- ACCESSEURS ----------*/

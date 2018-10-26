@@ -9,7 +9,7 @@ import utilities.Statics;
 
 import static utilities.Statics.EMPTY;
 
-public class DefaultQualiteFXML extends AbstractModele
+public class DefaultQualiteFXML extends AbstractModele implements ModeleFXML
 {
     /*---------- ATTRIBUTS ----------*/
 

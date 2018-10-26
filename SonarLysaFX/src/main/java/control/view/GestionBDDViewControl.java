@@ -3,10 +3,6 @@ package control.view;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,59 +12,92 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import dao.DaoDefaultAppli;
-import dao.DaoFactory;
+import control.view.fxml.AbstractFXMLViewControl;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
-import model.bdd.DefaultAppli;
-import model.bdd.DefaultQualite;
-import model.enums.EtatDefault;
-import model.fxml.DefaultQualiteFXML;
+import model.fxml.ModeleFXML;
 import utilities.CellHelper;
-import utilities.Statics;
 import utilities.enums.Bordure;
 
-public class DefaultsQualiteControl extends AbstractViewControl
+/**
+ * Controleur de la page de gestion de la base de données
+ * 
+ * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
+ *
+ */
+public class GestionBDDViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
 
     @FXML
     private VBox box;
     @FXML
-    private TableView<DefaultQualiteFXML> table;
-    @FXML
     private Button extraire;
     @FXML
     private Button importer;
+    @FXML
+    private Button dq;
+    @FXML
+    private Button compo;
+    @FXML
+    private VBox tablePane;
+
+    private AbstractFXMLViewControl controlleur;
+    private ObservableList<Node> children;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     @FXML
-    public void initialize()
+    public void initialize() throws IOException
     {
-        List<DefaultQualiteFXML> listeFXML = new ArrayList<>();
+        children = backgroundPane.getChildren();
 
-        for (DefaultQualite dq : DaoFactory.getDao(DefaultQualite.class).readAll())
-        {
-            if (dq.getEtatDefault() == EtatDefault.CLOSE || dq.getEtatDefault() == EtatDefault.ABANDONNEE)
-                listeFXML.add(new DefaultQualiteFXML(dq));
-        }
-
-        table.getItems().addAll(listeFXML);
+        // Initialisation de l'écran avec les défaults qualité
+        Button button = new Button();
+        button.idProperty().set("dq");
+        afficher(new ActionEvent(button, tail -> null));
     }
+
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
     protected void afficher(ActionEvent event) throws IOException
     {
-        // Pas de traitmetn sur cette feuillle pour le moment
+        Object source = event.getSource();
+        if (children.size() > 1)
+            children.remove(1);
+
+        if (source instanceof Button)
+        {
+            String id = ((Button) source).getId();
+
+            switch (id)
+            {
+                case "dq":
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DefaultQualiteBDD.fxml"));
+                    VBox bddEq = loader.load();
+                    backgroundPane.add(bddEq, 1, 0);
+                    controlleur = loader.getController();
+                    break;
+
+                case "compo":
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 
     @FXML
@@ -87,11 +116,13 @@ public class DefaultsQualiteControl extends AbstractViewControl
         CellHelper helper = new CellHelper(wb);
         CellStyle styleTitre = helper.getStyle(IndexedColors.AQUA, Bordure.BAS, HorizontalAlignment.CENTER);
         CellStyle styleGris = helper.getStyle(IndexedColors.GREY_25_PERCENT);
-        CellStyle styleBlanc = helper.getStyle(IndexedColors.GREY_25_PERCENT);
+        CellStyle styleBlanc = helper.getStyle(IndexedColors.WHITE);
 
-        for (TableColumn<DefaultQualiteFXML, ?> col : table.getColumns())
+        TableView<ModeleFXML> table = controlleur.getTable();
+
+        for (TableColumn<ModeleFXML, ?> col : table.getColumns())
         {
-            for (TableColumn<DefaultQualiteFXML, ?> col2 : col.getColumns())
+            for (TableColumn<ModeleFXML, ?> col2 : col.getColumns())
             {
                 Cell cell = row.createCell(cellIndex);
                 cell.setCellValue(col2.getText());
@@ -106,9 +137,9 @@ public class DefaultsQualiteControl extends AbstractViewControl
             row = sheet.createRow(i + 1);
 
             cellIndex = 0;
-            for (TableColumn<DefaultQualiteFXML, ?> col : table.getColumns())
+            for (TableColumn<ModeleFXML, ?> col : table.getColumns())
             {
-                for (TableColumn<DefaultQualiteFXML, ?> col2 : col.getColumns())
+                for (TableColumn<ModeleFXML, ?> col2 : col.getColumns())
                 {
                     Cell cell = row.createCell(cellIndex);
                     if (row.getRowNum() % 2 == 0)
@@ -132,39 +163,6 @@ public class DefaultsQualiteControl extends AbstractViewControl
         wb.write(fileOut);
         wb.close();
         fileOut.close();
-    }
-    
-    @FXML
-    public void recupDonnesFichier() throws InvalidFormatException, IOException
-    {
-     // Récupération non du fichier
-        File file = getFileFromFileChooser(TITRE);
-        Workbook wb = WorkbookFactory.create(file);
-        Sheet sheet = wb.getSheet("Composants avec pb. appli");
-        DaoDefaultAppli dao = DaoFactory.getDao(DefaultAppli.class);
-        Map<String, DefaultAppli> mapDefaultsAppli = dao.readAllMap();
-        int i = 0;
-        
-        for(Iterator<Row> iter = sheet.rowIterator(); iter.hasNext();)
-        {
-            Row row = iter.next();
-            
-            // On saute les lignes qui n'ont pas de valeur à prendre ne compte
-            if (row.getRowNum() == 0 && row.getCell(2).getStringCellValue().equals("A corriger") || row.getCell(3).getStringCellValue().equals(Statics.EMPTY))
-                continue;
-            
-            String key = row.getCell(0).getStringCellValue();
-            if (mapDefaultsAppli.containsKey(key))
-            {
-                mapDefaultsAppli.get(key).setAppliCorrigee(row.getCell(3).getStringCellValue());
-                System.out.println(row.getCell(3).getStringCellValue());
-                i++;
-            }
-            else
-                System.out.println(key);           
-        }
-        dao.persist(mapDefaultsAppli.values());
-        
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -27,7 +27,7 @@
 				</Menu>
 				<Menu text="BDD">
 					<items>
-						<MenuItem fx:id="dq" text="Défaults Qualité" onAction="#afficher" disable="false" />
+						<MenuItem fx:id="bdd" text="Défaults Qualité" onAction="#afficher" disable="true" />
 					</items>				
 				</Menu>
 				<Menu text="Outils">

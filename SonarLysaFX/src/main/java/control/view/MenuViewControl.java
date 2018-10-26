@@ -87,7 +87,7 @@ public final class MenuViewControl extends AbstractViewControl
     @FXML
     private MenuItem majAnos;
     @FXML
-    private MenuItem dq;
+    private MenuItem bdd;
     @FXML
     private Button connexion;
     @FXML
@@ -133,6 +133,7 @@ public final class MenuViewControl extends AbstractViewControl
         majVues.setDisable(true);
         majCompos.setDisable(true);
         majAnos.setDisable(true);
+        bdd.setDisable(true);
         rtc.setDisable(true);
         extraction.setDisable(true);
         planificateur.setDisable(true);
@@ -212,8 +213,8 @@ public final class MenuViewControl extends AbstractViewControl
                 majTitre(box, FONCTIONS + texte);
                 break;
 
-            case "dq":
-                load("/view/DefaultsQualite.fxml");
+            case "bdd":
+                load("/view/GestionBDD.fxml");
                 majTitre(box, FONCTIONS + texte);
                 break;
 
@@ -223,7 +224,7 @@ public final class MenuViewControl extends AbstractViewControl
                 break;
 
             case "majCompos":
-                alertConfirmation(new MajComposantsSonarTask(OptionMajCompos.PARTIELLE), "Cela lancera la mise à jour de tous les composants Sonar.");
+                alertConfirmation(new MajComposantsSonarTask(OptionMajCompos.COMPLETE), "Cela lancera la mise à jour de tous les composants Sonar.");
                 break;
 
             case "majAnos":
@@ -235,7 +236,7 @@ public final class MenuViewControl extends AbstractViewControl
                 break;
 
             default:
-                throw new TechnicalException("MenuItem pas géré" + id, null);
+                throw new TechnicalException("MenuItem pas géré : " + id, null);
         }
     }
 
@@ -284,6 +285,7 @@ public final class MenuViewControl extends AbstractViewControl
         majVues.setDisable(false);
         majCompos.setDisable(false);
         majAnos.setDisable(false);
+        bdd.setDisable(false);
         extraction.setDisable(false);
         suivi.setDisable(false);
         maintenance.setDisable(false);

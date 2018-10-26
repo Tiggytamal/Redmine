@@ -13,156 +13,157 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Region?>
 
-<VBox fx:id="box" fx:controller="control.view.DefaultsQualiteControl" xmlns:fx="http://javafx.com/fxml" alignment="center" prefHeight="500" prefWidth="500">
+<VBox fx:controller="control.view.fxml.DefaultQualiteBDDViewControl" xmlns:fx="http://javafx.com/fxml" fillWidth="true" GridPane.vgrow = "ALWAYS">
 	<padding>
 		<Insets top="25" right="25" bottom="10" left="25" />
 	</padding>
-	<children>
 		<Label text="Défaults Qualité" />
-		<Region prefHeight ="20" />
-		<TableView fx:id="table">
+		<Region prefHeight="20" />
+		<TableView fx:id="table" VBox.vgrow="ALWAYS">
 			<columns>
-				<TableColumn text="Projet Clarity">
+				<TableColumn text="Projet Clarity" styleClass="tableBlue">
+				
 					<columns>
-						<TableColumn text="Direction">
+						<TableColumn text="Direction" styleClass="tableBlue">
 							<cellValueFactory>
 								<PropertyValueFactory property="direction" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Département">
+						<TableColumn text="Département" styleClass="tableBlue">
 							<cellValueFactory>
 								<PropertyValueFactory property="departement" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Service">
+						<TableColumn text="Service" styleClass="tableBlue">
 							<cellValueFactory>
 								<PropertyValueFactory property="service" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Responsable Service">
+						<TableColumn text="Responsable Service" styleClass="tableBlue">
 							<cellValueFactory>
 								<PropertyValueFactory property="respServ" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Code Projet">
+						<TableColumn text="Code Projet" styleClass="tableBlue">
 							<cellValueFactory>
 								<PropertyValueFactory property="codeClarity" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Libellé Projet">
+						<TableColumn text="Libellé Projet" styleClass="tableBlue">
 							<cellValueFactory>
 								<PropertyValueFactory property="libelleClarity" />
 							</cellValueFactory>
 						</TableColumn>
 					</columns>
 				</TableColumn>
-				<TableColumn text="Projet RTC">
+				<TableColumn text="Projet RTC" styleClass="tableGreen">
 					<columns>
-						<TableColumn text="Cpi du Lot">
+						<TableColumn text="Cpi du Lot" styleClass="tableGreen">
 							<cellValueFactory>
 								<PropertyValueFactory property="cpiLot" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Edition">
+						<TableColumn text="Edition" styleClass="tableGreen">
 							<cellValueFactory>
 								<PropertyValueFactory property="edition" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Lot">
+						<TableColumn text="Lot" styleClass="tableGreen">
 							<cellValueFactory>
 								<PropertyValueFactory property="lotRTC" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Version">
+						<TableColumn text="Version" styleClass="tableGreen">
 							<cellValueFactory>
 								<PropertyValueFactory property="typeVersion" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Libellé Projet">
+						<TableColumn text="Libellé Projet" styleClass="tableGreen">
 							<cellValueFactory>
 								<PropertyValueFactory property="codeProjetRTC" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Groupe">
+						<TableColumn text="Groupe" styleClass="tableGreen">
 							<cellValueFactory>
 								<PropertyValueFactory property="groupe" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Date Maj">
+						<TableColumn text="Date Maj" styleClass="tableGreen">
 							<cellValueFactory>
 								<PropertyValueFactory property="dateMajRTC" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Etat">
+						<TableColumn text="Etat" styleClass="tableGreen">
 							<cellValueFactory>
 								<PropertyValueFactory property="etatLotRTC" />
 							</cellValueFactory>
 						</TableColumn>
 					</columns>
 				</TableColumn>
-				<TableColumn text="Anomalie">
+				<TableColumn text="Anomalie" styleClass="tableYellow">
 					<columns>
-						<TableColumn text="Numéro">
+						<TableColumn text="Numéro" styleClass="tableYellow">
 							<cellValueFactory>
 								<PropertyValueFactory property="numeroAnoRTC" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Sécurité">
+						<TableColumn text="Sécurité" styleClass="tableYellow">
 							<cellValueFactory>
 								<PropertyValueFactory property="securite" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Action">
+						<TableColumn text="Action" styleClass="tableYellow">
 							<cellValueFactory>
 								<PropertyValueFactory property="action" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Date détection">
+						<TableColumn text="Date détection" styleClass="tableYellow">
 							<cellValueFactory>
 								<PropertyValueFactory property="dateDetection" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Date création">
+						<TableColumn text="Date création" styleClass="tableYellow">
 							<cellValueFactory>
 								<PropertyValueFactory property="dateCreation" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Date relance">
+						<TableColumn text="Date relance" styleClass="tableYellow">
 							<cellValueFactory>
 								<PropertyValueFactory property="dateRelance" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Date résolution">
+						<TableColumn text="Date résolution" styleClass="tableYellow">
 							<cellValueFactory>
 								<PropertyValueFactory property="dateReso" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Etat">
+						<TableColumn text="Etat" styleClass="tableYellow">
 							<cellValueFactory>
 								<PropertyValueFactory property="etatRTC" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Remarques">
+						<TableColumn text="Remarques" styleClass="tableYellow">
 							<cellValueFactory>
 								<PropertyValueFactory property="remarque" />
 							</cellValueFactory>
 						</TableColumn>
 					</columns>
 				</TableColumn>
-				<TableColumn text="Défault">
+				<TableColumn text="Défault" styleClass="tableBrown">
 					<columns>
-						<TableColumn text="Type default">
+						<TableColumn text="Type default" styleClass="tableBrown">
 							<cellValueFactory>
 								<PropertyValueFactory property="typeDefault" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Etat default">
+						<TableColumn text="Etat default" styleClass="tableBrown">
 							<cellValueFactory>
 								<PropertyValueFactory property="etatDefault" />
 							</cellValueFactory>
 						</TableColumn>
-						<TableColumn text="Matière">
+						<TableColumn text="Matière" styleClass="tableBrown">
 							<cellValueFactory>
 								<PropertyValueFactory property="matiere" />
 							</cellValueFactory>
@@ -175,9 +176,6 @@
 				</FXCollections>
 			</items>
 		</TableView>
-		<Region prefHeight ="20" />
-		<Button text="Extraire" fx:id="extraire" onAction="#extraire" />
-				<Region prefHeight ="20" />
-		<Button text="importer" fx:id="importer" onAction="#recupDonnesFichier" />
-	</children>
+		<Region prefHeight="20"/>
+		<Button text="Importer données" onAction="#recupDonnesFichier"/>
 </VBox>

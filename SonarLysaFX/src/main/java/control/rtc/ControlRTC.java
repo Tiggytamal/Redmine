@@ -5,6 +5,7 @@ import static utilities.Statics.EMPTY;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumMap;
@@ -412,7 +413,7 @@ public class ControlRTC extends AbstractToStringImpl
         // Prise en compte de la date de création si elle est fournie
         if (dateCreation != null)
         {
-            IPredicate predicatCreation = WorkItemQueryModel.ROOT.creationDate()._gt(DateConvert.convertToOldDate(dateCreation));
+            IPredicate predicatCreation = WorkItemQueryModel.ROOT.creationDate()._gt(DateConvert.convertToOldDate(dateCreation, ZoneId.of("GMT")));
             predicatFinal = predicatFinal._and(predicatCreation);
         }
 
@@ -423,8 +424,8 @@ public class ControlRTC extends AbstractToStringImpl
             LocalDateTime lastUpdate = DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.LOTSRTC.toString()).getTimeStamp();
             if (lastUpdate != null)
             {
-                // Periode entre la dernière mise à jour et aujourd'hui
-                Date datePredicat = DateConvert.convertToOldDate(lastUpdate);
+                // Dernière date de mise à jour. On utilise la zone GMT car en interne RTC prend les dates dans ce format.
+                Date datePredicat = DateConvert.convertToOldDate(lastUpdate, ZoneId.of("GMT"));
 
                 // Prédicat des lots qui ont été modifiés depuis la dernière mise à jour
                 IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(datePredicat);
