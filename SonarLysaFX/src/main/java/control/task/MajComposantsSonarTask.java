@@ -2,12 +2,14 @@ package control.task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import control.word.ControlRapport;
 import dao.DaoComposantSonar;
 import dao.DaoDefaultAppli;
 import dao.DaoFactory;
@@ -19,8 +21,11 @@ import model.bdd.LotRTC;
 import model.enums.EtatDefault;
 import model.enums.Matiere;
 import model.enums.OptionMajCompos;
+import model.enums.ParamSpec;
 import model.enums.QG;
+import model.enums.TypeInfo;
 import model.enums.TypeMetrique;
+import model.enums.TypeRapport;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Periode;
@@ -28,7 +33,7 @@ import model.sonarapi.Projet;
 import utilities.Statics;
 
 /**
- * Tâche de création de la liste des composants SonarQube avec sauvegarde sous forme de fichier XML
+ * Tâche de création de la liste des composants SonarQube avec purge des composants plantés
  * 
  * @author ETP8137 - Grégoire Mathon
  * @since 1.0
@@ -38,14 +43,23 @@ public class MajComposantsSonarTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 
+    /** Logger pour de debug dans la console */
     private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
+    /** Logger général de l'application */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
+    /** Nombre d'étapes du traitement */
     private static final short ETAPES = 2;
+    /** Titre de la tâche */
     private static final String TITRE = "Création liste des composants";
+    /** Numéro de lot inconnu */
     private static final String LOT0 = "000000";
 
+    /** Liste des clefs des composants plantès dans SonarQube */
     private List<String> keysComposPlantes;
+    /** Options de la tâche */
     private OptionMajCompos option;
+    /** Rapport de la purge */
+    private ControlRapport controlR;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -55,6 +69,7 @@ public class MajComposantsSonarTask extends AbstractTask
         this.option = option;
         annulable = true;
         keysComposPlantes = new ArrayList<>();
+        controlR = new ControlRapport(TypeRapport.PURGESONAR);
         startTimers();
     }
 
@@ -117,8 +132,11 @@ public class MajComposantsSonarTask extends AbstractTask
 
             // Initialisation composant
             ComposantSonar compo = initCompoDepuisProjet(mapCompos, projet);
+            List<String> oldVersion = Arrays.asList(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONSVIEUXCOMPOS).split(";"));
 
-            if (!api.initCompoVersionEtDateMaj(compo) && option == OptionMajCompos.PARTIELLE)
+            // On ne recalcule pas les composants avec une ancienne version ou ceux qui n'ont pas été mise à jour depuis la dernière mise à jour,
+            // mais seulement dans le cas où l'option de mise à jour partielle est activée.
+            if (!compoATester(compo, oldVersion))
                 continue;
 
             // Récupération du numéro de lot et de l'applicaiton de chaque composant.
@@ -164,11 +182,51 @@ public class MajComposantsSonarTask extends AbstractTask
             retour.add(compo);
         }
 
+        // Ecriture de la liste des composants purgés
+        controlR.creerFichier();
+
+        // Purge dans la ltable des composants plantés
         purgeComposPlantes(keysComposPlantes);
+
+        // Mise à jour des défaults pour fermer ceux résolus
         majDefAppli(mapDefAppli);
 
-        // Sauvegarde des données
         return retour;
+    }
+
+    /**
+     * Contrôle pour voir si l'on doit rechercher des modifications sur le composant dans SonarQube
+     * 
+     * @param compo
+     * @param oldVersion
+     * @return
+     */
+    private boolean compoATester(ComposantSonar compo, List<String> oldVersion)
+    {
+        if (option == OptionMajCompos.COMPLETE)
+        {
+            api.initCompoVersionEtDateMaj(compo);
+            return true;
+        }
+        return testVersion(compo, oldVersion) && api.initCompoVersionEtDateMaj(compo);
+    }
+
+    /**
+     * Test si la version d'un composant est récente ou non. Utilise le paramètre de l'application {@code ParamSpec.VERSIONSVIEUXCOMPOS}.
+     * 
+     * @param compo
+     * @param oldVersions
+     * @return vrai si la version est récente faux si c'est uen ancienne version
+     */
+    private boolean testVersion(ComposantSonar compo, List<String> oldVersions)
+    {
+        for (String version : oldVersions)
+        {
+            String nom = compo.getNom();
+            if (nom.substring(nom.length() - 2, nom.length()).equals(version))
+                return false;
+        }
+        return true;
     }
 
     private void initCompoLotEtMatiere(ComposantSonar compo, Composant composant, Map<String, LotRTC> mapLotRTC)
@@ -180,8 +238,8 @@ public class MajComposantsSonarTask extends AbstractTask
         Matiere matiere = testMatiereCompo(compo.getNom());
         compo.setMatiere(matiere);
 
-        // On récupère le numéro de lot des infos du composant et si on ne trouve pas la valeur dans la base de données
-        // on crée un nouveau lot en spécifiant qu'il ne fait pas parti du référentiel. Les composants sans numéro de lot auront un lotRTC nul.
+        // On récupère le numéro de lot des infos du composant et si on ne trouve pas la valeur dans la base de données,
+        // on crée un nouveau lot en spécifiant qu'il ne fait pas parti du référentiel. Les composants sans numéro de lot auront un lotRTC inconnu.
         if (mapLotRTC.containsKey(numeroLot))
         {
             compo.setLotRTC(mapLotRTC.get(numeroLot));
@@ -243,6 +301,7 @@ public class MajComposantsSonarTask extends AbstractTask
         if (LOT0.equals(getValueMetrique(composant, TypeMetrique.LOT, LOT0)))
         {
             keysComposPlantes.add(composant.getKey());
+            controlR.addInfo(TypeInfo.COMPOPURGE, composant.getKey(), "");
             retour = false;
         }
         return retour;
@@ -332,6 +391,7 @@ public class MajComposantsSonarTask extends AbstractTask
             LOGGER.debug("suppression composant : {0}", key);
 
             // Suppression dans la base
+
             dao.delete(dao.recupEltParIndex(key));
         }
 

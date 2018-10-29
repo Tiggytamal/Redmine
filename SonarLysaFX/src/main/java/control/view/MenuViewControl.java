@@ -10,8 +10,8 @@ import java.util.Optional;
 import control.rtc.ControlRTC;
 import control.sonar.SonarAPI;
 import control.task.AbstractTask;
-import control.task.MajComposantsSonarTask;
 import control.task.InitBaseAnosTask;
+import control.task.MajComposantsSonarTask;
 import control.task.MajVuesTask;
 import control.task.PurgeSonarTask;
 import dao.DaoDateMaj;
@@ -38,6 +38,7 @@ import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.TechnicalException;
 import utilities.enums.Severity;
+import view.ComposantsDialog;
 import view.ConnexionDialog;
 
 /**
@@ -56,6 +57,7 @@ public final class MenuViewControl extends AbstractViewControl
     private static final short HEIGHTAIDE = 480;
     private static final String OUTILS = "Outils/";
     private static final String FONCTIONS = "Fonctions/";
+    private static final String MYSQLPATH = "D:\\mysql\\bin\\mysqladmin.exe";
 
     /** Element du ménu lançant les contrôles mensuels */
     @FXML
@@ -224,7 +226,7 @@ public final class MenuViewControl extends AbstractViewControl
                 break;
 
             case "majCompos":
-                alertConfirmation(new MajComposantsSonarTask(OptionMajCompos.COMPLETE), "Cela lancera la mise à jour de tous les composants Sonar.");
+                optionsMajCompo();
                 break;
 
             case "majAnos":
@@ -296,10 +298,10 @@ public final class MenuViewControl extends AbstractViewControl
         box.getChildren().remove(connexion);
         box.getChildren().add(deConnexion);
 
-        if (new File("D:\\mysql\\bin\\mysqladmin.exe").exists())
+        if (new File(MYSQLPATH).exists())
         {
             // Démarrage du serveur MySQl si besoin
-            ProcessBuilder pb = new ProcessBuilder("D:\\mysql\\bin\\mysqladmin.exe", "-u", "root", "-pAQPadmin01", "ping");
+            ProcessBuilder pb = new ProcessBuilder(MYSQLPATH, "-u", "root", "-pAQPadmin01", "ping");
 
             try
             {
@@ -367,6 +369,22 @@ public final class MenuViewControl extends AbstractViewControl
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get().equals(ButtonType.OK))
             startTask(task);
+    }
+
+    /**
+     * Lancement de la fénêtre des options pour la mise à jour des composants
+     */
+    private void optionsMajCompo()
+    {
+        // Création de la popup de connexion
+        ComposantsDialog dialog = new ComposantsDialog();
+
+        // Récupération du pseudo et du mdp
+        Optional<OptionMajCompos> result = dialog.showAndWait();
+
+        // Contrôle dans Sonar de la validitée
+        if (result.isPresent())
+            startTask(new MajComposantsSonarTask(result.get()));        
     }
 
     /* ---------- ACCESSEURS ---------- */

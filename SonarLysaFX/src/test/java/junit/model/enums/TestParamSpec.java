@@ -40,7 +40,7 @@ public class TestParamSpec implements TestEnums
         assertFalse(ParamSpec.MEMBRESJAVA.getNom().isEmpty());
         assertFalse(ParamSpec.MEMBRESDATASTAGE.getNom().isEmpty());
         assertFalse(ParamSpec.RECAPDEFECT.getNom().isEmpty());
-        assertFalse(ParamSpec.VERSIONSCOMPOSANTS.getNom().isEmpty());
+        assertFalse(ParamSpec.VERSIONSVIEUXCOMPOS.getNom().isEmpty());
         assertFalse(ParamSpec.TEXTEAPPLI.getNom().isEmpty());
         assertFalse(ParamSpec.TEXTERELANCE.getNom().isEmpty());
     }
@@ -55,7 +55,7 @@ public class TestParamSpec implements TestEnums
         assertEquals(TypeParamSpec.LISTVIEWNOM, ParamSpec.MEMBRESJAVA.getType());
         assertEquals(TypeParamSpec.LISTVIEWNOM, ParamSpec.MEMBRESDATASTAGE.getType());
         assertEquals(TypeParamSpec.LISTVIEWNOM, ParamSpec.MEMBRESMAIL.getType());
-        assertEquals(TypeParamSpec.LISTVIEWCOMPO, ParamSpec.VERSIONSCOMPOSANTS.getType());
+        assertEquals(TypeParamSpec.LISTVIEWCOMPO, ParamSpec.VERSIONSVIEUXCOMPOS.getType());
         assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTEAPPLI.getType());
         assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTERELANCE.getType());
     }

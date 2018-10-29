@@ -17,7 +17,7 @@ public enum ParamSpec implements TypeKey
     TEXTEDEFECT("Description Defect RTC", TypeParamSpec.TEXTAREA),
     TEXTESECURITE("Texte Sécurité RTC", TypeParamSpec.TEXTAREA),
     VERSIONS("Versions", TypeParamSpec.LISTVIEWVERSION),
-    VERSIONSCOMPOSANTS("Versions des composants pour la purge", TypeParamSpec.LISTVIEWCOMPO),
+    VERSIONSVIEUXCOMPOS("Versions des composants anciens", TypeParamSpec.LISTVIEWCOMPO),
     MEMBRESJAVA("Responsables  JAVA", TypeParamSpec.LISTVIEWNOM),
     MEMBRESDATASTAGE("Responsables DATASTAGE", TypeParamSpec.LISTVIEWNOM),
     MEMBRESMAIL("Groupe de reception des rapports", TypeParamSpec.LISTVIEWNOM);

@@ -566,8 +566,8 @@ Merci</value>
             <value>MATHON Gregoire;</value>
         </entry>
         <entry>
-            <key>VERSIONSCOMPOSANTS</key>
-            <value>14;15</value>
+            <key>VERSIONSVIEUXCOMPOS</key>
+            <value>10;11;12</value>
         </entry>
     </mapParamsSpec>
     <mapPlans>

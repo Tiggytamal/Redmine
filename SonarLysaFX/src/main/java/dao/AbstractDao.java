@@ -196,10 +196,14 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
      * 
      * @param t
      */
-    public void delete(T t)
+    public boolean delete(T t)
     {
-        if (t.getIdBase() != 0)
+        if (t != null && t.getIdBase() != 0)
+        {
             em.remove(t);
+            return true;
+        }
+        return false;
     }
 
     /**

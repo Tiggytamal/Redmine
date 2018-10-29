@@ -17,7 +17,6 @@ import dao.DaoFactory;
 import model.bdd.ComposantSonar;
 import model.enums.Param;
 import model.enums.ParamBool;
-import model.enums.ParamSpec;
 import model.enums.TypeInfo;
 import model.enums.TypeRapport;
 import utilities.Statics;
@@ -114,7 +113,7 @@ public class PurgeSonarTask extends AbstractTask
         int nbreVersion = Integer.parseInt(Statics.proprietesXML.getMapParams().get(Param.NBREPURGE));
 
         // Récupération de la liste des versions des composants à garder et rangement de la plus recente à la plus ancienne.
-        List<String> listeVersion = Arrays.asList(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONSCOMPOSANTS).split(";"));
+        List<String> listeVersion = Arrays.asList("15", "14", "13");
         Collections.sort(listeVersion, (s1, s2) -> Integer.valueOf(s2).compareTo(Integer.valueOf(s1)));
 
         // Calcul du pattern à partir du paramètrage pour obtenir : [(X)|...|(Z)]$

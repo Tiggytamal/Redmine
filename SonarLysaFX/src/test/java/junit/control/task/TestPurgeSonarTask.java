@@ -60,7 +60,7 @@ public class TestPurgeSonarTask extends AbstractTestTask<PurgeSonarTask>
         Map<String, ComposantSonar> mapCompos = new HashMap<>();
 
         // Remplissage de la liste
-        List<String> listeVersion = Arrays.asList(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONSCOMPOSANTS).split(";"));
+        List<String> listeVersion = Arrays.asList(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONSVIEUXCOMPOS).split(";"));
 
         for (String string : listeVersion)
         {
