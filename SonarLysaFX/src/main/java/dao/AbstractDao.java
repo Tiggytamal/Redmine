@@ -187,6 +187,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
         else
         {
             // Sinon, on fait un simple merge dans le contexte
+            persistImpl(t);
             em.merge(t);
             retour = false;
         }

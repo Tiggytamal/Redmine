@@ -54,10 +54,15 @@ public class DaoEdition extends AbstractDao<Edition> implements Serializable
         // Mise à jour des données
         for (Map.Entry<String, Edition> entry : mapExcel.entrySet())
         {
-            mapBase.put(entry.getKey(), mapBase.computeIfAbsent(entry.getKey(), key -> entry.getValue()).update(entry.getValue()));
+            String keyExcel = entry.getKey();
+            Edition edExcel = entry.getValue();
+            if (mapBase.containsKey(keyExcel))
+                mapBase.get(keyExcel).update(edExcel);
+            else
+                mapBase.put(keyExcel, edExcel);
         }
 
-        // PErsistance des données
+        // Persistance des données
         int retour = persist(mapBase.values());
         majDateDonnee();
         return retour;
@@ -66,7 +71,7 @@ public class DaoEdition extends AbstractDao<Edition> implements Serializable
     @Override
     protected void persistImpl(Edition t)
     {
-        // Pas d'implémentation nécessaire    
+        // Pas d'implémentation nécessaire
     }
 
     /*---------- METHODES PRIVEES ----------*/

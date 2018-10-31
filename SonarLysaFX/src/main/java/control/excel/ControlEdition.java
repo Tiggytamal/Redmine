@@ -63,7 +63,7 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
         Sheet sheet = wb.getSheetAt(0);
 
         int year = today.getYear();
-        List<String> annees = Arrays.asList(String.valueOf(year), String.valueOf(year + 1), String.valueOf(year - 1));
+        List<String> annees = Arrays.asList(String.valueOf(year), String.valueOf(year + 1), String.valueOf(year - 1), String.valueOf(year - 2));
 
         // Itération sur toutes les lignes sauf la première.
         // On enregistre l'édition si le libelle correspond à une CHC ou à une CHC_CDM
@@ -120,21 +120,29 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
             String retour = string.trim();
             if (retour.matches("^CDM20[12][0-9]\\-S[0-5][0-9]$"))
                 return "CHC_" + retour;
+            else if (retour.matches("^CDM20[12][0-9]\\-s[0-5][0-9]$"))
+                return "CHC_" + retour.replace("s", "S"); 
+            else if (retour.matches("^CDM20[12][0-9][0-5][0-9]$"))
+                return "CHC_" + retour.substring(0, retour.length() - 2) + "-S" + retour.substring(retour.length() - 2);
         }
 
         String retour = split[0].trim();
         if (retour.matches("^CHC20[12][0-9]\\-S[0-5][0-9]$"))
             return retour;
-
+        else if (retour.matches("^CHC20[12][0-9]\\-s[0-5][0-9]$"))
+            return retour.replace("s", "S");
+        else if (retour.matches("^CHC20[12][0-9][0-5][0-9]$"))
+            return retour.substring(0, retour.length() - 2) + "-S" + retour.substring(retour.length() - 2);
+        
         return libelle;
     }
 
     private LocalDate prepareDateMEP(String semaine)
     {
-        if (semaine.contains("N/A"))
+        if (semaine.contains("N/A") || semaine.contains("n/a") || semaine.isEmpty())
             return LocalDate.of(2099, 1, 1);
 
-        if (!semaine.matches("^S\\d{2}\\s\\-\\s20[1-9]\\d$"))
+        if (!semaine.matches("^[Ss]\\d{2}\\s\\-\\s20[1-9]\\d$"))
             throw new TechnicalException("Erreur dans le fichier des éditions, information sur la semaine : " + semaine);
 
         String[] split = semaine.split(" - ");
