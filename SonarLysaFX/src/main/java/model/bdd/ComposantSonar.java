@@ -34,7 +34,8 @@ import model.enums.QG;
 @NamedQueries (value = {
         @NamedQuery(name="ComposantSonar.findAll", query="SELECT distinct(c) FROM ComposantSonar c "
                 + "JOIN FETCH c.appli a "
-                + "JOIN FETCH c.lotRTC l"),
+                + "JOIN FETCH c.lotRTC l "
+                + "LEFT JOIN FETCH c.edition e"),
         @NamedQuery(name="ComposantSonar.findByIndex", query="SELECT c FROM ComposantSonar c WHERE c.key = :index"),
         @NamedQuery(name="ComposantSonar.resetTable", query="DELETE FROM ComposantSonar")
 })
@@ -64,8 +65,10 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @JoinColumn(name = "appli")
     private Application appli;
 
-    @Column(name = "edition", nullable = true, length = 20)
-    private String edition;
+    @BatchFetch(value = BatchFetchType.JOIN)
+    @ManyToOne(targetEntity = Edition.class, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "edition")
+    private Edition edition;
 
     @Column(name = "ldc", nullable = true)
     private int ldc;
@@ -171,12 +174,12 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
             this.appli = appli;
     }
 
-    public String getEdition()
+    public Edition getEdition()
     {
-        return getString(edition);
+        return edition;
     }
 
-    public void setEdition(String edition)
+    public void setEdition(Edition edition)
     {
         if (edition != null)
             this.edition = edition;

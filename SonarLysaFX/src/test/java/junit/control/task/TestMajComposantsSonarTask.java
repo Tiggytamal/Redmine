@@ -24,7 +24,7 @@ import dao.DaoFactory;
 import de.saxsys.javafx.test.JfxRunner;
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
-import model.bdd.DefaultAppli;
+import model.bdd.DefautAppli;
 import model.enums.OptionMajCompos;
 import model.enums.TypeMetrique;
 import model.sonarapi.Composant;
@@ -126,7 +126,7 @@ public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSo
     public void testGestionDefaultsAppli() throws Exception
     {
         List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
-        Map<String, DefaultAppli> mapDefAppli = DaoFactory.getDao(DefaultAppli.class).readAllMap();
+        Map<String, DefautAppli> mapDefAppli = DaoFactory.getDao(DefautAppli.class).readAllMap();
         
         for (ComposantSonar compo : compos)
         {

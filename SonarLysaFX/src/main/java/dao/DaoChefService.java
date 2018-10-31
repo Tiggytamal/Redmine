@@ -62,6 +62,12 @@ public class DaoChefService extends AbstractDao<ChefService> implements Serializ
         majDateDonnee();
         return retour;
     }
+    
+    @Override
+    protected void persistImpl(ChefService t)
+    {
+        // Pas d'implémentation nécessaire       
+    }
 
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

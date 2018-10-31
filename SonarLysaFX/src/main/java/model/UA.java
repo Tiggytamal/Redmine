@@ -11,7 +11,7 @@ public class UA extends AbstractModele
     
     /*---------- CONSTRUCTEURS ----------*/
 
-    UA() { }
+    UA() {}
     
     /*---------- METHODES PUBLIQUES ----------*/    
     /*---------- METHODES PRIVEES ----------*/

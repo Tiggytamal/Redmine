@@ -21,7 +21,7 @@ import com.ibm.team.workitem.common.model.ISubscriptions;
 import com.ibm.team.workitem.common.model.IWorkItem;
 import com.ibm.team.workitem.common.model.IWorkItemType;
 
-import model.bdd.DefaultQualite;
+import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.Matiere;
 import model.enums.Param;
@@ -43,14 +43,14 @@ public final class WorkItemInitialization extends WorkItemOperation
     private IWorkItemType type;
     private ICategory cat;
     private IProjectArea projet;
-    private DefaultQualite dq;
+    private DefautQualite dq;
     private int lotAno;
     private ControlRTC controlRTC;
     private IWorkItemClient client;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public WorkItemInitialization(IWorkItemType type, ICategory cat, IProjectArea projet, DefaultQualite dq)
+    public WorkItemInitialization(IWorkItemType type, ICategory cat, IProjectArea projet, DefautQualite dq)
     {
         super("Initializing Work Item");
         this.type = type;
@@ -188,7 +188,7 @@ public final class WorkItemInitialization extends WorkItemOperation
         workItem.setTags2(tags);
     }
 
-    private String creerDescription(DefaultQualite dq)
+    private String creerDescription(DefautQualite dq)
     {
         String retour;
         if (dq.getNomCompoAppli().isEmpty())

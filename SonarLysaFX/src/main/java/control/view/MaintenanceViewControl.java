@@ -15,7 +15,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import model.enums.CHCouCDM;
+import model.enums.TypeEdition;
 import utilities.TechnicalException;
 
 /**
@@ -46,7 +46,7 @@ public final class MaintenanceViewControl extends AbstractViewControl
     @FXML
     private CheckBox precedente;
 
-    private CHCouCDM chccdm;
+    private TypeEdition chccdm;
     private String titreTask;
     private final LocalDate today = LocalDate.now();
 
@@ -77,14 +77,14 @@ public final class MaintenanceViewControl extends AbstractViewControl
                 case "radioCHC" :
                     children.add(checkBoxPane);
                     children.add(creer);
-                    chccdm = CHCouCDM.CHC;
+                    chccdm = TypeEdition.CHC;
                     titreTask = "Vues CHC";
                     break;
 
                 case "radioCHCCDM" :
                     children.add(checkBoxPane);
                     children.add(creer);
-                    chccdm = CHCouCDM.CDM;
+                    chccdm = TypeEdition.CDM;
                     titreTask = "Vues CHC_CDM";
                     break;
 

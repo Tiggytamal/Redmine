@@ -17,7 +17,7 @@ public class InfoMail extends AbstractModele
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    InfoMail() { }
+    InfoMail() {}
     
     InfoMail(String lot, String infoSupp)
     {

@@ -11,7 +11,8 @@ public enum TypeColEdition implements TypeColR
 {
     LIBELLE ("Libellé", "colLib"),
     VERSION ("Numero de version", "colVersion"),
-    COMMENTAIRE("Commentaire", "colComment");
+    COMMENTAIRE("Commentaire", "colComment"),
+    SEMAINE("Semaine", "colSemaine");
 
     private final String valeur;
     private final String nomCol;

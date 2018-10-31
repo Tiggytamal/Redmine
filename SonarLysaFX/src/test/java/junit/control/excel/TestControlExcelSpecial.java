@@ -17,11 +17,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import control.excel.ControlSuivi;
-import model.bdd.DefaultQualite;
+import model.bdd.DefautQualite;
 import model.enums.TypeColSuivi;
 import utilities.Statics;
 
-public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<DefaultQualite>>
+public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<DefautQualite>>
 {
     /*---------- ATTRIBUTS ----------*/
     

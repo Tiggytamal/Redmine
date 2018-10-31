@@ -31,7 +31,7 @@ import control.excel.ControlSuivi;
 import control.rtc.ControlRTC;
 import junit.TestUtils;
 import model.ModelFactory;
-import model.bdd.DefaultQualite;
+import model.bdd.DefautQualite;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.TypeAction;
@@ -39,7 +39,7 @@ import model.enums.TypeColSuivi;
 import model.enums.TypeRapport;
 import utilities.FunctionalException;
 
-public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<DefaultQualite>>
+public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, ControlSuivi, List<DefautQualite>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -174,7 +174,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         // Vérification de al couleur de sortie de la méthode
 
         // Initialisation
-        DefaultQualite dq = ModelFactory.getModel(DefaultQualite.class);
+        DefautQualite dq = ModelFactory.getModel(DefautQualite.class);
         String methode = "calculCouleurLigne";
         Set<String> lotsEnErreurSonar = new HashSet<>();
         String anoLot = "123456";
@@ -270,10 +270,10 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException1() throws IllegalAccessException
     {
-        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefaultQualite.class, IndexedColors.class);
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
         try
         {
-            method.invoke(handler, null, ModelFactory.getModel(DefaultQualite.class), IndexedColors.AQUA);
+            method.invoke(handler, null, ModelFactory.getModel(DefautQualite.class), IndexedColors.AQUA);
 
         } catch (InvocationTargetException e)
         {
@@ -285,7 +285,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException2() throws IllegalAccessException
     {
-        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefaultQualite.class, IndexedColors.class);
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
         try
         {
             method.invoke(handler, wb.getSheetAt(0).getRow(0), null, IndexedColors.AQUA);
@@ -299,10 +299,10 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException3() throws IllegalAccessException
     {
-        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefaultQualite.class, IndexedColors.class);
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
         try
         {
-            method.invoke(handler, wb.getSheetAt(0).getRow(0), ModelFactory.getModel(DefaultQualite.class), null);
+            method.invoke(handler, wb.getSheetAt(0).getRow(0), ModelFactory.getModel(DefautQualite.class), null);
 
         } catch (InvocationTargetException e)
         {
@@ -314,7 +314,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException4() throws IllegalAccessException
     {
-        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefaultQualite.class, IndexedColors.class);
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
         try
         {
             method.invoke(handler, null, null, null);
@@ -432,7 +432,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     public void testSaveAnomaliesCloses() throws Exception
     {
         // Initialisation
-        Map<String, DefaultQualite> dqClos = new HashMap<>();
+        Map<String, DefautQualite> dqClos = new HashMap<>();
 
         // Test 1
         Sheet sheet = invokeMethod(handler, "saveAnomaliesCloses", dqClos);

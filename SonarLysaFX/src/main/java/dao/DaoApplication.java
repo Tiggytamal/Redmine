@@ -68,6 +68,12 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
         return retour;
     }
 
+    @Override
+    protected void persistImpl(Application t)
+    {
+        // Pas d'implémentation nécessaire       
+    }
+
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

@@ -75,7 +75,7 @@ public class ProjetClarity extends AbstractBDDModele implements Serializable
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    ProjetClarity() { }
+    ProjetClarity() {}
     
     public static ProjetClarity getProjetClarityInconnu(String code)
     {

@@ -50,7 +50,7 @@ public class ChefService extends AbstractBDDModele implements Serializable
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    ChefService() { }
+    ChefService() {}
     
     public static ChefService getChefServiceInconnu(String service)
     {

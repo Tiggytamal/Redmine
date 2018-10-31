@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import model.enums.TypeDefault;
+import model.enums.TypeDefaut;
 
 public class testTypeDefault implements TestEnums
 {
@@ -12,14 +12,14 @@ public class testTypeDefault implements TestEnums
     @Override
     public void testConstructeur()
     {
-        assertEquals(TypeDefault.SONAR, TypeDefault.valueOf(TypeDefault.SONAR.toString()));
+        assertEquals(TypeDefaut.SONAR, TypeDefaut.valueOf(TypeDefaut.SONAR.toString()));
     }
 
     @Test
     @Override
     public void testSize()
     {
-        assertEquals(3, TypeDefault.values().length);
+        assertEquals(3, TypeDefaut.values().length);
     }
 
 }

@@ -63,6 +63,12 @@ public class DaoEdition extends AbstractDao<Edition> implements Serializable
         return retour;
     }
 
+    @Override
+    protected void persistImpl(Edition t)
+    {
+        // Pas d'implémentation nécessaire    
+    }
+
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

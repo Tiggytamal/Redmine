@@ -18,7 +18,7 @@ public abstract class AbstractLaunchTask
     /*---------- ATTRIBUTS ----------*/
     /*---------- CONSTRUCTEURS ----------*/
 
-    protected AbstractLaunchTask() { }
+    protected AbstractLaunchTask() {}
 
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/

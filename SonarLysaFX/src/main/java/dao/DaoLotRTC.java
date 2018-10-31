@@ -45,27 +45,10 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
     }
 
     @Override
-    public boolean persistImpl(LotRTC lot)
+    public void persistImpl(LotRTC lot)
     {
-        if (lot.getIdBase() == 0)
-        {
-            lot.initTimeStamp();
-
-            if (lot.getProjetClarity() != null)
-            {
-                // Persistance lots RTC liés
-                if (lot.getProjetClarity().getIdBase() == 0)
-                    DaoFactory.getDao(ProjetClarity.class, em).persist(lot.getProjetClarity());
-                else
-                    em.merge(lot.getProjetClarity());
-            }
-
-            em.persist(lot);
-            return true;
-        }
-        else
-            em.merge(lot);
-        return false;
+            // Persistance projet Clarity
+            persistSousObjet(ProjetClarity.class, lot.getProjetClarity());
     }
 
     /*---------- METHODES PRIVEES ----------*/

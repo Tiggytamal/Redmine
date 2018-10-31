@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import model.enums.CHCouCDM;
+import model.enums.TypeEdition;
 
 /**
  * Classe de test de l'numération CDCouCDM
@@ -19,13 +19,13 @@ public class TestCHCouCDM implements TestEnums
     @Override
     public void testConstructeur()
     {
-        assertEquals(CHCouCDM.CDM, CHCouCDM.valueOf(CHCouCDM.CDM.toString()));
+        assertEquals(TypeEdition.CDM, TypeEdition.valueOf(TypeEdition.CDM.toString()));
     }
 
     @Test
     @Override
     public void testSize()
     {
-        assertEquals(2, CHCouCDM.values().length);
+        assertEquals(2, TypeEdition.values().length);
     }
 }

@@ -145,7 +145,7 @@ public class SonarAPI
         if (response.getStatus() == Status.OK.getStatusCode())
         {
             LOGGER.info("Liste des Vues triées retournées depuis Sonar");
-            return response.readEntity(new GenericType<List<Projet>>() { });
+            return response.readEntity(new GenericType<List<Projet>>() {});
         }
         else
             LOGGER.error("Impossible de retourner les vues depuis Sonar = " + PROJECTSINDEX);
@@ -350,7 +350,7 @@ public class SonarAPI
         // 3. Test du retour et renvoie de la dernière version si ok.
         if (response.getStatus() == Status.OK.getStatusCode())
         {
-            List<Event> liste = response.readEntity(new GenericType<List<Event>>() { });
+            List<Event> liste = response.readEntity(new GenericType<List<Event>>() {});
             if (liste != null && !liste.isEmpty())
                 return controleVersion(liste);
         }
@@ -373,7 +373,7 @@ public class SonarAPI
         if (response.getStatus() == Status.OK.getStatusCode())
         {
             LOGGER.info("Récupération de la liste des composants OK");
-            return response.readEntity(new GenericType<List<Projet>>() { });
+            return response.readEntity(new GenericType<List<Projet>>() {});
         }
         else
         {

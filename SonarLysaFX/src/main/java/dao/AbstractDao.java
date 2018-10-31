@@ -81,6 +81,13 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
      * @return
      */
     public abstract int recupDonneesDepuisExcel(File file);
+    
+    /**
+     * Méthode à implémenter si besoin de fonctions supplémentaires lors de la persistance
+     * 
+     * @param t
+     */
+    protected abstract void persistImpl(T t);
 
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -117,7 +124,6 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
         }
         return retour;
     }
-    
 
     /**
      * Récupère un élément de la base de donnée selon son code.
@@ -162,10 +168,29 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
      */
     public final boolean persist(T t)
     {
+        // Booléen permettant de créer ou non une transaction SQL
         boolean test = em.getTransaction().isActive();
+        
+        // Information de retour sur la persistance ou non de l'objet
+        boolean retour;
         if (!test)
             em.getTransaction().begin();
-        boolean retour = persistImpl(t);
+        
+        if (t.getIdBase() == 0)
+        {
+            // Si l'objet est nouveau, on crée un premier TimeStamp et on appelle l'implémentation spécifique de l'objet
+            t.initTimeStamp();
+            persistImpl(t);
+            em.persist(t);
+            retour = true;
+        }
+        else
+        {
+            // Sinon, on fait un simple merge dans le contexte
+            em.merge(t);
+            retour = false;
+        }
+
         if (!test)
             em.getTransaction().commit();
         return retour;
@@ -241,10 +266,10 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
         em.getTransaction().commit();
         return retour;
     }
-    
+
     /*---------- METHODES PROTECTED ----------*/
-    
-    protected <O extends AbstractBDDModele>void persistSousObjet(Class<O> classObjet, O objet)
+
+    protected <O extends AbstractBDDModele> void persistSousObjet(Class<O> classObjet, O objet)
     {
         if (objet != null)
         {
@@ -253,20 +278,6 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
             else
                 em.merge(objet);
         }
-    }
-    
-    protected boolean persistImpl(T t)
-    {
-        boolean retour = false;
-        if (t.getIdBase() == 0)
-        {
-            t.initTimeStamp();
-            em.persist(t);
-            retour = true;
-        }
-        else
-            em.merge(t);
-        return retour;        
     }
 
     /*---------- METHODES PRIVEES ----------*/

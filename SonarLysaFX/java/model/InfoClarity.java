@@ -19,7 +19,7 @@ public class InfoClarity implements Modele
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    InfoClarity() { }
+    InfoClarity() {}
 
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/

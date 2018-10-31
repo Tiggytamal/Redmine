@@ -22,7 +22,7 @@ import model.CompoPbApps;
 import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
-import model.bdd.DefaultAppli;
+import model.bdd.DefautAppli;
 import model.bdd.LotRTC;
 import model.enums.EtatAppli;
 import model.enums.OptionCreerVueParAppsTask;
@@ -213,7 +213,7 @@ public class CreerVueParAppsTask extends AbstractTask
         // Initialisation de la map
         HashMap<String, List<ComposantSonar>> retour = new HashMap<>();
         
-        Map<String, DefaultAppli> mapDefaultAppli = DaoFactory.getDao(DefaultAppli.class).readAllMap();
+        Map<String, DefautAppli> mapDefaultAppli = DaoFactory.getDao(DefautAppli.class).readAllMap();
 
         // Message
         baseMessage = "Traitements des composants :" + NL;
@@ -249,7 +249,7 @@ public class CreerVueParAppsTask extends AbstractTask
      *            Nom du composant Sonar.
      * @param inconnues
      */
-    private void testAppli(ComposantSonar compo, Map<String, DefaultAppli> mapDefaultAppli)
+    private void testAppli(ComposantSonar compo, Map<String, DefautAppli> mapDefaultAppli)
     {
         Application application = compo.getAppli();
         String codeAppli = application.getCode();
@@ -265,7 +265,7 @@ public class CreerVueParAppsTask extends AbstractTask
             // Ajout à la liste des composants à problème avec test sur les version précedente de celui-ci
             composPbAppli.add(testVersionPrec(compo));
             
-            DefaultAppli da = mapDefaultAppli.get(compo.getNom());
+            DefautAppli da = mapDefaultAppli.get(compo.getNom());
             if( da == null)
                 compo.setAppli(appliInconnue);
             

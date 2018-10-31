@@ -69,26 +69,10 @@ public class DaoProjetClarity extends AbstractDao<ProjetClarity> implements Seri
     }
 
     @Override
-    public boolean persistImpl(ProjetClarity projet)
+    public void persistImpl(ProjetClarity projet)
     {
-        if (projet.getIdBase() == 0)
-        {
-            projet.initTimeStamp();
-
-            // Persistance chef de service
-            if (projet.getChefService() != null)
-            {
-                if (projet.getChefService().getIdBase() == 0)
-                    DaoFactory.getDao(ChefService.class, em).persist(projet.getChefService());
-                else
-                    em.merge(projet.getChefService());
-            }
-
-            em.persist(projet);
-            return true;
-        }
-        em.merge(projet);
-        return false;
+        // Persistance chef de service
+        persistSousObjet(ChefService.class, projet.getChefService());
     }
 
     /*---------- METHODES PRIVEES ----------*/

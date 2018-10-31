@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
+import model.bdd.Edition;
 import model.bdd.LotRTC;
 import model.enums.TypeDonnee;
 
@@ -50,39 +51,16 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     }
 
     @Override
-    public boolean persistImpl(ComposantSonar compo)
+    public void persistImpl(ComposantSonar compo)
     {
-        if (compo.getIdBase() == 0)
-        {
-            compo.initTimeStamp();
+            // Presistance application liée
+            persistSousObjet(Application.class, compo.getAppli());
 
-            // Presistance applications liées
-            Application appli = compo.getAppli();
-            if (appli != null)
-            {
-                if (appli.getIdBase() == 0)
-                    DaoFactory.getDao(Application.class, em).persist(appli);
-                else
-                    em.merge(appli);
-            }
-
-            // Persistance lots liés
-            LotRTC lotRTC = compo.getLotRTC();
-            if (lotRTC != null)
-            {
-                if (lotRTC.getIdBase() == 0)
-                    DaoFactory.getDao(LotRTC.class, em).persist(lotRTC);
-                else
-                    em.merge(lotRTC);
-            }
-
-            em.persist(compo);
-            return true;
-        }
-        else
-            em.merge(compo);
-
-        return false;
+            // Persistance lot lié
+            persistSousObjet(LotRTC.class, compo.getLotRTC());
+            
+            // Persistance edition liée
+            persistSousObjet(Edition.class, compo.getEdition());
     }
 
     public void controleDoublons()

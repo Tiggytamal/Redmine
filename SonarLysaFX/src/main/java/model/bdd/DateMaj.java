@@ -44,7 +44,7 @@ public class DateMaj extends AbstractBDDModele
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    DateMaj() { }
+    DateMaj() {}
 
     /*---------- METHODES PUBLIQUES ----------*/
 

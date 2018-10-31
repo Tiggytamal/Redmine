@@ -25,7 +25,7 @@ import control.rtc.ControlRTC;
 import control.rtc.WorkItemInitialization;
 import junit.JunitBase;
 import model.ModelFactory;
-import model.bdd.DefaultQualite;
+import model.bdd.DefautQualite;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamSpec;
@@ -37,7 +37,7 @@ public class TestWorkItemInitialization extends JunitBase
     /*---------- ATTRIBUTS ----------*/
 
     private WorkItemInitialization handler;
-    private DefaultQualite dq;
+    private DefautQualite dq;
     private IWorkItemClient client;
     private ControlRTC controlRTC;
     private NullProgressMonitor monitor;
@@ -56,7 +56,7 @@ public class TestWorkItemInitialization extends JunitBase
     @Override
     public void init()
     {
-        dq = ModelFactory.getModel(DefaultQualite.class);
+        dq = ModelFactory.getModel(DefautQualite.class);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -122,7 +122,7 @@ public class TestWorkItemInitialization extends JunitBase
         assertEquals(controlRTC.recupLiteralDepuisString(valeurTest, attribut), workItemTest.getValue(attribut));
     }
 
-    private void testExecute(DefaultQualite dq) throws Exception
+    private void testExecute(DefautQualite dq) throws Exception
     {
 //        // Initialisation client, projet, itemType et categories
 //        @SuppressWarnings("unchecked")

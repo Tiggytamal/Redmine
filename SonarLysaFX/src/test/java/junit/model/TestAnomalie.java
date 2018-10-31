@@ -9,11 +9,11 @@ import static utilities.Statics.EMPTY;
 import org.junit.Test;
 
 import model.ModelFactory;
-import model.bdd.DefaultQualite;
+import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.TypeAction;
 
-public class TestAnomalie extends AbstractTestModel<DefaultQualite>
+public class TestAnomalie extends AbstractTestModel<DefautQualite>
 {
     /*---------- ATTRIBUTS ----------*/    
     /*---------- CONSTRUCTEURS ----------*/    
@@ -23,7 +23,7 @@ public class TestAnomalie extends AbstractTestModel<DefaultQualite>
     public void testAnomlieWithLot()
     {
         // Test création anomalie depuis LotSuiviRTC
-        handler = ModelFactory.getModelWithParams(DefaultQualite.class, ModelFactory.getModel(LotRTC.class));
+        handler = ModelFactory.getModelWithParams(DefautQualite.class, ModelFactory.getModel(LotRTC.class));
         assertNotNull(handler);
     }
     
@@ -77,7 +77,7 @@ public class TestAnomalie extends AbstractTestModel<DefaultQualite>
     public void testToString()
     {
         // Test sans initialisation
-        handler = ModelFactory.getModel(DefaultQualite.class);
+        handler = ModelFactory.getModel(DefautQualite.class);
         String string = handler.toString();
         System.out.println(string);
         assertTrue(string.contains("direction=<null>"));

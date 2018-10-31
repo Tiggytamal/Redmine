@@ -7,11 +7,11 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
-import model.bdd.DefaultQualite;
+import model.bdd.DefautQualite;
 import model.enums.Matiere;
 import model.enums.TypeDonnee;
 
-public class DaoDefaultQualite extends AbstractDao<DefaultQualite> implements Serializable
+public class DaoDefaultQualite extends AbstractDao<DefautQualite> implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -40,18 +40,24 @@ public class DaoDefaultQualite extends AbstractDao<DefaultQualite> implements Se
         return 0;
     }
 
-    public Map<String, DefaultQualite> readAllMapMatiere(Matiere matiere)
+    public Map<String, DefautQualite> readAllMapMatiere(Matiere matiere)
     {
-        Map<String, DefaultQualite> retour = new HashMap<>();
+        Map<String, DefautQualite> retour = new HashMap<>();
 
         // Itération pour ne prendre que les anomalies de la matière désirée
-        for (DefaultQualite dq : readAll())
+        for (DefautQualite dq : readAll())
         {
             if (dq.getLotRTC().getMatieres().contains(matiere))
                 retour.put(dq.getMapIndex(), dq);
         }
 
         return retour;
+    }
+
+    @Override
+    protected void persistImpl(DefautQualite t)
+    {
+        // Pas d'implémentation nécessaire       
     }
 
     /*---------- METHODES PRIVEES ----------*/

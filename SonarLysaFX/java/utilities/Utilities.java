@@ -28,7 +28,7 @@ public final class Utilities
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
     private static final short BASEVERSION = 17;
 
-    private Utilities() { }
+    private Utilities() {}
 
     /**
      * Gets the base location of the given class.

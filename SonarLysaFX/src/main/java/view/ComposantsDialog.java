@@ -10,6 +10,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import model.enums.OptionMajCompos;
+import utilities.FunctionalException;
+import utilities.enums.Severity;
 
 /**
  * Dialogue permettant de tester la connexion au serveur Sonar
@@ -47,15 +49,17 @@ public class ComposantsDialog extends Dialog<OptionMajCompos>
         grid.setVgap(BASEGAP);
         grid.setPadding(new Insets(TOPINSET, RIGHTINSET, BASEGAP, BASEGAP));
 
-        // Option
+        // Label
         Label label = new Label("Choisissez le type de mise à jour :");
+        grid.add(label, 0, 0, 2, 1);
+        
+        // RadioBoutons
         ToggleGroup group = new ToggleGroup();
         RadioButton partielle = new RadioButton("Partielle. temps < 20 mins");
         group.getToggles().add(partielle);        
         RadioButton complete = new RadioButton("Complète. temps > 1h");
         group.getToggles().add(complete);
-
-        grid.add(label, 0, 0, 2, 1);
+        group.selectToggle(partielle);
         grid.add(partielle, 1, 1);
         grid.add(complete, 1, 2);
 
@@ -72,8 +76,10 @@ public class ComposantsDialog extends Dialog<OptionMajCompos>
             {
                 if (partielle.isSelected())
                     return OptionMajCompos.PARTIELLE;
-                else
+                else if (complete.isSelected())
                     return OptionMajCompos.COMPLETE;
+                else
+                    throw new FunctionalException(Severity.INFO, "Vous devez choisir un type de mise à jour.");
             }
             return null;
         });

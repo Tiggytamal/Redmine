@@ -11,7 +11,7 @@ import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
 import dao.DaoDefaultQualite;
 import dao.DaoFactory;
-import model.bdd.DefaultQualite;
+import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.Param;
 import model.enums.TypeColSuivi;
@@ -43,7 +43,7 @@ public class InitBaseAnosTask extends AbstractTask
     public Boolean call() throws Exception
     {
         updateMessage("Remise à zéro de la table des anomalies");
-        DaoFactory.getDao(DefaultQualite.class).resetTable();
+        DaoFactory.getDao(DefautQualite.class).resetTable();
         
         etapePlus();
         String base = "Traitement du fichier JAVA :\n";
@@ -65,7 +65,7 @@ public class InitBaseAnosTask extends AbstractTask
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private Collection<DefaultQualite> initDefaults(String fichier, String base)
+    private Collection<DefautQualite> initDefaults(String fichier, String base)
     {
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;
         ControlSuivi controlAno = ExcelFactory.getReader(TypeColSuivi.class, new File(name));
@@ -74,7 +74,7 @@ public class InitBaseAnosTask extends AbstractTask
         Map<String, LotRTC> lotsRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
         
         updateMessage(base + "Traitement des défaults en cours");
-        List<DefaultQualite> liste = controlAno.recupAnoEnCoursDepuisExcel(lotsRTC, this);
+        List<DefautQualite> liste = controlAno.recupAnoEnCoursDepuisExcel(lotsRTC, this);
         
         updateMessage(base + "Traitement des défaults clos");
         liste.addAll(controlAno.recupAnoClosesDepuisExcel(lotsRTC, this));
@@ -83,9 +83,9 @@ public class InitBaseAnosTask extends AbstractTask
         return controlAno.controlAnoAbandon(liste, lotsRTC);
     }
     
-    private boolean sauvegarde(Collection<DefaultQualite> liste)
+    private boolean sauvegarde(Collection<DefautQualite> liste)
     {
-        DaoDefaultQualite dao = DaoFactory.getDao(DefaultQualite.class);
+        DaoDefaultQualite dao = DaoFactory.getDao(DefautQualite.class);
         int taille = dao.persist(liste);
         dao.majDateDonnee();
         return taille > 0;

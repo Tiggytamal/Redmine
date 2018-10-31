@@ -19,9 +19,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
-import model.bdd.DefaultAppli;
+import model.bdd.DefautAppli;
 import model.bdd.LotRTC;
-import model.enums.EtatDefault;
+import model.enums.EtatDefaut;
 import model.enums.TypeAction;
 import model.enums.TypeColSuiviApps;
 import utilities.CellHelper;
@@ -29,7 +29,7 @@ import utilities.FunctionalException;
 import utilities.enums.Bordure;
 import utilities.enums.Severity;
 
-public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps, List<DefaultAppli>>
+public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps, List<DefautAppli>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -63,13 +63,13 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public List<DefaultAppli> recupDonneesDepuisExcel()
+    public List<DefautAppli> recupDonneesDepuisExcel()
     {
         // Récupération de la première feuille
         Sheet sheet = wb.getSheet(DA);
 
         // Liste de retour
-        List<DefaultAppli> retour = new ArrayList<>();
+        List<DefautAppli> retour = new ArrayList<>();
 
         // Itération sur chaque ligne pour créer les anomalies
         for (int i = 1; i <= sheet.getLastRowNum(); i++)
@@ -80,22 +80,22 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
             if (row == null)
                 continue;
 
-            retour.add(creerDefaultdepuisExcel(row));
+            retour.add(creerDefautdepuisExcel(row));
         }
 
         return retour;
     }
 
-    public void majFeuilleDefaultsAppli(List<DefaultAppli> dasATraiter, Sheet sheet)
+    public void majFeuilleDefaultsAppli(List<DefautAppli> dasATraiter, Sheet sheet)
     {
         // Rangement anomalies par date de détection
         Collections.sort(dasATraiter, (o1, o2) -> o1.getDateDetection().compareTo(o2.getDateDetection()));
 
         // Mise à jour anomalies
-        for (DefaultAppli da : dasATraiter)
+        for (DefautAppli da : dasATraiter)
         {
             // Onne prend pas en compte les défaults clos et abandonnés
-            if (da.getEtatDefault() == EtatDefault.CLOSE || da.getEtatDefault() == EtatDefault.ABANDONNEE)
+            if (da.getEtatDefaut() == EtatDefaut.CLOSE || da.getEtatDefaut() == EtatDefaut.ABANDONNEE)
                 continue;
 
             // Calcul de la couleur de la ligne dans le fichier Excel
@@ -135,9 +135,9 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
 
     /*---------- METHODES PRIVEES ----------*/
 
-    private DefaultAppli creerDefaultdepuisExcel(Row row)
+    private DefautAppli creerDefautdepuisExcel(Row row)
     {
-        DefaultAppli retour = ModelFactory.getModel(DefaultAppli.class);
+        DefautAppli retour = ModelFactory.getModel(DefautAppli.class);
 
         retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));
         retour.setNomComposant(getCellStringValue(row, colCompo));
@@ -145,7 +145,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
         return retour;
     }
 
-    private void creerLigneDA(Row row, DefaultAppli da, IndexedColors couleur)
+    private void creerLigneDA(Row row, DefautAppli da, IndexedColors couleur)
     {
         // 1. Contrôles des entrées
         if (couleur == null || row == null || da == null)
@@ -167,7 +167,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
         valoriserCellule(row, colAction, centre, da.getAction());
 
         // Etat
-        valoriserCellule(row, colEtat, centre, da.getEtatDefault());
+        valoriserCellule(row, colEtat, centre, da.getEtatDefaut());
 
         // Date Détection
         valoriserCellule(row, colDateDetec, centre, da.getDateDetection());
@@ -185,10 +185,10 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
         valoriserCellule(row, colLot, centre, lotRTC.getLot());
 
         // Ano RTC
-        if (da.getDefaultQualite() != null && da.getDefaultQualite().getNumeroAnoRTC() != 0)
+        if (da.getDefautQualite() != null && da.getDefautQualite().getNumeroAnoRTC() != 0)
         {
-            Cell cell = valoriserCellule(row, colAnoRTC, centre, da.getDefaultQualite().getNumeroAnoRTC());
-            ajouterLiens(cell, da.getDefaultQualite().getLiensAno());
+            Cell cell = valoriserCellule(row, colAnoRTC, centre, da.getDefautQualite().getNumeroAnoRTC());
+            ajouterLiens(cell, da.getDefautQualite().getLiensAno());
         }
 
     }
@@ -199,7 +199,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
      * @param da
      * @return
      */
-    private IndexedColors calculCouleurLigne(DefaultAppli da)
+    private IndexedColors calculCouleurLigne(DefautAppli da)
     {
         // Les lignes sont blanches de base
         IndexedColors couleur = IndexedColors.WHITE;
@@ -208,7 +208,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
         if (da.getAppliCorrigee().equals(da.getCompo().getAppli().getCode()))
             couleur = IndexedColors.LIGHT_GREEN;
         // On met à bleu les défault en cours de traitement
-        else if (da.getEtatDefault() == EtatDefault.TRAITEE)
+        else if (da.getEtatDefaut() == EtatDefaut.TRAITEE)
             couleur = IndexedColors.LIGHT_BLUE;
 
         return couleur;

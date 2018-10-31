@@ -65,7 +65,7 @@ public class Application extends AbstractBDDModele implements Serializable
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    Application() { }
+    Application() {}
 
     /**
      * Constructeur pour un code application inconnu

@@ -1,6 +1,6 @@
 package model.enums;
 
-public enum EtatDefault 
+public enum EtatDefaut 
 {
     NOUVELLE,
     ABANDONNEE,

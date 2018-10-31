@@ -98,8 +98,8 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     private GroupeProjet groupe;
         
     @BatchFetch(value = BatchFetchType.JOIN)
-    @OneToOne (targetEntity = DefaultQualite.class, mappedBy = "lotRTC")
-    private DefaultQualite defaultQualite;
+    @OneToOne (targetEntity = DefautQualite.class, mappedBy = "lotRTC")
+    private DefautQualite defaultQualite;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -313,12 +313,12 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.groupe = groupe;
     }
 
-    public DefaultQualite getDefaultQualite()
+    public DefautQualite getDefaultQualite()
     {
         return defaultQualite;
     }
 
-    public void setDefaultQualite(DefaultQualite defaultQualite)
+    public void setDefaultQualite(DefautQualite defaultQualite)
     {
         this.defaultQualite = defaultQualite;
     }

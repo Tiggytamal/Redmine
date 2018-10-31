@@ -37,8 +37,6 @@ public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implement
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
-    /*---------- METHODES PRIVEES ----------*/
-    /*---------- ACCESSEURS ----------*/
 
     @Override
     public int recupDonneesDepuisExcel(File file)
@@ -70,4 +68,13 @@ public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implement
         majDateDonnee();
         return retour;
     }
+
+    @Override
+    protected void persistImpl(GroupementProjet t)
+    {
+        // Pas d'implémentation nécessaire           
+    }
+    
+    /*---------- METHODES PRIVEES ----------*/
+    /*---------- ACCESSEURS ----------*/
 }

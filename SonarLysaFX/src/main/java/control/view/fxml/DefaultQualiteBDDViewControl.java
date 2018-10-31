@@ -16,9 +16,9 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import dao.DaoDefaultAppli;
 import dao.DaoFactory;
 import javafx.fxml.FXML;
-import model.bdd.DefaultAppli;
-import model.bdd.DefaultQualite;
-import model.enums.EtatDefault;
+import model.bdd.DefautAppli;
+import model.bdd.DefautQualite;
+import model.enums.EtatDefaut;
 import model.enums.TypeAction;
 import model.fxml.DefaultQualiteFXML;
 import utilities.Statics;
@@ -38,9 +38,9 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
     {
         listeFXML = new ArrayList<>();
 
-        for (DefaultQualite defaultQualite : DaoFactory.getDao(DefaultQualite.class).readAll())
+        for (DefautQualite defaultQualite : DaoFactory.getDao(DefautQualite.class).readAll())
         {
-            if (defaultQualite.getEtatDefault() == EtatDefault.CLOSE || defaultQualite.getEtatDefault() == EtatDefault.ABANDONNEE)
+            if (defaultQualite.getEtatDefaut() == EtatDefaut.CLOSE || defaultQualite.getEtatDefaut() == EtatDefaut.ABANDONNEE)
                 listeFXML.add(new DefaultQualiteFXML(defaultQualite));
         }
         table.getItems().addAll(listeFXML);
@@ -54,8 +54,8 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
         File file = getFileFromFileChooser("Fichier consolidation");
         Workbook wb = WorkbookFactory.create(file);
         Sheet sheet = wb.getSheet("Composants avec pb. appli");
-        DaoDefaultAppli dao = DaoFactory.getDao(DefaultAppli.class);
-        Map<String, DefaultAppli> mapDefaultsAppli = dao.readAllMap();
+        DaoDefaultAppli dao = DaoFactory.getDao(DefautAppli.class);
+        Map<String, DefautAppli> mapDefaultsAppli = dao.readAllMap();
         int i = 0;
 
         for (Iterator<Row> iter = sheet.rowIterator(); iter.hasNext();)
@@ -64,9 +64,9 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
             String key = row.getCell(0).getStringCellValue();
             String action = row.getCell(2).getStringCellValue();
             String appliCorrigee = row.getCell(3).getStringCellValue();
-            DefaultAppli da = mapDefaultsAppli.get(key);
+            DefautAppli da = mapDefaultsAppli.get(key);
 
-            // On aute la première ligne et toutes les lignes à vide qui ne sont pas à vérifier, ainsi que les composants qui ne sont plus dans SonarQube
+            // On saute la première ligne et toutes les lignes à vide qui ne sont pas à vérifier, ainsi que les composants qui ne sont plus dans SonarQube
             if (row.getRowNum() == 0 || da == null || (appliCorrigee.equals(Statics.EMPTY) && !row.getCell(2).getStringCellValue().equals(TypeAction.VERIFIER.getValeur())))
                 continue;
 

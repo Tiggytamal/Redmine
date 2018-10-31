@@ -49,6 +49,12 @@ public class DaoDateMaj extends AbstractDao<DateMaj> implements Serializable
             return liste.get(0);
     }
 
+    @Override
+    protected void persistImpl(DateMaj t)
+    {
+        // Pas d'implémentation nécessaire        
+    }
+
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

@@ -31,7 +31,7 @@ public class Info extends AbstractModele implements XML
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    Info() { }
+    Info() {}
     
     /*---------- METHODES PUBLIQUES ----------*/
 

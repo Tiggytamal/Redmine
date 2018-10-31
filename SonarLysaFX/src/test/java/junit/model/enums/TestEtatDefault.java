@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import model.enums.EtatDefault;
+import model.enums.EtatDefaut;
 
 /**
  * Classe de test de l'numération EtatDefault
@@ -19,14 +19,14 @@ public class TestEtatDefault implements TestEnums
     @Override
     public void testConstructeur()
     {
-        assertEquals(EtatDefault.NOUVELLE, EtatDefault.valueOf(EtatDefault.NOUVELLE.toString()));
+        assertEquals(EtatDefaut.NOUVELLE, EtatDefaut.valueOf(EtatDefaut.NOUVELLE.toString()));
     }
 
     @Test
     @Override
     public void testSize()
     {
-        assertEquals(4, EtatDefault.values().length);
+        assertEquals(4, EtatDefaut.values().length);
     }
 
 }

@@ -32,7 +32,7 @@ public final class Utilities
     private static final String JAR = "jar:";
     private static final int JARLENGTH = JAR.length();
 
-    private Utilities() { }
+    private Utilities() {}
 
     /**
      * Gets the base location of the given class.

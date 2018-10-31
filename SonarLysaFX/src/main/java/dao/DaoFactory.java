@@ -14,7 +14,7 @@ import utilities.TechnicalException;
  */
 public class DaoFactory
 {
-    DaoFactory() { }
+    DaoFactory() {}
     
     @SuppressWarnings("unchecked")
     public static <T extends AbstractDao<M>, M extends AbstractBDDModele> T getDao(Class<M> daoClass)
@@ -39,7 +39,7 @@ public class DaoFactory
             case "model.bdd.ProjetClarity":
                 return (T) new DaoProjetClarity();
                 
-            case "model.bdd.DefaultQualite":
+            case "model.bdd.DefautQualite":
                 return (T) new DaoDefaultQualite();
                 
             case "model.bdd.DateMaj":
@@ -48,7 +48,7 @@ public class DaoFactory
             case "model.bdd.GroupementProjet":
                 return (T) new DaoGroupementProjet();
                 
-            case "model.bdd.DefaultAppli":
+            case "model.bdd.DefautAppli":
                 return (T) new DaoDefaultAppli();
 
             default:
@@ -79,7 +79,7 @@ public class DaoFactory
             case "model.bdd.ProjetClarity":
                 return (T) new DaoProjetClarity(em);
                 
-            case "model.bdd.DefaultQualite":
+            case "model.bdd.DefautQualite":
                 return (T) new DaoDefaultQualite(em);
                 
             case "model.bdd.DateMaj":
@@ -88,7 +88,7 @@ public class DaoFactory
             case "model.bdd.GroupementProjet":
                 return (T) new DaoGroupementProjet(em);
                 
-            case "model.bdd.DefaultAppli":
+            case "model.bdd.DefautAppli":
                 return (T) new DaoDefaultAppli(em);
 
             default:

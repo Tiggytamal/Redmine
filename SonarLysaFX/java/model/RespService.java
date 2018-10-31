@@ -21,7 +21,7 @@ public class RespService implements Modele, Serializable
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    RespService() { }
+    RespService() {}
 
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/

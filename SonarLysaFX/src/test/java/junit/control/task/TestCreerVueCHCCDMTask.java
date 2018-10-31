@@ -23,7 +23,7 @@ import control.task.CreerVueCHCCDMTask;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Edition;
-import model.enums.CHCouCDM;
+import model.enums.TypeEdition;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
 
@@ -40,7 +40,7 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
     {
         annees = new ArrayList<>();
         annees.add("2018");
-        handler = new CreerVueCHCCDMTask(annees, CHCouCDM.CDM);
+        handler = new CreerVueCHCCDMTask(annees, TypeEdition.CDM);
         initAPI(CreerVueCHCCDMTask.class, true);
     }
     
@@ -49,13 +49,13 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
     @Test (expected = FunctionalException.class)
     public void testCreerVueCHCCDMTaskException1()
     {
-        new CreerVueCHCCDMTask(null, CHCouCDM.CDM); 
+        new CreerVueCHCCDMTask(null, TypeEdition.CDM); 
     }
     
     @Test (expected = FunctionalException.class)
     public void testCreerVueCHCCDMTaskException2()
     {
-        new CreerVueCHCCDMTask(new ArrayList<>(), CHCouCDM.CDM);
+        new CreerVueCHCCDMTask(new ArrayList<>(), TypeEdition.CDM);
     }
     
     @Test
@@ -73,9 +73,9 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
     @Test
     public void testSuppressionVuesMaintenance() throws Exception
     {
-        Whitebox.invokeMethod(handler, "suppressionVuesMaintenance", CHCouCDM.CHC, annees);
+        Whitebox.invokeMethod(handler, "suppressionVuesMaintenance", TypeEdition.CHC, annees);
         Mockito.verify(api, Mockito.times(52)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
-        Whitebox.invokeMethod(handler, "suppressionVuesMaintenance", CHCouCDM.CDM, annees);
+        Whitebox.invokeMethod(handler, "suppressionVuesMaintenance", TypeEdition.CDM, annees);
         Mockito.verify(api, Mockito.times(104)).supprimerProjet(Mockito.anyString(), Mockito.eq(false));
     }
     
@@ -88,7 +88,7 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
         assertFalse(retour.isEmpty());
         for (String key : retour.keySet())
         {
-            assertTrue(key.contains(CHCouCDM.CDM.toString()));
+            assertTrue(key.contains(TypeEdition.CDM.toString()));
         }
     }
     
@@ -96,10 +96,10 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
     public void testControle() throws Exception
     {
         String methode = "controle";
-        assertTrue(Whitebox.invokeMethod(handler, methode, CHCouCDM.CDM, "CDM2018"));
-        assertFalse(Whitebox.invokeMethod(handler, methode, CHCouCDM.CDM, "CHC2018"));
-        assertTrue(Whitebox.invokeMethod(handler, methode, CHCouCDM.CHC, "CHC2018"));
-        assertFalse(Whitebox.invokeMethod(handler, methode, CHCouCDM.CHC, "CDM2018"));
+        assertTrue(Whitebox.invokeMethod(handler, methode, TypeEdition.CDM, "CDM2018"));
+        assertFalse(Whitebox.invokeMethod(handler, methode, TypeEdition.CDM, "CHC2018"));
+        assertTrue(Whitebox.invokeMethod(handler, methode, TypeEdition.CHC, "CHC2018"));
+        assertFalse(Whitebox.invokeMethod(handler, methode, TypeEdition.CHC, "CDM2018"));
     }  
     
     @Test

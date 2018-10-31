@@ -64,8 +64,8 @@ import control.task.AbstractTask;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.DateMaj;
-import model.bdd.DefaultAppli;
-import model.bdd.DefaultQualite;
+import model.bdd.DefautAppli;
+import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.EtatAnoRTC;
 import model.enums.EtatLot;
@@ -581,7 +581,7 @@ public class ControlRTC extends AbstractToStringImpl
      *            anomalie servant d'origine au Defect
      * @return
      */
-    public int creerAnoRTC(DefaultQualite dq)
+    public int creerAnoRTC(DefautQualite dq)
     {
         IWorkItem workItem = null;
 
@@ -639,7 +639,7 @@ public class ControlRTC extends AbstractToStringImpl
      * 
      * @param dq
      */
-    public void controleAnoRTC(DefaultQualite dq)
+    public void controleAnoRTC(DefautQualite dq)
     {
         if (dq.getNumeroAnoRTC() == 0)
             return;
@@ -672,9 +672,9 @@ public class ControlRTC extends AbstractToStringImpl
      * 
      * @param da
      */
-    public boolean ajoutAppliAnoRTC(DefaultAppli da)
+    public boolean ajoutAppliAnoRTC(DefautAppli da)
     {
-        DefaultQualite dq = da.getDefaultQualite();
+        DefautQualite dq = da.getDefautQualite();
         if (dq == null || dq.getNumeroAnoRTC() == 0)
             return false;
         try

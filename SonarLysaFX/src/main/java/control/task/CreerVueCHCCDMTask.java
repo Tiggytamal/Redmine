@@ -12,7 +12,7 @@ import java.util.Set;
 import dao.DaoFactory;
 import model.bdd.ComposantSonar;
 import model.bdd.Edition;
-import model.enums.CHCouCDM;
+import model.enums.TypeEdition;
 import model.enums.Matiere;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
@@ -34,7 +34,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
     private static final String TITRE = "création vues Maintenance";
     
     private List<String> annees;
-    private CHCouCDM chccdm;
+    private TypeEdition chccdm;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -44,7 +44,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
         startTimers();
     }
 
-    public CreerVueCHCCDMTask(List<String> annees, CHCouCDM chccdm)
+    public CreerVueCHCCDMTask(List<String> annees, TypeEdition chccdm)
     {
         this();
         annulable = false;
@@ -88,7 +88,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
      * @param cdm
      * @param annees
      */
-    private void suppressionVuesMaintenance(CHCouCDM chccdm, List<String> annees)
+    private void suppressionVuesMaintenance(TypeEdition chccdm, List<String> annees)
     {
         String baseClef;
         baseMessage = "Suppression des vues existantes :" + NL;
@@ -100,7 +100,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
         for (String annee : annees)
         {
             // préparation de la base de la clef
-            if (chccdm == CHCouCDM.CDM)
+            if (chccdm == TypeEdition.CDM)
                 baseClef = "CHC_CDM" + annee;
             else
                 baseClef = "CHC" + annee;
@@ -150,35 +150,20 @@ public class CreerVueCHCCDMTask extends AbstractTask
             updateProgress(i, composants.size());
 
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
-            if (compo.getLotRTC() != null && mapEditions.containsKey(compo.getEdition()))
+            if (compo.getLotRTC() != null && compo.getEdition() != null )
             {
-                String keyCHC = mapEditions.get(compo.getEdition()).getNom();
-
+                Edition edition = compo.getEdition();
+                
                 // Contrôle pour ne prendre que les CHC ou CDM selon le booléen
-                if (!controle(chccdm, keyCHC))
+                if (edition.getTypeEdition() != chccdm)
                     continue;
 
                 // AJout à la map et initialisation HashSet au besoin
-                retour.computeIfAbsent(keyCHC, k -> new HashSet<>()).add(compo.getLotRTC().getLot());
+                retour.computeIfAbsent(edition.getNom(), k -> new HashSet<>()).add(compo.getLotRTC().getLot());
             }
         }
 
         return retour;
-    }
-
-    /**
-     * 
-     * @param chccdm
-     *          Type d'édition à prendre en compte
-     * @param keyCHC
-     *          Valeur de l'édition - CHC(_CDM)YYYY-Sww
-     * @return
-     *         vrai si la clef contient CDM pour le CDM ou si la clef ne contient pas CDM pour les CHC.
-     *      
-     */
-    private boolean controle(CHCouCDM chccdm, String keyCHC)
-    {
-        return (chccdm == CHCouCDM.CDM && keyCHC.contains("CDM")) || (chccdm == CHCouCDM.CHC && !keyCHC.contains("CDM"));
     }
 
     /**

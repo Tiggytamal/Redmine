@@ -19,10 +19,10 @@ import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
 import dao.AbstractDao;
-import model.enums.EtatDefault;
+import model.enums.EtatDefaut;
 import model.enums.Param;
 import model.enums.TypeAction;
-import model.enums.TypeDefault;
+import model.enums.TypeDefaut;
 import model.enums.TypeVersion;
 import utilities.Statics;
 
@@ -33,15 +33,15 @@ import utilities.Statics;
  * @since 1.0
  */
 @Entity
-@Table(name = "defaults_qualite")
+@Table(name = "defauts_qualite")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="DefaultQualite" + AbstractDao.FINDALL, query="SELECT dq FROM DefaultQualite dq LEFT JOIN FETCH dq.lotRTC l"),
-        @NamedQuery(name="DefaultQualite" + AbstractDao.FINDINDEX, query="SELECT dq FROM DefaultQualite dq WHERE dq.lotRTC.lot = :index"),
-        @NamedQuery(name="DefaultQualite" + AbstractDao.RESET, query="DELETE FROM DefaultQualite")
+        @NamedQuery(name="DefautQualite" + AbstractDao.FINDALL, query="SELECT dq FROM DefautQualite dq LEFT JOIN FETCH dq.lotRTC l"),
+        @NamedQuery(name="DefautQualite" + AbstractDao.FINDINDEX, query="SELECT dq FROM DefautQualite dq WHERE dq.lotRTC.lot = :index"),
+        @NamedQuery(name="DefautQualite" + AbstractDao.RESET, query="DELETE FROM DefautQualite")
 })
 //@formatter:on
-public class DefaultQualite extends AbstractBDDModele implements Serializable
+public class DefautQualite extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -87,16 +87,16 @@ public class DefaultQualite extends AbstractBDDModele implements Serializable
     private LocalDate dateReso;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "etat_default", nullable = false)
-    private EtatDefault etatDefault;
+    @Column(name = "etat_defaut", nullable = false)
+    private EtatDefaut etatDefaut;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "action", nullable = false)
     private TypeAction action;
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "type_default", nullable = false)
-    private TypeDefault typeDefault;
+    @Column(name = "type_defaut", nullable = false)
+    private TypeDefaut typeDefaut;
     
     @Transient
     private String nomCompoAppli;
@@ -106,17 +106,17 @@ public class DefaultQualite extends AbstractBDDModele implements Serializable
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    DefaultQualite()
+    DefautQualite()
     {
         typeVersion = TypeVersion.SNAPSHOT;
-        etatDefault = EtatDefault.NOUVELLE;
+        etatDefaut = EtatDefaut.NOUVELLE;
         action = TypeAction.VIDE;
         remarque = Statics.EMPTY;
         dateDetection = LocalDate.now();
-        typeDefault = TypeDefault.SONAR;
+        typeDefaut = TypeDefaut.SONAR;
     }
 
-    DefaultQualite(LotRTC lotRTC)
+    DefautQualite(LotRTC lotRTC)
     {
         this();
         this.lotRTC = lotRTC;
@@ -138,9 +138,9 @@ public class DefaultQualite extends AbstractBDDModele implements Serializable
      */
     public boolean calculTraitee()
     {
-        if ((!getRemarque().isEmpty() || numeroAnoRTC != 0 || action != TypeAction.VIDE) && etatDefault == EtatDefault.NOUVELLE)
-            etatDefault = EtatDefault.TRAITEE;
-        return etatDefault != EtatDefault.NOUVELLE;
+        if ((!getRemarque().isEmpty() || numeroAnoRTC != 0 || action != TypeAction.VIDE) && etatDefaut == EtatDefaut.NOUVELLE)
+            etatDefaut = EtatDefaut.TRAITEE;
+        return etatDefaut != EtatDefaut.NOUVELLE;
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -295,24 +295,24 @@ public class DefaultQualite extends AbstractBDDModele implements Serializable
         this.action = action;
     }
 
-    public EtatDefault getEtatDefault()
+    public EtatDefaut getEtatDefaut()
     {
-        return etatDefault;
+        return etatDefaut;
     }
 
-    public void setEtatDefault(EtatDefault etatAnoSuivi)
+    public void setEtatDefaut(EtatDefaut etatAnoSuivi)
     {
-        this.etatDefault = etatAnoSuivi;
+        this.etatDefaut = etatAnoSuivi;
     }
 
-    public TypeDefault getTypeDefault()
+    public TypeDefaut getTypeDefaut()
     {
-        return typeDefault;
+        return typeDefaut;
     }
 
-    public void setTypeDefault(TypeDefault typeDefault)
+    public void setTypeDefaut(TypeDefaut typeDefault)
     {
-        this.typeDefault = typeDefault;
+        this.typeDefaut = typeDefault;
     }
 
     public String getNomCompoAppli()

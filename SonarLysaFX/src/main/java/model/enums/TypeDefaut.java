@@ -1,6 +1,6 @@
 package model.enums;
 
-public enum TypeDefault 
+public enum TypeDefaut 
 {
     SONAR,
     APPLI,

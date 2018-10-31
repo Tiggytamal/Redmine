@@ -27,7 +27,7 @@ public class Info implements Modele, XML
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    Info() { }
+    Info() {}
     
     /*---------- METHODES PUBLIQUES ----------*/
 

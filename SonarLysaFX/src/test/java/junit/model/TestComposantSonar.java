@@ -1,6 +1,7 @@
 package junit.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
+import model.bdd.Edition;
 import model.bdd.LotRTC;
 
 public class TestComposantSonar extends AbstractTestModel<ComposantSonar>
@@ -92,10 +94,10 @@ public class TestComposantSonar extends AbstractTestModel<ComposantSonar>
     public void testGetEdition()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getEdition());
+        assertNull(handler.getEdition());
         
         // Test setter et getter
-        String edition = "Edition";
+        Edition edition = Edition.getEditionInconnue(null);
         handler.setEdition(edition);
         assertEquals(edition, handler.getEdition());       
     }

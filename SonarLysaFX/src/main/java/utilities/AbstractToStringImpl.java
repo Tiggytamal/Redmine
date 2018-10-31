@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public abstract class AbstractToStringImpl
 {
-    protected AbstractToStringImpl() { }
+    protected AbstractToStringImpl() {}
     
     @Override
     public String toString()

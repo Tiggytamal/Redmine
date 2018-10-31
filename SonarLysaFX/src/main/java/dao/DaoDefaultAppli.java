@@ -6,11 +6,11 @@ import java.io.Serializable;
 import javax.persistence.EntityManager;
 
 import model.bdd.ComposantSonar;
-import model.bdd.DefaultAppli;
-import model.bdd.DefaultQualite;
+import model.bdd.DefautAppli;
+import model.bdd.DefautQualite;
 import model.enums.TypeDonnee;
 
-public class DaoDefaultAppli extends AbstractDao<DefaultAppli> implements Serializable
+public class DaoDefaultAppli extends AbstractDao<DefautAppli> implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -41,25 +41,13 @@ public class DaoDefaultAppli extends AbstractDao<DefaultAppli> implements Serial
     }
 
     @Override
-    public boolean persistImpl(DefaultAppli defAppli)
+    public void persistImpl(DefautAppli defAppli)
     {
-        if (defAppli.getIdBase() == 0)
-        {
-            defAppli.initTimeStamp();
-
             // Gestion composantSonar
             persistSousObjet(ComposantSonar.class, defAppli.getCompo());
 
             // Gestion DefaultQualite
-            persistSousObjet(DefaultQualite.class, defAppli.getDefaultQualite());
-
-            // Persistance
-            em.persist(defAppli);
-            return true;
-        }
-        else
-            em.merge(defAppli);
-        return false;
+            persistSousObjet(DefautQualite.class, defAppli.getDefautQualite());
     }
 
     /*---------- METHODES PRIVEES ----------*/

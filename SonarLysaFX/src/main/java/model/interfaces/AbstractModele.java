@@ -13,7 +13,7 @@ import utilities.Statics;
 public abstract class AbstractModele extends AbstractToStringImpl
 {
     
-    protected AbstractModele() { }
+    protected AbstractModele() {}
     
     /**
      * Protège les {@code String} pour renvoyer une chaîne de caratères vide en cas d'objet null.

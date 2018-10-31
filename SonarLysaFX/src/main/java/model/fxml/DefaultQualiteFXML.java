@@ -1,7 +1,7 @@
 package model.fxml;
 
 import javafx.beans.property.SimpleStringProperty;
-import model.bdd.DefaultQualite;
+import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
 import model.interfaces.AbstractModele;
@@ -44,7 +44,7 @@ public class DefaultQualiteFXML extends AbstractModele implements ModeleFXML
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public DefaultQualiteFXML(DefaultQualite dq)
+    public DefaultQualiteFXML(DefautQualite dq)
     {
         if (dq.getLotRTC() != null)
         {
@@ -93,12 +93,12 @@ public class DefaultQualiteFXML extends AbstractModele implements ModeleFXML
             setDateRelance(dq.getDateRelance().toString());
         if (dq.getDateReso() != null)
             setDateReso(dq.getDateReso().toString());
-        if (dq.getEtatDefault() != null)
-            setEtatDefault(dq.getEtatDefault().toString());
+        if (dq.getEtatDefaut() != null)
+            setEtatDefault(dq.getEtatDefaut().toString());
         if (dq.getAction() != null)
             setAction(dq.getAction().getValeur());
-        if (dq.getTypeDefault() != null)
-            setTypeDefault(dq.getTypeDefault().toString());
+        if (dq.getTypeDefaut() != null)
+            setTypeDefault(dq.getTypeDefaut().toString());
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

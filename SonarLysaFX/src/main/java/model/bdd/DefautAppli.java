@@ -18,7 +18,7 @@ import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
 import dao.AbstractDao;
-import model.enums.EtatDefault;
+import model.enums.EtatDefaut;
 import model.enums.TypeAction;
 import utilities.Statics;
 
@@ -29,15 +29,15 @@ import utilities.Statics;
  * @since 1.0
  */
 @Entity
-@Table(name = "defaults_application")
+@Table(name = "defauts_application")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="DefaultAppli" + AbstractDao.FINDALL, query="SELECT da FROM DefaultAppli da JOIN FETCH da.compo c LEFT JOIN FETCH da.defaultQualite dq"),
-        @NamedQuery(name="DefaultAppli" + AbstractDao.FINDINDEX, query="SELECT da FROM DefaultAppli da WHERE da.compo.nom = :index"),
-        @NamedQuery(name="DefaultAppli" + AbstractDao.RESET, query="DELETE FROM DefaultQualite")
+        @NamedQuery(name="DefautAppli" + AbstractDao.FINDALL, query="SELECT da FROM DefautAppli da JOIN FETCH da.compo c LEFT JOIN FETCH da.defautQualite dq"),
+        @NamedQuery(name="DefautAppli" + AbstractDao.FINDINDEX, query="SELECT da FROM DefautAppli da WHERE da.compo.nom = :index"),
+        @NamedQuery(name="DefautAppli" + AbstractDao.RESET, query="DELETE FROM DefautQualite")
 })
 //@formatter:on
-public class DefaultAppli extends AbstractBDDModele
+public class DefautAppli extends AbstractBDDModele
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -57,22 +57,22 @@ public class DefaultAppli extends AbstractBDDModele
     private LocalDate dateDetection;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "etat_default", nullable = false)
-    private EtatDefault etatDefault;
+    @Column(name = "etat_defaut", nullable = false)
+    private EtatDefaut etatDefaut;
 
     @BatchFetch(value = BatchFetchType.JOIN)
-    @OneToOne(targetEntity = DefaultQualite.class, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "default_qualite")
-    private DefaultQualite defaultQualite;
+    @OneToOne(targetEntity = DefautQualite.class, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "defaut_qualite")
+    private DefautQualite defautQualite;
     
     @Transient
     private String nomComposant;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    DefaultAppli()
+    DefautAppli()
     {
-        etatDefault = EtatDefault.NOUVELLE;
+        etatDefaut = EtatDefaut.NOUVELLE;
         appliCorrigee = Statics.EMPTY;
         action = TypeAction.VIDE;
     }
@@ -121,24 +121,24 @@ public class DefaultAppli extends AbstractBDDModele
         this.action = action;
     }
 
-    public EtatDefault getEtatDefault()
+    public EtatDefaut getEtatDefaut()
     {
-        return etatDefault;
+        return etatDefaut;
     }
 
-    public void setEtatDefault(EtatDefault etatDefault)
+    public void setEtatDefaut(EtatDefaut etatDefaut)
     {
-        this.etatDefault = etatDefault;
+        this.etatDefaut = etatDefaut;
     }
 
-    public DefaultQualite getDefaultQualite()
+    public DefautQualite getDefautQualite()
     {
-        return defaultQualite;
+        return defautQualite;
     }
 
-    public void setDefaultQualite(DefaultQualite defaultQualite)
+    public void setDefautQualite(DefautQualite defautQualite)
     {
-        this.defaultQualite = defaultQualite;
+        this.defautQualite = defautQualite;
     }
 
     public LocalDate getDateDetection()

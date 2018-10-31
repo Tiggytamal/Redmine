@@ -3,7 +3,6 @@ package control.task;
 import static utilities.Statics.proprietesXML;
 
 import java.io.File;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,14 +13,13 @@ import control.rtc.ControlRTC;
 import dao.DaoDefaultAppli;
 import dao.DaoDefaultQualite;
 import dao.DaoFactory;
-import model.ModelFactory;
-import model.bdd.DefaultAppli;
-import model.bdd.DefaultQualite;
-import model.enums.EtatDefault;
+import model.bdd.DefautAppli;
+import model.bdd.DefautQualite;
+import model.enums.EtatDefaut;
 import model.enums.Param;
 import model.enums.TypeAction;
 import model.enums.TypeColSuiviApps;
-import model.enums.TypeDefault;
+import model.enums.TypeDefaut;
 
 public class MajSuiviAppsTask extends AbstractTask
 {
@@ -39,8 +37,8 @@ public class MajSuiviAppsTask extends AbstractTask
     public MajSuiviAppsTask()
     {
         super(ETAPES, TITRE);
-        dao = DaoFactory.getDao(DefaultAppli.class);
-        daoDq = DaoFactory.getDao(DefaultQualite.class);
+        dao = DaoFactory.getDao(DefautAppli.class);
+        daoDq = DaoFactory.getDao(DefautQualite.class);
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA);
         control = ExcelFactory.getReader(TypeColSuiviApps.class, new File(name));
         startTimers();
@@ -64,18 +62,18 @@ public class MajSuiviAppsTask extends AbstractTask
 
     private boolean majSuiviApps()
     {
-        Map<String, DefaultAppli> mapDefaults = dao.readAllMap();
+        Map<String, DefautAppli> mapDefaults = dao.readAllMap();
 
         etapePlus();
-        List<DefaultAppli> das = control.recupDonneesDepuisExcel();
+        List<DefautAppli> das = control.recupDonneesDepuisExcel();
         
         int i = 0;
         int size= das.size();
         baseMessage = "Traitement Défaults Qualité :";
 
-        for (DefaultAppli da : das)
+        for (DefautAppli da : das)
         {
-            DefaultAppli daBase = mapDefaults.get(da.getMapIndex());
+            DefautAppli daBase = mapDefaults.get(da.getMapIndex());
             if (daBase != null)
             {
                 daBase.setAction(da.getAction());
@@ -93,19 +91,19 @@ public class MajSuiviAppsTask extends AbstractTask
         return false;
     }
 
-    private void gestionAction(DefaultAppli da)
+    private void gestionAction(DefautAppli da)
     {
         if (da.getAction() == TypeAction.CREER && creerAnoRTC(da))
         {
             da.setAction(TypeAction.VIDE);
-            da.setEtatDefault(EtatDefault.TRAITEE);
+            da.setEtatDefaut(EtatDefaut.TRAITEE);
         }
     }
 
-    private boolean creerAnoRTC(DefaultAppli da)
+    private boolean creerAnoRTC(DefautAppli da)
     {
 
-        DefaultQualite dq = daoDq.recupEltParIndex(da.getCompo().getLotRTC().getLot());
+        DefautQualite dq = daoDq.recupEltParIndex(da.getCompo().getLotRTC().getLot());
         ControlRTC controlRTC = ControlRTC.INSTANCE;
         if (dq == null)
         {
@@ -144,8 +142,8 @@ public class MajSuiviAppsTask extends AbstractTask
         }
         else
         {
-            dq.setTypeDefault(TypeDefault.MIXTE);
-            da.setDefaultQualite(dq);
+            dq.setTypeDefaut(TypeDefaut.MIXTE);
+            da.setDefautQualite(dq);
             dq.setNomCompoAppli(da.getCompo().getNom());
             return controlRTC.ajoutAppliAnoRTC(da);
 
