@@ -66,7 +66,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     private Application appli;
 
     @BatchFetch(value = BatchFetchType.JOIN)
-    @ManyToOne(targetEntity = Edition.class, cascade = CascadeType.PERSIST)
+    @ManyToOne(targetEntity = Edition.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "edition")
     private Edition edition;
 
