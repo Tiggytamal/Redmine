@@ -60,7 +60,7 @@ import utilities.enums.Severity;
  * @since 1.0
  * 
  */
-public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<DefautQualite>>
+public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<DefautQualite>> implements Contraintes
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -110,7 +110,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         super(file);
 
         // Initialisation des parties constantes des liens
-        initContraintes();
+        contraintes = initContraintes();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -751,18 +751,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             return getCellDateValue(row, colDateDetec);
         else
             return LocalDate.of(DATEINCONNUE, 1, 1);
-    }
-
-    /**
-     * Initialisation liste des contraintes depuis les paramètres
-     */
-    private void initContraintes()
-    {
-        contraintes = new String[TypeAction.values().length];
-        for (int i = 0; i < contraintes.length; i++)
-        {
-            contraintes[i] = TypeAction.values()[i].getValeur();
-        }
     }
 
     /**

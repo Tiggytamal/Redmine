@@ -56,7 +56,6 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
         Sheet sheet = wb.getSheet("Composants avec pb. appli");
         DaoDefaultAppli dao = DaoFactory.getDao(DefautAppli.class);
         Map<String, DefautAppli> mapDefaultsAppli = dao.readAllMap();
-        int i = 0;
 
         for (Iterator<Row> iter = sheet.rowIterator(); iter.hasNext();)
         {
@@ -77,9 +76,7 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
                 da.setAction(TypeAction.VERIFIER);
                 da.setAppliCorrigee(row.getCell(1).getStringCellValue());
             }
-            i++;
         }
-        System.out.println(i);
         dao.persist(mapDefaultsAppli.values());
         wb.close();
     }

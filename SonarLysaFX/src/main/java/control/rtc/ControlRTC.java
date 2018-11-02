@@ -41,6 +41,7 @@ import com.ibm.team.repository.common.query.IItemQueryPage;
 import com.ibm.team.repository.common.query.ast.IPredicate;
 import com.ibm.team.repository.common.service.IQueryService;
 import com.ibm.team.workitem.client.IAuditableClient;
+import com.ibm.team.workitem.client.IDetailedStatus;
 import com.ibm.team.workitem.client.IWorkItemClient;
 import com.ibm.team.workitem.client.WorkItemWorkingCopy;
 import com.ibm.team.workitem.common.IAuditableCommon;
@@ -49,6 +50,7 @@ import com.ibm.team.workitem.common.internal.model.query.BaseWorkItemQueryModel.
 import com.ibm.team.workitem.common.model.IAttribute;
 import com.ibm.team.workitem.common.model.IAttributeHandle;
 import com.ibm.team.workitem.common.model.ICategory;
+import com.ibm.team.workitem.common.model.IComment;
 import com.ibm.team.workitem.common.model.IEnumeration;
 import com.ibm.team.workitem.common.model.ILiteral;
 import com.ibm.team.workitem.common.model.IWorkItem;
@@ -71,6 +73,7 @@ import model.enums.EtatAnoRTC;
 import model.enums.EtatLot;
 import model.enums.Param;
 import model.enums.ParamSpec;
+import model.enums.TypeCom;
 import model.enums.TypeDonnee;
 import model.enums.TypeEnumRTC;
 import utilities.AbstractToStringImpl;
@@ -679,10 +682,10 @@ public class ControlRTC extends AbstractToStringImpl
             return false;
         try
         {
-            String texte = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEAPPLI).replaceAll("xxxxx", da.getCompo().getNom());             
+            String texte = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEAPPLI).replaceAll("xxxxx", da.getCompo().getNom());
             if (!da.getAppliCorrigee().isEmpty())
                 texte += Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTENEWAPPLI).replaceAll("-code-", da.getAppliCorrigee());
-            ajoutCommentaireAnoRTC(dq.getNumeroAnoRTC(), texte);
+            ajoutCommentaireAnoRTC(dq.getNumeroAnoRTC(), texte, TypeCom.APPLICATION);
             return true;
         }
         catch (TeamRepositoryException e)
@@ -718,14 +721,36 @@ public class ControlRTC extends AbstractToStringImpl
     }
 
     /**
-     * Ajoute u ncommentaire de relance sur une anomalie RTC
+     * Ajoute un commentaire de relance sur une anomalie RTC
      * 
      * @param id
      * @throws TeamRepositoryException
      */
     public void relancerAno(int id) throws TeamRepositoryException
     {
-        ajoutCommentaireAnoRTC(id, Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTERELANCE));
+        ajoutCommentaireAnoRTC(id, Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTERELANCE), TypeCom.RELANCE);
+    }
+
+    public boolean reouvrirAnoRTC(int id) throws TeamRepositoryException
+    {
+        // récupération du workItem puis du workflow depuis le numéro de l'anomalie
+        IWorkItem wi = recupWorkItemDepuisId(id);
+        IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(wi, monitor);
+        if (workflowInfo == null)
+        {
+            LOGPLANTAGE.error("control.rtc.ControlRTC.reouvrirAnoRTC - impossible de trouver le workflow de l'anomalie : " + id);
+            return false;
+        }
+
+        // Création du copyManager pour pouvoir modifier les données de l'anomalie
+        workItemClient.getWorkItemWorkingCopyManager().connect(wi, IWorkItem.FULL_PROFILE, monitor);
+        WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(wi);
+
+        // Récupératoinde l'état et réouverture de l'anomalie
+        EtatAnoRTC etatLot = EtatAnoRTC.from(workflowInfo.getStateName(wi.getState2()).trim());
+        if (etatLot == EtatAnoRTC.CLOSE || etatLot == EtatAnoRTC.ABANDONNEE)
+            return changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.REOUVERTE.getAction());
+        return etatLot != EtatAnoRTC.CLOSE && etatLot != EtatAnoRTC.ABANDONNEE;
     }
 
     /**
@@ -742,7 +767,7 @@ public class ControlRTC extends AbstractToStringImpl
         IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(wi, monitor);
         if (workflowInfo == null)
         {
-            LOGPLANTAGE.error("control.rtc.ControlRTC.fermerAnomalieRTC - impossible de trouver le workflow de l'anomalie : " + id);
+            LOGPLANTAGE.error("control.rtc.ControlRTC.fermerAnoRTC - impossible de trouver le workflow de l'anomalie : " + id);
             return false;
         }
 
@@ -775,9 +800,11 @@ public class ControlRTC extends AbstractToStringImpl
         {
             EtatAnoRTC etatLot = EtatAnoRTC.from(workflowInfo.getStateName(wi.getState2()).trim());
 
+            // Attention deux cases utilisent le même code.
             switch (etatLot)
             {
                 case CLOSE:
+                case ABANDONNEE:
                     workItemClient.getWorkItemWorkingCopyManager().disconnect(wi);
                     return true;
 
@@ -871,21 +898,46 @@ public class ControlRTC extends AbstractToStringImpl
      * @param actionName
      * @throws TeamRepositoryException
      */
-    private void changerEtatAno(WorkItemWorkingCopy workingCopy, IWorkflowInfo workflowInfo, IWorkItem workItem, String actionName)
+    private boolean changerEtatAno(WorkItemWorkingCopy workingCopy, IWorkflowInfo workflowInfo, IWorkItem workItem, String actionName)
     {
         workingCopy.setWorkflowAction(getAction(workflowInfo, workItem, actionName));
-        workingCopy.save(monitor);
+        IDetailedStatus status = workingCopy.save(monitor);
+        return status.isOK();
     }
 
-    private void ajoutCommentaireAnoRTC(int id, String commentaire) throws TeamRepositoryException
+    /**
+     * Permet d'ajouter un commentaire à une workItem RTC
+     * 
+     * @param id
+     *            id du WorkItem
+     * @param texteCommentaire
+     *            texte du commentaire
+     * @param type
+     *            Type du commenaire
+     * @return vrai si un commentaire à été ajouté, sinon faux.
+     * @throws TeamRepositoryException
+     */
+    private boolean ajoutCommentaireAnoRTC(int id, String texteCommentaire, TypeCom type) throws TeamRepositoryException
     {
+        // Création workingCopy
         IWorkItem wi = recupWorkItemDepuisId(id);
         workItemClient.getWorkItemWorkingCopyManager().connect(wi, IWorkItem.FULL_PROFILE, monitor);
         WorkItemWorkingCopy workingCopy = workItemClient.getWorkItemWorkingCopyManager().getWorkingCopy(wi);
-        workingCopy.getWorkItem().getComments().append(
-                workingCopy.getWorkItem().getComments().createComment(repo.loggedInContributor(), XMLString.createFromPlainText(commentaire)));
+
+        // Récupération de la liste des commentaires, et contrôle pour ne pas ajouter deux fois le même commentaire de défaut de code application
+        IComment[] commentaires = workingCopy.getWorkItem().getComments().getContents();
+        XMLString xmlTexte = XMLString.createFromPlainText(texteCommentaire);
+        for (IComment comm : commentaires)
+        {
+            if (type == TypeCom.APPLICATION && comm.getHTMLContent().equals(xmlTexte))
+                return false;
+        }
+
+        // Ajout du commentaire, et sauvegarde
+        workingCopy.getWorkItem().getComments().append(workingCopy.getWorkItem().getComments().createComment(repo.loggedInContributor(), xmlTexte));
         workingCopy.save(monitor);
         workItemClient.getWorkItemWorkingCopyManager().disconnect(wi);
+        return true;
     }
 
     /*---------- ACCESSEURS ----------*/

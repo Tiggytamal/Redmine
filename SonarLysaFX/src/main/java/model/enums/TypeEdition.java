@@ -11,5 +11,7 @@ public enum TypeEdition
 {
     CHC,
     CDM,
+    FDL,
+    INCONNU,
     AUTRE;
 }

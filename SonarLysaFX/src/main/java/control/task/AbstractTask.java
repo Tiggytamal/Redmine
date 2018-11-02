@@ -55,8 +55,8 @@ public abstract class AbstractTask extends Task<Boolean>
 
     protected SonarAPI api;
     protected String baseMessage;
-    protected int debut;
-    protected int fin;
+    protected int etapeDebut;
+    protected int etapeFin;
     protected boolean annulable;
     protected AbstractTask tacheParente;
     protected Map<String, ComposantSonar> mapCompos;
@@ -301,9 +301,9 @@ public abstract class AbstractTask extends Task<Boolean>
      */
     protected final void initEtape(int fin)
     {
-        debut = 1;
-        this.fin = fin;
-        setEtape(debut, fin);
+        etapeDebut = 1;
+        this.etapeFin = fin;
+        setEtape(etapeDebut, fin);
     }
 
     /**
@@ -311,8 +311,8 @@ public abstract class AbstractTask extends Task<Boolean>
      */
     protected void etapePlus()
     {
-        debut++;
-        setEtape(debut, fin);
+        etapeDebut++;
+        setEtape(etapeDebut, etapeFin);
     }
 
     /**
@@ -604,8 +604,10 @@ public abstract class AbstractTask extends Task<Boolean>
         Platform.runLater(() -> {
             if (millis == 0)
                 tempsRestant.set("");
+            else if (millis < 0)
+                tempsRestant.set(LocalTime.ofSecondOfDay(0).format(DateTimeFormatter.ISO_LOCAL_TIME));
             else
-                tempsRestant.set(RESTANT + LocalTime.ofSecondOfDay(Math.abs(millis) / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME));
+                tempsRestant.set(RESTANT + LocalTime.ofSecondOfDay(millis / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME));
         });
     }
 

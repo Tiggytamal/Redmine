@@ -19,7 +19,8 @@ public enum TypeAction
     ASSEMBLER(Valeur.ASSEMBLER),
     CLOTURER(Valeur.CLOTURER),
     ABANDONNER(Valeur.ABANDONNER),
-    RELANCER(Valeur.RELANCER);
+    RELANCER(Valeur.RELANCER),
+    REOUV(Valeur.REOUV);
 
     private final String valeur;
 
@@ -58,6 +59,9 @@ public enum TypeAction
                 
             case Valeur.RELANCER :
                 return RELANCER;  
+                
+            case Valeur.REOUV :
+                return REOUV;
 
             default :
                 return VIDE;
@@ -75,6 +79,7 @@ public enum TypeAction
         private static final String CLOTURER = "A clôturer";
         private static final String ABANDONNER = "A abandonner";
         private static final String RELANCER = "A relancer";
+        private static final String REOUV = " A réouvrir";
         private static final String VIDE = Statics.EMPTY;
         
         private Valeur() 

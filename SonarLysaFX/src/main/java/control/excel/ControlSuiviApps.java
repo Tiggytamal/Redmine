@@ -29,7 +29,7 @@ import utilities.FunctionalException;
 import utilities.enums.Bordure;
 import utilities.enums.Severity;
 
-public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps, List<DefautAppli>>
+public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps, List<DefautAppli>> implements Contraintes
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -57,7 +57,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
     {
         super(file);
         
-        initContraintes();
+        contraintes = initContraintes();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -85,7 +85,13 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
 
         return retour;
     }
-
+    
+    /**
+     * 
+     * 
+     * @param dasATraiter
+     * @param sheet
+     */
     public void majFeuilleDefaultsAppli(List<DefautAppli> dasATraiter, Sheet sheet)
     {
         // Rangement anomalies par date de détection
@@ -209,21 +215,9 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
             couleur = IndexedColors.LIGHT_GREEN;
         // On met à bleu les défault en cours de traitement
         else if (da.getEtatDefaut() == EtatDefaut.TRAITEE)
-            couleur = IndexedColors.LIGHT_BLUE;
+            couleur = IndexedColors.LIGHT_TURQUOISE;
 
         return couleur;
-    }
-
-    /**
-     * Initialisation liste des contraintes depuis les paramètres
-     */
-    private void initContraintes()
-    {
-        contraintes = new String[TypeAction.values().length];
-        for (int i = 0; i < contraintes.length; i++)
-        {
-            contraintes[i] = TypeAction.values()[i].getValeur();
-        }
     }
     
     /**

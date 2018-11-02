@@ -32,7 +32,9 @@ import utilities.Statics;
 @Table(name = "defauts_application")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="DefautAppli" + AbstractDao.FINDALL, query="SELECT da FROM DefautAppli da JOIN FETCH da.compo c LEFT JOIN FETCH da.defautQualite dq"),
+        @NamedQuery(name="DefautAppli" + AbstractDao.FINDALL, query="SELECT da FROM DefautAppli da "
+                + "JOIN FETCH da.compo c "
+                + "LEFT JOIN FETCH da.defautQualite dq"),
         @NamedQuery(name="DefautAppli" + AbstractDao.FINDINDEX, query="SELECT da FROM DefautAppli da WHERE da.compo.nom = :index"),
         @NamedQuery(name="DefautAppli" + AbstractDao.RESET, query="DELETE FROM DefautQualite")
 })

@@ -532,7 +532,7 @@ Merci</value>
 		</entry>
 		<entry>
 			<key>TEXTEAPPLI</key>
-			<value>Suite à analyse des données SonarQube du composant xxxxx , il s'avère que ce dernier n'a pas de code application valide dans son pom.xml.
+			<value>Suite à analyse des données SonarQube du composant xxxxx , il s'avère que ce dernier n'a pas de code application valide dans son pom.xml (balise "adaboCodeApplication").
 Aussi, pourriez-vous le renseigner avant le prochain assemblage. 
 Merci.</value>
 		</entry>

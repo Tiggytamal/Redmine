@@ -177,5 +177,5 @@
 			</items>
 		</TableView>
 		<Region prefHeight="20"/>
-		<Button text="Importer données" onAction="#recupDonnesFichier"/>
+		<Button text="Importer données consolidation" onAction="#recupDonnesFichier"/>
 </VBox>

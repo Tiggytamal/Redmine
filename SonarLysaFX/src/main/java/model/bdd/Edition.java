@@ -70,7 +70,7 @@ public class Edition extends AbstractBDDModele implements Serializable
             retour = new Edition("inconnue", EDITION0);
         else
             retour = new Edition("inconnue", edition);
-        retour.setTypeEdition(TypeEdition.AUTRE);
+        retour.setTypeEdition(TypeEdition.INCONNU);
         retour.setDateMEP(LocalDate.of(2099, 1, 1));
         retour.setCommentaire(COMEDINCO);
         return retour;

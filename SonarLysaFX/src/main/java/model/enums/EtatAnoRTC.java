@@ -14,6 +14,7 @@ public enum EtatAnoRTC
     VERIFIEE(Valeur.VERIFIEE, "Clore"),
     VMOA(Valeur.VMOA, "Valider et clore"),
     CLOSE(Valeur.CLOSE, ""),
+    ABANDONNEE(Valeur.ABANDONNEE, ""),
     REOUVERTE(Valeur.REOUVERTE, "Commencer à travailler");
     
     // valeur dans RTC de l'état
@@ -63,6 +64,9 @@ public enum EtatAnoRTC
             case Valeur.CLOSE:
                 return CLOSE;
                 
+            case Valeur.ABANDONNEE:
+                return ABANDONNEE;
+                
             case Valeur.REOUVERTE:
                 return REOUVERTE;
 
@@ -96,6 +100,7 @@ public enum EtatAnoRTC
         private static final String VMOA = "En attente validation/homologation MOA";
         private static final String CLOSE = "Close";
         private static final String REOUVERTE = "Réouverte";
+        private static final String ABANDONNEE = "Abandonnée";
         
         // Contructeur privé empéchant l'instanciation
         private Valeur() 
