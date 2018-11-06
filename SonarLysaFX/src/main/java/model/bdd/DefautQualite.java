@@ -109,7 +109,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     DefautQualite()
     {
         typeVersion = TypeVersion.SNAPSHOT;
-        etatDefaut = EtatDefaut.NOUVELLE;
+        etatDefaut = EtatDefaut.NOUVEAU;
         action = TypeAction.VIDE;
         remarque = Statics.EMPTY;
         dateDetection = LocalDate.now();
@@ -138,9 +138,9 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
      */
     public boolean calculTraitee()
     {
-        if ((!getRemarque().isEmpty() || numeroAnoRTC != 0 || action != TypeAction.VIDE) && etatDefaut == EtatDefaut.NOUVELLE)
-            etatDefaut = EtatDefaut.TRAITEE;
-        return etatDefaut != EtatDefaut.NOUVELLE;
+        if ((!getRemarque().isEmpty() || numeroAnoRTC != 0 || action != TypeAction.VIDE) && etatDefaut == EtatDefaut.NOUVEAU)
+            etatDefaut = EtatDefaut.TRAITE;
+        return etatDefaut != EtatDefaut.NOUVEAU;
     }
 
     /*---------- METHODES PRIVEES ----------*/

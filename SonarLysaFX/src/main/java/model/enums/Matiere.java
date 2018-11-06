@@ -13,7 +13,9 @@ public enum Matiere
 
     JAVA(Valeur.JAVA, TypeRapport.SUIVIJAVA),
     DATASTAGE(Valeur.DATASTAGE, TypeRapport.SUIVIDATASTAGE),
-    COBOL(Valeur.COBOL, TypeRapport.SUIVICOBOL);
+    COBOL(Valeur.COBOL, TypeRapport.SUIVICOBOL),
+    ANDROID(Valeur.ANDROID, TypeRapport.ANDROID),
+    IOS(Valeur.IOS, TypeRapport.IOS);
     
     private final String valeur;
     private final TypeRapport typeRapport;
@@ -41,6 +43,12 @@ public enum Matiere
             case Valeur.COBOL :
                 return COBOL;
                 
+            case Valeur.ANDROID :
+                return ANDROID;
+                
+            case Valeur.IOS :
+                return IOS;
+                
             default :
                 throw new IllegalArgumentException("Matière inconnue :" + matiere);
         }        
@@ -66,6 +74,8 @@ public enum Matiere
         public static final String JAVA = "JAVA";
         public static final String DATASTAGE = "DATASTAGE";
         public static final String COBOL = "COBOL";
+        public static final String ANDROID = "ANDROID";
+        public static final String IOS = "IOS";
         
         private Valeur() 
         {

@@ -76,7 +76,9 @@ public class MajSuiviAppsTask extends AbstractTask
         int size = das.size();
         long debut = System.currentTimeMillis();
         baseMessage = "Traitement Défaults Qualité :";
+        updateMessage("");
 
+        // Récupération eds informations depuis le fichier Excel pour le traitement
         for (DefautAppli da : das)
         {
             DefautAppli daBase = mapDefaults.get(da.getMapIndex());
@@ -93,6 +95,7 @@ public class MajSuiviAppsTask extends AbstractTask
         control.majFeuilleDefaultsAppli(new ArrayList<>(mapDefaults.values()), control.resetFeuilleDA());
         control.write();
         control.close();
+        dao.persist(mapDefaults.values());
         return false;
     }
 
@@ -101,13 +104,12 @@ public class MajSuiviAppsTask extends AbstractTask
         if (da.getAction() == TypeAction.CREER && creerAnoRTC(da))
         {
             da.setAction(TypeAction.VIDE);
-            da.setEtatDefaut(EtatDefaut.TRAITEE);
+            da.setEtatDefaut(EtatDefaut.TRAITE);
         }
     }
 
     private boolean creerAnoRTC(DefautAppli da) throws TeamRepositoryException
     {
-
         DefautQualite dq = daoDq.recupEltParIndex(da.getCompo().getLotRTC().getLot());
         ControlRTC controlRTC = ControlRTC.INSTANCE;
         boolean retour = false;
@@ -128,10 +130,11 @@ public class MajSuiviAppsTask extends AbstractTask
                 dq.setNumeroAnoRTC(numeroAno);
                 dq.setDateCreation(LocalDate.now());
                 dq.calculTraitee();
+                controlRTC.ajoutAppliAnoRTC(da);
                 retour = true;
             }
         }
-        
+
         // Action si défaut déjà créée mais pas d'anomalie RTC : On crée l'anomalie
         else if (dq.getNumeroAnoRTC() == 0)
         {
@@ -143,14 +146,15 @@ public class MajSuiviAppsTask extends AbstractTask
                 dq.setNumeroAnoRTC(numeroAno);
                 dq.setDateCreation(LocalDate.now());
                 dq.calculTraitee();
+                controlRTC.ajoutAppliAnoRTC(da);
                 retour = true;
             }
         }
-        
+
         // Action si l'anomalie RTC n'est pas déjà close : On rajoute un commentaire pour le code application
         else if (!dq.getEtatRTC().equals(EtatAnoRTC.CLOSE.getValeur()) && controlRTC.ajoutAppliAnoRTC(da))
             retour = true;
-        
+
         // Action si l'anomalie est close : On rouvre l'anomalie et on rajoute le commentaire
         else if (controlRTC.reouvrirAnoRTC(dq.getNumeroAnoRTC()) && controlRTC.ajoutAppliAnoRTC(da))
             retour = true;
@@ -159,7 +163,7 @@ public class MajSuiviAppsTask extends AbstractTask
         if (dq.getTypeDefaut() != TypeDefaut.APPLI)
             dq.setTypeDefaut(TypeDefaut.MIXTE);
         da.setDefautQualite(dq);
-        dq.setEtatDefaut(EtatDefaut.TRAITEE);
+        dq.setEtatDefaut(EtatDefaut.TRAITE);
         dq.setNomCompoAppli(da.getCompo().getNom());
 
         // Si tout est bon, on enlève l'action de création

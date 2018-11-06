@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import control.sonar.SonarAPI;
+import control.sonar.SonarAPI5;
 import dao.DaoFactory;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,6 +26,7 @@ import javafx.concurrent.Task;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
 import model.enums.EtatLot;
+import model.enums.InstanceSonar;
 import model.enums.Matiere;
 import model.enums.OptionRecupCompo;
 import model.enums.Param;
@@ -53,7 +54,7 @@ public abstract class AbstractTask extends Task<Boolean>
     private static final String ECOULE = "Temps écoulé : ";
     private static final String RESTANT = "\nTemps restant : ";
 
-    protected SonarAPI api;
+    protected SonarAPI5 api;
     protected String baseMessage;
     protected int etapeDebut;
     protected int etapeFin;
@@ -78,7 +79,7 @@ public abstract class AbstractTask extends Task<Boolean>
     {
         if (!info.controle())
             throw new FunctionalException(Severity.ERROR, "Pas de connexion au serveur Sonar, merci de vous reconnecter");
-        api = SonarAPI.INSTANCE;
+        api = SonarAPI5.INSTANCE;
         initEtape(fin);
         this.titre = titre;
         baseMessage = "";
@@ -223,7 +224,7 @@ public abstract class AbstractTask extends Task<Boolean>
      *
      * @return
      */
-    protected final List<ComposantSonar> recupererComposantsSonar(Matiere matiere)
+    protected final List<ComposantSonar> recupererComposantsSonar(Matiere matiere, InstanceSonar instance)
     {
         updateMessage(RECUPCOMPOSANTS);
 
@@ -233,7 +234,7 @@ public abstract class AbstractTask extends Task<Boolean>
         // Itération pour retiter les composants qui ne sont pas de la bonne matière
         for (Iterator<ComposantSonar> iter = retour.iterator(); iter.hasNext();)
         {
-            if (!testMatiereCompo(matiere, iter.next()))
+            if (!testMatiereInstanceCompo(instance, matiere, iter.next()))
                 iter.remove();
         }
 
@@ -352,6 +353,14 @@ public abstract class AbstractTask extends Task<Boolean>
         String filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
         if (nom.startsWith(filtreCobol))
             return Matiere.COBOL;
+        
+        String filtreIos = proprietesXML.getMapParams().get(Param.FILTREIOS);
+        if (nom.contains(filtreIos))
+            return Matiere.IOS;
+        
+        String filtreAndroid = proprietesXML.getMapParams().get(Param.FILTREANDROID);
+        if (nom.contains(filtreAndroid))
+            return Matiere.ANDROID;
 
         return Matiere.JAVA;
     }
@@ -370,27 +379,48 @@ public abstract class AbstractTask extends Task<Boolean>
 
     /**
      * Contrôle la matière d'un composant en utilisant les filtres paramétrés.
+     * @param instance 
      * 
      * @param matiere
      * @param compo
      * @return
      */
-    private boolean testMatiereCompo(Matiere matiere, ComposantSonar compo)
+    private boolean testMatiereInstanceCompo(InstanceSonar instance, Matiere matiere, ComposantSonar compo)
     {
-        String filtreDataStage = proprietesXML.getMapParams().get(Param.FILTREDATASTAGE);
-        String filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
+        // ON ne prend que les composants de la bonne instance
+        if (compo.getInstance() != instance)
+            return false;
+        
+        // Filtres et variables
+        String filtreDataStage;
+        String filtreCobol;
+        String filtreIOS;
+        String filtreAndroid;        
+        String nom = compo.getNom();
 
         // Switch de contrôle selon la type de matière en utilisant les filtres
         switch (matiere)
         {
             case DATASTAGE:
-                return compo.getNom().startsWith(filtreDataStage);
+                filtreDataStage = proprietesXML.getMapParams().get(Param.FILTREDATASTAGE);
+                return nom.startsWith(filtreDataStage);
 
             case JAVA:
-                return !compo.getNom().startsWith(filtreDataStage) && !compo.getNom().startsWith(filtreCobol);
+                filtreDataStage = proprietesXML.getMapParams().get(Param.FILTREDATASTAGE);
+                filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
+                return !nom.startsWith(filtreDataStage) && !compo.getNom().startsWith(filtreCobol);
 
             case COBOL:
-                return compo.getNom().startsWith(filtreCobol);
+                filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
+                return nom.startsWith(filtreCobol);
+                
+            case IOS :
+                filtreIOS = proprietesXML.getMapParams().get(Param.FILTREIOS);
+                return nom.contains(filtreIOS);
+                
+            case ANDROID :
+                filtreAndroid = proprietesXML.getMapParams().get(Param.FILTREANDROID);
+                return nom.contains(filtreAndroid);
 
             default:
                 throw new FunctionalException(Severity.ERROR, "Nouvelle matière pas prise en compte");

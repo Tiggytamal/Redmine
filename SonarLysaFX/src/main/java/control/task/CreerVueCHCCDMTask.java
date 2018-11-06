@@ -13,6 +13,7 @@ import dao.DaoFactory;
 import model.bdd.ComposantSonar;
 import model.bdd.Edition;
 import model.enums.TypeEdition;
+import model.enums.InstanceSonar;
 import model.enums.Matiere;
 import model.sonarapi.Vue;
 import utilities.FunctionalException;
@@ -136,7 +137,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
         Map<String, Set<String>> retour = new HashMap<>();
 
         // Récupératoin des composants en base
-        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.JAVA);
+        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.JAVA, InstanceSonar.LEGACY);
 
         etapePlus();
         baseMessage = "Traitement des composants :\n";

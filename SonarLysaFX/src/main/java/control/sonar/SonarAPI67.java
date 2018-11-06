@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -29,27 +27,20 @@ import com.mchange.util.AssertException;
 import dao.DaoFactory;
 import model.bdd.ComposantSonar;
 import model.bdd.DateMaj;
-import model.enums.Param;
 import model.enums.TypeDonnee;
 import model.interfaces.ModeleSonar;
-import model.sonarapi.AjouterProjet;
-import model.sonarapi.AjouterVueLocale;
-import model.sonarapi.AssocierQG;
 import model.sonarapi.Clef;
 import model.sonarapi.Composant;
-import model.sonarapi.Event;
-import model.sonarapi.Issue;
-import model.sonarapi.Issues;
 import model.sonarapi.IssuesSimple;
-import model.sonarapi.ManualMesure;
 import model.sonarapi.Message;
 import model.sonarapi.Parametre;
 import model.sonarapi.Projet;
-import model.sonarapi.QualityGate;
 import model.sonarapi.Retour;
 import model.sonarapi.Validation;
-import model.sonarapi.Vue;
+import model.sonarapi67.Analyse;
+import model.sonarapi67.Analyses;
 import model.sonarapi67.Connexion;
+import model.sonarapi67.Event;
 import utilities.AbstractToStringImpl;
 import utilities.FunctionalException;
 import utilities.Statics;
@@ -74,9 +65,7 @@ public class SonarAPI67 extends AbstractToStringImpl
 
     private static final String AUTHORIZATION = "Authorization";
     private static final String HTTP = ": HTTP ";
-    private static final String RESOURCE = "resource";
-    private static final String CATEGORIES = "categories";
-    private static final String VERSION = "Version";
+    private static final String VERSION = "VERSION";
 
     // Liste des api utilisées
     private static final String VIEWSLIST = "api/views/list";
@@ -84,7 +73,7 @@ public class SonarAPI67 extends AbstractToStringImpl
     private static final String QGLIST = "api/qualitygates/list";
     private static final String ISSUESSEARCH = "api/issues/search";
     private static final String MEASURESCOMPONENT = "api/measures/component";
-    private static final String EVENTS = "api/events";
+    private static final String ANALYSES = "api/project_analyses/search";
     private static final String VIEWSSHOW = "api/views/show";
     private static final String VIEWSCREATE = "api/views/create";
     private static final String VIEWSMODE = "api/views/mode";
@@ -125,7 +114,7 @@ public class SonarAPI67 extends AbstractToStringImpl
     }
 
     /*---------- METHODES PUBLIQUES GET ----------*/
-    
+
     /**
      * Retourne tous les composants présents dans SonarQube
      * 
@@ -133,25 +122,117 @@ public class SonarAPI67 extends AbstractToStringImpl
      */
     public List<Projet> getComposants()
     {
-        Parametre param = new Parametre("search", "composant ");
-        Response response = appelWebserviceGET(PROJECTSINDEX, new Parametre[] { param });
+        Response response = appelWebserviceGET(PROJECTSINDEX);
 
         if (response.getStatus() == Status.OK.getStatusCode())
         {
             LOGGER.info("Récupération de la liste des composants OK");
-            return response.readEntity(new GenericType<List<Projet>>() {
-            });
+            return response.readEntity(new GenericType<List<Projet>>() { });
         }
         else
         {
-            String erreur = "Impossible de remonter tous les composants de Sonar - API : " + PROJECTSINDEX + "/search=composant ";
+            String erreur = "Impossible de remonter tous les composants de Sonar - API : " + PROJECTSINDEX;
             LOGGER.error(erreur);
             throw new FunctionalException(Severity.ERROR, erreur);
         }
     }
-    
-    /*---------- METHODES PUBLIQUES POST ----------*/
 
+    /**
+     * Remonte les données métriques spécifiques à un composant
+     * 
+     * @param composantKey
+     *            clé du composant dans la base SonarQube
+     * @param metricKeys
+     *            clé des métriques désirées (issues, bugs, vulnerabilitie, etc..)
+     * @return un objet de type {@link Composant} avec toutes les informations sur celui-ci
+     */
+    public Composant getMetriquesComposant(String composantKey, String[] metricKeys)
+    {
+        // 1. Création des paramètres
+        Parametre paramComposant = new Parametre("componentKey", composantKey);
+
+        Parametre paramMetrics = new Parametre();
+        paramMetrics.setClef("metricKeys");
+        StringBuilder valeur = new StringBuilder();
+        for (int i = 0; i < metricKeys.length; i++)
+        {
+            valeur.append(metricKeys[i]);
+            if (i + 1 < metricKeys.length)
+                valeur.append(",");
+        }
+        paramMetrics.setValeur(valeur.toString());
+
+        // 2. appel du webservices
+        Response response = appelWebserviceGET(MEASURESCOMPONENT, new Parametre[] { paramComposant, paramMetrics });
+
+        // 3. Test du retour et renvoie du composant si ok.
+        if (response.getStatus() == Status.OK.getStatusCode())
+            return response.readEntity(Retour.class).getComponent();
+        else
+        {
+            LOGGER.error(erreurAPI(MEASURESCOMPONENT) + paramComposant.getValeur());
+            return new Composant();
+        }
+    }
+
+    /**
+     * Donne le nombre de problèmes de sécurité en cours et à prendre en compte d'un composant.
+     * 
+     * @param componentKey
+     * @return
+     */
+    public int getSecuriteComposant(String componentKey)
+    {
+        // 1. Création des paramètres de la requête
+        Parametre paramComposant = new Parametre("componentKeys", componentKey);
+        Parametre paramSeverities = new Parametre("severities", "CRITICAL, BLOCKER");
+        Parametre paramSinceLeakPeriod = new Parametre("sinceLeakPeriod", "true");
+        Parametre paramTypes = new Parametre("types", "VULNERABILITY");
+        Parametre paramResolved = new Parametre("resolved", "false");
+
+        // 2. appel du webservices
+        Response response = appelWebserviceGET(ISSUESSEARCH, new Parametre[] { paramComposant, paramSeverities, paramSinceLeakPeriod, paramTypes, paramResolved });
+
+        // 3. Test du retour et renvoie du composant si ok.
+        if (response.getStatus() == Status.OK.getStatusCode())
+            return response.readEntity(IssuesSimple.class).getTotal();
+        else
+        {
+            LOGGER.error(erreurAPI(ISSUESSEARCH) + paramComposant.getValeur());
+            return 0;
+        }
+    }
+
+    /**
+     * Vérifie si la date de mise à jour du composant est antérieure à la dernière date de mise à jour de la base des composants. En plus met à la jour la version
+     * du composant ERLEASE ou SNAPCHOT.
+     * 
+     * @param compo
+     * @return
+     */
+    public boolean initCompoVersionEtDateMaj(ComposantSonar compo)
+    {
+        // 1. Création des paramètres de la requête
+        Parametre paramResource = new Parametre("project", compo.getKey());
+        Parametre paramCategorie = new Parametre("category", VERSION);
+
+        // 2. appel du webservices
+        Response response = appelWebserviceGET(ANALYSES, new Parametre[] { paramResource, paramCategorie });
+
+        // 3. Test du retour et renvoie de la dernière version si ok.
+        if (response.getStatus() == Status.OK.getStatusCode())
+        {
+            Analyses analyses = response.readEntity(Analyses.class);
+            if (analyses != null)
+                return controleVersionEtDateMaj(analyses, compo);
+        }
+        else
+            LOGGER.error(erreurAPI(ANALYSES) + paramResource.getValeur());
+
+        return false;
+    }
+
+    /*---------- METHODES PUBLIQUES POST ----------*/
 
     /**
      * Permet de vérifier si l'utilisateur a bien les accès à SonarQube
@@ -173,7 +254,7 @@ public class SonarAPI67 extends AbstractToStringImpl
 
         return false;
     }
-    
+
     /**
      * Supprime un projet dans SonarQube depuis la clef avec ou non gestion des erreur, et vérifie que celle-ci n'existe plus pendant 2s.
      * 
@@ -278,6 +359,39 @@ public class SonarAPI67 extends AbstractToStringImpl
     }
 
     /*---------- METHODES PRIVEES ----------*/
+
+    /**
+     * Itération sur tous les Event retournés par le webService pour être sûr de bien retourner les informations du plus récent.
+     * 
+     * @param analyses
+     *            liste d'{@link model.sonarapi.Event} des changements de version
+     * @return
+     */
+    private boolean controleVersionEtDateMaj(Analyses analyses, ComposantSonar compo)
+    {
+        if (analyses == null)
+            throw new IllegalArgumentException("la liste ne peut pas être nulle");
+
+        LocalDateTime date = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0);
+        String version = EMPTY;
+
+        // Itération sur la liste pour récupérer la date la plus récente.
+        for (Analyse analyse : analyses.getListAnalyses())
+        {
+            LocalDateTime temp = LocalDateTime.parse(analyse.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+            if (temp.isAfter(date))
+            {
+                date = temp;
+                for (Event event : analyse.getEvent())
+                {
+                    if (VERSION.equals(event.getCategory()))
+                        version = event.getName();
+                }
+            }
+        }
+        compo.setVersionRelease(!version.contains("SNAPSHOT"));
+        return date.isAfter(DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.COMPOSANT.toString()).getTimeStamp());
+    }
 
     /**
      * Gère les retours d'erreurs des Webservices.

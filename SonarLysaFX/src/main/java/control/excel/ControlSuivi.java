@@ -163,7 +163,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         List<DefautQualite> retour = recupListeAnomaliesDepuisFeuille(AC, lotsRTC, task);
         for (DefautQualite dq : retour)
         {
-            dq.setEtatDefaut(EtatDefaut.CLOSE);
+            dq.setEtatDefaut(EtatDefaut.CLOS);
         }
         return retour;
     }
@@ -198,11 +198,11 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
                 String lot = Utilities.testLot(getCellStringValue(row, Index.DONNEEI.ordinal()));
                 String traite = getCellStringValue(row, Index.TOTALI.ordinal());
                 if ("A".equals(traite) && map.containsKey(lot))
-                    map.get(lot).setEtatDefaut(EtatDefaut.ABANDONNEE);
+                    map.get(lot).setEtatDefaut(EtatDefaut.ABANDONNE);
                 else if ("A".equals(traite))
                 {
                     DefautQualite dq = ModelFactory.getModel(DefautQualite.class);
-                    dq.setEtatDefaut(EtatDefaut.ABANDONNEE);
+                    dq.setEtatDefaut(EtatDefaut.ABANDONNE);
                     dq.setDateDetection(LocalDate.of(DATEINCONNUE, 1, 1));
                     dq.setLotRTC(lotsRTC.get(lot));
                     map.put(dq.getLotRTC().getLot(), dq);
@@ -406,23 +406,23 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         QG qg = lotRTC.getQualityGate();
 
         // On considère les anomalies abandonnées comme bonnes
-        if (etatAno == EtatDefaut.ABANDONNEE)
+        if (etatAno == EtatDefaut.ABANDONNE)
             return true;
 
         // On ne reprend pas les anomalies closes avec un lot terminé ou livré à l'édition
-        if ((etatLot == EtatLot.EDITION || etatLot == EtatLot.TERMINE) && etatAno == EtatDefaut.CLOSE)
+        if ((etatLot == EtatLot.EDITION || etatLot == EtatLot.TERMINE) && etatAno == EtatDefaut.CLOS)
             return true;
 
         // Si l'anomalie est close mais que le QG est toujours en erreur, on met l'anomalie à vérifier et nouvelle
-        if (etatAno == EtatDefaut.CLOSE && qg == QG.ERROR)
+        if (etatAno == EtatDefaut.CLOS && qg == QG.ERROR)
         {
             dq.setAction(TypeAction.VERIFIER);
             dq.setDateDetection(LocalDate.now());
-            dq.setEtatDefaut(EtatDefaut.NOUVELLE);
+            dq.setEtatDefaut(EtatDefaut.NOUVEAU);
             return false;
         }
 
-        return etatAno == EtatDefaut.CLOSE;
+        return etatAno == EtatDefaut.CLOS;
     }
 
     /**

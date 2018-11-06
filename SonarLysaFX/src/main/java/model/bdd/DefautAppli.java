@@ -74,7 +74,7 @@ public class DefautAppli extends AbstractBDDModele
 
     DefautAppli()
     {
-        etatDefaut = EtatDefaut.NOUVELLE;
+        etatDefaut = EtatDefaut.NOUVEAU;
         appliCorrigee = Statics.EMPTY;
         action = TypeAction.VIDE;
     }

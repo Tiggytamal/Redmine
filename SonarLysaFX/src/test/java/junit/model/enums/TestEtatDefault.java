@@ -19,7 +19,7 @@ public class TestEtatDefault implements TestEnums
     @Override
     public void testConstructeur()
     {
-        assertEquals(EtatDefaut.NOUVELLE, EtatDefaut.valueOf(EtatDefaut.NOUVELLE.toString()));
+        assertEquals(EtatDefaut.NOUVEAU, EtatDefaut.valueOf(EtatDefaut.NOUVEAU.toString()));
     }
 
     @Test

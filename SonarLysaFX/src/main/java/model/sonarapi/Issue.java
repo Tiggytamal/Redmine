@@ -15,6 +15,7 @@ import model.interfaces.ModeleSonar;
  * Classe de modèle pour les erreurs remontées dans SonarQube les propriétés flows et components sont ignorées pour diminuer la taille des flux XML traités.
  * 
  * @author ETP8137 - Grégoire Mathon
+ * @since 1.0
  *
  */
 @XmlRootElement

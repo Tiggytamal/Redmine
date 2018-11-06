@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import control.rtc.ControlRTC;
-import control.sonar.SonarAPI;
+import control.sonar.SonarAPI5;
 import control.task.AbstractTask;
 import control.task.InitBaseAnosTask;
 import control.task.MajComposantsSonarTask;
@@ -275,7 +275,7 @@ public final class MenuViewControl extends AbstractViewControl
         info.setMotDePasse(mdp);
 
         // Contrôle connexion RTC et SonarQube
-        if (!ControlRTC.INSTANCE.connexion() || !SonarAPI.INSTANCE.verificationUtilisateur())
+        if (!ControlRTC.INSTANCE.connexion() || !SonarAPI5.INSTANCE.verificationUtilisateur())
             throw new FunctionalException(Severity.INFO, "Utilisateur incorrect");
 
         mensuel.setDisable(false);

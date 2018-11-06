@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
-import control.sonar.SonarAPI;
+import control.sonar.SonarAPI5;
 import control.task.AbstractTask;
 import de.saxsys.javafx.test.JfxRunner;
 import junit.JunitBase;
@@ -41,7 +41,7 @@ public abstract class AbstractTestTask<T extends AbstractTask> extends JunitBase
     /*---------- ATTRIBUTS ----------*/
 
     protected T handler;
-    protected SonarAPI api;
+    protected SonarAPI5 api;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -102,24 +102,24 @@ public abstract class AbstractTestTask<T extends AbstractTask> extends JunitBase
     {
         if (mock)
         {
-            api = Mockito.mock(SonarAPI.class);
+            api = Mockito.mock(SonarAPI5.class);
 
             // Init du codeUser
             StringBuilder builder = new StringBuilder(Statics.info.getPseudo());
             builder.append(":");
             builder.append(Statics.info.getMotDePasse());
-            Whitebox.getField(SonarAPI.class, "codeUser").set(api, Base64.getEncoder().encodeToString(builder.toString().getBytes()));
+            Whitebox.getField(SonarAPI5.class, "codeUser").set(api, Base64.getEncoder().encodeToString(builder.toString().getBytes()));
 
             // init du webtarget
             WebTarget webTarget = ClientBuilder.newClient().target(Statics.proprietesXML.getMapParams().get(Param.URLSONAR));
-            Whitebox.getField(SonarAPI.class, "webTarget").set(api, webTarget);
+            Whitebox.getField(SonarAPI5.class, "webTarget").set(api, webTarget);
 
             // Ajout du mock à l'instance de la classe testée
             Whitebox.getField(clazz, "api").set(handler, api);
         }
         else
         {
-            api = SonarAPI.INSTANCE;
+            api = SonarAPI5.INSTANCE;
             Whitebox.getField(clazz, "api").set(handler, api);
         }
     }

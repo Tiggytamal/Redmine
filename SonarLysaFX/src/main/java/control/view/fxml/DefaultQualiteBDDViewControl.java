@@ -40,7 +40,7 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
 
         for (DefautQualite defaultQualite : DaoFactory.getDao(DefautQualite.class).readAll())
         {
-            if (defaultQualite.getEtatDefaut() == EtatDefaut.CLOSE || defaultQualite.getEtatDefaut() == EtatDefaut.ABANDONNEE)
+            if (defaultQualite.getEtatDefaut() == EtatDefaut.CLOS || defaultQualite.getEtatDefaut() == EtatDefaut.ABANDONNE)
                 listeFXML.add(new DefaultQualiteFXML(defaultQualite));
         }
         table.getItems().addAll(listeFXML);

@@ -14,6 +14,8 @@ public enum TypeRapport
     SUIVIJAVA("Résumé du traitement de suivi des anomalies JAVA", "rapport JAVA - "),
     SUIVIDATASTAGE("Résumé du traitement de suivi des anomalies DATASTAGE", "rapport DATASTAGE - "),
     SUIVICOBOL("Résumé du traitement de suivi des anomalies COBOL", "rapport COBOL - "),
+    ANDROID("Résumé du traitement de suivi des anomalies Androïd", "rapport Androïd - "),
+    IOS("Résumé du traitement de suivi des anomalies iOS", "rapport iOS - "),
     VUEAPPS("Résumé du traitement de la création des vues par application", "rapport Vues Applications - "),
     PURGESONAR("Liste des composants purgés", "rapport Purge Sonar - ");
     

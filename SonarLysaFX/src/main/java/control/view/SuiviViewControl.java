@@ -27,6 +27,10 @@ public final class SuiviViewControl extends AbstractViewControl
     @FXML
     private RadioButton radioDataStage;
     @FXML
+    private RadioButton radioIOS;
+    @FXML
+    private RadioButton radioAndroid;
+    @FXML
     private RadioButton radioMulti;
     @FXML
     private RadioButton radioCobol;
@@ -72,6 +76,16 @@ public final class SuiviViewControl extends AbstractViewControl
             case "radioCobol":
                 executer.setDisable(false);
                 typeMaj = TypeMajSuivi.COBOL;
+                break;
+                
+            case "radioIOS":
+                executer.setDisable(false);
+                typeMaj = TypeMajSuivi.IOS;
+                break;
+                
+            case "radioAndroid":
+                executer.setDisable(false);
+                typeMaj = TypeMajSuivi.ANDROID;
                 break;
 
             case "radioMulti":

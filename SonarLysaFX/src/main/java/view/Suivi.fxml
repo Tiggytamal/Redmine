@@ -15,7 +15,7 @@
 		<Insets top="25" right="25" bottom="10" left="25" />
 	</padding>
 	<children>
-	
+
 		<!-- RadioBoutons -->
 		<fx:define>
 			<ToggleGroup fx:id="toggleGroup" />
@@ -25,6 +25,8 @@
 			<RadioButton fx:id="radioSuivi" text="Suivi JAVA" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 			<RadioButton fx:id="radioDataStage" text="Suivi DataStage" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 			<RadioButton fx:id="radioCobol" text="Suivi COBOL" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioIOS" text="Suivi iOS" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+			<RadioButton fx:id="radioAndroid" text="Suivi Androïd" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 			<RadioButton fx:id="radioMulti" text="Suivi complet" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
 		</VBox>
 
@@ -34,7 +36,7 @@
 			<children>
 
 				<!-- Bouton pour lancer le traitement -->
-				<Button text="Executer" fx:id="executer" onAction="#executer" alignment="CENTER" disable="true"/>
+				<Button text="Executer" fx:id="executer" onAction="#executer" alignment="CENTER" disable="true" />
 			</children>
 		</VBox>
 	</children>

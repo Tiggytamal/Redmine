@@ -18,6 +18,7 @@ import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
 import model.enums.EtatAppli;
+import model.enums.InstanceSonar;
 import model.enums.Matiere;
 import model.enums.QG;
 
@@ -102,6 +103,10 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @Column(name = "matiere", nullable = false)
     private Matiere matiere;
     
+    @Enumerated(EnumType.STRING)
+    @Column(name = "instance", nullable = false)
+    private InstanceSonar instance;
+
     @Transient
     private EtatAppli etatAppli;
 
@@ -125,6 +130,44 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     public String getMapIndex()
     {
         return getKey();
+    }
+    
+    public void setSecurityRatingDepuisSonar(String securityRating)
+    {
+        if (securityRating != null)
+            switch (securityRating)
+            {
+                case "0":
+                    setSecurityRating("A");
+                    break;
+
+                case "1":
+                    setSecurityRating("A");
+                    break;
+
+                case "2":
+                    setSecurityRating("B");
+                    break;
+
+                case "3":
+                    setSecurityRating("C");
+                    break;
+
+                case "4":
+                    setSecurityRating("D");
+                    break;
+
+                case "5":
+                    setSecurityRating("E");
+                    break;
+
+                case "6":
+                    setSecurityRating("F");
+                    break;
+
+                default:
+                    setSecurityRating("F");
+            }
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -225,44 +268,6 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     {
         if (securityRating != null)
             this.securityRating = securityRating;
-    }
-
-    public void setSecurityRatingDepuisSonar(String securityRating)
-    {
-        if (securityRating != null)
-            switch (securityRating)
-            {
-                case "0":
-                    setSecurityRating("A");
-                    break;
-
-                case "1":
-                    setSecurityRating("A");
-                    break;
-
-                case "2":
-                    setSecurityRating("B");
-                    break;
-
-                case "3":
-                    setSecurityRating("C");
-                    break;
-
-                case "4":
-                    setSecurityRating("D");
-                    break;
-
-                case "5":
-                    setSecurityRating("E");
-                    break;
-
-                case "6":
-                    setSecurityRating("F");
-                    break;
-
-                default:
-                    setSecurityRating("F");
-            }
     }
 
     public int getVulnerabilites()
@@ -377,5 +382,15 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     public void setEtatAppli(EtatAppli etatAppli)
     {
         this.etatAppli = etatAppli;
+    }
+    
+    public InstanceSonar getInstance()
+    {
+        return instance;
+    }
+
+    public void setInstance(InstanceSonar instance)
+    {
+        this.instance = instance;
     }
 }

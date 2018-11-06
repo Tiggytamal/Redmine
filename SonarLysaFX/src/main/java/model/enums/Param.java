@@ -13,8 +13,12 @@ public enum Param implements TypeKey
 
     FILTREDATASTAGE("Filtre DataStage"), 
     FILTRECOBOL("Filtre COBOL"),
+    FILTREANDROID("Filtre Androïd"),
+    FILTREIOS("Filtre iOS"),
     ABSOLUTEPATH("Chemin des fichiers"), 
     NOMFICHIERJAVA("Nom fichier de suivi"), 
+    NOMFICHIERANDROID("Nom fichier de suivi Android"),
+    NOMFICHIERIOS("Nom fichier de suivi iOS"),
     NOMFICHIERDATASTAGE("Nom fichier de suivi DataStage"),
     NOMFICHIERCOBOL("Nom fichier de suivi COBOL"),
     NOMFICHIERAPPLI("Nom fichier d'extraction des applis"),

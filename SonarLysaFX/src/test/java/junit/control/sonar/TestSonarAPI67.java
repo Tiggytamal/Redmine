@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
-import control.sonar.SonarAPI;
+import control.sonar.SonarAPI5;
 import control.sonar.SonarAPI67;
 import junit.JunitBase;
 import junit.TestUtils;
@@ -38,7 +38,7 @@ public class TestSonarAPI67 extends JunitBase
         when(responseMock, "getStatus").thenReturn(Status.FORBIDDEN.getStatusCode());
         
         // Mock du logger pour vérifier les appels à celui-ci
-        logger = TestUtils.getMockLogger(SonarAPI.class, "LOGGER");
+        logger = TestUtils.getMockLogger(SonarAPI5.class, "LOGGER");
     }
 
     @Before

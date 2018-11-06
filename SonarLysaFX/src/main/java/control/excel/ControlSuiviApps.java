@@ -101,7 +101,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
         for (DefautAppli da : dasATraiter)
         {
             // Onne prend pas en compte les défaults clos et abandonnés
-            if (da.getEtatDefaut() == EtatDefaut.CLOSE || da.getEtatDefaut() == EtatDefaut.ABANDONNEE)
+            if (da.getEtatDefaut() == EtatDefaut.CLOS || da.getEtatDefaut() == EtatDefaut.ABANDONNE || da.getEtatDefaut() == EtatDefaut.LOTCLOS)
                 continue;
 
             // Calcul de la couleur de la ligne dans le fichier Excel
@@ -214,7 +214,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
         if (da.getAppliCorrigee().equals(da.getCompo().getAppli().getCode()))
             couleur = IndexedColors.LIGHT_GREEN;
         // On met à bleu les défault en cours de traitement
-        else if (da.getEtatDefaut() == EtatDefaut.TRAITEE)
+        else if (da.getEtatDefaut() == EtatDefaut.TRAITE)
             couleur = IndexedColors.LIGHT_TURQUOISE;
 
         return couleur;

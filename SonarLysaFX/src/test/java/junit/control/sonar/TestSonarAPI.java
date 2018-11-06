@@ -29,7 +29,7 @@ import org.powermock.reflect.Whitebox;
 
 import com.mchange.util.AssertException;
 
-import control.sonar.SonarAPI;
+import control.sonar.SonarAPI5;
 import junit.JunitBase;
 import junit.TestUtils;
 import model.enums.Param;
@@ -47,7 +47,7 @@ public class TestSonarAPI extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private SonarAPI handler;
+    private SonarAPI5 handler;
     private Response responseMock;
     private Logger logger;
 
@@ -62,13 +62,13 @@ public class TestSonarAPI extends JunitBase
         when(responseMock, "getStatus").thenReturn(Status.FORBIDDEN.getStatusCode());
         
         // Mock du logger pour vérifier les appels à celui-ci
-        logger = TestUtils.getMockLogger(SonarAPI.class, "LOGGER");
+        logger = TestUtils.getMockLogger(SonarAPI5.class, "LOGGER");
     }
 
     @Before
     public void init()
     {
-        handler = PowerMockito.spy(SonarAPI.INSTANCE);
+        handler = PowerMockito.spy(SonarAPI5.INSTANCE);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -79,7 +79,7 @@ public class TestSonarAPI extends JunitBase
         // Contrôle que l'on ne peut pas instancier un deuxième controleur par réflexion
         try
         {
-            Whitebox.getConstructor(SonarAPI.class).newInstance();
+            Whitebox.getConstructor(SonarAPI5.class).newInstance();
         } catch (InvocationTargetException e)
         {
             if (e.getCause() instanceof AssertException)
@@ -435,7 +435,7 @@ public class TestSonarAPI extends JunitBase
      */
     private void appelGetMockErreurWithParam() throws Exception
     {
-        Method methode = Whitebox.getMethod(SonarAPI.class, APPELGET, String.class, Parametre[].class);
+        Method methode = Whitebox.getMethod(SonarAPI5.class, APPELGET, String.class, Parametre[].class);
         when(handler, methode).withArguments(Mockito.anyString(), new Object[] {Mockito.any(Parametre[].class) }).thenReturn(responseMock);
     }
     

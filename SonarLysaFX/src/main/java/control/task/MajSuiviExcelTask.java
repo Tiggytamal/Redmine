@@ -29,10 +29,11 @@ import control.word.ControlRapport;
 import dao.DaoDefaultQualite;
 import dao.DaoFactory;
 import model.ModelFactory;
-import model.bdd.DefautQualite;
 import model.bdd.ComposantSonar;
+import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.EtatDefaut;
+import model.enums.InstanceSonar;
 import model.enums.Matiere;
 import model.enums.OptionMajCompos;
 import model.enums.Param;
@@ -71,7 +72,7 @@ public class MajSuiviExcelTask extends AbstractTask
     /*---------- CONSTRUCTEURS ----------*/
 
     public MajSuiviExcelTask(TypeMajSuivi typeMaj)
-    {        
+    {
         super(typeMaj.getNbreEtapes(), TITRE);
         this.typeMaj = typeMaj;
         annulable = false;
@@ -134,6 +135,20 @@ public class MajSuiviExcelTask extends AbstractTask
             case COBOL:
                 majFichierSuiviExcelCOBOL();
                 break;
+                
+            case ANDROID :
+                MajComposantsSonarMCTask recupCompos = new MajComposantsSonarMCTask(OptionMajCompos.COMPLETE);
+                recupCompos.affilierTache(this);
+                recupCompos.call();
+                majFichierSuiviExcelAndroid();
+                break;
+                
+            case IOS :
+                recupCompos = new MajComposantsSonarMCTask(OptionMajCompos.COMPLETE);
+                recupCompos.affilierTache(this);
+                recupCompos.call();
+                majFichierSuiviExcelIOS();
+                break;
 
             case MULTI:
                 traitementSuiviExcelToutFichiers();
@@ -177,6 +192,12 @@ public class MajSuiviExcelTask extends AbstractTask
 
         // Traitement fichier COBOL
         majFichierSuiviExcelCOBOL();
+        
+        // Traitement fichier Androïd
+        majFichierSuiviExcelAndroid();
+        
+        // Traitement fichier iOS
+        majFichierSuiviExcelIOS();
     }
 
     /**
@@ -189,7 +210,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private Set<String> majFichierSuiviExcelDataStage() throws IOException
     {
         // Appel de la récupération des composants datastage avec les vesions en paramètre
-        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.DATASTAGE);
+        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.DATASTAGE, InstanceSonar.LEGACY);
 
         // Mise à jour des liens des composants datastage avec le bon QG
         etapePlus();
@@ -209,7 +230,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private Set<String> majFichierSuiviExcelCOBOL() throws IOException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
-        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.COBOL);
+        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.COBOL, InstanceSonar.LEGACY);
         etapePlus();
 
         // Traitement du fichier de suivi
@@ -227,13 +248,33 @@ public class MajSuiviExcelTask extends AbstractTask
     private Set<String> majFichierSuiviExcelJAVA() throws IOException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
-        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.JAVA);
+        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.JAVA, InstanceSonar.LEGACY);
         etapePlus();
 
         // Traitement du fichier de suivi
         return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA), Matiere.JAVA);
     }
+
+    private Set<String> majFichierSuiviExcelAndroid() throws IOException
+    {
+        // Appel de la récupération des composants non datastage avec les vesions en paramètre
+        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.JAVA, InstanceSonar.MOBILECENTER);
+        etapePlus();
+
+        // Traitement du fichier de suivi
+        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIERANDROID), Matiere.ANDROID);
+    }
     
+    private Set<String> majFichierSuiviExcelIOS() throws IOException
+    {
+        // Appel de la récupération des composants non datastage avec les vesions en paramètre
+        List<ComposantSonar> composants = recupererComposantsSonar(Matiere.JAVA, InstanceSonar.MOBILECENTER);
+        etapePlus();
+
+        // Traitement du fichier de suivi
+        return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIERIOS), Matiere.IOS);
+    }
+
     private void traitementSuiviDefautsAppli() throws Exception
     {
         MajSuiviAppsTask majSuiviAppsTask = new MajSuiviAppsTask();
@@ -435,7 +476,7 @@ public class MajSuiviExcelTask extends AbstractTask
      * @param base
      *            Base pour l'affichage du message dans la fenêtre d'execution
      * @param dqEnBase
-     * @param dqInit 
+     * @param dqInit
      */
     private void traitementCompo(ComposantSonar compo, Set<String> retour, Map<String, DefautQualite> dqEnBase, List<DefautQualite> dqInit)
     {
@@ -450,7 +491,7 @@ public class MajSuiviExcelTask extends AbstractTask
         if (dqEnBase.containsKey(lotRTC.getLot()))
         {
             dq = dqEnBase.get(lotRTC.getLot());
-            
+
             // Initialisation d'un défault avec les valeurs à faux pour la sécurité et à SNAPCHOT pour la version
             // On effectue cette opération qu'une fois pour le premier composant qui mets à jour l'anomalie.
             if (!dqInit.contains(dq))
@@ -532,7 +573,7 @@ public class MajSuiviExcelTask extends AbstractTask
      *            Feuille des anomalies closes
      * @return {@code true} si l'on doit continuer le traitement<br>
      *         {@code false} si l'anomalie est à clôturer ou abandonner
-     * @throws TeamRepositoryException 
+     * @throws TeamRepositoryException
      */
     private void gestionAction(DefautQualite ano, ControlRapport controlRapport)
     {
@@ -541,7 +582,7 @@ public class MajSuiviExcelTask extends AbstractTask
             case ABANDONNER:
                 if (controlAno(ano))
                 {
-                    ano.setEtatDefaut(EtatDefaut.ABANDONNEE);
+                    ano.setEtatDefaut(EtatDefaut.ABANDONNE);
                     ano.setAction(TypeAction.VIDE);
                     controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
                 }
@@ -553,7 +594,7 @@ public class MajSuiviExcelTask extends AbstractTask
             case CLOTURER:
                 if (controlAno(ano))
                 {
-                    ano.setEtatDefaut(EtatDefaut.CLOSE);
+                    ano.setEtatDefaut(EtatDefaut.CLOS);
                     ano.setAction(TypeAction.VIDE);
                     controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
                 }

@@ -61,7 +61,7 @@ import utilities.enums.Severity;
  * @since 1.0
  * 
  */
-public class SonarAPI extends AbstractToStringImpl
+public class SonarAPI5 extends AbstractToStringImpl
 {
 
     /*---------- ATTRIBUTS ----------*/
@@ -91,7 +91,7 @@ public class SonarAPI extends AbstractToStringImpl
     private static final String AUTHVALID = "api/authentication/validate";
 
     /** Instance du controleur */
-    public static final SonarAPI INSTANCE = new SonarAPI();
+    public static final SonarAPI5 INSTANCE = new SonarAPI5();
 
     private final WebTarget webTarget;
     private final String codeUser;
@@ -110,7 +110,7 @@ public class SonarAPI extends AbstractToStringImpl
      * @throws IOException
      * @throws SecurityException
      */
-    private SonarAPI()
+    private SonarAPI5()
     {
         // Protection contre la création d'une nouvelle instance par réflexion
         if (INSTANCE != null)

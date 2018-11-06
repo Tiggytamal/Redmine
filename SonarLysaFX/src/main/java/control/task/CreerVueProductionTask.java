@@ -19,6 +19,7 @@ import com.ibm.team.repository.common.TeamRepositoryException;
 import control.rtc.ControlRTC;
 import model.bdd.ComposantSonar;
 import model.enums.EtatLot;
+import model.enums.InstanceSonar;
 import model.enums.Matiere;
 import model.enums.OptionVueProduction;
 import model.sonarapi.Projet;
@@ -227,7 +228,7 @@ public class CreerVueProductionTask extends AbstractTask
 
         Map<String, Vue> map = new HashMap<>();
 
-        List<ComposantSonar> composDataStage = recupererComposantsSonar(Matiere.DATASTAGE);
+        List<ComposantSonar> composDataStage = recupererComposantsSonar(Matiere.DATASTAGE, InstanceSonar.LEGACY);
         
         // Message
         int size = composDataStage.size();

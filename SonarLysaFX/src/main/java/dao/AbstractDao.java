@@ -91,6 +91,10 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
 
     /*---------- METHODES PUBLIQUES ----------*/
 
+    public void clearCache()
+    {
+        em.getEntityManagerFactory().getCache().evictAll();
+    }
     /**
      * Retourne toutes les données de la table sous forme d'une liste
      * 

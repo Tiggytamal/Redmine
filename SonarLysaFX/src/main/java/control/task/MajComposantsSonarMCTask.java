@@ -1,39 +1,29 @@
 package control.task;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import control.word.ControlRapport;
+import control.sonar.SonarAPI67;
 import dao.DaoComposantSonar;
-import dao.DaoDefaultAppli;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
-import model.bdd.DefautAppli;
 import model.bdd.Edition;
 import model.bdd.LotRTC;
-import model.enums.EtatDefaut;
-import model.enums.EtatLot;
 import model.enums.InstanceSonar;
 import model.enums.Matiere;
 import model.enums.OptionMajCompos;
-import model.enums.ParamSpec;
 import model.enums.QG;
-import model.enums.TypeInfo;
 import model.enums.TypeMetrique;
-import model.enums.TypeRapport;
 import model.sonarapi.Composant;
 import model.sonarapi.Metrique;
 import model.sonarapi.Periode;
 import model.sonarapi.Projet;
-import utilities.Statics;
 
 /**
  * Tâche de création de la liste des composants SonarQube avec purge des composants plantés
@@ -42,39 +32,32 @@ import utilities.Statics;
  * @since 1.0
  *
  */
-public class MajComposantsSonarTask extends AbstractTask
+public class MajComposantsSonarMCTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 
     /** Logger pour de debug dans la console */
     private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
-    /** Logger général de l'application */
-    private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** Nombre d'étapes du traitement */
     private static final short ETAPES = 2;
     /** Titre de la tâche */
     private static final String TITRE = "Création liste des composants";
-    /** Numéro de lot inconnu */
-    private static final String LOT0 = "000000";
+    private static final String LOTMONPAT = "341390";
+    private static final String APPLIMONPAT = "DCPA";
 
-    private static final boolean PURGE = true;
-
-    /** Liste des clefs des composants plantès dans SonarQube */
-    private List<String> keysComposPlantes;
     /** Options de la tâche */
     private OptionMajCompos option;
-    /** Rapport de la purge */
-    private ControlRapport controlR;
+
+    private SonarAPI67 api67;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public MajComposantsSonarTask(OptionMajCompos option)
+    public MajComposantsSonarMCTask(OptionMajCompos option)
     {
         super(ETAPES, TITRE);
         this.option = option;
         annulable = true;
-        keysComposPlantes = new ArrayList<>();
-        controlR = new ControlRapport(TypeRapport.PURGESONAR);
+        api67 = SonarAPI67.INSTANCE;
         startTimers();
     }
 
@@ -104,17 +87,10 @@ public class MajComposantsSonarTask extends AbstractTask
 
         // Récupération des données de la base de données et de Sonar
         List<ComposantSonar> retour = new ArrayList<>();
-        Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
         Map<String, LotRTC> mapLotRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
-        Map<String, DefautAppli> mapDefAppli = DaoFactory.getDao(DefautAppli.class).readAllMap();
+        Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
         Map<String, Edition> mapEdition = DaoFactory.getDao(Edition.class).readAllMap();
-        List<Projet> projets = api.getComposants();
-
-        // Réinitialisation des matières des lots pour le cas d'un composant qui serait retiré et qui enléverait un type de matière.
-        for (LotRTC lotRTC : mapLotRTC.values())
-        {
-            lotRTC.getMatieres().clear();
-        }
+        List<Projet> projets = api67.getComposants();
 
         // Affichage
         updateMessage("Récupération OK.");
@@ -139,27 +115,22 @@ public class MajComposantsSonarTask extends AbstractTask
             // Initialisation composant
             ComposantSonar compo = initCompoDepuisProjet(mapCompos, projet);
 
-            // On ne recalcule pas les composants avec une ancienne version ou ceux qui n'ont pas été mis à jour depuis la dernière mise à jour,
-            // mais seulement dans le cas où l'option de mise à jour partielle est activée.
-            List<String> oldVersion = Arrays.asList(Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONSVIEUXCOMPOS).split(";"));
-            if (!compoATester(compo, oldVersion))
+            if (!compoATester(compo))
                 continue;
 
             // Récupération des informations de chaque composant depuis SonarQube.
-            Composant composant = api.getMetriquesComposant(projet.getKey(),
-                    new String[] { TypeMetrique.LOT.getValeur(), TypeMetrique.APPLI.getValeur(), TypeMetrique.EDITION.getValeur(), TypeMetrique.LDC.getValeur(), TypeMetrique.SECURITY.getValeur(),
-                            TypeMetrique.VULNERABILITIES.getValeur(), TypeMetrique.QG.getValeur(), TypeMetrique.DUPLICATION.getValeur(), TypeMetrique.BLOQUANT.getValeur(),
-                            TypeMetrique.CRITIQUE.getValeur() });
+            Composant composant = api67.getMetriquesComposant(projet.getKey(), new String[] { TypeMetrique.LDC.getValeur(), TypeMetrique.SECURITY.getValeur(), TypeMetrique.VULNERABILITIES.getValeur(),
+                    TypeMetrique.QG.getValeur(), TypeMetrique.DUPLICATION.getValeur(), TypeMetrique.BLOQUANT.getValeur(), TypeMetrique.CRITIQUE.getValeur() });
 
             // On saute les composants null et plantés
-            if (composant == null || !testCompoPlante(composant))
+            if (composant == null)
                 continue;
 
             // Lot et matière
-            initCompoLotEtMatiere(compo, composant, mapLotRTC);
+            initCompoLotEtMatiere(compo, mapLotRTC);
 
             // Code application
-            String codeAppli = getValueMetrique(composant, TypeMetrique.APPLI, Statics.EMPTY).toUpperCase();
+            String codeAppli = APPLIMONPAT;
 
             // On récupère le code appli des infos du composant et si on ne trouve pas le code application dans la base de données,
             // on crée une nouvelle en spécifiant qu'elle ne fait pas partie du référentiel. Les composants sans code appli auront une application nulle.
@@ -172,15 +143,12 @@ public class MajComposantsSonarTask extends AbstractTask
                 mapAppli.put(codeAppli, appli);
             }
 
-            // Mise à jour la table des défauts sur les codes application
-            gestionDefautsAppli(compo, mapDefAppli);
-
             // Securite du composant
-            if (api.getSecuriteComposant(projet.getKey()) > 0)
+            if (api67.getSecuriteComposant(projet.getKey()) > 0)
                 compo.setSecurite(true);
 
             // Edition
-            initCompoEdition(compo, composant, mapEdition);
+            compo.setEdition(mapEdition.get("00.00.00.00"));
 
             // Données restantes
             compo.setQualityGate(getValueMetrique(composant, TypeMetrique.QG, QG.NONE.getValeur()));
@@ -192,15 +160,6 @@ public class MajComposantsSonarTask extends AbstractTask
             compo.setDuplication(recupLeakPeriod(getListPeriode(composant, TypeMetrique.DUPLICATION)));
             retour.add(compo);
         }
-
-        // Ecriture de la liste des composants purgés
-        controlR.creerFichier();
-
-        // Purge dans la ltable des composants plantés
-        purgeComposPlantes(keysComposPlantes);
-
-        // Mise à jour des défaults pour fermer ceux résolus
-        majDefAppli(mapDefAppli);
 
         return retour;
     }
@@ -223,7 +182,7 @@ public class MajComposantsSonarTask extends AbstractTask
         retour.setKey(projet.getKey());
         retour.setNom(projet.getNom());
         retour.setId(projet.getId());
-        retour.setInstance(InstanceSonar.LEGACY);
+        retour.setInstance(InstanceSonar.MOBILECENTER);
         return retour;
     }
 
@@ -231,13 +190,13 @@ public class MajComposantsSonarTask extends AbstractTask
      * Initialisation du lot et de la matièere d'un ComposantSonar
      * 
      * @param compo
-     * @param composant
      * @param mapLotRTC
+     * @param composant
      */
-    private void initCompoLotEtMatiere(ComposantSonar compo, Composant composant, Map<String, LotRTC> mapLotRTC)
+    private void initCompoLotEtMatiere(ComposantSonar compo, Map<String, LotRTC> mapLotRTC)
     {
         // Lot RTC
-        String numeroLot = getValueMetrique(composant, TypeMetrique.LOT, LOT0);
+        String numeroLot = LOTMONPAT;
 
         // Gestion de la matière
         Matiere matiere = testMatiereCompo(compo.getNom());
@@ -260,115 +219,21 @@ public class MajComposantsSonarTask extends AbstractTask
     }
 
     /**
-     * Initialisation de l'édition d'un ComposantSonar
-     * 
-     * @param compo
-     * @param composant
-     * @param mapEdition
-     */
-    private void initCompoEdition(ComposantSonar compo, Composant composant, Map<String, Edition> mapEdition)
-    {
-        // On récpère le numéro de l'édition du composant, et on va chercher dans la map des éditions celle corerspondante pour l'ajouter au ComposantSonar.
-        // Puis on ajoute cette édition en tant qu'édition inconnue si elle n'existe pas dans la base.
-        String edition = getValueMetrique(composant, TypeMetrique.EDITION, null);
-        if (edition == null || edition.isEmpty())
-            compo.setEdition(mapEdition.computeIfAbsent(edition, key -> Edition.getEditionInconnue(null)));
-        else
-            compo.setEdition(mapEdition.computeIfAbsent(edition, key -> Edition.getEditionInconnue(edition)));
-    }
-
-    /**
      * Contrôle pour voir si l'on doit rechercher des modifications sur le composant dans SonarQube
      * 
      * @param compo
-     * @param oldVersion
      * @return
      */
-    private boolean compoATester(ComposantSonar compo, List<String> oldVersion)
+    private boolean compoATester(ComposantSonar compo)
     {
+        if (!compo.getNom().contains("DCPA"))
+            return false;
         if (option == OptionMajCompos.COMPLETE)
         {
-            api.initCompoVersionEtDateMaj(compo);
+            api67.initCompoVersionEtDateMaj(compo);
             return true;
         }
-        return testVersion(compo, oldVersion) && api.initCompoVersionEtDateMaj(compo);
-    }
-
-    /**
-     * Test si la version d'un composant est récente ou non. Utilise le paramètre de l'application {@code ParamSpec.VERSIONSVIEUXCOMPOS}.
-     * 
-     * @param compo
-     * @param oldVersions
-     * @return vrai si la version est récente faux si c'est uen ancienne version
-     */
-    private boolean testVersion(ComposantSonar compo, List<String> oldVersions)
-    {
-        for (String version : oldVersions)
-        {
-            String nom = compo.getNom();
-            if (nom.substring(nom.length() - 2, nom.length()).equals(version))
-                return false;
-        }
-        return true;
-    }
-
-    /**
-     * Mise à jour de la table des défaults des applications
-     * 
-     * @param mapDefAppli
-     */
-    private void majDefAppli(Map<String, DefautAppli> mapDefAppli)
-    {
-        DaoDefaultAppli daoDefAppli = DaoFactory.getDao(DefautAppli.class);
-        daoDefAppli.persist(mapDefAppli.values());
-        daoDefAppli.majDateDonnee();
-    }
-
-    /**
-     * Contrôle des composants et création d'un défault dans le cas d'un code applicatif érroné.
-     * 
-     * @param compo
-     * @param mapDefAppli
-     */
-    private void gestionDefautsAppli(ComposantSonar compo, Map<String, DefautAppli> mapDefAppli)
-    {
-        Application appli = compo.getAppli();
-        LotRTC lotRTC = compo.getLotRTC();
-
-        if (!appli.isReferentiel() && !mapDefAppli.containsKey(compo.getNom()))
-        {
-            DefautAppli defAppli = ModelFactory.getModel(DefautAppli.class);
-            defAppli.setCompo(compo);
-            defAppli.setDateDetection(LocalDate.now());
-            mapDefAppli.put(compo.getNom(), defAppli);
-        }
-        else if (mapDefAppli.containsKey(compo.getNom()))
-        {
-            DefautAppli defAppli = mapDefAppli.get(compo.getNom());
-
-            if (appli.isReferentiel())
-                defAppli.setEtatDefaut(EtatDefaut.CLOS);
-            else if (lotRTC.getEtatLot() == EtatLot.ABANDONNE || lotRTC.getEtatLot() == EtatLot.TERMINE || lotRTC.getEtatLot() == EtatLot.EDITION)
-                defAppli.setEtatDefaut(EtatDefaut.LOTCLOS);
-        }
-    }
-
-    /**
-     * Test pour trouver les composants planté dans SonarQube
-     * 
-     * @param composant
-     * @return
-     */
-    private boolean testCompoPlante(Composant composant)
-    {
-        boolean retour = true;
-        if (LOT0.equals(getValueMetrique(composant, TypeMetrique.LOT, LOT0)))
-        {
-            keysComposPlantes.add(composant.getKey());
-            controlR.addInfo(TypeInfo.COMPOPURGE, composant.getKey(), "");
-            retour = false;
-        }
-        return retour;
+        return api67.initCompoVersionEtDateMaj(compo);
     }
 
     /**
@@ -414,30 +279,6 @@ public class MajComposantsSonarTask extends AbstractTask
         int retour = dao.persist(listeSonar);
         dao.majDateDonnee();
         return retour;
-    }
-
-    /**
-     * Purge des composantsSoanr plantés dans SonarQube et dans la base de données
-     * 
-     * @param keysComposPlantes
-     */
-    private void purgeComposPlantes(List<String> keysComposPlantes)
-    {
-        DaoComposantSonar dao = DaoFactory.getDao(ComposantSonar.class);
-
-        for (String key : keysComposPlantes)
-        {
-            // Suppression dans SonarQube
-            api.supprimerProjet(key, false);
-            api.supprimerVue(key, false);
-
-            LOGGER.debug("suppression composant : {}", key);
-
-            // Suppression dans la base
-            if (PURGE)
-                dao.delete(dao.recupEltParIndex(key));
-        }
-
     }
 
     /*---------- ACCESSEURS ----------*/
