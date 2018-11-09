@@ -32,7 +32,7 @@ public class TestTypeMajSuivi implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(5, TypeMajSuivi.values().length);
+        assertEquals(7, TypeMajSuivi.values().length);
     }
     
     @Test
@@ -42,6 +42,8 @@ public class TestTypeMajSuivi implements TestEnums
         assertFalse("La valeur de l'énumération est vide : " + TypeMajSuivi.DATASTAGE, TypeMajSuivi.DATASTAGE.getValeur().isEmpty());  
         assertFalse("La valeur de l'énumération est vide : " + TypeMajSuivi.JAVA, TypeMajSuivi.JAVA.getValeur().isEmpty());  
         assertFalse("La valeur de l'énumération est vide : " + TypeMajSuivi.MULTI, TypeMajSuivi.MULTI.getValeur().isEmpty());  
+        assertFalse("La valeur de l'énumération est vide : " + TypeMajSuivi.IOS, TypeMajSuivi.IOS.getValeur().isEmpty());
+        assertFalse("La valeur de l'énumération est vide : " + TypeMajSuivi.ANDROID, TypeMajSuivi.ANDROID.getValeur().isEmpty());
         assertFalse("La valeur de l'énumération est vide : " + TypeMajSuivi.NUIT, TypeMajSuivi.NUIT.getValeur().isEmpty());
     }
     
@@ -52,6 +54,8 @@ public class TestTypeMajSuivi implements TestEnums
         assertNotEquals(0, TypeMajSuivi.DATASTAGE.getNbreEtapes());
         assertNotEquals(0, TypeMajSuivi.JAVA.getNbreEtapes());
         assertNotEquals(0, TypeMajSuivi.MULTI.getNbreEtapes());
+        assertNotEquals(0, TypeMajSuivi.IOS.getNbreEtapes());
+        assertNotEquals(0, TypeMajSuivi.ANDROID.getNbreEtapes());
         assertNotEquals(0, TypeMajSuivi.NUIT.getNbreEtapes());
     }
 

@@ -27,9 +27,9 @@ import model.bdd.ComposantSonar;
 import model.bdd.DefautAppli;
 import model.enums.OptionMajCompos;
 import model.enums.TypeMetrique;
-import model.sonarapi.Composant;
-import model.sonarapi.Metrique;
-import model.sonarapi.Periode;
+import model.rest.sonarapi.Composant;
+import model.rest.sonarapi.Metrique;
+import model.rest.sonarapi.Periode;
 
 @RunWith(JfxRunner.class)
 public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSonarTask>

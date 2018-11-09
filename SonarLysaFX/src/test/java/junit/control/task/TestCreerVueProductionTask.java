@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import control.task.CreerVueProductionTask;
-import model.sonarapi.Vue;
+import model.rest.sonarapi.Vue;
 import utilities.Statics;
 
 public class TestCreerVueProductionTask extends AbstractTestTask<CreerVueProductionTask>

@@ -9,7 +9,7 @@ import org.powermock.reflect.Whitebox;
 
 import control.task.CreerVuePatrimoineTask;
 import model.bdd.ComposantSonar;
-import model.sonarapi.Vue;
+import model.rest.sonarapi.Vue;
 import utilities.Statics;
 
 public class TestCreerVuePatrimoineTask extends AbstractTestTask<CreerVuePatrimoineTask>

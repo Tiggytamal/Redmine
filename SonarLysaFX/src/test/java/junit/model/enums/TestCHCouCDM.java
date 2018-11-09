@@ -26,6 +26,6 @@ public class TestCHCouCDM implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(2, TypeEdition.values().length);
+        assertEquals(5, TypeEdition.values().length);
     }
 }

@@ -29,17 +29,17 @@ import org.powermock.reflect.Whitebox;
 
 import com.mchange.util.AssertException;
 
-import control.sonar.SonarAPI5;
+import control.rest.SonarAPI5;
 import junit.JunitBase;
 import junit.TestUtils;
 import model.enums.Param;
 import model.enums.TypeMetrique;
-import model.sonarapi.Composant;
-import model.sonarapi.Issue;
-import model.sonarapi.Parametre;
-import model.sonarapi.Projet;
-import model.sonarapi.QualityGate;
-import model.sonarapi.Vue;
+import model.rest.sonarapi.Composant;
+import model.rest.sonarapi.Issue;
+import model.rest.sonarapi.Parametre;
+import model.rest.sonarapi.Projet;
+import model.rest.sonarapi.QualityGate;
+import model.rest.sonarapi.Vue;
 import utilities.FunctionalException;
 import utilities.Statics;
 

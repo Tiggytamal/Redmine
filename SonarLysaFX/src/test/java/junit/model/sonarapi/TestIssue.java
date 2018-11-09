@@ -11,13 +11,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.Commentaire;
-import model.sonarapi.Composant;
-import model.sonarapi.Flow;
-import model.sonarapi.Issue;
-import model.sonarapi.Rule;
-import model.sonarapi.TextRange;
-import model.sonarapi.User;
+import model.rest.sonarapi.Commentaire;
+import model.rest.sonarapi.Composant;
+import model.rest.sonarapi.Flow;
+import model.rest.sonarapi.Issue;
+import model.rest.sonarapi.Rule;
+import model.rest.sonarapi.TextRange;
+import model.rest.sonarapi.User;
 
 public class TestIssue
 {

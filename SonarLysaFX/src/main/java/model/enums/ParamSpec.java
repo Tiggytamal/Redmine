@@ -6,14 +6,14 @@ package model.enums;
  * @author ETP8137 - Grégoire mathon
  * @since 1.0
  */
-public enum ParamSpec implements TypeKey 
+public enum ParamSpec implements TypeKey
 {
     /*---------- ATTRIBUTS ----------*/
 
     RECAPDEFECT("Récapitulatif Defect RTC", TypeParamSpec.TEXTAREA),
     TEXTERELANCE("Texte de relance des anomalies", TypeParamSpec.TEXTAREA),
     TEXTEAPPLI("Texte des anomlies sur les applis", TypeParamSpec.TEXTAREA),
-    TEXTENEWAPPLI("Texte remontant le bon nom e l'appli", TypeParamSpec.TEXTAREA),
+    TEXTENEWAPPLI("Texte remontant le bon nom de l'appli", TypeParamSpec.TEXTAREA),
     TEXTEDEFECT("Description Defect RTC", TypeParamSpec.TEXTAREA),
     TEXTESECURITE("Texte Sécurité RTC", TypeParamSpec.TEXTAREA),
     VERSIONS("Versions", TypeParamSpec.LISTVIEWVERSION),

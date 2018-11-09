@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.Parametre;
+import model.rest.sonarapi.Parametre;
 
 public class TestParametre
 {

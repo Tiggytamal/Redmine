@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.Condition;
+import model.rest.sonarapi.Condition;
 
 public class TestCondition
 {

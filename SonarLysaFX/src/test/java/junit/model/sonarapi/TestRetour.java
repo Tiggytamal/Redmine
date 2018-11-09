@@ -11,12 +11,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.Composant;
-import model.sonarapi.Message;
-import model.sonarapi.QualityGate;
-import model.sonarapi.Retour;
-import model.sonarapi.StatusProjet;
-import model.sonarapi.Vue;
+import model.rest.sonarapi.Composant;
+import model.rest.sonarapi.Message;
+import model.rest.sonarapi.QualityGate;
+import model.rest.sonarapi.Retour;
+import model.rest.sonarapi.StatusProjet;
+import model.rest.sonarapi.Vue;
 
 public class TestRetour
 {

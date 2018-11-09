@@ -23,6 +23,6 @@ public class TesteurMain
         builder = new StringBuilder("admin");
         builder.append(":");
         builder.append("admin");
-        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));  
+        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
     }
 }

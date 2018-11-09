@@ -44,8 +44,8 @@ import model.enums.TypeColSuivi;
 import model.enums.TypeInfo;
 import model.enums.TypeMajSuivi;
 import model.enums.TypeVersion;
-import model.sonarapi.QualityGate;
-import model.sonarapi.Vue;
+import model.rest.sonarapi.QualityGate;
+import model.rest.sonarapi.Vue;
 import utilities.Statics;
 import utilities.TechnicalException;
 
@@ -115,6 +115,7 @@ public class MajSuiviExcelTask extends AbstractTask
         // Mise à jour du fichier RTC à la date du jour.
         MajLotsRTCTask task = new MajLotsRTCTask(null);
         task.affilierTache(this);
+
         task.call();
 
         updateProgress(-1, 0);
@@ -577,10 +578,11 @@ public class MajSuiviExcelTask extends AbstractTask
      */
     private void gestionAction(DefautQualite ano, ControlRapport controlRapport)
     {
+        // Atention plusieurs cases n'ont pas d'action et sont regroupés
         switch (ano.getAction())
         {
             case ABANDONNER:
-                if (controlAno(ano))
+                if (controlEtFermetureAno(ano))
                 {
                     ano.setEtatDefaut(EtatDefaut.ABANDONNE);
                     ano.setAction(TypeAction.VIDE);
@@ -588,11 +590,8 @@ public class MajSuiviExcelTask extends AbstractTask
                 }
                 break;
 
-            case ASSEMBLER:
-                break;
-
             case CLOTURER:
-                if (controlAno(ano))
+                if (controlEtFermetureAno(ano))
                 {
                     ano.setEtatDefaut(EtatDefaut.CLOS);
                     ano.setAction(TypeAction.VIDE);
@@ -625,10 +624,22 @@ public class MajSuiviExcelTask extends AbstractTask
                     LOGPLANTAGE.error(e);
                 }
                 break;
-
-            case VERIFIER:
+                
+            case REOUV:
+                try
+                {
+                    ControlRTC.INSTANCE.reouvrirAnoRTC(ano.getNumeroAnoRTC());
+                    ano.setDateReouv(LocalDate.now());
+                    ano.setAction(TypeAction.VIDE);
+                }
+                catch (TeamRepositoryException e)
+                {
+                    LOGPLANTAGE.error(e);
+                }
                 break;
 
+            case ASSEMBLER:
+            case VERIFIER:
             case VIDE:
                 // Pas d'action
                 break;
@@ -639,7 +650,7 @@ public class MajSuiviExcelTask extends AbstractTask
         }
     }
 
-    private boolean controlAno(DefautQualite dq)
+    private boolean controlEtFermetureAno(DefautQualite dq)
     {
         if (dq.getNumeroAnoRTC() == 0 || Statics.ANOCLOSE.equals(dq.getEtatRTC()))
             return true;

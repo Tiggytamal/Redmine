@@ -64,14 +64,21 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     @JoinColumn(name = "projet_Clarity")
     private ProjetClarity projetClarity;
 
+    // Permet d'enregistrer temporairement la donnée depuis RTC avant traitement
     @Transient
     private String projetClarityString;
 
     @Column(name = "cpi_projet", nullable = false, length = 128)
     private String cpiProjet;
 
-    @Column(name = "edition", nullable = false, length = 32)
-    private String edition;
+    @BatchFetch(value = BatchFetchType.JOIN)
+    @ManyToOne(targetEntity = Edition.class, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "edition")
+    private Edition edition;
+
+    // Permet d'enregistrer temporairement la donnée depuis RTC avant traitement
+    @Transient
+    private String editionString;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "etatLot", nullable = true)
@@ -92,13 +99,13 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     @Enumerated(EnumType.STRING)
     @Column(name = "matiere", nullable = true)
     private Set<Matiere> matieres;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "groupe", nullable = true)
     private GroupeProjet groupe;
-        
+
     @BatchFetch(value = BatchFetchType.JOIN)
-    @OneToOne (targetEntity = DefautQualite.class, mappedBy = "lotRTC")
+    @OneToOne(targetEntity = DefautQualite.class, mappedBy = "lotRTC")
     private DefautQualite defaultQualite;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -127,7 +134,6 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         retour.cpiProjet = Statics.EMPTY;
         retour.etatLot = EtatLot.NOUVEAU;
         retour.projetRTC = Statics.EMPTY;
-        retour.edition = Statics.EMPTY;
         return retour;
     }
 
@@ -231,12 +237,12 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.cpiProjet = cpiProjet;
     }
 
-    public String getEdition()
+    public Edition getEdition()
     {
-        return getString(edition);
+        return edition;
     }
 
-    public void setEdition(String edition)
+    public void setEdition(Edition edition)
     {
         this.edition = edition;
     }
@@ -321,5 +327,15 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     public void setDefaultQualite(DefautQualite defaultQualite)
     {
         this.defaultQualite = defaultQualite;
+    }
+
+    public String getEditionString()
+    {
+        return editionString;
+    }
+
+    public void setEditionString(String editionString)
+    {
+        this.editionString = editionString;
     }
 }

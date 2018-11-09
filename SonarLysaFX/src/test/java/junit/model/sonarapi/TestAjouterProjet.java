@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.AjouterProjet;
+import model.rest.sonarapi.AjouterProjet;
 
 public class TestAjouterProjet
 {

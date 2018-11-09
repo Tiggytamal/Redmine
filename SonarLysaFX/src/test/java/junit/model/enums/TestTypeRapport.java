@@ -19,7 +19,7 @@ public class TestTypeRapport implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(5, TypeRapport.values().length);
+        assertEquals(7, TypeRapport.values().length);
     }
 
     @Test
@@ -37,6 +37,8 @@ public class TestTypeRapport implements TestEnums
         assertEquals("Résumé du traitement de suivi des anomalies COBOL", TypeRapport.SUIVICOBOL.getDebut());
         assertEquals("Résumé du traitement de la création des vues par application", TypeRapport.VUEAPPS.getDebut());
         assertEquals("Liste des composants purgés", TypeRapport.PURGESONAR.getDebut());
+        assertEquals("Résumé du traitement de suivi des anomalies Androïd", TypeRapport.ANDROID.getDebut());
+        assertEquals("Résumé du traitement de suivi des anomalies iOS", TypeRapport.IOS.getDebut());
     }
     
     @Test
@@ -47,5 +49,7 @@ public class TestTypeRapport implements TestEnums
         assertEquals("rapport COBOL - ", TypeRapport.SUIVICOBOL.getNomFichier());
         assertEquals("rapport Vues Applications - ", TypeRapport.VUEAPPS.getNomFichier());
         assertEquals("rapport Purge Sonar - ", TypeRapport.PURGESONAR.getNomFichier());
+        assertEquals("rapport Androïd - ", TypeRapport.ANDROID.getNomFichier());
+        assertEquals("rapport iOS - ", TypeRapport.IOS.getNomFichier());
     }
 }

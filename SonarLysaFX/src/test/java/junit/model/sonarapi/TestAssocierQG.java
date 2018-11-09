@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.AssocierQG;
+import model.rest.sonarapi.AssocierQG;
 
 public class TestAssocierQG
 {

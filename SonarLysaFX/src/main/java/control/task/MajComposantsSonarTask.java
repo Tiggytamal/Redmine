@@ -17,7 +17,6 @@ import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
 import model.bdd.DefautAppli;
-import model.bdd.Edition;
 import model.bdd.LotRTC;
 import model.enums.EtatDefaut;
 import model.enums.EtatLot;
@@ -29,10 +28,10 @@ import model.enums.QG;
 import model.enums.TypeInfo;
 import model.enums.TypeMetrique;
 import model.enums.TypeRapport;
-import model.sonarapi.Composant;
-import model.sonarapi.Metrique;
-import model.sonarapi.Periode;
-import model.sonarapi.Projet;
+import model.rest.sonarapi.Composant;
+import model.rest.sonarapi.Metrique;
+import model.rest.sonarapi.Periode;
+import model.rest.sonarapi.Projet;
 import utilities.Statics;
 
 /**
@@ -107,7 +106,6 @@ public class MajComposantsSonarTask extends AbstractTask
         Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
         Map<String, LotRTC> mapLotRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
         Map<String, DefautAppli> mapDefAppli = DaoFactory.getDao(DefautAppli.class).readAllMap();
-        Map<String, Edition> mapEdition = DaoFactory.getDao(Edition.class).readAllMap();
         List<Projet> projets = api.getComposants();
 
         // Réinitialisation des matières des lots pour le cas d'un composant qui serait retiré et qui enléverait un type de matière.
@@ -147,7 +145,7 @@ public class MajComposantsSonarTask extends AbstractTask
 
             // Récupération des informations de chaque composant depuis SonarQube.
             Composant composant = api.getMetriquesComposant(projet.getKey(),
-                    new String[] { TypeMetrique.LOT.getValeur(), TypeMetrique.APPLI.getValeur(), TypeMetrique.EDITION.getValeur(), TypeMetrique.LDC.getValeur(), TypeMetrique.SECURITY.getValeur(),
+                    new String[] { TypeMetrique.LOT.getValeur(), TypeMetrique.APPLI.getValeur(), TypeMetrique.LDC.getValeur(), TypeMetrique.SECURITY.getValeur(),
                             TypeMetrique.VULNERABILITIES.getValeur(), TypeMetrique.QG.getValeur(), TypeMetrique.DUPLICATION.getValeur(), TypeMetrique.BLOQUANT.getValeur(),
                             TypeMetrique.CRITIQUE.getValeur() });
 
@@ -178,9 +176,6 @@ public class MajComposantsSonarTask extends AbstractTask
             // Securite du composant
             if (api.getSecuriteComposant(projet.getKey()) > 0)
                 compo.setSecurite(true);
-
-            // Edition
-            initCompoEdition(compo, composant, mapEdition);
 
             // Données restantes
             compo.setQualityGate(getValueMetrique(composant, TypeMetrique.QG, QG.NONE.getValeur()));
@@ -257,24 +252,6 @@ public class MajComposantsSonarTask extends AbstractTask
             compo.setLotRTC(lotRTC);
             mapLotRTC.put(numeroLot, lotRTC);
         }
-    }
-
-    /**
-     * Initialisation de l'édition d'un ComposantSonar
-     * 
-     * @param compo
-     * @param composant
-     * @param mapEdition
-     */
-    private void initCompoEdition(ComposantSonar compo, Composant composant, Map<String, Edition> mapEdition)
-    {
-        // On récpère le numéro de l'édition du composant, et on va chercher dans la map des éditions celle corerspondante pour l'ajouter au ComposantSonar.
-        // Puis on ajoute cette édition en tant qu'édition inconnue si elle n'existe pas dans la base.
-        String edition = getValueMetrique(composant, TypeMetrique.EDITION, null);
-        if (edition == null || edition.isEmpty())
-            compo.setEdition(mapEdition.computeIfAbsent(edition, key -> Edition.getEditionInconnue(null)));
-        else
-            compo.setEdition(mapEdition.computeIfAbsent(edition, key -> Edition.getEditionInconnue(edition)));
     }
 
     /**

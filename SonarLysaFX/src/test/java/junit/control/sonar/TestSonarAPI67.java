@@ -13,11 +13,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
-import control.sonar.SonarAPI5;
-import control.sonar.SonarAPI67;
+import control.rest.SonarAPI5;
+import control.rest.SonarAPI67;
 import junit.JunitBase;
 import junit.TestUtils;
-import model.sonarapi.Projet;
+import model.rest.sonarapi.Projet;
 
 public class TestSonarAPI67 extends JunitBase
 {

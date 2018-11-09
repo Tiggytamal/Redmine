@@ -1,9 +1,12 @@
 package junit.model.enums;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
@@ -38,6 +41,32 @@ public class TestMatiere implements TestEnums
         assertEquals("DATASTAGE", Matiere.DATASTAGE.getValeur());
         assertEquals(Matiere.COBOL, Matiere.from("COBOL"));
         assertEquals("COBOL", Matiere.COBOL.getValeur());
+        assertEquals(Matiere.ANDROID, Matiere.from("ANDROID"));
+        assertEquals("ANDROID", Matiere.ANDROID.getValeur());
+        assertEquals(Matiere.IOS, Matiere.from("IOS"));
+        assertEquals("IOS", Matiere.IOS.getValeur());
+        
+        // Test lancement exception
+        List<String> listeException = new ArrayList<>();
+        listeException.add("\0JAVA");
+        listeException.add("\0DATASTAGE");
+        listeException.add("\0COBOL");
+        listeException.add("\0ANDROID");
+        listeException.add("\0IOS");
+
+        for (String string : listeException)
+        {
+            try
+            {
+                Matiere.from(string);
+            }
+            catch (IllegalArgumentException e)
+            {
+                assertEquals("model.enums.Matiere.from - matière envoyée inconnue : " + string, e.getMessage());
+                continue;
+            }
+            fail("Pas d'envoi d'esception avec " + string);
+        }
     }
     
     @Test (expected = IllegalArgumentException.class)
@@ -52,13 +81,15 @@ public class TestMatiere implements TestEnums
         assertEquals(TypeRapport.SUIVIJAVA, Matiere.JAVA.getTypeRapport());
         assertEquals(TypeRapport.SUIVIDATASTAGE, Matiere.DATASTAGE.getTypeRapport());
         assertEquals(TypeRapport.SUIVICOBOL, Matiere.COBOL.getTypeRapport());
+        assertEquals(TypeRapport.ANDROID, Matiere.ANDROID.getTypeRapport());
+        assertEquals(TypeRapport.IOS, Matiere.IOS.getTypeRapport());
     }
     
     @Test
     @Override
     public void testSize()
     {
-        assertEquals(3, Matiere.values().length);
+        assertEquals(5, Matiere.values().length);
     }
 
     @Test

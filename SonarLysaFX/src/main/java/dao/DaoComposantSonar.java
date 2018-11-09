@@ -2,16 +2,12 @@ package dao;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
-import model.bdd.Edition;
 import model.bdd.LotRTC;
 import model.enums.TypeDonnee;
 
@@ -58,32 +54,16 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
 
             // Persistance lot lié
             persistSousObjet(LotRTC.class, compo.getLotRTC());
-            
-            // Persistance edition liée
-            persistSousObjet(Edition.class, compo.getEdition());
     }
 
-    public void controleDoublons()
+    public List<String> recupLotsAvecComposants()
     {
-        List<ComposantSonar> aSupprimer = new ArrayList<>();
-        Map<String, ComposantSonar> map = new HashMap<>();
+        List<String> retour = em.createQuery("SELECT distinct(l.lot) FROM ComposantSonar c JOIN FETCH LotRTC l", String.class).getResultList();
+        System.out.println(retour.size());
 
-        for (ComposantSonar compo : readAll())
-        {
-            ComposantSonar compoMap = map.get(compo.getMapIndex());
-            if (compoMap == null)
-                map.put(compo.getMapIndex(), compo);
-            else
-            {
-                if (compoMap.getIdBase() > compo.getIdBase())
-                    aSupprimer.add(compoMap);
-                else
-                    aSupprimer.add(compo);
-            }
-        }
-
-        delete(aSupprimer);
-
+        retour = em.createNamedQuery("ComposantSonar.recupLotsRTC", String.class).getResultList();
+        System.out.println(retour.size());
+        return retour;
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -27,7 +27,7 @@ public class TestParam implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(20, Param.values().length);
+        assertEquals(24, Param.values().length);
     }
     
     @Test
@@ -53,5 +53,9 @@ public class TestParam implements TestEnums
         assertFalse(Param.PORTMAIL.getNom().isEmpty());
         assertFalse(Param.AQPMAIL.getNom().isEmpty());
         assertFalse(Param.NBREPURGE.getNom().isEmpty());
+        assertFalse(Param.NOMFICHIERANDROID.getNom().isEmpty());
+        assertFalse(Param.NOMFICHIERIOS.getNom().isEmpty());
+        assertFalse(Param.FILTREANDROID.getNom().isEmpty());
+        assertFalse(Param.FILTREIOS.getNom().isEmpty());
     }
 }

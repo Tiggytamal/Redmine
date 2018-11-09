@@ -2,7 +2,7 @@ package control.task;
 
 import java.util.List;
 
-import model.sonarapi.Vue;
+import model.rest.sonarapi.Vue;
 
 /**
  * Tâche permettant de mettre à jour les vues Sonar avec une valeur manuelle égale au numéro du lot.

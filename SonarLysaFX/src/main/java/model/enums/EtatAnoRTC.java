@@ -9,10 +9,14 @@ public enum EtatAnoRTC
     NOUVELLE(Valeur.NOUVELLE, "Accepter"),
     OUVERTE(Valeur.OUVERTE, "Commencer à travailler"),
     ENCOURS(Valeur.ENCOURS, "Terminer le travail"),
+    DENOUEMENT(Valeur.DENOUEMENT, "Reprendre"),
     RESOLUE(Valeur.RESOLUE, "Clore"),
     VMOE(Valeur.VMOE, "Vérifier OK"),
     VERIFIEE(Valeur.VERIFIEE, "Clore"),
     VMOA(Valeur.VMOA, "Valider et clore"),
+    REJETEE(Valeur.REJETEE, ""),
+    EDITEUR(Valeur.EDITEUR, "Terminer le travail"),
+    ATTEDITEUR(Valeur.ATTEDITEUR, "Tester correctif"),
     CLOSE(Valeur.CLOSE, ""),
     ABANDONNEE(Valeur.ABANDONNEE, ""),
     REOUVERTE(Valeur.REOUVERTE, "Commencer à travailler");
@@ -69,6 +73,18 @@ public enum EtatAnoRTC
                 
             case Valeur.REOUVERTE:
                 return REOUVERTE;
+                
+            case Valeur.DENOUEMENT:
+                return DENOUEMENT;
+                
+            case Valeur.REJETEE:
+                return REJETEE;
+                
+            case Valeur.EDITEUR:
+                return EDITEUR;
+                
+            case Valeur.ATTEDITEUR:
+                return ATTEDITEUR;
 
             default:
                 throw new TechnicalException("model.enums.EtatAnoRTC.from - etat envoyé inconnu :" + valeur, null);
@@ -101,6 +117,10 @@ public enum EtatAnoRTC
         private static final String CLOSE = "Close";
         private static final String REOUVERTE = "Réouverte";
         private static final String ABANDONNEE = "Abandonnée";
+        private static final String DENOUEMENT = "En attente de dénouement";
+        private static final String REJETEE = "Rejetée";
+        private static final String EDITEUR = "Correctif éditeur testé";
+        private static final String ATTEDITEUR = "En attente correctif éditeur";
         
         // Contructeur privé empéchant l'instanciation
         private Valeur() 

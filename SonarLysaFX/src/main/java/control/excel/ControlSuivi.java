@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataValidation;
@@ -95,7 +96,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     private int colAction;
     private int colDateRes;
     private int colDateMajEtat;
-    private int colNpc;
+    private int colProduit;
+    private int colDureeAno;
+    private int colDateReouv;
 
     // Controleurs
     private ControlRapport controlRapport;
@@ -637,12 +640,18 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         // Date création
         valoriserCellule(row, colDateDetec, date, dq.getDateDetection());
+        
+        // Date de réouverture
+        valoriserCellule(row, colDateReouv, date, dq.getDateReouv());
 
         // Date relance
         valoriserCellule(row, colDateRel, date, dq.getDateRelance());
 
         // Date resolution
         valoriserCellule(row, colDateRes, date, dq.getDateReso());
+        
+        // Durée anomalie
+        valoriserFormuleCellule(row, colDureeAno, centre, creerFormule(row));
 
         // Date mise à jour de l'état de l'anomalie
         valoriserCellule(row, colDateMajEtat, date, lotRTC.getDateMajEtat());
@@ -657,7 +666,21 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         valoriserCellule(row, colAction, centre, dq.getAction());
 
         // Groupe composant
-        valoriserCellule(row, colNpc, centre, lotRTC.getGroupe().getValeur());
+        valoriserCellule(row, colProduit, centre, lotRTC.getGroupe().getValeur());
+    }
+
+    private String creerFormule(Row row)
+    {
+        // Numéro de cellule de la date de création de l'anomalie
+        String dateCrea = CellReference.convertNumToColString(colDateCrea) + (row.getRowNum() + 1);
+        
+        // Numéro de cellule de la date de résolution de l'anomalie
+        String dateReso = CellReference.convertNumToColString(colDateRes) + (row.getRowNum() + 1);
+        
+        // Création de la formule =SI(S4="";""; SI(U4 = "";AUJOURDHUI() - S4; U4 - S4))
+        StringBuilder builder = new StringBuilder("IF(");
+        builder.append(dateCrea).append(" = \"\" , \"\" , IF( ").append(dateReso).append(" = \"\" , TODAY() - ").append(dateCrea).append(" , ").append(dateReso).append(" - ").append(dateCrea).append(" ))");
+        return builder.toString();
     }
 
     /**

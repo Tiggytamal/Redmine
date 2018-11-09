@@ -7,23 +7,22 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import control.sonar.SonarAPI67;
+import control.rest.SonarAPI67;
 import dao.DaoComposantSonar;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
-import model.bdd.Edition;
 import model.bdd.LotRTC;
 import model.enums.InstanceSonar;
 import model.enums.Matiere;
 import model.enums.OptionMajCompos;
 import model.enums.QG;
 import model.enums.TypeMetrique;
-import model.sonarapi.Composant;
-import model.sonarapi.Metrique;
-import model.sonarapi.Periode;
-import model.sonarapi.Projet;
+import model.rest.sonarapi.Composant;
+import model.rest.sonarapi.Metrique;
+import model.rest.sonarapi.Periode;
+import model.rest.sonarapi.Projet;
 
 /**
  * Tâche de création de la liste des composants SonarQube avec purge des composants plantés
@@ -89,7 +88,6 @@ public class MajComposantsSonarMCTask extends AbstractTask
         List<ComposantSonar> retour = new ArrayList<>();
         Map<String, LotRTC> mapLotRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
         Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
-        Map<String, Edition> mapEdition = DaoFactory.getDao(Edition.class).readAllMap();
         List<Projet> projets = api67.getComposants();
 
         // Affichage
@@ -146,9 +144,6 @@ public class MajComposantsSonarMCTask extends AbstractTask
             // Securite du composant
             if (api67.getSecuriteComposant(projet.getKey()) > 0)
                 compo.setSecurite(true);
-
-            // Edition
-            compo.setEdition(mapEdition.get("00.00.00.00"));
 
             // Données restantes
             compo.setQualityGate(getValueMetrique(composant, TypeMetrique.QG, QG.NONE.getValeur()));

@@ -86,6 +86,9 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     @Column(name = "date_resolution", nullable = true)
     private LocalDate dateReso;
 
+    @Column(name = "date_reouverture", nullable = true)
+    private LocalDate dateReouv;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "etat_defaut", nullable = false)
     private EtatDefaut etatDefaut;
@@ -93,14 +96,14 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     @Enumerated(EnumType.STRING)
     @Column(name = "action", nullable = false)
     private TypeAction action;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type_defaut", nullable = false)
     private TypeDefaut typeDefaut;
-    
+
     @Transient
     private String nomCompoAppli;
-    
+
     @Transient
     private String newCodeAppli;
 
@@ -324,6 +327,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     {
         this.nomCompoAppli = nomCompoAppli;
     }
+
     public String getNewCodeAppli()
     {
         return newCodeAppli;
@@ -332,5 +336,15 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     public void setNewCodeAppli(String newCodeAppli)
     {
         this.newCodeAppli = newCodeAppli;
+    }
+
+    public LocalDate getDateReouv()
+    {
+        return dateReouv;
+    }
+
+    public void setDateReouv(LocalDate dateReouv)
+    {
+        this.dateReouv = dateReouv;
     }
 }

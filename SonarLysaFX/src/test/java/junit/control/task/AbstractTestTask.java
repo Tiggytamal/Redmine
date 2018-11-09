@@ -16,12 +16,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
-import control.sonar.SonarAPI5;
+import control.rest.SonarAPI5;
 import control.task.AbstractTask;
 import de.saxsys.javafx.test.JfxRunner;
 import junit.JunitBase;
 import model.enums.Param;
-import model.sonarapi.Parametre;
+import model.rest.sonarapi.Parametre;
 import utilities.FunctionalException;
 import utilities.Statics;
 import utilities.enums.Severity;

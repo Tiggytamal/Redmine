@@ -31,7 +31,7 @@ public class TestTypeAction implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(7, TypeAction.values().length);
+        assertEquals(8, TypeAction.values().length);
     }
     
     @Test
@@ -55,9 +55,11 @@ public class TestTypeAction implements TestEnums
         assertEquals(TypeAction.RELANCER, TypeAction.from("A relancer"));
         assertEquals(TypeAction.VIDE, TypeAction.from("\0A relancer"));
         assertEquals("A relancer", TypeAction.RELANCER.getValeur());
+        assertEquals(TypeAction.REOUV, TypeAction.from("A réouvrir"));
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0A réouvrir"));
+        assertEquals("A réouvrir", TypeAction.REOUV.getValeur());
         assertEquals(TypeAction.VIDE, TypeAction.from("inconnu"));
         assertEquals(EMPTY, TypeAction.VIDE.getValeur());
-
         assertEquals(TypeAction.VIDE, TypeAction.from(EMPTY));
     }
 

@@ -7,7 +7,7 @@ package model.enums;
  * @since 1.0
  * 
  */
-public enum Matiere 
+public enum Matiere
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -50,7 +50,7 @@ public enum Matiere
                 return IOS;
                 
             default :
-                throw new IllegalArgumentException("Matière inconnue :" + matiere);
+                throw new IllegalArgumentException("model.enums.Matiere.from - matière envoyée inconnue : " + matiere);
         }        
     }
     

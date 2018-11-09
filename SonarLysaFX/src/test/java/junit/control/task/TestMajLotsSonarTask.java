@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
-import control.sonar.SonarAPI5;
+import control.rest.SonarAPI5;
 import control.task.MajLotsSonarTask;
 import de.saxsys.javafx.test.JfxRunner;
 

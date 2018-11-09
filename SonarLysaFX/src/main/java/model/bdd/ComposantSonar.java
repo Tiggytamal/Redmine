@@ -35,8 +35,8 @@ import model.enums.QG;
 @NamedQueries (value = {
         @NamedQuery(name="ComposantSonar.findAll", query="SELECT distinct(c) FROM ComposantSonar c "
                 + "JOIN FETCH c.appli a "
-                + "JOIN FETCH c.lotRTC l "
-                + "LEFT JOIN FETCH c.edition e"),
+                + "JOIN FETCH c.lotRTC l "),
+        @NamedQuery(name="ComposantSonar.recupLotsRTC", query="SELECT distinct(l.lot) FROM ComposantSonar c JOIN FETCH LotRTC l"),
         @NamedQuery(name="ComposantSonar.findByIndex", query="SELECT c FROM ComposantSonar c WHERE c.key = :index"),
         @NamedQuery(name="ComposantSonar.resetTable", query="DELETE FROM ComposantSonar")
 })
@@ -60,16 +60,14 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     @Column(name = "id", nullable = false)
     private String id;
+    
+    @Column(name = "version", nullable = false, length = 32)
+    private String version;
 
     @BatchFetch(value = BatchFetchType.JOIN)
     @ManyToOne(targetEntity = Application.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "appli")
     private Application appli;
-
-    @BatchFetch(value = BatchFetchType.JOIN)
-    @ManyToOne(targetEntity = Edition.class, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "edition")
-    private Edition edition;
 
     @Column(name = "ldc", nullable = true)
     private int ldc;
@@ -215,17 +213,6 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     {
         if (appli != null)
             this.appli = appli;
-    }
-
-    public Edition getEdition()
-    {
-        return edition;
-    }
-
-    public void setEdition(Edition edition)
-    {
-        if (edition != null)
-            this.edition = edition;
     }
 
     public String getId()
@@ -392,5 +379,15 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     public void setInstance(InstanceSonar instance)
     {
         this.instance = instance;
+    }
+
+    public String getVersion()
+    {
+        return getString(version);
+    }
+
+    public void setVersion(String version)
+    {
+        this.version = version;
     }
 }

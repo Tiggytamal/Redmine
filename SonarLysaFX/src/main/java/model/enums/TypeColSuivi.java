@@ -27,14 +27,16 @@ public enum TypeColSuivi  implements TypeColR
     REMARQUE("Remarque", "colRemarque"), 
     VERSION("Version", "colVer"), 
     DATECREATION("Date de création", "colDateCrea"), 
+    DATEREOUV("Date de réouverture", "colDateReouv"),
     DATEDETECTION("Date de détection", "colDateDetec"),
     DATERELANCE("Date de relance", "colDateRel"),
     DATERESOLUTION("Date de résolution", "colDateRes"),
+    DUREEANO("Durée de l'anomalie", "colDureeAno"),
     DATEMAJETAT("Date de mise à jour de l'état", "colDateMajEtat"),
     MATIERE("Matière", "colMatiere"),
     PROJETRTC("Projet RTC", "colProjetRTC"),
     ACTION("Action", "colAction"),
-    NPC("Projet NPC", "colNpc");
+    PRODUIT("Produit", "colProduit");
 
     private final String valeur;
     private final String nomCol;

@@ -10,7 +10,7 @@ import java.util.Locale;
 import model.bdd.ComposantSonar;
 import model.enums.OptionRecupCompo;
 import model.enums.Param;
-import model.sonarapi.Vue;
+import model.rest.sonarapi.Vue;
 import utilities.Statics;
 
 /**

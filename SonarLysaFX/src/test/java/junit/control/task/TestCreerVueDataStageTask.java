@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import control.task.CreerVueDataStageTask;
-import model.sonarapi.Vue;
+import model.rest.sonarapi.Vue;
 
 public class TestCreerVueDataStageTask extends AbstractTestTask<CreerVueDataStageTask>
 {

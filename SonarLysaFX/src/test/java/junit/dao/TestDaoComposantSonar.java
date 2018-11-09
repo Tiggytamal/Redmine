@@ -28,14 +28,20 @@ public class TestDaoComposantSonar extends AbstractTestDao<DaoComposantSonar, Co
         int size = handler.resetTable();
         assertEquals(handler.readAll().size(), size);
     }
+    
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
     @Test
-    @Ignore ("pas d'implemntaiton dans cette classe de la méthode testée")
     @Override
     public void testRecupDonneesDepuisExcel()
     {
-
+        assertEquals(0, handler.recupDonneesDepuisExcel(null));
+    }
+    
+    @Test
+    public void testRecupLotsAvecComposants()
+    {
+        handler.recupLotsAvecComposants();
     }
 }

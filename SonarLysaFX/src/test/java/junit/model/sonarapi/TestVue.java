@@ -13,7 +13,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.Vue;
+import model.rest.sonarapi.Vue;
 
 public class TestVue
 {

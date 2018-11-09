@@ -32,8 +32,8 @@ import model.enums.TypeAction;
 import model.enums.TypeColAppsW;
 import model.enums.TypeColPbApps;
 import model.enums.TypeColUA;
-import model.sonarapi.Projet;
-import model.sonarapi.Vue;
+import model.rest.sonarapi.Projet;
+import model.rest.sonarapi.Vue;
 import utilities.Statics;
 import utilities.TechnicalException;
 

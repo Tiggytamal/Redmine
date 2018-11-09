@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import control.rest.SonarAPI5;
 import control.rtc.ControlRTC;
-import control.sonar.SonarAPI5;
 import control.task.AbstractTask;
 import control.task.InitBaseAnosTask;
 import control.task.MajComposantsSonarTask;

@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 import javax.persistence.EntityManager;
 
+import model.bdd.Edition;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
 import model.enums.TypeDonnee;
@@ -49,6 +50,9 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
     {
             // Persistance projet Clarity
             persistSousObjet(ProjetClarity.class, lot.getProjetClarity());
+            
+            // Persistance édition
+            persistSousObjet(Edition.class, lot.getEdition());
     }
 
     /*---------- METHODES PRIVEES ----------*/

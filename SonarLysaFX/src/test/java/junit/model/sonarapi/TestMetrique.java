@@ -12,8 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.enums.TypeMetrique;
-import model.sonarapi.Metrique;
-import model.sonarapi.Periode;
+import model.rest.sonarapi.Metrique;
+import model.rest.sonarapi.Periode;
 
 public class TestMetrique
 {

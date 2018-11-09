@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.TextRange;
+import model.rest.sonarapi.TextRange;
 
 public class TestTextRange
 {

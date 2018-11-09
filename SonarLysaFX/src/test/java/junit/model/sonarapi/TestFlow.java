@@ -10,8 +10,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.Flow;
-import model.sonarapi.Location;
+import model.rest.sonarapi.Flow;
+import model.rest.sonarapi.Location;
 
 public class TestFlow
 {

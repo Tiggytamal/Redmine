@@ -32,9 +32,13 @@ import com.mchange.util.AssertException;
 
 import control.rtc.ControlRTC;
 import control.task.MajLotsRTCTask;
+import dao.DaoDefaultQualite;
+import dao.DaoFactory;
 import junit.JunitBase;
 import junit.TestUtils;
+import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
+import model.enums.EtatAnoRTC;
 import model.enums.EtatLot;
 import model.enums.Param;
 import model.enums.TypeEnumRTC;
@@ -147,7 +151,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-//    @Ignore("Suppression WorkItem - A utiliser en test manuel")
+    // @Ignore("Suppression WorkItem - A utiliser en test manuel")
     public void testSupprimerWorkItemDepuisId() throws TeamRepositoryException
     {
         handler.supprimerWorkItemDepuisId(326691);
@@ -265,7 +269,7 @@ public class TestControlRTC extends JunitBase
         List<LotRTC> liste = handler.recupLotsRTC(LocalDate.of(2016, 01, 01), new MajLotsRTCTask());
         LotRTC lot = liste.get(0);
         assertNotNull(lot.getEdition());
-        assertFalse(lot.getEdition().isEmpty());
+        assertNotNull(lot.getEdition());
         assertNotNull(lot.getProjetClarity());
         assertFalse(lot.getProjetClarity().getCode().isEmpty());
     }
@@ -283,6 +287,54 @@ public class TestControlRTC extends JunitBase
         assertEquals(LocalDate.of(2018, 6, 6), dates.get(EtatLot.MOA));
         assertEquals(LocalDate.of(2018, 6, 6), dates.get(EtatLot.VMOA));
         assertEquals(LocalDate.of(2018, 6, 21), dates.get(EtatLot.EDITION));
+    }
+
+    @Test
+    public void testRecupEtatsAnoRTC()
+    {
+        DaoDefaultQualite dao = DaoFactory.getDao(DefautQualite.class);
+        List<DefautQualite> dqs = dao.readAll();
+        int size = dqs.size();
+        int i = 0;
+        int j = 0;
+        for (DefautQualite dq : dqs)
+        {
+            i++;
+            System.out.println(i + " - " + size);
+            if (dq.getNumeroAnoRTC() == 0)
+                continue;
+
+            ControlRTC.INSTANCE.connexion();
+            IWorkItem wi = null;
+            try
+            {
+                wi = ControlRTC.INSTANCE.recupWorkItemDepuisId(dq.getNumeroAnoRTC());
+            }
+            catch (TeamRepositoryException e)
+            {
+                System.out.println(dq.getNumeroAnoRTC());
+                continue;
+            }
+            Map<EtatAnoRTC, LocalDate> etats;
+            try
+            {
+                etats = ControlRTC.INSTANCE.recupDatesEtatsAnoRTC(wi);
+            }
+            catch (TeamRepositoryException e)
+            {
+                System.out.println(wi.getId());
+                continue;
+            }
+
+            if (etats.containsKey(EtatAnoRTC.REOUVERTE))
+            {
+                System.out.println(dq.getNumeroAnoRTC());
+                dq.setDateReouv(etats.get(EtatAnoRTC.REOUVERTE));
+                j++;
+            }
+        }
+
+        System.out.println(j);
     }
 
     @Test
@@ -335,25 +387,25 @@ public class TestControlRTC extends JunitBase
         assertTrue(!TeamPlatform.isStarted());
         TeamPlatform.startup();
     }
-    
+
     @Test
     public void testRecupListeTypeWorkItem() throws TeamRepositoryException
     {
         handler.recupListeTypeWorkItem("PRJM_FE000018_GSI PLA Titres");
     }
-    
+
     @Test
     public void testRecupListeCustomAttributes() throws TeamRepositoryException
     {
         handler.recupListeCustomAttributes(356839);
     }
-    
+
     @Test
     public void testFermerAnoRTC() throws TeamRepositoryException
     {
         handler.fermerAnoRTC(356839);
     }
-    
+
     @Test
     public void testRelancerAno() throws TeamRepositoryException
     {
@@ -371,7 +423,7 @@ public class TestControlRTC extends JunitBase
     {
         assertEquals(Whitebox.getField(ControlRTC.class, "workItemClient").get(handler), Whitebox.invokeMethod(handler, "getClient"));
     }
-    
+
     @Test
     public void testTest() throws TeamRepositoryException
     {

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.Validation;
+import model.rest.sonarapi.Validation;
 
 public class TestValidation
 {

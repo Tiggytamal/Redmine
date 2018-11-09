@@ -9,10 +9,10 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.Composant;
-import model.sonarapi.Issue;
-import model.sonarapi.Issues;
-import model.sonarapi.Paging;
+import model.rest.sonarapi.Composant;
+import model.rest.sonarapi.Issue;
+import model.rest.sonarapi.Issues;
+import model.rest.sonarapi.Paging;
 
 public class TestIssues
 {

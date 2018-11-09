@@ -29,6 +29,7 @@ public enum Param implements TypeKey
     LIENSANOS("Hyperliens vers anomalie RTC"), 
     NOMQGDATASTAGE("Nom QualityGate Datastage"), 
     URLSONAR("Url serveur Sonar"), 
+    URLREPACK("URL Webservice Repack"),
     URLRTC("Url serveur RTC Jazz"),
     RTCLOTCHC("Edition RTC pour lots CHC"), 
     IPMAIL("Adresse IP du serveur mail"),

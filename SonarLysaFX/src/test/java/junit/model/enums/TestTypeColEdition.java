@@ -19,7 +19,7 @@ public class TestTypeColEdition implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(3, TypeColEdition.values().length);
+        assertEquals(4, TypeColEdition.values().length);
     }
     
     @Test
@@ -28,6 +28,7 @@ public class TestTypeColEdition implements TestEnums
         assertEquals("Libellé", TypeColEdition.LIBELLE.getValeur());
         assertEquals("Numero de version", TypeColEdition.VERSION.getValeur());
         assertEquals("Commentaire", TypeColEdition.COMMENTAIRE.getValeur());
+        assertEquals("Semaine", TypeColEdition.SEMAINE.getValeur());
     }
     
     @Test
@@ -36,6 +37,7 @@ public class TestTypeColEdition implements TestEnums
         assertEquals("colLib", TypeColEdition.LIBELLE.getNomCol());
         assertEquals("colVersion", TypeColEdition.VERSION.getNomCol());
         assertEquals("colComment", TypeColEdition.COMMENTAIRE.getNomCol());
+        assertEquals("colSemaine", TypeColEdition.SEMAINE.getNomCol());
     }
 
     @Test

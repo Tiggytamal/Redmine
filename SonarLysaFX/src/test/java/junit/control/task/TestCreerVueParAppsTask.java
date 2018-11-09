@@ -28,7 +28,7 @@ import control.task.CreerVueParAppsTask;
 import model.bdd.ComposantSonar;
 import model.enums.OptionCreerVueParAppsTask;
 import model.enums.OptionRecupCompo;
-import model.sonarapi.Projet;
+import model.rest.sonarapi.Projet;
 import utilities.Statics;
 import utilities.TechnicalException;
 

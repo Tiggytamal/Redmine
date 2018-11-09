@@ -34,10 +34,10 @@ import utilities.DateConvert;
 public abstract class AbstractControlExcel extends AbstractToStringImpl
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     /** Paramétrage pour éviter les Zip Bomb */
     private static final double MININFLATERATIO = 0;
-    
+
     /** Fichier Excel à modifier */
     protected File file;
     /** Workbook représentant le fichier */
@@ -50,31 +50,31 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
     protected CreationHelper createHelper;
     /** Ancre pour les commentaire */
     protected ClientAnchor ca;
-    
+
     /*---------- CONSTRUCTEURS ----------*/
-    
+
     protected AbstractControlExcel(File file)
     {
         this.file = file;
         // Changement de paramétrage pour éviter les zip bombs
         ZipSecureFile.setMinInflateRatio(MININFLATERATIO);
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES ABSTRAITES ----------*/
-    
+
     /**
      * Initialise le WorkBook
      */
     protected abstract void createWb();
-    
+
     /**
      * Initialisa les indices des colonnes
      */
     protected abstract void calculIndiceColonnes();
-    
+
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * recalcule la largeur de chaque colonne de la feuille.
      * 
@@ -88,7 +88,7 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
             sheet.autoSizeColumn(i);
         }
     }
-    
+
     /**
      * Met à jour l'indice max des colonnes
      * 
@@ -99,7 +99,7 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
         if (maxIndice < i)
             maxIndice = i;
     }
-    
+
     /**
      * Permet de créer et de valoriser une cellule. Le texte peut-être de type {@link String}, {@linkplain model.enum.Environnement}, {@link LocalDate}.
      * 
@@ -145,7 +145,37 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
 
         return cell;
     }
-    
+
+    /**
+     * Permet d'ajouter une formule Excel à une cellule.
+     * 
+     * @param row
+     * @param indexCol
+     * @param style
+     * @param formule
+     * @return
+     */
+    protected Cell valoriserFormuleCellule(Row row, Integer indexCol, CellStyle style, String formule)
+    {
+        // Contrôle
+        if (row == null || indexCol == null)
+            throw new IllegalArgumentException("row null pour la méthode control.parent.ControlExcel.valoriserCellule.");
+
+        // Création cellule
+        Cell cell = row.createCell(indexCol);
+
+        // Style
+        if (style != null)
+            cell.setCellStyle(style);
+
+        // pas 'action sur une formule nulle ou vide
+        if (formule == null || formule.isEmpty())
+            return cell;
+
+        cell.setCellFormula(formule);
+        return cell;
+    }
+
     /**
      * Ajoute un liens à une cellule, soit vers Sonar soit vers RTC
      * 
@@ -169,7 +199,7 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
         link.setAddress(adresse);
         cell.setHyperlink(link);
     }
-    
+
     /**
      * Copie un commentaire dans une cellule
      * 
@@ -200,7 +230,7 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
         retour.setString(commentaire.getString());
         return retour;
     }
-    
+
     /**
      * Copie d'une cellule
      * 
@@ -248,8 +278,7 @@ public abstract class AbstractControlExcel extends AbstractToStringImpl
         if (commentaire != null)
             copieComment(commentaire, newCell);
     }
-    
-    /*---------- ACCESSEURS ----------*/
 
+    /*---------- ACCESSEURS ----------*/
 
 }

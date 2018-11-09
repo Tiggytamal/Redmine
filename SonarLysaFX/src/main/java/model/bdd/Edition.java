@@ -34,7 +34,7 @@ public class Edition extends AbstractBDDModele implements Serializable
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
-    private static final String EDITION0 = "00.00.00.00";
+    private static final String NUMED0 = "00.00.00.00";
     private static final String COMEDINCO = "Inconnue dans la codification des Editions";
 
     @Column(name = "nom", unique = true, nullable = false, length = 64)
@@ -66,10 +66,10 @@ public class Edition extends AbstractBDDModele implements Serializable
     public static Edition getEditionInconnue(String edition)
     {
         Edition retour;
-        if (edition == null)
-            retour = new Edition("inconnue", EDITION0);
+        if (edition == null || edition.isEmpty())
+            retour = new Edition(NUMED0, NUMED0);
         else
-            retour = new Edition("inconnue", edition);
+            retour = new Edition(edition, NUMED0);
         retour.setTypeEdition(TypeEdition.INCONNU);
         retour.setDateMEP(LocalDate.of(2099, 1, 1));
         retour.setCommentaire(COMEDINCO);
@@ -81,7 +81,7 @@ public class Edition extends AbstractBDDModele implements Serializable
     @Override
     public String getMapIndex()
     {
-        return getNumero();
+        return getNom();
     }
 
     public Edition update(Edition update)

@@ -73,33 +73,36 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
             for (String annee : annees)
             {
                 String semaine = getCellStringValue(row, colSemaine);
+                String libelle = getCellStringValue(row, colLib);
 
-                // On vérfie qu'on a bien une édition des annèes choisie
-                if (semaine.contains(annee))
-                {
-                    Edition edition = ModelFactory.getModel(Edition.class);
+                // On vérfie qu'on a bien une édition Open (EXX, CHC ou CDM) des annèes choisies
+                if (!controleLigne(annee, semaine, libelle))
+                    continue;
 
-                    String libelle = getCellStringValue(row, colLib);
-                    String nom = prepareNomEdition(libelle);
-                    edition.setNom(nom);
+                Edition edition = ModelFactory.getModel(Edition.class);
 
-                    String numero = getCellFormulaValue(row, colVersion);
-                    edition.setNumero(numero);
+                String nom = prepareNomEdition(libelle);
+                edition.setNom(nom);
 
+                String numero = getCellFormulaValue(row, colVersion);
+                edition.setNumero(numero);
 
-                    edition.setDateMEP(prepareDateMEP(semaine));
-
-                    edition.setCommentaire(getCellStringValue(row, colComment));
-                    retour.put(numero, edition);
-
-                    edition.setTypeEdition(prepareTypeEdition(nom));
-                }
+                edition.setDateMEP(prepareDateMEP(semaine));
+                edition.setCommentaire(getCellStringValue(row, colComment));
+                edition.setTypeEdition(prepareTypeEdition(nom));
+                
+                retour.put(nom, edition);
             }
         }
         return retour;
     }
 
     /*---------- METHODES PRIVEES ----------*/
+
+    private boolean controleLigne(String annee, String semaine, String libelle)
+    {
+        return semaine.contains(annee) && (libelle.matches("^E\\d\\d.*$") || libelle.matches("^CHC.*$") || libelle.matches("^CDM.*$"));
+    }
 
     /**
      * Contrôle des libelle des éditions dans le fichier.
@@ -121,7 +124,7 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
             if (retour.matches("^CDM20[12][0-9]\\-S[0-5][0-9]$"))
                 return "CHC_" + retour;
             else if (retour.matches("^CDM20[12][0-9]\\-s[0-5][0-9]$"))
-                return "CHC_" + retour.replace("s", "S"); 
+                return "CHC_" + retour.replace("s", "S");
             else if (retour.matches("^CDM20[12][0-9][0-5][0-9]$"))
                 return "CHC_" + retour.substring(0, retour.length() - 2) + "-S" + retour.substring(retour.length() - 2);
         }
@@ -133,7 +136,7 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
             return retour.replace("s", "S");
         else if (retour.matches("^CHC20[12][0-9][0-5][0-9]$"))
             return retour.substring(0, retour.length() - 2) + "-S" + retour.substring(retour.length() - 2);
-        
+
         return libelle;
     }
 

@@ -15,6 +15,7 @@ import control.rtc.ControlRTC;
 import dao.DaoFactory;
 import dao.DaoLotRTC;
 import javafx.application.Platform;
+import model.bdd.Edition;
 import model.bdd.GroupementProjet;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
@@ -38,7 +39,7 @@ public class MajLotsRTCTask extends AbstractTask
     private static final short CLARITYMINI = 5;
     private static final short CLARITYMAX = 9;
     private static final short CLARITY7 = 7;
-    
+
     private LocalDate date;
     private DaoLotRTC dao;
 
@@ -96,13 +97,14 @@ public class MajLotsRTCTask extends AbstractTask
         Map<String, LotRTC> retour = dao.readAllMap();
         Map<String, ProjetClarity> mapClarity = DaoFactory.getDao(ProjetClarity.class).readAllMap();
         Map<String, GroupementProjet> mapGroupe = DaoFactory.getDao(GroupementProjet.class).readAllMap();
+        Map<String, Edition> mapEdition = DaoFactory.getDao(Edition.class).readAllMap();
 
         for (LotRTC lotRTC : lotsRTC)
         {
             // On saute tous les lotRTC sans numéro de lot.
             if (lotRTC.getLot().isEmpty())
                 continue;
-
+            
             LOGCONSOLE.debug("Traitement lots RTC : " + i + " - " + size + " - lot : " + lotRTC.getLot());
 
             // Récupération du code Clarity depuis RTC
@@ -111,8 +113,15 @@ public class MajLotsRTCTask extends AbstractTask
             // Test du projet Clarity par rapport à la base de données et valorisation de la donnée
             ProjetClarity projetClarity = testProjetClarity(codeClarity, mapClarity);
             lotRTC.setProjetClarity(projetClarity);
-            
-            //Controle du groupe
+
+            // Récupération du code édition depuis RTC
+            String editionString = lotRTC.getEditionString();
+
+            // Test de l'édition par rapport à la base de données et valorisation de la donnée
+            Edition edition = testEdition(editionString, mapEdition);
+            lotRTC.setEdition(edition);
+
+            // Controle du groupe
             if (mapGroupe.containsKey(lotRTC.getProjetRTC()))
                 lotRTC.setGroupe(mapGroupe.get(lotRTC.getProjetRTC()).getGroupe());
             else
@@ -129,12 +138,22 @@ public class MajLotsRTCTask extends AbstractTask
             // Affichage
             i++;
             calculTempsRestant(debut, i, size);
-            updateProgress((double)i, (double)size);
+            updateProgress((double) i, (double) size);
             updateMessage(lot);
         }
         return retour;
     }
-    
+
+    private Edition testEdition(String editionString, Map<String, Edition> mapEdition)
+    {        
+        if (editionString.startsWith("CDM") && !editionString.startsWith("CHC_CDM"))
+            editionString = editionString.replace("CDM", "CHC_CDM");
+        
+        if (!mapEdition.containsKey(editionString))
+            return Edition.getEditionInconnue(editionString);
+        else
+            return mapEdition.get(editionString);
+    }
 
     private ProjetClarity testProjetClarity(String codeClarity, Map<String, ProjetClarity> mapClarity)
     {
@@ -169,7 +188,7 @@ public class MajLotsRTCTask extends AbstractTask
         mapClarity.put(inconnu.getMapIndex(), inconnu);
         return inconnu;
     }
-    
+
     /**
      * Contrôle les valeurs du code Clarity en prenant en compte les différentes erreurs possibles
      * 

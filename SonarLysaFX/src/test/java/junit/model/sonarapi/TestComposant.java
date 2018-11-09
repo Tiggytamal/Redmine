@@ -16,8 +16,8 @@ import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
 import model.enums.TypeMetrique;
-import model.sonarapi.Composant;
-import model.sonarapi.Metrique;
+import model.rest.sonarapi.Composant;
+import model.rest.sonarapi.Metrique;
 
 public class TestComposant
 {

@@ -17,8 +17,8 @@ import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
 import model.enums.OptionRecupCompo;
 import model.enums.TypeVulnerabilite;
-import model.sonarapi.Issue;
-import model.sonarapi.Parametre;
+import model.rest.sonarapi.Issue;
+import model.rest.sonarapi.Parametre;
 import utilities.Statics;
 import utilities.Utilities;
 

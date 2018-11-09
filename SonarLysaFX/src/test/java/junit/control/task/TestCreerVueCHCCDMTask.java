@@ -24,7 +24,7 @@ import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Edition;
 import model.enums.TypeEdition;
-import model.sonarapi.Vue;
+import model.rest.sonarapi.Vue;
 import utilities.FunctionalException;
 
 public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>

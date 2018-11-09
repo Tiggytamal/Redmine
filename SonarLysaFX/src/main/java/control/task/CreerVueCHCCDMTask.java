@@ -4,18 +4,16 @@ import static utilities.Statics.NL;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import dao.DaoFactory;
 import model.bdd.ComposantSonar;
 import model.bdd.Edition;
-import model.enums.TypeEdition;
 import model.enums.InstanceSonar;
 import model.enums.Matiere;
-import model.sonarapi.Vue;
+import model.enums.TypeEdition;
+import model.rest.sonarapi.Vue;
 import utilities.FunctionalException;
 import utilities.enums.Severity;
 
@@ -76,9 +74,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
         // Traitement depuis le fichier XML
         suppressionVuesMaintenance(chccdm, annees);
 
-        Map<String, Edition> editions = recupererEditions(annees);
-
-        Map<String, Set<String>> mapVues = preparerMapVuesMaintenance(editions);
+        Map<String, Set<String>> mapVues = preparerMapVuesMaintenance();
 
         creerVuesMaintenance(mapVues);
 
@@ -132,7 +128,7 @@ public class CreerVueCHCCDMTask extends AbstractTask
      * @return La map des vues sous forme de HashSet pour ne pas avoir de doublon de lot. <br>
      *          <b>clé</b> : Edition - <b>valeur</b> : set des lot de l'édition 
      */
-    private Map<String, Set<String>> preparerMapVuesMaintenance(Map<String, Edition> mapEditions)
+    private Map<String, Set<String>> preparerMapVuesMaintenance()
     {
         Map<String, Set<String>> retour = new HashMap<>();
 
@@ -151,9 +147,9 @@ public class CreerVueCHCCDMTask extends AbstractTask
             updateProgress(i, composants.size());
 
             // Vérification qu'on a bien un numéro de lot et que dans le fichier XML, l'édition du composant est présente
-            if (compo.getLotRTC() != null && compo.getEdition() != null )
+            if (compo.getLotRTC() != null && compo.getLotRTC().getEdition() != null )
             {
-                Edition edition = compo.getEdition();
+                Edition edition = compo.getLotRTC().getEdition();
                 
                 // Contrôle pour ne prendre que les CHC ou CDM selon le booléen
                 if (edition.getTypeEdition() != chccdm)
@@ -203,35 +199,6 @@ public class CreerVueCHCCDMTask extends AbstractTask
                 updateProgress(i, sizeComplete);
             }
         }
-    }
-
-    /**
-     * Récupération des éditions CDM et CHC depuis les fichiers Excel, selon le type de vue et les annèes
-     * 
-     * @param annees <br/>
-     *            Liste des annèes à prendre en compte (année en cours et/ou annèe suivante et/ou annèe précedente
-     *            
-     * @return La map provenant du fichier Excel avec suppression des annèe non désirées. <br/>
-     *         <b>clé</b> = numéro édition XX.YY.ZZ.AA - <b>valeur</b> = CHC(_CDM)YYYY-Sww
-     */
-    private Map<String, Edition> recupererEditions(List<String> annees)
-    {
-        Map<String, Edition> retour = DaoFactory.getDao(Edition.class).readAllMap();
-
-        // On itère sur la HashMap pour retirer tous les éléments qui ne sont pas des annèes selectionnées
-        for (Iterator<Edition> iter = retour.values().iterator(); iter.hasNext();)
-        {
-            boolean ok = false;
-            Edition edition = iter.next();
-            for (String annee : annees)
-            {
-                if (edition.getNom().contains(annee))
-                    ok = true;
-            }
-            if (!ok)
-                iter.remove();
-        }
-        return retour;
     }
 
     /*---------- ACCESSEURS ----------*/

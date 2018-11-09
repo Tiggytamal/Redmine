@@ -22,7 +22,7 @@ import model.bdd.Application;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
 import model.enums.TypeVulnerabilite;
-import model.sonarapi.Issue;
+import model.rest.sonarapi.Issue;
 import utilities.Statics;
 
 public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExtractVulnerabiliteTask>

@@ -20,7 +20,6 @@ public class DefaultQualiteFXML extends AbstractModele implements ModeleFXML
     private final SimpleStringProperty codeClarity = new SimpleStringProperty(EMPTY);
     private final SimpleStringProperty libelleClarity = new SimpleStringProperty(EMPTY);
     private final SimpleStringProperty cpiLot = new SimpleStringProperty(EMPTY);
-    private final SimpleStringProperty edition = new SimpleStringProperty(EMPTY);
     private final SimpleStringProperty lotRTC = new SimpleStringProperty(EMPTY);
     private final SimpleStringProperty liensLot = new SimpleStringProperty(EMPTY);
     private final SimpleStringProperty typeVersion = new SimpleStringProperty(EMPTY);
@@ -51,7 +50,6 @@ public class DefaultQualiteFXML extends AbstractModele implements ModeleFXML
             LotRTC lot = dq.getLotRTC();
             setLotRTC(lot.getLot());
             setCpiLot(lot.getCpiProjet());
-            setEdition(lot.getEdition());
             setCodeProjetRTC(lot.getProjetRTC());
             if (lot.getDateMajEtat() != null)
                 setDateMajRTC(lot.getDateMajEtat().toString());
@@ -62,15 +60,15 @@ public class DefaultQualiteFXML extends AbstractModele implements ModeleFXML
 
             if (lot.getProjetClarity() != null)
             {
-                ProjetClarity ProjetClarity = lot.getProjetClarity();
-                setCodeClarity(ProjetClarity.getCode());
-                setLibelleClarity(ProjetClarity.getLibelleProjet());
-                setDepartement(ProjetClarity.getDepartement());
-                setDirection(ProjetClarity.getDirection());
-                setService(ProjetClarity.getService());
+                ProjetClarity projetClarity = lot.getProjetClarity();
+                setCodeClarity(projetClarity.getCode());
+                setLibelleClarity(projetClarity.getLibelleProjet());
+                setDepartement(projetClarity.getDepartement());
+                setDirection(projetClarity.getDirection());
+                setService(projetClarity.getService());
 
-                if (ProjetClarity.getChefService() != null)
-                    setRespServ(ProjetClarity.getChefService().getNom());
+                if (projetClarity.getChefService() != null)
+                    setRespServ(projetClarity.getChefService().getNom());
             }
         }
 
@@ -323,16 +321,6 @@ public class DefaultQualiteFXML extends AbstractModele implements ModeleFXML
     public void setCpiLot(String cpiLot)
     {
         this.cpiLot.set(cpiLot);
-    }
-
-    public String getEdition()
-    {
-        return edition.get();
-    }
-
-    public void setEdition(String edition)
-    {
-        this.edition.set(edition);
     }
 
     public String getGroupe()

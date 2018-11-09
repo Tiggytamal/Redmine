@@ -77,7 +77,7 @@ public final class WorkItemInitialization extends WorkItemOperation
 
         // Environnement
         IAttribute attribut = client.findAttribute(projet, TypeEnumRTC.ENVIRONNEMENT.getValeur(), monitor);
-        if (calculPariteEdition(lotRTC.getEdition()) || calculPariteEdition(proprietesXML.getMapParams().get(Param.RTCLOTCHC)))
+        if (calculPariteEdition(lotRTC.getEdition().getNom()) || calculPariteEdition(proprietesXML.getMapParams().get(Param.RTCLOTCHC)))
             workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Br A VMOE", attribut));
         else
             workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Br B VMOE", attribut));
@@ -99,7 +99,7 @@ public final class WorkItemInitialization extends WorkItemOperation
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("MOE", attribut));
 
         // Edition
-        String edition = lotRTC.getEdition();
+        String edition = lotRTC.getEdition().getNom();
         attribut = client.findAttribute(projet, TypeEnumRTC.EDITION.getValeur(), monitor);
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString(calculEditionRTC(edition), attribut));
 

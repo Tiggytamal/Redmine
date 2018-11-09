@@ -31,9 +31,9 @@ import model.enums.Param;
 import model.enums.QG;
 import model.enums.TypeMajSuivi;
 import model.enums.TypeMetrique;
-import model.sonarapi.Metrique;
-import model.sonarapi.Periode;
-import model.sonarapi.QualityGate;
+import model.rest.sonarapi.Metrique;
+import model.rest.sonarapi.Periode;
+import model.rest.sonarapi.QualityGate;
 import utilities.Statics;
 
 public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>

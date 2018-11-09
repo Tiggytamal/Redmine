@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.QualityGate;
+import model.rest.sonarapi.QualityGate;
 
 public class TestQualityGate
 {

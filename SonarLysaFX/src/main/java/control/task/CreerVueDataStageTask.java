@@ -5,7 +5,8 @@ import java.util.List;
 
 import dao.DaoFactory;
 import model.bdd.ComposantSonar;
-import model.sonarapi.Vue;
+import model.enums.Param;
+import model.rest.sonarapi.Vue;
 import utilities.Statics;
 
 /**
@@ -80,7 +81,7 @@ public class CreerVueDataStageTask extends AbstractTask
         List<ComposantSonar> listeDS = new ArrayList<>();
         for (ComposantSonar compo : compos)
         {
-            if (compo.getNom().startsWith("Composant DS_"))
+            if (compo.getNom().startsWith(Statics.proprietesXML.getMapParams().get(Param.FILTREDATASTAGE)))
                 listeDS.add(compo);
         }
 

@@ -11,9 +11,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.Condition;
-import model.sonarapi.StatusPeriode;
-import model.sonarapi.StatusProjet;
+import model.rest.sonarapi.Condition;
+import model.rest.sonarapi.StatusPeriode;
+import model.rest.sonarapi.StatusProjet;
 
 public class TestStatusProjet
 {

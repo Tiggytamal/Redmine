@@ -37,7 +37,7 @@ public abstract class AbstractTestDao<T extends AbstractDao<R>, R extends Abstra
             throw new TechnicalException("Impossible d'instancier l'énumération - control.excel.ControlExcelRead", e);
         }
         
-        DaoFactory.getDao(modele);
+        handler = DaoFactory.getDao(modele);
     }
     
     /*---------- METHODES ABSTRAITES ----------*/

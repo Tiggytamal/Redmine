@@ -15,7 +15,7 @@ import model.enums.TypeParamSpec;
  * @since 1.0
  *
  */
-public class TestParamSpec implements TestEnums 
+public class TestParamSpec implements TestEnums
 {
     @Test
     @Override
@@ -28,7 +28,7 @@ public class TestParamSpec implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(10, ParamSpec.values().length);
+        assertEquals(11, ParamSpec.values().length);
     }
     
     @Test
@@ -43,6 +43,7 @@ public class TestParamSpec implements TestEnums
         assertFalse(ParamSpec.VERSIONSVIEUXCOMPOS.getNom().isEmpty());
         assertFalse(ParamSpec.TEXTEAPPLI.getNom().isEmpty());
         assertFalse(ParamSpec.TEXTERELANCE.getNom().isEmpty());
+        assertFalse(ParamSpec.TEXTENEWAPPLI.getNom().isEmpty());
     }
     
     @Test
@@ -58,5 +59,6 @@ public class TestParamSpec implements TestEnums
         assertEquals(TypeParamSpec.LISTVIEWCOMPO, ParamSpec.VERSIONSVIEUXCOMPOS.getType());
         assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTEAPPLI.getType());
         assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTERELANCE.getType());
+        assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTENEWAPPLI.getType());
     }
 }

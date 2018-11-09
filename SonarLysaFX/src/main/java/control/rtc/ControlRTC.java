@@ -63,8 +63,11 @@ import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
 import com.mchange.util.AssertException;
 
 import control.task.AbstractTask;
+import dao.DaoComposantSonar;
+import dao.DaoDateMaj;
 import dao.DaoFactory;
 import model.ModelFactory;
+import model.bdd.ComposantSonar;
 import model.bdd.DateMaj;
 import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
@@ -424,14 +427,16 @@ public class ControlRTC extends AbstractToStringImpl
         else
         {
             // Récupération de la date de mise à jour depuis la base de données
-            LocalDateTime lastUpdate = DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.LOTSRTC.toString()).getTimeStamp();
+            DaoDateMaj dao = DaoFactory.getDao(DateMaj.class);
+            dao.clearCache();
+            LocalDateTime lastUpdate = dao.recupEltParIndex(TypeDonnee.LOTSRTC.toString()).getTimeStamp();
             if (lastUpdate != null)
             {
                 // Dernière date de mise à jour. On utilise la zone GMT car en interne RTC prend les dates dans ce format.
                 Date datePredicat = DateConvert.convertToOldDate(lastUpdate, ZoneId.of("GMT"));
 
                 // Prédicat des lots qui ont été modifiés depuis la dernière mise à jour
-                IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(datePredicat);
+                IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(datePredicat);               
 
                 // Prédicat des lots qui ont été créés depuis la dernière mise à jour
                 IPredicate predicatCreation = WorkItemQueryModel.ROOT.creationDate()._gt(datePredicat);
@@ -441,6 +446,25 @@ public class ControlRTC extends AbstractToStringImpl
                 predicatFinal = predicatFinal._and(predicatOu);
             }
         }
+        
+        // Gestion des lots des composants. On ne prend que les lots qui ont un composantSonar dans la base.
+        
+        // Récupération des numéros de lots depuis la base de données
+        DaoComposantSonar dao = DaoFactory.getDao(ComposantSonar.class);
+        List<String> listeLots = dao.recupLotsAvecComposants();
+        
+        // Création de la liste de numéros de lots
+        Number[] lots = new Number[listeLots.size()];
+        int i = 0;
+        for (String lot : listeLots)
+        {
+            lots[i] = Integer.valueOf(lot);
+            i++;
+        }
+        
+        // création du prédicat
+        IPredicate predicatLots = WorkItemQueryModel.ROOT.id()._in(lots);
+        predicatFinal = predicatFinal._and(predicatLots);
 
         // Utilisation du Predicate en filtre.
         IItemQuery filtered = (IItemQuery) query.filter(predicatFinal);
@@ -469,7 +493,7 @@ public class ControlRTC extends AbstractToStringImpl
         // trasnformation des IWorkItemHandle en LotRTC
 
         // Variables
-        int i = 0;
+        i = 0;
         int size = handles.size();
         task.setBaseMessage("Récupération lots RTC...");
         String lot = "Lot ";
@@ -482,7 +506,7 @@ public class ControlRTC extends AbstractToStringImpl
         {
             if (task.isCancelled())
                 break;
-
+            
             // Récupération de l'objet complet depuis l'handle de la requête
             retour.add(creerLotSuiviRTCDepuisHandle(handle));
 
@@ -522,6 +546,37 @@ public class ControlRTC extends AbstractToStringImpl
             IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(iWorkItem, monitor);
             String etat = workflowInfo.getStateName(iWorkItem.getState2());
             retour.put(EtatLot.from(etat), DateConvert.localDate(iWorkItem.modified()));
+        }
+
+        return retour;
+    }
+    
+    /**
+     * Remonte une liste des tous les états passés par le lot ainsi que les dates de mise à jour.
+     * 
+     * @param lot
+     * @throws TeamRepositoryException
+     */
+    @SuppressWarnings("unchecked")
+    public Map<EtatAnoRTC, LocalDate> recupDatesEtatsAnoRTC(IItem lot) throws TeamRepositoryException
+    {
+        // Manager
+        IItemManager itemManager = repo.itemManager();
+
+        // Récupération de l'historique des modifications faites sur le lot.
+        List<IAuditableHandle> handles = itemManager.fetchAllStateHandles((IAuditableHandle) lot.getItemHandle(), monitor);
+        List<IWorkItem> workItems = itemManager.fetchCompleteStates(handles, null);
+
+        // Tri de la liste par dates décroissantes
+        workItems.sort((o1, o2) -> o2.modified().compareTo(o1.modified()));
+
+        // Transfert des données dans une map, pour avoir la première date de mise à jour de chaque état.
+        Map<EtatAnoRTC, LocalDate> retour = new EnumMap<>(EtatAnoRTC.class);
+        for (IWorkItem iWorkItem : workItems)
+        {
+            IWorkflowInfo workflowInfo = workItemClient.findWorkflowInfo(iWorkItem, monitor);
+            String etat = workflowInfo.getStateName(iWorkItem.getState2()).trim();
+            retour.put(EtatAnoRTC.from(etat), DateConvert.localDate(iWorkItem.modified()));
         }
 
         return retour;
@@ -682,9 +737,10 @@ public class ControlRTC extends AbstractToStringImpl
             return false;
         try
         {
-            String texte = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEAPPLI).replaceAll("xxxxx", da.getCompo().getNom());
+            
+            String texte = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEAPPLI).replace("xxxxx", da.getCompo().getNom().replace("Composant ", Statics.EMPTY));
             if (!da.getAppliCorrigee().isEmpty())
-                texte += Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTENEWAPPLI).replaceAll("-code-", da.getAppliCorrigee());
+                texte += Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTENEWAPPLI).replace("-code-", da.getAppliCorrigee());
             ajoutCommentaireAnoRTC(dq.getNumeroAnoRTC(), texte, TypeCom.APPLICATION);
             return true;
         }
@@ -800,10 +856,11 @@ public class ControlRTC extends AbstractToStringImpl
         {
             EtatAnoRTC etatLot = EtatAnoRTC.from(workflowInfo.getStateName(wi.getState2()).trim());
 
-            // Attention deux cases utilisent le même code.
+            // Attention trois cases utilisent le même code.
             switch (etatLot)
             {
                 case CLOSE:
+                case REJETEE:
                 case ABANDONNEE:
                     workItemClient.getWorkItemWorkingCopyManager().disconnect(wi);
                     return true;
@@ -839,6 +896,18 @@ public class ControlRTC extends AbstractToStringImpl
                 case VERIFIEE:
                     changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.VERIFIEE.getAction());
                     break;
+                    
+                case EDITEUR:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.EDITEUR.getAction());
+                    break;
+                    
+                case DENOUEMENT:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.DENOUEMENT.getAction());
+                    break; 
+                    
+                case ATTEDITEUR:
+                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.ATTEDITEUR.getAction());
+                    break; 
             }
         }
     }
@@ -861,8 +930,8 @@ public class ControlRTC extends AbstractToStringImpl
         retour.setLot(String.valueOf(workItem.getId()));
         retour.setLibelle(workItem.getHTMLSummary().getPlainText());
         retour.setCpiProjet(recupItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
-        retour.setProjetClarityString(recupValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem));
-        retour.setEdition(recupValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem));
+        retour.setProjetClarityString(recupValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem).trim());
+        retour.setEditionString(recupValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem).trim());
         EtatLot etatLot = EtatLot.from(recupEtatElement(workItem));
         retour.setEtatLot(etatLot);
         retour.setProjetRTC(recupItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());

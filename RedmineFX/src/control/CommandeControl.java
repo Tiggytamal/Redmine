@@ -54,9 +54,11 @@ public class CommandeControl implements Serializable, Instance
     /** Helper pour la gestion des cellules */
     private CellHelper helper;
     /** Variables privées des indices des colonnes */
-    private final int iApps = 2, iClos = 3, iResolv = 4, iCharge = 5, iBDC = 6, iAvanc = 7, iNoms = 2;
+    private final int iApps = 2;
+    private final int iClos = 3, iResolv = 4, iCharge = 5, iBDC = 6, iAvanc = 7, iNoms = 2;
     /** Date pour le tri des incidents */
-    private Date dateDebut, dateFin;
+    private Date dateDebut;
+    private Date dateFin;
     
     private int iRows;
 

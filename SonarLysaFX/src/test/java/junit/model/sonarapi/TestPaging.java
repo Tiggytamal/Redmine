@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.sonarapi.Paging;
+import model.rest.sonarapi.Paging;
 
 public class TestPaging
 {
