@@ -96,15 +96,15 @@ public class ComposantRepack extends AbstractModele implements Serializable
         this.version = version;
     }
 
-    @XmlAttribute(name = "idBaseLineRtc")
-    public String getIdBaseLineRtc()
+    @XmlAttribute(name = "idBaselineRtc")
+    public String getIdBaselineRtc()
     {
         return idBaseLineRtc;
     }
 
-    public void setIdBaseLineRtc(String idBaseLineRtc)
+    public void setIdBaselineRtc(String idBaselineRtc)
     {
-        this.idBaseLineRtc = idBaseLineRtc;
+        this.idBaseLineRtc = idBaselineRtc;
     }
 
     @XmlAttribute(name = "baseline")

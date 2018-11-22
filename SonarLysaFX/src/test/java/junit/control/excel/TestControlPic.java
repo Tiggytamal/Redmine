@@ -32,7 +32,7 @@ public class TestControlPic extends TestControlExcelRead<TypeColPic, ControlPic,
     @Test
     public void testRecupDonneesDepuisExcel()
     {
-        testRecupDonneesDepuisExcel(map -> map.size() == 1927); 
+        testRecupDonneesDepuisExcel(map -> map.size() == 1927);  
     }
     
     @Test(expected = FunctionalException.class)
@@ -45,7 +45,7 @@ public class TestControlPic extends TestControlExcelRead<TypeColPic, ControlPic,
             wb.removeSheetAt(i);
         }
         
-        Whitebox.invokeMethod(handler, "initSheet");
+        Whitebox.invokeMethod(controlTest, "initSheet");
     }
     
     @Test

@@ -1,6 +1,7 @@
 package model.bdd;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -60,7 +61,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     @Column(name = "id", nullable = false)
     private String id;
-    
+
     @Column(name = "version", nullable = false, length = 32)
     private String version;
 
@@ -100,18 +101,21 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @Enumerated(EnumType.STRING)
     @Column(name = "matiere", nullable = false)
     private Matiere matiere;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "instance", nullable = false)
     private InstanceSonar instance;
+
+    @Column(name = "date_repack", nullable = true)
+    private LocalDate dateRepack;
 
     @Transient
     private EtatAppli etatAppli;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    ComposantSonar() 
-    { 
+    ComposantSonar()
+    {
         etatAppli = EtatAppli.OK;
     }
 
@@ -120,52 +124,57 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.id = id;
         this.key = key;
         this.nom = nom;
+        etatAppli = EtatAppli.OK;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
+    
+    public static ComposantSonar build(String id, String key, String nom)
+    {
+        return new ComposantSonar(id, key, nom);
+    }
 
     @Override
     public String getMapIndex()
     {
         return getKey();
     }
-    
+
     public void setSecurityRatingDepuisSonar(String securityRating)
     {
-        if (securityRating != null)
-            switch (securityRating)
-            {
-                case "0":
-                    setSecurityRating("A");
-                    break;
+        switch (getString(securityRating))
+        {
+            case "0":
+                setSecurityRating("A");
+                break;
 
-                case "1":
-                    setSecurityRating("A");
-                    break;
+            case "1":
+                setSecurityRating("A");
+                break;
 
-                case "2":
-                    setSecurityRating("B");
-                    break;
+            case "2":
+                setSecurityRating("B");
+                break;
 
-                case "3":
-                    setSecurityRating("C");
-                    break;
+            case "3":
+                setSecurityRating("C");
+                break;
 
-                case "4":
-                    setSecurityRating("D");
-                    break;
+            case "4":
+                setSecurityRating("D");
+                break;
 
-                case "5":
-                    setSecurityRating("E");
-                    break;
+            case "5":
+                setSecurityRating("E");
+                break;
 
-                case "6":
-                    setSecurityRating("F");
-                    break;
+            case "6":
+                setSecurityRating("F");
+                break;
 
-                default:
-                    setSecurityRating("F");
-            }
+            default:
+                setSecurityRating("F");
+        }
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -178,8 +187,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setNom(String nom)
     {
-        if (nom != null)
-            this.nom = nom;
+        this.nom = getString(nom);
     }
 
     public LotRTC getLotRTC()
@@ -200,8 +208,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setKey(String key)
     {
-        if (key != null)
-            this.key = key;
+        this.key = getString(key);
     }
 
     public Application getAppli()
@@ -222,8 +229,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setId(String id)
     {
-        if (id != null)
-            this.id = id;
+        this.id = getString(id);
     }
 
     public int getLdc()
@@ -248,13 +254,12 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public String getSecurityRating()
     {
-        return securityRating;
+        return getString(securityRating);
     }
 
     public void setSecurityRating(String securityRating)
     {
-        if (securityRating != null)
-            this.securityRating = securityRating;
+        this.securityRating = getString(securityRating);
     }
 
     public int getVulnerabilites()
@@ -274,7 +279,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
      */
     public void setVulnerabilites(String vulnerabilites)
     {
-        if (vulnerabilites != null)
+        if (vulnerabilites != null && !vulnerabilites.isEmpty())
             this.vulnerabilites = Integer.parseInt(vulnerabilites);
     }
 
@@ -306,8 +311,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
      */
     public void setQualityGate(String qualityGate)
     {
-        if (qualityGate != null)
-            this.qualityGate = QG.from(qualityGate);
+        this.qualityGate = QG.from(qualityGate);
     }
 
     public float getBloquants()
@@ -368,9 +372,10 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setEtatAppli(EtatAppli etatAppli)
     {
-        this.etatAppli = etatAppli;
+        if (etatAppli != null)
+            this.etatAppli = etatAppli;
     }
-    
+
     public InstanceSonar getInstance()
     {
         return instance;
@@ -378,7 +383,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setInstance(InstanceSonar instance)
     {
-        this.instance = instance;
+        if (instance != null)
+            this.instance = instance;
     }
 
     public String getVersion()
@@ -388,6 +394,18 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     public void setVersion(String version)
     {
-        this.version = version;
+
+        this.version = getString(version);
+    }
+
+    public LocalDate getDateRepack()
+    {
+        return dateRepack;
+    }
+
+    public void setDateRepack(LocalDate dateRepack)
+    {
+        if (dateRepack != null)
+            this.dateRepack = dateRepack;
     }
 }

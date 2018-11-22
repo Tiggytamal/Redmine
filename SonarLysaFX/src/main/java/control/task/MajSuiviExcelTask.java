@@ -30,6 +30,7 @@ import dao.DaoDefaultQualite;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
+import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.EtatDefaut;
@@ -136,15 +137,15 @@ public class MajSuiviExcelTask extends AbstractTask
             case COBOL:
                 majFichierSuiviExcelCOBOL();
                 break;
-                
-            case ANDROID :
+
+            case ANDROID:
                 MajComposantsSonarMCTask recupCompos = new MajComposantsSonarMCTask(OptionMajCompos.COMPLETE);
                 recupCompos.affilierTache(this);
                 recupCompos.call();
                 majFichierSuiviExcelAndroid();
                 break;
-                
-            case IOS :
+
+            case IOS:
                 recupCompos = new MajComposantsSonarMCTask(OptionMajCompos.COMPLETE);
                 recupCompos.affilierTache(this);
                 recupCompos.call();
@@ -193,10 +194,10 @@ public class MajSuiviExcelTask extends AbstractTask
 
         // Traitement fichier COBOL
         majFichierSuiviExcelCOBOL();
-        
+
         // Traitement fichier Androïd
         majFichierSuiviExcelAndroid();
-        
+
         // Traitement fichier iOS
         majFichierSuiviExcelIOS();
     }
@@ -265,7 +266,7 @@ public class MajSuiviExcelTask extends AbstractTask
         // Traitement du fichier de suivi
         return traitementFichierSuivi(composants, proprietesXML.getMapParams().get(Param.NOMFICHIERANDROID), Matiere.ANDROID);
     }
-    
+
     private Set<String> majFichierSuiviExcelIOS() throws IOException
     {
         // Appel de la récupération des composants non datastage avec les vesions en paramètre
@@ -504,7 +505,7 @@ public class MajSuiviExcelTask extends AbstractTask
         }
         else
         {
-            dq = ModelFactory.getModel(DefautQualite.class);
+            dq = ModelFactory.build(DefautQualite.class);
             dq.setLotRTC(lotRTC);
         }
 
@@ -518,6 +519,12 @@ public class MajSuiviExcelTask extends AbstractTask
         // Contrôle du composant pour voir s'il a une version RELEASE ou SNAPSHOT
         if (compo.isVersionRelease())
             dq.setTypeVersion(TypeVersion.RELEASE);
+
+        // Mise à jour de la date de repack
+        if (dq.getLotRTC().getDateRepack() != null)
+            dq.setDateMepPrev(dq.getLotRTC().getDateRepack());
+        else
+            dq.setDateMepPrev(dq.getLotRTC().getEdition().getDateMEP());
 
         dqEnBase.put(dq.getLotRTC().getLot(), dq);
     }
@@ -565,7 +572,7 @@ public class MajSuiviExcelTask extends AbstractTask
     /**
      * Gestion des actions possibles pour une anomalie (Creer, Clôturer, Abandonner)
      * 
-     * @param ano
+     * @param dq
      *            Anomalie à traiter
      * @param controlRapport
      * @param anoLot
@@ -576,61 +583,69 @@ public class MajSuiviExcelTask extends AbstractTask
      *         {@code false} si l'anomalie est à clôturer ou abandonner
      * @throws TeamRepositoryException
      */
-    private void gestionAction(DefautQualite ano, ControlRapport controlRapport)
+    private void gestionAction(DefautQualite dq, ControlRapport controlRapport)
     {
         // Atention plusieurs cases n'ont pas d'action et sont regroupés
-        switch (ano.getAction())
+        switch (dq.getAction())
         {
             case ABANDONNER:
-                if (controlEtFermetureAno(ano))
+                if (controlEtFermetureAno(dq))
                 {
-                    ano.setEtatDefaut(EtatDefaut.ABANDONNE);
-                    ano.setAction(TypeAction.VIDE);
-                    controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
+                    dq.setEtatDefaut(EtatDefaut.ABANDONNE);
+                    dq.setAction(TypeAction.VIDE);
+                    fermetureDefautAppli(dq);
+                    controlRapport.addInfo(TypeInfo.ANOABANDON, dq.getLotRTC().getLot(), String.valueOf(dq.getNumeroAnoRTC()));
                 }
+                dq.controleLiens();
                 break;
 
             case CLOTURER:
-                if (controlEtFermetureAno(ano))
+                if (controlEtFermetureAno(dq))
                 {
-                    ano.setEtatDefaut(EtatDefaut.CLOS);
-                    ano.setAction(TypeAction.VIDE);
-                    controlRapport.addInfo(TypeInfo.ANOABANDON, ano.getLotRTC().getLot(), String.valueOf(ano.getNumeroAnoRTC()));
+                    dq.setEtatDefaut(EtatDefaut.CLOS);
+                    dq.setAction(TypeAction.VIDE);
+                    fermetureDefautAppli(dq);
+                    controlRapport.addInfo(TypeInfo.ANOABANDON, dq.getLotRTC().getLot(), String.valueOf(dq.getNumeroAnoRTC()));
                 }
+                dq.controleLiens();
                 break;
 
             case CREER:
 
-                int numeroAno = ControlRTC.INSTANCE.creerAnoRTC(ano);
+                int numeroAno = ControlRTC.INSTANCE.creerAnoRTC(dq);
                 if (numeroAno != 0)
                 {
-                    ano.setAction(TypeAction.VIDE);
-                    ano.setNumeroAnoRTC(numeroAno);
-                    ano.setDateCreation(LocalDate.now());
-                    ano.calculTraitee();
-                    controlRapport.addInfo(TypeInfo.ANOSRTCCREES, ano.getLotRTC().getLot(), null);
+                    dq.setAction(TypeAction.VIDE);
+                    dq.setNumeroAnoRTC(numeroAno);
+                    dq.setDateCreation(LocalDate.now());
+                    dq.calculTraitee();
+                    controlRapport.addInfo(TypeInfo.ANOSRTCCREES, dq.getLotRTC().getLot(), null);
                 }
                 break;
 
             case RELANCER:
                 try
                 {
-                    ControlRTC.INSTANCE.relancerAno(ano.getNumeroAnoRTC());
-                    ano.setDateRelance(LocalDate.now());
-                    ano.setAction(TypeAction.VIDE);
+                    if (dq.getNumeroAnoRTC() != 0)
+                    {
+                        ControlRTC.INSTANCE.relancerAno(dq.getNumeroAnoRTC());
+                        dq.setDateRelance(LocalDate.now());
+                    }
+                    dq.setAction(TypeAction.VIDE);
                 }
                 catch (TeamRepositoryException e)
                 {
                     LOGPLANTAGE.error(e);
                 }
+                dq.controleLiens();
                 break;
-                
+
             case REOUV:
                 try
                 {
-                    ControlRTC.INSTANCE.reouvrirAnoRTC(ano.getNumeroAnoRTC());
-                    ano.setDateReouv(LocalDate.now());
-                    ano.setAction(TypeAction.VIDE);
+                    ControlRTC.INSTANCE.reouvrirAnoRTC(dq.getNumeroAnoRTC());
+                    dq.setDateReouv(LocalDate.now());
+                    dq.setAction(TypeAction.VIDE);
                 }
                 catch (TeamRepositoryException e)
                 {
@@ -641,12 +656,21 @@ public class MajSuiviExcelTask extends AbstractTask
             case ASSEMBLER:
             case VERIFIER:
             case VIDE:
-                // Pas d'action
+                dq.controleLiens();
                 break;
 
             default:
-                throw new TechnicalException("control.task.MajSuiviExcelTask.gestionAction - type d'action inconnue : " + ano.getAction());
-
+                throw new TechnicalException("control.task.MajSuiviExcelTask.gestionAction - type d'action inconnue : " + dq.getAction());
+        }
+    }
+    
+    private void fermetureDefautAppli(DefautQualite dq)
+    {
+        DefautAppli da = dq.getDefautAppli();
+        if (da != null)
+        {
+            da.setEtatDefaut(EtatDefaut.ABANDONNE);
+            da.setAction(TypeAction.VIDE);
         }
     }
 

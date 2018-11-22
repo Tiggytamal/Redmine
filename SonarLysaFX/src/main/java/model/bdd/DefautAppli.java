@@ -1,5 +1,6 @@
 package model.bdd;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
@@ -39,9 +40,11 @@ import utilities.Statics;
         @NamedQuery(name="DefautAppli" + AbstractDao.RESET, query="DELETE FROM DefautQualite")
 })
 //@formatter:on
-public class DefautAppli extends AbstractBDDModele
+public class DefautAppli extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
+
+    private static final long serialVersionUID = 1L;
 
     @BatchFetch(value = BatchFetchType.JOIN)
     @OneToOne(targetEntity = ComposantSonar.class, cascade = CascadeType.MERGE)
@@ -54,7 +57,7 @@ public class DefautAppli extends AbstractBDDModele
     @Enumerated(EnumType.STRING)
     @Column(name = "action", nullable = true)
     private TypeAction action;
-    
+
     @Column(name = "date_detection", nullable = false)
     private LocalDate dateDetection;
 
@@ -66,7 +69,7 @@ public class DefautAppli extends AbstractBDDModele
     @OneToOne(targetEntity = DefautQualite.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "defaut_qualite")
     private DefautQualite defautQualite;
-    
+
     @Transient
     private String nomComposant;
 
@@ -77,6 +80,7 @@ public class DefautAppli extends AbstractBDDModele
         etatDefaut = EtatDefaut.NOUVEAU;
         appliCorrigee = Statics.EMPTY;
         action = TypeAction.VIDE;
+        dateDetection = LocalDate.now();
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -86,8 +90,8 @@ public class DefautAppli extends AbstractBDDModele
     {
         if (compo != null)
             return compo.getNom();
-        
-        return getNomComposant();        
+
+        return getNomComposant();
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -100,37 +104,44 @@ public class DefautAppli extends AbstractBDDModele
 
     public void setCompo(ComposantSonar compo)
     {
-        this.compo = compo;
+        if (compo != null)
+            this.compo = compo;
     }
 
     public String getAppliCorrigee()
     {
-        return appliCorrigee;
+        return getString(appliCorrigee);
     }
 
     public void setAppliCorrigee(String appliCorrigee)
     {
-        this.appliCorrigee = appliCorrigee;
+        this.appliCorrigee = getString(appliCorrigee);
     }
 
     public TypeAction getAction()
     {
+        if (action == null)
+            action = TypeAction.VIDE;
         return action;
     }
 
     public void setAction(TypeAction action)
     {
-        this.action = action;
+        if (action != null)
+            this.action = action;
     }
 
     public EtatDefaut getEtatDefaut()
     {
+        if (etatDefaut == null)
+            etatDefaut = EtatDefaut.NOUVEAU;
         return etatDefaut;
     }
 
     public void setEtatDefaut(EtatDefaut etatDefaut)
     {
-        this.etatDefaut = etatDefaut;
+        if (etatDefaut != null)
+            this.etatDefaut = etatDefaut;
     }
 
     public DefautQualite getDefautQualite()
@@ -148,10 +159,6 @@ public class DefautAppli extends AbstractBDDModele
         return dateDetection;
     }
 
-    public void setDateDetection(LocalDate dateDetection)
-    {
-        this.dateDetection = dateDetection;
-    }
     public String getNomComposant()
     {
         return getString(nomComposant);
@@ -159,6 +166,6 @@ public class DefautAppli extends AbstractBDDModele
 
     public void setNomComposant(String nomComposant)
     {
-        this.nomComposant = nomComposant;
+        this.nomComposant = getString(nomComposant);
     }
 }

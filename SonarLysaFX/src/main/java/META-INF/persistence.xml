@@ -12,7 +12,7 @@
 		<class>model.bdd.DefautQualite</class>
 		<class>model.bdd.DefautAppli</class>
 		<class>model.bdd.DateMaj</class>
-		<class>model.bdd.GroupementProjet</class>
+		<class>model.bdd.Produit</class>
 		<class>utilities.adapter.LocalDateConverter</class>
 		<class>utilities.adapter.LocalDateTimeConverter</class>
 		<properties>

@@ -56,7 +56,7 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
     /** Le workbook gérant le fichier Excel */
     protected Workbook wb;
     /** Le controleur Excel */
-    protected C handler;
+    protected C controlTest;
     
     private static final String MAXINDICE = "maxIndice";
 
@@ -91,8 +91,8 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
     public void init() throws IOException, IllegalAccessException
     {
         file = new File(getClass().getResource(Statics.ROOT + fichier).getFile());
-        handler = ExcelFactory.getReader(typeColClass, file);
-        wb = (Workbook) getField(handler.getClass(), "wb").get(handler);
+        controlTest = ExcelFactory.getReader(typeColClass, file);
+        wb = (Workbook) getField(controlTest.getClass(), "wb").get(controlTest);
         initOther();
     }
     
@@ -100,27 +100,27 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
     public void testInitException() throws Exception
     {
         // Initialisation handler avec mauvais format de fichier
-        handler = ExcelFactory.getReader(typeColClass, new File("12:;"));
+        controlTest = ExcelFactory.getReader(typeColClass, new File("12:;"));
     }
     
     @Test
     public void testCreateWb() throws Exception
     {
         // Appel méthode
-        invokeMethod(handler, "createWb");
+        invokeMethod(controlTest, "createWb");
         
         // Test initialisation des données
-        assertNotNull(getField(handler.getClass(), "wb").get(handler));
-        assertNotNull(getField(handler.getClass(), "helper").get(handler));
-        assertNotNull(getField(handler.getClass(), "createHelper").get(handler));
-        assertNotNull(getField(handler.getClass(), "ca").get(handler));
+        assertNotNull(getField(controlTest.getClass(), "wb").get(controlTest));
+        assertNotNull(getField(controlTest.getClass(), "helper").get(controlTest));
+        assertNotNull(getField(controlTest.getClass(), "createHelper").get(controlTest));
+        assertNotNull(getField(controlTest.getClass(), "ca").get(controlTest));
     }
 
     @Test
     public void testInitEnum() throws IllegalAccessException
     {
         // test - énumération du bon Type
-        assertEquals(typeColClass, getField(ControlSuivi.class, "enumeration").get(handler)); 
+        assertEquals(typeColClass, getField(ControlSuivi.class, "enumeration").get(controlTest)); 
     }
 
     @Test
@@ -130,14 +130,14 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
         Row row = wb.getSheetAt(0).getRow(0);
 
         // Test 1 - changement couleur
-        invokeMethod(handler, "majCouleurLigne", row, IndexedColors.AQUA);
+        invokeMethod(controlTest, "majCouleurLigne", row, IndexedColors.AQUA);
         for (Cell cell : row)
         {
             assertEquals(IndexedColors.AQUA.index, cell.getCellStyle().getFillForegroundColor());
         }
 
         // Test 2 - autre couleur
-        invokeMethod(handler, "majCouleurLigne", row, IndexedColors.BROWN);
+        invokeMethod(controlTest, "majCouleurLigne", row, IndexedColors.BROWN);
         for (Cell cell : row)
         {
             assertEquals(IndexedColors.BROWN.index, cell.getCellStyle().getFillForegroundColor());
@@ -148,7 +148,7 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
     public void testInitSheet() throws Exception
     {
         // Test 1 - feuille ok
-        Sheet sheet = invokeMethod(handler, "initSheet");
+        Sheet sheet = invokeMethod(controlTest, "initSheet");
         assertNotNull(sheet);
         assertEquals(wb.getSheetAt(0), sheet);
     }
@@ -159,17 +159,7 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
     {
         // Test 2 - feuille nulle
         wb.removeSheetAt(0);
-        invokeMethod(handler, "initSheet");
-    }
-
-    @Test (expected = TechnicalException.class)
-    public void testClose() throws Exception
-    {
-        // Test - appel de la méthode close.
-        invokeMethod(handler, "close");
-        
-        // Appel méthode write  pour voir si le Workbook est bien fermé
-        invokeMethod(handler, "write");
+        invokeMethod(controlTest, "initSheet");
     }
     
     @Test
@@ -180,8 +170,8 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
         Mockito.when(mock.getRow(Mockito.anyInt())).thenReturn(wb.getSheetAt(0).getRow(0));
         
         // Test - vérifie qu'on appele bien la méthode autant de fois qu'il y a de colonnes
-        invokeMethod(handler, "autosizeColumns", mock);
-        Mockito.verify(mock, Mockito.times((int) getField(handler.getClass(), MAXINDICE).get(handler) +1)).autoSizeColumn(Mockito.anyInt());
+        invokeMethod(controlTest, "autosizeColumns", mock);
+        Mockito.verify(mock, Mockito.times((int) getField(controlTest.getClass(), MAXINDICE).get(controlTest) +1)).autoSizeColumn(Mockito.anyInt());
     }
     
     @Test
@@ -192,15 +182,15 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
         // Test - Appel méthode avec différentes valeur. le maxIndice doit toujours avoir la valeur maximum
         
         // Valur initiale du nombre max = taille du nombre d'éléments de l'énumération
-        int max = (int) getField(handler.getClass(), MAXINDICE).get(handler);
-        invokeMethod(handler, methode, max -2);
-        assertEquals(max, getField(handler.getClass(), MAXINDICE).get(handler));
-        invokeMethod(handler, methode, 0);
-        assertEquals(max, getField(handler.getClass(), MAXINDICE).get(handler));
-        invokeMethod(handler, methode, max +3);
-        assertEquals(max + 3, getField(handler.getClass(), MAXINDICE).get(handler));
-        invokeMethod(handler, methode, max -1);
-        assertEquals(max + 3, getField(handler.getClass(), MAXINDICE).get(handler));
+        int max = (int) getField(controlTest.getClass(), MAXINDICE).get(controlTest);
+        invokeMethod(controlTest, methode, max -2);
+        assertEquals(max, getField(controlTest.getClass(), MAXINDICE).get(controlTest));
+        invokeMethod(controlTest, methode, 0);
+        assertEquals(max, getField(controlTest.getClass(), MAXINDICE).get(controlTest));
+        invokeMethod(controlTest, methode, max +3);
+        assertEquals(max + 3, getField(controlTest.getClass(), MAXINDICE).get(controlTest));
+        invokeMethod(controlTest, methode, max -1);
+        assertEquals(max + 3, getField(controlTest.getClass(), MAXINDICE).get(controlTest));
     }
     
     @Test
@@ -212,9 +202,9 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
             {
                 for (Cell cell : row)
                 {
-                    assertNotNull(invokeMethod(handler, "getCellStringValue", row, cell.getColumnIndex()));
-                    assertNotNull(invokeMethod(handler, "getCellFormulaValue", row, cell.getColumnIndex()));
-                    assertNotNull(invokeMethod(handler, "getCellNumericValue", row, cell.getColumnIndex()));
+                    assertNotNull(invokeMethod(controlTest, "getCellStringValue", row, cell.getColumnIndex()));
+                    assertNotNull(invokeMethod(controlTest, "getCellFormulaValue", row, cell.getColumnIndex()));
+                    assertNotNull(invokeMethod(controlTest, "getCellNumericValue", row, cell.getColumnIndex()));
                 }               
             }
         }        
@@ -229,17 +219,17 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
         Cell oldCell = null;
         
         // test 1 - retour avec cellules vides.
-        invokeMethod(handler, methode, newCell, oldCell);
+        invokeMethod(controlTest, methode, newCell, oldCell);
         assertNull(newCell);
         assertNull(oldCell);
         
         newCell = wb.getSheetAt(0).getRow(0).getCell(0);
-        invokeMethod(handler, methode, newCell, oldCell);
+        invokeMethod(controlTest, methode, newCell, oldCell);
         assertNull(oldCell);  
         
         newCell = null;
         oldCell = wb.getSheetAt(0).getRow(0).getCell(0);
-        invokeMethod(handler, methode, newCell, oldCell);
+        invokeMethod(controlTest, methode, newCell, oldCell);
         assertNull(newCell);  
     }
     
@@ -261,7 +251,7 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
      */
     protected Y testRecupDonneesDepuisExcel(Function<Y, Boolean> tailleListe)
     {
-        Y map = handler.recupDonneesDepuisExcel();
+        Y map = controlTest.recupDonneesDepuisExcel();
         assertNotNull(map);
         assertTrue(tailleListe.apply(map));
         return map;
@@ -278,12 +268,12 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
      */
     protected void testCalculIndiceColonnes(int nbre) throws Exception
     {
-        invokeMethod(handler, "calculIndiceColonnes");
+        invokeMethod(controlTest, "calculIndiceColonnes");
         int nbrecolA0 = 0;
-        for (Field field : handler.getClass().getDeclaredFields())
+        for (Field field : controlTest.getClass().getDeclaredFields())
         {
             field.setAccessible(true);
-            if (field.getName().startsWith("col") && (int) field.get(handler) == 0)
+            if (field.getName().startsWith("col") && (int) field.get(controlTest) == 0)
                 nbrecolA0++;
         }
         assertEquals(nbre, nbrecolA0);

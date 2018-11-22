@@ -18,7 +18,6 @@ import org.powermock.reflect.Whitebox;
 import control.rtc.ControlRTC;
 import control.task.PurgeSonarTask;
 import control.word.ControlRapport;
-import model.ModelFactory;
 import model.bdd.ComposantSonar;
 import model.enums.ParamSpec;
 import utilities.Statics;
@@ -65,28 +64,28 @@ public class TestPurgeSonarTask extends AbstractTestTask<PurgeSonarTask>
         for (String string : listeVersion)
         {
             String key = "fr.ca.ts.composanta " + string;
-            mapCompos.put(key, ModelFactory.getModelWithParams(ComposantSonar.class, ID, key, "composanta " + string));
+            mapCompos.put(key, ComposantSonar.build(ID, key, "composanta " + string));
             key = "fr.ca.ts.composantb " + string;
-            mapCompos.put(key, ModelFactory.getModelWithParams(ComposantSonar.class, ID, key, "composantb " + string));
+            mapCompos.put(key, ComposantSonar.build(ID, key, "composantb " + string));
             key = "fr.ca.ts.composantc " + string;
-            mapCompos.put(key, ModelFactory.getModelWithParams(ComposantSonar.class, ID, key, "composantc " + string));
+            mapCompos.put(key, ComposantSonar.build(ID, key, "composantc " + string));
         }
 
-        ComposantSonar end = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "fr.ca.ts.composanta 9999", "composanta 9999");
+        ComposantSonar end = ComposantSonar.build(ID, "fr.ca.ts.composanta 9999", "composanta 9999");
         mapCompos.put(end.getKey(), end);
-        ComposantSonar a = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "fr.ca.ts.composanta 11", "composanta 11");
+        ComposantSonar a = ComposantSonar.build(ID, "fr.ca.ts.composanta 11", "composanta 11");
         mapCompos.put(a.getKey(), a);
-        ComposantSonar b = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "fr.ca.ts.composanta 10", "composanta 10");
+        ComposantSonar b = ComposantSonar.build(ID, "fr.ca.ts.composanta 10", "composanta 10");
         mapCompos.put(b.getKey(), b);
-        ComposantSonar c = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "fr.ca.ts.composantb 12", "composantb 12");
+        ComposantSonar c = ComposantSonar.build(ID, "fr.ca.ts.composantb 12", "composantb 12");
         mapCompos.put(c.getKey(), c);
-        ComposantSonar d = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "fr.ca.ts.composantb 11", "composantb 11");
+        ComposantSonar d = ComposantSonar.build(ID, "fr.ca.ts.composantb 11", "composantb 11");
         mapCompos.put(d.getKey(), d);
-        ComposantSonar e = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "fr.ca.ts.composantc 09", "composantc 09");
+        ComposantSonar e = ComposantSonar.build(ID, "fr.ca.ts.composantc 09", "composantc 09");
         mapCompos.put(e.getKey(), e);
-        ComposantSonar f = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "fr.ca.ts.composantd 10", "composantd 10");
+        ComposantSonar f = ComposantSonar.build(ID, "fr.ca.ts.composantd 10", "composantd 10");
         mapCompos.put(f.getKey(), f);
-        ComposantSonar g = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "fr.ca.ts.composante 13", "composante 13");
+        ComposantSonar g = ComposantSonar.build(ID, "fr.ca.ts.composante 13", "composante 13");
         mapCompos.put(g.getKey(), g);
 
 
@@ -133,15 +132,15 @@ public class TestPurgeSonarTask extends AbstractTestTask<PurgeSonarTask>
 
         // Changement données de la liste statique
         Map<String, ComposantSonar> mapCompos = new HashMap<>();
-        ComposantSonar a = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "azerty01", nom);
+        ComposantSonar a = ComposantSonar.build(ID, "azerty01", nom);
         mapCompos.put(a.getKey(), a);
-        ComposantSonar b = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "azerty02", nom);
+        ComposantSonar b = ComposantSonar.build(ID, "azerty02", nom);
         mapCompos.put(b.getKey(), b);
-        ComposantSonar c = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "azerty01azeert03", nom);
+        ComposantSonar c = ComposantSonar.build(ID, "azerty01azeert03", nom);
         mapCompos.put(c.getKey(), c);
-        ComposantSonar d = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "azerty01azeert04", nom);
+        ComposantSonar d = ComposantSonar.build(ID, "azerty01azeert04", nom);
         mapCompos.put(d.getKey(), d);
-        ComposantSonar e = ModelFactory.getModelWithParams(ComposantSonar.class, ID, "1234", nom);
+        ComposantSonar e = ComposantSonar.build(ID, "1234", nom);
         mapCompos.put(e.getKey(), e);
 
         // 2. Appel de la méthode

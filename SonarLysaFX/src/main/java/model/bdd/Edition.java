@@ -12,6 +12,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import model.enums.TypeEdition;
+import utilities.Statics;
 
 /**
  * Classe de modèle des Edition de la PIC
@@ -25,16 +26,17 @@ import model.enums.TypeEdition;
 //@formatter:off
 @NamedQueries (value = {
         @NamedQuery(name="Edition.findAll", query="SELECT e FROM Edition e"),
-        @NamedQuery(name="Edition.findByIndex", query="SELECT e FROM Edition e WHERE e.numero = :index"),
+        @NamedQuery(name="Edition.recupDateDepuisRepack", query="SELECT e.dateMEP from Edition e "
+                + "WHERE e.numero LIKE :numero AND e.nom LIKE :semaine AND e.nom LIKE 'CHC%'"),
+        @NamedQuery(name="Edition.findByIndex", query="SELECT e FROM Edition e WHERE e.nom = :index"),
         @NamedQuery(name="Edition.resetTable", query="DELETE FROM Edition")
 })
 //@formatter:on
 public class Edition extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
-
+    
     private static final long serialVersionUID = 1L;
-    private static final String NUMED0 = "00.00.00.00";
     private static final String COMEDINCO = "Inconnue dans la codification des Editions";
 
     @Column(name = "nom", unique = true, nullable = false, length = 64)
@@ -55,23 +57,31 @@ public class Edition extends AbstractBDDModele implements Serializable
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    Edition() {}
+    Edition()
+    {
+    }
 
-    Edition(String nom, String numero)
+    private Edition(String nom, String numero)
     {
         this.nom = nom;
         this.numero = numero;
+        commentaire = Statics.EMPTY;
     }
 
+    public static Edition build(String nom, String numero)
+    {
+        return new Edition(nom, numero);
+    }
+    
     public static Edition getEditionInconnue(String edition)
     {
         Edition retour;
         if (edition == null || edition.isEmpty())
-            retour = new Edition(NUMED0, NUMED0);
+            retour = new Edition(Statics.EDINCONNUE, Statics.EDINCONNUE);
         else
-            retour = new Edition(edition, NUMED0);
+            retour = new Edition(edition, Statics.EDINCONNUE);
         retour.setTypeEdition(TypeEdition.INCONNU);
-        retour.setDateMEP(LocalDate.of(2099, 1, 1));
+        retour.setDateMEP(Statics.DATEINCO2099);
         retour.setCommentaire(COMEDINCO);
         return retour;
     }
@@ -98,7 +108,7 @@ public class Edition extends AbstractBDDModele implements Serializable
 
     public String getNom()
     {
-        return nom;
+        return getString(nom);
     }
 
     public void setNom(String nom)
@@ -108,41 +118,48 @@ public class Edition extends AbstractBDDModele implements Serializable
 
     public String getNumero()
     {
-        return numero;
+        return getString(numero);
     }
 
     public void setNumero(String numero)
     {
-        this.numero = numero;
+        if (numero != null && !numero.isEmpty() && numero.matches("(\\d\\d\\.){3}\\d\\d"))
+            this.numero = numero;
     }
 
     public String getCommentaire()
     {
-        return commentaire;
+        return getString(commentaire);
     }
 
     public void setCommentaire(String commentaire)
     {
-        this.commentaire = commentaire;
+        this.commentaire = getString(commentaire);
     }
 
     public LocalDate getDateMEP()
     {
+        if (dateMEP == null)
+            dateMEP = Statics.DATEINCO2099;
         return dateMEP;
     }
 
     public void setDateMEP(LocalDate dateMEP)
     {
-        this.dateMEP = dateMEP;
+        if (dateMEP != null)
+            this.dateMEP = dateMEP;
     }
 
     public TypeEdition getTypeEdition()
     {
+        if (typeEdition == null)
+            typeEdition = TypeEdition.INCONNU;
         return typeEdition;
     }
 
     public void setTypeEdition(TypeEdition typeEdition)
     {
-        this.typeEdition = typeEdition;
+        if (typeEdition != null)
+            this.typeEdition = typeEdition;
     }
 }

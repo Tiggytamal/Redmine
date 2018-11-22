@@ -19,13 +19,18 @@ public class InfoMail extends AbstractModele
 
     InfoMail() {}
     
-    InfoMail(String lot, String infoSupp)
+    private InfoMail(String lot, String infoSupp)
     {
         this.lot = lot;
         this.infoSupp = infoSupp;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
+    
+    public static InfoMail build(String lot, String infoSupp)
+    {
+        return new InfoMail(lot,infoSupp);
+    }
     
     @Override
     public int hashCode()

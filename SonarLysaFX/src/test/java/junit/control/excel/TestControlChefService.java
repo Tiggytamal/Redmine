@@ -45,7 +45,7 @@ public class TestControlChefService extends TestControlExcelRead<TypeColChefServ
     public void testInitSheet() throws Exception
     {
         // Test 1 - feuille ok
-        Sheet sheet = Whitebox.invokeMethod(handler, "initSheet");
+        Sheet sheet = Whitebox.invokeMethod(controlTest, "initSheet");
         assertNotNull(sheet);
         assertEquals(wb.getSheetAt(0), sheet);
     }
@@ -56,7 +56,7 @@ public class TestControlChefService extends TestControlExcelRead<TypeColChefServ
     {
         // Test 2 - feuille nulle
         wb.removeSheetAt(0);
-        Whitebox.invokeMethod(handler, "initSheet"); 
+        Whitebox.invokeMethod(controlTest, "initSheet"); 
     }
     
     /*---------- METHODES PRIVEES ----------*/

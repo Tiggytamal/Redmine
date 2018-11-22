@@ -14,7 +14,7 @@ public interface ModelFactory
      * @param modelClass
      * @return
      */
-    public static <T extends AbstractModele> T getModel(Class<T> modelClass)
+    public static <T extends AbstractModele> T build(Class<T> modelClass)
     {
         try
         {
@@ -23,37 +23,6 @@ public interface ModelFactory
             return constructor.newInstance();
         }
         catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e)
-        {
-            throw new TechnicalException("Impossible d'instancier l'objet - classe : " + modelClass.getName(), e);
-        }
-    }
-    
-    /**
-     * Retourne une instance de la classe de modèle avec un constructeur utilisant des paramètres
-     * Attention il n'est asp possible de retrouver un constructeur avec un varaible nulle.
-     * Si c'est le cas, un test sera fait avec un {@code String}.
-     * 
-     * @param modelClass
-     * @param params
-     * @return
-     */
-    public static <T extends AbstractModele> T getModelWithParams(Class<T> modelClass, Object... params)
-    {
-        try
-        {
-            Class<?>[] classParams = new Class<?>[params.length];
-            for (int i = 0; i < params.length; i++)
-            {
-                if (params[i] != null)
-                    classParams[i] = params[i].getClass();
-                else
-                    classParams[i] = String.class;
-            }
-            Constructor<T> constructor = modelClass.getDeclaredConstructor(classParams);
-            constructor.setAccessible(true);
-            return constructor.newInstance(params);
-        }
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
         {
             throw new TechnicalException("Impossible d'instancier l'objet - classe : " + modelClass.getName(), e);
         }

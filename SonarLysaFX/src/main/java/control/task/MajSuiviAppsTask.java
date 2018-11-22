@@ -68,6 +68,7 @@ public class MajSuiviAppsTask extends AbstractTask
     private boolean majSuiviApps() throws TeamRepositoryException
     {
         Map<String, DefautAppli> mapDefaults = dao.readAllMap();
+        Map<String, DefautQualite> dqs = daoDq.readAllMap();
 
         etapePlus();
         List<DefautAppli> das = control.recupDonneesDepuisExcel();
@@ -85,7 +86,7 @@ public class MajSuiviAppsTask extends AbstractTask
             if (daBase != null)
             {
                 daBase.setAction(da.getAction());
-                gestionAction(daBase);
+                gestionAction(daBase, dqs);
             }
             i++;
             calculTempsRestant(debut, i, size);
@@ -99,29 +100,36 @@ public class MajSuiviAppsTask extends AbstractTask
         return false;
     }
 
-    private void gestionAction(DefautAppli da) throws TeamRepositoryException
+    private void gestionAction(DefautAppli da, Map<String, DefautQualite> dqs) throws TeamRepositoryException
     {
-        if (da.getAction() == TypeAction.CREER && creerAnoRTC(da))
+        if (da.getAction() == TypeAction.CREER && creerAnoRTC(da, dqs))
         {
             da.setAction(TypeAction.VIDE);
             da.setEtatDefaut(EtatDefaut.TRAITE);
         }
+        else if (da.getAction() == TypeAction.ABANDONNER)
+        {
+            da.setAction(TypeAction.VIDE);
+            da.setEtatDefaut(EtatDefaut.ABANDONNE);
+        }
     }
 
-    private boolean creerAnoRTC(DefautAppli da) throws TeamRepositoryException
+    private boolean creerAnoRTC(DefautAppli da, Map<String, DefautQualite> dqs) throws TeamRepositoryException
     {
-        DefautQualite dq = daoDq.recupEltParIndex(da.getCompo().getLotRTC().getLot());
+
+        DefautQualite dq = dqs.get(da.getCompo().getLotRTC().getLot());
         ControlRTC controlRTC = ControlRTC.INSTANCE;
         boolean retour = false;
 
         // Action si pas de défaut Qualite : On crée le DefautQualité puis l'anomalie
         if (dq == null)
         {
-            dq = ModelFactory.getModel(DefautQualite.class);
+            dq = ModelFactory.build(DefautQualite.class);
             dq.setSecurite(false);
             dq.setDateDetection(da.getDateDetection());
             dq.setTypeDefaut(TypeDefaut.APPLI);
             dq.setLotRTC(da.getCompo().getLotRTC());
+            dqs.put(dq.getMapIndex(), dq);
 
             int numeroAno = controlRTC.creerAnoRTC(dq);
             if (numeroAno != 0)
@@ -130,7 +138,7 @@ public class MajSuiviAppsTask extends AbstractTask
                 dq.setNumeroAnoRTC(numeroAno);
                 dq.setDateCreation(LocalDate.now());
                 dq.calculTraitee();
-                controlRTC.ajoutAppliAnoRTC(da);
+                controlRTC.ajoutCommAppliAnoRTC(da);
                 retour = true;
             }
         }
@@ -146,17 +154,17 @@ public class MajSuiviAppsTask extends AbstractTask
                 dq.setNumeroAnoRTC(numeroAno);
                 dq.setDateCreation(LocalDate.now());
                 dq.calculTraitee();
-                controlRTC.ajoutAppliAnoRTC(da);
+                controlRTC.ajoutCommAppliAnoRTC(da);
                 retour = true;
             }
         }
 
         // Action si l'anomalie RTC n'est pas déjà close : On rajoute un commentaire pour le code application
-        else if (!dq.getEtatRTC().equals(EtatAnoRTC.CLOSE.getValeur()) && controlRTC.ajoutAppliAnoRTC(da))
+        else if (!dq.getEtatRTC().equals(EtatAnoRTC.CLOSE.getValeur()) && controlRTC.ajoutCommAppliAnoRTC(da))
             retour = true;
 
         // Action si l'anomalie est close : On rouvre l'anomalie et on rajoute le commentaire
-        else if (controlRTC.reouvrirAnoRTC(dq.getNumeroAnoRTC()) && controlRTC.ajoutAppliAnoRTC(da))
+        else if (controlRTC.reouvrirAnoRTC(dq.getNumeroAnoRTC()) && controlRTC.ajoutCommAppliAnoRTC(da))
             retour = true;
 
         // Traitement général à chaque cas

@@ -198,7 +198,7 @@ public final class PlanificateurViewControl extends AbstractViewControl
 
     private Planificateur initPlan(TypePlan typePlan)
     {
-        return proprietesXML.getMapPlans().computeIfAbsent(typePlan, k -> ModelFactory.getModel(Planificateur.class));
+        return proprietesXML.getMapPlans().computeIfAbsent(typePlan, k -> ModelFactory.build(Planificateur.class));
     }
 
     /*---------- ACCESSEURS ----------*/

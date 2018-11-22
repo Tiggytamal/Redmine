@@ -180,7 +180,7 @@ public abstract class AbstractTask extends Task<Boolean>
         updateProgress(-1, -1);
 
         // Triage ascendant de la liste par nom de projet
-        List<ComposantSonar> compos = new ArrayList<>(mapCompos.values());
+        List<ComposantSonar> compos = new ArrayList<>(mapCompos.values()); 
         compos.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
 
         // Création de la regex pour retirer les numéros de version des composants

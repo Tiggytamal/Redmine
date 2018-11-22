@@ -30,7 +30,7 @@ import model.Colonne;
 import model.bdd.Application;
 import model.bdd.ChefService;
 import model.bdd.Edition;
-import model.bdd.GroupementProjet;
+import model.bdd.Produit;
 import model.bdd.ProjetClarity;
 import model.enums.Param;
 import model.enums.ParamBool;
@@ -41,7 +41,7 @@ import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColCompo;
 import model.enums.TypeColEdition;
-import model.enums.TypeColGrProjet;
+import model.enums.TypeColProduit;
 import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
@@ -175,7 +175,7 @@ public final class OptionViewControl extends AbstractViewControl
                 break;
                 
             case "NPC":
-                afficherColonnes(TypeColGrProjet.class, root);
+                afficherColonnes(TypeColProduit.class, root);
                 break;
                 
             case "UA":
@@ -235,7 +235,7 @@ public final class OptionViewControl extends AbstractViewControl
                 break;
                 
             case "npc":
-                charger("Projets NPC", DaoFactory.getDao(GroupementProjet.class)::recupDonneesDepuisExcel);
+                charger("Projets NPC", DaoFactory.getDao(Produit.class)::recupDonneesDepuisExcel);
                 break;
 
             default:

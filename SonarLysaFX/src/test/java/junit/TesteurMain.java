@@ -25,4 +25,5 @@ public class TesteurMain
         builder.append("admin");
         System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
     }
+
 }

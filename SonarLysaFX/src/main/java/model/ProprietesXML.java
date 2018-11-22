@@ -19,7 +19,7 @@ import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColCompo;
 import model.enums.TypeColEdition;
-import model.enums.TypeColGrProjet;
+import model.enums.TypeColProduit;
 import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
 import model.enums.TypeColR;
@@ -60,7 +60,7 @@ public class ProprietesXML extends AbstractModele implements XML
     private Map<TypeColPic, String> mapColsPic;
     private Map<TypeColEdition, String> mapColsEdition;
     private Map<TypeColApps, String> mapColsApps;
-    private Map<TypeColGrProjet, String> mapColsGrProjet;
+    private Map<TypeColProduit, String> mapColsProduit;
     private Map<TypeColUA, String> mapColsUA;
     private Map<TypeColSuiviApps, String> mapColsSuiviApps;
     
@@ -84,7 +84,7 @@ public class ProprietesXML extends AbstractModele implements XML
         mapColsPic = new EnumMap<>(TypeColPic.class);
         mapColsEdition = new EnumMap<>(TypeColEdition.class);
         mapColsApps = new EnumMap<>(TypeColApps.class);
-        mapColsGrProjet = new EnumMap<>(TypeColGrProjet.class);
+        mapColsProduit = new EnumMap<>(TypeColProduit.class);
         mapColsUA = new EnumMap<>(TypeColUA.class);
         mapColsVul = new EnumMap<>(TypeColVul.class);
         mapColsPbApps = new EnumMap<>(TypeColPbApps.class);
@@ -108,7 +108,7 @@ public class ProprietesXML extends AbstractModele implements XML
         boolean bool3 = controlePlanificateurs(builder);
         
         // Message OK
-        if (!bool1 || !bool2 || !bool3)
+        if (!bool1  || !bool2 || !bool3)
             builder.append("Merci de changer les paramètres en option ou de recharger les fichiers de paramétrage.");
 
         return builder.toString();
@@ -143,8 +143,8 @@ public class ProprietesXML extends AbstractModele implements XML
             case "model.enums.TypeColApps" :
                 return (Map<T, String>) getMapColsApps();
                 
-            case "model.enums.TypeColGrProjet" :
-                return (Map<T, String>) getMapColsNPC();
+            case "model.enums.TypeColProduit" :
+                return (Map<T, String>) getMapColsProduit(); 
                 
             case "model.enums.TypeColUA" :
                 return (Map<T, String>) getMapColsUA();
@@ -168,7 +168,7 @@ public class ProprietesXML extends AbstractModele implements XML
     {
         switch (typeColClass.getName())
         {
-            case "model.enums.TypeColVul" :
+            case "model.enums.TypeColVul" : 
                 return (Map<T, Colonne>) getMapColsVul();
                 
             case "model.enums.TypeColPbApps" :
@@ -215,7 +215,9 @@ public class ProprietesXML extends AbstractModele implements XML
         controleMap(builderErreurs, TypeColPic.class, mapColsPic);
         controleMap(builderErreurs, TypeColEdition.class, mapColsEdition);
         controleMap(builderErreurs, TypeColApps.class, mapColsApps);
-        controleMap(builderErreurs, TypeColGrProjet.class, mapColsGrProjet);
+        controleMap(builderErreurs, TypeColProduit.class, mapColsProduit);
+        controleMap(builderErreurs, TypeColUA.class, mapColsUA);
+        controleMap(builderErreurs, TypeColSuiviApps.class, mapColsSuiviApps);
 
         // Renvoi du booleen
         if (builderErreurs.length() == 0)
@@ -388,10 +390,10 @@ public class ProprietesXML extends AbstractModele implements XML
     }
     
     @XmlElementWrapper
-    @XmlElement(name = "mapColsNPC", required = false)
-    private Map<TypeColGrProjet, String> getMapColsNPC()
+    @XmlElement(name = "mapColsProduit", required = false)
+    private Map<TypeColProduit, String> getMapColsProduit()
     {
-        return mapColsGrProjet;
+        return mapColsProduit;
     }
     
     @XmlElementWrapper

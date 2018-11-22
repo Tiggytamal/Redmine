@@ -15,9 +15,6 @@ public class CompoPbApps extends AbstractModele
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private static final String DEPARTVIDE = "Projet sans département";
-    private static final String SERVVIDE = "Projet sans service";
-
     private String codeComposant;
     private String codeAppli;
     private String cpiLot;
@@ -29,9 +26,7 @@ public class CompoPbApps extends AbstractModele
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    CompoPbApps()
-    {
-    }
+    CompoPbApps() { }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -120,7 +115,7 @@ public class CompoPbApps extends AbstractModele
 
     public String getLotRTC()
     {
-        return lotRTC;
+        return getString(lotRTC);
     }
 
     public void setLotRTC(String lotRTC)
@@ -136,15 +131,5 @@ public class CompoPbApps extends AbstractModele
     public void setEtatAppli(EtatAppli etatAppli)
     {
         this.etatAppli = etatAppli;
-    }
-
-    public static String getDepartvide()
-    {
-        return DEPARTVIDE;
-    }
-
-    public static String getServvide()
-    {
-        return SERVVIDE;
     }
 }

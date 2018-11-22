@@ -24,108 +24,108 @@ public class TestVulnerabilite extends AbstractTestModel<Vulnerabilite>
     public void testGetSeverite()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getSeverite());
+        assertEquals(EMPTY, objetTest.getSeverite());
         
         // Test setter et getter
         String severite = "Sev";
-        handler.setSeverite(severite);
-        assertEquals(severite, handler.getSeverite());       
+        objetTest.setSeverite(severite);
+        assertEquals(severite, objetTest.getSeverite());       
     }
     
     @Test
     public void testGetComposant()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getComposant());
+        assertEquals(EMPTY, objetTest.getComposant());
         
         // Test setter et getter
         String compo = "Compo";
-        handler.setComposant(compo);
-        assertEquals(compo, handler.getComposant());       
+        objetTest.setComposant(compo);
+        assertEquals(compo, objetTest.getComposant());       
     }
     
     @Test
     public void testGetStatus()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getStatus());
+        assertEquals(EMPTY, objetTest.getStatus());
         
         // Test setter et getter
         String status = "Status";
-        handler.setStatus(status);
-        assertEquals(status, handler.getStatus());       
+        objetTest.setStatus(status);
+        assertEquals(status, objetTest.getStatus());       
     }
     
     @Test
     public void testGetMessage()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getMessage());
+        assertEquals(EMPTY, objetTest.getMessage());
         
         // Test setter et getter
         String message = "Message";
-        handler.setMessage(message);
-        assertEquals(message, handler.getMessage());       
+        objetTest.setMessage(message);
+        assertEquals(message, objetTest.getMessage());       
     }
     
     @Test
     public void testGetDateCreation()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getDateCreation());
+        assertEquals(EMPTY, objetTest.getDateCreation());
         
         // Test setter et getter
         String date = "10-12-2018";
-        handler.setDateCreation(date);
-        assertEquals(date, handler.getDateCreation());       
+        objetTest.setDateCreation(date);
+        assertEquals(date, objetTest.getDateCreation());       
     }
     
     @Test
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getLot());
+        assertEquals(EMPTY, objetTest.getLot());
         
         // Test setter et getter
         String lot = "123456";
-        handler.setLot(lot);
-        assertEquals(lot, handler.getLot());       
+        objetTest.setLot(lot);
+        assertEquals(lot, objetTest.getLot());       
     }
     
     @Test
     public void testGetClarity()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getClarity());
+        assertEquals(EMPTY, objetTest.getClarity());
         
         // Test setter et getter
         String clarity = "SVRP_qsdfhjl";
-        handler.setClarity(clarity);
-        assertEquals(clarity, handler.getClarity());       
+        objetTest.setClarity(clarity);
+        assertEquals(clarity, objetTest.getClarity());       
     }
     
     @Test
     public void testGetAppli()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getAppli());
+        assertEquals(EMPTY, objetTest.getAppli());
         
         // Test setter et getter
         String appli = "ABCD";
-        handler.setAppli(appli);
-        assertEquals(appli, handler.getAppli());       
+        objetTest.setAppli(appli);
+        assertEquals(appli, objetTest.getAppli());       
     }
     
     @Test
     public void testGetLib()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getLib());
+        assertEquals(EMPTY, objetTest.getLib());
         
         // Test setter et getter
         String lib = "Lib";
-        handler.setLib(lib);
-        assertEquals(lib, handler.getLib());       
+        objetTest.setLib(lib);
+        assertEquals(lib, objetTest.getLib());       
     }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

@@ -22,49 +22,42 @@ public class TestModelFactory extends JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
     /*---------- CONSTRUCTEURS ----------*/
-    
+
     @Override
     public void init()
     {
-        // Pas d'initialisation particulière       
+        // Pas d'initialisation particulière
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
 
-    @Test (expected = TechnicalException.class)
+    @Test(expected = TechnicalException.class)
     public void testGetModelException()
     {
         // Test exception lancé si le constructeur n'est pas accessible
-        ModelFactory.getModel(ModeletTest.class);
+        ModelFactory.build(ModeletTest.class);
     }
-    
+
     @Test
     public void testGetModel()
     {
         // Création Modele depuis Factory
-        LotSuiviPic lot = ModelFactory.getModel(LotSuiviPic.class);
+        LotSuiviPic lot = ModelFactory.build(LotSuiviPic.class);
         assertNotNull(lot);
     }
-    
+
     @Test
     public void testGetModelWithParams()
     {
         // Test création objet depuis constructeur avec paramètres
-        DefautQualite ano = ModelFactory.getModelWithParams(DefautQualite.class, ModelFactory.getModel(LotRTC.class));
+        DefautQualite ano = DefautQualite.build(ModelFactory.build(LotRTC.class));
         assertNotNull(ano);
     }
-    
-    @Test (expected = TechnicalException.class)
-    public void testGetModelWithParamsException()
-    {
-        // Test exception lancée si le contructeur avec paramètres n'éxiste pas
-        ModelFactory.getModelWithParams(ModeletTest.class, new Object());
-    }
-    
+
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
     /*---------- CLASSES PRIVEES ----------*/
-    
+
     /**
      * Classe de Modele pour tester les constructeurs non accessibles
      * 
@@ -73,6 +66,8 @@ public class TestModelFactory extends JunitBase
      */
     private class ModeletTest extends AbstractModele
     {
-        private ModeletTest() {}
+        private ModeletTest()
+        {
+        }
     }
 }

@@ -8,7 +8,6 @@ import static utilities.Statics.EMPTY;
 import org.junit.Test;
 
 import model.InfoMail;
-import model.ModelFactory;
 
 /**
  * Classe de test de la calsse de modèle InfoMail
@@ -26,68 +25,68 @@ public class TestInfoMail extends AbstractTestModel<InfoMail>
     @Test
     public void testHashCode()
     {
-        assertEquals(961, handler.hashCode());
-        handler.setInfoSupp("Infosupp2");
-        assertTrue(handler.hashCode() > 961*2);
-        handler.setLot("lot2");
-        assertTrue(handler.hashCode() > 961*3);
+        assertEquals(961, objetTest.hashCode());
+        objetTest.setInfoSupp("Infosupp2");
+        assertTrue(objetTest.hashCode() > 961*2);
+        objetTest.setLot("lot2");
+        assertTrue(objetTest.hashCode() > 961*3);
     }
     
     @Test
     public void testEquals()
     {
         // Passage par tous les tests de la méthode Equals
-        assertTrue(handler.equals(handler));
-        assertFalse(handler.equals(null));
-        assertFalse(handler.equals(EMPTY));
-        InfoMail objet = ModelFactory.getModelWithParams(InfoMail.class, "lot", "infoSupp");
-        assertFalse(handler.equals(objet));
-        handler.setInfoSupp("Infosupp2");
-        assertFalse(handler.equals(objet));
-        handler.setInfoSupp("infoSupp");
-        assertFalse(handler.equals(objet));
-        handler.setLot("lot2");
-        assertFalse(handler.equals(objet));
-        handler.setLot("lot");
-        assertTrue(handler.equals(objet));
-        handler.setLot(null);
+        assertTrue(objetTest.equals(objetTest));
+        assertFalse(objetTest.equals(null));
+        assertFalse(objetTest.equals(EMPTY));
+        InfoMail objet = InfoMail.build("lot", "infoSupp");
+        assertFalse(objetTest.equals(objet));
+        objetTest.setInfoSupp("Infosupp2");
+        assertFalse(objetTest.equals(objet));
+        objetTest.setInfoSupp("infoSupp");
+        assertFalse(objetTest.equals(objet));
+        objetTest.setLot("lot2");
+        assertFalse(objetTest.equals(objet));
+        objetTest.setLot("lot");
+        assertTrue(objetTest.equals(objet));
+        objetTest.setLot(null);
         objet.setLot(null);
-        assertTrue(handler.equals(objet));
-        handler.setInfoSupp(null);
+        assertTrue(objetTest.equals(objet));
+        objetTest.setInfoSupp(null);
         objet.setInfoSupp(null);
-        assertTrue(handler.equals(objet));
+        assertTrue(objetTest.equals(objet));
     }
     
     @Test
     public void testConstructeur()
     {
-        handler = ModelFactory.getModelWithParams(InfoMail.class, "Lot", "InfoSupp");
-        assertEquals("Lot", handler.getLot());
-        assertEquals("InfoSupp", handler.getInfoSupp());        
+        objetTest = InfoMail.build("Lot", "InfoSupp");
+        assertEquals("Lot", objetTest.getLot());
+        assertEquals("InfoSupp", objetTest.getInfoSupp());        
     }
     
     @Test
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getLot());
+        assertEquals(EMPTY, objetTest.getLot());
         
         // Test setter et getter
         String lot = "Lot";
-        handler.setLot(lot);
-        assertEquals(lot, handler.getLot());       
+        objetTest.setLot(lot);
+        assertEquals(lot, objetTest.getLot());       
     }
     
     @Test
     public void testGetInfoSupp()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getInfoSupp());
+        assertEquals(EMPTY, objetTest.getInfoSupp());
         
         // Test setter et getter
         String infoSupp = "infoSupp";
-        handler.setInfoSupp(infoSupp);
-        assertEquals(infoSupp, handler.getInfoSupp());       
+        objetTest.setInfoSupp(infoSupp);
+        assertEquals(infoSupp, objetTest.getInfoSupp());       
     }
     
     /*---------- METHODES PRIVEES ----------*/

@@ -172,7 +172,7 @@ public class MajComposantsSonarMCTask extends AbstractTask
         if (mapCompos.containsKey(projet.getKey()))
             retour = mapCompos.get(projet.getKey());
         else
-            retour = ModelFactory.getModel(ComposantSonar.class);
+            retour = ModelFactory.build(ComposantSonar.class);
 
         retour.setKey(projet.getKey());
         retour.setNom(projet.getNom());

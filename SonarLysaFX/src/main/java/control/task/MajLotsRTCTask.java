@@ -16,10 +16,10 @@ import dao.DaoFactory;
 import dao.DaoLotRTC;
 import javafx.application.Platform;
 import model.bdd.Edition;
-import model.bdd.GroupementProjet;
+import model.bdd.Produit;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
-import model.enums.GroupeProjet;
+import model.enums.GroupeProduit;
 import utilities.Statics;
 import utilities.enums.Severity;
 
@@ -96,7 +96,7 @@ public class MajLotsRTCTask extends AbstractTask
         // Initialisation de la map depuis les informations de la base de données
         Map<String, LotRTC> retour = dao.readAllMap();
         Map<String, ProjetClarity> mapClarity = DaoFactory.getDao(ProjetClarity.class).readAllMap();
-        Map<String, GroupementProjet> mapGroupe = DaoFactory.getDao(GroupementProjet.class).readAllMap();
+        Map<String, Produit> mapGroupe = DaoFactory.getDao(Produit.class).readAllMap();
         Map<String, Edition> mapEdition = DaoFactory.getDao(Edition.class).readAllMap();
 
         for (LotRTC lotRTC : lotsRTC)
@@ -104,7 +104,7 @@ public class MajLotsRTCTask extends AbstractTask
             // On saute tous les lotRTC sans numéro de lot.
             if (lotRTC.getLot().isEmpty())
                 continue;
-            
+
             LOGCONSOLE.debug("Traitement lots RTC : " + i + " - " + size + " - lot : " + lotRTC.getLot());
 
             // Récupération du code Clarity depuis RTC
@@ -123,9 +123,9 @@ public class MajLotsRTCTask extends AbstractTask
 
             // Controle du groupe
             if (mapGroupe.containsKey(lotRTC.getProjetRTC()))
-                lotRTC.setGroupe(mapGroupe.get(lotRTC.getProjetRTC()).getGroupe());
+                lotRTC.setGroupeProduit(mapGroupe.get(lotRTC.getProjetRTC()).getGroupe());
             else
-                lotRTC.setGroupe(GroupeProjet.AUCUN);
+                lotRTC.setGroupeProduit(GroupeProduit.AUCUN);
 
             String lot = lotRTC.getLot();
 
@@ -144,17 +144,35 @@ public class MajLotsRTCTask extends AbstractTask
         return retour;
     }
 
+    /**
+     * Test si l'édition est présente dans la base de données. Retourne la valeur dans ce cas, ou crèe uen nouvelle édition et la rajoute à la map.
+     * 
+     * @param editionString
+     * @param mapEdition
+     * @return
+     */
     private Edition testEdition(String editionString, Map<String, Edition> mapEdition)
-    {        
+    {
         if (editionString.startsWith("CDM") && !editionString.startsWith("CHC_CDM"))
             editionString = editionString.replace("CDM", "CHC_CDM");
-        
+
         if (!mapEdition.containsKey(editionString))
-            return Edition.getEditionInconnue(editionString);
+        {
+            Edition edition = Edition.getEditionInconnue(editionString);
+            mapEdition.put(edition.getMapIndex(), edition);
+            return edition;
+        }
         else
             return mapEdition.get(editionString);
     }
 
+    /**
+     * Test si le code Clarity est présent dans la base de données. Retourne la valeur dans ce cas, ou crèe un nouveau code Clarity et le rajoute à la map.
+     * 
+     * @param codeClarity
+     * @param mapClarity
+     * @return
+     */
     private ProjetClarity testProjetClarity(String codeClarity, Map<String, ProjetClarity> mapClarity)
     {
         // Vérification si le code Clarity est bien dans la map

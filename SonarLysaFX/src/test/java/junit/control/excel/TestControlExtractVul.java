@@ -45,10 +45,10 @@ public class TestControlExtractVul extends TestControlExcelWrite<TypeColVul, Con
         liste.add(vul1);
         
         // Appel méthode avec liste différente
-        handler.ajouterExtraction(liste, TypeVulnerabilite.OUVERTE, new CreerExtractVulnerabiliteTask(file));
+        controlTest.ajouterExtraction(liste, TypeVulnerabilite.OUVERTE, new CreerExtractVulnerabiliteTask(file));
 
         liste.add(vul2);
-        handler.ajouterExtraction(liste, TypeVulnerabilite.RESOLUE, new CreerExtractVulnerabiliteTask(file));
+        controlTest.ajouterExtraction(liste, TypeVulnerabilite.RESOLUE, new CreerExtractVulnerabiliteTask(file));
                
         // Controle de la taille des feuilles
         assertEquals(1, wb.getSheet(TypeVulnerabilite.OUVERTE.getNomSheet()).getLastRowNum());
@@ -72,21 +72,21 @@ public class TestControlExtractVul extends TestControlExcelWrite<TypeColVul, Con
     public void testCreateWb() throws Exception
     {
         assertNotNull(wb);
-        assertNotNull(Whitebox.getField(ControlExtractVul.class, "helper").get(handler));
+        assertNotNull(Whitebox.getField(ControlExtractVul.class, "helper").get(controlTest));
     }
     
     @Test
     public void testCalculIndiceColonnes() throws Exception
     {
         // Test que l'on a bien la surcharge avec aucun plantage
-        Whitebox.invokeMethod(handler, "calculIndiceColonnes");
+        Whitebox.invokeMethod(controlTest, "calculIndiceColonnes");
     }
     
     @Test
     public void testInitEnum() throws IllegalAccessException
     {
         // test - énumération du bon Type
-        assertEquals(TypeColVul.class, getField(ControlExtractVul.class, "enumeration").get(handler)); 
+        assertEquals(TypeColVul.class, getField(ControlExtractVul.class, "enumeration").get(controlTest)); 
     }
     
     /*---------- METHODES PRIVEES ----------*/

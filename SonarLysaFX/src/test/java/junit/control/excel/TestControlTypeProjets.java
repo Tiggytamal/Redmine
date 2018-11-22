@@ -5,15 +5,15 @@ import java.util.List;
 import org.junit.Test;
 
 import control.excel.ControlGroupeProjets;
-import model.bdd.GroupementProjet;
-import model.enums.TypeColGrProjet;
+import model.bdd.Produit;
+import model.enums.TypeColProduit;
 
-public class TestControlTypeProjets extends TestControlExcelRead<TypeColGrProjet, ControlGroupeProjets, List<GroupementProjet>>
+public class TestControlTypeProjets extends TestControlExcelRead<TypeColProduit, ControlGroupeProjets, List<Produit>>
 {
 
     public TestControlTypeProjets()
     {
-        super(TypeColGrProjet.class, "projets_npc.xlsx");
+        super(TypeColProduit.class, "projets_npc.xlsx");
     }
 
     @Test

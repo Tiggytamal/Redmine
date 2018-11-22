@@ -27,7 +27,7 @@ public class RepackREST extends AbstractModele
     private String idNgm;
     private String libelle;
     private String idGc;
-    private String nomGC;
+    private String nomGc;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -45,7 +45,7 @@ public class RepackREST extends AbstractModele
         this.idNgm = idNgm;
         this.libelle = libelle;
         this.idGc = idGc;
-        this.nomGC = nomGC;
+        this.nomGc = nomGC;
     }
 
     public RepackREST()
@@ -167,14 +167,14 @@ public class RepackREST extends AbstractModele
         this.idGc = idGc;
     }
 
-    @XmlAttribute(name = "nomGC")
-    public String getNomGC()
+    @XmlAttribute(name = "nomGc")
+    public String getNomGc()
     {
-        return nomGC;
+        return nomGc;
     }
 
-    public void setNomGC(String nomGC)
+    public void setNomGc(String nomGC)
     {
-        this.nomGC = nomGC;
+        this.nomGc = nomGC;
     }
 }

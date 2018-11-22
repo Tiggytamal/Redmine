@@ -14,10 +14,12 @@ import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlAppsW;
 import control.task.CreerVueParAppsTask;
+import de.saxsys.javafx.test.JfxRunner;
 import model.ModelFactory;
 import model.bdd.Application;
 import model.enums.OptionCreerVueParAppsTask;
@@ -26,6 +28,7 @@ import model.enums.TypeColAppsW;
 import utilities.Statics;
 import utilities.TechnicalException;
 
+@RunWith(JfxRunner.class)
 public class TestControlAppsW extends TestControlExcelWrite<TypeColAppsW, ControlAppsW, Collection<Application>>
 {
     /*---------- ATTRIBUTS ----------*/
@@ -37,7 +40,7 @@ public class TestControlAppsW extends TestControlExcelWrite<TypeColAppsW, Contro
     public TestControlAppsW()
     {
         super(TypeColAppsW.class, "testAppW.xlsx");
-        appli = ModelFactory.getModel(Application.class);
+        appli = ModelFactory.build(Application.class);
         appli.setActif(true);
         appli.setCode("ABCD");
         appli.setLibelle("Application");
@@ -51,7 +54,7 @@ public class TestControlAppsW extends TestControlExcelWrite<TypeColAppsW, Contro
     public void testInitEnum() throws IllegalAccessException
     {
         // test - énumération du bon Type
-        assertEquals(TypeColAppsW.class, getField(ControlAppsW.class, "enumeration").get(handler));
+        assertEquals(TypeColAppsW.class, getField(ControlAppsW.class, "enumeration").get(controlTest));
     }
 
     @Test
@@ -59,8 +62,8 @@ public class TestControlAppsW extends TestControlExcelWrite<TypeColAppsW, Contro
     {
         Set<Application> applisOpenSonar = new HashSet<>();
         applisOpenSonar.add(appli);
-        handler.creerfeuilleSonar(applisOpenSonar, new CreerVueParAppsTask(OptionCreerVueParAppsTask.ALL, file));
-        Sheet sheet = wb.getSheet("Périmètre Couverts SonarQbe");
+        controlTest.creerfeuilleSonar(applisOpenSonar, new CreerVueParAppsTask(OptionCreerVueParAppsTask.ALL, file));
+        Sheet sheet = wb.getSheet("Périmètre Couverts SonarQube");
         assertNotNull(sheet);
         assertEquals(1, sheet.getLastRowNum());
     }
@@ -75,7 +78,7 @@ public class TestControlAppsW extends TestControlExcelWrite<TypeColAppsW, Contro
         
         try
         {
-        Whitebox.invokeMethod(handler, "calculDeuxiemeFeuille", liste);
+        Whitebox.invokeMethod(controlTest, "calculDeuxiemeFeuille", liste);
         }
         catch (TechnicalException e)
         {
@@ -93,10 +96,10 @@ public class TestControlAppsW extends TestControlExcelWrite<TypeColAppsW, Contro
     public void testWrite() throws IllegalAccessException
     {
         // Remplacement du fichier par un fichier mal nommé
-        Whitebox.getField(ControlAppsW.class, "file").set(handler, new File("adc*;,b"));
+        Whitebox.getField(ControlAppsW.class, "file").set(controlTest, new File("adc*;,b"));
         
         // Appel crite pour remonter l'exception
-        handler.write();
+        controlTest.write();
     }
 
     /*---------- METHODES PRIVEES ----------*/

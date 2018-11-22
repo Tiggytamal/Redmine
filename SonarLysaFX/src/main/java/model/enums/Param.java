@@ -15,7 +15,7 @@ public enum Param implements TypeKey
     FILTRECOBOL("Filtre COBOL"),
     FILTREANDROID("Filtre Androïd"),
     FILTREIOS("Filtre iOS"),
-    ABSOLUTEPATH("Chemin des fichiers"), 
+    ABSOLUTEPATH("Chemin des fichiers"),
     NOMFICHIERJAVA("Nom fichier de suivi"), 
     NOMFICHIERANDROID("Nom fichier de suivi Android"),
     NOMFICHIERIOS("Nom fichier de suivi iOS"),

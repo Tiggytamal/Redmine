@@ -11,7 +11,6 @@ import dao.DaoFactory;
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.javafx.test.TestInJfxThread;
 import junit.JunitBase;
-import model.FichiersXML;
 import model.ProprietesXML;
 import model.bdd.Edition;
 import utilities.Statics;
@@ -37,7 +36,6 @@ public class TestControlXML extends JunitBase
     @TestInJfxThread
     public void testRecupererXMLResources()
     {
-        handler.recupererXMLResources(FichiersXML.class);
         handler.recupererXMLResources(ProprietesXML.class);
     }
 

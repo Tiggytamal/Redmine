@@ -79,7 +79,7 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
                 if (!controleLigne(annee, semaine, libelle))
                     continue;
 
-                Edition edition = ModelFactory.getModel(Edition.class);
+                Edition edition = ModelFactory.build(Edition.class);
 
                 String nom = prepareNomEdition(libelle);
                 edition.setNom(nom);
@@ -158,6 +158,8 @@ public class ControlEdition extends AbstractControlExcelRead<TypeColEdition, Map
             return TypeEdition.CDM;
         if (libelle.startsWith(CHC))
             return TypeEdition.CHC;
+        if (libelle.contains("Fil_De_Leau"))
+            return TypeEdition.FDL;
         return TypeEdition.AUTRE;
     }
 

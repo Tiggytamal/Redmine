@@ -30,7 +30,7 @@ public class TestControlUA extends TestControlExcelRead<TypeColUA, ControlUA, Ma
     @Test
     public void testRecupDonneesDepuisExcel()
     {
-        Map<String, String> map = handler.recupDonneesDepuisExcel();
+        Map<String, String> map = controlTest.recupDonneesDepuisExcel();
         assertFalse(map.isEmpty());
     }
     
@@ -41,7 +41,7 @@ public class TestControlUA extends TestControlExcelRead<TypeColUA, ControlUA, Ma
     {
         // Test 2 - feuille nulle
         wb.removeSheetAt(wb.getSheetIndex("Catalogue_UA-APPLI_E30"));
-        invokeMethod(handler, "initSheet");
+        invokeMethod(controlTest, "initSheet");
     }
     
     @Override
@@ -54,8 +54,8 @@ public class TestControlUA extends TestControlExcelRead<TypeColUA, ControlUA, Ma
             {
                 for (Cell cell: row)
                 {
-                    assertNotNull(invokeMethod(handler, "getCellStringValue", row, cell.getColumnIndex()));
-                    assertNotNull(invokeMethod(handler, "getCellNumericValue", row, cell.getColumnIndex()));
+                    assertNotNull(invokeMethod(controlTest, "getCellStringValue", row, cell.getColumnIndex()));
+                    assertNotNull(invokeMethod(controlTest, "getCellNumericValue", row, cell.getColumnIndex()));
                 }               
             }
         }        

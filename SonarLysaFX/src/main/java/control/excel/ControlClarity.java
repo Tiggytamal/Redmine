@@ -102,7 +102,7 @@ public class ControlClarity extends AbstractControlExcelRead<TypeColClarity, Map
      */
     private ProjetClarity creerInfoClarityDepuisExcel(Row row)
     {
-        ProjetClarity retour = ModelFactory.getModel(ProjetClarity.class);
+        ProjetClarity retour = ModelFactory.build(ProjetClarity.class);
         retour.setChefProjet(getCellStringValue(row, colCpi));
         retour.setCode(getCellStringValue(row, colClarity));
         retour.setDepartement(getCellStringValue(row, colDepart));

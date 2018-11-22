@@ -141,7 +141,7 @@ public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSo
     {
         // Initialisaiton des variables
         // Metrique avec une liste des périodes non vide
-        Composant compo = ModelFactory.getModel(Composant.class);
+        Composant compo = ModelFactory.build(Composant.class);
         List<Periode> periodes = new ArrayList<>();
         periodes.add(new Periode(1, UN));
         List<Metrique> metriques = new ArrayList<>();

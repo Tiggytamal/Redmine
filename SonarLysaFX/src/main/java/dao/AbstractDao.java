@@ -16,7 +16,6 @@ import javax.persistence.Persistence;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import model.ModelFactory;
 import model.bdd.AbstractBDDModele;
 import model.bdd.DateMaj;
 import model.enums.TypeDonnee;
@@ -81,7 +80,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
      * @return
      */
     public abstract int recupDonneesDepuisExcel(File file);
-    
+
     /**
      * Méthode à implémenter si besoin de fonctions supplémentaires lors de la persistance
      * 
@@ -95,6 +94,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
     {
         em.getEntityManagerFactory().getCache().evictAll();
     }
+
     /**
      * Retourne toutes les données de la table sous forme d'une liste
      * 
@@ -174,12 +174,12 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
     {
         // Booléen permettant de créer ou non une transaction SQL
         boolean test = em.getTransaction().isActive();
-        
+
         // Information de retour sur la persistance ou non de l'objet
         boolean retour;
         if (!test)
             em.getTransaction().begin();
-        
+
         if (t.getIdBase() == 0)
         {
             // Si l'objet est nouveau, on crée un premier TimeStamp et on appelle l'implémentation spécifique de l'objet
@@ -248,12 +248,12 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
         DaoDateMaj dao = DaoFactory.getDao(DateMaj.class);
         DateMaj dateMaj = dao.recupEltParIndex(typeDonnee.toString());
         if (dateMaj == null)
+            dateMaj = DateMaj.build(typeDonnee, LocalDate.now(), LocalTime.now());
+        else
         {
-            dateMaj = ModelFactory.getModel(DateMaj.class);
-            dateMaj.setTypeDonnee(typeDonnee);
+            dateMaj.setDate(LocalDate.now());
+            dateMaj.setHeure(LocalTime.now());
         }
-        dateMaj.setDate(LocalDate.now());
-        dateMaj.setHeure(LocalTime.now());
         return dao.persist(dateMaj);
     }
 

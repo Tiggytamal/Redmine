@@ -41,7 +41,7 @@ public class ControlAppsW extends AbstractControlExcelWrite<TypeColAppsW, Collec
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private static final String APPLIGEREES = "Périmètre Couverts SonarQbe";
+    private static final String APPLIGEREES = "Périmètre Couverts SonarQube";
     private static final String REFAPPLIS = "Ref CodeApps detaillés";
 
     private int colCode;

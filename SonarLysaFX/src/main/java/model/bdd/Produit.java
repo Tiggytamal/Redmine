@@ -9,7 +9,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import dao.AbstractDao;
-import model.enums.GroupeProjet;
+import model.enums.GroupeProduit;
 
 /**
  * Classe de modèle qui correspond aux données du fichier Excel des anomalies.
@@ -18,15 +18,15 @@ import model.enums.GroupeProjet;
  * @since 1.0
  */
 @Entity
-@Table(name = "projets_groupe")
+@Table(name = "produits")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="GroupementProjet" + AbstractDao.FINDALL, query="SELECT gp FROM GroupementProjet gp"),
-        @NamedQuery(name="GroupementProjet" + AbstractDao.FINDINDEX, query="SELECT gp FROM GroupementProjet gp WHERE gp.nomProjet = :index"),
-        @NamedQuery(name="GroupementProjet" + AbstractDao.RESET, query="DELETE FROM GroupementProjet")
+        @NamedQuery(name="Produit" + AbstractDao.FINDALL, query="SELECT p FROM Produit p"),
+        @NamedQuery(name="Produit" + AbstractDao.FINDINDEX, query="SELECT p FROM Produit p WHERE p.nomProjet = :index"),
+        @NamedQuery(name="Produit" + AbstractDao.RESET, query="DELETE FROM Produit")
 })
 //@formatter:on
-public class GroupementProjet extends AbstractBDDModele
+public class Produit extends AbstractBDDModele
 {
 
     /*---------- ATTRIBUTS ----------*/
@@ -36,13 +36,11 @@ public class GroupementProjet extends AbstractBDDModele
 
     @Enumerated(EnumType.STRING)
     @Column(name = "groupe")
-    private GroupeProjet groupe;
+    private GroupeProduit groupe;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    GroupementProjet()
-    {
-    }
+    Produit() { }
 
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -62,18 +60,20 @@ public class GroupementProjet extends AbstractBDDModele
 
     public void setNomProjet(String nomProjet)
     {
-        this.nomProjet = nomProjet;
+        if (nomProjet != null && !nomProjet.isEmpty())
+            this.nomProjet = nomProjet;
     }
 
-    public GroupeProjet getGroupe()
+    public GroupeProduit getGroupe()
     {
         if (groupe == null)
-            return GroupeProjet.AUCUN;
+            return GroupeProduit.AUCUN;
         return groupe;
     }
 
-    public void setGroupe(GroupeProjet groupe)
+    public void setGroupe(GroupeProduit groupe)
     {
-        this.groupe = groupe;
+        if (groupe != null)
+            this.groupe = groupe;
     }
 }

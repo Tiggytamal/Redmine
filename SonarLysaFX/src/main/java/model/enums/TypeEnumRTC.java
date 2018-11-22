@@ -17,7 +17,8 @@ public enum TypeEnumRTC
     IMPORTANCE("NiveauImportance"),
     ORIGINE("Origine"),
     CLARITY("fr.ca.cat.attribut.codeprojetclarity"),
-    DATELIVHOMO("fr.ca.cat.attribut.datedelivraison");
+    DATELIVHOMO("fr.ca.cat.attribut.datedelivraison"),
+    TROUVEDANS("fr.ca.cat.attribut.trouvedans");
     
     private String valeur;
     

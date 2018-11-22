@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import model.enums.GroupeProjet;
+import model.enums.GroupeProduit;
 
 /**
  * Classe de test de l'numération GroupeProjet
@@ -19,21 +19,21 @@ public class TestGroupeProjet implements TestEnums
     @Override
     public void testConstructeur()
     {
-        assertEquals(GroupeProjet.NPC, GroupeProjet.valueOf(GroupeProjet.NPC.toString()));
+        assertEquals(GroupeProduit.NPC, GroupeProduit.valueOf(GroupeProduit.NPC.toString()));
     }
 
     @Test
     @Override
     public void testSize()
     {
-        assertEquals(2, GroupeProjet.values().length);
+        assertEquals(2, GroupeProduit.values().length);
     }
     
     @Test
     public void testGetValeur()
     {
-        assertEquals("", GroupeProjet.AUCUN.getValeur());
-        assertEquals("NPC", GroupeProjet.NPC.getValeur());
+        assertEquals("", GroupeProduit.AUCUN.getValeur());
+        assertEquals("NPC", GroupeProduit.NPC.getValeur());
     }
 
 }

@@ -58,10 +58,10 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
         issue.setCreationDate("date");
         issue.setSeverity("severity");
         issue.setMessage("javajaf.jar");
-        ComposantSonar composant = ModelFactory.getModel(ComposantSonar.class);
+        ComposantSonar composant = ModelFactory.build(ComposantSonar.class);
         composant.setNom("nom");      
-        composant.setAppli(ModelFactory.getModel(Application.class));
-        LotRTC lotRTC = ModelFactory.getModel(LotRTC.class);
+        composant.setAppli(ModelFactory.build(Application.class));
+        LotRTC lotRTC = ModelFactory.build(LotRTC.class);
         lotRTC.setLot("123456");
         composant.setLotRTC(lotRTC);
         Vulnerabilite retour = Whitebox.invokeMethod(handler, "convertIssueToVul", issue, composant);

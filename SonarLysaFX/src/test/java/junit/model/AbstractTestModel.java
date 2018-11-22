@@ -17,7 +17,7 @@ public abstract class AbstractTestModel<T extends AbstractModele> extends JunitB
     /** logger plantages de l'application */
     private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
     
-    protected T handler;
+    protected T objetTest;
     
     /*---------- CONSTRUCTEURS ----------*/
     
@@ -34,16 +34,27 @@ public abstract class AbstractTestModel<T extends AbstractModele> extends JunitB
         // instanciation du paramètre, récupération de la classe, et création du handler depuis la factory
         try
         {
-            handler = ModelFactory.getModel((Class<T>) Class.forName(parameterClassName));
+            objetTest = ModelFactory.build((Class<T>) Class.forName(parameterClassName));
         } 
         catch (ClassNotFoundException e)
         {
             LOGPLANTAGE.error(e);
             throw new TechnicalException("Impossible d'instancier l'énumération - junit.model.AbstractTestModel.init", e);
         }
+        
+        initImpl();
     }
     
     /*---------- METHODES PUBLIQUES ----------*/
+    /*---------- METHODES PROTECTED ----------*/    
+    
+    /**
+     * Implémentation de l'initialisation si besoin pour les classes filles
+     */
+    protected void initImpl()
+    {
+        
+    }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 

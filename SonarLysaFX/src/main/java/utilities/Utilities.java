@@ -194,7 +194,7 @@ public final class Utilities
     {
         if (versionEdition != null && versionEdition.matches("E[0-9][0-9]"))
             return String.valueOf((Integer.parseInt(versionEdition.substring(1)) - BASEVERSION));
-        throw new FunctionalException(Severity.ERROR, "Transcodification version Edition impossible - " + versionEdition);
+        throw new FunctionalException(Severity.ERROR, "Transcodification version Edition impossible : " + versionEdition);
     }
 
     /**

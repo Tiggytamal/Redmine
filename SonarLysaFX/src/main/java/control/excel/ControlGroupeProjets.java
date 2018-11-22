@@ -9,9 +9,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import model.ModelFactory;
-import model.bdd.GroupementProjet;
-import model.enums.GroupeProjet;
-import model.enums.TypeColGrProjet;
+import model.bdd.Produit;
+import model.enums.GroupeProduit;
+import model.enums.TypeColProduit;
 
 /**
  * Classe de contrôle du fichier des applications
@@ -20,7 +20,7 @@ import model.enums.TypeColGrProjet;
  * @since 1.0
  * 
  */
-public class ControlGroupeProjets extends AbstractControlExcelRead<TypeColGrProjet, List<GroupementProjet>>
+public class ControlGroupeProjets extends AbstractControlExcelRead<TypeColProduit, List<Produit>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -45,18 +45,18 @@ public class ControlGroupeProjets extends AbstractControlExcelRead<TypeColGrProj
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
-    public List<GroupementProjet> recupDonneesDepuisExcel()
+    public List<Produit> recupDonneesDepuisExcel()
     {
         Sheet sheet = wb.getSheetAt(0);
-        List<GroupementProjet> retour = new ArrayList<>();
+        List<Produit> retour = new ArrayList<>();
 
         // Iterateur depuis la ligne 1 - sans les titres
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
             Row row = sheet.getRow(i);
-            GroupementProjet gp = ModelFactory.getModel(GroupementProjet.class);
+            Produit gp = ModelFactory.build(Produit.class);
             gp.setNomProjet(getCellStringValue(row, colNom));
-            gp.setGroupe(GroupeProjet.valueOf(getCellStringValue(row, colGroupe)));
+            gp.setGroupe(GroupeProduit.valueOf(getCellStringValue(row, colGroupe)));
             retour.add(gp);
         }
         return retour;

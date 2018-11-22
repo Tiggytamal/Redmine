@@ -63,7 +63,7 @@ public class ControlChefService extends AbstractControlExcelRead<TypeColChefServ
             Row row = sheet.getRow(i);
 
             // Création de l'objet
-            ChefService respServ = ModelFactory.getModel(ChefService.class);
+            ChefService respServ = ModelFactory.build(ChefService.class);
             respServ.setDepartement(getCellStringValue(row, colDepart));
             respServ.setDirection(getCellStringValue(row, colDir));
             respServ.setService(getCellStringValue(row, colService));

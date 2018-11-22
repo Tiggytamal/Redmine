@@ -21,7 +21,7 @@ public class TestControlExcelWrite<T extends Enum<T> & TypeColW, C extends Abstr
     private String fichier;
     private Class<T> typeColClass;
     protected File file;
-    protected C handler;
+    protected C controlTest;
     protected Workbook wb;
     
     /*---------- CONSTRUCTEURS ----------*/
@@ -53,8 +53,8 @@ public class TestControlExcelWrite<T extends Enum<T> & TypeColW, C extends Abstr
     public void init() throws IOException, IllegalAccessException
     {
         file = new File(Statics.ROOT + fichier);
-        handler = ExcelFactory.getWriter(typeColClass, file);
-        wb = (Workbook) getField(handler.getClass(), "wb").get(handler);
+        controlTest = ExcelFactory.getWriter(typeColClass, file);
+        wb = (Workbook) getField(controlTest.getClass(), "wb").get(controlTest);
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

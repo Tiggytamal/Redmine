@@ -262,6 +262,10 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>DATEREOUV</key>
             <value>Date réouverture</value>
         </entry>
+		<entry>
+            <key>DATEMEPPREV</key>
+            <value>Date MEP Prév.</value>
+        </entry>
         <entry>
             <key>MATIERE</key>
             <value>Matière</value>
@@ -291,7 +295,7 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <value>Durée de ano RTC</value>
         </entry>
     </mapColsSuivi>
-    <mapColsNPC>
+    <mapColsProduit>
         <entry>
             <key>NOM</key>
             <value>Nom Projet</value>
@@ -300,7 +304,7 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>GROUPE</key>
             <value>Groupe</value>
         </entry>
-    </mapColsNPC>
+    </mapColsProduit>
     <mapColsVul>
     	<entry>
     		<key>SEVERITE</key>

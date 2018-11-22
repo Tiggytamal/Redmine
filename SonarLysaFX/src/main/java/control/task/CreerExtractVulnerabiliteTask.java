@@ -2,11 +2,9 @@ package control.task;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.mchange.util.AssertException;
 
@@ -34,7 +32,6 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
 
     /*---------- ATTRIBUTS ----------*/
 
-    private static final Logger LOGGER = LogManager.getLogger("complet-log");
     private static final String TITRE = "Extraction vulnérabilités";
 
     private ControlExtractVul control;
@@ -117,7 +114,8 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
 
         if (lotRTC != null)
         {
-            retour.setClarity(lotRTC.getProjetClarity().getCode());
+            if (lotRTC.getProjetClarity() != null)
+                retour.setClarity(lotRTC.getProjetClarity().getCode());
             retour.setLot(lotRTC.getLot());
         }
 
@@ -134,7 +132,12 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
     private List<Vulnerabilite> recupVulnerabilitesSonar(TypeVulnerabilite type)
     {
         // Liste des composants du patrimoine
-        Map<String, ComposantSonar> composants = recupererComposantsSonar(OptionRecupCompo.PATRIMOINE);
+        Map<String, ComposantSonar> composants = recupererComposantsSonar(OptionRecupCompo.DERNIERE);
+        Map<String, ComposantSonar> composantsByKey = new HashMap<>();
+        for (ComposantSonar compo : composants.values())
+        {
+            composantsByKey.put(compo.getKey(), compo);
+        }
 
         // Affichage avancée
         baseMessage = "Vulnérabilitès " + type.getNomSheet() + Statics.NL;
@@ -168,13 +171,10 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
             updateProgress(i, size);
             i++;
 
-            ComposantSonar composant = composants.get(clefProjet);
+            ComposantSonar composant = composantsByKey.get(clefProjet);
 
             if (composant == null)
-            {
-                LOGGER.warn(clefProjet + " n'existe pas dans la liste des composants.");
                 continue;
-            }
 
             // Conversion dans le format pour créer le fichier Excel
             retour.add(convertIssueToVul(issue, composant));

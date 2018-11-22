@@ -143,7 +143,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
 
     private DefautAppli creerDefautdepuisExcel(Row row)
     {
-        DefautAppli retour = ModelFactory.getModel(DefautAppli.class);
+        DefautAppli retour = ModelFactory.build(DefautAppli.class);
 
         retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));
         retour.setNomComposant(getCellStringValue(row, colCompo));
@@ -211,12 +211,8 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
         IndexedColors couleur = IndexedColors.WHITE;
 
         // On met à vert les défautls dont le code applicaiton a été corrigé
-        if (da.getAppliCorrigee().equals(da.getCompo().getAppli().getCode()))
+        if (da.getCompo().getAppli().isReferentiel())
             couleur = IndexedColors.LIGHT_GREEN;
-        // On met à bleu les défault en cours de traitement
-        else if (da.getEtatDefaut() == EtatDefaut.TRAITE)
-            couleur = IndexedColors.LIGHT_TURQUOISE;
-
         return couleur;
     }
     

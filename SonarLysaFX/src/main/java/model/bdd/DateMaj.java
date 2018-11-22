@@ -38,15 +38,32 @@ public class DateMaj extends AbstractBDDModele
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
-    
+
     @Column(name = "heure", nullable = false)
     private LocalTime heure;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    DateMaj() {}
+    DateMaj()
+    {
+        // Constructeur pour le JPA
+    }
+
+    private DateMaj(TypeDonnee typeDonnee, LocalDate date, LocalTime heure)
+    {
+        if (typeDonnee == null || date == null || heure == null)
+            throw new IllegalArgumentException("model.bdd.DateMaj.constructeur : arguments nuls ou non valides.");
+        this.typeDonnee = typeDonnee;
+        this.date = date;
+        this.heure = heure;
+    }
 
     /*---------- METHODES PUBLIQUES ----------*/
+
+    public static DateMaj build(TypeDonnee typeDonnee, LocalDate date, LocalTime heure)
+    {
+        return new DateMaj(typeDonnee, date, heure);
+    }
 
     @Override
     public String getMapIndex()
@@ -62,11 +79,6 @@ public class DateMaj extends AbstractBDDModele
         return typeDonnee;
     }
 
-    public void setTypeDonnee(TypeDonnee typeDonnee)
-    {
-        this.typeDonnee = typeDonnee;
-    }
-
     public LocalDate getDate()
     {
         return date;
@@ -74,7 +86,8 @@ public class DateMaj extends AbstractBDDModele
 
     public void setDate(LocalDate date)
     {
-        this.date = date;
+        if (date != null)
+            this.date = date;
     }
 
     public LocalTime getHeure()
@@ -84,6 +97,7 @@ public class DateMaj extends AbstractBDDModele
 
     public void setHeure(LocalTime heure)
     {
-        this.heure = heure;
+        if (heure != null)
+            this.heure = heure;
     }
 }

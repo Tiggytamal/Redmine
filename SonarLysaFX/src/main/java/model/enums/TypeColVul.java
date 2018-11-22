@@ -7,7 +7,7 @@ package model.enums;
  * @since 1.0
  *
  */
-public enum TypeColVul implements TypeColW 
+public enum TypeColVul implements TypeColW
 {
     SEVERITE("Severité", "colSeverity"), 
     STATUS("Status", "colStatus"),

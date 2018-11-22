@@ -1,5 +1,7 @@
 package utilities;
 
+import java.time.LocalDate;
+
 import application.Main;
 import control.xml.ControlXML;
 import javafx.stage.FileChooser;
@@ -33,6 +35,12 @@ public final class Statics
     public static final short SBTRINGLOT = 4;
     /** Divisuer millisecondes */
     public static final int MILLITOSECOND = 1000;
+    /** Date inconnue initialisée au 1er Janvier 2000 */
+    public static final LocalDate DATEINCONNUE = LocalDate.of(2000, 1, 1);
+    /** Date inconnue au 1er Janvier 2099 */
+    public static final LocalDate DATEINCO2099 = LocalDate.of(2099, 1, 1);
+    /** Aujourd'hiu */
+    public static LocalDate TODAY = LocalDate.now();
     
     /** Adresse générale pour les resources */
     public static final String ROOT = "/";
@@ -94,11 +102,13 @@ public final class Statics
     public static final String ANOCLOSE = "Close";
     /** commentaire, balise @Ignore des Junit */
     public static final String TESTMANUEL = "Test manuel - ne pas utiliser en automatique";
+    /** Edition inconnue */
+    public static final String EDINCONNUE ="00.00.00.00";
     
     /* ----- Objets statiques ----- */
     
     /** Wrapper des informations générales de fonctionnement de l'application*/
-    public static final Info info = ModelFactory.getModel(Info.class);
+    public static final Info info = ModelFactory.build(Info.class);
     /** Controleur XML */
     private static final ControlXML controlXML = new ControlXML();
     /** Sauvegarde des fichiers Excel de paramètre */

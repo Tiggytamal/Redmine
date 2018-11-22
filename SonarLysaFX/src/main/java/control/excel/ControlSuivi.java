@@ -18,6 +18,7 @@ import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
@@ -33,6 +34,7 @@ import control.word.ControlRapport;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.ChefService;
+import model.bdd.ComposantSonar;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
@@ -69,7 +71,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     private static final String SQ = "SUIVI Défaults Qualité";
     private static final String AC = "Anomalies closes";
     private static final String STATS = "Statistiques";
-    private static final int DATEINCONNUE = 2016;
+    private static final LocalDate DATEINCONNUE = LocalDate.of(2016, 1, 1);
 
     // Liste des indices des colonnes
     // Les noms des champs doivent correspondre aux valeurs dans l'énumération TypeCol
@@ -99,9 +101,11 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     private int colProduit;
     private int colDureeAno;
     private int colDateReouv;
+    private int colDateMepPrev;
 
     // Controleurs
     private ControlRapport controlRapport;
+    private Map<String, List<ComposantSonar>> mapCompoByLot;
 
     /** contrainte de validitée de la colonne Action */
     protected String[] contraintes;
@@ -114,6 +118,13 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         // Initialisation des parties constantes des liens
         contraintes = initContraintes();
+        
+        mapCompoByLot = new HashMap<>();
+        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
+        for (ComposantSonar compo : compos)
+        {
+            mapCompoByLot.computeIfAbsent(compo.getLotRTC().getLot(), k -> new ArrayList<>()).add(compo);
+        }
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -204,9 +215,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
                     map.get(lot).setEtatDefaut(EtatDefaut.ABANDONNE);
                 else if ("A".equals(traite))
                 {
-                    DefautQualite dq = ModelFactory.getModel(DefautQualite.class);
+                    DefautQualite dq = ModelFactory.build(DefautQualite.class);
                     dq.setEtatDefaut(EtatDefaut.ABANDONNE);
-                    dq.setDateDetection(LocalDate.of(DATEINCONNUE, 1, 1));
+                    dq.setDateDetection(DATEINCONNUE);
                     dq.setLotRTC(lotsRTC.get(lot));
                     map.put(dq.getLotRTC().getLot(), dq);
                 }
@@ -325,9 +336,12 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             // Calcul de la couleur de la ligne dans le fichier Excel
             IndexedColors couleur = calculCouleurLigne(dq);
 
+            // Calcul du motif
+            FillPatternType pattern = calculMotif(dq);
+
             // Création de la ligne
             Row row = sheet.createRow(sheet.getLastRowNum() + 1);
-            creerLigneSQ(row, dq, couleur);
+            creerLigneSQ(row, dq, couleur, pattern);
         }
 
         if (sheet.getLastRowNum() > 0)
@@ -530,6 +544,10 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         else if (TypeAction.ASSEMBLER == dq.getAction())
             couleur = IndexedColors.LIGHT_TURQUOISE;
 
+        // Lot proches de leur date de MEP
+        else if (dq.getDateMepPrev().minusWeeks(3).isBefore(LocalDate.now()))
+            couleur = IndexedColors.LIGHT_YELLOW;
+
         // Le reste est en blanc
         else
             couleur = IndexedColors.WHITE;
@@ -545,6 +563,17 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         return couleur;
     }
 
+    private FillPatternType calculMotif(DefautQualite dq)
+    {
+        // On cherche dans la map des composants, tous ceux qui sont liès au lot du défaut. Si un des composants a une application mal renseignée, on change le fond de la ligne.
+        for (ComposantSonar compo : mapCompoByLot.computeIfAbsent(dq.getLotRTC().getLot(), k -> new ArrayList<>()))
+        {
+            if (!compo.getAppli().isReferentiel() && dq.getDefautAppli() != null && dq.getDefautAppli().getEtatDefaut() == EtatDefaut.TRAITE)
+                return FillPatternType.LEAST_DOTS;
+        }
+        return FillPatternType.SOLID_FOREGROUND;
+    }
+
     /**
      * Crée une ligne correspondante à une anomalie dans le fichier Excel
      * 
@@ -552,7 +581,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
      * @param dq
      * @param couleur
      */
-    private void creerLigneSQ(Row row, DefautQualite dq, IndexedColors couleur)
+    private void creerLigneSQ(Row row, DefautQualite dq, IndexedColors couleur, FillPatternType pattern)
     {
         // 1. Contrôles des entrées
         if (couleur == null || row == null || dq == null)
@@ -569,8 +598,8 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         // 3. Création des styles
         CellHelper helper = new CellHelper(wb);
-        CellStyle normal = helper.getStyle(couleur);
-        CellStyle centre = helper.getStyle(couleur, Bordure.VIDE, HorizontalAlignment.CENTER);
+        CellStyle normal = helper.getStyle(couleur, pattern);
+        CellStyle centre = helper.getStyle(couleur, Bordure.VIDE, pattern, HorizontalAlignment.CENTER);
         CellStyle date = wb.createCellStyle();
         date.cloneStyleFrom(centre);
         date.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
@@ -599,7 +628,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         valoriserCellule(row, colCpi, normal, lotRTC.getCpiProjet());
 
         // Edition
-        valoriserCellule(row, colEdition, centre, lotRTC.getEdition());
+        valoriserCellule(row, colEdition, centre, lotRTC.getEdition().getNom());
 
         // Numéro du lot
         Cell cell = valoriserCellule(row, colLot, centre, lotRTC.getLot());
@@ -615,8 +644,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         if (numeroAno != 0)
         {
             cell.setCellValue(numeroAno);
-
-            // Rajout de "&id=", car cela fait planter la désérialisation du fichier de paramètres
             ajouterLiens(cell, dq.getLiensAno());
         }
 
@@ -640,7 +667,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         // Date création
         valoriserCellule(row, colDateDetec, date, dq.getDateDetection());
-        
+
         // Date de réouverture
         valoriserCellule(row, colDateReouv, date, dq.getDateReouv());
 
@@ -649,7 +676,10 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         // Date resolution
         valoriserCellule(row, colDateRes, date, dq.getDateReso());
-        
+
+        // Date de mise ne production prévisionnelle
+        valoriserCellule(row, colDateMepPrev, date, dq.getDateMepPrev());
+
         // Durée anomalie
         valoriserFormuleCellule(row, colDureeAno, centre, creerFormule(row));
 
@@ -666,20 +696,21 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         valoriserCellule(row, colAction, centre, dq.getAction());
 
         // Groupe composant
-        valoriserCellule(row, colProduit, centre, lotRTC.getGroupe().getValeur());
+        valoriserCellule(row, colProduit, centre, lotRTC.getGroupeProduit().getValeur());
     }
 
     private String creerFormule(Row row)
     {
         // Numéro de cellule de la date de création de l'anomalie
         String dateCrea = CellReference.convertNumToColString(colDateCrea) + (row.getRowNum() + 1);
-        
+
         // Numéro de cellule de la date de résolution de l'anomalie
         String dateReso = CellReference.convertNumToColString(colDateRes) + (row.getRowNum() + 1);
-        
+
         // Création de la formule =SI(S4="";""; SI(U4 = "";AUJOURDHUI() - S4; U4 - S4))
         StringBuilder builder = new StringBuilder("IF(");
-        builder.append(dateCrea).append(" = \"\" , \"\" , IF( ").append(dateReso).append(" = \"\" , TODAY() - ").append(dateCrea).append(" , ").append(dateReso).append(" - ").append(dateCrea).append(" ))");
+        builder.append(dateCrea).append(" = \"\" , \"\" , IF( ").append(dateReso).append(" = \"\" , TODAY() - ").append(dateCrea).append(" , ").append(dateReso).append(" - ").append(dateCrea)
+                .append(" ))");
         return builder.toString();
     }
 
@@ -713,7 +744,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         final String DONT = " dont ";
         final String SECURITE = " de sécurité";
-        
+
         valoriserCellule(row, 0, centre, new StringBuilder(texte).append(total).append(DONT).append(secu).append(SECURITE));
     }
 
@@ -726,7 +757,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
      */
     private DefautQualite creerdqDepuisExcel(Row row, Map<String, LotRTC> lotsRTC)
     {
-        DefautQualite retour = ModelFactory.getModel(DefautQualite.class);
+        DefautQualite retour = ModelFactory.build(DefautQualite.class);
         retour.setLotRTC(lotsRTC.get(Utilities.testLot(getCellStringValue(row, colLot))));
         retour.setRemarque(getCellStringValue(row, colRemarque));
         retour.setDateRelance(getCellDateValue(row, colDateRel));
@@ -745,7 +776,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
      */
     private DefautQualite creerAnodepuisExcelFull(Row row, Map<String, LotRTC> lotsRTC)
     {
-        DefautQualite retour = ModelFactory.getModel(DefautQualite.class);
+        DefautQualite retour = ModelFactory.build(DefautQualite.class);
         retour.setLotRTC(lotsRTC.get(Utilities.testLot(getCellStringValue(row, colLot))));
         retour.setNumeroAnoRTC(getCellNumericValue(row, colAno));
         retour.setRemarque(getCellStringValue(row, colRemarque));
@@ -773,7 +804,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         if (date != null)
             return getCellDateValue(row, colDateDetec);
         else
-            return LocalDate.of(DATEINCONNUE, 1, 1);
+            return DATEINCONNUE;
     }
 
     /**

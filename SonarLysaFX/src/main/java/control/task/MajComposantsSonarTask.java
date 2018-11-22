@@ -9,14 +9,17 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import control.rest.ControlRepack;
 import control.word.ControlRapport;
 import dao.DaoComposantSonar;
 import dao.DaoDefaultAppli;
+import dao.DaoEdition;
 import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
 import model.bdd.DefautAppli;
+import model.bdd.Edition;
 import model.bdd.LotRTC;
 import model.enums.EtatDefaut;
 import model.enums.EtatLot;
@@ -28,6 +31,7 @@ import model.enums.QG;
 import model.enums.TypeInfo;
 import model.enums.TypeMetrique;
 import model.enums.TypeRapport;
+import model.rest.repack.RepackREST;
 import model.rest.sonarapi.Composant;
 import model.rest.sonarapi.Metrique;
 import model.rest.sonarapi.Periode;
@@ -156,6 +160,9 @@ public class MajComposantsSonarTask extends AbstractTask
             // Lot et matière
             initCompoLotEtMatiere(compo, composant, mapLotRTC);
 
+            // Repack
+            initDateRepack(compo);
+
             // Code application
             String codeAppli = getValueMetrique(composant, TypeMetrique.APPLI, Statics.EMPTY).toUpperCase();
 
@@ -194,7 +201,7 @@ public class MajComposantsSonarTask extends AbstractTask
         // Purge dans la ltable des composants plantés
         purgeComposPlantes(keysComposPlantes);
 
-        // Mise à jour des défaults pour fermer ceux résolus
+        // Mise à jour des défaults des codes application
         majDefAppli(mapDefAppli);
 
         return retour;
@@ -213,7 +220,7 @@ public class MajComposantsSonarTask extends AbstractTask
         if (mapCompos.containsKey(projet.getKey()))
             retour = mapCompos.get(projet.getKey());
         else
-            retour = ModelFactory.getModel(ComposantSonar.class);
+            retour = ModelFactory.build(ComposantSonar.class);
 
         retour.setKey(projet.getKey());
         retour.setNom(projet.getNom());
@@ -252,6 +259,73 @@ public class MajComposantsSonarTask extends AbstractTask
             compo.setLotRTC(lotRTC);
             mapLotRTC.put(numeroLot, lotRTC);
         }
+    }
+
+    /**
+     * Initilisation de la date de repack du composant ainsi que de la mise à jour de celle de son lot
+     * 
+     * @param compo
+     */
+    private void initDateRepack(ComposantSonar compo)
+    {
+        // Récupération de tous les repacks du composant
+        List<RepackREST> repacks = ControlRepack.INSTANCE.getRepacksComposant(compo);
+
+        // Récupératoin de la date de chaque repack pour garder la plus recente de toute
+        LocalDate date = Statics.DATEINCONNUE;
+        for (RepackREST repackREST : repacks)
+        {
+            if (repackREST.getNomGc() != null && repackREST.getNomGc() != "BOREAL_Packaging")
+            {
+                LocalDate temp = calculDateRepack(repackREST.getNomGc());
+                if (temp.isAfter(date))
+                    date = temp;
+            }
+        }
+
+        if (date != Statics.DATEINCONNUE)
+            compo.setDateRepack(date);
+
+        
+        traitementLot(compo);
+    }
+
+    /**
+     * Calcul de la date de Repack depuis le nom des groupes de correction
+     * 
+     * @param nomGc
+     * @return
+     */
+    private LocalDate calculDateRepack(String nomGc)
+    {
+        if (nomGc == null)
+            return Statics.DATEINCONNUE;
+
+        DaoEdition dao = DaoFactory.getDao(Edition.class);
+        if (nomGc.matches("^E[2-9]\\d_GC\\d\\d[A-Z]?$"))
+            return dao.readAllMap().get(nomGc.substring(0, 3)).getDateMEP();
+
+        if (nomGc.matches("^E[2-9]\\d_CDMS\\d\\d$"))
+            return dao.recupDateEditionDepuisRepack(nomGc);
+
+        if (nomGc.matches("^E[2.9]\\d_.*$"))
+            return dao.readAllMap().get(nomGc.substring(0, 3)).getDateMEP();
+
+        return Statics.DATEINCONNUE;
+    }
+
+    /**
+     * Calcul de la date de repack du lot en prenant la date la plus récente des repacks des composants
+     * 
+     * @param compo
+     */
+    private void traitementLot(ComposantSonar compo)
+    {
+        LotRTC lot = compo.getLotRTC();
+        LocalDate repackCompo = compo.getDateRepack();
+
+        if (repackCompo != null && Statics.DATEINCO2099.equals(lot.getEdition().getDateMEP()) && (lot.getDateRepack() == null || repackCompo.isAfter(lot.getDateRepack())))
+            lot.setDateRepack(repackCompo);
     }
 
     /**
@@ -314,16 +388,15 @@ public class MajComposantsSonarTask extends AbstractTask
 
         if (!appli.isReferentiel() && !mapDefAppli.containsKey(compo.getNom()))
         {
-            DefautAppli defAppli = ModelFactory.getModel(DefautAppli.class);
+            DefautAppli defAppli = ModelFactory.build(DefautAppli.class);
             defAppli.setCompo(compo);
-            defAppli.setDateDetection(LocalDate.now());
             mapDefAppli.put(compo.getNom(), defAppli);
         }
         else if (mapDefAppli.containsKey(compo.getNom()))
         {
             DefautAppli defAppli = mapDefAppli.get(compo.getNom());
 
-            if (appli.isReferentiel())
+            if (appli.isReferentiel() && (defAppli.getDefautQualite() == null || defAppli.getDefautQualite().getNumeroAnoRTC() == 0))
                 defAppli.setEtatDefaut(EtatDefaut.CLOS);
             else if (lotRTC.getEtatLot() == EtatLot.ABANDONNE || lotRTC.getEtatLot() == EtatLot.TERMINE || lotRTC.getEtatLot() == EtatLot.EDITION)
                 defAppli.setEtatDefaut(EtatDefaut.LOTCLOS);

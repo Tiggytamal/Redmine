@@ -56,7 +56,7 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
         {
             Cell cell1 = row1.getCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK);
             Cell cell2 = row2.createCell(i);
-            invokeMethod(handler, "copierCellule", cell2, cell1);
+            invokeMethod(controlTest, "copierCellule", cell2, cell1);
 
             // Assertion sur les cellules
             assertNotNull(cell1);
@@ -73,14 +73,14 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
     {
         // Récupération première cellule avec un commentaire, et envoi d'une cellule nulle en paramètre
         Cell cell = wb.getSheetAt(0).getRow(1).getCell(2, MissingCellPolicy.CREATE_NULL_AS_BLANK);
-        invokeMethod(handler, COPIECOMMENT, cell.getCellComment(), null);
+        invokeMethod(controlTest, COPIECOMMENT, cell.getCellComment(), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCopieCommentException2() throws Exception
     {
         // Envoi des deux paramètres nuls
-        invokeMethod(handler, COPIECOMMENT, new Class[] { Comment.class, Cell.class }, null, null);
+        invokeMethod(controlTest, COPIECOMMENT, new Class[] { Comment.class, Cell.class }, null, null);
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -88,7 +88,7 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
     {
         // Envoi d'un commentaire vide en paramètre
         Cell cell = wb.getSheetAt(0).getRow(1).getCell(2, MissingCellPolicy.CREATE_NULL_AS_BLANK);
-        invokeMethod(handler, COPIECOMMENT, new Class[] { Comment.class, Cell.class }, null, cell);
+        invokeMethod(controlTest, COPIECOMMENT, new Class[] { Comment.class, Cell.class }, null, cell);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
             if (cell1.getCellComment() != null)
             {                
                 Comment comment1 = cell1.getCellComment();
-                invokeMethod(handler, COPIECOMMENT, comment1, cell2);
+                invokeMethod(controlTest, COPIECOMMENT, comment1, cell2);
                 Comment comment2 = cell2.getCellComment();
                 testEffectue = true;
                 assertEquals(comment1.getString().getString(), comment2.getString().getString());
@@ -145,7 +145,7 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
             if (cell1.getCellComment() != null)
             {                
                 Comment comment1 = cell1.getCellComment();       
-                Comment comment2 = invokeMethod(handler, COPIECOMMENT, comment1, cell);
+                Comment comment2 = invokeMethod(controlTest, COPIECOMMENT, comment1, cell);
                 assertEquals(comment1.getString().getString(), comment2.getString().getString());
                 assertEquals(comment1.getAuthor(), comment2.getAuthor());
                 testEffectue = true;
@@ -162,7 +162,7 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
     public void testValoriserCelluleException1() throws Exception
     {
         // Appel méthode avec ligne nulle       
-        invokeMethod(handler, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, null, 1, null, Statics.EMPTY, null);        
+        invokeMethod(controlTest, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, null, 1, null, Statics.EMPTY, null);        
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -172,7 +172,7 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
         Row row = wb.getSheetAt(0).getRow(1);
         
         // Appel méthode avec object texte non pris en compte
-        invokeMethod(handler, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, row, 1, null, 32, null);
+        invokeMethod(controlTest, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, row, 1, null, 32, null);
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -182,7 +182,7 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
         Row row = wb.getSheetAt(0).getRow(1);
         
         // Appel méthode avec conIndex null
-        invokeMethod(handler, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, row, null, null, 32, null);
+        invokeMethod(controlTest, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, row, null, null, 32, null);
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -36,126 +36,126 @@ public class TestPlanificateur extends AbstractTestModel<Planificateur>
     public void testIsLundi()
     {
         // Test valeur après initialisation
-        assertFalse(handler.isLundi());
+        assertFalse(objetTest.isLundi());
         
         // Test setter et getter
-        handler.setLundi(true);
-        assertTrue(handler.isLundi());       
+        objetTest.setLundi(true);
+        assertTrue(objetTest.isLundi());       
     }
     
     @Test
     public void testIsMardi()
     {
         // Test valeur après initialisation
-        assertFalse(handler.isMardi());
+        assertFalse(objetTest.isMardi());
         
         // Test setter et getter
-        handler.setMardi(true);
-        assertTrue(handler.isMardi());       
+        objetTest.setMardi(true);
+        assertTrue(objetTest.isMardi());       
     }
     
     @Test
     public void testIsMercredi()
     {
         // Test valeur après initialisation
-        assertFalse(handler.isMercredi());
+        assertFalse(objetTest.isMercredi());
         
         // Test setter et getter
-        handler.setMercredi(true);
-        assertTrue(handler.isMercredi());       
+        objetTest.setMercredi(true);
+        assertTrue(objetTest.isMercredi());       
     }
     
     @Test
     public void testIsJeudi()
     {
         // Test valeur après initialisation
-        assertFalse(handler.isJeudi());
+        assertFalse(objetTest.isJeudi());
         
         // Test setter et getter
-        handler.setJeudi(true);
-        assertTrue(handler.isJeudi());       
+        objetTest.setJeudi(true);
+        assertTrue(objetTest.isJeudi());       
     }
     
     @Test
     public void testIsVendredi()
     {
         // Test valeur après initialisation
-        assertFalse(handler.isVendredi());
+        assertFalse(objetTest.isVendredi());
         
         // Test setter et getter
-        handler.setVendredi(true);
-        assertTrue(handler.isVendredi());       
+        objetTest.setVendredi(true);
+        assertTrue(objetTest.isVendredi());       
     }
     
     @Test
     public void testGetHeure()
     {
         // Test valeur après initialisation
-        assertEquals(LocalTime.of(0, 0), handler.getHeure());
+        assertEquals(LocalTime.of(0, 0), objetTest.getHeure());
         
         // Test setter et getter
-        handler.setHeure(LocalTime.of(10, 10));
-        assertEquals(LocalTime.of(10, 10), handler.getHeure());       
+        objetTest.setHeure(LocalTime.of(10, 10));
+        assertEquals(LocalTime.of(10, 10), objetTest.getHeure());       
     }
     
     @Test
     public void testIsActive()
     {
         // Test valeur après initialisation
-        assertFalse(handler.isActive());
+        assertFalse(objetTest.isActive());
         
         // Test setter et getter
-        handler.setActive(true);
-        assertTrue(handler.isActive());       
+        objetTest.setActive(true);
+        assertTrue(objetTest.isActive());       
     }
     
     @Test
     public void testGetAnnees()
     {       
         // Test valeur après initialisation
-        assertEquals(anneeEnCours, handler.getAnnees().get(0));
+        assertEquals(anneeEnCours, objetTest.getAnnees().get(0));
         
         // Test ajout annèe précedente
-        handler.addLastYear();        
-        assertTrue(handler.getAnnees().contains(prec));
-        assertTrue(handler.getAnnees().contains(anneeEnCours));
+        objetTest.addLastYear();        
+        assertTrue(objetTest.getAnnees().contains(prec));
+        assertTrue(objetTest.getAnnees().contains(anneeEnCours));
         
         // test ajout année suivante
-        handler.addNextYear();
-        assertTrue(handler.getAnnees().contains(suiv)); 
-        assertTrue(handler.getAnnees().contains(anneeEnCours));
+        objetTest.addNextYear();
+        assertTrue(objetTest.getAnnees().contains(suiv)); 
+        assertTrue(objetTest.getAnnees().contains(anneeEnCours));
         
         // Test avec nouvel objet
-        handler = ModelFactory.getModel(Planificateur.class);
+        objetTest = ModelFactory.build(Planificateur.class);
         
         // Test ajout annèe précedente
-        handler.addLastYear();        
-        assertTrue(handler.getAnnees().contains(prec));
-        assertTrue(handler.getAnnees().contains(anneeEnCours));
+        objetTest.addLastYear();        
+        assertTrue(objetTest.getAnnees().contains(prec));
+        assertTrue(objetTest.getAnnees().contains(anneeEnCours));
         
         // Test avec nouvel objet
-        handler = ModelFactory.getModel(Planificateur.class);
+        objetTest = ModelFactory.build(Planificateur.class);
         
         // test ajout année suivante
-        handler.addNextYear();
-        assertTrue(handler.getAnnees().contains(suiv)); 
-        assertTrue(handler.getAnnees().contains(anneeEnCours));
+        objetTest.addNextYear();
+        assertTrue(objetTest.getAnnees().contains(suiv)); 
+        assertTrue(objetTest.getAnnees().contains(anneeEnCours));
     }
     
     @Test
     public void testAddLastYear()
     {
         // Test ajout annèe précedente
-        handler.addLastYear();        
-        assertTrue(handler.getAnnees().contains(prec));
-        assertTrue(handler.getAnnees().contains(anneeEnCours));  
+        objetTest.addLastYear();        
+        assertTrue(objetTest.getAnnees().contains(prec));
+        assertTrue(objetTest.getAnnees().contains(anneeEnCours));  
         
         // Vérification qu'on ajoute pas de doublons d'année
-        handler.addLastYear();  
-        handler.addLastYear();  
+        objetTest.addLastYear();  
+        objetTest.addLastYear();  
         
         int compte = 0;
-        for (String annee : handler.getAnnees())
+        for (String annee : objetTest.getAnnees())
         {
             if (annee.equals(prec))
                 compte++;
@@ -167,16 +167,16 @@ public class TestPlanificateur extends AbstractTestModel<Planificateur>
     public void testAddNextYear()
     {     
         // test ajout année suivante
-        handler.addNextYear();
-        assertTrue(handler.getAnnees().contains(suiv)); 
-        assertTrue(handler.getAnnees().contains(anneeEnCours));
+        objetTest.addNextYear();
+        assertTrue(objetTest.getAnnees().contains(suiv)); 
+        assertTrue(objetTest.getAnnees().contains(anneeEnCours));
         
         // Vérification qu'on ajoute pas de doublons d'année
-        handler.addNextYear();
-        handler.addNextYear();
+        objetTest.addNextYear();
+        objetTest.addNextYear();
         
         int compte = 0;
-        for (String annee : handler.getAnnees())
+        for (String annee : objetTest.getAnnees())
         {
             if (annee.equals(suiv))
                 compte++;

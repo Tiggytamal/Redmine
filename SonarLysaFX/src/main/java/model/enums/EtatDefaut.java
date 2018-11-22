@@ -3,7 +3,7 @@ package model.enums;
 public enum EtatDefaut 
 {
     NOUVEAU,
-    ABANDONNE,
+    ABANDONNE,    
     TRAITE,
     LOTCLOS,
     CLOS;

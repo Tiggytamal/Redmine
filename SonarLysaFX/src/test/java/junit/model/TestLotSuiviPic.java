@@ -17,150 +17,150 @@ public class TestLotSuiviPic extends AbstractTestModel<LotSuiviPic>
     public void testGetLot()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getLot());
+        assertEquals(EMPTY, objetTest.getLot());
         
         // Test setter et getter
         String lot = "lot";
-        handler.setLot(lot);
-        assertEquals(lot, handler.getLot());       
+        objetTest.setLot(lot);
+        assertEquals(lot, objetTest.getLot());       
     }
     
     @Test
     public void testGetLibelle()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getLibelle());
+        assertEquals(EMPTY, objetTest.getLibelle());
         
         // Test setter et getter
         String libelle = "libelle";
-        handler.setLibelle(libelle);
-        assertEquals(libelle, handler.getLibelle());       
+        objetTest.setLibelle(libelle);
+        assertEquals(libelle, objetTest.getLibelle());       
     }
     
     @Test
     public void testGetProjetClarity()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getProjetClarity());
+        assertEquals(EMPTY, objetTest.getProjetClarity());
         
         // Test setter et getter
         String projetClarity = "projetClarity";
-        handler.setProjetClarity(projetClarity);
-        assertEquals(projetClarity, handler.getProjetClarity());       
+        objetTest.setProjetClarity(projetClarity);
+        assertEquals(projetClarity, objetTest.getProjetClarity());       
     }
     
     @Test
     public void testGetCpiProjet()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getCpiProjet());
+        assertEquals(EMPTY, objetTest.getCpiProjet());
         
         // Test setter et getter
         String cpiProjet = "cpiProjet";
-        handler.setCpiProjet(cpiProjet);
-        assertEquals(cpiProjet, handler.getCpiProjet());       
+        objetTest.setCpiProjet(cpiProjet);
+        assertEquals(cpiProjet, objetTest.getCpiProjet());       
     }
     
     @Test
     public void testGetEdition()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getEdition());
+        assertEquals(EMPTY, objetTest.getEdition());
         
         // Test setter et getter
         String edition = "edition";
-        handler.setEdition(edition);
-        assertEquals(edition, handler.getEdition());       
+        objetTest.setEdition(edition);
+        assertEquals(edition, objetTest.getEdition());       
     }
     
     @Test
     public void testGetNbreComposants()
     {
         // test valeur vide ou nulle
-        assertEquals(0, handler.getNbreComposants());
+        assertEquals(0, objetTest.getNbreComposants());
         
         // Test setter et getter
         int nbreComposants = 10;
-        handler.setNbreComposants(nbreComposants);
-        assertEquals(nbreComposants, handler.getNbreComposants());       
+        objetTest.setNbreComposants(nbreComposants);
+        assertEquals(nbreComposants, objetTest.getNbreComposants());       
     }
     
     @Test
     public void testGetNbrePaquets()
     {
         // test valeur vide ou nulle
-        assertEquals(0, handler.getNbrePaquets());
+        assertEquals(0, objetTest.getNbrePaquets());
         
         // Test setter et getter
         int nbrePaquets = 10;
-        handler.setNbrePaquets(nbrePaquets);
-        assertEquals(nbrePaquets, handler.getNbrePaquets());       
+        objetTest.setNbrePaquets(nbrePaquets);
+        assertEquals(nbrePaquets, objetTest.getNbrePaquets());       
     }
     
     @Test
     public void testGetBuild()
     {
         // test valeur vide ou nulle
-        assertEquals(null, handler.getBuild());
+        assertEquals(null, objetTest.getBuild());
         
         // Test setter et getter
-        handler.setBuild(today);
-        assertEquals(today, handler.getBuild());       
+        objetTest.setBuild(today);
+        assertEquals(today, objetTest.getBuild());       
     }
     
     @Test
     public void testGetDevtu()
     {
         // test valeur vide ou nulle
-        assertEquals(null, handler.getDevtu());
+        assertEquals(null, objetTest.getDevtu());
         
         // Test setter et getter
-        handler.setDevtu(today);
-        assertEquals(today, handler.getDevtu());       
+        objetTest.setDevtu(today);
+        assertEquals(today, objetTest.getDevtu());       
     }
     
     @Test
     public void testGetTfon()
     {
         // test valeur vide ou nulle
-        assertEquals(null, handler.getTfon());
+        assertEquals(null, objetTest.getTfon());
         
         // Test setter et getter
-        handler.setTfon(today);
-        assertEquals(today, handler.getTfon());       
+        objetTest.setTfon(today);
+        assertEquals(today, objetTest.getTfon());       
     }
     
     @Test
     public void testGetVmoe()
     {
         // test valeur vide ou nulle
-        assertEquals(null, handler.getVmoe());
+        assertEquals(null, objetTest.getVmoe());
         
         // Test setter et getter
-        handler.setVmoe(today);
-        assertEquals(today, handler.getVmoe());       
+        objetTest.setVmoe(today);
+        assertEquals(today, objetTest.getVmoe());       
     }
     
     @Test
     public void testGetVmoa()
     {
         // test valeur vide ou nulle
-        assertEquals(null, handler.getVmoa());
+        assertEquals(null, objetTest.getVmoa());
         
         // Test setter et getter
-        handler.setVmoa(today);
-        assertEquals(today, handler.getVmoa());       
+        objetTest.setVmoa(today);
+        assertEquals(today, objetTest.getVmoa());       
     }
     
     @Test
     public void testGetLivraison()
     {
         // test valeur vide ou nulle
-        assertEquals(null, handler.getLivraison());
+        assertEquals(null, objetTest.getLivraison());
         
         // Test setter et getter
-        handler.setLivraison(today);
-        assertEquals(today, handler.getLivraison());       
+        objetTest.setLivraison(today);
+        assertEquals(today, objetTest.getLivraison());       
     }
     
     /*---------- METHODES PRIVEES ----------*/

@@ -227,6 +227,7 @@ public class ControlRTC extends AbstractToStringImpl
     {
         Identifier<ILiteral> literalID = null;
         IEnumeration<? extends ILiteral> enumeration = workItemClient.resolveEnumeration(ia, null);
+
         List<? extends ILiteral> literals = enumeration.getEnumerationLiterals();
         for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();)
         {
@@ -436,7 +437,7 @@ public class ControlRTC extends AbstractToStringImpl
                 Date datePredicat = DateConvert.convertToOldDate(lastUpdate, ZoneId.of("GMT"));
 
                 // Prédicat des lots qui ont été modifiés depuis la dernière mise à jour
-                IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(datePredicat);               
+                IPredicate dateModification = WorkItemQueryModel.ROOT.modified()._gt(datePredicat);
 
                 // Prédicat des lots qui ont été créés depuis la dernière mise à jour
                 IPredicate predicatCreation = WorkItemQueryModel.ROOT.creationDate()._gt(datePredicat);
@@ -446,13 +447,13 @@ public class ControlRTC extends AbstractToStringImpl
                 predicatFinal = predicatFinal._and(predicatOu);
             }
         }
-        
+
         // Gestion des lots des composants. On ne prend que les lots qui ont un composantSonar dans la base.
-        
+
         // Récupération des numéros de lots depuis la base de données
         DaoComposantSonar dao = DaoFactory.getDao(ComposantSonar.class);
         List<String> listeLots = dao.recupLotsAvecComposants();
-        
+
         // Création de la liste de numéros de lots
         Number[] lots = new Number[listeLots.size()];
         int i = 0;
@@ -461,7 +462,7 @@ public class ControlRTC extends AbstractToStringImpl
             lots[i] = Integer.valueOf(lot);
             i++;
         }
-        
+
         // création du prédicat
         IPredicate predicatLots = WorkItemQueryModel.ROOT.id()._in(lots);
         predicatFinal = predicatFinal._and(predicatLots);
@@ -506,7 +507,7 @@ public class ControlRTC extends AbstractToStringImpl
         {
             if (task.isCancelled())
                 break;
-            
+
             // Récupération de l'objet complet depuis l'handle de la requête
             retour.add(creerLotSuiviRTCDepuisHandle(handle));
 
@@ -550,7 +551,7 @@ public class ControlRTC extends AbstractToStringImpl
 
         return retour;
     }
-    
+
     /**
      * Remonte une liste des tous les états passés par le lot ainsi que les dates de mise à jour.
      * 
@@ -646,6 +647,8 @@ public class ControlRTC extends AbstractToStringImpl
         try
         {
             IProjectArea projet = pareas.get(dq.getLotRTC().getProjetRTC());
+            if (projet == null)
+                return 0;
 
             // Type de l'objet
             IWorkItemType itemType = workItemClient.findWorkItemType(projet, "defect", monitor);
@@ -730,14 +733,13 @@ public class ControlRTC extends AbstractToStringImpl
      * 
      * @param da
      */
-    public boolean ajoutAppliAnoRTC(DefautAppli da)
+    public boolean ajoutCommAppliAnoRTC(DefautAppli da)
     {
         DefautQualite dq = da.getDefautQualite();
         if (dq == null || dq.getNumeroAnoRTC() == 0)
             return false;
         try
         {
-            
             String texte = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEAPPLI).replace("xxxxx", da.getCompo().getNom().replace("Composant ", Statics.EMPTY));
             if (!da.getAppliCorrigee().isEmpty())
                 texte += Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTENEWAPPLI).replace("-code-", da.getAppliCorrigee());
@@ -805,7 +807,7 @@ public class ControlRTC extends AbstractToStringImpl
         // Récupératoinde l'état et réouverture de l'anomalie
         EtatAnoRTC etatLot = EtatAnoRTC.from(workflowInfo.getStateName(wi.getState2()).trim());
         if (etatLot == EtatAnoRTC.CLOSE || etatLot == EtatAnoRTC.ABANDONNEE)
-            return changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.REOUVERTE.getAction());
+            return changerEtatAno(workingCopy, workflowInfo, wi, "Réouvrir");
         return etatLot != EtatAnoRTC.CLOSE && etatLot != EtatAnoRTC.ABANDONNEE;
     }
 
@@ -851,8 +853,18 @@ public class ControlRTC extends AbstractToStringImpl
             workingCopy.save(monitor);
         }
 
+        // Estimation
+        if (wi.getDuration() == -1)
+        {
+            workingCopy.getWorkItem().setDuration(28800000);
+            workingCopy.save(monitor);
+        }
+        
+
         // Boucle pour passer arriver jusqu'à l'anomalie close.
-        while (true)
+        // Retourne vrai si l'anomalie a été fermée ou faux s'il y a eu un plantage aux changements d'états.
+        boolean ok = true;
+        while (ok)
         {
             EtatAnoRTC etatLot = EtatAnoRTC.from(workflowInfo.getStateName(wi.getState2()).trim());
 
@@ -866,50 +878,54 @@ public class ControlRTC extends AbstractToStringImpl
                     return true;
 
                 case ENCOURS:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.ENCOURS.getAction());
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.ENCOURS.getAction());
                     break;
 
                 case NOUVELLE:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.NOUVELLE.getAction());
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.NOUVELLE.getAction());
                     break;
 
                 case OUVERTE:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.OUVERTE.getAction());
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.OUVERTE.getAction());
                     break;
 
                 case REOUVERTE:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.REOUVERTE.getAction());
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.REOUVERTE.getAction());
                     break;
 
                 case VMOE:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.VMOE.getAction());
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.VMOE.getAction());
                     break;
 
                 case VMOA:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.VMOA.getAction());
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.VMOA.getAction());
                     break;
 
                 case RESOLUE:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.RESOLUE.getAction());
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.RESOLUE.getAction());
                     break;
 
                 case VERIFIEE:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.VERIFIEE.getAction());
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.VERIFIEE.getAction());
                     break;
-                    
+
                 case EDITEUR:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.EDITEUR.getAction());
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.EDITEUR.getAction());
                     break;
-                    
+
                 case DENOUEMENT:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.DENOUEMENT.getAction());
-                    break; 
-                    
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.DENOUEMENT.getAction());
+                    break;
+
                 case ATTEDITEUR:
-                    changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.ATTEDITEUR.getAction());
-                    break; 
+                    ok = changerEtatAno(workingCopy, workflowInfo, wi, EtatAnoRTC.ATTEDITEUR.getAction());
+                    break;
             }
         }
+
+        // Cas s'il y a eu un plantage dans la mise à jour de l'anomalie
+        workItemClient.getWorkItemWorkingCopyManager().disconnect(wi);
+        return false;
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -926,7 +942,7 @@ public class ControlRTC extends AbstractToStringImpl
     {
 
         IWorkItem workItem = recupItemDepuisHandle(IWorkItem.class, handle);
-        LotRTC retour = ModelFactory.getModel(LotRTC.class);
+        LotRTC retour = ModelFactory.build(LotRTC.class);
         retour.setLot(String.valueOf(workItem.getId()));
         retour.setLibelle(workItem.getHTMLSummary().getPlainText());
         retour.setCpiProjet(recupItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
@@ -971,7 +987,10 @@ public class ControlRTC extends AbstractToStringImpl
     {
         workingCopy.setWorkflowAction(getAction(workflowInfo, workItem, actionName));
         IDetailedStatus status = workingCopy.save(monitor);
-        return status.isOK();
+        boolean ok = status.isOK();
+        if (!ok)
+            LOGPLANTAGE.error(status.getException());
+        return ok;
     }
 
     /**

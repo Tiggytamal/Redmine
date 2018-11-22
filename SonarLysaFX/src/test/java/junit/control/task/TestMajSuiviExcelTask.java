@@ -2,7 +2,6 @@ package junit.control.task;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static utilities.Statics.EMPTY;
 
@@ -23,7 +22,6 @@ import org.powermock.reflect.Whitebox;
 import control.rtc.ControlRTC;
 import control.task.MajSuiviExcelTask;
 import model.ModelFactory;
-import model.bdd.DefautQualite;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
 import model.enums.Matiere;
@@ -92,7 +90,7 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
     public void testTraitementProjet() throws Exception
     {
         // Initialisation des variables
-        ComposantSonar compo = ModelFactory.getModelWithParams(ComposantSonar.class, "id", "pweb.metier.gpar:BOREAL_Metier_GPAR_Build:15", "nom");
+        ComposantSonar compo = ComposantSonar.build("id", "pweb.metier.gpar:BOREAL_Metier_GPAR_Build:15", "nom");
         HashMap<String, Set<String>> retour = new HashMap<>();
         String entryKey = "15";
         retour.put(entryKey, new HashSet<>());
@@ -123,7 +121,7 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
         assertEquals(0, retour.get(entryKey).size());
 
         // Initialisation du lot
-        LotRTC lotRTC = ModelFactory.getModel(LotRTC.class);
+        LotRTC lotRTC = ModelFactory.build(LotRTC.class);
         lotRTC.setLot(NUMEROLOT1);
         compo.setLotRTC(lotRTC);
 
@@ -222,7 +220,7 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
         Mockito.when(api.appelWebserviceGET(Mockito.anyString())).thenCallRealMethod();
 
         // Initialisation paramètre méthode
-        ComposantSonar compo = ModelFactory.getModel(ComposantSonar.class);
+        ComposantSonar compo = ModelFactory.build(ComposantSonar.class);
         List<ComposantSonar> liste = new ArrayList<>();
         Collection<List<ComposantSonar>> collec = new ArrayList<>();
         liste.add(compo);

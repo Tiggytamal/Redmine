@@ -56,7 +56,7 @@ public class TestWorkItemInitialization extends JunitBase
     @Override
     public void init()
     {
-        dq = ModelFactory.getModel(DefautQualite.class);
+        dq = ModelFactory.build(DefautQualite.class);
     }
 
     /*---------- METHODES PUBLIQUES ----------*/

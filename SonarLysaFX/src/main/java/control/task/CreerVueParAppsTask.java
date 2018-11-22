@@ -385,7 +385,7 @@ public class CreerVueParAppsTask extends AbstractTask
         {
             i++;
             updateProgress(i, size);
-            CompoPbApps pbApps = ModelFactory.getModel(CompoPbApps.class);
+            CompoPbApps pbApps = ModelFactory.build(CompoPbApps.class);
             LotRTC lotSuiviRTC = compo.getLotRTC();
 
             // Code composant

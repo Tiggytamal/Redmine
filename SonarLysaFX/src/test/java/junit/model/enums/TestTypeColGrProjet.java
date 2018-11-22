@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import model.enums.TypeColGrProjet;
+import model.enums.TypeColProduit;
 
 /**
  * Classe de test de l'énumération TypeColGrProjet
@@ -19,27 +19,27 @@ public class TestTypeColGrProjet implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(2, TypeColGrProjet.values().length);
+        assertEquals(2, TypeColProduit.values().length);
     }
     
     @Test
     public void testGetValeur()
     {
-        assertEquals("Nom Projet", TypeColGrProjet.NOM.getValeur());
-        assertEquals("Groupe", TypeColGrProjet.GROUPE.getValeur());
+        assertEquals("Nom Projet", TypeColProduit.NOM.getValeur());
+        assertEquals("Groupe", TypeColProduit.GROUPE.getValeur());
     }
     
     @Test
     public void testGetNomCol()
     {
-        assertEquals("colNom", TypeColGrProjet.NOM.getNomCol());
-        assertEquals("colGroupe", TypeColGrProjet.GROUPE.getNomCol());
+        assertEquals("colNom", TypeColProduit.NOM.getNomCol());
+        assertEquals("colGroupe", TypeColProduit.GROUPE.getNomCol());
     }
 
     @Test
     @Override
     public void testConstructeur()
     {
-        assertEquals(TypeColGrProjet.NOM, TypeColGrProjet.valueOf(TypeColGrProjet.NOM.toString()));    
+        assertEquals(TypeColProduit.NOM, TypeColProduit.valueOf(TypeColProduit.NOM.toString()));    
     }
 }

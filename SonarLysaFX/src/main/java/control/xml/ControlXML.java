@@ -51,7 +51,7 @@ public class ControlXML
     {
         // variables
         JAXBContext context;
-        T retour = ModelFactory.getModel(typeXML);
+        T retour = ModelFactory.build(typeXML);
         File file = retour.getFile();
 
         try
@@ -83,7 +83,7 @@ public class ControlXML
     {
         // variables
         JAXBContext context;
-        T retour = ModelFactory.getModel(typeXML);
+        T retour = ModelFactory.build(typeXML);
         File file = retour.getResource();
 
         try

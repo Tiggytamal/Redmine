@@ -7,7 +7,7 @@ package model.enums;
  * @since 1.0
  *
  */
-public enum TypeColGrProjet implements TypeColR 
+public enum TypeColProduit implements TypeColR 
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -19,7 +19,7 @@ public enum TypeColGrProjet implements TypeColR
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    private TypeColGrProjet(String valeur, String nomCol)
+    private TypeColProduit(String valeur, String nomCol)
     {
         this.valeur = valeur;
         this.nomCol = nomCol;

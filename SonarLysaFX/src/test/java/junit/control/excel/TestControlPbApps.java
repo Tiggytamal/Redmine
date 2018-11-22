@@ -32,7 +32,7 @@ public class TestControlPbApps extends TestControlExcelWrite<TypeColPbApps, Cont
     public void testCalculIndiceColonnes() throws Exception
     {
         // Test que l'on a bien la surcharge avec aucun plantage
-        Whitebox.invokeMethod(handler, "calculIndiceColonnes");
+        Whitebox.invokeMethod(controlTest, "calculIndiceColonnes");
     }
     
     @Test

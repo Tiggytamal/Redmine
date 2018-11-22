@@ -28,7 +28,7 @@ public class Colonne extends AbstractModele
     @XmlAttribute(name = "nom", required = true)
     public String getNom()
     {
-        return nom;
+        return getString(nom);
     }
 
     public void setNom(String nom)
@@ -39,7 +39,7 @@ public class Colonne extends AbstractModele
     @XmlAttribute(name = "indice", required = true)
     public String getIndice()
     {
-        return indice;
+        return getString(indice);
     }
 
     public void setIndice(String indice)

@@ -10,14 +10,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import com.ibm.team.repository.common.TeamRepositoryException;
-
-import control.rtc.ControlRTC;
+import dao.DaoFactory;
 import model.bdd.ComposantSonar;
+import model.bdd.LotRTC;
 import model.enums.EtatLot;
 import model.enums.InstanceSonar;
 import model.enums.Matiere;
@@ -40,11 +37,6 @@ import utilities.enums.Severity;
 public class CreerVueProductionTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
-
-    /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
-    /** logger général */
-    private static final Logger LOGGER = LogManager.getLogger("complet-log");
 
     // Constantes statiques
     private static final short ETAPES = 3;
@@ -147,50 +139,38 @@ public class CreerVueProductionTask extends AbstractTask
      * @param dateFin
      *            Date limite supérieure pour la livraison à l'édition
      * @param mapSonar
-     *            Map de tous le slots Sonar
+     *            Map de tous les lots Sonar
      * @return
      */
     private Map<LocalDate, List<Vue>> recupLotRTCPourMEP(LocalDate dateDebut, LocalDate dateFin, Map<String, Vue> mapSonar)
     {
         Map<LocalDate, List<Vue>> retour = new HashMap<>();
+        Map<String, LotRTC> mapLots = DaoFactory.getDao(LotRTC.class).readAllMap();
 
         // Affichage et variables
         baseMessage = "Traitement RTC :\n";
         int size = mapSonar.size();
         int i = 0;
-        long debut = System.currentTimeMillis();
 
         // Itération sur les lots Sonar
         for (Map.Entry<String, Vue> entry : mapSonar.entrySet())
         {
-            Map<EtatLot, LocalDate> map;
-            try
-            {
-                // Récupération des états du lot depuis RTC
-                map = ControlRTC.INSTANCE.recupDatesEtatsLot(ControlRTC.INSTANCE.recupWorkItemDepuisId(Integer.parseInt(entry.getKey())));
-
-                // Affichage
-                i++;
-                calculTempsRestant(debut, i, size);
-                updateProgress(i, size);
-                updateMessage("Lot " + entry.getKey());
-
-            }
-            catch (TeamRepositoryException e)
-            {
-                LOGGER.error("Erreur au moment de l'appel RTC pour récupérer un lot : méthode control.task.CreerVueProductionTask.recupLotSonarPourMEP - " + entry.getKey());
-                LOGPLANTAGE.error(e);
+            LotRTC lot = mapLots.get(entry.getKey());
+            
+            if (lot == null)
                 continue;
-            }
 
             // Récupération de la date de livraison à l'édition
-            LocalDate date = map.get(EtatLot.EDITION);
-            if (date != null && ((date.isAfter(dateDebut) && date.isBefore(dateFin)) || date.isEqual(dateDebut) || date.isEqual(dateFin)))
+            EtatLot etatLot = lot.getEtatLot();
+            LocalDate date = lot.getDateMajEtat();
+            if (etatLot == EtatLot.EDITION && date != null && ((date.isAfter(dateDebut) && date.isBefore(dateFin)) || date.isEqual(dateDebut) || date.isEqual(dateFin)))
             {
                 // Création d'une nouvelle date au 1er du mois qui servira du clef à la map.
                 LocalDate clef = LocalDate.of(date.getYear(), date.getMonth(), 1);
                 retour.computeIfAbsent(clef, k -> new ArrayList<>()).add(entry.getValue());
             }
+            i++;
+            updateProgress(i, size);
         }
 
         return retour;

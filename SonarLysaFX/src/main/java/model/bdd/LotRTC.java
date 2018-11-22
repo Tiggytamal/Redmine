@@ -24,8 +24,9 @@ import javax.persistence.Transient;
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
+import dao.DaoFactory;
 import model.enums.EtatLot;
-import model.enums.GroupeProjet;
+import model.enums.GroupeProduit;
 import model.enums.Matiere;
 import model.enums.QG;
 import utilities.Statics;
@@ -90,6 +91,9 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     @Column(name = "date_maj_etat", nullable = true)
     private LocalDate dateMajEtat;
 
+    @Column(name = "date_repack", nullable = true)
+    private LocalDate dateRepack;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "qualityGate", nullable = false)
     private QG qualityGate;
@@ -102,7 +106,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
 
     @Enumerated(EnumType.STRING)
     @Column(name = "groupe", nullable = true)
-    private GroupeProjet groupe;
+    private GroupeProduit groupeProduit;
 
     @BatchFetch(value = BatchFetchType.JOIN)
     @OneToOne(targetEntity = DefautQualite.class, mappedBy = "lotRTC")
@@ -114,7 +118,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     {
         qualityGate = QG.NONE;
         matieres = new HashSet<>();
-        groupe = GroupeProjet.AUCUN;
+        groupeProduit = GroupeProduit.AUCUN;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -131,9 +135,11 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         retour.lot = lot;
         retour.libelle = Statics.EMPTY;
         retour.projetClarityString = Statics.EMPTY;
+        retour.editionString = Statics.EMPTY;
         retour.cpiProjet = Statics.EMPTY;
         retour.etatLot = EtatLot.NOUVEAU;
         retour.projetRTC = Statics.EMPTY;
+        retour.edition = DaoFactory.getDao(Edition.class).recupEltParIndex(Statics.EDINCONNUE);
         return retour;
     }
 
@@ -146,7 +152,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         etatLot = update.etatLot;
         projetRTC = update.projetRTC;
         dateMajEtat = update.dateMajEtat;
-        groupe = update.groupe;
+        groupeProduit = update.groupeProduit;
         return this;
 
     }
@@ -172,7 +178,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     }
 
     /**
-     * Remplie la liste des matières depuis une chaine de caractères. Cahque matière doit être séparées par un "-".
+     * Remplie la liste des matières depuis une chaine de caractères. Chaque matière doit être séparées par un "-".
      * 
      */
     public void setMatieresString(String matieresString)
@@ -191,7 +197,10 @@ public class LotRTC extends AbstractBDDModele implements Serializable
 
     public void addMatiere(Matiere matiere)
     {
-        matieres.add(matiere);
+        if (matieres == null)
+            matieres = new HashSet<>();
+        if (matiere != null)
+            matieres.add(matiere);
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -294,7 +303,8 @@ public class LotRTC extends AbstractBDDModele implements Serializable
 
     public void setQualityGate(QG qualityGate)
     {
-        this.qualityGate = qualityGate;
+        if (qualityGate != null)
+            this.qualityGate = qualityGate;
     }
 
     public Set<Matiere> getMatieres()
@@ -309,14 +319,14 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.matieres = matieres;
     }
 
-    public GroupeProjet getGroupe()
+    public GroupeProduit getGroupeProduit()
     {
-        return groupe;
+        return groupeProduit;
     }
 
-    public void setGroupe(GroupeProjet groupe)
+    public void setGroupeProduit(GroupeProduit groupeProduit)
     {
-        this.groupe = groupe;
+        this.groupeProduit = groupeProduit;
     }
 
     public DefautQualite getDefaultQualite()
@@ -337,5 +347,15 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     public void setEditionString(String editionString)
     {
         this.editionString = editionString;
+    }
+
+    public LocalDate getDateRepack()
+    {
+        return dateRepack;
+    }
+
+    public void setDateRepack(LocalDate dateRepack)
+    {
+        this.dateRepack = dateRepack;
     }
 }

@@ -28,6 +28,7 @@ public enum TypeColSuivi  implements TypeColR
     VERSION("Version", "colVer"), 
     DATECREATION("Date de création", "colDateCrea"), 
     DATEREOUV("Date de réouverture", "colDateReouv"),
+    DATEMEPPREV("Date MEP prev.", "colDateMepPrev"),
     DATEDETECTION("Date de détection", "colDateDetec"),
     DATERELANCE("Date de relance", "colDateRel"),
     DATERESOLUTION("Date de résolution", "colDateRes"),

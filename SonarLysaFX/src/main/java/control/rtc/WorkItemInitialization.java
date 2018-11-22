@@ -85,10 +85,18 @@ public final class WorkItemInitialization extends WorkItemOperation
         // Importance
         attribut = client.findAttribute(projet, TypeEnumRTC.IMPORTANCE.getValeur(), monitor);
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Bloquante", attribut));
-
+        
+        // Estimation
+        workItem.setDuration(43200000);
+        
         // Origine
         attribut = client.findAttribute(projet, TypeEnumRTC.ORIGINE.getValeur(), monitor);
         workItem.setValue(attribut, controlRTC.recupLiteralDepuisString("Qualimétrie", attribut));
+        
+        // Trouvé dans - Itération de plannification
+        attribut = client.findAttribute(projet, TypeEnumRTC.TROUVEDANS.getValeur(), monitor);
+        IWorkItem lotInitial = controlRTC.recupWorkItemDepuisId(Integer.parseInt(dq.getLotRTC().getLot()));        
+        workItem.setValue(attribut, lotInitial.getTarget());
 
         // Nature
         attribut = client.findAttribute(projet, TypeEnumRTC.NATURE.getValeur(), monitor);

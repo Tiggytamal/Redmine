@@ -16,6 +16,8 @@ import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -36,6 +38,7 @@ import dao.DaoDefaultQualite;
 import dao.DaoFactory;
 import junit.JunitBase;
 import junit.TestUtils;
+import model.ModelFactory;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.EtatAnoRTC;
@@ -170,25 +173,21 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    public void testCreerDefect() throws TeamRepositoryException
+    public void testCreerAnoRTC() throws TeamRepositoryException
     {
-        // String projetTest = "PRJF_T300703";
-        // Anomalie ano = ModelFactory.getModel(Anomalie.class);
-        // ano.setCpiProjet("MATHON Gregoire");
-        // ano.setProjetRTC(projetTest);
-        // ano.setLot("Lot 315765");
-        // ano.setEdition("E32_Fil_De_Leau");
-        // ano.setSecurite(Statics.X);
-        // int numero = handler.creerDefect(ano);
-        //
-        // // Test que le defect a bien été créé
-        // assertTrue(numero > 0);
-        //
-        // // Suppression defect
-        // assertEquals(IStatus.OK, handler.supprimerWorkItemDepuisId(numero).getCode());
-        //
-        // // Test de la suppression
-        // assertNull(handler.recupWorkItemDepuisId(numero));
+         DefautQualite dq = ModelFactory.build(DefautQualite.class);
+         dq.setLotRTC(DaoFactory.getDao(LotRTC.class).recupEltParIndex("310979"));
+         dq.setSecurite(true);
+         int numero = handler.creerAnoRTC(dq);
+        
+         // Test que le defect a bien été créé
+         assertTrue(numero > 0);
+        
+         // Suppression defect
+         assertEquals(IStatus.OK, handler.supprimerWorkItemDepuisId(numero).getCode());
+        
+         // Test de la suppression
+         assertNull(handler.recupWorkItemDepuisId(numero));
     }
 
     @Test
@@ -248,7 +247,7 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testRecupLotsRTC() throws TeamRepositoryException
     {
-        List<LotRTC> liste = handler.recupLotsRTC(LocalDate.of(2016, 01, 01), new MajLotsRTCTask());
+        List<LotRTC> liste = handler.recupLotsRTC(LocalDate.of(2016, 1, 1), new MajLotsRTCTask());
         assertNotNull(liste);
         assertFalse(liste.isEmpty());
 
@@ -266,7 +265,7 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testCreerLotSuiviRTCDepuisHandle() throws TeamRepositoryException
     {
-        List<LotRTC> liste = handler.recupLotsRTC(LocalDate.of(2016, 01, 01), new MajLotsRTCTask());
+        List<LotRTC> liste = handler.recupLotsRTC(LocalDate.of(2016, 1, 1), new MajLotsRTCTask());
         LotRTC lot = liste.get(0);
         assertNotNull(lot.getEdition());
         assertNotNull(lot.getEdition());
@@ -308,7 +307,7 @@ public class TestControlRTC extends JunitBase
             IWorkItem wi = null;
             try
             {
-                wi = ControlRTC.INSTANCE.recupWorkItemDepuisId(dq.getNumeroAnoRTC());
+                wi = handler.recupWorkItemDepuisId(dq.getNumeroAnoRTC());
             }
             catch (TeamRepositoryException e)
             {
@@ -423,12 +422,12 @@ public class TestControlRTC extends JunitBase
     {
         assertEquals(Whitebox.getField(ControlRTC.class, "workItemClient").get(handler), Whitebox.invokeMethod(handler, "getClient"));
     }
-
+    
     @Test
+    @Ignore ("Méthode pour tests manuels")
     public void testTest() throws TeamRepositoryException
     {
-        IWorkItem wi = handler.recupWorkItemDepuisId(288016);
-        System.out.println(wi.getWorkItemType());
+        
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -17,7 +17,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
 import model.InfoMail;
-import model.ModelFactory;
 import model.enums.Param;
 import model.enums.TypeInfo;
 import model.enums.TypeRapport;
@@ -151,7 +150,7 @@ public class ControlRapport extends AbstractControlWord
      */
     public void addInfo(TypeInfo type, String lot, String infoSupp)
     {
-        mapInfos.get(type).add(ModelFactory.getModelWithParams(InfoMail.class, lot, infoSupp));
+        mapInfos.get(type).add(InfoMail.build(lot, infoSupp));
     }
 
     /**

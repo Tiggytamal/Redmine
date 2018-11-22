@@ -19,7 +19,7 @@ public class TestTypeEnumRTC implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(9, TypeEnumRTC.values().length);
+        assertEquals(10, TypeEnumRTC.values().length);
     }
     
     @Test
@@ -34,6 +34,7 @@ public class TestTypeEnumRTC implements TestEnums
         assertEquals("Origine", TypeEnumRTC.ORIGINE.getValeur());
         assertEquals("fr.ca.cat.attribut.codeprojetclarity", TypeEnumRTC.CLARITY.getValeur());
         assertEquals("fr.ca.cat.attribut.datedelivraison", TypeEnumRTC.DATELIVHOMO.getValeur());
+        assertEquals("fr.ca.cat.attribut.trouvedans", TypeEnumRTC.TROUVEDANS.getValeur());
     }
 
     @Test

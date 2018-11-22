@@ -55,8 +55,8 @@ public class DefaultQualiteFXML extends AbstractModele implements ModeleFXML
                 setDateMajRTC(lot.getDateMajEtat().toString());
             if (lot.getEtatLot() != null)
                 setEtatLotRTC(lot.getEtatLot().getValeur());
-            if (lot.getGroupe() != null)
-                setGroupe(lot.getGroupe().getValeur());
+            if (lot.getGroupeProduit() != null)
+                setGroupe(lot.getGroupeProduit().getValeur());
 
             if (lot.getProjetClarity() != null)
             {

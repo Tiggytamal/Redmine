@@ -69,7 +69,7 @@ public final class ControlPic extends AbstractControlExcelRead<TypeColPic, Map<S
                 Row row = sheet.getRow(i);
 
                 // Création de l'objet
-                LotSuiviPic lot = ModelFactory.getModel(LotSuiviPic.class);
+                LotSuiviPic lot = ModelFactory.build(LotSuiviPic.class);
                 lot.setLot(String.valueOf(getCellNumericValue(row, colLot)));
                 lot.setLibelle(getCellStringValue(row, colLibelle));
                 lot.setProjetClarity(getCellStringValue(row, colClarity));

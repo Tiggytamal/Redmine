@@ -61,7 +61,7 @@ public class ControlApps extends AbstractControlExcelRead<TypeColApps, List<Appl
         for (int i = 1; i < sheet.getLastRowNum() + 1; i++)
         {
             Row row = sheet.getRow(i);
-            Application app = ModelFactory.getModel(Application.class);
+            Application app = ModelFactory.build(Application.class);
 
             // Application active ou non
             if (ACTIF.equals(getCellStringValue(row, colActif)))

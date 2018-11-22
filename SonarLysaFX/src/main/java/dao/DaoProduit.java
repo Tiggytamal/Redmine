@@ -9,13 +9,13 @@ import javax.persistence.EntityManager;
 
 import control.excel.ControlGroupeProjets;
 import control.excel.ExcelFactory;
-import model.bdd.GroupementProjet;
+import model.bdd.Produit;
 import model.bdd.LotRTC;
-import model.enums.GroupeProjet;
-import model.enums.TypeColGrProjet;
+import model.enums.GroupeProduit;
+import model.enums.TypeColProduit;
 import model.enums.TypeDonnee;
 
-public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implements Serializable
+public class DaoProduit extends AbstractDao<Produit> implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -24,13 +24,13 @@ public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implement
     
     /*---------- CONSTRUCTEURS ----------*/
     
-    DaoGroupementProjet()
+    DaoProduit()
     {
         super(TABLE);
         typeDonnee = TypeDonnee.GROUPE;
     }
     
-    DaoGroupementProjet(EntityManager em)
+    DaoProduit(EntityManager em)
     {
         super(TABLE, em);
         typeDonnee = TypeDonnee.GROUPE;
@@ -42,8 +42,8 @@ public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implement
     public int recupDonneesDepuisExcel(File file)
     {
         // Récupération des données du fichier Excel
-        ControlGroupeProjets control = ExcelFactory.getReader(TypeColGrProjet.class, file);
-        List<GroupementProjet> listeExcel = control.recupDonneesDepuisExcel();
+        ControlGroupeProjets control = ExcelFactory.getReader(TypeColProduit.class, file);
+        List<Produit> listeExcel = control.recupDonneesDepuisExcel();
 
         // Reset de la table
         resetTable();
@@ -52,16 +52,16 @@ public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implement
         int retour = persist(listeExcel);
         
         // Mise à des lots en focntion des groupes
-        Map<String, GroupementProjet> map = readAllMap();
+        Map<String, Produit> map = readAllMap();
         DaoLotRTC daoLotRTC = DaoFactory.getDao(LotRTC.class);
         List<LotRTC> lotsRTC = daoLotRTC.readAll();
         
         for (LotRTC lotRTC : lotsRTC)
         {
             if (map.containsKey(lotRTC.getProjetRTC()))
-                lotRTC.setGroupe(map.get(lotRTC.getProjetRTC()).getGroupe());
+                lotRTC.setGroupeProduit(map.get(lotRTC.getProjetRTC()).getGroupe());
             else
-                lotRTC.setGroupe(GroupeProjet.AUCUN);
+                lotRTC.setGroupeProduit(GroupeProduit.AUCUN);
         }
         
         daoLotRTC.persist(lotsRTC);
@@ -70,7 +70,7 @@ public class DaoGroupementProjet extends AbstractDao<GroupementProjet> implement
     }
 
     @Override
-    protected void persistImpl(GroupementProjet t)
+    protected void persistImpl(Produit t)
     {
         // Pas d'implémentation nécessaire           
     }

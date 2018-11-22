@@ -45,8 +45,8 @@ public class DaoFactory
             case "model.bdd.DateMaj":
                 return (T) new DaoDateMaj();
                 
-            case "model.bdd.GroupementProjet":
-                return (T) new DaoGroupementProjet();
+            case "model.bdd.Produit":
+                return (T) new DaoProduit();
                 
             case "model.bdd.DefautAppli":
                 return (T) new DaoDefaultAppli();
@@ -86,7 +86,7 @@ public class DaoFactory
                 return (T) new DaoDateMaj(em);
                 
             case "model.bdd.GroupementProjet":
-                return (T) new DaoGroupementProjet(em);
+                return (T) new DaoProduit(em);
                 
             case "model.bdd.DefautAppli":
                 return (T) new DaoDefaultAppli(em);

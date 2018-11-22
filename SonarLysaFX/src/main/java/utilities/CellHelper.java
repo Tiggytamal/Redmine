@@ -31,6 +31,7 @@ public class CellHelper
     
     // Constantes statiques
     private static final short SIZEFONT = 12;
+    private static final String ERREUR = "La couleur ou la bordure ne peuvent être nulles";
     
     private Workbook wb;
     private CreationHelper ch;
@@ -67,7 +68,7 @@ public class CellHelper
             CellStyle style = wb.createCellStyle();
 
             // Création du style
-            prepareStyle(style, couleur, bordure);
+            prepareStyle(style, couleur, bordure, FillPatternType.SOLID_FOREGROUND);
             
             retour.put(false, style);
             CellStyle styleC = wb.createCellStyle();
@@ -100,6 +101,29 @@ public class CellHelper
     }
 
     /**
+     * Retourne le style de cellule voulu selon la couleur, la bordure désirée, l'alignement du texte et le motif.
+     * 
+     * @param couleur
+     *            {@link org.apache.poi.ss.usermodel.IndexedColors}
+     * @param bordure
+     *            {@link utilities.enums.Bordure}
+     * @param alignement
+     *            {@link org.apache.poi.ss.usermodel.HorizontalAlignment}
+     * @return
+     */
+    public CellStyle getStyle(IndexedColors couleur, Bordure bordure, FillPatternType pattern, HorizontalAlignment alignement)
+    {
+        if (couleur == null || bordure == null || alignement == null || pattern == null)
+            throw new IllegalArgumentException(ERREUR);
+
+        CellStyle style = getStyle(couleur, bordure, pattern);
+        
+        // Ajout de l'alignement horizontal
+        style.setAlignment(alignement);
+        return style;
+    }
+    
+    /**
      * Retourne le style de cellule voulu selon la couleur, la bordure désirée et l'alignement du texte
      * 
      * @param couleur
@@ -113,9 +137,9 @@ public class CellHelper
     public CellStyle getStyle(IndexedColors couleur, Bordure bordure, HorizontalAlignment alignement)
     {
         if (couleur == null || bordure == null || alignement == null)
-            throw new IllegalArgumentException("La couleur ou la bordure ne peuvent être nulles");
+            throw new IllegalArgumentException(ERREUR);
 
-        CellStyle style = getStyle(couleur, bordure);
+        CellStyle style = getStyle(couleur, bordure, FillPatternType.SOLID_FOREGROUND);
         
         // Ajout de l'alignement horizontal
         style.setAlignment(alignement);
@@ -123,7 +147,7 @@ public class CellHelper
     }
     
     /**
-     * Retourne le style de cellule voulu selon la couleur, la bordure désirée et l'alignement du texte est celui par défault.
+     * Retourne le style de cellule voulu selon la couleur, la bordure et le motif désirés, et l'alignement du texte est celui par défault.
      * 
      * @param couleur
      *              couleur de fond de la cellule
@@ -131,17 +155,17 @@ public class CellHelper
      *              désignation des bordures de la cellule
      * @return
      */
-    public CellStyle getStyle(IndexedColors couleur, Bordure bordure)
+    public CellStyle getStyle(IndexedColors couleur, Bordure bordure, FillPatternType pattern)
     {
         // Renvoie un style vide sans statut d'incident
         if (couleur == null || bordure == null)
-            throw new IllegalArgumentException("La couleur ou la bordure ne peuvent être nulles");
+            throw new IllegalArgumentException(ERREUR);
         
         // Initialisation du style
         CellStyle style = wb.createCellStyle();
 
         // Création du style
-        prepareStyle(style, couleur, bordure);
+        prepareStyle(style, couleur, bordure, pattern);
         
         return style;
     }
@@ -155,7 +179,19 @@ public class CellHelper
      */
     public CellStyle getStyle(IndexedColors couleur)
     {
-        return getStyle(couleur, Bordure.VIDE);
+        return getStyle(couleur, Bordure.VIDE, FillPatternType.SOLID_FOREGROUND);
+    }
+    
+    /**
+     * Retourne le style de cellule voulu selon la couleur, sans bordure spécifique, mais avec un motif particulier
+     * 
+     * @param couleur
+     *          Couleur de fond du style
+     * @return
+     */
+    public CellStyle getStyle(IndexedColors couleur, FillPatternType pattern)
+    {
+        return getStyle(couleur, Bordure.VIDE, pattern);
     }
 
     /**
@@ -195,7 +231,7 @@ public class CellHelper
      * @param couleur
      * @param bordure
      */
-    private void prepareStyle(CellStyle style, IndexedColors couleur, Bordure bordure)
+    private void prepareStyle(CellStyle style, IndexedColors couleur, Bordure bordure, FillPatternType pattern)
     {
         // Alignement vertical centré plus ligne fine en bordure
         style.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -204,8 +240,19 @@ public class CellHelper
         style.setWrapText(true);
 
         // Choix de la couleur de fond
-        style.setFillForegroundColor(couleur.index);
-        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        
+        // Si on veu un fond unifié, on doit mettre la couleur sur le ForGroudnColor
+        if (pattern == FillPatternType.SOLID_FOREGROUND)
+            style.setFillForegroundColor(couleur.index);
+        
+        // Avec l'utilisation d'un motif, il faut utiliser le BackGround en couleur de base
+        else
+        {
+            style.setFillBackgroundColor(couleur.index);
+            style.setFillForegroundColor(IndexedColors.BLACK.index);
+        }
+        style.setFillPattern(pattern);
+
 
         // Switch sur le placement de la cellule, rajout d'une bordure plus épaisse au bord du tableau
         switch (bordure)

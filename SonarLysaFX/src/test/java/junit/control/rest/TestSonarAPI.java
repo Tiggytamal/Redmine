@@ -1,4 +1,4 @@
-package junit.control.sonar;
+package junit.control.rest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -415,6 +415,12 @@ public class TestSonarAPI extends JunitBase
             if (projet.getNom().contains("RESS_SdjOpenApi"))
                 System.out.println(projet.getKey());
         }
+        
+    }
+    
+    @Test
+    public void testTest()
+    {
         
     }
 

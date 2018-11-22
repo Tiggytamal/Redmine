@@ -22,7 +22,6 @@ import control.word.ControlRapport;
 import junit.JunitBase;
 import junit.TestUtils;
 import model.InfoMail;
-import model.ModelFactory;
 import model.enums.TypeInfo;
 import model.enums.TypeRapport;
 import utilities.Statics;
@@ -78,14 +77,14 @@ public class TestControlRapport extends JunitBase
         // Contrôle
         assertFalse(mapInfos.isEmpty());
         assertFalse(mapInfos.get(TypeInfo.ANOABANDON).isEmpty());
-        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "123456", null), mapInfos.get(TypeInfo.ANOABANDON).get(0));
-        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "654321", "000001"), mapInfos.get(TypeInfo.ANOABANDON).get(1));
+        assertEquals(InfoMail.build("123456", null), mapInfos.get(TypeInfo.ANOABANDON).get(0));
+        assertEquals(InfoMail.build("654321", "000001"), mapInfos.get(TypeInfo.ANOABANDON).get(1));
         assertFalse(mapInfos.get(TypeInfo.ANONEW).isEmpty());
-        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "234567", "infoSupp"), mapInfos.get(TypeInfo.ANONEW).get(0));
+        assertEquals(InfoMail.build( "234567", "infoSupp"), mapInfos.get(TypeInfo.ANONEW).get(0));
         assertFalse(mapInfos.get(TypeInfo.APPLIOBSOLETE).isEmpty());
-        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "345678", "application"), mapInfos.get(TypeInfo.APPLIOBSOLETE).get(0));
+        assertEquals(InfoMail.build("345678", "application"), mapInfos.get(TypeInfo.APPLIOBSOLETE).get(0));
         assertFalse(mapInfos.get(TypeInfo.LOTMAJ).isEmpty());
-        assertEquals(ModelFactory.getModelWithParams(InfoMail.class, "123456", null), mapInfos.get(TypeInfo.LOTMAJ).get(0));
+        assertEquals(InfoMail.build("123456", null), mapInfos.get(TypeInfo.LOTMAJ).get(0));
     }
     
     @Test

@@ -17,24 +17,24 @@ public class TestUA extends AbstractTestModel<UA>
     public void testGetCodeUA()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getCodeUA());
+        assertEquals(EMPTY, objetTest.getCodeUA());
         
         // Test setter et getter
         String string = "CodeUA";
-        handler.setCodeUA(string);
-        assertEquals(string, handler.getCodeUA());       
+        objetTest.setCodeUA(string);
+        assertEquals(string, objetTest.getCodeUA());       
     }
     
     @Test
     public void testGetCodeAppli()
     {
         // test valeur vide ou nulle
-        assertEquals(EMPTY, handler.getCodeAppli());
+        assertEquals(EMPTY, objetTest.getCodeAppli());
         
         // Test setter et getter
         String string = "CodeAppli";
-        handler.setCodeAppli(string);
-        assertEquals(string, handler.getCodeAppli());       
+        objetTest.setCodeAppli(string);
+        assertEquals(string, objetTest.getCodeAppli());       
     }
     
     /*---------- METHODES PRIVEES ----------*/

@@ -25,6 +25,7 @@ import model.enums.TypeAction;
 import model.enums.TypeDefaut;
 import model.enums.TypeVersion;
 import utilities.Statics;
+import utilities.TechnicalException;
 
 /**
  * Classe de modèle qui correspond aux données du fichier Excel des anomalies.
@@ -89,6 +90,9 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     @Column(name = "date_reouverture", nullable = true)
     private LocalDate dateReouv;
 
+    @Column(name = "date_mep_prev", nullable = true)
+    private LocalDate dateMepPrev;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "etat_defaut", nullable = false)
     private EtatDefaut etatDefaut;
@@ -100,6 +104,9 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     @Enumerated(EnumType.STRING)
     @Column(name = "type_defaut", nullable = false)
     private TypeDefaut typeDefaut;
+
+    @OneToOne(optional = true, mappedBy = "defautQualite", targetEntity = DefautAppli.class)
+    private DefautAppli defautAppli;
 
     @Transient
     private String nomCompoAppli;
@@ -128,6 +135,11 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     /*---------- METHODES PUBLIQUES ----------*/
 
+    public static DefautQualite build(LotRTC lotRTC)
+    {
+        return new DefautQualite(lotRTC);
+    }
+
     @Override
     public String getMapIndex()
     {
@@ -146,6 +158,12 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         return etatDefaut != EtatDefaut.NOUVEAU;
     }
 
+    public void controleLiens()
+    {
+        controleLiensAno();
+        controleLiensLot();
+    }
+
     /*---------- METHODES PRIVEES ----------*/
 
     /**
@@ -162,6 +180,18 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     private void creerLiensLotRTC()
     {
         liensLot = Statics.proprietesXML.getMapParams().get(Param.LIENSLOTS) + getLotRTC().getLot();
+    }
+
+    private void controleLiensAno()
+    {
+        if (numeroAnoRTC != 0 && (liensAno == null || liensAno.isEmpty()))
+            creerLiensAnoRTC();
+    }
+
+    private void controleLiensLot()
+    {
+        if (liensLot == null || liensLot.isEmpty())
+            creerLiensLotRTC();
     }
 
     /*---------- ACCESSEURS ----------*/
@@ -185,7 +215,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     public void setNumeroAnoRTC(int numeroAnoRTC)
     {
         this.numeroAnoRTC = numeroAnoRTC;
-        creerLiensAnoRTC();
+        if (numeroAnoRTC != 0)
+            creerLiensAnoRTC();
     }
 
     public String getEtatRTC()
@@ -220,7 +251,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public String getLiensLot()
     {
-        return getString(liensLot);
+        controleLiensLot();
+        return liensLot;
     }
 
     public void setLiensLot(String liensLot)
@@ -230,6 +262,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public String getLiensAno()
     {
+        controleLiensAno();
         return getString(liensAno);
     }
 
@@ -290,7 +323,9 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public TypeAction getAction()
     {
-        return action == null ? TypeAction.VIDE : action;
+        if (action == null)
+            action = TypeAction.VIDE;
+        return action;
     }
 
     public void setAction(TypeAction action)
@@ -303,9 +338,11 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         return etatDefaut;
     }
 
-    public void setEtatDefaut(EtatDefaut etatAnoSuivi)
+    public void setEtatDefaut(EtatDefaut etatDefaut)
     {
-        this.etatDefaut = etatAnoSuivi;
+        if (etatDefaut == null)
+            throw new TechnicalException("Tentative de mise à null de DefautQualite.etatDefaut");
+        this.etatDefaut = etatDefaut;
     }
 
     public TypeDefaut getTypeDefaut()
@@ -315,6 +352,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setTypeDefaut(TypeDefaut typeDefault)
     {
+        if (typeDefault == null)
+            throw new TechnicalException("Tentative de mise à null de DefautQualite.typeDefaut");
         this.typeDefaut = typeDefault;
     }
 
@@ -330,7 +369,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public String getNewCodeAppli()
     {
-        return newCodeAppli;
+        return getString(newCodeAppli);
     }
 
     public void setNewCodeAppli(String newCodeAppli)
@@ -346,5 +385,25 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     public void setDateReouv(LocalDate dateReouv)
     {
         this.dateReouv = dateReouv;
+    }
+
+    public LocalDate getDateMepPrev()
+    {
+        return dateMepPrev;
+    }
+
+    public void setDateMepPrev(LocalDate dateMepPrev)
+    {
+        this.dateMepPrev = dateMepPrev;
+    }
+
+    public DefautAppli getDefautAppli()
+    {
+        return defautAppli;
+    }
+
+    public void setDefautAppli(DefautAppli defautAppli)
+    {
+        this.defautAppli = defautAppli;
     }
 }

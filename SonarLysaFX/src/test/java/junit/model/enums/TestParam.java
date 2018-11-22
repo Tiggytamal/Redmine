@@ -27,7 +27,7 @@ public class TestParam implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(24, Param.values().length);
+        assertEquals(25, Param.values().length);
     }
     
     @Test
@@ -47,6 +47,7 @@ public class TestParam implements TestEnums
         assertFalse(Param.NOMQGDATASTAGE.getNom().isEmpty());
         assertFalse(Param.URLSONAR.getNom().isEmpty());
         assertFalse(Param.URLRTC.getNom().isEmpty());
+        assertFalse(Param.URLREPACK.getNom().isEmpty());
         assertFalse(Param.RTCLOTCHC.getNom().isEmpty());
         assertFalse(Param.NOMFICHIERCOBOL.getNom().isEmpty());
         assertFalse(Param.IPMAIL.getNom().isEmpty());

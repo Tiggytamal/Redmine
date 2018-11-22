@@ -7,14 +7,14 @@ package model.enums;
  * @since 1.0
  *
  */
-public enum GroupeProjet 
+public enum GroupeProduit
 {
     NPC("NPC"), 
     AUCUN("");
 
     private String valeur;
 
-    private GroupeProjet(String valeur)
+    private GroupeProduit(String valeur)
     {
         this.valeur = valeur;
     }

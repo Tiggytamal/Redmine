@@ -11,29 +11,22 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 
 import control.excel.ControlSuivi;
 import control.rtc.ControlRTC;
-import junit.TestUtils;
 import model.ModelFactory;
 import model.bdd.DefautQualite;
-import model.enums.EtatLot;
-import model.enums.Matiere;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import model.enums.TypeRapport;
@@ -119,19 +112,19 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     public void testSauvegardeFichierException1() throws IOException
     {
         // Envoi d'une IOException avec un nom non compatible.
-        handler.sauvegardeFichier("@|(['{");
+        controlTest.sauvegardeFichier("@|(['{");
     }
 
     @Test
     public void testSauvegardeFichier() throws IOException
     {
         // Test 1 - On vérifie que la feuille renvoyée ne contient bien qu'une seule ligne.
-        Sheet sheet = handler.sauvegardeFichier(file.getName());
+        Sheet sheet = controlTest.sauvegardeFichier(file.getName());
         assertEquals(1, sheet.getPhysicalNumberOfRows());
 
         // Test 2 - test avec une feuille nulle
         removeSheet(SQ);
-        sheet = handler.sauvegardeFichier(file.getName());
+        sheet = controlTest.sauvegardeFichier(file.getName());
         assertEquals(1, sheet.getPhysicalNumberOfRows());
     }
 
@@ -174,7 +167,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         // Vérification de al couleur de sortie de la méthode
 
         // Initialisation
-        DefautQualite dq = ModelFactory.getModel(DefautQualite.class);
+        DefautQualite dq = ModelFactory.build(DefautQualite.class);
         String methode = "calculCouleurLigne";
         Set<String> lotsEnErreurSonar = new HashSet<>();
         String anoLot = "123456";
@@ -183,28 +176,28 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         dq.setEtatRTC(EMPTY);
         dq.setNumeroAnoRTC(1);
         dq.calculTraitee();
-        IndexedColors couleur = invokeMethod(handler, methode, dq, lotsEnErreurSonar, anoLot);
+        IndexedColors couleur = invokeMethod(controlTest, methode, dq, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.LIGHT_GREEN, couleur);
 
         // Test 3 = Blanc
         lotsEnErreurSonar.add(anoLot);
-        couleur = invokeMethod(handler, methode, dq, lotsEnErreurSonar, anoLot);
+        couleur = invokeMethod(controlTest, methode, dq, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.WHITE, couleur);
 
         // Test 3 = Turquoise
         dq.setAction(TypeAction.ASSEMBLER);
-        couleur = invokeMethod(handler, methode, dq, lotsEnErreurSonar, anoLot);
+        couleur = invokeMethod(controlTest, methode, dq, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.LIGHT_TURQUOISE, couleur);
 
         // Test 4 = Gris
         dq.setAction(TypeAction.VERIFIER);
-        couleur = invokeMethod(handler, methode, dq, lotsEnErreurSonar, anoLot);
+        couleur = invokeMethod(controlTest, methode, dq, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.GREY_25_PERCENT, couleur);
 
         // Test 5 = Orange
         dq.setNumeroAnoRTC(0);
         dq.calculTraitee();
-        couleur = invokeMethod(handler, methode, dq, lotsEnErreurSonar, anoLot);
+        couleur = invokeMethod(controlTest, methode, dq, lotsEnErreurSonar, anoLot);
         assertEquals(IndexedColors.LIGHT_ORANGE, couleur);
     }
     
@@ -273,7 +266,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
         try
         {
-            method.invoke(handler, null, ModelFactory.getModel(DefautQualite.class), IndexedColors.AQUA);
+            method.invoke(controlTest, null, ModelFactory.build(DefautQualite.class), IndexedColors.AQUA);
 
         } catch (InvocationTargetException e)
         {
@@ -288,7 +281,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
         try
         {
-            method.invoke(handler, wb.getSheetAt(0).getRow(0), null, IndexedColors.AQUA);
+            method.invoke(controlTest, wb.getSheetAt(0).getRow(0), null, IndexedColors.AQUA);
         } catch (InvocationTargetException e)
         {
             if (e.getCause() instanceof IllegalArgumentException)
@@ -302,7 +295,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
         try
         {
-            method.invoke(handler, wb.getSheetAt(0).getRow(0), ModelFactory.getModel(DefautQualite.class), null);
+            method.invoke(controlTest, wb.getSheetAt(0).getRow(0), ModelFactory.build(DefautQualite.class), null);
 
         } catch (InvocationTargetException e)
         {
@@ -317,7 +310,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
         try
         {
-            method.invoke(handler, null, null, null);
+            method.invoke(controlTest, null, null, null);
 
         } catch (InvocationTargetException e)
         {
@@ -332,7 +325,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Sheet sheet = wb.createSheet();
 
         // Vérification 1 seule ligne et nombre de colonnes bon
-        invokeMethod(handler, "creerLigneTitres", sheet);
+        invokeMethod(controlTest, "creerLigneTitres", sheet);
         assertEquals(1, sheet.getPhysicalNumberOfRows());
         assertEquals(TypeColSuivi.values().length, sheet.getRow(0).getPhysicalNumberOfCells());
     }
@@ -343,7 +336,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Cell cell = null;
         String baseAdresse = "adresse";
         String variable = "var";
-        invokeMethod(handler, AJOUTERLIENS, cell, baseAdresse, variable);
+        invokeMethod(controlTest, AJOUTERLIENS, cell, baseAdresse, variable);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -352,7 +345,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Cell cell = wb.createSheet().createRow(0).createCell(0);
         String baseAdresse = null;
         String variable = "var";
-        invokeMethod(handler, AJOUTERLIENS, cell, baseAdresse, variable);
+        invokeMethod(controlTest, AJOUTERLIENS, cell, baseAdresse, variable);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -361,7 +354,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Cell cell = wb.createSheet().createRow(0).createCell(0);
         String baseAdresse = EMPTY;
         String variable = "var";
-        invokeMethod(handler, AJOUTERLIENS, cell, baseAdresse, variable);
+        invokeMethod(controlTest, AJOUTERLIENS, cell, baseAdresse, variable);
     }
 
     @Test
@@ -370,7 +363,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Cell cell = wb.createSheet().createRow(0).createCell(0);
         String baseAdresse = "adresse";
         String variable = "var";
-        invokeMethod(handler, AJOUTERLIENS, cell, baseAdresse, variable);
+        invokeMethod(controlTest, AJOUTERLIENS, cell, baseAdresse, variable);
         assertEquals(baseAdresse + variable, cell.getHyperlink().getAddress());
     }
 
@@ -435,14 +428,14 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Map<String, DefautQualite> dqClos = new HashMap<>();
 
         // Test 1
-        Sheet sheet = invokeMethod(handler, "saveAnomaliesCloses", dqClos);
+        Sheet sheet = invokeMethod(controlTest, "saveAnomaliesCloses", dqClos);
         assertEquals(1, sheet.getPhysicalNumberOfRows());
         assertEquals(13, dqClos.size()); 
 
         // Test 2 - à partir d'une feuille vide
         removeSheet(AC);
         dqClos.clear();
-        sheet = invokeMethod(handler, "saveAnomaliesCloses", dqClos);
+        sheet = invokeMethod(controlTest, "saveAnomaliesCloses", dqClos);
         assertEquals(1, sheet.getPhysicalNumberOfRows());
         assertEquals(0, dqClos.size());
     }
@@ -452,7 +445,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     public void testInitEnum() throws IllegalAccessException
     {
         // Test - énumération du bon type
-        assertEquals(TypeColSuivi.class, getField(ControlSuivi.class, "enumeration").get(handler));
+        assertEquals(TypeColSuivi.class, getField(ControlSuivi.class, "enumeration").get(controlTest));
     }
 
     @Test
@@ -460,7 +453,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     public void testInitSheet() throws Exception
     {
         // Test 1 - feuille ok
-        Sheet sheet = invokeMethod(handler, "initSheet");
+        Sheet sheet = invokeMethod(controlTest, "initSheet");
         assertNotNull(sheet);
         assertEquals(wb.getSheet(SQ), sheet);
     }
@@ -471,7 +464,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     {
         // Test 2 - feuille nulle
         removeSheet(SQ);
-        invokeMethod(handler, "initSheet");
+        invokeMethod(controlTest, "initSheet");
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -479,7 +472,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     @Override
     protected void initOther()
     {
-        handler.createControlRapport(TypeRapport.SUIVIJAVA); 
+        controlTest.createControlRapport(TypeRapport.SUIVIJAVA); 
     }
     
     private void removeSheet(String nomSheet)

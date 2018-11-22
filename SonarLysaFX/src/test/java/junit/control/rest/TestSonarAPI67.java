@@ -1,4 +1,4 @@
-package junit.control.sonar;
+package junit.control.rest;
 
 import static org.powermock.api.mockito.PowerMockito.when;
 
