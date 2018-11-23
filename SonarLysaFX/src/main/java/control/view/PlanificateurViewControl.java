@@ -130,7 +130,7 @@ public final class PlanificateurViewControl extends AbstractViewControl
         if (precedenteBox.isVisible() && precedenteBox.isSelected())
             planificateur.addLastYear();
 
-        new ControlXML().saveParam(proprietesXML);
+        new ControlXML().saveXML(proprietesXML);
     }
 
     @Override

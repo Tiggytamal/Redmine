@@ -23,10 +23,13 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
 import control.excel.ControlSuivi;
 import control.rtc.ControlRTC;
+import control.xml.ControlXML;
+import model.DataBaseXML;
 import model.ModelFactory;
 import model.bdd.DefautQualite;
 import model.enums.Matiere;
@@ -121,32 +124,14 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     {
 
         // Initialisation
-        controlTest = PowerMockito.spy(controlTest);
-        PowerMockito.doNothing().when(controlTest, "write");
-        List<DefautQualite> lotsEnAno = controlTest.recupDonneesDepuisExcel();
-        DefautQualite ano = ModelFactory.build(DefautQualite.class);
-//        ano.setLot("Lot 225727");
-        lotsEnAno.add(ano);
-        ano = ModelFactory.build(DefautQualite.class);
-//        ano.setLot("Lot 156452");
-        ano.setEtatRTC("Close");
-        lotsEnAno.add(ano);
-        ano = ModelFactory.build(DefautQualite.class);
-//        ano.setLot("Lot 239654");
-        ano.setEtatRTC("Abandonnée");
-        lotsEnAno.add(ano);
-        List<DefautQualite> anoAajouter = new ArrayList<>();
-        Set<String> lotsEnErreurSonar = new HashSet<>();
-        Set<String> lotsSecurite = new HashSet<>();
-        lotsSecurite.add("290318");
-        lotsSecurite.add("225727");
-        Set<String> lotsRelease = new HashSet<>();
-        lotsRelease.add("225727");
+        controlTest = Mockito.spy(controlTest);
+        PowerMockito.when(controlTest, "write").thenReturn(true);
+
         Sheet sheet = wb.createSheet();
         Matiere matiere = Matiere.JAVA;
 
         // Appel méthode sans écriture du fichier
-        controlTest.majFeuilleDefaultsQualite(lotsEnAno, sheet, matiere);
+        controlTest.majFeuilleDefaultsQualite(new ArrayList<>(new ControlXML().recupererXMLResources(DataBaseXML.class).getMapDefautQualite().values()), sheet, matiere);
     }
 
     @Test
@@ -224,87 +209,63 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
 //        Mockito.verify(logger, Mockito.times(1)).info("Création anomalie 1 pour le lot 123456");        
     }
 
-    @Test
-    public void testAjouterAnomaliesCloses() throws Exception
-    {
-//        // Vérification si une anomaie est bien rajoutée à la feuille des anomalies closes.
-//
-//        // Initialisation
-//        Sheet sheet = wb.getSheet(AC);
-//        Map<String, Anomalie> anoClose = new HashMap<>();
-//        Anomalie ano = ModelFactory.getModel(Anomalie.class);
-//        ano.setNumeroAnoRTC(307402);
-//        ano.setLot(LOT);
-//        ano.setEtatLot(EtatLot.NOUVEAU);
-//        anoClose.put(ano.getLotRTC(), ano);
-//        ano = ModelFactory.getModel(Anomalie.class);
-//        ano.setNumeroAnoRTC(0);
-//        ano.setLot("Lot 316089");
-//        anoClose.put(ano.getLotRTC(), ano);
-//
-//        // Appel méthode et controle
-//        int nbreLignes = sheet.getPhysicalNumberOfRows();
-//        invokeMethod(handler, "ajouterAnomaliesCloses", sheet, anoClose);
-//        assertEquals(nbreLignes + 1l, sheet.getPhysicalNumberOfRows());
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException1() throws IllegalAccessException
     {
-//        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
-//        try
-//        {
-//            method.invoke(controlTest, null, ModelFactory.build(DefautQualite.class), IndexedColors.AQUA);
-//
-//        } catch (InvocationTargetException e)
-//        {
-//            if (e.getCause() instanceof IllegalArgumentException)
-//                throw (IllegalArgumentException) e.getCause();
-//        }
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
+        try
+        {
+            method.invoke(controlTest, null, ModelFactory.build(DefautQualite.class), IndexedColors.AQUA);
+
+        } catch (InvocationTargetException e)
+        {
+            if (e.getCause() instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e.getCause();
+        }
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException2() throws IllegalAccessException
     {
-//        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
-//        try
-//        {
-//            method.invoke(controlTest, wb.getSheetAt(0).getRow(0), null, IndexedColors.AQUA);
-//        } catch (InvocationTargetException e)
-//        {
-//            if (e.getCause() instanceof IllegalArgumentException)
-//                throw (IllegalArgumentException) e.getCause();
-//        }
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
+        try
+        {
+            method.invoke(controlTest, wb.getSheetAt(0).getRow(0), null, IndexedColors.AQUA);
+        } catch (InvocationTargetException e)
+        {
+            if (e.getCause() instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e.getCause();
+        }
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException3() throws IllegalAccessException
     {
-//        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
-//        try
-//        {
-//            method.invoke(controlTest, wb.getSheetAt(0).getRow(0), ModelFactory.build(DefautQualite.class), null);
-//
-//        } catch (InvocationTargetException e)
-//        {
-//            if (e.getCause() instanceof IllegalArgumentException)
-//                throw (IllegalArgumentException) e.getCause();
-//        }
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
+        try
+        {
+            method.invoke(controlTest, wb.getSheetAt(0).getRow(0), ModelFactory.build(DefautQualite.class), null);
+
+        } catch (InvocationTargetException e)
+        {
+            if (e.getCause() instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e.getCause();
+        }
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreerLigneSQException4() throws IllegalAccessException
     {
-//        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
-//        try
-//        {
-//            method.invoke(controlTest, null, null, null);
-//
-//        } catch (InvocationTargetException e)
-//        {
-//            if (e.getCause() instanceof IllegalArgumentException)
-//                throw (IllegalArgumentException) e.getCause();
-//        }
+        Method method = getMethod(ControlSuivi.class, CREERLIGNESQ, Row.class, DefautQualite.class, IndexedColors.class);
+        try
+        {
+            method.invoke(controlTest, null, null, null);
+
+        } catch (InvocationTargetException e)
+        {
+            if (e.getCause() instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e.getCause();
+        }
     }
 
     @Test
@@ -316,60 +277,6 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         invokeMethod(controlTest, "creerLigneTitres", sheet);
         assertEquals(1, sheet.getPhysicalNumberOfRows());
         assertEquals(TypeColSuivi.values().length, sheet.getRow(0).getPhysicalNumberOfCells());
-    }
-
-    @Test
-    public void testAjouterNouvellesAnos() throws Exception
-    {
-//        // Initialisation
-//        Sheet sheet = wb.createSheet();
-//        String methode = "ajouterNouvellesAnos";
-//        List<Anomalie> anoAajouter = new ArrayList<>();
-//        Map<String, Anomalie> mapAnoCloses = new HashMap<>();
-//        Set<String> lotsSecurite = new HashSet<>();
-//        Set<String> lotsRelease = new HashSet<>();
-//        Matiere matiere = Matiere.JAVA;
-//
-//        // Test 1. liste vide
-//        invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
-//        assertEquals(0, sheet.getPhysicalNumberOfRows());
-//
-//        // Test 2. ni securite / ni release / ni close
-//        Anomalie ano1 = ModelFactory.getModel(Anomalie.class);
-//        ano1.setNumeroAnoRTC(307402);
-//        ano1.setEtatLot(EtatLot.NOUVEAU);
-//        ano1.setLot(LOT);
-//        ano1.setMatieresString("JAVA");
-//        anoAajouter.add(ano1);
-//        invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
-//        assertEquals(1, sheet.getPhysicalNumberOfRows());
-//        assertEquals(today, ano1.getDateDetection());
-//        assertEquals(EMPTY, ano1.isSecurite());
-//        assertEquals(SNAPSHOT, ano1.getVersion());
-//
-//        // Test 3. securite / release
-//        Anomalie ano = ModelFactory.getModel(Anomalie.class);
-//        ano.setLot("Lot 295711");
-//        anoAajouter.add(ano);
-//        lotsSecurite.add("295711");
-//        lotsRelease.add("295711");
-//        invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
-//        assertEquals(3, sheet.getPhysicalNumberOfRows());
-//        assertEquals(today, ano.getDateDetection());
-//
-//        // Test 4. close
-//        Anomalie anoClose = ModelFactory.getModel(Anomalie.class);
-//        anoClose.setNumeroAnoRTC(307402);
-//        anoClose.setLot(LOT);
-//        anoClose.setDateCreation(today);
-//        anoClose.setDateRelance(today);
-//        anoClose.setRemarque("remarque");
-//        mapAnoCloses.put(LOT, anoClose);
-//        invokeMethod(handler, methode, sheet, anoAajouter, mapAnoCloses, lotsSecurite, lotsRelease, matiere);
-//        assertEquals(4, sheet.getPhysicalNumberOfRows());
-//        assertEquals(anoClose.getNumeroAnoRTC(), ano1.getNumeroAnoRTC());
-//        assertEquals(anoClose.getLotRTC(), ano1.getLotRTC());
-//        assertEquals(anoClose.getNumeroAnoRTC(), ano1.getNumeroAnoRTC());
     }
 
     /*---------- METHODES PRIVEES ----------*/

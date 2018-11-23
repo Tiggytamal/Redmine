@@ -110,7 +110,7 @@ public class ControlXML
      *            Fichier à suvagarder, doit implémenter l'interface {@link model.interfaces.XML}.
      * @throws JAXBException
      */
-    public boolean saveParam(XML fichier)
+    public boolean saveXML(XML fichier)
     {
         try
         {

@@ -99,6 +99,18 @@ public class ProprietesXML extends AbstractModele implements XML
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
+    public File getFile()
+    {
+        return new File(Statics.JARPATH + NOMFICHIER);
+    }
+
+    @Override
+    public File getResource()
+    {
+        return new File(JunitBase.class.getResource(RESOURCE).getFile());
+    }
+
+    @Override
     public String controleDonnees()
     {
         StringBuilder builder = new StringBuilder("Chargement paramètres :").append(Statics.NL);
@@ -436,17 +448,5 @@ public class ProprietesXML extends AbstractModele implements XML
     private Map<TypeColSuiviApps, String> getMapColsSuiviApps()
     {
         return mapColsSuiviApps;
-    }
-
-    @Override
-    public File getFile()
-    {
-        return new File(Statics.JARPATH + NOMFICHIER);
-    }
-
-    @Override
-    public File getResource()
-    {
-        return new File(JunitBase.class.getResource(RESOURCE).getFile());
     }
 }

@@ -8,6 +8,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import dao.AbstractDao;
 
@@ -27,6 +29,7 @@ import dao.AbstractDao;
         @NamedQuery(name="Application" + AbstractDao.RESET, query="DELETE FROM Application")
 })
 //@formatter:on
+@XmlRootElement
 public class Application extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
@@ -134,6 +137,7 @@ public class Application extends AbstractBDDModele implements Serializable
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
+    @XmlAttribute(name = "code")
     public String getCode()
     {
         return getString(code);
@@ -144,6 +148,7 @@ public class Application extends AbstractBDDModele implements Serializable
         this.code = code;
     }
 
+    @XmlAttribute(name = "actif")
     public boolean isActif()
     {
         return actif;
@@ -154,6 +159,7 @@ public class Application extends AbstractBDDModele implements Serializable
         this.actif = actif;
     }
 
+    @XmlAttribute(name = "libelle")
     public String getLibelle()
     {
         return getString(libelle);
@@ -164,6 +170,7 @@ public class Application extends AbstractBDDModele implements Serializable
         this.libelle = libelle;
     }
 
+    @XmlAttribute(name = "open")
     public boolean isOpen()
     {
         return open;
@@ -174,6 +181,7 @@ public class Application extends AbstractBDDModele implements Serializable
         this.open = open;
     }
 
+    @XmlAttribute(name = "mainFrame")
     public boolean isMainFrame()
     {
         return mainFrame;
@@ -204,6 +212,7 @@ public class Application extends AbstractBDDModele implements Serializable
         this.nbreVulnerabilites = nbreVulnerabilites;
     }
 
+    @XmlAttribute(name = "ldcSonar")
     public int getLdcSonar()
     {
         return ldcSonar;
@@ -214,6 +223,7 @@ public class Application extends AbstractBDDModele implements Serializable
         this.ldcSonar = ldcSonar;
     }
 
+    @XmlAttribute(name = "ldcMainFrame")
     public int getLdcMainframe()
     {
         return ldcMainframe;
@@ -224,6 +234,7 @@ public class Application extends AbstractBDDModele implements Serializable
         this.ldcMainframe = ldcMainframe;
     }
 
+    @XmlAttribute(name = "key")
     public boolean isReferentiel()
     {
         return referentiel;

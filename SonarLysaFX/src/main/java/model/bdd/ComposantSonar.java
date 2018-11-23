@@ -14,6 +14,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
@@ -22,6 +26,7 @@ import model.enums.EtatAppli;
 import model.enums.InstanceSonar;
 import model.enums.Matiere;
 import model.enums.QG;
+import utilities.adapter.LocalDateAdapter;
 
 /**
  * Classe de modèle réprésentant un composant SonarQube du fichier XML
@@ -42,6 +47,7 @@ import model.enums.QG;
         @NamedQuery(name="ComposantSonar.resetTable", query="DELETE FROM ComposantSonar")
 })
 //@formatter:on
+@XmlRootElement
 public class ComposantSonar extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
@@ -180,6 +186,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
+    @XmlAttribute(name = "nom")
     public String getNom()
     {
         return getString(nom);
@@ -190,6 +197,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.nom = getString(nom);
     }
 
+    @XmlElement (name = "lotRTC")
     public LotRTC getLotRTC()
     {
         return lotRTC;
@@ -201,6 +209,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
             this.lotRTC = lotRTC;
     }
 
+    @XmlAttribute(name = "key")
     public String getKey()
     {
         return getString(key);
@@ -211,6 +220,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.key = getString(key);
     }
 
+    @XmlElement(name = "appli")
     public Application getAppli()
     {
         return appli;
@@ -222,6 +232,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
             this.appli = appli;
     }
 
+    @XmlAttribute(name = "id")
     public String getId()
     {
         return getString(id);
@@ -232,6 +243,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.id = getString(id);
     }
 
+    @XmlAttribute(name = "ldc")
     public int getLdc()
     {
         return ldc;
@@ -252,6 +264,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.ldc = Integer.parseInt(ldc);
     }
 
+    @XmlAttribute(name = "securityRating")
     public String getSecurityRating()
     {
         return getString(securityRating);
@@ -262,6 +275,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.securityRating = getString(securityRating);
     }
 
+    @XmlAttribute(name = "vulnerabilites")
     public int getVulnerabilites()
     {
         return vulnerabilites;
@@ -283,6 +297,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
             this.vulnerabilites = Integer.parseInt(vulnerabilites);
     }
 
+    @XmlAttribute(name = "securite")
     public boolean isSecurite()
     {
         return securite;
@@ -293,6 +308,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.securite = securite;
     }
 
+    @XmlAttribute(name = "qualityGate")
     public QG getQualityGate()
     {
         return qualityGate == null ? QG.NONE : qualityGate;
@@ -314,6 +330,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.qualityGate = QG.from(qualityGate);
     }
 
+    @XmlAttribute(name = "bloquants")
     public float getBloquants()
     {
         return bloquants;
@@ -324,6 +341,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.bloquants = bloquants;
     }
 
+    @XmlAttribute(name = "critiques")
     public float getCritiques()
     {
         return critiques;
@@ -334,6 +352,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.critiques = critiques;
     }
 
+    @XmlAttribute(name = "duplication")
     public float getDuplication()
     {
         return duplication;
@@ -344,6 +363,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.duplication = duplication;
     }
 
+    @XmlAttribute(name = "versionrelease")
     public boolean isVersionRelease()
     {
         return versionRelease;
@@ -354,6 +374,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.versionRelease = versionRelease;
     }
 
+    @XmlAttribute(name = "matiere")
     public Matiere getMatiere()
     {
         return matiere;
@@ -365,6 +386,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
             this.matiere = matiere;
     }
 
+    @XmlAttribute(name = "etatAppli")
     public EtatAppli getEtatAppli()
     {
         return etatAppli;
@@ -376,6 +398,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
             this.etatAppli = etatAppli;
     }
 
+    @XmlAttribute(name = "instance")
     public InstanceSonar getInstance()
     {
         return instance;
@@ -387,6 +410,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
             this.instance = instance;
     }
 
+    @XmlAttribute(name = "version")
     public String getVersion()
     {
         return getString(version);
@@ -398,6 +422,8 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.version = getString(version);
     }
 
+    @XmlAttribute(name = "dateRepack")
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getDateRepack()
     {
         return dateRepack;

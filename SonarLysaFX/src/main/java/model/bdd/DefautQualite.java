@@ -14,6 +14,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
@@ -26,6 +31,7 @@ import model.enums.TypeDefaut;
 import model.enums.TypeVersion;
 import utilities.Statics;
 import utilities.TechnicalException;
+import utilities.adapter.LocalDateAdapter;
 
 /**
  * Classe de modèle qui correspond aux données du fichier Excel des anomalies.
@@ -42,6 +48,7 @@ import utilities.TechnicalException;
         @NamedQuery(name="DefautQualite" + AbstractDao.RESET, query="DELETE FROM DefautQualite")
 })
 //@formatter:on
+@XmlRootElement
 public class DefautQualite extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
@@ -196,6 +203,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     /*---------- ACCESSEURS ----------*/
 
+    @XmlElement(name = "lotRTC")
     public LotRTC getLotRTC()
     {
         return lotRTC;
@@ -207,6 +215,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         creerLiensLotRTC();
     }
 
+    @XmlAttribute(name = "numeroAnoRTC")
     public int getNumeroAnoRTC()
     {
         return numeroAnoRTC;
@@ -219,6 +228,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
             creerLiensAnoRTC();
     }
 
+    @XmlAttribute(name = "etatRTC")
     public String getEtatRTC()
     {
         return getString(etatRTC);
@@ -229,6 +239,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.etatRTC = etatRTC.trim();
     }
 
+    @XmlAttribute(name = "securite")
     public boolean isSecurite()
     {
         return securite;
@@ -239,6 +250,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.securite = securite;
     }
 
+    @XmlAttribute(name = "remarque")
     public String getRemarque()
     {
         return getString(remarque);
@@ -249,6 +261,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.remarque = remarque;
     }
 
+    @XmlAttribute(name = "liensLot")
     public String getLiensLot()
     {
         controleLiensLot();
@@ -260,6 +273,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.liensLot = liensLot;
     }
 
+    @XmlAttribute(name = "liensAno")
     public String getLiensAno()
     {
         controleLiensAno();
@@ -271,6 +285,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.liensAno = liensAno;
     }
 
+    @XmlAttribute(name = "typeVersion")
     public TypeVersion getTypeVersion()
     {
         return typeVersion;
@@ -281,6 +296,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.typeVersion = typeVersion;
     }
 
+    @XmlAttribute(name = "dateCreation")
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getDateCreation()
     {
         return dateCreation;
@@ -291,6 +308,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.dateCreation = dateCreation;
     }
 
+    @XmlAttribute(name = "dateDetection")
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getDateDetection()
     {
         return dateDetection;
@@ -301,6 +320,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.dateDetection = dateDetection;
     }
 
+    @XmlAttribute(name = "dateRelance")
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getDateRelance()
     {
         return dateRelance;
@@ -311,6 +332,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.dateRelance = dateRelance;
     }
 
+    @XmlAttribute(name = "dateReso")
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getDateReso()
     {
         return dateReso;
@@ -321,6 +344,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.dateReso = dateReso;
     }
 
+    @XmlAttribute(name = "action")
     public TypeAction getAction()
     {
         if (action == null)
@@ -333,6 +357,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.action = action;
     }
 
+    @XmlAttribute(name = "etatDefaut")
     public EtatDefaut getEtatDefaut()
     {
         return etatDefaut;
@@ -345,6 +370,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.etatDefaut = etatDefaut;
     }
 
+    @XmlAttribute(name = "typeDefaut")
     public TypeDefaut getTypeDefaut()
     {
         return typeDefaut;
@@ -357,6 +383,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.typeDefaut = typeDefault;
     }
 
+    @XmlTransient
     public String getNomCompoAppli()
     {
         return getString(nomCompoAppli);
@@ -367,6 +394,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.nomCompoAppli = nomCompoAppli;
     }
 
+    @XmlTransient
     public String getNewCodeAppli()
     {
         return getString(newCodeAppli);
@@ -377,6 +405,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.newCodeAppli = newCodeAppli;
     }
 
+    @XmlAttribute(name = "dateReouv")
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getDateReouv()
     {
         return dateReouv;
@@ -387,6 +417,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.dateReouv = dateReouv;
     }
 
+    @XmlAttribute(name = "dateMepPrev")
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getDateMepPrev()
     {
         return dateMepPrev;
@@ -397,6 +429,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         this.dateMepPrev = dateMepPrev;
     }
 
+    @XmlTransient
     public DefautAppli getDefautAppli()
     {
         return defautAppli;

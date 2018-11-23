@@ -20,6 +20,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
@@ -30,6 +36,7 @@ import model.enums.GroupeProduit;
 import model.enums.Matiere;
 import model.enums.QG;
 import utilities.Statics;
+import utilities.adapter.LocalDateAdapter;
 
 /**
  * Classe répresentant l'extraction d'un lot depuis RTC
@@ -48,6 +55,7 @@ import utilities.Statics;
         @NamedQuery(name="LotRTC.resetTable", query="DELETE FROM LotRTC")
 })
 //@formatter:on
+@XmlRootElement
 public class LotRTC extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
@@ -162,6 +170,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
      * 
      * @return
      */
+    @XmlTransient
     public String getMatieresString()
     {
         StringBuilder builder = new StringBuilder();
@@ -206,6 +215,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
+    @XmlAttribute(name = "lot")
     public String getLot()
     {
         return getString(lot);
@@ -216,6 +226,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.lot = lot;
     }
 
+    @XmlAttribute(name = "libemme")
     public String getLibelle()
     {
         return getString(libelle);
@@ -226,6 +237,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.libelle = libelle;
     }
 
+    @XmlTransient
     public ProjetClarity getProjetClarity()
     {
         return projetClarity;
@@ -236,6 +248,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.projetClarity = projetClarity;
     }
 
+    @XmlAttribute(name = "cpiProjet")
     public String getCpiProjet()
     {
         return getString(cpiProjet);
@@ -246,6 +259,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.cpiProjet = cpiProjet;
     }
 
+    @XmlTransient
     public Edition getEdition()
     {
         return edition;
@@ -256,6 +270,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.edition = edition;
     }
 
+    @XmlAttribute(name = "etatLot")
     public EtatLot getEtatLot()
     {
         return etatLot == null ? EtatLot.INCONNU : etatLot;
@@ -266,6 +281,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.etatLot = etatLot;
     }
 
+    @XmlAttribute(name = "projetRTC")
     public String getProjetRTC()
     {
         return getString(projetRTC);
@@ -276,6 +292,8 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.projetRTC = projetRTC;
     }
 
+    @XmlAttribute(name = "dateMajEtat")
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getDateMajEtat()
     {
         return dateMajEtat;
@@ -296,6 +314,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.projetClarityString = projetClarityString;
     }
 
+    @XmlAttribute(name = "qualityGate")
     public QG getQualityGate()
     {
         return qualityGate;
@@ -307,6 +326,8 @@ public class LotRTC extends AbstractBDDModele implements Serializable
             this.qualityGate = qualityGate;
     }
 
+    @XmlElementWrapper
+    @XmlElement(name = "matiere")
     public Set<Matiere> getMatieres()
     {
         if (matieres == null)
@@ -319,6 +340,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.matieres = matieres;
     }
 
+    @XmlAttribute(name = "groupeProduit")
     public GroupeProduit getGroupeProduit()
     {
         return groupeProduit;
@@ -329,6 +351,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.groupeProduit = groupeProduit;
     }
 
+    @XmlTransient
     public DefautQualite getDefaultQualite()
     {
         return defaultQualite;
@@ -349,6 +372,8 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.editionString = editionString;
     }
 
+    @XmlAttribute(name = "dateRepack")
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getDateRepack()
     {
         return dateRepack;

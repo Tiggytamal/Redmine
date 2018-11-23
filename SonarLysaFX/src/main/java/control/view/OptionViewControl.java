@@ -271,7 +271,7 @@ public final class OptionViewControl extends AbstractViewControl
         }
 
         // Enregistrement paramètres
-        new ControlXML().saveParam(proprietesXML);
+        new ControlXML().saveXML(proprietesXML);
     }
 
     /**
@@ -290,7 +290,7 @@ public final class OptionViewControl extends AbstractViewControl
         }
 
         // Enregistrement paramètres
-        new ControlXML().saveParam(proprietesXML);
+        new ControlXML().saveXML(proprietesXML);
     }
 
     /**
@@ -309,7 +309,7 @@ public final class OptionViewControl extends AbstractViewControl
             }
         }
 
-        new ControlXML().saveParam(proprietesXML);
+        new ControlXML().saveXML(proprietesXML);
     }
 
     /*---------- METHODES PRIVEES ----------*/
