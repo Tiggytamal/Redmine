@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
-import control.excel.ControlGroupeProjets;
+import control.excel.ControlProduits;
 import control.excel.ExcelFactory;
 import model.bdd.Produit;
 import model.bdd.LotRTC;
@@ -42,7 +42,7 @@ public class DaoProduit extends AbstractDao<Produit> implements Serializable
     public int recupDonneesDepuisExcel(File file)
     {
         // Récupération des données du fichier Excel
-        ControlGroupeProjets control = ExcelFactory.getReader(TypeColProduit.class, file);
+        ControlProduits control = ExcelFactory.getReader(TypeColProduit.class, file);
         List<Produit> listeExcel = control.recupDonneesDepuisExcel();
 
         // Reset de la table

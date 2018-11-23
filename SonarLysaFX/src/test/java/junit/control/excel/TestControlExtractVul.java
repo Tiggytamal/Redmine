@@ -9,14 +9,17 @@ import java.util.List;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlExtractVul;
 import control.task.CreerExtractVulnerabiliteTask;
+import de.saxsys.javafx.test.JfxRunner;
 import model.Vulnerabilite;
 import model.enums.TypeColVul;
 import model.enums.TypeVulnerabilite;
 
+@RunWith(JfxRunner.class)
 public class TestControlExtractVul extends TestControlExcelWrite<TypeColVul, ControlExtractVul, List<Vulnerabilite>>
 {
     /*---------- ATTRIBUTS ----------*/    

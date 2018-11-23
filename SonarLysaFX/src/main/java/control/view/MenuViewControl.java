@@ -10,7 +10,6 @@ import java.util.Optional;
 import control.rest.SonarAPI5;
 import control.rtc.ControlRTC;
 import control.task.AbstractTask;
-import control.task.InitBaseAnosTask;
 import control.task.MajComposantsSonarTask;
 import control.task.MajVuesTask;
 import control.task.PurgeSonarTask;
@@ -229,10 +228,6 @@ public final class MenuViewControl extends AbstractViewControl
                 optionsMajCompo();
                 break;
 
-            case "majAnos":
-                alertConfirmation(new InitBaseAnosTask(), "Réinitialisation de la base des anomalies depuis le fichier Excel.");
-                break;
-
             case "purger":
                 alertConfirmation(new PurgeSonarTask(), "Cela lancera la purge des composants Sonar.");
                 break;
@@ -384,7 +379,7 @@ public final class MenuViewControl extends AbstractViewControl
 
         // Contrôle dans Sonar de la validitée
         if (result.isPresent())
-            startTask(new MajComposantsSonarTask(result.get()));        
+            startTask(new MajComposantsSonarTask(result.get()));
     }
 
     /* ---------- ACCESSEURS ---------- */

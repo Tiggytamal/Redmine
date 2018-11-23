@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import control.excel.ControlGroupeProjets;
+import control.excel.ControlProduits;
 import model.bdd.Produit;
 import model.enums.TypeColProduit;
 
-public class TestControlTypeProjets extends TestControlExcelRead<TypeColProduit, ControlGroupeProjets, List<Produit>>
+public class TestControlTypeProjets extends TestControlExcelRead<TypeColProduit, ControlProduits, List<Produit>>
 {
 
     public TestControlTypeProjets()

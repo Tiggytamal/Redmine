@@ -22,40 +22,44 @@
             <value>MainFrame</value>
         </entry>
     </mapColsApps>
-	<mapColsSuiviApps>
-		<entry>
-			<key>COMPO</key>
-			<value>Composant</value>
-		</entry>
-		<entry>
-			<key>ACTUEL</key>
-			<value>Code appli dans le POM</value>
-		</entry>
-		<entry>
-			<key>NEW</key>
-			<value>Code appli corrigé</value>
-		</entry>
-		<entry>
-			<key>ACTION</key>
-			<value>Action</value>
-		</entry>
-		<entry>
-			<key>ETAT</key>
-			<value>Etat du défault</value>
-		</entry>
-		<entry>
-			<key>ANORTC</key>
-			<value>Numéro ano RTC</value>
-		</entry>
-		<entry>
-			<key>CPILOT</key>
-			<value>Cpi du lot</value>
-		</entry>			
-		<entry>
-			<key>LOT</key>
-			<value>Lot</value>
-		</entry>
-	</mapColsSuiviApps>
+    <mapColsAppsW>
+        <entry>
+            <key>CODEAPPS</key>
+            <value indice="0" nom="Code Application"/>
+        </entry>
+        <entry>
+            <key>ACTIF</key>
+            <value indice="1" nom="Actif"/>
+        </entry>
+        <entry>
+            <key>LIB</key>
+            <value indice="2" nom="Libellé"/>
+        </entry>
+        <entry>
+            <key>OPEN</key>
+            <value indice="3" nom="Open"/>
+        </entry>
+        <entry>
+            <key>MAINFRAME</key>
+            <value indice="4" nom="MainFrame"/>
+        </entry>
+        <entry>
+            <key>CRITICITE</key>
+            <value indice="5" nom="Valeur Sécurité"/>
+        </entry>
+        <entry>
+            <key>VULN</key>
+            <value indice="6" nom="Vulnérabilitès"/>
+        </entry>
+        <entry>
+            <key>LDCSONAR</key>
+            <value indice="7" nom="LDC SonarQube"/>
+        </entry>
+        <entry>
+            <key>LDCMAIN</key>
+            <value indice="8" nom="LDC MainFrame"/>
+        </entry>
+    </mapColsAppsW>
     <mapColsChefServ>
         <entry>
             <key>DIRECTION</key>
@@ -112,6 +116,24 @@
             <value>Service</value>
         </entry>
     </mapColsClarity>
+    <mapColsCompo>
+        <entry>
+            <key>PATRIMOINE</key>
+            <value indice="0" nom="Composants du Patrimoine"/>
+        </entry>
+        <entry>
+            <key>INCONNU</key>
+            <value indice="1" nom="Composants sans lot RTC connu"/>
+        </entry>
+        <entry>
+            <key>NONPROD</key>
+            <value indice="2" nom="Composants sans lots en production"/>
+        </entry>
+        <entry>
+            <key>TERMINE</key>
+            <value indice="3" nom="Composants avec lots en production"/>
+        </entry>
+    </mapColsCompo>
     <mapColsEdition>
         <entry>
             <key>LIBELLE</key>
@@ -122,15 +144,45 @@
             <value>Numero de version
 NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
         </entry>
-		<entry>
-			<key>COMMENTAIRE</key>
-			<value>Commentaires</value>
-		</entry>
-		<entry>
-			<key>SEMAINE</key>
-			<value>Semaine (indicative)</value>
-		</entry>
+        <entry>
+            <key>COMMENTAIRE</key>
+            <value>Commentaires</value>
+        </entry>
+        <entry>
+            <key>SEMAINE</key>
+            <value>Semaine (indicative)</value>
+        </entry>
     </mapColsEdition>
+    <mapColsPbApps>
+        <entry>
+            <key>CODE</key>
+            <value indice="0" nom="Code Composant"/>
+        </entry>
+        <entry>
+            <key>APPLI</key>
+            <value indice="1" nom="Code Application"/>
+        </entry>
+        <entry>
+            <key>LOT</key>
+            <value indice="2" nom="Lot RTC"/>
+        </entry>
+        <entry>
+            <key>CPILOT</key>
+            <value indice="3" nom="Cpi lot"/>
+        </entry>
+        <entry>
+            <key>DEP</key>
+            <value indice="4" nom="Département"/>
+        </entry>
+        <entry>
+            <key>SERVICE</key>
+            <value indice="5" nom="Service"/>
+        </entry>
+        <entry>
+            <key>CHEFSERV</key>
+            <value indice="6" nom="Chef de Service"/>
+        </entry>
+    </mapColsPbApps>
     <mapColsPic>
         <entry>
             <key>LOT</key>
@@ -185,6 +237,16 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <value>Livraison édition</value>
         </entry>
     </mapColsPic>
+    <mapColsProduit>
+        <entry>
+            <key>NOM</key>
+            <value>Nom Projet</value>
+        </entry>
+        <entry>
+            <key>GROUPE</key>
+            <value>Groupe</value>
+        </entry>
+    </mapColsProduit>
     <mapColsSuivi>
         <entry>
             <key>DIRECTION</key>
@@ -251,6 +313,14 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <value>Date création</value>
         </entry>
         <entry>
+            <key>DATEREOUV</key>
+            <value>Date réouverture</value>
+        </entry>
+        <entry>
+            <key>DATEMEPPREV</key>
+            <value>Date MEP Prév.</value>
+        </entry>
+        <entry>
             <key>DATEDETECTION</key>
             <value>Date détection</value>
         </entry>
@@ -258,13 +328,17 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>DATERELANCE</key>
             <value>Date relance</value>
         </entry>
-		<entry>
-            <key>DATEREOUV</key>
-            <value>Date réouverture</value>
+        <entry>
+            <key>DATERESOLUTION</key>
+            <value>Date résolution</value>
         </entry>
-		<entry>
-            <key>DATEMEPPREV</key>
-            <value>Date MEP Prév.</value>
+        <entry>
+            <key>DUREEANO</key>
+            <value>Durée ano RTC</value>
+        </entry>
+        <entry>
+            <key>DATEMAJETAT</key>
+            <value>Date mise à jour état</value>
         </entry>
         <entry>
             <key>MATIERE</key>
@@ -278,171 +352,93 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>ACTION</key>
             <value>Action</value>
         </entry>
-		<entry>
-            <key>DATERESOLUTION</key>
-            <value>Date résolution</value>
-        </entry>
         <entry>
-			<key>DATEMAJETAT</key>
-            <value>Date mise à jour état</value>
-        </entry>
-        <entry>
-			<key>PRODUIT</key>
+            <key>PRODUIT</key>
             <value>NPC</value>
         </entry>
-		<entry>
-            <key>DUREEANO</key>
-            <value>Durée de ano RTC</value>
-        </entry>
     </mapColsSuivi>
-    <mapColsProduit>
+    <mapColsSuiviApps>
         <entry>
-            <key>NOM</key>
-            <value>Nom Projet</value>
+            <key>COMPO</key>
+            <value>Composant</value>
         </entry>
         <entry>
-            <key>GROUPE</key>
-            <value>Groupe</value>
+            <key>ACTUEL</key>
+            <value>Code appli dans le POM</value>
         </entry>
-    </mapColsProduit>
+        <entry>
+            <key>NEW</key>
+            <value>Code appli corrigé</value>
+        </entry>
+        <entry>
+            <key>ACTION</key>
+            <value>Action</value>
+        </entry>
+        <entry>
+            <key>ETAT</key>
+            <value>Etat du défault</value>
+        </entry>
+        <entry>
+            <key>ANORTC</key>
+            <value>Numéro ano RTC</value>
+        </entry>
+        <entry>
+            <key>CPILOT</key>
+            <value>Cpi du lot</value>
+        </entry>
+        <entry>
+            <key>LOT</key>
+            <value>Lot</value>
+        </entry>
+    </mapColsSuiviApps>
+    <mapColsUA>
+        <entry>
+            <key>UA</key>
+            <value>ID_UA</value>
+        </entry>
+        <entry>
+            <key>APPLI</key>
+            <value>APPL</value>
+        </entry>
+    </mapColsUA>
     <mapColsVul>
-    	<entry>
-    		<key>SEVERITE</key>
-    		<value nom="Sévérité" indice="7" />
-    	</entry>  
-    	<entry>
-    		<key>STATUS</key>
-    		<value nom="Status" indice="5" />
-    	</entry>
-    	<entry>
-    		<key>MESSAGE</key>
-    		<value nom="Message" indice="8" />
-    	</entry>
-    	<entry>
-    		<key>DATECREA</key>
-    		<value nom="Date création" indice="6" />
-    	</entry>
-    	<entry>
-    		<key>LOT</key>
-    		<value nom="Lot" indice="2" />
-    	</entry>
-    	<entry>
-    		<key>CLARITY</key>
-    		<value nom="Code Clarity" indice="4" />
-    	</entry>
-    	<entry>
-    		<key>APPLI</key>
-    		<value nom="Appli" indice="3" />
-    	</entry>
-    	<entry>
-    		<key>COMPOSANT</key>
-    		<value nom="Composant" indice="0" />
-    	</entry>
-    	<entry>
-    		<key>LIB</key>
-    		<value nom="Bibliothèque" indice="1" />
-    	</entry>		
+        <entry>
+            <key>SEVERITE</key>
+            <value indice="7" nom="Sévérité"/>
+        </entry>
+        <entry>
+            <key>STATUS</key>
+            <value indice="5" nom="Status"/>
+        </entry>
+        <entry>
+            <key>MESSAGE</key>
+            <value indice="8" nom="Message"/>
+        </entry>
+        <entry>
+            <key>DATECREA</key>
+            <value indice="6" nom="Date création"/>
+        </entry>
+        <entry>
+            <key>LOT</key>
+            <value indice="2" nom="Lot"/>
+        </entry>
+        <entry>
+            <key>CLARITY</key>
+            <value indice="4" nom="Code Clarity"/>
+        </entry>
+        <entry>
+            <key>APPLI</key>
+            <value indice="3" nom="Appli"/>
+        </entry>
+        <entry>
+            <key>COMPOSANT</key>
+            <value indice="0" nom="Composant"/>
+        </entry>
+        <entry>
+            <key>LIB</key>
+            <value indice="1" nom="Bibliothèque"/>
+        </entry>
     </mapColsVul>
-	<mapColsUA>
-	    <entry>
-    		<key>UA</key>
-    		<value>ID_UA</value>
-    	</entry>
-		<entry>
-    		<key>APPLI</key>
-    		<value>APPL</value>
-    	</entry>
-	</mapColsUA>
-	<mapColsPbApps>
-		<entry>
-    		<key>CODE</key>
-    		<value nom="Code Composant" indice="0" />
-    	</entry>
-		<entry>
-    		<key>APPLI</key>
-    		<value nom="Code Application" indice="1" />
-    	</entry>
-		<entry>
-    		<key>ETATAPPLI</key>
-    		<value nom="Etat Application" indice="2" />
-    	</entry>
-		<entry>
-    		<key>LOT</key>
-    		<value nom="Lot RTC" indice="3" />
-    	</entry>
-		<entry>
-    		<key>CPILOT</key>
-    		<value nom="Cpi lot" indice="4" />
-    	</entry>
-		<entry>
-    		<key>DEP</key>
-    		<value nom="Département" indice="5" />
-    	</entry>
-		<entry>
-    		<key>SERVICE</key>
-    		<value nom="Service" indice="6" />
-    	</entry>
-		<entry>
-    		<key>CHEFSERV</key>
-    		<value nom="Chef de Service" indice="7" />
-    	</entry>	
-	</mapColsPbApps>
-	<mapColsAppsW>
-		<entry>
-    		<key>CODEAPPS</key>
-    		<value nom="Code Application" indice="0" />
-    	</entry>
-		<entry>
-    		<key>ACTIF</key>
-    		<value nom="Actif" indice="1" />
-    	</entry>
-		<entry>
-    		<key>LIB</key>
-    		<value nom="Libellé" indice="2" />
-    	</entry>
-		<entry>
-    		<key>OPEN</key>
-    		<value nom="Open" indice="3" />
-    	</entry>
-		<entry>
-    		<key>MAINFRAME</key>
-    		<value nom="MainFrame" indice="4" />
-    	</entry>
-		<entry>
-    		<key>CRITICITE</key>
-    		<value nom="Valeur Sécurité" indice="5" />
-    	</entry>
-		<entry>
-    		<key>VULN</key>
-    		<value nom="Vulnérabilitès" indice="6" />
-    	</entry>
-		<entry>
-    		<key>LDCSONAR</key>
-    		<value nom="LDC SonarQube" indice="7" />
-    	</entry>
-		<entry>
-    		<key>LDCMAIN</key>
-    		<value nom="LDC MainFrame" indice="8" />
-    	</entry>
-	</mapColsAppsW>
-	<mapColsCompo>
-		<entry>
-    		<key>PATRIMOINE</key>
-    		<value nom="Composants du Patrimoine" indice="0" />
-    	</entry>
-		<entry>
-    		<key>INCONNU</key>
-    		<value nom="Composants sans lot RTC connu" indice="1" />
-    	</entry>
-		<entry>
-    		<key>NONPROD</key>
-    		<value nom="Composants sans lots en production" indice="2" />
-    	</entry>
-		<entry>
-    		<key>TERMINE</key>
-    		<value nom="Composants avec lots en production" indice="3" />
-    	</entry>
-	</mapColsCompo>
     <mapParams>
         <entry>
             <key>FILTREDATASTAGE</key>
@@ -452,53 +448,53 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>FILTRECOBOL</key>
             <value>Composant COBMF</value>
         </entry>
-		<entry>
-            <key>FILTREIOS</key>
-            <value>iOS</value>
-        </entry>
-		<entry>
+        <entry>
             <key>FILTREANDROID</key>
             <value>DCPA</value>
         </entry>
         <entry>
-            <key>ABSOLUTEPATH</key>
-            <value>src/test/resources/</value>
+            <key>FILTREIOS</key>
+            <value>iOS</value>
         </entry>
         <entry>
-            <key>ABSOLUTEPATHRAPPORT</key>
-            <value>src/test/resources/</value>
+            <key>ABSOLUTEPATH</key>
+            <value>S:\\SER_ASSURANCE_QUALITE\\COMMUN\\Qualimétrie\\Suivi des anomalies qualimétriques\\</value>
         </entry>
         <entry>
             <key>NOMFICHIERJAVA</key>
-            <value>Suivi_Quality_GateTest.xlsx</value>
+            <value>Suivi_Quality_Gate.xlsx</value>
+        </entry>
+        <entry>
+            <key>NOMFICHIERANDROID</key>
+            <value>Suivi_Quality_Gate - Androïd.xlsx</value>
+        </entry>
+        <entry>
+            <key>NOMFICHIERIOS</key>
+            <value>Suivi_Quality_Gate - iOS.xlsx</value>
         </entry>
         <entry>
             <key>NOMFICHIERDATASTAGE</key>
-            <value>Suivi_Quality_Gate - DataStageTest.xlsx</value>
+            <value>Suivi_Quality_Gate - DataStage.xlsx</value>
         </entry>
         <entry>
             <key>NOMFICHIERCOBOL</key>
             <value>Suivi_Quality_Gate - COBOL.xlsx</value>
         </entry>
-		<entry>
-            <key>NOMFICHIERIOS</key>
-            <value>Suivi_Quality_Gate - iOS.xlsx</value>
-        </entry>
-		<entry>
-            <key>NOMFICHIERANDROID</key>
-            <value>Suivi_Quality_Gate - Androïd.xlsx</value>
-        </entry>
         <entry>
             <key>NOMFICHIERAPPLI</key>
-            <value>testAppsW2.xlsx</value>
+            <value>fichier analyse AQP - périmètre - V0.2.xlsx</value>
         </entry>
         <entry>
             <key>NOMFICHIERPBAPPLI</key>
-            <value>Composants Pb Code Appli.xlsx</value>
+            <value>ProbApplis.xlsx</value>
         </entry>
         <entry>
             <key>ABSOLUTEPATHHISTO</key>
-            <value>src/test/resources/</value>
+            <value>S:\\SER_ASSURANCE_QUALITE\\COMMUN\\Qualimétrie\\Suivi des anomalies qualimétriques\\Historique SUIVI\\</value>
+        </entry>
+        <entry>
+            <key>ABSOLUTEPATHRAPPORT</key>
+            <value>S:\\SER_ASSURANCE_QUALITE\\COMMUN\\Qualimétrie\\Suivi des anomalies qualimétriques\\rapports\\</value>
         </entry>
         <entry>
             <key>LIENSLOTS</key>
@@ -517,33 +513,33 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <value>http://ttp10-snar.ca-technologies.fr</value>
         </entry>
         <entry>
-            <key>URLRTC</key>
-            <value>https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm</value>
-        </entry>
-		<entry>
             <key>URLREPACK</key>
             <value>http://ttp10-pic0.ca-technologies.fr/PIC0/rest</value>
+        </entry>
+        <entry>
+            <key>URLRTC</key>
+            <value>https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm</value>
         </entry>
         <entry>
             <key>RTCLOTCHC</key>
             <value>E31.0.FDL</value>
         </entry>
         <entry>
-        	<key>IPMAIL</key>
-        	<value>10.166.212.129</value>        
+            <key>IPMAIL</key>
+            <value>10.166.212.129</value>
         </entry>
         <entry>
-        	<key>PORTMAIL</key>
-        	<value>25</value>        
+            <key>PORTMAIL</key>
+            <value>25</value>
         </entry>
         <entry>
-        	<key>AQPMAIL</key>
-        	<value>Gregoire.MATHON-ext@ca-ts.fr</value>
+            <key>AQPMAIL</key>
+            <value>AQP.qualimetrie@ca-ts.fr</value>
         </entry>
         <entry>
             <key>NBREPURGE</key>
             <value>2</value>
-        </entry> 
+        </entry>
     </mapParams>
     <mapParamsBool>
         <entry>
@@ -553,29 +549,29 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
         <entry>
             <key>SUPPSONAR</key>
             <value>false</value>
-        </entry>       
+        </entry>
     </mapParamsBool>
     <mapParamsSpec>
         <entry>
             <key>RECAPDEFECT</key>
             <value>DEFAUT QUALITE : Anomalie Qualimétrie suite à analyse SONARQUBE</value>
         </entry>
-		<entry>
-			<key>TEXTERELANCE</key>
-			<value>Bonjour,
+        <entry>
+            <key>TEXTERELANCE</key>
+            <value>Bonjour,
 Pourriez vous prendre en compte les défauts qualité restants pour correction ?
 Merci</value>
-		</entry>
-		<entry>
-			<key>TEXTEAPPLI</key>
-			<value>Suite à analyse des données SonarQube du composant xxxxx , il s'avère que ce dernier n'a pas de code application valide dans son pom.xml (balise "adaboCodeApplication").
+        </entry>
+        <entry>
+            <key>TEXTEAPPLI</key>
+            <value>Suite à analyse des données SonarQube du composant xxxxx , il s'avère que ce dernier n'a pas de code application valide dans son pom.xml (balise "adaboCodeApplication" dans la balise "properties").
 Aussi, pourriez-vous le renseigner avant le prochain assemblage. 
 Merci.</value>
-		</entry>
-		<entry>
-			<key>TEXTENEWAPPLI</key>
-			<value>Le bon code appli est le : -code-</value>
-		</entry>
+        </entry>
+        <entry>
+            <key>TEXTENEWAPPLI</key>
+            <value>Le bon code appli est le : -code-</value>
+        </entry>
         <entry>
             <key>TEXTEDEFECT</key>
             <value>Bonjour,
@@ -594,6 +590,10 @@ Merci</value>
             <value>E30;E31;E32</value>
         </entry>
         <entry>
+            <key>VERSIONSVIEUXCOMPOS</key>
+            <value>10;11;12</value>
+        </entry>
+        <entry>
             <key>MEMBRESJAVA</key>
             <value>MATHON Gregoire;PRUDENT Alain;TRICOT Nicolas</value>
         </entry>
@@ -603,25 +603,21 @@ Merci</value>
         </entry>
         <entry>
             <key>MEMBRESMAIL</key>
-            <value>MATHON Gregoire;</value>
-        </entry>
-        <entry>
-            <key>VERSIONSVIEUXCOMPOS</key>
-            <value>10;11;12</value>
+            <value>BONORIS Jean-Louis;GREFFET Gaetan;MATHON Gregoire;TRICOT Nicolas</value>
         </entry>
     </mapParamsSpec>
     <mapPlans>
         <entry>
             <key>SUIVIHEBDO</key>
-            <value active="true" annees="2018" heure="23:30" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
+            <value active="true" annees="2018" heure="22:28" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
         </entry>
         <entry>
             <key>VUECHC</key>
-            <value active="false" annees="2017 2018" heure="17:00" jeudi="false" lundi="true" mardi="true" mercredi="false" vendredi="false"/>
+            <value active="true" annees="2018" heure="23:02" jeudi="false" lundi="false" mardi="true" mercredi="false" vendredi="true"/>
         </entry>
         <entry>
             <key>VUECDM</key>
-            <value active="true" annees="2018" heure="23:00" jeudi="false" lundi="false" mardi="true" mercredi="false" vendredi="true"/>
+            <value active="true" annees="2018" heure="23:00" jeudi="false" lundi="false" mardi="true" mercredi="true" vendredi="true"/>
         </entry>
     </mapPlans>
 </proprietesXML>

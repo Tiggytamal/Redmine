@@ -20,7 +20,7 @@ import model.enums.TypeColProduit;
  * @since 1.0
  * 
  */
-public class ControlGroupeProjets extends AbstractControlExcelRead<TypeColProduit, List<Produit>>
+public class ControlProduits extends AbstractControlExcelRead<TypeColProduit, List<Produit>>
 {
     /*---------- ATTRIBUTS ----------*/
 
@@ -37,7 +37,7 @@ public class ControlGroupeProjets extends AbstractControlExcelRead<TypeColProdui
      * @throws IOException
      *             Exception lors des accès lecture/écriture
      */
-    ControlGroupeProjets(File file)
+    ControlProduits(File file)
     {
         super(file);
     }

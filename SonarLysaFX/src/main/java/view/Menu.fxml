@@ -36,7 +36,6 @@
 						<MenuItem fx:id="planificateur" text="Planificateur" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="majVues" text="Mise à jour vues" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="majCompos" text="Mise à jour composants" onAction="#afficher" disable="true" />
-						<MenuItem fx:id="majAnos" text="Initialisation des anomalies" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="purge" text="Purge des composants" onAction="#afficher" disable="true" />
 						<MenuItem fx:id="aide" text="Aide" onAction="#aide" disable="false" />
 					</items>

@@ -49,21 +49,21 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     @Override
     public void persistImpl(ComposantSonar compo)
     {
-            // Presistance application liée
-            persistSousObjet(Application.class, compo.getAppli());
+        // Presistance application liée
+        persistSousObjet(Application.class, compo.getAppli());
 
-            // Persistance lot lié
-            persistSousObjet(LotRTC.class, compo.getLotRTC());
+        // Persistance lot lié
+        persistSousObjet(LotRTC.class, compo.getLotRTC());
     }
 
+    /**
+     * Récupération de la liste des numéros de lots avec un composant Sonar
+     * 
+     * @return
+     */
     public List<String> recupLotsAvecComposants()
     {
-        List<String> retour = em.createQuery("SELECT distinct(l.lot) FROM ComposantSonar c JOIN FETCH LotRTC l", String.class).getResultList();
-        System.out.println(retour.size());
-
-        retour = em.createNamedQuery("ComposantSonar.recupLotsRTC", String.class).getResultList();
-        System.out.println(retour.size());
-        return retour;
+        return em.createNamedQuery("ComposantSonar.recupLotsRTC", String.class).getResultList();
     }
 
     /*---------- METHODES PRIVEES ----------*/

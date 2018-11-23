@@ -7,10 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +26,6 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-import control.rtc.ControlRTC;
-import control.task.AbstractTask;
 import control.word.ControlRapport;
 import dao.DaoFactory;
 import model.ModelFactory;
@@ -42,12 +38,10 @@ import model.enums.EtatDefaut;
 import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.Param;
-import model.enums.ParamSpec;
 import model.enums.QG;
 import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import model.enums.TypeRapport;
-import model.enums.TypeVersion;
 import utilities.CellHelper;
 import utilities.FunctionalException;
 import utilities.Statics;
@@ -69,7 +63,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
     // Constantes statiques
     private static final String SQ = "SUIVI Défaults Qualité";
-    private static final String AC = "Anomalies closes";
     private static final String STATS = "Statistiques";
     private static final LocalDate DATEINCONNUE = LocalDate.of(2016, 1, 1);
 
@@ -151,79 +144,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             retour.add(creerdqDepuisExcel(row, lotsRTC));
         }
         return retour;
-    }
-
-    /**
-     * Récupère les anomalies en corus depuis le fichier Excel
-     * 
-     * @param matiere
-     * @param lotsRTC
-     * @param task
-     * @return
-     */
-    public List<DefautQualite> recupAnoEnCoursDepuisExcel(Map<String, LotRTC> lotsRTC, AbstractTask task)
-    {
-        return recupListeAnomaliesDepuisFeuille(SQ, lotsRTC, task);
-    }
-
-    /**
-     * Récupère les anomalies closes depuis le fichier Excel
-     * 
-     * @param matiere
-     * @return
-     */
-    public List<DefautQualite> recupAnoClosesDepuisExcel(Map<String, LotRTC> lotsRTC, AbstractTask task)
-    {
-        List<DefautQualite> retour = recupListeAnomaliesDepuisFeuille(AC, lotsRTC, task);
-        for (DefautQualite dq : retour)
-        {
-            dq.setEtatDefaut(EtatDefaut.CLOS);
-        }
-        return retour;
-    }
-
-    /**
-     * Mets à jour les liste des anomalies avec les anomalies abadonnées
-     * 
-     * @param liste
-     */
-    public Collection<DefautQualite> controlAnoAbandon(Iterable<DefautQualite> liste, Map<String, LotRTC> lotsRTC)
-    {
-        Map<String, DefautQualite> map = new HashMap<>();
-
-        for (DefautQualite dq : liste)
-        {
-            map.put(dq.getLotRTC().getLot(), dq);
-        }
-
-        // Récupération des versions en paramètre
-        String[] versions = proprietesXML.getMapParamsSpec().get(ParamSpec.VERSIONS).split(";");
-        for (String version : versions)
-        {
-            // Création de la feuille de calcul
-            Sheet sheet = wb.getSheet(version);
-            if (sheet == null)
-                continue;
-
-            Iterator<Row> iter = sheet.rowIterator();
-            while (iter.hasNext())
-            {
-                Row row = iter.next();
-                String lot = Utilities.testLot(getCellStringValue(row, Index.DONNEEI.ordinal()));
-                String traite = getCellStringValue(row, Index.TOTALI.ordinal());
-                if ("A".equals(traite) && map.containsKey(lot))
-                    map.get(lot).setEtatDefaut(EtatDefaut.ABANDONNE);
-                else if ("A".equals(traite))
-                {
-                    DefautQualite dq = ModelFactory.build(DefautQualite.class);
-                    dq.setEtatDefaut(EtatDefaut.ABANDONNE);
-                    dq.setDateDetection(DATEINCONNUE);
-                    dq.setLotRTC(lotsRTC.get(lot));
-                    map.put(dq.getLotRTC().getLot(), dq);
-                }
-            }
-        }
-        return map.values();
     }
 
     public void calculStatistiques(Iterable<DefautQualite> dqsEnBase)
@@ -440,39 +360,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         }
 
         return etatAno == EtatDefaut.CLOS;
-    }
-
-    /**
-     * 
-     * @param feuille
-     * @param lotsRTC
-     * @param task
-     * @return
-     */
-    private List<DefautQualite> recupListeAnomaliesDepuisFeuille(String feuille, Map<String, LotRTC> lotsRTC, AbstractTask task)
-    {
-        // Récupération de la première feuille
-        Sheet sheet = wb.getSheet(feuille);
-
-        // Liste de retour
-        List<DefautQualite> retour = new ArrayList<>();
-
-        int size = sheet.getLastRowNum();
-
-        // Itération sur chaque ligne pour créer les anomalies
-        for (int i = 1; i <= size; i++)
-        {
-            Row row = sheet.getRow(i);
-
-            // protection pour les lignes vides
-            if (row == null)
-                continue;
-
-            task.updateProgress(i, size);
-
-            retour.add(creerAnodepuisExcelFull(row, lotsRTC));
-        }
-        return retour;
     }
 
     /**
@@ -764,47 +651,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));
         retour.calculTraitee();
         return retour;
-    }
-
-    /**
-     * Crée une anomalie depuis les informations du fichier Excel avec plus d'informations
-     * 
-     * @param row
-     * @param lotsRTC
-     * @param matiere
-     * @return
-     */
-    private DefautQualite creerAnodepuisExcelFull(Row row, Map<String, LotRTC> lotsRTC)
-    {
-        DefautQualite retour = ModelFactory.build(DefautQualite.class);
-        retour.setLotRTC(lotsRTC.get(Utilities.testLot(getCellStringValue(row, colLot))));
-        retour.setNumeroAnoRTC(getCellNumericValue(row, colAno));
-        retour.setRemarque(getCellStringValue(row, colRemarque));
-        retour.setDateRelance(getCellDateValue(row, colDateRel));
-        retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));
-        retour.setDateDetection(getCellNotNullDateValue(row, colDateDetec));
-        retour.setDateCreation(getCellDateValue(row, colDateCrea));
-        retour.setDateReso(getCellDateValue(row, colDateRes));
-        if (Statics.X.equals(getCellStringValue(row, colSec)))
-            retour.setSecurite(true);
-        if (TypeVersion.SNAPSHOT.toString().equals(getCellStringValue(row, colVer)))
-            retour.setTypeVersion(TypeVersion.SNAPSHOT);
-        else
-            retour.setTypeVersion(TypeVersion.RELEASE);
-
-        ControlRTC.INSTANCE.controleAnoRTC(retour);
-
-        retour.calculTraitee();
-        return retour;
-    }
-
-    private LocalDate getCellNotNullDateValue(Row row, int col)
-    {
-        LocalDate date = getCellDateValue(row, col);
-        if (date != null)
-            return getCellDateValue(row, colDateDetec);
-        else
-            return DATEINCONNUE;
     }
 
     /**

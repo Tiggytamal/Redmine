@@ -70,7 +70,6 @@ public class ControlExtractCompo extends AbstractControlExcelWrite<TypeColCompo,
     @Override
     protected void enregistrerDonnees(Map<TypeColCompo, List<ComposantSonar>> composSonar, Sheet sheet, AbstractTask task)
     {
-
         CellStyle centre = helper.getStyle(IndexedColors.WHITE, Bordure.VIDE, HorizontalAlignment.CENTER);
         centre.setWrapText(false);
 
@@ -99,17 +98,18 @@ public class ControlExtractCompo extends AbstractControlExcelWrite<TypeColCompo,
                 default:
                     throw new TechnicalException("control.excel.ControlExtractCompo.eregistrerDonnees - TypeColCompo Inconnu : " + entry.getKey());
             }
-            
+
             int size = entry.getValue().size();
 
             for (int i = 0; i < size; i++)
             {
                 valoriserCellule(getRow(i + 1, sheet), numCol, centre, entry.getValue().get(i).getNom());
-                task.updateProgress(i, size);
+                if (task != null)
+                    task.updateProgress(i, size);
             }
         }
 
-        autosizeColumns(sheet);       
+        autosizeColumns(sheet);
     }
 
     /*---------- METHODES PRIVEES ----------*/

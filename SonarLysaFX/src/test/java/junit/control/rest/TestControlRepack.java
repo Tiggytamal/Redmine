@@ -28,10 +28,8 @@ public class TestControlRepack extends JunitBase
     
     @Test
     public void testGetRepacksComposant()
-    {
-        
+    {        
         List<RepackREST> liste = handler.getRepacksComposant(DaoFactory.getDao(ComposantSonar.class).recupEltParIndex("fr.ca.cat.controlermifentretienjoint:SRVT_ControlerMIFEntretienJoint_Build:14"));
-        System.out.println(liste.size());
     }
     
     /*---------- METHODES PRIVEES ----------*/

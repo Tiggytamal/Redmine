@@ -17,7 +17,7 @@ import utilities.TechnicalException;
  * 
  */
 public interface ExcelFactory
-{   
+{
     /**
      * Retourne une instance d'un controleur Excel en fonction du type d'énumération
      * 
@@ -31,39 +31,39 @@ public interface ExcelFactory
     public static <T extends Enum<T> & TypeColR, R extends AbstractControlExcelRead<T, Y>, Y> R getReader(Class<T> type, File file)
     {
         switch (type.getName())
-        {           
-            case "model.enums.TypeColClarity" :                
+        {
+            case "model.enums.TypeColClarity":
                 return (R) new ControlClarity(file);
-                
-            case "model.enums.TypeColChefServ" :
+
+            case "model.enums.TypeColChefServ":
                 return (R) new ControlChefService(file);
-            
-            case "model.enums.TypeColPic" :
+
+            case "model.enums.TypeColPic":
                 return (R) new ControlPic(file);
-                
-            case "model.enums.TypeColEdition" :
+
+            case "model.enums.TypeColEdition":
                 return (R) new ControlEdition(file);
-                
-            case "model.enums.TypeColApps" :
+
+            case "model.enums.TypeColApps":
                 return (R) new ControlApps(file);
-                
-            case "model.enums.TypeColSuivi" :
+
+            case "model.enums.TypeColSuivi":
                 return (R) new ControlSuivi(file);
-                
-            case "model.enums.TypeColGrProjet" :
-                return (R) new ControlGroupeProjets(file);
-                
-            case "model.enums.TypeColUA" :
+
+            case "model.enums.TypeColProduit":
+                return (R) new ControlProduits(file);
+
+            case "model.enums.TypeColUA":
                 return (R) new ControlUA(file);
-                
-            case "model.enums.TypeColSuiviApps" :
+
+            case "model.enums.TypeColSuiviApps":
                 return (R) new ControlSuiviApps(file);
-                
+
             default:
                 throw new TechnicalException("control.excel.ExcelFactory.getReader - type non géré : " + type.toString(), null);
         }
     }
-    
+
     /**
      * Retourne une instance d'un controleur Excel en fonction du type d'énumération
      * 
@@ -77,21 +77,24 @@ public interface ExcelFactory
     public static <T extends Enum<T> & TypeColW, R extends AbstractControlExcelWrite<T, Y>, Y> R getWriter(Class<T> type, File file)
     {
         switch (type.getName())
-        {           
-            case "model.enums.TypeColVul" :                
+        {
+            case "model.enums.TypeColVul":
                 return (R) new ControlExtractVul(file);
-                
-            case "model.enums.TypeColApps" :
+
+            case "model.enums.TypeColApps":
                 return (R) new ControlAppsW(file);
-                
-            case "model.enums.TypeColPbApps" :
+
+            case "model.enums.TypeColPbApps":
                 return (R) new ControlPbApps(file);
-                
-            case "model.enums.TypeColAppsW" :
+
+            case "model.enums.TypeColAppsW":
                 return (R) new ControlAppsW(file);
-                
+
+            case "model.enums.TypeColCompo":
+                return (R) new ControlExtractCompo(file);
+
             default:
-                throw new TechnicalException("ExcelFactory.getXriter - type non géré : " + type.toString(), null);
+                throw new TechnicalException("ExcelFactory.getWriter - type non géré : " + type.toString(), null);
         }
     }
 }
