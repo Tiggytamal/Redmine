@@ -13,9 +13,7 @@ import com.ibm.team.repository.common.TeamRepositoryException;
 import control.excel.ControlSuiviApps;
 import control.excel.ExcelFactory;
 import control.rtc.ControlRTC;
-import dao.DaoDefaultAppli;
-import dao.DaoDefaultQualite;
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.ModelFactory;
 import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
@@ -33,8 +31,6 @@ public class MajSuiviAppsTask extends AbstractTask
     private static final String TITRE = "Création Vue Datastage";
     private static final int ETAPES = 2;
 
-    private DaoDefaultAppli dao;
-    private DaoDefaultQualite daoDq;
     private ControlSuiviApps control;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -42,8 +38,6 @@ public class MajSuiviAppsTask extends AbstractTask
     public MajSuiviAppsTask()
     {
         super(ETAPES, TITRE);
-        dao = DaoFactory.getDao(DefautAppli.class);
-        daoDq = DaoFactory.getDao(DefautQualite.class);
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + proprietesXML.getMapParams().get(Param.NOMFICHIERJAVA);
         control = ExcelFactory.getReader(TypeColSuiviApps.class, new File(name));
         startTimers();
@@ -67,8 +61,8 @@ public class MajSuiviAppsTask extends AbstractTask
 
     private boolean majSuiviApps() throws TeamRepositoryException
     {
-        Map<String, DefautAppli> mapDefaults = dao.readAllMap();
-        Map<String, DefautQualite> dqs = daoDq.readAllMap();
+        Map<String, DefautAppli> mapDefaults = ListeDao.daoDefautAppli.readAllMap();
+        Map<String, DefautQualite> dqs = ListeDao.daoDefautQualite.readAllMap();
 
         etapePlus();
         List<DefautAppli> das = control.recupDonneesDepuisExcel();
@@ -76,7 +70,7 @@ public class MajSuiviAppsTask extends AbstractTask
         int i = 0;
         int size = das.size();
         long debut = System.currentTimeMillis();
-        baseMessage = "Traitement Défaults Qualité :";
+        baseMessage = "Traitement Défaults Appliction :";
         updateMessage("");
 
         // Récupération eds informations depuis le fichier Excel pour le traitement
@@ -96,7 +90,7 @@ public class MajSuiviAppsTask extends AbstractTask
         control.majFeuilleDefaultsAppli(new ArrayList<>(mapDefaults.values()), control.resetFeuilleDA());
         control.write();
         control.close();
-        dao.persist(mapDefaults.values());
+        ListeDao.daoDefautAppli.persist(mapDefaults.values());
         return false;
     }
 
@@ -111,6 +105,11 @@ public class MajSuiviAppsTask extends AbstractTask
         {
             da.setAction(TypeAction.VIDE);
             da.setEtatDefaut(EtatDefaut.ABANDONNE);
+        }
+        else if (da.getAction() == TypeAction.CLOTURER && da.getCompo().getAppli().isReferentiel())
+        {
+            da.setAction(TypeAction.VIDE);
+            da.setEtatDefaut(EtatDefaut.CLOS);
         }
     }
 

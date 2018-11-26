@@ -6,5 +6,6 @@ public enum EtatDefaut
     ABANDONNE,    
     TRAITE,
     LOTCLOS,
+    CORRIGE,
     CLOS;
 }

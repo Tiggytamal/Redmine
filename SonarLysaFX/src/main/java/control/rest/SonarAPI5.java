@@ -26,9 +26,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.mchange.util.AssertException;
 
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.bdd.ComposantSonar;
-import model.bdd.DateMaj;
 import model.enums.Param;
 import model.enums.TypeDonnee;
 import model.interfaces.ModeleSonar;
@@ -902,7 +901,7 @@ public class SonarAPI5 extends AbstractToStringImpl
         }
         compo.setVersion(version);
         compo.setVersionRelease(!version.contains("SNAPSHOT"));
-        return date.isAfter(DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.COMPOSANT.toString()).getTimeStamp());
+        return date.isAfter(ListeDao.daoDateMaj.recupEltParIndex(TypeDonnee.COMPOSANT.toString()).getTimeStamp());
     }
 
     /**

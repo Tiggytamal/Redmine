@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import javax.xml.bind.JAXBException;
 
 import control.xml.ControlXML;
-import dao.DaoFactory;
+import dao.ListeDao;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -27,11 +27,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import model.Colonne;
-import model.bdd.Application;
-import model.bdd.ChefService;
-import model.bdd.Edition;
-import model.bdd.Produit;
-import model.bdd.ProjetClarity;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
@@ -41,9 +36,9 @@ import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColCompo;
 import model.enums.TypeColEdition;
-import model.enums.TypeColProduit;
 import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
+import model.enums.TypeColProduit;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
 import model.enums.TypeColUA;
@@ -219,23 +214,23 @@ public final class OptionViewControl extends AbstractViewControl
         switch (id)
         {
             case "apps":
-                charger("Applications", DaoFactory.getDao(Application.class)::recupDonneesDepuisExcel);
+                charger("Applications", ListeDao.daoAppli::recupDonneesDepuisExcel);
                 break;
 
             case "clarity":
-                charger("Referentiel Clarity", DaoFactory.getDao(ProjetClarity.class)::recupDonneesDepuisExcel);
+                charger("Referentiel Clarity", ListeDao.daoProjetClarity::recupDonneesDepuisExcel);
                 break;
 
             case "chefSrev":
-                charger("Chefs de Service", DaoFactory.getDao(ChefService.class)::recupDonneesDepuisExcel);
+                charger("Chefs de Service", ListeDao.daoChefServ::recupDonneesDepuisExcel);
                 break;
 
             case "edition":
-                charger("Editions CDM", DaoFactory.getDao(Edition.class)::recupDonneesDepuisExcel);
+                charger("Editions CDM", ListeDao.daoEdition::recupDonneesDepuisExcel);
                 break;
                 
             case "npc":
-                charger("Projets NPC", DaoFactory.getDao(Produit.class)::recupDonneesDepuisExcel);
+                charger("Projets NPC", ListeDao.daoProduit::recupDonneesDepuisExcel);
                 break;
 
             default:

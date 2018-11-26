@@ -17,7 +17,7 @@ public class DaoFactory
     DaoFactory() {}
     
     @SuppressWarnings("unchecked")
-    public static <T extends AbstractDao<M>, M extends AbstractBDDModele> T getDao(Class<M> daoClass)
+    static <T extends AbstractDao<M>, M extends AbstractBDDModele> T getDao(Class<M> daoClass)
     {
         switch (daoClass.getName())
         {
@@ -40,7 +40,7 @@ public class DaoFactory
                 return (T) new DaoProjetClarity();
                 
             case "model.bdd.DefautQualite":
-                return (T) new DaoDefaultQualite();
+                return (T) new DaoDefautQualite();
                 
             case "model.bdd.DateMaj":
                 return (T) new DaoDateMaj();
@@ -49,7 +49,7 @@ public class DaoFactory
                 return (T) new DaoProduit();
                 
             case "model.bdd.DefautAppli":
-                return (T) new DaoDefaultAppli();
+                return (T) new DaoDefautAppli();
 
             default:
                 throw new TechnicalException("dao.DaoFactory - Création Dao impossible - classe : " + daoClass.getName());
@@ -57,7 +57,7 @@ public class DaoFactory
     }
     
     @SuppressWarnings("unchecked")
-    public static <T extends AbstractDao<M>, M extends AbstractBDDModele> T getDao(Class<M> daoClass, EntityManager em)
+    static <T extends AbstractDao<M>, M extends AbstractBDDModele> T getDao(Class<M> daoClass, EntityManager em)
     {
         switch (daoClass.getName())
         {
@@ -80,7 +80,7 @@ public class DaoFactory
                 return (T) new DaoProjetClarity(em);
                 
             case "model.bdd.DefautQualite":
-                return (T) new DaoDefaultQualite(em);
+                return (T) new DaoDefautQualite(em);
                 
             case "model.bdd.DateMaj":
                 return (T) new DaoDateMaj(em);
@@ -89,7 +89,7 @@ public class DaoFactory
                 return (T) new DaoProduit(em);
                 
             case "model.bdd.DefautAppli":
-                return (T) new DaoDefaultAppli(em);
+                return (T) new DaoDefautAppli(em);
 
             default:
                 throw new TechnicalException("dao.DaoFactory - Création Dao impossible - classe : " + daoClass.getName());

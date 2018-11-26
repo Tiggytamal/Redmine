@@ -100,7 +100,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
      * 
      * @return
      */
-    public final List<T> readAll()
+    public List<T> readAll()
     {
         // Appel de la requête et calcul du temps de traitement
         long debut = System.currentTimeMillis();

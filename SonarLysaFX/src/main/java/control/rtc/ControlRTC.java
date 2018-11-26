@@ -64,11 +64,8 @@ import com.mchange.util.AssertException;
 
 import control.task.AbstractTask;
 import dao.DaoComposantSonar;
-import dao.DaoDateMaj;
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.ModelFactory;
-import model.bdd.ComposantSonar;
-import model.bdd.DateMaj;
 import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
@@ -428,9 +425,8 @@ public class ControlRTC extends AbstractToStringImpl
         else
         {
             // Récupération de la date de mise à jour depuis la base de données
-            DaoDateMaj dao = DaoFactory.getDao(DateMaj.class);
-            dao.clearCache();
-            LocalDateTime lastUpdate = dao.recupEltParIndex(TypeDonnee.LOTSRTC.toString()).getTimeStamp();
+            ListeDao.daoDateMaj.clearCache();
+            LocalDateTime lastUpdate = ListeDao.daoDateMaj.recupEltParIndex(TypeDonnee.LOTSRTC.toString()).getTimeStamp();
             if (lastUpdate != null)
             {
                 // Dernière date de mise à jour. On utilise la zone GMT car en interne RTC prend les dates dans ce format.
@@ -451,7 +447,7 @@ public class ControlRTC extends AbstractToStringImpl
         // Gestion des lots des composants. On ne prend que les lots qui ont un composantSonar dans la base.
 
         // Récupération des numéros de lots depuis la base de données
-        DaoComposantSonar dao = DaoFactory.getDao(ComposantSonar.class);
+        DaoComposantSonar dao = ListeDao.daoCompo;
         List<String> listeLots = dao.recupLotsAvecComposants();
 
         // Création de la liste de numéros de lots

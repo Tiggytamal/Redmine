@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
 import model.enums.EtatLot;
@@ -145,7 +145,7 @@ public class CreerVueProductionTask extends AbstractTask
     private Map<LocalDate, List<Vue>> recupLotRTCPourMEP(LocalDate dateDebut, LocalDate dateFin, Map<String, Vue> mapSonar)
     {
         Map<LocalDate, List<Vue>> retour = new HashMap<>();
-        Map<String, LotRTC> mapLots = DaoFactory.getDao(LotRTC.class).readAllMap();
+        Map<String, LotRTC> mapLots = ListeDao.daoLotRTC.readAllMap();
 
         // Affichage et variables
         baseMessage = "Traitement RTC :\n";

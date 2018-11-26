@@ -212,7 +212,10 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
 
         // On met à vert les défautls dont le code applicaiton a été corrigé
         if (da.getCompo().getAppli().isReferentiel())
+        {
             couleur = IndexedColors.LIGHT_GREEN;
+            da.setEtatDefaut(EtatDefaut.CORRIGE);
+        }
         return couleur;
     }
     

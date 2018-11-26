@@ -13,8 +13,7 @@ import control.task.AbstractTask;
 import control.task.MajComposantsSonarTask;
 import control.task.MajVuesTask;
 import control.task.PurgeSonarTask;
-import dao.DaoDateMaj;
-import dao.DaoFactory;
+import dao.ListeDao;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -86,8 +85,6 @@ public final class MenuViewControl extends AbstractViewControl
     @FXML
     private MenuItem majCompos;
     @FXML
-    private MenuItem majAnos;
-    @FXML
     private MenuItem bdd;
     @FXML
     private Button connexion;
@@ -133,7 +130,6 @@ public final class MenuViewControl extends AbstractViewControl
         purge.setDisable(true);
         majVues.setDisable(true);
         majCompos.setDisable(true);
-        majAnos.setDisable(true);
         bdd.setDisable(true);
         rtc.setDisable(true);
         extraction.setDisable(true);
@@ -281,7 +277,6 @@ public final class MenuViewControl extends AbstractViewControl
         appli.setDisable(false);
         majVues.setDisable(false);
         majCompos.setDisable(false);
-        majAnos.setDisable(false);
         bdd.setDisable(false);
         extraction.setDisable(false);
         suivi.setDisable(false);
@@ -311,8 +306,7 @@ public final class MenuViewControl extends AbstractViewControl
             }
         }
 
-        DaoDateMaj dao = DaoFactory.getDao(DateMaj.class);
-        List<DateMaj> liste = dao.readAll();
+        List<DateMaj> liste = ListeDao.daoDateMaj.readAll();
 
         StringBuilder builder = new StringBuilder("Dates de mises à jour de la base :\n");
         final String TIRET = " - ";

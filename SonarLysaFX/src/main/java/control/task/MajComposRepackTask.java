@@ -5,9 +5,8 @@ import java.util.List;
 
 import control.rest.ControlRepack;
 import dao.DaoEdition;
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.bdd.ComposantSonar;
-import model.bdd.Edition;
 import model.bdd.LotRTC;
 import model.rest.repack.RepackREST;
 import utilities.Statics;
@@ -39,7 +38,7 @@ public class MajComposRepackTask extends AbstractTask
     public Boolean call() throws Exception
     {
         majComposRepack();
-        return DaoFactory.getDao(ComposantSonar.class).persist(mapCompos.values()) > 0;
+        return ListeDao.daoCompo.persist(mapCompos.values()) > 0;
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -107,7 +106,7 @@ public class MajComposRepackTask extends AbstractTask
         if (nomGc == null)
             return Statics.DATEINCONNUE;
 
-        DaoEdition dao = DaoFactory.getDao(Edition.class);
+        DaoEdition dao = ListeDao.daoEdition;
         if (nomGc.matches("^E[2-9]\\d_GC\\d\\d[A-Z]?$"))
             return dao.readAllMap().get(nomGc.substring(0, 3)).getDateMEP();
 

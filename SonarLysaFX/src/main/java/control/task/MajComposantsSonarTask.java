@@ -11,15 +11,12 @@ import org.apache.logging.log4j.Logger;
 
 import control.rest.ControlRepack;
 import control.word.ControlRapport;
-import dao.DaoComposantSonar;
-import dao.DaoDefaultAppli;
 import dao.DaoEdition;
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
 import model.bdd.DefautAppli;
-import model.bdd.Edition;
 import model.bdd.LotRTC;
 import model.enums.EtatDefaut;
 import model.enums.EtatLot;
@@ -107,9 +104,9 @@ public class MajComposantsSonarTask extends AbstractTask
 
         // Récupération des données de la base de données et de Sonar
         List<ComposantSonar> retour = new ArrayList<>();
-        Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
-        Map<String, LotRTC> mapLotRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
-        Map<String, DefautAppli> mapDefAppli = DaoFactory.getDao(DefautAppli.class).readAllMap();
+        Map<String, Application> mapAppli = ListeDao.daoAppli.readAllMap();
+        Map<String, LotRTC> mapLotRTC = ListeDao.daoLotRTC.readAllMap();
+        Map<String, DefautAppli> mapDefAppli = ListeDao.daoDefautAppli.readAllMap();
         List<Projet> projets = api.getComposants();
 
         // Réinitialisation des matières des lots pour le cas d'un composant qui serait retiré et qui enléverait un type de matière.
@@ -301,7 +298,7 @@ public class MajComposantsSonarTask extends AbstractTask
         if (nomGc == null)
             return Statics.DATEINCONNUE;
 
-        DaoEdition dao = DaoFactory.getDao(Edition.class);
+        DaoEdition dao = ListeDao.daoEdition;
         if (nomGc.matches("^E[2-9]\\d_GC\\d\\d[A-Z]?$"))
             return dao.readAllMap().get(nomGc.substring(0, 3)).getDateMEP();
 
@@ -370,9 +367,8 @@ public class MajComposantsSonarTask extends AbstractTask
      */
     private void majDefAppli(Map<String, DefautAppli> mapDefAppli)
     {
-        DaoDefaultAppli daoDefAppli = DaoFactory.getDao(DefautAppli.class);
-        daoDefAppli.persist(mapDefAppli.values());
-        daoDefAppli.majDateDonnee();
+        ListeDao.daoDefautAppli.persist(mapDefAppli.values());
+        ListeDao.daoDefautAppli.majDateDonnee();
     }
 
     /**
@@ -398,6 +394,8 @@ public class MajComposantsSonarTask extends AbstractTask
 
             if (appli.isReferentiel() && (defAppli.getDefautQualite() == null || defAppli.getDefautQualite().getNumeroAnoRTC() == 0))
                 defAppli.setEtatDefaut(EtatDefaut.CLOS);
+            else if (appli.isReferentiel() && defAppli.getDefautQualite() != null && defAppli.getDefautQualite().getNumeroAnoRTC() != 0)
+                defAppli.setEtatDefaut(EtatDefaut.CORRIGE);
             else if (lotRTC.getEtatLot() == EtatLot.ABANDONNE || lotRTC.getEtatLot() == EtatLot.TERMINE || lotRTC.getEtatLot() == EtatLot.EDITION)
                 defAppli.setEtatDefaut(EtatDefaut.LOTCLOS);
         }
@@ -460,9 +458,8 @@ public class MajComposantsSonarTask extends AbstractTask
     private int sauvegarde(List<ComposantSonar> listeSonar)
     {
         // Ajout des donnèes et mise à jour de la date de modification de la table
-        DaoComposantSonar dao = DaoFactory.getDao(ComposantSonar.class);
-        int retour = dao.persist(listeSonar);
-        dao.majDateDonnee();
+        int retour = ListeDao.daoCompo.persist(listeSonar);
+        ListeDao.daoCompo.majDateDonnee();
         return retour;
     }
 
@@ -473,7 +470,6 @@ public class MajComposantsSonarTask extends AbstractTask
      */
     private void purgeComposPlantes(List<String> keysComposPlantes)
     {
-        DaoComposantSonar dao = DaoFactory.getDao(ComposantSonar.class);
 
         for (String key : keysComposPlantes)
         {
@@ -485,7 +481,7 @@ public class MajComposantsSonarTask extends AbstractTask
 
             // Suppression dans la base
             if (PURGE)
-                dao.delete(dao.recupEltParIndex(key));
+                ListeDao.daoCompo.delete(ListeDao.daoCompo.recupEltParIndex(key));
         }
 
     }

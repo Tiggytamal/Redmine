@@ -112,9 +112,6 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     @Column(name = "type_defaut", nullable = false)
     private TypeDefaut typeDefaut;
 
-    @OneToOne(optional = true, mappedBy = "defautQualite", targetEntity = DefautAppli.class)
-    private DefautAppli defautAppli;
-
     @Transient
     private String nomCompoAppli;
 
@@ -178,7 +175,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
      */
     private void creerLiensAnoRTC()
     {
-        liensAno = Statics.proprietesXML.getMapParams().get(Param.LIENSANOS) + getLotRTC().getProjetRTC().replace(Statics.SPACE, "%20") + Statics.FINLIENSANO + String.valueOf(numeroAnoRTC);
+        if (getLotRTC() != null && getLotRTC().getProjetRTC() != null)
+            liensAno = Statics.proprietesXML.getMapParams().get(Param.LIENSANOS) + getLotRTC().getProjetRTC().replace(Statics.SPACE, "%20") + Statics.FINLIENSANO + String.valueOf(numeroAnoRTC);
     }
 
     /**
@@ -186,7 +184,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
      */
     private void creerLiensLotRTC()
     {
-        liensLot = Statics.proprietesXML.getMapParams().get(Param.LIENSLOTS) + getLotRTC().getLot();
+        if (getLotRTC() != null)
+            liensLot = Statics.proprietesXML.getMapParams().get(Param.LIENSLOTS) + getLotRTC().getLot();
     }
 
     private void controleLiensAno()
@@ -427,16 +426,5 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     public void setDateMepPrev(LocalDate dateMepPrev)
     {
         this.dateMepPrev = dateMepPrev;
-    }
-
-    @XmlTransient
-    public DefautAppli getDefautAppli()
-    {
-        return defautAppli;
-    }
-
-    public void setDefautAppli(DefautAppli defautAppli)
-    {
-        this.defautAppli = defautAppli;
     }
 }

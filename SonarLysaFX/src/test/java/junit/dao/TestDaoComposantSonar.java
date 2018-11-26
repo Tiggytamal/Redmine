@@ -18,15 +18,15 @@ public class TestDaoComposantSonar extends AbstractTestDao<DaoComposantSonar, Co
     @Test
     public void testReadAll()
     {
-        assertNotNull(handler.readAll());
+        assertNotNull(daoTest.readAll());
     }
     
     @Test
     @Ignore ("test manuel pour effacer la table")
     public void testResetTable()
     {
-        int size = handler.resetTable();
-        assertEquals(handler.readAll().size(), size);
+        int size = daoTest.resetTable();
+        assertEquals(daoTest.readAll().size(), size);
     }
     
     /*---------- METHODES PRIVEES ----------*/
@@ -36,12 +36,12 @@ public class TestDaoComposantSonar extends AbstractTestDao<DaoComposantSonar, Co
     @Override
     public void testRecupDonneesDepuisExcel()
     {
-        assertEquals(0, handler.recupDonneesDepuisExcel(null));
+        assertEquals(0, daoTest.recupDonneesDepuisExcel(null));
     }
     
     @Test
     public void testRecupLotsAvecComposants()
     {
-        handler.recupLotsAvecComposants();
+        daoTest.recupLotsAvecComposants();
     }
 }

@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.enums.EtatLot;
 import model.enums.GroupeProduit;
 import model.enums.Matiere;
@@ -147,7 +147,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         retour.cpiProjet = Statics.EMPTY;
         retour.etatLot = EtatLot.NOUVEAU;
         retour.projetRTC = Statics.EMPTY;
-        retour.edition = DaoFactory.getDao(Edition.class).recupEltParIndex(Statics.EDINCONNUE);
+        retour.edition = ListeDao.daoEdition.recupEltParIndex(Statics.EDINCONNUE);
         return retour;
     }
 
@@ -184,24 +184,6 @@ public class LotRTC extends AbstractBDDModele implements Serializable
                 builder.append(" - ");
         }
         return builder.toString();
-    }
-
-    /**
-     * Remplie la liste des matières depuis une chaine de caractères. Chaque matière doit être séparées par un "-".
-     * 
-     */
-    public void setMatieresString(String matieresString)
-    {
-        if (matieresString == null || matieresString.isEmpty())
-            return;
-        if (matieres == null)
-            matieres = new HashSet<>();
-        else
-            matieres.clear();
-        for (String matiere : matieresString.split("-"))
-        {
-            matieres.add(Matiere.from(matiere.trim()));
-        }
     }
 
     public void addMatiere(Matiere matiere)
@@ -259,7 +241,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.cpiProjet = cpiProjet;
     }
 
-    @XmlTransient
+    @XmlElement (name = "edition")
     public Edition getEdition()
     {
         return edition;

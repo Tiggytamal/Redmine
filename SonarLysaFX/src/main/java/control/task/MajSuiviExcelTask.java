@@ -26,11 +26,9 @@ import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
 import control.rtc.ControlRTC;
 import control.word.ControlRapport;
-import dao.DaoDefaultQualite;
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
-import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.EtatDefaut;
@@ -351,8 +349,7 @@ public class MajSuiviExcelTask extends AbstractTask
         // Création de la map de retour
         Set<String> retour = new HashSet<>();
 
-        DaoDefaultQualite dao = DaoFactory.getDao(DefautQualite.class);
-        Map<String, DefautQualite> dqsEnBase = dao.readAllMap();
+        Map<String, DefautQualite> dqsEnBase = ListeDao.daoDefautQualite.readAllMap();
         List<DefautQualite> dqInit = new ArrayList<>();
 
         // Message
@@ -371,7 +368,7 @@ public class MajSuiviExcelTask extends AbstractTask
             traitementCompo(compo, retour, dqsEnBase, dqInit);
         }
 
-        dao.persist(dqsEnBase.values());
+        ListeDao.daoDefautQualite.persist(dqsEnBase.values());
         return retour;
     }
 
@@ -392,8 +389,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private void majFichierAnomalies(Set<String> lotSonarQGError, String fichier, Matiere matiere) throws IOException
     {
         // Récupération des anomalies en base
-        DaoDefaultQualite dao = DaoFactory.getDao(DefautQualite.class);
-        Map<String, DefautQualite> mapDqsEnBase = dao.readAllMapMatiere(matiere);
+        Map<String, DefautQualite> mapDqsEnBase = ListeDao.daoDefautQualite.readAllMapMatiere(matiere);
 
         // Mise à jour des lots en ereur
         for (DefautQualite dq : mapDqsEnBase.values())
@@ -453,7 +449,7 @@ public class MajSuiviExcelTask extends AbstractTask
         controlAno.majFeuilleDefaultsQualite(new ArrayList<>(mapDqsEnBase.values()), sheet, matiere);
 
         // Persistance des données
-        dao.persist(mapDqsEnBase.values());
+        ListeDao.daoDefautQualite.persist(mapDqsEnBase.values());
 
         controlAno.calculStatistiques(new ArrayList<>(mapDqsEnBase.values()));
 
@@ -593,7 +589,6 @@ public class MajSuiviExcelTask extends AbstractTask
                 {
                     dq.setEtatDefaut(EtatDefaut.ABANDONNE);
                     dq.setAction(TypeAction.VIDE);
-                    fermetureDefautAppli(dq);
                     controlRapport.addInfo(TypeInfo.ANOABANDON, dq.getLotRTC().getLot(), String.valueOf(dq.getNumeroAnoRTC()));
                 }
                 dq.controleLiens();
@@ -604,7 +599,6 @@ public class MajSuiviExcelTask extends AbstractTask
                 {
                     dq.setEtatDefaut(EtatDefaut.CLOS);
                     dq.setAction(TypeAction.VIDE);
-                    fermetureDefautAppli(dq);
                     controlRapport.addInfo(TypeInfo.ANOABANDON, dq.getLotRTC().getLot(), String.valueOf(dq.getNumeroAnoRTC()));
                 }
                 dq.controleLiens();
@@ -661,16 +655,6 @@ public class MajSuiviExcelTask extends AbstractTask
 
             default:
                 throw new TechnicalException("control.task.MajSuiviExcelTask.gestionAction - type d'action inconnue : " + dq.getAction());
-        }
-    }
-    
-    private void fermetureDefautAppli(DefautQualite dq)
-    {
-        DefautAppli da = dq.getDefautAppli();
-        if (da != null)
-        {
-            da.setEtatDefaut(EtatDefaut.ABANDONNE);
-            da.setAction(TypeAction.VIDE);
         }
     }
 

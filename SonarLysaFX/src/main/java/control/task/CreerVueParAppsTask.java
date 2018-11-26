@@ -17,7 +17,7 @@ import control.excel.ControlPbApps;
 import control.excel.ControlUA;
 import control.excel.ExcelFactory;
 import dao.DaoApplication;
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.CompoPbApps;
 import model.ModelFactory;
 import model.bdd.Application;
@@ -77,7 +77,7 @@ public class CreerVueParAppsTask extends AbstractTask
     {
         super(ETAPES, TITRE);
         annulable = false;
-        daoApplication = DaoFactory.getDao(Application.class);
+        daoApplication = ListeDao.daoAppli;
         applications = daoApplication.readAllMap();
         initAppliInconnue();
         applisOpenSonar = new HashSet<>();
@@ -213,7 +213,7 @@ public class CreerVueParAppsTask extends AbstractTask
         // Initialisation de la map
         HashMap<String, List<ComposantSonar>> retour = new HashMap<>();
         
-        Map<String, DefautAppli> mapDefaultAppli = DaoFactory.getDao(DefautAppli.class).readAllMap();
+        Map<String, DefautAppli> mapDefaultAppli = ListeDao.daoDefautAppli.readAllMap();
 
         // Message
         baseMessage = "Traitements des composants :" + NL;

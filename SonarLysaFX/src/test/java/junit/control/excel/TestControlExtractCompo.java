@@ -17,7 +17,7 @@ import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlExtractCompo;
 import control.task.MajLotsRTCTask;
-import dao.DaoFactory;
+import dao.ListeDao;
 import de.saxsys.javafx.test.JfxRunner;
 import model.bdd.ComposantSonar;
 import model.enums.TypeColCompo;
@@ -47,7 +47,7 @@ public class TestControlExtractCompo extends TestControlExcelWrite<TypeColCompo,
     public void testAjouterExtraction() throws IllegalArgumentException, IllegalAccessException
     {
         // Données depuis la base
-        List<ComposantSonar> composBase = DaoFactory.getDao(ComposantSonar.class).readAll();
+        List<ComposantSonar> composBase = ListeDao.daoCompo.readAll();
 
         // Préparation de la map
         Map<TypeColCompo, List<ComposantSonar>> composSonar = new HashMap<>();

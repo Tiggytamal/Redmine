@@ -13,8 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import dao.DaoDefaultAppli;
-import dao.DaoFactory;
+import dao.ListeDao;
 import javafx.fxml.FXML;
 import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
@@ -38,7 +37,7 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
     {
         listeFXML = new ArrayList<>();
 
-        for (DefautQualite defaultQualite : DaoFactory.getDao(DefautQualite.class).readAll())
+        for (DefautQualite defaultQualite : ListeDao.daoDefautQualite.readAll())
         {
             if (defaultQualite.getEtatDefaut() == EtatDefaut.CLOS || defaultQualite.getEtatDefaut() == EtatDefaut.ABANDONNE)
                 listeFXML.add(new DefaultQualiteFXML(defaultQualite));
@@ -54,8 +53,7 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
         File file = getFileFromFileChooser("Fichier consolidation");
         Workbook wb = WorkbookFactory.create(file);
         Sheet sheet = wb.getSheet("Composants avec pb. appli");
-        DaoDefaultAppli dao = DaoFactory.getDao(DefautAppli.class);
-        Map<String, DefautAppli> mapDefaultsAppli = dao.readAllMap();
+        Map<String, DefautAppli> mapDefaultsAppli = ListeDao.daoDefautAppli.readAllMap();
 
         for (Iterator<Row> iter = sheet.rowIterator(); iter.hasNext();)
         {
@@ -77,7 +75,7 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
                 da.setAppliCorrigee(row.getCell(1).getStringCellValue());
             }
         }
-        dao.persist(mapDefaultsAppli.values());
+        ListeDao.daoDefautAppli.persist(mapDefaultsAppli.values());
         wb.close();
     }
     

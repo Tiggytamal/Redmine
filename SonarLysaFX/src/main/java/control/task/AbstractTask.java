@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import control.rest.SonarAPI5;
-import dao.DaoFactory;
+import dao.ListeDao;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -83,7 +83,7 @@ public abstract class AbstractTask extends Task<Boolean>
         initEtape(fin);
         this.titre = titre;
         baseMessage = "";
-        mapCompos = DaoFactory.getDao(ComposantSonar.class).readAllMap();
+        mapCompos = ListeDao.daoCompo.readAllMap();
         setTempsRestant(0);
         timerTask = new TimerTask(this);
         affTimerTask = new AffichageTempsTask(this);

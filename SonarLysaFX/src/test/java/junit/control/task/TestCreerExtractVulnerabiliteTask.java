@@ -15,7 +15,7 @@ import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlExtractVul;
 import control.task.CreerExtractVulnerabiliteTask;
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.ModelFactory;
 import model.Vulnerabilite;
 import model.bdd.Application;
@@ -83,7 +83,7 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
         
         // Compteur pour limiter la taille de la liste et le temps de traitement.
         int i = 0;
-        for (ComposantSonar compo : DaoFactory.getDao(ComposantSonar.class).readAll())
+        for (ComposantSonar compo : ListeDao.daoCompo.readAll())
         {
             nomsComposPatrimoine.add(compo.getNom());
             if (++i == 20)

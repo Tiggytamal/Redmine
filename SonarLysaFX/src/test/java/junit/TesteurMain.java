@@ -2,16 +2,14 @@ package junit;
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.Map;
+import java.util.List;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.xml.ControlXML;
-import dao.DaoFactory;
 import model.DataBaseXML;
-import model.ModelFactory;
 import model.bdd.ComposantSonar;
-import model.bdd.DefautQualite;
+import model.bdd.LotRTC;
 
 /**
  * Calsse permetant de faire des tests directement avec une entrée JAVA classique
@@ -32,13 +30,8 @@ public class TesteurMain
         builder.append(":");
         builder.append("admin");
         System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
-        
-        Map<String, ComposantSonar> mapCompos = DaoFactory.getDao(ComposantSonar.class).readAllMap();
-        Map<String, DefautQualite> mapDQ = DaoFactory.getDao(DefautQualite.class).readAllMap();
-        DataBaseXML db = ModelFactory.build(DataBaseXML.class);
-        db.getMapCompos().putAll(mapCompos);
-        db.getMapDefautQualite().putAll(mapDQ);
-        new ControlXML().saveXML(db);
+        List<LotRTC> liste = new ControlXML().recupererXMLResources(DataBaseXML.class).getLotsRTC();
+        System.out.println(liste.size());
     }
 
 }

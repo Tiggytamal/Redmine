@@ -34,8 +34,8 @@ import com.mchange.util.AssertException;
 
 import control.rtc.ControlRTC;
 import control.task.MajLotsRTCTask;
-import dao.DaoDefaultQualite;
-import dao.DaoFactory;
+import dao.DaoDefautQualite;
+import dao.ListeDao;
 import junit.JunitBase;
 import junit.TestUtils;
 import model.ModelFactory;
@@ -176,7 +176,7 @@ public class TestControlRTC extends JunitBase
     public void testCreerAnoRTC() throws TeamRepositoryException
     {
          DefautQualite dq = ModelFactory.build(DefautQualite.class);
-         dq.setLotRTC(DaoFactory.getDao(LotRTC.class).recupEltParIndex("310979"));
+         dq.setLotRTC(ListeDao.daoLotRTC.recupEltParIndex("310979"));
          dq.setSecurite(true);
          int numero = handler.creerAnoRTC(dq);
         
@@ -291,7 +291,7 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testRecupEtatsAnoRTC()
     {
-        DaoDefaultQualite dao = DaoFactory.getDao(DefautQualite.class);
+        DaoDefautQualite dao = ListeDao.daoDefautQualite;
         List<DefautQualite> dqs = dao.readAll();
         int size = dqs.size();
         int i = 0;

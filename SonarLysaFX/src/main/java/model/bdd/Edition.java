@@ -10,9 +10,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import model.enums.TypeEdition;
 import utilities.Statics;
+import utilities.adapter.LocalDateAdapter;
 
 /**
  * Classe de modèle des Edition de la PIC
@@ -32,10 +36,11 @@ import utilities.Statics;
         @NamedQuery(name="Edition.resetTable", query="DELETE FROM Edition")
 })
 //@formatter:on
+@XmlRootElement
 public class Edition extends AbstractBDDModele implements Serializable
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     private static final long serialVersionUID = 1L;
     private static final String COMEDINCO = "Inconnue dans la codification des Editions";
 
@@ -72,7 +77,7 @@ public class Edition extends AbstractBDDModele implements Serializable
     {
         return new Edition(nom, numero);
     }
-    
+
     public static Edition getEditionInconnue(String edition)
     {
         Edition retour;
@@ -106,6 +111,7 @@ public class Edition extends AbstractBDDModele implements Serializable
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 
+    @XmlAttribute(name = "nom")
     public String getNom()
     {
         return getString(nom);
@@ -116,6 +122,7 @@ public class Edition extends AbstractBDDModele implements Serializable
         this.nom = nom;
     }
 
+    @XmlAttribute(name = "numero")
     public String getNumero()
     {
         return getString(numero);
@@ -127,6 +134,7 @@ public class Edition extends AbstractBDDModele implements Serializable
             this.numero = numero;
     }
 
+    @XmlAttribute(name = "commentaire")
     public String getCommentaire()
     {
         return getString(commentaire);
@@ -137,6 +145,8 @@ public class Edition extends AbstractBDDModele implements Serializable
         this.commentaire = getString(commentaire);
     }
 
+    @XmlAttribute(name = "dateMEP")
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getDateMEP()
     {
         if (dateMEP == null)
@@ -150,6 +160,7 @@ public class Edition extends AbstractBDDModele implements Serializable
             this.dateMEP = dateMEP;
     }
 
+    @XmlAttribute(name = "typeEdition")
     public TypeEdition getTypeEdition()
     {
         if (typeEdition == null)

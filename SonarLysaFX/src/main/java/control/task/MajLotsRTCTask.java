@@ -12,12 +12,11 @@ import com.mchange.util.AssertException;
 
 import application.Main;
 import control.rtc.ControlRTC;
-import dao.DaoFactory;
-import dao.DaoLotRTC;
+import dao.ListeDao;
 import javafx.application.Platform;
 import model.bdd.Edition;
-import model.bdd.Produit;
 import model.bdd.LotRTC;
+import model.bdd.Produit;
 import model.bdd.ProjetClarity;
 import model.enums.GroupeProduit;
 import utilities.Statics;
@@ -41,7 +40,6 @@ public class MajLotsRTCTask extends AbstractTask
     private static final short CLARITY7 = 7;
 
     private LocalDate date;
-    private DaoLotRTC dao;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -49,7 +47,6 @@ public class MajLotsRTCTask extends AbstractTask
     {
         super(1, TITRE);
         this.date = date;
-        dao = DaoFactory.getDao(LotRTC.class);
         annulable = true;
         startTimers();
     }
@@ -94,10 +91,10 @@ public class MajLotsRTCTask extends AbstractTask
         long debut = System.currentTimeMillis();
 
         // Initialisation de la map depuis les informations de la base de données
-        Map<String, LotRTC> retour = dao.readAllMap();
-        Map<String, ProjetClarity> mapClarity = DaoFactory.getDao(ProjetClarity.class).readAllMap();
-        Map<String, Produit> mapGroupe = DaoFactory.getDao(Produit.class).readAllMap();
-        Map<String, Edition> mapEdition = DaoFactory.getDao(Edition.class).readAllMap();
+        Map<String, LotRTC> retour = ListeDao.daoLotRTC.readAllMap();
+        Map<String, ProjetClarity> mapClarity = ListeDao.daoProjetClarity.readAllMap();
+        Map<String, Produit> mapGroupe = ListeDao.daoProduit.readAllMap();
+        Map<String, Edition> mapEdition = ListeDao.daoEdition.readAllMap();
 
         for (LotRTC lotRTC : lotsRTC)
         {
@@ -241,8 +238,8 @@ public class MajLotsRTCTask extends AbstractTask
      */
     private boolean sauvegarde(Map<String, LotRTC> map)
     {
-        boolean retour = dao.persist(map.values()) > 0;
-        dao.majDateDonnee();
+        boolean retour = ListeDao.daoLotRTC.persist(map.values()) > 0;
+        ListeDao.daoLotRTC.majDateDonnee();
         return retour;
     }
 

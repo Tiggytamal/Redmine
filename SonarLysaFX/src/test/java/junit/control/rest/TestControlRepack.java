@@ -5,9 +5,8 @@ import java.util.List;
 import org.junit.Test;
 
 import control.rest.ControlRepack;
-import dao.DaoFactory;
+import dao.ListeDao;
 import junit.JunitBase;
-import model.bdd.ComposantSonar;
 import model.rest.repack.RepackREST;
 
 public class TestControlRepack extends JunitBase
@@ -29,7 +28,7 @@ public class TestControlRepack extends JunitBase
     @Test
     public void testGetRepacksComposant()
     {        
-        List<RepackREST> liste = handler.getRepacksComposant(DaoFactory.getDao(ComposantSonar.class).recupEltParIndex("fr.ca.cat.controlermifentretienjoint:SRVT_ControlerMIFEntretienJoint_Build:14"));
+        List<RepackREST> liste = handler.getRepacksComposant(ListeDao.daoCompo.recupEltParIndex("fr.ca.cat.controlermifentretienjoint:SRVT_ControlerMIFEntretienJoint_Build:14"));
     }
     
     /*---------- METHODES PRIVEES ----------*/

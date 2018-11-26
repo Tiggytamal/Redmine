@@ -1,24 +1,19 @@
 package junit.control.excel;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.reflect.Whitebox.getField;
 import static org.powermock.reflect.Whitebox.getMethod;
 import static org.powermock.reflect.Whitebox.invokeMethod;
-import static utilities.Statics.EMPTY;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -28,12 +23,10 @@ import org.powermock.api.mockito.PowerMockito;
 
 import control.excel.ControlSuivi;
 import control.rtc.ControlRTC;
-import control.xml.ControlXML;
-import model.DataBaseXML;
+import dao.ListeDao;
 import model.ModelFactory;
 import model.bdd.DefautQualite;
 import model.enums.Matiere;
-import model.enums.TypeAction;
 import model.enums.TypeColSuivi;
 import model.enums.TypeRapport;
 import utilities.FunctionalException;
@@ -131,7 +124,17 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Matiere matiere = Matiere.JAVA;
 
         // Appel méthode sans écriture du fichier
-        controlTest.majFeuilleDefaultsQualite(new ArrayList<>(new ControlXML().recupererXMLResources(DataBaseXML.class).getMapDefautQualite().values()), sheet, matiere);
+        List<DefautQualite> dqs = ListeDao.daoDefautQualite.readAll();
+        controlTest.majFeuilleDefaultsQualite(ListeDao.daoDefautQualite.readAll(), sheet, matiere);
+        assertEquals(wb.getActiveSheetIndex(), wb.getSheetIndex(sheet));
+        assertTrue(sheet.getLastRowNum() > 2);
+        assertFalse(sheet.getDataValidations().isEmpty());
+        
+        for (Row row : sheet)
+        {
+            
+        }
+        
     }
 
     @Test

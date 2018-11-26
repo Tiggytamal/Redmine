@@ -1,8 +1,8 @@
 package model;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import junit.JunitBase;
 import model.bdd.ComposantSonar;
 import model.bdd.DefautQualite;
+import model.bdd.LotRTC;
 import model.interfaces.AbstractModele;
 import model.interfaces.XML;
 import utilities.Statics;
@@ -33,15 +34,17 @@ public class DataBaseXML extends AbstractModele implements XML
     private static final String RESOURCE = "/database.xml";
     
     // Tables
-    private Map<String, ComposantSonar> mapCompos;
-    private Map<String, DefautQualite> mapDQ;
+    private List<ComposantSonar> compos;
+    private List<DefautQualite> dqs;
+    private List<LotRTC> lotsRTC;
     
     /*---------- CONSTRUCTEURS ----------*/
     
     DataBaseXML()
     {
-        mapCompos = new HashMap<>();
-        mapDQ = new HashMap<>();
+        compos = new ArrayList<>();
+        dqs = new ArrayList<>();
+        lotsRTC = new ArrayList<>();
     }
     /*---------- METHODES PUBLIQUES ----------*/
 
@@ -67,16 +70,23 @@ public class DataBaseXML extends AbstractModele implements XML
     /*---------- ACCESSEURS ----------*/
    
     @XmlElementWrapper
-    @XmlElement(name = "mapCompos", required = false)
-    public Map<String, ComposantSonar> getMapCompos()
+    @XmlElement(name = "composant", required = false)
+    public List<ComposantSonar> getCompos()
     {
-        return mapCompos;
+        return compos;
     }
     
     @XmlElementWrapper
-    @XmlElement(name = "mapDQ", required = false)
-    public Map<String, DefautQualite> getMapDefautQualite()
+    @XmlElement(name = "defautQualite", required = false)
+    public List<DefautQualite> getDqs()
     {
-        return mapDQ;
+        return dqs;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "lotRTC", required = false)
+    public List<LotRTC> getLotsRTC()
+    {
+        return lotsRTC;
     }
 }

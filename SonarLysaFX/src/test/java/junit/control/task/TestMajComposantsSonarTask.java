@@ -20,7 +20,7 @@ import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import control.task.MajComposantsSonarTask;
-import dao.DaoFactory;
+import dao.ListeDao;
 import de.saxsys.javafx.test.JfxRunner;
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
@@ -125,8 +125,8 @@ public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSo
     @Test
     public void testGestionDefaultsAppli() throws Exception
     {
-        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
-        Map<String, DefautAppli> mapDefAppli = DaoFactory.getDao(DefautAppli.class).readAllMap();
+        List<ComposantSonar> compos = ListeDao.daoCompo.readAll();
+        Map<String, DefautAppli> mapDefAppli = ListeDao.daoDefautAppli.readAllMap();
         
         for (ComposantSonar compo : compos)
         {

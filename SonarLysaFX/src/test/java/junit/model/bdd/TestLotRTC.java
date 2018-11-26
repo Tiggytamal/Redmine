@@ -97,31 +97,6 @@ public class TestLotRTC extends AbstractTestModel<LotRTC>
     }
 
     @Test
-    public void testSetMatieresString()
-    {
-        objetTest.addMatiere(Matiere.IOS);
-        
-        // Contrôle null et vide
-        String test = objetTest.getMatieresString();
-        objetTest.setMatieresString(null);
-        assertEquals(test, objetTest.getMatieresString());
-        objetTest.setMatieresString(EMPTY);
-        assertEquals(test, objetTest.getMatieresString());
-        
-        // matieres vide
-        objetTest.setMatieres(null);
-        objetTest.setMatieresString("COBOL - JAVA");
-        assertTrue(objetTest.getMatieres().contains(Matiere.JAVA));
-        assertTrue(objetTest.getMatieres().contains(Matiere.COBOL));        
-    }
-    
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetMatieresStringException()
-    {
-        objetTest.setMatieresString("ABCDE");
-    }
-
-    @Test
     public void testAddMatiere()
     {
         // Contrôle ajout matières

@@ -27,7 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import control.word.ControlRapport;
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.ModelFactory;
 import model.bdd.ChefService;
 import model.bdd.ComposantSonar;
@@ -64,7 +64,6 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     // Constantes statiques
     private static final String SQ = "SUIVI Défaults Qualité";
     private static final String STATS = "Statistiques";
-    private static final LocalDate DATEINCONNUE = LocalDate.of(2016, 1, 1);
 
     // Liste des indices des colonnes
     // Les noms des champs doivent correspondre aux valeurs dans l'énumération TypeCol
@@ -113,7 +112,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         contraintes = initContraintes();
         
         mapCompoByLot = new HashMap<>();
-        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
+        List<ComposantSonar> compos = ListeDao.daoCompo.readAll();
         for (ComposantSonar compo : compos)
         {
             mapCompoByLot.computeIfAbsent(compo.getLotRTC().getLot(), k -> new ArrayList<>()).add(compo);
@@ -130,7 +129,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         // Liste de retour
         List<DefautQualite> retour = new ArrayList<>();
-        Map<String, LotRTC> lotsRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
+        Map<String, LotRTC> lotsRTC = ListeDao.daoLotRTC.readAllMap();
 
         // Itération sur chaque ligne pour créer les anomalies
         for (int i = 1; i <= sheet.getLastRowNum(); i++)
@@ -141,7 +140,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             if (row == null)
                 continue;
 
-            retour.add(creerdqDepuisExcel(row, lotsRTC));
+            retour.add(creerDqDepuisExcel(row, lotsRTC));
         }
         return retour;
     }
@@ -455,7 +454,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         // On cherche dans la map des composants, tous ceux qui sont liès au lot du défaut. Si un des composants a une application mal renseignée, on change le fond de la ligne.
         for (ComposantSonar compo : mapCompoByLot.computeIfAbsent(dq.getLotRTC().getLot(), k -> new ArrayList<>()))
         {
-            if (!compo.getAppli().isReferentiel() && dq.getDefautAppli() != null && dq.getDefautAppli().getEtatDefaut() == EtatDefaut.TRAITE)
+            if (!compo.getAppli().isReferentiel())
                 return FillPatternType.LEAST_DOTS;
         }
         return FillPatternType.SOLID_FOREGROUND;
@@ -642,7 +641,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
      * @param lotsRTC
      * @return
      */
-    private DefautQualite creerdqDepuisExcel(Row row, Map<String, LotRTC> lotsRTC)
+    private DefautQualite creerDqDepuisExcel(Row row, Map<String, LotRTC> lotsRTC)
     {
         DefautQualite retour = ModelFactory.build(DefautQualite.class);
         retour.setLotRTC(lotsRTC.get(Utilities.testLot(getCellStringValue(row, colLot))));

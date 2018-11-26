@@ -20,7 +20,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
 import control.task.CreerVueCHCCDMTask;
-import dao.DaoFactory;
+import dao.ListeDao;
 import model.bdd.Edition;
 import model.enums.TypeEdition;
 import model.rest.sonarapi.Vue;
@@ -131,7 +131,7 @@ public class TestCreerVueCHCCDMTask extends AbstractTestTask<CreerVueCHCCDMTask>
         }       
         
         // rajout d'une nouvelle valeur dans la map
-        Map<String, Edition> mapTest = DaoFactory.getDao(Edition.class).readAllMap();
+        Map<String, Edition> mapTest = ListeDao.daoEdition.readAllMap();
         mapTest.put("2019", Edition.build("2019","2019"));
         
         // Appel méthode et controle qu'on a bien supprimé la nouvelle valeur.

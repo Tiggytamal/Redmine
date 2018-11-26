@@ -26,7 +26,7 @@ public class TestDaoApplication extends AbstractTestDao<DaoApplication, Applicat
     @Override
     public void testReadAll()
     {
-        assertNotNull(handler.readAll());
+        assertNotNull(daoTest.readAll());
     }
     
     @Test
@@ -34,7 +34,7 @@ public class TestDaoApplication extends AbstractTestDao<DaoApplication, Applicat
     @Override
     public void testResetTable()
     {
-        assertEquals(handler.readAll().size(), handler.resetTable());
+        assertEquals(daoTest.readAll().size(), daoTest.resetTable());
     }
     
     @Test
@@ -45,7 +45,7 @@ public class TestDaoApplication extends AbstractTestDao<DaoApplication, Applicat
         File file = new File(getClass().getResource(Statics.ROOT + "liste_applis.xlsx").getFile());
         
         // Méthode et récupération du nombre de lignes
-        int test = handler.recupDonneesDepuisExcel(file);
+        int test = daoTest.recupDonneesDepuisExcel(file);
         
         // Test que le nombre de lignes en registrées est au moins égale au nombre de lignes du ficheir excel
         ControlApps control = ExcelFactory.getReader(TypeColApps.class, file);
