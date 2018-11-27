@@ -33,6 +33,7 @@ import com.ibm.team.repository.common.IAuditableHandle;
 import com.ibm.team.repository.common.IContributor;
 import com.ibm.team.repository.common.IContributorHandle;
 import com.ibm.team.repository.common.IItem;
+import com.ibm.team.repository.common.PermissionDeniedException;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.common.UUID;
 import com.ibm.team.repository.common.model.query.BaseContributorQueryModel.ContributorQueryModel;
@@ -487,7 +488,11 @@ public class ControlRTC extends AbstractToStringImpl
             handles.addAll(nextPage.getItemHandles());
         }
 
-        // trasnformation des IWorkItemHandle en LotRTC
+        task.setBaseMessage("Mise à jour des lots RTC incomplets...");
+        task.updateMessage("");
+        List<LotRTC> retour = miseAJourLotincomplets();
+
+        // transformation des IWorkItemHandle en LotRTC
 
         // Variables
         i = 0;
@@ -497,21 +502,66 @@ public class ControlRTC extends AbstractToStringImpl
         String sur = " sur ";
         long debut = System.currentTimeMillis();
 
-        // valorisation de al liste de retour
-        List<LotRTC> retour = new ArrayList<>();
+        // valorisation de la liste de retour
         for (IWorkItemHandle handle : handles)
         {
             if (task.isCancelled())
                 break;
 
             // Récupération de l'objet complet depuis l'handle de la requête
-            retour.add(creerLotSuiviRTCDepuisHandle(handle));
+            retour.add(creerLotSuiviRTCDepuisItem(recupItemDepuisHandle(IWorkItem.class, handle)));
 
             // Affichage
             i++;
             task.calculTempsRestant(debut, i, size);
             task.updateProgress(i, size);
             task.updateMessage(new StringBuilder(lot).append(i).append(sur).append(size).toString());
+        }
+
+        return retour;
+    }
+
+    /**
+     * Prépare la liste des lots RTC avec ceux qui ont des anomalies de contenu.
+     * 
+     * @return
+     * @throws TeamRepositoryException
+     */
+    private List<LotRTC> miseAJourLotincomplets() throws TeamRepositoryException
+    {
+        // Récupération des lots avec informations manquantes
+        List<LotRTC> retour = ListeDao.daoLotRTC.readAll();
+        for (Iterator<LotRTC> iter = retour.iterator(); iter.hasNext();)
+        {
+            LotRTC lot = iter.next();
+
+            // On enlève tous les lots qui ont une édition, un projet clarity et un libellé non vide, ou qui ne sont pas accessibles par RTC
+            if ((!lot.getLibelle().isEmpty() && lot.getEdition() != null && lot.getProjetClarity() != null) || lot.isRtcHS())
+                iter.remove();
+        }
+
+        // Mise à jour des lots depuis RTC
+        IWorkItem wi;
+        for (Iterator<LotRTC> iter = retour.iterator(); iter.hasNext();)
+        {
+            LotRTC lotRTC = iter.next();
+            try
+            {
+                // Récupération du workitem depuis le numéro du lot
+                wi = ControlRTC.INSTANCE.recupWorkItemDepuisId(Integer.parseInt(lotRTC.getLot()));
+            }
+            catch (PermissionDeniedException e)
+            {
+                // Si on a pas l'accès au lot. on metà jour le top HS et la base de données
+                iter.remove();
+                lotRTC.setRtcHS(true);
+                ListeDao.daoLotRTC.persist(lotRTC);
+                continue;
+            }
+
+            // Mise à jour du lot avec les nouvelles informations
+            LotRTC update = ControlRTC.INSTANCE.creerLotSuiviRTCDepuisItem(wi);
+            lotRTC.update(update);
         }
 
         return retour;
@@ -855,7 +905,6 @@ public class ControlRTC extends AbstractToStringImpl
             workingCopy.getWorkItem().setDuration(28800000);
             workingCopy.save(monitor);
         }
-        
 
         // Boucle pour passer arriver jusqu'à l'anomalie close.
         // Retourne vrai si l'anomalie a été fermée ou faux s'il y a eu un plantage aux changements d'états.
@@ -927,23 +976,24 @@ public class ControlRTC extends AbstractToStringImpl
     /*---------- METHODES PRIVEES ----------*/
 
     /**
-     * Création d'un LotSuiviRTC regroupant les informations depuis RTC. Ne prend en compte que les IWorkItemHandle
+     * * Création d'un LotSuiviRTC regroupant les informations depuis RTC. Ne prend en compte que les IWorkItem
      * 
-     * @param handle
-     *            IItemHandle provenant de RTC.
-     * @return {@link model.bdd.LotRTC}
+     * @param workItem
+     * @return
      * @throws TeamRepositoryException
      */
-    private LotRTC creerLotSuiviRTCDepuisHandle(IWorkItemHandle handle) throws TeamRepositoryException
+    public LotRTC creerLotSuiviRTCDepuisItem(IWorkItem workItem) throws TeamRepositoryException
     {
-
-        IWorkItem workItem = recupItemDepuisHandle(IWorkItem.class, handle);
         LotRTC retour = ModelFactory.build(LotRTC.class);
         retour.setLot(String.valueOf(workItem.getId()));
         retour.setLibelle(workItem.getHTMLSummary().getPlainText());
         retour.setCpiProjet(recupItemDepuisHandle(IContributor.class, workItem.getOwner()).getName());
         retour.setProjetClarityString(recupValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CLARITY.getValeur(), null), workItem).trim());
+        if (retour.getProjetClarityString().isEmpty())
+            retour.setProjetClarityString(recupValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.CODECLARITY.getValeur(), null), workItem).trim());
         retour.setEditionString(recupValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSICIBLE.getValeur(), null), workItem).trim());
+        if (retour.getEditionString().isEmpty())
+            retour.setEditionString(recupValeurAttribut(workItemClient.findAttribute(workItem.getProjectArea(), TypeEnumRTC.EDITIONSI.getValeur(), null), workItem).trim());
         EtatLot etatLot = EtatLot.from(recupEtatElement(workItem));
         retour.setEtatLot(etatLot);
         retour.setProjetRTC(recupItemDepuisHandle(IProjectArea.class, workItem.getProjectArea()).getName());

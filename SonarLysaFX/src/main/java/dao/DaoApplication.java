@@ -27,8 +27,8 @@ public class DaoApplication extends AbstractDao<Application> implements Serializ
     private static final String TABLE = "applications";
 
     /*---------- CONSTRUCTEURS ----------*/
-
-    DaoApplication()
+    
+    public DaoApplication()
     {
         super(TABLE);
         typeDonnee = TypeDonnee.APPS;

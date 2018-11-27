@@ -26,7 +26,7 @@ public class TestEtatDefault implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(5, EtatDefaut.values().length);
+        assertEquals(6, EtatDefaut.values().length);
     }
 
 }

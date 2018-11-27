@@ -14,9 +14,11 @@ public enum TypeEnumRTC
     NATURE("NatureProbleme"),
     EDITION("fr.ca.cat.attribut.edition"),
     EDITIONSICIBLE("fr.ca.cat.attribut.editionsicible"),
+    EDITIONSI("editionSI"),
     IMPORTANCE("NiveauImportance"),
     ORIGINE("Origine"),
     CLARITY("fr.ca.cat.attribut.codeprojetclarity"),
+    CODECLARITY("codeprojet"),
     DATELIVHOMO("fr.ca.cat.attribut.datedelivraison"),
     TROUVEDANS("fr.ca.cat.attribut.trouvedans");
     

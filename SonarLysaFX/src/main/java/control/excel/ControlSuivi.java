@@ -110,7 +110,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         // Initialisation des parties constantes des liens
         contraintes = initContraintes();
-        
+
         mapCompoByLot = new HashMap<>();
         List<ComposantSonar> compos = ListeDao.daoCompo.readAll();
         for (ComposantSonar compo : compos)
@@ -263,12 +263,14 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             creerLigneSQ(row, dq, couleur, pattern);
         }
 
+        // création des validations en évitant les plantage sur une page vide
         if (sheet.getLastRowNum() > 0)
             ajouterDataValidation(sheet);
         autosizeColumns(sheet);
 
         wb.setActiveSheet(wb.getSheetIndex(sheet));
-        controlRapport.creerFichier();
+        if (controlRapport != null)
+            controlRapport.creerFichier();
     }
 
     /*---------- METHODES PROTECTED ----------*/
@@ -431,7 +433,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             couleur = IndexedColors.LIGHT_TURQUOISE;
 
         // Lot proches de leur date de MEP
-        else if (dq.getDateMepPrev().minusWeeks(3).isBefore(LocalDate.now()))
+        else if (dq.getDateMepPrev() != null && dq.getDateMepPrev().minusWeeks(3).isBefore(LocalDate.now()))
             couleur = IndexedColors.LIGHT_YELLOW;
 
         // Le reste est en blanc
@@ -451,7 +453,8 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
     private FillPatternType calculMotif(DefautQualite dq)
     {
-        // On cherche dans la map des composants, tous ceux qui sont liès au lot du défaut. Si un des composants a une application mal renseignée, on change le fond de la ligne.
+        // On cherche dans la map des composants, tous ceux qui sont liès au lot du défaut. Si un des composants a une application mal renseignée, on change le fond de
+        // la ligne.
         for (ComposantSonar compo : mapCompoByLot.computeIfAbsent(dq.getLotRTC().getLot(), k -> new ArrayList<>()))
         {
             if (!compo.getAppli().isReferentiel())
@@ -470,7 +473,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     private void creerLigneSQ(Row row, DefautQualite dq, IndexedColors couleur, FillPatternType pattern)
     {
         // 1. Contrôles des entrées
-        if (couleur == null || row == null || dq == null)
+        if (couleur == null || row == null || dq == null || pattern == null)
             throw new IllegalArgumentException("Les arguments ne peuvent pas être nuls - méthode control.excel.ControlSuivi.creerLigneSQ");
 
         // 2. Données de l'anomalie
@@ -690,6 +693,8 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
     public ControlRapport createControlRapport(TypeRapport type)
     {
+        if (type == null)
+            throw new TechnicalException("control.excel.ControlSuivi.createControlRapport - type null");
         controlRapport = new ControlRapport(type);
         return controlRapport;
     }

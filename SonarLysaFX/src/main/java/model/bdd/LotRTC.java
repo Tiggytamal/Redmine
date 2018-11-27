@@ -119,6 +119,9 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     @BatchFetch(value = BatchFetchType.JOIN)
     @OneToOne(targetEntity = DefautQualite.class, mappedBy = "lotRTC")
     private DefautQualite defaultQualite;
+    
+    @Column(name = "rtc_hs", nullable = false)    
+    private boolean rtcHS;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -127,6 +130,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         qualityGate = QG.NONE;
         matieres = new HashSet<>();
         groupeProduit = GroupeProduit.AUCUN;
+        rtcHS = false;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
@@ -161,6 +165,9 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         projetRTC = update.projetRTC;
         dateMajEtat = update.dateMajEtat;
         groupeProduit = update.groupeProduit;
+        projetClarityString = update.projetClarityString;
+        editionString = update.editionString;
+        rtcHS = update.rtcHS;
         return this;
 
     }
@@ -288,7 +295,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
 
     public String getProjetClarityString()
     {
-        return projetClarityString;
+        return getString(projetClarityString);
     }
 
     public void setProjetClarityString(String projetClarityString)
@@ -364,5 +371,16 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     public void setDateRepack(LocalDate dateRepack)
     {
         this.dateRepack = dateRepack;
+    }
+    
+    @XmlAttribute(name = "rtcHS")
+    public boolean isRtcHS()
+    {
+        return rtcHS;
+    }
+
+    public void setRtcHS(boolean rtcHS)
+    {
+        this.rtcHS = rtcHS;
     }
 }

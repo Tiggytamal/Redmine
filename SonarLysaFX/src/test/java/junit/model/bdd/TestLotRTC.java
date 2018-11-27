@@ -48,6 +48,7 @@ public class TestLotRTC extends AbstractTestModel<LotRTC>
         assertEquals(EMPTY, objetTest.getProjetRTC());
         assertEquals(LOT, objetTest.getLot());
         assertNotNull(objetTest.getEdition());
+        assertEquals(Statics.EDINCONNUE, objetTest.getEdition().getNumero());
     }
 
     @Test
@@ -212,7 +213,8 @@ public class TestLotRTC extends AbstractTestModel<LotRTC>
     public void testGetProjetClarityString()
     {
         // test valeur vide ou nulle
-        assertNull(objetTest.getProjetClarityString());
+        assertNotNull(objetTest.getProjetClarityString());
+        assertTrue(objetTest.getProjetClarityString().isEmpty());
 
         // Test setter et getter
         String code = "Code";

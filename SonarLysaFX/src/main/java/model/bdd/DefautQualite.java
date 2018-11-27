@@ -69,7 +69,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     @Column(name = "liens_ano", nullable = true)
     private String liensAno;
 
-    @Column(name = "etatRTC", nullable = true, length = 32)
+    @Column(name = "etatRTC", nullable = true, length = 40)
     private String etatRTC;
 
     @Column(name = "securite", nullable = false)
@@ -210,8 +210,11 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setLotRTC(LotRTC lotRTC)
     {
-        this.lotRTC = lotRTC;
-        creerLiensLotRTC();
+        if (lotRTC != null)
+        {
+            this.lotRTC = lotRTC;
+            creerLiensLotRTC();
+        }
     }
 
     @XmlAttribute(name = "numeroAnoRTC")
@@ -222,9 +225,11 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setNumeroAnoRTC(int numeroAnoRTC)
     {
-        this.numeroAnoRTC = numeroAnoRTC;
         if (numeroAnoRTC != 0)
+        {
+            this.numeroAnoRTC = numeroAnoRTC;
             creerLiensAnoRTC();
+        }
     }
 
     @XmlAttribute(name = "etatRTC")
@@ -235,7 +240,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setEtatRTC(String etatRTC)
     {
-        this.etatRTC = etatRTC.trim();
+        this.etatRTC = getString(etatRTC).trim();
     }
 
     @XmlAttribute(name = "securite")
@@ -257,7 +262,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setRemarque(String remarque)
     {
-        this.remarque = remarque;
+        this.remarque = getString(remarque);
     }
 
     @XmlAttribute(name = "liensLot")
@@ -281,18 +286,21 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setLiensAno(String liensAno)
     {
-        this.liensAno = liensAno;
+        this.liensAno = getString(liensAno);
     }
 
     @XmlAttribute(name = "typeVersion")
     public TypeVersion getTypeVersion()
     {
+        if (typeVersion == null)
+            typeVersion = TypeVersion.SNAPSHOT;
         return typeVersion;
     }
 
     public void setTypeVersion(TypeVersion typeVersion)
     {
-        this.typeVersion = typeVersion;
+        if (typeVersion != null)
+            this.typeVersion = typeVersion;
     }
 
     @XmlAttribute(name = "dateCreation")
@@ -304,7 +312,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setDateCreation(LocalDate dateCreation)
     {
-        this.dateCreation = dateCreation;
+        if (dateCreation != null)
+            this.dateCreation = dateCreation;
     }
 
     @XmlAttribute(name = "dateDetection")
@@ -316,7 +325,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setDateDetection(LocalDate dateDetection)
     {
-        this.dateDetection = dateDetection;
+        if (dateDetection != null)
+            this.dateDetection = dateDetection;
     }
 
     @XmlAttribute(name = "dateRelance")
@@ -353,7 +363,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setAction(TypeAction action)
     {
-        this.action = action;
+        if (action != null)
+            this.action = action;
     }
 
     @XmlAttribute(name = "etatDefaut")
@@ -390,7 +401,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setNomCompoAppli(String nomCompoAppli)
     {
-        this.nomCompoAppli = nomCompoAppli;
+        this.nomCompoAppli = getString(nomCompoAppli);
     }
 
     @XmlTransient
@@ -401,7 +412,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setNewCodeAppli(String newCodeAppli)
     {
-        this.newCodeAppli = newCodeAppli;
+        this.newCodeAppli = getString(newCodeAppli);
     }
 
     @XmlAttribute(name = "dateReouv")
@@ -425,6 +436,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     public void setDateMepPrev(LocalDate dateMepPrev)
     {
-        this.dateMepPrev = dateMepPrev;
+        if (dateMepPrev != null)
+            this.dateMepPrev = dateMepPrev;
     }
 }

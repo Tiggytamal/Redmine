@@ -19,7 +19,7 @@ public class TestTypeEnumRTC implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(10, TypeEnumRTC.values().length);
+        assertEquals(12, TypeEnumRTC.values().length);
     }
     
     @Test
@@ -30,9 +30,11 @@ public class TestTypeEnumRTC implements TestEnums
         assertEquals("NatureProbleme", TypeEnumRTC.NATURE.getValeur());
         assertEquals("fr.ca.cat.attribut.edition", TypeEnumRTC.EDITION.getValeur());
         assertEquals("fr.ca.cat.attribut.editionsicible", TypeEnumRTC.EDITIONSICIBLE.getValeur());
+        assertEquals("editionSI", TypeEnumRTC.EDITIONSI.getValeur());
         assertEquals("NiveauImportance", TypeEnumRTC.IMPORTANCE.getValeur());
         assertEquals("Origine", TypeEnumRTC.ORIGINE.getValeur());
         assertEquals("fr.ca.cat.attribut.codeprojetclarity", TypeEnumRTC.CLARITY.getValeur());
+        assertEquals("codeprojet", TypeEnumRTC.CODECLARITY.getValeur());
         assertEquals("fr.ca.cat.attribut.datedelivraison", TypeEnumRTC.DATELIVHOMO.getValeur());
         assertEquals("fr.ca.cat.attribut.trouvedans", TypeEnumRTC.TROUVEDANS.getValeur());
     }

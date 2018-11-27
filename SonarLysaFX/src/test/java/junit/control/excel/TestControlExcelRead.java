@@ -127,7 +127,8 @@ public abstract class TestControlExcelRead<T extends Enum<T> & TypeColR, C exten
     public void testMajCouleurLigne() throws Exception
     {
         // Initilisation
-        Row row = wb.getSheetAt(0).getRow(0);
+        Row row = wb.getSheetAt(0)
+                .getRow(0);
 
         // Test 1 - changement couleur
         invokeMethod(controlTest, "majCouleurLigne", row, IndexedColors.AQUA);

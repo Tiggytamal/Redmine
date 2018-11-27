@@ -207,11 +207,11 @@ public class MajLotsRTCTask extends AbstractTask
     /**
      * Contrôle les valeurs du code Clarity en prenant en compte les différentes erreurs possibles
      * 
-     * @param anoClarity
+     * @param codeClarity
      * @param key
      * @return
      */
-    private boolean controleKey(String anoClarity, String key)
+    private boolean controleKey(String codeClarity, String key)
     {
         // Retourne une clef avec 6 caractères maximum si celle-ci finie par un numéro de lot
         String smallkey = key.length() > CLARITYMINI && key.matches(".*0[0-9E]$") ? key.substring(0, CLARITYMINI + 1) : key;
@@ -220,15 +220,15 @@ public class MajLotsRTCTask extends AbstractTask
         String newKey = key.length() == CLARITYMAX && (key.startsWith("T") || key.startsWith("P")) ? key.substring(0, CLARITYMAX - 1) : smallkey;
 
         // Retourne la clef clairity de l'anomalie avec 6 caractères maximum si celle-ci finie par un numéro de lot
-        String smallClarity = anoClarity.length() > CLARITYMINI && anoClarity.matches(".*0[0-9E]$") ? anoClarity.substring(0, CLARITYMINI + 1) : anoClarity;
+        String smallClarity = codeClarity.length() > CLARITYMINI && codeClarity.matches(".*0[0-9E]$") ? codeClarity.substring(0, CLARITYMINI + 1) : codeClarity;
 
         // Contrôle si la clef est de type T* ou P*.
-        String newClarity = anoClarity.length() == CLARITYMAX && (anoClarity.startsWith("T") || anoClarity.startsWith("P")) ? anoClarity.substring(0, CLARITYMAX - 1) : smallClarity;
+        String newClarity = codeClarity.length() == CLARITYMAX && (codeClarity.startsWith("T") || codeClarity.startsWith("P")) ? codeClarity.substring(0, CLARITYMAX - 1) : smallClarity;
 
         // remplace le dernier du coade Clarity par 0.
-        String lastClarity = anoClarity.replace(anoClarity.charAt(anoClarity.length() - 1), '0');
+        String lastClarity = codeClarity.replace(codeClarity.charAt(codeClarity.length() - 1), '0');
 
-        return anoClarity.equalsIgnoreCase(newKey) || newClarity.equalsIgnoreCase(key) || lastClarity.equalsIgnoreCase(key);
+        return codeClarity.equalsIgnoreCase(newKey) || newClarity.equalsIgnoreCase(key) || lastClarity.equalsIgnoreCase(key);
     }
 
     /**

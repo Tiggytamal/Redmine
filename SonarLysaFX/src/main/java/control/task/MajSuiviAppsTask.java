@@ -125,7 +125,6 @@ public class MajSuiviAppsTask extends AbstractTask
         {
             dq = ModelFactory.build(DefautQualite.class);
             dq.setSecurite(false);
-            dq.setDateDetection(da.getDateDetection());
             dq.setTypeDefaut(TypeDefaut.APPLI);
             dq.setLotRTC(da.getCompo().getLotRTC());
             dqs.put(dq.getMapIndex(), dq);

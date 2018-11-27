@@ -151,8 +151,11 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
      * @param collection
      * @return
      */
-    public final int persist(Iterable<T> collection)
+    public int persist(Iterable<T> collection)
     {
+        if (collection == null)
+            return 0;
+
         em.getTransaction().begin();
         int i = 0;
         for (T t : collection)
@@ -170,8 +173,11 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
      * 
      * @param t
      */
-    public final boolean persist(T t)
+    public boolean persist(T t)
     {
+        if (t == null)
+            return false;
+
         // Booléen permettant de créer ou non une transaction SQL
         boolean test = em.getTransaction().isActive();
 
