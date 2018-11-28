@@ -402,11 +402,11 @@ public class MajSuiviExcelTask extends AbstractTask
 
         // Controleur
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;
-        ControlSuivi controlAno = ExcelFactory.getReader(TypeColSuivi.class, new File(name));
-        ControlRapport controlRapport = controlAno.createControlRapport(matiere.getTypeRapport());
+        ControlSuivi controlSuivi = ExcelFactory.getReader(TypeColSuivi.class, new File(name));
+        ControlRapport controlRapport = controlSuivi.createControlRapport(matiere.getTypeRapport());
 
         // Lecture du fichier pour remonter les anomalies en cours.
-        List<DefautQualite> listeDqExcel = controlAno.recupDonneesDepuisExcel();
+        List<DefautQualite> listeDqExcel = controlSuivi.recupDonneesDepuisExcel();
 
         // Affichage
         int size = listeDqExcel.size();
@@ -443,19 +443,19 @@ public class MajSuiviExcelTask extends AbstractTask
         }
 
         // Sauvegarde fichier et maj feuille principale
-        Sheet sheet = controlAno.sauvegardeFichier(fichier);
+        Sheet sheet = controlSuivi.sauvegardeFichier(fichier);
 
         // Mis à jour de la feuille principale
-        controlAno.majFeuilleDefaultsQualite(new ArrayList<>(mapDqsEnBase.values()), sheet, matiere);
+        controlSuivi.majFeuilleDefaultsQualite(new ArrayList<>(mapDqsEnBase.values()), sheet, matiere);
 
         // Persistance des données
         ListeDao.daoDefautQualite.persist(mapDqsEnBase.values());
 
-        controlAno.calculStatistiques(new ArrayList<>(mapDqsEnBase.values()));
+        controlSuivi.calculStatistiques(new ArrayList<>(mapDqsEnBase.values()));
 
         // Ecriture et Fermeture controleur
-        write(controlAno);
-        controlAno.close();
+        write(controlSuivi);
+        controlSuivi.close();
     }
 
     /**

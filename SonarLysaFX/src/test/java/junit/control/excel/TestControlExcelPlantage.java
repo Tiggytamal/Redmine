@@ -32,7 +32,7 @@ public class TestControlExcelPlantage
 
         } catch (FunctionalException e)
         {
-            assertEquals("Le fichier excel est mal configuré, vérifié les colonnes de celui-ci : Différence = 4", e.getMessage());
+            assertEquals("Le fichier excel est mal configuré, vérifié les colonnes de celui-ci : Différence = 7", e.getMessage());
         }
     }
     /*---------- METHODES PRIVEES ----------*/

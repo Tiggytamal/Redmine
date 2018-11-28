@@ -356,6 +356,10 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <key>PRODUIT</key>
             <value>NPC</value>
         </entry>
+		<entry>
+            <key>TYPE</key>
+            <value>Type défaut</value>
+        </entry>
     </mapColsSuivi>
     <mapColsSuiviApps>
         <entry>

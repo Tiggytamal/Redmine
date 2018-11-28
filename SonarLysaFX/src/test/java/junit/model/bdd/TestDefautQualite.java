@@ -1,5 +1,6 @@
 package junit.model.bdd;
 
+import static org.powermock.reflect.Whitebox.getField;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -8,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
+import org.powermock.reflect.Whitebox;
 
 import junit.model.AbstractTestModel;
 import model.ModelFactory;
@@ -73,7 +75,7 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
     }
 
     @Test
-    public void testCalculTraitee()
+    public void testCalculTraitee() throws IllegalArgumentException, IllegalAccessException
     {
         // Avec une objet juste initialisé, le booleén doit être à faux.
         assertFalse(objetTest.calculTraitee());
@@ -97,13 +99,14 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
 
         // Avec une action non nulle
         objetTest.setEtatDefaut(EtatDefaut.NOUVEAU);
-        objetTest.setNumeroAnoRTC(0);
+        getField(objetTest.getClass(), "numeroAnoRTC").set(objetTest, 0);
         objetTest.setAction(TypeAction.ASSEMBLER);
         assertTrue(objetTest.calculTraitee());
 
         // Avec une action vide
         objetTest.setEtatDefaut(EtatDefaut.NOUVEAU);
         objetTest.setAction(TypeAction.VIDE);
+        objetTest.setRemarque(EMPTY);
         assertFalse(objetTest.calculTraitee());
 
         // Avec un etat non nouveau
@@ -112,45 +115,85 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
         assertTrue(objetTest.calculTraitee());
 
     }
-    
+
     @Test
-    public void testControlLiens()
+    public void testControlLiens() throws IllegalArgumentException, IllegalAccessException
     {
         final String LIENSLOT = "http://ttp10-snar.ca-technologies.fr/governance?id=view_lot_123456";
-        final String LIENSANO = "https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/#action=com.ibm.team.workitem.viewWorkItem&id=12456";
-        
+        final String LIENSANO = "https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/PROJET#action=com.ibm.team.workitem.viewWorkItem&id=12456";
+
         // Test sans numéro
         objetTest.controleLiens();
         assertEquals(EMPTY, objetTest.getLiensAno());
         assertEquals(LIENSLOT, objetTest.getLiensLot());
-        
+
         // Test liens lot null
         objetTest.setLiensLot(null);
         assertEquals(LIENSLOT, objetTest.getLiensLot());
-        
+
         // Test liens lot vide
         objetTest.setLiensLot(EMPTY);
         assertEquals(LIENSLOT, objetTest.getLiensLot());
-        
+
         // Test liens ano sans numero ano
         objetTest.setLiensAno(EMPTY);
-        objetTest.setNumeroAnoRTC(0);
+        getField(objetTest.getClass(), "numeroAnoRTC").set(objetTest, 0);
         assertEquals(EMPTY, objetTest.getLiensAno());
         objetTest.setLiensAno(null);
         assertEquals(EMPTY, objetTest.getLiensAno());
-        
+
         // Test avec liens ano null et numero ano
         objetTest.setNumeroAnoRTC(12456);
         objetTest.setLiensAno(null);
+        objetTest.getLotRTC().setProjetRTC("PROJET");
         assertEquals(LIENSANO, objetTest.getLiensAno());
-        
+
         // Test avec liens ano vide et numero ano
         objetTest.setLiensAno(EMPTY);
         assertEquals(LIENSANO, objetTest.getLiensAno());
         objetTest.setLiensAno("a");
         assertEquals("a", objetTest.getLiensAno());
-        
-        
+
+    }
+
+    @Test
+    public void testCreerLiensAnoRTC() throws Exception
+    {
+        assertEquals(EMPTY, objetTest.getLiensAno());
+        final String LIENSANO = "https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/PROJET#action=com.ibm.team.workitem.viewWorkItem&id=0";
+        objetTest.getLotRTC().setProjetRTC("PROJET");
+        Whitebox.invokeMethod(objetTest, "creerLiensAnoRTC");
+        assertEquals(LIENSANO, objetTest.getLiensAno());
+    }
+
+    @Test
+    public void testCreerLiensLotRTC() throws Exception
+    {
+        final String LIENSLOT = "http://ttp10-snar.ca-technologies.fr/governance?id=view_lot_123456";
+        getField(objetTest.getClass(), "lotRTC").set(objetTest, null);
+        Whitebox.invokeMethod(objetTest, "creerLiensLotRTC");
+        assertEquals(LIENSLOT, objetTest.getLiensLot());
+    }
+
+    @Test
+    public void testGetLotRTC()
+    {
+        // Test avec initialisation
+        assertNotNull(objetTest.getLotRTC());
+
+        // Protection null
+        objetTest.setLotRTC(null);
+        assertNotNull(objetTest.getLotRTC());
+    }
+
+    @Test
+    public void testControleLiensAno() throws Exception
+    {
+        objetTest.setNumeroAnoRTC(123456);
+        getField(objetTest.getClass(), "liensAno").set(objetTest, null);
+        Whitebox.invokeMethod(objetTest, "controleLiensAno");
+        assertEquals(EMPTY, objetTest.getLiensAno());
+
     }
 
     @Test
@@ -225,7 +268,7 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
     }
 
     @Test
-    public void testGetVersion()
+    public void testGetVersion() throws IllegalArgumentException, IllegalAccessException
     {
         // test valeur vide ou nulle
         assertEquals(TypeVersion.SNAPSHOT, objetTest.getTypeVersion());
@@ -234,19 +277,34 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
         TypeVersion typeVersion = TypeVersion.RELEASE;
         objetTest.setTypeVersion(typeVersion);
         assertEquals(typeVersion, objetTest.getTypeVersion());
+
+        // Protection null
+        objetTest.setTypeVersion(null);
+        assertEquals(typeVersion, objetTest.getTypeVersion());
+
+        // Test remise à null remonte SNAPSHOT
+        getField(objetTest.getClass(), "typeVersion").set(objetTest, null);
+        assertEquals(TypeVersion.SNAPSHOT, objetTest.getTypeVersion());
     }
 
     @Test
-    public void testGetAction()
+    public void testGetAction() throws IllegalArgumentException, IllegalAccessException
     {
         // test valeur vide ou nulle
         assertEquals(TypeAction.VIDE, objetTest.getAction());
 
         // Test setter et getter
-        TypeAction action = TypeAction.CREER;
-        objetTest.setAction(action);
-        assertEquals(action, objetTest.getAction());
+        objetTest.setAction(TypeAction.CREER);
+        assertEquals(TypeAction.CREER, objetTest.getAction());
+
+        // protection null
         objetTest.setAction(null);
+        assertEquals(TypeAction.CREER, objetTest.getAction());
+
+        objetTest.setAction(TypeAction.VIDE);
+        assertEquals(TypeAction.VIDE, objetTest.getAction());
+
+        getField(objetTest.getClass(), "action").set(objetTest, null);
         assertEquals(TypeAction.VIDE, objetTest.getAction());
     }
 
@@ -259,6 +317,10 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
         // Test setter et getter
         objetTest.setDateCreation(today);
         assertEquals(today, objetTest.getDateCreation());
+
+        // Proection null
+        objetTest.setDateCreation(null);
+        assertEquals(today, objetTest.getDateCreation());
     }
 
     @Test
@@ -269,6 +331,10 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
 
         // Test setter et getter
         objetTest.setDateDetection(today);
+        assertEquals(today, objetTest.getDateDetection());
+
+        // Protection null
+        objetTest.setDateDetection(null);
         assertEquals(today, objetTest.getDateDetection());
     }
 
@@ -343,7 +409,7 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
         }
         assertTrue("Pas d'exception renvoyée : DefautQualite.setTypeDefaut à null", erreur);
     }
-    
+
     @Test
     public void testGetNomCompoAppli()
     {
@@ -355,7 +421,7 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
         objetTest.setNomCompoAppli(string);
         assertEquals(string, objetTest.getNomCompoAppli());
     }
-    
+
     @Test
     public void testGetNewCodeAppli()
     {
@@ -367,7 +433,7 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
         objetTest.setNewCodeAppli(string);
         assertEquals(string, objetTest.getNewCodeAppli());
     }
-    
+
     @Test
     public void testGetDateReouv()
     {
@@ -378,7 +444,7 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
         objetTest.setDateReouv(today);
         assertEquals(today, objetTest.getDateReouv());
     }
-    
+
     @Test
     public void testGetDateMepPrev()
     {
@@ -388,6 +454,19 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
         // Test setter et getter
         objetTest.setDateMepPrev(today);
         assertEquals(today, objetTest.getDateMepPrev());
+
+        // Protection null
+        objetTest.setDateMepPrev(null);
+        assertEquals(today, objetTest.getDateMepPrev());
+    }
+
+    @Test
+    public void testGetTimeStamp() throws IllegalArgumentException, IllegalAccessException
+    {
+        assertNotNull(objetTest.getTimeStamp());
+
+        getField(objetTest.getClass(), "timeStamp").set(objetTest, null);
+        assertNotNull(objetTest.getTimeStamp());
     }
 
     /*---------- METHODES PRIVEES ----------*/

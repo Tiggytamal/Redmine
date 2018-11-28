@@ -40,7 +40,7 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
 
     public CreerExtractVulnerabiliteTask(File file)
     {
-        super(TypeVulnerabilite.values().length, TITRE);
+        super(TypeVulnerabilite.values().length, TITRE); 
         control = new ControlExtractVul(file);
         startTimers();
     }
@@ -163,6 +163,9 @@ public class CreerExtractVulnerabiliteTask extends AbstractTask
         // Traitement de chaque issue pour récupérer le numéro de lot, et l'appli.
         for (Issue issue : liste)
         {
+//            if (issue.getTags().contains("cve"))
+//                continue;
+
             // Nom du projet
             String clefProjet = issue.getProjet();
 

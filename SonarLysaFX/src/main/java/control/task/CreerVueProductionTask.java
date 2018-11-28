@@ -244,7 +244,7 @@ public class CreerVueProductionTask extends AbstractTask
         // Création de la vue principale
 
         String nomVue = new StringBuilder("MEP ").append(DateConvert.dateFrancais(entry.getKey(), "yyyy.MM - MMMM")).append(option.getTitre()).toString();
-        vueKey = new StringBuilder("MEPMEP").append(DateConvert.dateFrancais(entry.getKey(), "MMyyyy")).append("Key").append(option.toString()).toString();
+        vueKey = new StringBuilder("MEPMEP").append(DateConvert.dateFrancais(entry.getKey(), "MMyyyy").replace(".", Statics.EMPTY)).append("Key").append(option.toString()).toString();
         etapePlus();
         baseMessage = "Vue " + nomVue + Statics.NL;
         updateMessage("");

@@ -162,7 +162,7 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
     public void testValoriserCelluleException1() throws Exception
     {
         // Appel méthode avec ligne nulle       
-        invokeMethod(controlTest, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, null, 1, null, Statics.EMPTY, null);        
+        invokeMethod(controlTest, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class}, null, 1, null, Statics.EMPTY); 
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -171,18 +171,8 @@ public class TestControlExcelSpecial extends TestControlExcelRead<TypeColSuivi, 
         // Initialisation
         Row row = wb.getSheetAt(0).getRow(1);
         
-        // Appel méthode avec object texte non pris en compte
-        invokeMethod(controlTest, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, row, 1, null, 32, null);
-    }
-    
-    @Test(expected = IllegalArgumentException.class)
-    public void testValoriserCelluleException3() throws Exception
-    {
-        // Initialisation
-        Row row = wb.getSheetAt(0).getRow(1);
-        
         // Appel méthode avec conIndex null
-        invokeMethod(controlTest, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class, Comment.class}, row, null, null, 32, null);
+        invokeMethod(controlTest, VALORISERCELLULE, new Class[] {Row.class, Integer.class, CellStyle.class, Object.class}, row, null, null, 32);
     }
 
     /*---------- METHODES PRIVEES ----------*/

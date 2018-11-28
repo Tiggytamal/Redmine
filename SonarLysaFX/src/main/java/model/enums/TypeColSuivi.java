@@ -35,6 +35,7 @@ public enum TypeColSuivi  implements TypeColR
     DUREEANO("Durée de l'anomalie", "colDureeAno"),
     DATEMAJETAT("Date de mise à jour de l'état", "colDateMajEtat"),
     MATIERE("Matière", "colMatiere"),
+    TYPE("Type", "colType"),
     PROJETRTC("Projet RTC", "colProjetRTC"),
     ACTION("Action", "colAction"),
     PRODUIT("Produit", "colProduit");

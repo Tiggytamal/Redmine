@@ -157,7 +157,10 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
      */
     public boolean calculTraitee()
     {
-        if ((!getRemarque().isEmpty() || numeroAnoRTC != 0 || action != TypeAction.VIDE) && etatDefaut == EtatDefaut.NOUVEAU)
+        if ((!getRemarque().isEmpty() 
+                || numeroAnoRTC != 0  
+                || action != TypeAction.VIDE) 
+                && etatDefaut == EtatDefaut.NOUVEAU)
             etatDefaut = EtatDefaut.TRAITE;
         return etatDefaut != EtatDefaut.NOUVEAU;
     }
@@ -175,7 +178,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
      */
     private void creerLiensAnoRTC()
     {
-        if (getLotRTC() != null && getLotRTC().getProjetRTC() != null)
+        if (getLotRTC() != null 
+                && !getLotRTC().getProjetRTC().isEmpty())
             liensAno = Statics.proprietesXML.getMapParams().get(Param.LIENSANOS) + getLotRTC().getProjetRTC().replace(Statics.SPACE, "%20") + Statics.FINLIENSANO + String.valueOf(numeroAnoRTC);
     }
 
@@ -190,13 +194,16 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     private void controleLiensAno()
     {
-        if (numeroAnoRTC != 0 && (liensAno == null || liensAno.isEmpty()))
+        if (numeroAnoRTC != 0 
+                && (liensAno == null 
+                || liensAno.isEmpty()))
             creerLiensAnoRTC();
     }
 
     private void controleLiensLot()
     {
-        if (liensLot == null || liensLot.isEmpty())
+        if (liensLot == null 
+                || liensLot.isEmpty())
             creerLiensLotRTC();
     }
 

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -34,6 +35,7 @@ import model.ModelFactory;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.EtatDefaut;
+import model.enums.EtatLot;
 import model.enums.Matiere;
 import model.enums.QG;
 import model.enums.TypeAction;
@@ -147,6 +149,15 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         assertEquals(wb.getActiveSheetIndex(), wb.getSheetIndex(sheet));
         assertTrue(sheet.getLastRowNum() > 2);
         assertFalse(sheet.getDataValidations().isEmpty());
+
+        // Test avec rapport et fichier vide
+        sheet = wb.createSheet();
+        controlTest.createControlRapport(TypeRapport.ANDROID);
+        controlTest.majFeuilleDefaultsQualite(new ArrayList<>(), sheet, matiere);
+        assertEquals(wb.getActiveSheetIndex(), wb.getSheetIndex(sheet));
+        assertEquals(0, sheet.getLastRowNum());
+        assertTrue(sheet.getDataValidations().isEmpty());
+
     }
 
     @Test
@@ -162,8 +173,42 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
     }
 
     @Test
-    public void testTestAnoOK()
+    public void testTestAnoOK() throws Exception
     {
+        // Initialisation
+        String methode = "testAnoOK";
+        DefautQualite dq = ModelFactory.build(DefautQualite.class);
+        LotRTC lot = LotRTC.getLotRTCInconnu("123456");
+        dq.setLotRTC(lot);
+
+        // Retour vrai pour le anomalies abandonnées
+        dq.setEtatDefaut(EtatDefaut.ABANDONNE);
+        assertTrue(invokeMethod(controlTest, methode, dq));
+        
+        // Test des défauts non repris
+        dq.getLotRTC().setEtatLot(EtatLot.EDITION);
+        dq.setEtatDefaut(EtatDefaut.CLOS);
+        assertTrue(invokeMethod(controlTest, methode, dq));
+        dq.getLotRTC().setEtatLot(EtatLot.TERMINE);
+        assertTrue(invokeMethod(controlTest, methode, dq));
+        
+        // Test anomalies closes à reprendre
+        dq.setEtatDefaut(EtatDefaut.CLOS);
+        dq.getLotRTC().setEtatLot(EtatLot.MOA);
+        dq.getLotRTC().setQualityGate(QG.ERROR);
+        assertFalse(invokeMethod(controlTest, methode, dq));
+        
+        // Test autres cas
+        dq.setEtatDefaut(EtatDefaut.NOUVEAU);
+        assertFalse(invokeMethod(controlTest, methode, dq));
+        
+        dq.setEtatDefaut(EtatDefaut.CLOS);
+        dq.getLotRTC().setQualityGate(QG.NONE);
+        assertTrue(invokeMethod(controlTest, methode, dq));
+        
+        dq.getLotRTC().setEtatLot(EtatLot.EDITION);
+        dq.setEtatDefaut(EtatDefaut.NOUVEAU);
+        assertFalse(invokeMethod(controlTest, methode, dq));
 
     }
 
@@ -346,7 +391,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         assertEquals(column, newSheet.getDataValidations().get(0).getRegions().getCellRangeAddresses()[0].getLastColumn());
     }
 
-    @Test (expected = TechnicalException.class)
+    @Test(expected = TechnicalException.class)
     public void testGetControlRapport()
     {
         // Test getter objet null
@@ -355,9 +400,9 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         // Test setter et getter
         ControlRapport rapport = controlTest.createControlRapport(TypeRapport.ANDROID);
         assertEquals(rapport, controlTest.getControlRapport());
-        
+
         // Test exception type null
-        controlTest.createControlRapport(null);        
+        controlTest.createControlRapport(null);
     }
 
     /*---------- METHODES PRIVEES ----------*/

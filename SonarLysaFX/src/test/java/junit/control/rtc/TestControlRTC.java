@@ -424,7 +424,7 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-    @Ignore("Méthode pour tests manuels")
+//    @Ignore("Méthode pour tests manuels")
     public void testTest() throws TeamRepositoryException
     {
         

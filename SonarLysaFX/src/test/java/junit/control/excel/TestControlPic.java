@@ -32,7 +32,7 @@ public class TestControlPic extends TestControlExcelRead<TypeColPic, ControlPic,
     @Test
     public void testRecupDonneesDepuisExcel()
     {
-        testRecupDonneesDepuisExcel(map -> map.size() == 1927);  
+        testRecupDonneesDepuisExcel(map -> map.size() == 158);  
     }
     
     @Test(expected = FunctionalException.class)
@@ -51,8 +51,8 @@ public class TestControlPic extends TestControlExcelRead<TypeColPic, ControlPic,
     @Test
     public void testCalculIndiceColonnes() throws Exception
     {
-        // Test initialisation colonnes. Pour ce fichier, la première colonne ne sert pas.
-        testCalculIndiceColonnes(0);
+        // Test initialisation colonnes.
+        testCalculIndiceColonnes(1);
     }
     
     /*---------- METHODES PRIVEES ----------*/

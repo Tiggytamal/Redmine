@@ -306,6 +306,15 @@ public class TestLotRTC extends AbstractTestModel<LotRTC>
         objetTest.setDateRepack(date);
         assertEquals(date, objetTest.getDateRepack());
     }
+    
+    @Test
+    public void testIsRtcHS()
+    {
+        // Test getter et setter
+        assertFalse(objetTest.isRtcHS());
+        objetTest.setRtcHS(true);
+        assertTrue(objetTest.isRtcHS());
+    }
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 

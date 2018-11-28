@@ -220,7 +220,7 @@ public class DateConvert
     {
         if (pattern == null || date == null)
             throw new IllegalArgumentException("La date et le pattern ne peuvent être nuls");
-        return date.format(DateTimeFormatter.ofPattern(pattern, Locale.FRANCE)).replace("é", "e").replace("û", "u").replace(".", Statics.EMPTY);
+        return date.format(DateTimeFormatter.ofPattern(pattern, Locale.FRANCE)).replace("é", "e").replace("û", "u");
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -94,6 +94,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     private int colDureeAno;
     private int colDateReouv;
     private int colDateMepPrev;
+    private int colType;
 
     // Controleurs
     private ControlRapport controlRapport;
@@ -281,7 +282,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         // Récupération de la feuille principale
         Sheet sheet = wb.getSheet(SQ);
         if (sheet == null)
-            throw new FunctionalException(Severity.ERROR, "Le fichier n'a pas de page Suivi Qualité");
+            throw new FunctionalException(Severity.ERROR, "Le fichier n'a pas de page SUIVI Défaults Qualité");
         return sheet;
     }
 
@@ -338,21 +339,24 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     private boolean testAnoOK(DefautQualite dq)
     {
         // Données
-        EtatDefaut etatAno = dq.getEtatDefaut();
+        EtatDefaut etatDq = dq.getEtatDefaut();
         LotRTC lotRTC = dq.getLotRTC();
         EtatLot etatLot = lotRTC.getEtatLot();
         QG qg = lotRTC.getQualityGate();
 
         // On considère les anomalies abandonnées comme bonnes
-        if (etatAno == EtatDefaut.ABANDONNE)
+        if (etatDq == EtatDefaut.ABANDONNE)
             return true;
 
         // On ne reprend pas les anomalies closes avec un lot terminé ou livré à l'édition
-        if ((etatLot == EtatLot.EDITION || etatLot == EtatLot.TERMINE) && etatAno == EtatDefaut.CLOS)
+        if ((etatLot == EtatLot.EDITION 
+                || etatLot == EtatLot.TERMINE) 
+                && etatDq == EtatDefaut.CLOS)
             return true;
 
         // Si l'anomalie est close mais que le QG est toujours en erreur, on met l'anomalie à vérifier et nouvelle
-        if (etatAno == EtatDefaut.CLOS && qg == QG.ERROR)
+        if (etatDq == EtatDefaut.CLOS 
+                && qg == QG.ERROR)
         {
             dq.setAction(TypeAction.VERIFIER);
             dq.setDateDetection(LocalDate.now());
@@ -360,7 +364,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             return false;
         }
 
-        return etatAno == EtatDefaut.CLOS;
+        return etatDq == EtatDefaut.CLOS;
     }
 
     /**
@@ -586,6 +590,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         // Groupe composant
         valoriserCellule(row, colProduit, centre, lotRTC.getGroupeProduit().getValeur());
+        
+        // Type défaut
+        valoriserCellule(row, colType, centre, dq.getTypeDefaut());
     }
 
     private String creerFormule(Row row)
@@ -739,6 +746,4 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         TOTALS,
         TOTALSSEC;
     }
-    
-    // @formatter:on
 }
