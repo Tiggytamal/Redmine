@@ -1,11 +1,11 @@
 package junit.model.bdd;
 
-import static org.powermock.reflect.Whitebox.getField;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.powermock.reflect.Whitebox.getField;
 import static utilities.Statics.EMPTY;
 
 import org.junit.Test;
@@ -408,18 +408,6 @@ public class TestDefautQualite extends AbstractTestModel<DefautQualite>
             erreur = true;
         }
         assertTrue("Pas d'exception renvoyée : DefautQualite.setTypeDefaut à null", erreur);
-    }
-
-    @Test
-    public void testGetNomCompoAppli()
-    {
-        // test valeur vide ou nulle
-        assertEquals(EMPTY, objetTest.getNomCompoAppli());
-
-        // Test setter et getter
-        String string = "compo";
-        objetTest.setNomCompoAppli(string);
-        assertEquals(string, objetTest.getNomCompoAppli());
     }
 
     @Test

@@ -28,7 +28,6 @@ import model.enums.EtatAppli;
 import model.enums.OptionCreerVueParAppsTask;
 import model.enums.OptionRecupCompo;
 import model.enums.Param;
-import model.enums.TypeAction;
 import model.enums.TypeColAppsW;
 import model.enums.TypeColPbApps;
 import model.enums.TypeColUA;
@@ -67,7 +66,7 @@ public class CreerVueParAppsTask extends AbstractTask
     private OptionCreerVueParAppsTask option;
     /** Nom du fichier de suavegarde de l'extraction */
     private File file;
-    
+
     private Application appliInconnue;
     private DaoApplication daoApplication;
 
@@ -152,7 +151,7 @@ public class CreerVueParAppsTask extends AbstractTask
             api.supprimerVue(projet.getKey(), false);
 
             // Affichage
-            calculTempsRestant(debut, i+1, size);
+            calculTempsRestant(debut, i + 1, size);
             updateMessage(projet.getNom());
             updateProgress(i, size);
         }
@@ -212,7 +211,7 @@ public class CreerVueParAppsTask extends AbstractTask
     {
         // Initialisation de la map
         HashMap<String, List<ComposantSonar>> retour = new HashMap<>();
-        
+
         Map<String, DefautAppli> mapDefaultAppli = ListeDao.daoDefautAppli.readAllMap();
 
         // Message
@@ -239,7 +238,8 @@ public class CreerVueParAppsTask extends AbstractTask
 
     /**
      * Vérifie qu'une application d'un composant Sonar est présente dans la liste des applications de la PIC.
-     * @param mapDefaultAppli 
+     * 
+     * @param mapDefaultAppli
      *
      * @param application
      *            Application enregistrée pour le composant dans Sonar.
@@ -264,18 +264,10 @@ public class CreerVueParAppsTask extends AbstractTask
 
             // Ajout à la liste des composants à problème avec test sur les version précedente de celui-ci
             composPbAppli.add(testVersionPrec(compo));
-            
+
             DefautAppli da = mapDefaultAppli.get(compo.getNom());
-            if( da == null)
+            if (da == null || da.getAppliCorrigee().isEmpty())
                 compo.setAppli(appliInconnue);
-            
-            else if( da.getAppliCorrigee().isEmpty())
-            {
-                if (da.getAction() != TypeAction.VERIFIER)
-                    compo.setAppli(appliInconnue);
-                else
-                    compo.setAppli(daoApplication.recupEltParIndex(da.getAppliCorrigee()));
-            }
             else
                 compo.setAppli(daoApplication.recupEltParIndex(da.getAppliCorrigee()));
         }
@@ -304,7 +296,7 @@ public class CreerVueParAppsTask extends AbstractTask
     {
         int i = 0;
         ComposantSonar retour = compo;
-        
+
         // Récupération du dernier chiffre de la verion du composant. On retourne faux si on a pas un chiffre.
         // Soustraction de 1 pour obtenier la version précedente du composant.
         try
@@ -390,8 +382,8 @@ public class CreerVueParAppsTask extends AbstractTask
 
             // Code composant
             pbApps.setCodeComposant(compo.getNom());
-            
-            // Traitement des composants plantés dans SonarQube sans lot 
+
+            // Traitement des composants plantés dans SonarQube sans lot
             if (lotSuiviRTC.getLot().isEmpty())
             {
                 pbApps.setLotRTC(COMPOSANSLOT);
@@ -401,7 +393,6 @@ public class CreerVueParAppsTask extends AbstractTask
 
             pbApps.setLotRTC(lotSuiviRTC.getLot());
             pbApps.setCodeAppli(compo.getAppli().getCode());
-
 
             if (lotSuiviRTC.getCpiProjet().isEmpty())
                 pbApps.setCpiLot("Lot inaccessible depuis RTC");
@@ -444,7 +435,7 @@ public class CreerVueParAppsTask extends AbstractTask
             }
         }
     }
-    
+
     /**
      * Initialisation de l'applicaiton inconnue
      */
@@ -456,7 +447,7 @@ public class CreerVueParAppsTask extends AbstractTask
             appliInconnue = Application.getApplicationInconnue("inconnue");
             applications.put(appliInconnue.getMapIndex(), appliInconnue);
             daoApplication.persist(appliInconnue);
-        }        
+        }
     }
 
     /*---------- ACCESSEURS ----------*/

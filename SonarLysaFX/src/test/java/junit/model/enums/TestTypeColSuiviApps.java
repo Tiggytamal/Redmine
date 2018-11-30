@@ -26,7 +26,7 @@ public class TestTypeColSuiviApps implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(8, TypeColSuiviApps.values().length);
+        assertEquals(5, TypeColSuiviApps.values().length);
     }
 
     @Test
@@ -35,10 +35,7 @@ public class TestTypeColSuiviApps implements TestEnums
         assertEquals("Composant", TypeColSuiviApps.COMPO.getValeur());
         assertEquals("Code actuel", TypeColSuiviApps.ACTUEL.getValeur());
         assertEquals("Code à valoriser", TypeColSuiviApps.NEW.getValeur());
-        assertEquals("Action", TypeColSuiviApps.ACTION.getValeur());
         assertEquals("Etat", TypeColSuiviApps.ETAT.getValeur());
-        assertEquals("Anomalie RTC", TypeColSuiviApps.ANORTC.getValeur());
-        assertEquals("Cpi Lot", TypeColSuiviApps.CPILOT.getValeur());
         assertEquals("Lot", TypeColSuiviApps.LOT.getValeur());
     }
 
@@ -48,10 +45,7 @@ public class TestTypeColSuiviApps implements TestEnums
         assertEquals("colCompo", TypeColSuiviApps.COMPO.getNomCol());
         assertEquals("colActuel", TypeColSuiviApps.ACTUEL.getNomCol());
         assertEquals("colNew", TypeColSuiviApps.NEW.getNomCol());
-        assertEquals("colAction", TypeColSuiviApps.ACTION.getNomCol());
         assertEquals("colEtat", TypeColSuiviApps.ETAT.getNomCol());
-        assertEquals("colAnoRTC", TypeColSuiviApps.ANORTC.getNomCol());
-        assertEquals("colCpiLot", TypeColSuiviApps.CPILOT.getNomCol());
         assertEquals("colLot", TypeColSuiviApps.LOT.getNomCol());
     }
 }

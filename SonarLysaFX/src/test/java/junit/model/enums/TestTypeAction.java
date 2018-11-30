@@ -31,33 +31,36 @@ public class TestTypeAction implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(8, TypeAction.values().length);
+        assertEquals(9, TypeAction.values().length);
     }
     
     @Test
     public void testFrom()
     {
-        assertEquals(TypeAction.CREER, TypeAction.from("A créer"));
-        assertEquals(TypeAction.VIDE, TypeAction.from("\0A créer"));
-        assertEquals("A créer", TypeAction.CREER.getValeur());
-        assertEquals(TypeAction.VERIFIER, TypeAction.from("A vérifier"));
-        assertEquals(TypeAction.VIDE, TypeAction.from("\0A vérifier"));
-        assertEquals("A vérifier", TypeAction.VERIFIER.getValeur());
-        assertEquals(TypeAction.ASSEMBLER, TypeAction.from("A assembler"));
-        assertEquals(TypeAction.VIDE, TypeAction.from("\0A assembler"));
-        assertEquals("A assembler", TypeAction.ASSEMBLER.getValeur());
-        assertEquals(TypeAction.CLOTURER, TypeAction.from("A clôturer"));
-        assertEquals(TypeAction.VIDE, TypeAction.from("\0A clôturer"));
-        assertEquals("A clôturer", TypeAction.CLOTURER.getValeur());
-        assertEquals(TypeAction.ABANDONNER, TypeAction.from("A abandonner"));
-        assertEquals(TypeAction.VIDE, TypeAction.from("\0A abandonner"));
-        assertEquals("A abandonner", TypeAction.ABANDONNER.getValeur());
-        assertEquals(TypeAction.RELANCER, TypeAction.from("A relancer"));
-        assertEquals(TypeAction.VIDE, TypeAction.from("\0A relancer"));
-        assertEquals("A relancer", TypeAction.RELANCER.getValeur());
-        assertEquals(TypeAction.REOUV, TypeAction.from("A réouvrir"));
-        assertEquals(TypeAction.VIDE, TypeAction.from("\0A réouvrir"));
-        assertEquals("A réouvrir", TypeAction.REOUV.getValeur());
+        assertEquals(TypeAction.CREER, TypeAction.from("Créer"));
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0ACréer"));
+        assertEquals("Créer", TypeAction.CREER.getValeur());
+        assertEquals(TypeAction.AJOUTCOMM, TypeAction.from("Ajouter com."));
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0Ajouter com."));
+        assertEquals("Ajouter com.", TypeAction.AJOUTCOMM.getValeur());
+        assertEquals(TypeAction.VERIFIER, TypeAction.from("Vérifier"));
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0Vérifier"));
+        assertEquals("Vérifier", TypeAction.VERIFIER.getValeur());
+        assertEquals(TypeAction.ASSEMBLER, TypeAction.from("Assembler"));
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0Assembler"));
+        assertEquals("Assembler", TypeAction.ASSEMBLER.getValeur());
+        assertEquals(TypeAction.CLOTURER, TypeAction.from("Clôturer"));
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0Clôturer"));
+        assertEquals("Clôturer", TypeAction.CLOTURER.getValeur());
+        assertEquals(TypeAction.ABANDONNER, TypeAction.from("Abandonner"));
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0Abandonner"));
+        assertEquals("Abandonner", TypeAction.ABANDONNER.getValeur());
+        assertEquals(TypeAction.RELANCER, TypeAction.from("Relancer"));
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0Relancer"));
+        assertEquals("Relancer", TypeAction.RELANCER.getValeur());
+        assertEquals(TypeAction.REOUV, TypeAction.from("Réouvrir"));
+        assertEquals(TypeAction.VIDE, TypeAction.from("\0Réouvrir"));
+        assertEquals("Réouvrir", TypeAction.REOUV.getValeur());
         assertEquals(TypeAction.VIDE, TypeAction.from("inconnu"));
         assertEquals(EMPTY, TypeAction.VIDE.getValeur());
         assertEquals(TypeAction.VIDE, TypeAction.from(EMPTY));

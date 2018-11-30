@@ -16,8 +16,6 @@ import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -39,11 +37,14 @@ import dao.ListeDao;
 import junit.JunitBase;
 import junit.TestUtils;
 import model.ModelFactory;
+import model.bdd.ComposantSonar;
+import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.EtatAnoRTC;
 import model.enums.EtatLot;
 import model.enums.Param;
+import model.enums.TypeDefaut;
 import model.enums.TypeEnumRTC;
 import utilities.Statics;
 import utilities.TechnicalException;
@@ -178,16 +179,24 @@ public class TestControlRTC extends JunitBase
         DefautQualite dq = ModelFactory.build(DefautQualite.class);
         dq.setLotRTC(ListeDao.daoLotRTC.recupEltParIndex("310979"));
         dq.setSecurite(true);
+        dq.setTypeDefaut(TypeDefaut.APPLI);
+        DefautAppli da = ModelFactory.build(DefautAppli.class);
+        da.setCompo(ComposantSonar.build("id1", "key1", "Composant 1"));
+        DefautAppli da2 = ModelFactory.build(DefautAppli.class); 
+        da2.setCompo(ComposantSonar.build("id2", "key2", "Composant 2"));
+        dq.getDefautsAppli().add(da);
+        dq.getDefautsAppli().add(da2);
         int numero = controlTest.creerAnoRTC(dq);
 
         // Test que le defect a bien été créé
         assertTrue(numero > 0);
+        System.out.println(numero);
 
         // Suppression defect
-        assertEquals(IStatus.OK, controlTest.supprimerWorkItemDepuisId(numero).getCode());
+//        assertEquals(IStatus.OK, controlTest.supprimerWorkItemDepuisId(numero).getCode());
 
         // Test de la suppression
-        assertNull(controlTest.recupWorkItemDepuisId(numero));
+//        assertNull(controlTest.recupWorkItemDepuisId(numero));
     }
 
     @Test

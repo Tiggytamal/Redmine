@@ -31,6 +31,7 @@ import dao.ListeDao;
 import model.ModelFactory;
 import model.bdd.ChefService;
 import model.bdd.ComposantSonar;
+import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.bdd.ProjetClarity;
@@ -428,12 +429,12 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     {
         IndexedColors couleur;
 
-        // Mise en vert des anomalies avec un Quality Gate bon
+        // Mise en vert des anomalies avec un Quality Gate non erreur
         if (dq.getLotRTC().getQualityGate() != QG.ERROR)
             couleur = IndexedColors.LIGHT_GREEN;
-
-        // Les lots qui ont besoin juste d'un réassemblage sont en bleu
-        else if (TypeAction.ASSEMBLER == dq.getAction())
+        
+        // Mise à turquoise un anomalies avec un quality gate à WARN ou qui ont beosin d'un assemblage
+        else if (TypeAction.ASSEMBLER == dq.getAction() || dq.getLotRTC().getQualityGate() == QG.WARN)
             couleur = IndexedColors.LIGHT_TURQUOISE;
 
         // Lot proches de leur date de MEP
@@ -459,10 +460,16 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
     {
         // On cherche dans la map des composants, tous ceux qui sont liès au lot du défaut. Si un des composants a une application mal renseignée, on change le fond de
         // la ligne.
-        for (ComposantSonar compo : mapCompoByLot.computeIfAbsent(dq.getLotRTC().getLot(), k -> new ArrayList<>()))
+        for (DefautAppli da : dq.getDefautsAppli())
         {
-            if (!compo.getAppli().isReferentiel())
+            if (da.getEtatDefaut() == EtatDefaut.NOUVEAU)
                 return FillPatternType.LEAST_DOTS;
+        }
+        
+        for (DefautAppli da : dq.getDefautsAppli())
+        {
+            if (da.getEtatDefaut() == EtatDefaut.TRAITE)
+                return FillPatternType.THICK_FORWARD_DIAG;
         }
         return FillPatternType.SOLID_FOREGROUND;
     }

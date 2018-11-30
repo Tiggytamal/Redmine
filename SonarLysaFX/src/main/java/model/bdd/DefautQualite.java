@@ -2,6 +2,8 @@ package model.bdd;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,11 +13,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -43,7 +47,9 @@ import utilities.adapter.LocalDateAdapter;
 @Table(name = "defauts_qualite")
 //@formatter:off
 @NamedQueries (value = {
-        @NamedQuery(name="DefautQualite" + AbstractDao.FINDALL, query="SELECT dq FROM DefautQualite dq LEFT JOIN FETCH dq.lotRTC l"),
+        @NamedQuery(name="DefautQualite" + AbstractDao.FINDALL, query="SELECT distinct(dq) FROM DefautQualite dq "
+                + "JOIN FETCH dq.lotRTC l "
+                + "LEFT JOIN FETCH dq.defautsAppli da "),
         @NamedQuery(name="DefautQualite" + AbstractDao.FINDINDEX, query="SELECT dq FROM DefautQualite dq WHERE dq.lotRTC.lot = :index"),
         @NamedQuery(name="DefautQualite" + AbstractDao.RESET, query="DELETE FROM DefautQualite")
 })
@@ -112,8 +118,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     @Column(name = "type_defaut", nullable = false)
     private TypeDefaut typeDefaut;
 
-    @Transient
-    private String nomCompoAppli;
+    @OneToMany(cascade = CascadeType.MERGE, targetEntity = DefautAppli.class, mappedBy = "defautQualite")
+    private Set<DefautAppli> defautsAppli;
 
     @Transient
     private String newCodeAppli;
@@ -127,7 +133,8 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
         action = TypeAction.VIDE;
         remarque = Statics.EMPTY;
         dateDetection = LocalDate.now();
-        typeDefaut = TypeDefaut.SONAR;
+        typeDefaut = TypeDefaut.INCONNU;
+        defautsAppli = new HashSet<>();
     }
 
     DefautQualite(LotRTC lotRTC)
@@ -157,10 +164,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
      */
     public boolean calculTraitee()
     {
-        if ((!getRemarque().isEmpty() 
-                || numeroAnoRTC != 0  
-                || action != TypeAction.VIDE) 
-                && etatDefaut == EtatDefaut.NOUVEAU)
+        if ((!getRemarque().isEmpty() || numeroAnoRTC != 0 || action != TypeAction.VIDE) && etatDefaut == EtatDefaut.NOUVEAU)
             etatDefaut = EtatDefaut.TRAITE;
         return etatDefaut != EtatDefaut.NOUVEAU;
     }
@@ -178,8 +182,7 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
      */
     private void creerLiensAnoRTC()
     {
-        if (getLotRTC() != null 
-                && !getLotRTC().getProjetRTC().isEmpty())
+        if (getLotRTC() != null && !getLotRTC().getProjetRTC().isEmpty())
             liensAno = Statics.proprietesXML.getMapParams().get(Param.LIENSANOS) + getLotRTC().getProjetRTC().replace(Statics.SPACE, "%20") + Statics.FINLIENSANO + String.valueOf(numeroAnoRTC);
     }
 
@@ -194,16 +197,13 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
 
     private void controleLiensAno()
     {
-        if (numeroAnoRTC != 0 
-                && (liensAno == null 
-                || liensAno.isEmpty()))
+        if (numeroAnoRTC != 0 && (liensAno == null || liensAno.isEmpty()))
             creerLiensAnoRTC();
     }
 
     private void controleLiensLot()
     {
-        if (liensLot == null 
-                || liensLot.isEmpty())
+        if (liensLot == null || liensLot.isEmpty())
             creerLiensLotRTC();
     }
 
@@ -401,17 +401,6 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     }
 
     @XmlTransient
-    public String getNomCompoAppli()
-    {
-        return getString(nomCompoAppli);
-    }
-
-    public void setNomCompoAppli(String nomCompoAppli)
-    {
-        this.nomCompoAppli = getString(nomCompoAppli);
-    }
-
-    @XmlTransient
     public String getNewCodeAppli()
     {
         return getString(newCodeAppli);
@@ -445,5 +434,20 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     {
         if (dateMepPrev != null)
             this.dateMepPrev = dateMepPrev;
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "defautsAppli")
+    public Set<DefautAppli> getDefautsAppli()
+    {
+        if (defautsAppli == null)
+            defautsAppli = new HashSet<>();
+        return defautsAppli;
+    }
+
+    public void setDefautsAppli(Set<DefautAppli> defautsAppli)
+    {
+        if (defautsAppli != null && !defautsAppli.isEmpty())
+            this.defautsAppli = defautsAppli;
     }
 }

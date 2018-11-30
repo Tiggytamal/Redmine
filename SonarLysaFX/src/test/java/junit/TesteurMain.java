@@ -2,13 +2,16 @@ package junit;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 import org.powermock.reflect.Whitebox;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.xml.ControlXML;
+import dao.ListeDao;
 import model.Info;
+import model.bdd.ComposantSonar;
 import utilities.Statics;
 
 /**
@@ -32,6 +35,13 @@ public class TesteurMain
         builder.append(":");
         builder.append("admin");
         System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
+
+        List<ComposantSonar> compos = ListeDao.daoCompo.readAll();
+        for (ComposantSonar compo : compos)
+        {
+            if (compo.getAppli() == null)
+                System.out.println(compo.getNom());
+        }
     }
 
 }

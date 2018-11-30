@@ -71,7 +71,6 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
                 da.setAppliCorrigee(appliCorrigee);
             else if (action.equals(TypeAction.VERIFIER.getValeur()))
             {
-                da.setAction(TypeAction.VERIFIER);
                 da.setAppliCorrigee(row.getCell(1).getStringCellValue());
             }
         }

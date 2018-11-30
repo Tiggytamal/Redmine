@@ -40,7 +40,7 @@ public final class Statics
     /** Date inconnue au 1er Janvier 2099 */
     public static final LocalDate DATEINCO2099 = LocalDate.of(2099, 1, 1);
     /** Aujourd'hiu */
-    public static LocalDate TODAY = LocalDate.now();
+    public static final LocalDate TODAY = LocalDate.now();
     
     /** Adresse générale pour les resources */
     public static final String ROOT = "/";

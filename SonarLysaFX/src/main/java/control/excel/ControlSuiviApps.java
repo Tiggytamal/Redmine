@@ -5,24 +5,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.util.CellRangeAddressList;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
-import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
 import model.bdd.DefautAppli;
 import model.bdd.LotRTC;
 import model.enums.EtatDefaut;
-import model.enums.TypeAction;
 import model.enums.TypeColSuiviApps;
 import utilities.CellHelper;
 import utilities.FunctionalException;
@@ -41,11 +34,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
     private int colCompo;
     private int colActuel;
     private int colNew;
-    private int colAction;
     private int colEtat;
-    private int colDateDetec;
-    private int colAnoRTC;
-    private int colCpiLot;
     private int colLot;
 
     /** contrainte de validitée de la colonne Action */
@@ -56,7 +45,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
     ControlSuiviApps(File file)
     {
         super(file);
-        
+
         contraintes = initContraintes();
     }
 
@@ -85,24 +74,21 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
 
         return retour;
     }
-    
+
     /**
      * 
      * 
      * @param dasATraiter
      * @param sheet
      */
-    public void majFeuilleDefaultsAppli(List<DefautAppli> dasATraiter, Sheet sheet)
+    public void majFeuilleDefaultsAppli(List<DefautAppli> das, Sheet sheet)
     {
         // Rangement anomalies par date de détection
-        Collections.sort(dasATraiter, (o1, o2) -> o1.getDateDetection().compareTo(o2.getDateDetection()));
+        Collections.sort(das, (o1, o2) -> o1.getCompo().getNom().compareTo(o2.getCompo().getNom()));
 
         // Mise à jour anomalies
-        for (DefautAppli da : dasATraiter)
+        for (DefautAppli da : das)
         {
-            // Onne prend pas en compte les défaults clos et abandonnés
-            if (da.getEtatDefaut() == EtatDefaut.CLOS || da.getEtatDefaut() == EtatDefaut.ABANDONNE || da.getEtatDefaut() == EtatDefaut.LOTCLOS)
-                continue;
 
             // Calcul de la couleur de la ligne dans le fichier Excel
             IndexedColors couleur = calculCouleurLigne(da);
@@ -111,9 +97,6 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
             Row row = sheet.createRow(sheet.getLastRowNum() + 1);
             creerLigneDA(row, da, couleur);
         }
-        
-        if (sheet.getLastRowNum() > 0)
-            ajouterDataValidation(sheet);
         autosizeColumns(sheet);
     }
 
@@ -145,7 +128,6 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
     {
         DefautAppli retour = ModelFactory.build(DefautAppli.class);
 
-        retour.setAction(TypeAction.from(getCellStringValue(row, colAction)));
         retour.setNomComposant(getCellStringValue(row, colCompo));
 
         return retour;
@@ -169,14 +151,8 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
         // code corrigée
         valoriserCellule(row, colNew, centre, da.getAppliCorrigee());
 
-        // Action
-        valoriserCellule(row, colAction, centre, da.getAction());
-
         // Etat
         valoriserCellule(row, colEtat, centre, da.getEtatDefaut());
-
-        // Date Détection
-        valoriserCellule(row, colDateDetec, centre, da.getDateDetection());
 
         // Composant
         valoriserCellule(row, colCompo, normal, compo.getNom());
@@ -184,19 +160,8 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
         // Code actuel
         valoriserCellule(row, colActuel, centre, compo.getAppli().getCode());
 
-        // CPI Projet
-        valoriserCellule(row, colCpiLot, centre, lotRTC.getCpiProjet());
-
         // Lot
         valoriserCellule(row, colLot, centre, lotRTC.getLot());
-
-        // Ano RTC
-        if (da.getDefautQualite() != null && da.getDefautQualite().getNumeroAnoRTC() != 0)
-        {
-            Cell cell = valoriserCellule(row, colAnoRTC, centre, da.getDefautQualite().getNumeroAnoRTC());
-            ajouterLiens(cell, da.getDefautQualite().getLiensAno());
-        }
-
     }
 
     /**
@@ -218,31 +183,7 @@ public class ControlSuiviApps extends AbstractControlExcelRead<TypeColSuiviApps,
         }
         return couleur;
     }
-    
-    /**
-     * Ajoute les contrôles de validation de la colonne Action de la feuille
-     * 
-     * @param sheet
-     */
-    private void ajouterDataValidation(Sheet sheet)
-    {
-        // Protection pour les veuilles qui ne sont pas des .xlsx
-        XSSFSheet xssfSheet = null;
-        if (sheet instanceof XSSFSheet)
-            xssfSheet = (XSSFSheet) sheet;
-        else
-            return;
 
-        XSSFDataValidationConstraint dvContraintes = (XSSFDataValidationConstraint) xssfSheet.getDataValidationHelper().createExplicitListConstraint(contraintes);
-        CellRangeAddressList addressList = new CellRangeAddressList(1, xssfSheet.getLastRowNum(), colAction, colAction);
-        XSSFDataValidation dataValidation = (XSSFDataValidation) xssfSheet.getDataValidationHelper().createValidation(dvContraintes, addressList);
-        dataValidation.setSuppressDropDownArrow(true);
-        dataValidation.setErrorStyle(DataValidation.ErrorStyle.STOP);
-        dataValidation.createErrorBox("Erreur Action", "Valeur pour l'action interdite");
-        dataValidation.setShowErrorBox(true);
-        sheet.addValidationData(dataValidation);
-    }
-    
     /*---------- ACCESSEURS ----------*/
 
 }

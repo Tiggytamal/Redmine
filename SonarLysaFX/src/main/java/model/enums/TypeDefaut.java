@@ -4,5 +4,6 @@ public enum TypeDefaut
 {
     SONAR,
     APPLI,
-    MIXTE;
+    MIXTE,
+    INCONNU;
 }

@@ -12,10 +12,7 @@ public enum TypeColSuiviApps implements TypeColR
     COMPO("Composant", "colCompo"),
     ACTUEL("Code actuel", "colActuel"),
     NEW("Code à valoriser", "colNew"),
-    ACTION("Action", "colAction"),
     ETAT("Etat", "colEtat"),
-    ANORTC("Anomalie RTC", "colAnoRTC"),
-    CPILOT("Cpi Lot", "colCpiLot"),
     LOT("Lot", "colLot");
 
     private String valeur;

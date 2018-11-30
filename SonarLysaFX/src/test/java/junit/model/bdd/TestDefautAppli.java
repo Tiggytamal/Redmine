@@ -2,7 +2,6 @@ package junit.model.bdd;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
@@ -14,9 +13,7 @@ import junit.model.AbstractTestModel;
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
 import model.bdd.DefautAppli;
-import model.bdd.DefautQualite;
 import model.enums.EtatDefaut;
-import model.enums.TypeAction;
 
 public class TestDefautAppli extends AbstractTestModel<DefautAppli>
 {
@@ -80,28 +77,6 @@ public class TestDefautAppli extends AbstractTestModel<DefautAppli>
     }
 
     @Test
-    public void testGetAction() throws IllegalAccessException
-    {
-        // Test valeur initiale
-        assertNotNull(objetTest.getAction());
-        assertEquals(TypeAction.VIDE, objetTest.getAction());
-        
-        // Test protection null
-        objetTest.setAction(null);
-        assertEquals(TypeAction.VIDE, objetTest.getAction());
-        
-        // Mise à null du champ
-        Field field = Whitebox.getField(objetTest.getClass(), "action");
-        field.setAccessible(true);
-        field.set(objetTest, null);
-        assertEquals(TypeAction.VIDE, objetTest.getAction());
-        
-        // Test setter et getter
-        objetTest.setAction(TypeAction.ASSEMBLER);
-        assertEquals(TypeAction.ASSEMBLER, objetTest.getAction());
-    }
-
-    @Test
     public void testGetEtatDefaut() throws IllegalAccessException
     {
         // Test valeur initiale
@@ -121,22 +96,6 @@ public class TestDefautAppli extends AbstractTestModel<DefautAppli>
         // Test setter et getter
         objetTest.setEtatDefaut(EtatDefaut.ABANDONNE);
         assertEquals(EtatDefaut.ABANDONNE, objetTest.getEtatDefaut());
-    }
-
-    @Test
-    public void testGetDefautQualite()
-    {
-        // test getter et setter
-        assertNull(objetTest.getDefautQualite());
-        objetTest.setDefautQualite(ModelFactory.build(DefautQualite.class));
-        assertNotNull(objetTest.getDefautQualite());
-    }
-
-    @Test
-    public void testGetDateDetection()
-    {
-        // test getter
-        assertEquals(today, objetTest.getDateDetection());
     }
 
     @Test

@@ -684,6 +684,7 @@ public class ControlRTC extends AbstractToStringImpl
      * 
      * @param dq
      *            anomalie servant d'origine au Defect
+     * @param typeDefaut 
      * @return
      */
     public int creerAnoRTC(DefautQualite dq)
@@ -779,22 +780,19 @@ public class ControlRTC extends AbstractToStringImpl
      * 
      * @param da
      */
-    public boolean ajoutCommAppliAnoRTC(DefautAppli da)
+    public boolean ajoutCommAppliAnoRTC(DefautAppli da, int numeroAno)
     {
-        DefautQualite dq = da.getDefautQualite();
-        if (dq == null || dq.getNumeroAnoRTC() == 0)
-            return false;
         try
         {
             String texte = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEAPPLI).replace("xxxxx", da.getCompo().getNom().replace("Composant ", Statics.EMPTY));
             if (!da.getAppliCorrigee().isEmpty())
                 texte += Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTENEWAPPLI).replace("-code-", da.getAppliCorrigee());
-            ajoutCommentaireAnoRTC(dq.getNumeroAnoRTC(), texte, TypeCom.APPLICATION);
+            ajoutCommentaireAnoRTC(numeroAno, texte, TypeCom.APPLICATION);
             return true;
         }
         catch (TeamRepositoryException e)
         {
-            LOGGER.error("control.rtc.controlRTC.ajoutAppliAnoRTC - Erreur modification Defect. Lot : " + dq.getLotRTC());
+            LOGGER.error("control.rtc.controlRTC.ajoutAppliAnoRTC - Erreur modification Defect. Lot : " + da.getCompo().getLotRTC().getLot());
             LOGPLANTAGE.error(e);
             return false;
         }

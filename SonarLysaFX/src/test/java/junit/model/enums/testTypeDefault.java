@@ -19,7 +19,7 @@ public class testTypeDefault implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(3, TypeDefaut.values().length);
+        assertEquals(4, TypeDefaut.values().length);
     }
 
 }

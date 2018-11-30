@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 
 import model.bdd.ComposantSonar;
 import model.bdd.DefautAppli;
-import model.bdd.DefautQualite;
 import model.enums.TypeDonnee;
 
 public class DaoDefautAppli extends AbstractDao<DefautAppli> implements Serializable
@@ -45,9 +44,6 @@ public class DaoDefautAppli extends AbstractDao<DefautAppli> implements Serializ
     {
             // Gestion composantSonar
             persistSousObjet(ComposantSonar.class, defAppli.getCompo());
-
-            // Gestion DefaultQualite
-            persistSousObjet(DefautQualite.class, defAppli.getDefautQualite());
     }
 
     /*---------- METHODES PRIVEES ----------*/

@@ -375,20 +375,8 @@ NE PAS ATTRIBUER xx.yy.00.01 et xx.yy.00.02</value>
             <value>Code appli corrigé</value>
         </entry>
         <entry>
-            <key>ACTION</key>
-            <value>Action</value>
-        </entry>
-        <entry>
             <key>ETAT</key>
             <value>Etat du défault</value>
-        </entry>
-        <entry>
-            <key>ANORTC</key>
-            <value>Numéro ano RTC</value>
-        </entry>
-        <entry>
-            <key>CPILOT</key>
-            <value>Cpi du lot</value>
         </entry>
         <entry>
             <key>LOT</key>
@@ -571,6 +559,14 @@ Merci</value>
             <value>Suite à analyse des données SonarQube du composant xxxxx , il s'avère que ce dernier n'a pas de code application valide dans son pom.xml (balise "adaboCodeApplication" dans la balise "properties").
 Aussi, pourriez-vous le renseigner avant le prochain assemblage. 
 Merci.</value>
+        </entry>
+		<entry>
+            <key>TEXTEDEFECTAPPLI</key>
+            <value>Suite à analyse des données SonarQube des composant suivants, il s'avère que cux-ci n'ont pas de code application valide dans leur pom.xml (balise "adaboCodeApplication" dans la balise "properties").
+Aussi, pourriez-vous le renseigner avant le prochain assemblage. 
+Merci.
+Composants :
+xxxxx</value>
         </entry>
         <entry>
             <key>TEXTENEWAPPLI</key>

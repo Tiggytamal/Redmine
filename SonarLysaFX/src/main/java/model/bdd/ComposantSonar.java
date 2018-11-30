@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -41,7 +42,8 @@ import utilities.adapter.LocalDateAdapter;
 @NamedQueries (value = {
         @NamedQuery(name="ComposantSonar.findAll", query="SELECT distinct(c) FROM ComposantSonar c "
                 + "JOIN FETCH c.appli a "
-                + "JOIN FETCH c.lotRTC l "),
+                + "JOIN FETCH c.lotRTC l "
+                + "LEFT JOIN FETCH c.defautAppli da"),
         @NamedQuery(name="ComposantSonar.recupLotsRTC", query="SELECT distinct(l.lot) FROM ComposantSonar c JOIN FETCH LotRTC l"),
         @NamedQuery(name="ComposantSonar.findByIndex", query="SELECT c FROM ComposantSonar c WHERE c.key = :index"),
         @NamedQuery(name="ComposantSonar.resetTable", query="DELETE FROM ComposantSonar")
@@ -71,7 +73,6 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @Column(name = "version", nullable = false, length = 32)
     private String version;
 
-    @BatchFetch(value = BatchFetchType.JOIN)
     @ManyToOne(targetEntity = Application.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "appli")
     private Application appli;
@@ -114,6 +115,9 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     @Column(name = "date_repack", nullable = true)
     private LocalDate dateRepack;
+    
+    @OneToOne(targetEntity = DefautAppli.class, cascade = CascadeType.MERGE, mappedBy = "compo")
+    private DefautAppli defautAppli;
 
     @Transient
     private EtatAppli etatAppli;
@@ -433,5 +437,16 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     {
         if (dateRepack != null)
             this.dateRepack = dateRepack;
+    }
+
+    @XmlElement(name = "defautAppli")
+    public DefautAppli getDefautAppli()
+    {
+        return defautAppli;
+    }
+
+    public void setDefautAppli(DefautAppli defautAppli)
+    {
+        this.defautAppli = defautAppli;
     }
 }

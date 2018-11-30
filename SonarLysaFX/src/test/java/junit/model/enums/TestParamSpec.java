@@ -28,7 +28,7 @@ public class TestParamSpec implements TestEnums
     @Override
     public void testSize()
     {
-        assertEquals(11, ParamSpec.values().length);
+        assertEquals(12, ParamSpec.values().length);
     }
     
     @Test
@@ -44,6 +44,7 @@ public class TestParamSpec implements TestEnums
         assertFalse(ParamSpec.TEXTEAPPLI.getNom().isEmpty());
         assertFalse(ParamSpec.TEXTERELANCE.getNom().isEmpty());
         assertFalse(ParamSpec.TEXTENEWAPPLI.getNom().isEmpty());
+        assertFalse(ParamSpec.TEXTEDEFECTAPPLI.getNom().isEmpty());
     }
     
     @Test
@@ -60,5 +61,6 @@ public class TestParamSpec implements TestEnums
         assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTEAPPLI.getType());
         assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTERELANCE.getType());
         assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTENEWAPPLI.getType());
+        assertEquals(TypeParamSpec.TEXTAREA, ParamSpec.TEXTEDEFECTAPPLI.getType());
     }
 }

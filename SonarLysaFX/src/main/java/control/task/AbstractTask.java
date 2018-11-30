@@ -159,7 +159,7 @@ public abstract class AbstractTask extends Task<Boolean>
         affTimerTask.annuler();
         annulerImpl();
     }
-    
+
     public final void startTimers()
     {
         new Thread(timerTask).start();
@@ -180,7 +180,7 @@ public abstract class AbstractTask extends Task<Boolean>
         updateProgress(-1, -1);
 
         // Triage ascendant de la liste par nom de projet
-        List<ComposantSonar> compos = new ArrayList<>(mapCompos.values()); 
+        List<ComposantSonar> compos = new ArrayList<>(mapCompos.values());
         compos.sort((o1, o2) -> o1.getNom().compareTo(o2.getNom()));
 
         // Création de la regex pour retirer les numéros de version des composants
@@ -353,11 +353,11 @@ public abstract class AbstractTask extends Task<Boolean>
         String filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
         if (nom.startsWith(filtreCobol))
             return Matiere.COBOL;
-        
+
         String filtreIos = proprietesXML.getMapParams().get(Param.FILTREIOS);
         if (nom.contains(filtreIos))
             return Matiere.IOS;
-        
+
         String filtreAndroid = proprietesXML.getMapParams().get(Param.FILTREANDROID);
         if (nom.contains(filtreAndroid))
             return Matiere.ANDROID;
@@ -379,7 +379,8 @@ public abstract class AbstractTask extends Task<Boolean>
 
     /**
      * Contrôle la matière d'un composant en utilisant les filtres paramétrés.
-     * @param instance 
+     * 
+     * @param instance
      * 
      * @param matiere
      * @param compo
@@ -390,12 +391,12 @@ public abstract class AbstractTask extends Task<Boolean>
         // ON ne prend que les composants de la bonne instance
         if (compo.getInstance() != instance)
             return false;
-        
+
         // Filtres et variables
         String filtreDataStage;
         String filtreCobol;
         String filtreIOS;
-        String filtreAndroid;        
+        String filtreAndroid;
         String nom = compo.getNom();
 
         // Switch de contrôle selon la type de matière en utilisant les filtres
@@ -413,12 +414,12 @@ public abstract class AbstractTask extends Task<Boolean>
             case COBOL:
                 filtreCobol = proprietesXML.getMapParams().get(Param.FILTRECOBOL);
                 return nom.startsWith(filtreCobol);
-                
-            case IOS :
+
+            case IOS:
                 filtreIOS = proprietesXML.getMapParams().get(Param.FILTREIOS);
                 return nom.contains(filtreIOS);
-                
-            case ANDROID :
+
+            case ANDROID:
                 filtreAndroid = proprietesXML.getMapParams().get(Param.FILTREANDROID);
                 return nom.contains(filtreAndroid);
 
@@ -673,7 +674,10 @@ public abstract class AbstractTask extends Task<Boolean>
 
     public void setBaseMessage(String baseMessage)
     {
-        this.baseMessage = baseMessage;
+        if (tacheParente != null)
+            tacheParente.setBaseMessage(baseMessage);
+        else
+            this.baseMessage = baseMessage;
     }
 
     public String getBaseMessage()

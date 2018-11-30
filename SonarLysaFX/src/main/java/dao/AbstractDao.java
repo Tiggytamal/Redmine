@@ -12,9 +12,11 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.internal.jpa.EJBQueryImpl;
 
 import model.bdd.AbstractBDDModele;
 import model.bdd.DateMaj;
@@ -104,7 +106,10 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
     {
         // Appel de la requête et calcul du temps de traitement
         long debut = System.currentTimeMillis();
-        List<T> retour = em.createNamedQuery(modele.getSimpleName() + FINDALL, modele).getResultList();
+        TypedQuery<T> query = em.createNamedQuery(modele.getSimpleName() + FINDALL, modele);
+        LOGCONSOLE.debug(query.unwrap(EJBQueryImpl.class).getDatabaseQuery().getJPQLString());
+        LOGCONSOLE.debug(query.unwrap(EJBQueryImpl.class).getDatabaseQuery().getSQLString());
+        List<T> retour = query.getResultList();
         long fin = System.currentTimeMillis();
 
         // Affichage des temps de traitement

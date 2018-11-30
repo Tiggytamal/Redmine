@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -17,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -50,7 +52,8 @@ import utilities.adapter.LocalDateAdapter;
 @NamedQueries (value = {
         @NamedQuery(name="LotRTC.findAll", query="SELECT l FROM LotRTC l "
                 + "LEFT JOIN FETCH l.projetClarity p "
-                + "LEFT JOIN FETCH l.defaultQualite dq"),
+                + "LEFT JOIN FETCH l.defaultQualite dq "
+                + "LEFT JOIN FETCH l.compos c"),
         @NamedQuery(name="LotRTC.findByIndex", query="SELECT l FROM LotRTC l WHERE l.lot = :index"),
         @NamedQuery(name="LotRTC.resetTable", query="DELETE FROM LotRTC")
 })
@@ -68,7 +71,6 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     @Column(name = "libelle", nullable = false)
     private String libelle;
 
-    @BatchFetch(value = BatchFetchType.JOIN)
     @ManyToOne(targetEntity = ProjetClarity.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "projet_Clarity")
     private ProjetClarity projetClarity;
@@ -80,7 +82,6 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     @Column(name = "cpi_projet", nullable = false, length = 128)
     private String cpiProjet;
 
-    @BatchFetch(value = BatchFetchType.JOIN)
     @ManyToOne(targetEntity = Edition.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "edition")
     private Edition edition;
@@ -119,8 +120,11 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     @BatchFetch(value = BatchFetchType.JOIN)
     @OneToOne(targetEntity = DefautQualite.class, mappedBy = "lotRTC")
     private DefautQualite defaultQualite;
-    
-    @Column(name = "rtc_hs", nullable = false)    
+
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "lotRTC", targetEntity = ComposantSonar.class)
+    private List<ComposantSonar> compos;
+
+    @Column(name = "rtc_hs", nullable = false)
     private boolean rtcHS;
 
     /*---------- CONSTRUCTEURS ----------*/
@@ -248,7 +252,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.cpiProjet = cpiProjet;
     }
 
-    @XmlElement (name = "edition")
+    @XmlElement(name = "edition")
     public Edition getEdition()
     {
         return edition;
@@ -293,6 +297,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.dateMajEtat = dateMajEtat;
     }
 
+    @XmlTransient
     public String getProjetClarityString()
     {
         return getString(projetClarityString);
@@ -351,6 +356,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         this.defaultQualite = defaultQualite;
     }
 
+    @XmlTransient
     public String getEditionString()
     {
         return editionString;
@@ -372,7 +378,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     {
         this.dateRepack = dateRepack;
     }
-    
+
     @XmlAttribute(name = "rtcHS")
     public boolean isRtcHS()
     {
@@ -382,5 +388,16 @@ public class LotRTC extends AbstractBDDModele implements Serializable
     public void setRtcHS(boolean rtcHS)
     {
         this.rtcHS = rtcHS;
+    }
+
+    @XmlTransient
+    public List<ComposantSonar> getCompos()
+    {
+        return compos;
+    }
+
+    public void setCompos(List<ComposantSonar> compos)
+    {
+        this.compos = compos;
     }
 }

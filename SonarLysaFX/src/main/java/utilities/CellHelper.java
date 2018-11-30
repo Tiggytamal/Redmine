@@ -28,11 +28,11 @@ import utilities.enums.Bordure;
 public class CellHelper
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     // Constantes statiques
     private static final short SIZEFONT = 12;
     private static final String ERREUR = "La couleur ou la bordure ne peuvent être nulles";
-    
+
     private Workbook wb;
     private CreationHelper ch;
 
@@ -50,7 +50,7 @@ public class CellHelper
      * Retourne une map avec tous les styles possible d'une couleur. les Elements à true ont un style centré horizontalement.
      * 
      * @param couleur
-     *              Couleur du texte
+     *            Couleur du texte
      * @return
      */
     public Map<Boolean, CellStyle> createAllStyles(IndexedColors couleur)
@@ -69,7 +69,7 @@ public class CellHelper
 
             // Création du style
             prepareStyle(style, couleur, bordure, FillPatternType.SOLID_FOREGROUND);
-            
+
             retour.put(false, style);
             CellStyle styleC = wb.createCellStyle();
             styleC.cloneStyleFrom(style);
@@ -117,12 +117,12 @@ public class CellHelper
             throw new IllegalArgumentException(ERREUR);
 
         CellStyle style = getStyle(couleur, bordure, pattern);
-        
+
         // Ajout de l'alignement horizontal
         style.setAlignment(alignement);
         return style;
     }
-    
+
     /**
      * Retourne le style de cellule voulu selon la couleur, la bordure désirée et l'alignement du texte
      * 
@@ -140,19 +140,19 @@ public class CellHelper
             throw new IllegalArgumentException(ERREUR);
 
         CellStyle style = getStyle(couleur, bordure, FillPatternType.SOLID_FOREGROUND);
-        
+
         // Ajout de l'alignement horizontal
         style.setAlignment(alignement);
         return style;
     }
-    
+
     /**
      * Retourne le style de cellule voulu selon la couleur, la bordure et le motif désirés, et l'alignement du texte est celui par défault.
      * 
      * @param couleur
-     *              couleur de fond de la cellule
+     *            couleur de fond de la cellule
      * @param bordure
-     *              désignation des bordures de la cellule
+     *            désignation des bordures de la cellule
      * @return
      */
     public CellStyle getStyle(IndexedColors couleur, Bordure bordure, FillPatternType pattern)
@@ -160,13 +160,13 @@ public class CellHelper
         // Renvoie un style vide sans statut d'incident
         if (couleur == null || bordure == null)
             throw new IllegalArgumentException(ERREUR);
-        
+
         // Initialisation du style
         CellStyle style = wb.createCellStyle();
 
         // Création du style
         prepareStyle(style, couleur, bordure, pattern);
-        
+
         return style;
     }
 
@@ -174,19 +174,19 @@ public class CellHelper
      * Retourne le style de cellule voulu selon la couleur, sans bordure spécifique
      * 
      * @param couleur
-     *          Couleur de fond du style
+     *            Couleur de fond du style
      * @return
      */
     public CellStyle getStyle(IndexedColors couleur)
     {
         return getStyle(couleur, Bordure.VIDE, FillPatternType.SOLID_FOREGROUND);
     }
-    
+
     /**
      * Retourne le style de cellule voulu selon la couleur, sans bordure spécifique, mais avec un motif particulier
      * 
      * @param couleur
-     *          Couleur de fond du style
+     *            Couleur de fond du style
      * @return
      */
     public CellStyle getStyle(IndexedColors couleur, FillPatternType pattern)
@@ -196,10 +196,11 @@ public class CellHelper
 
     /**
      * Rajoute un lien hypertexte à la cellule donnée
+     * 
      * @param adresse
-     *          liens hypertexte a ajouter à la cellule
+     *            liens hypertexte a ajouter à la cellule
      * @param cell
-     *          cellule à traiter
+     *            cellule à traiter
      * @return
      */
     public void createHyperLink(String adresse, Cell cell)
@@ -222,11 +223,12 @@ public class CellHelper
         cell.setHyperlink(link);
         cell.setCellStyle(style);
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Permet de créer un stye avec les informations de couleur et de bordure.
+     * 
      * @param style
      * @param couleur
      * @param bordure
@@ -240,19 +242,26 @@ public class CellHelper
         style.setWrapText(true);
 
         // Choix de la couleur de fond
-        
+
         // Si on veu un fond unifié, on doit mettre la couleur sur le ForGroudnColor
         if (pattern == FillPatternType.SOLID_FOREGROUND)
             style.setFillForegroundColor(couleur.index);
-        
+
         // Avec l'utilisation d'un motif, il faut utiliser le BackGround en couleur de base
-        else
+        else if (pattern == FillPatternType.LEAST_DOTS)
         {
             style.setFillBackgroundColor(couleur.index);
             style.setFillForegroundColor(IndexedColors.BLACK.index);
         }
-        style.setFillPattern(pattern);
+        else if (pattern == FillPatternType.THICK_FORWARD_DIAG)
+        {
+            style.setFillBackgroundColor(IndexedColors.WHITE.index);
+            style.setFillForegroundColor(couleur.index);
+        }
+        else
+            throw new TechnicalException("utilities.CellHelper.prepareStyle - FillpattnerType non prévu : " + pattern);
 
+        style.setFillPattern(pattern);
 
         // Switch sur le placement de la cellule, rajout d'une bordure plus épaisse au bord du tableau
         switch (bordure)

@@ -15,6 +15,7 @@ public enum ParamSpec implements TypeKey
     TEXTEAPPLI("Texte des anomlies sur les applis", TypeParamSpec.TEXTAREA),
     TEXTENEWAPPLI("Texte remontant le bon nom de l'appli", TypeParamSpec.TEXTAREA),
     TEXTEDEFECT("Description Defect RTC", TypeParamSpec.TEXTAREA),
+    TEXTEDEFECTAPPLI("Description Defect appli RTC", TypeParamSpec.TEXTAREA),
     TEXTESECURITE("Texte Sécurité RTC", TypeParamSpec.TEXTAREA),
     VERSIONS("Versions", TypeParamSpec.LISTVIEWVERSION),
     VERSIONSVIEUXCOMPOS("Versions des composants anciens", TypeParamSpec.LISTVIEWCOMPO),

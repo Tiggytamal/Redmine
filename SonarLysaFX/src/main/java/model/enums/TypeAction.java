@@ -20,7 +20,8 @@ public enum TypeAction
     CLOTURER(Valeur.CLOTURER),
     ABANDONNER(Valeur.ABANDONNER),
     RELANCER(Valeur.RELANCER),
-    REOUV(Valeur.REOUV);
+    REOUV(Valeur.REOUV),
+    AJOUTCOMM(Valeur.AJOUTCOMM);
 
     private final String valeur;
 
@@ -62,6 +63,9 @@ public enum TypeAction
                 
             case Valeur.REOUV :
                 return REOUV;
+                
+            case Valeur.AJOUTCOMM :
+                return AJOUTCOMM;
 
             default :
                 return VIDE;
@@ -73,13 +77,14 @@ public enum TypeAction
     
     private static final class Valeur
     {
-        private static final String CREER = "A créer";
-        private static final String VERIFIER = "A vérifier";
-        private static final String ASSEMBLER = "A assembler";
-        private static final String CLOTURER = "A clôturer";
-        private static final String ABANDONNER = "A abandonner";
-        private static final String RELANCER = "A relancer";
-        private static final String REOUV = "A réouvrir";
+        private static final String CREER = "Créer";
+        private static final String VERIFIER = "Vérifier";
+        private static final String ASSEMBLER = "Assembler";
+        private static final String CLOTURER = "Clôturer";
+        private static final String ABANDONNER = "Abandonner";
+        private static final String RELANCER = "Relancer";
+        private static final String REOUV = "Réouvrir";
+        private static final String AJOUTCOMM = "Ajouter com.";
         private static final String VIDE = Statics.EMPTY;
         
         private Valeur() 

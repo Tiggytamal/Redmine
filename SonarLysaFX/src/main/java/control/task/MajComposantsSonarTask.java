@@ -109,12 +109,6 @@ public class MajComposantsSonarTask extends AbstractTask
         Map<String, DefautAppli> mapDefAppli = ListeDao.daoDefautAppli.readAllMap();
         List<Projet> projets = api.getComposants();
 
-        // Réinitialisation des matières des lots pour le cas d'un composant qui serait retiré et qui enléverait un type de matière.
-        for (LotRTC lotRTC : mapLotRTC.values())
-        {
-            lotRTC.getMatieres().clear();
-        }
-
         // Affichage
         updateMessage("Récupération OK.");
         etapePlus();
@@ -189,7 +183,7 @@ public class MajComposantsSonarTask extends AbstractTask
             compo.setBloquants(recupLeakPeriod(getListPeriode(composant, TypeMetrique.BLOQUANT)));
             compo.setCritiques(recupLeakPeriod(getListPeriode(composant, TypeMetrique.CRITIQUE)));
             compo.setDuplication(recupLeakPeriod(getListPeriode(composant, TypeMetrique.DUPLICATION)));
-            retour.add(compo);
+            retour.add(compo);            
         }
 
         // Ecriture de la liste des composants purgés
@@ -283,7 +277,6 @@ public class MajComposantsSonarTask extends AbstractTask
         if (date != Statics.DATEINCONNUE)
             compo.setDateRepack(date);
 
-        
         traitementLot(compo);
     }
 
@@ -392,9 +385,7 @@ public class MajComposantsSonarTask extends AbstractTask
         {
             DefautAppli defAppli = mapDefAppli.get(compo.getNom());
 
-            if (appli.isReferentiel() && (defAppli.getDefautQualite() == null || defAppli.getDefautQualite().getNumeroAnoRTC() == 0))
-                defAppli.setEtatDefaut(EtatDefaut.CLOS);
-            else if (appli.isReferentiel() && defAppli.getDefautQualite() != null && defAppli.getDefautQualite().getNumeroAnoRTC() != 0)
+            if (appli.isReferentiel())
                 defAppli.setEtatDefaut(EtatDefaut.CORRIGE);
             else if (lotRTC.getEtatLot() == EtatLot.ABANDONNE || lotRTC.getEtatLot() == EtatLot.TERMINE || lotRTC.getEtatLot() == EtatLot.EDITION)
                 defAppli.setEtatDefaut(EtatDefaut.LOTCLOS);

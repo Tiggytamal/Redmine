@@ -21,11 +21,13 @@ import com.ibm.team.workitem.common.model.ISubscriptions;
 import com.ibm.team.workitem.common.model.IWorkItem;
 import com.ibm.team.workitem.common.model.IWorkItemType;
 
+import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
 import model.enums.Matiere;
 import model.enums.Param;
 import model.enums.ParamSpec;
+import model.enums.TypeDefaut;
 import model.enums.TypeEnumRTC;
 import utilities.Statics;
 
@@ -43,7 +45,7 @@ public final class WorkItemInitialization extends WorkItemOperation
     private IWorkItemType type;
     private ICategory cat;
     private IProjectArea projet;
-    private DefautQualite dq;
+    private DefautQualite dq;   
     private int lotAno;
     private ControlRTC controlRTC;
     private IWorkItemClient client;
@@ -199,7 +201,7 @@ public final class WorkItemInitialization extends WorkItemOperation
     private String creerDescription(DefautQualite dq)
     {
         String retour;
-        if (dq.getNomCompoAppli().isEmpty())
+        if (dq.getTypeDefaut() != TypeDefaut.APPLI)
         {
             retour = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEDEFECT).replace("-lot-", String.valueOf(lotAno));
             if (dq.isSecurite())
@@ -207,7 +209,15 @@ public final class WorkItemInitialization extends WorkItemOperation
         }
         else
         {
-            retour = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEAPPLI).replaceAll("xxxxx", dq.getNomCompoAppli());            
+            // Ajout de tous le snoms de composants à la liste
+            StringBuilder builder = new StringBuilder();
+            for (DefautAppli da : dq.getDefautsAppli())
+            {
+                builder.append(Statics.TIRET).append(da.getCompo().getNom()).append(Statics.NL);
+            }
+            
+            // ajout des noms de composants à la phrase de l'anomalie
+            retour = Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTEDEFECTAPPLI).replaceAll("xxxxx", builder.toString());            
             if (!dq.getNewCodeAppli().isEmpty())
                 retour += Statics.proprietesXML.getMapParamsSpec().get(ParamSpec.TEXTENEWAPPLI).replaceAll("-code-", dq.getNewCodeAppli());
         }
