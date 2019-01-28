@@ -140,6 +140,14 @@
 			<version>2.0</version>
 		</dependency>
 		
+		<!-- Dépendance interne pour API RTC -->
+		<dependency>
+			<groupId>com.ibm.jazz.rtc.api</groupId>
+			<artifactId>rtc-deps</artifactId>
+			<version>6.0.2</version>
+			<type>pom</type>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.jpa -->
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>

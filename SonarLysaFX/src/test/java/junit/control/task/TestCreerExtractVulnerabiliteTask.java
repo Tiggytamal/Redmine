@@ -15,7 +15,7 @@ import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlExtractVul;
 import control.task.CreerExtractVulnerabiliteTask;
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.Vulnerabilite;
 import model.bdd.Application;
@@ -35,12 +35,12 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
     {
         handler = new CreerExtractVulnerabiliteTask(new File(Statics.RESSTEST + "testExtract.xlsx"));
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     @Test
     public void testCreerExtract() throws Exception
-    {   
+    {
         // Appel de la méthode call qui ne sert qu'à appeler la méthode privée.
         // Controle du bon retour à true. Mock du controleur pour éviter écriture du fichier.
         ControlExtractVul control = Mockito.mock(ControlExtractVul.class);
@@ -48,7 +48,7 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
         Whitebox.getField(CreerExtractVulnerabiliteTask.class, "control").set(handler, control);
         assertTrue(Whitebox.invokeMethod(handler, "call"));
     }
-    
+
     @Test
     public void testConvertIssueToVul() throws Exception
     {
@@ -59,13 +59,13 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
         issue.setSeverity("severity");
         issue.setMessage("javajaf.jar");
         ComposantSonar composant = ModelFactory.build(ComposantSonar.class);
-        composant.setNom("nom");      
+        composant.setNom("nom");
         composant.setAppli(ModelFactory.build(Application.class));
         LotRTC lotRTC = ModelFactory.build(LotRTC.class);
         lotRTC.setLot("123456");
         composant.setLotRTC(lotRTC);
         Vulnerabilite retour = Whitebox.invokeMethod(handler, "convertIssueToVul", issue, composant);
-        
+
         // Controleur que les valeurs sont bonnes après conversion
         assertEquals(Statics.EMPTY, retour.getAppli());
         assertEquals("123456", retour.getLot());
@@ -73,30 +73,30 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
         assertEquals("status", retour.getStatus());
         assertEquals("severity", retour.getSeverite());
         assertEquals("javajaf.jar", retour.getMessage());
-        
+
     }
-    
+
     @Test
     public void testRecupVulnerabilitesSonar() throws Exception
     {
         List<String> nomsComposPatrimoine = new ArrayList<>();
-        
+
         // Compteur pour limiter la taille de la liste et le temps de traitement.
         int i = 0;
-        for (ComposantSonar compo : ListeDao.daoCompo.readAll())
+        for (ComposantSonar compo : DaoFactory.getDao(ComposantSonar.class).readAll())
         {
             nomsComposPatrimoine.add(compo.getNom());
             if (++i == 20)
                 break;
         }
-        
+
         // Test que la liste des vulnérabilités ouvertes ne contient pas de résolue ou close.
         List<Vulnerabilite> result = Whitebox.invokeMethod(handler, "recupVulnerabilitesSonar", TypeVulnerabilite.OUVERTE, nomsComposPatrimoine);
         for (Vulnerabilite vulnerabilite : result)
         {
             assertFalse(vulnerabilite.getStatus().equals("RESOLVED") || vulnerabilite.getStatus().equals("CLOSED"));
         }
-        
+
         // Test que la liste des vulnérabilités résolues ne contient que des résolues ou closes.
         result = Whitebox.invokeMethod(handler, "recupVulnerabilitesSonar", TypeVulnerabilite.RESOLUE, nomsComposPatrimoine);
         for (Vulnerabilite vulnerabilite : result)
@@ -104,7 +104,7 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
             assertTrue(vulnerabilite.getStatus().equals("RESOLVED") || vulnerabilite.getStatus().equals("CLOSED"));
         }
     }
-    
+
     @Test
     public void testExtractLib() throws Exception
     {
@@ -116,8 +116,7 @@ public class TestCreerExtractVulnerabiliteTask extends AbstractTestTask<CreerExt
         assertEquals(jar, Whitebox.invokeMethod(handler, "extractLib", "boudu.jar/autretexte"));
         assertEquals(jar, Whitebox.invokeMethod(handler, "extractLib", "boudu.jar | autre texte"));
     }
-    
-    
+
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
 }

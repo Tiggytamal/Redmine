@@ -2,16 +2,13 @@ package junit;
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.List;
 
 import org.powermock.reflect.Whitebox;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 import control.xml.ControlXML;
-import dao.ListeDao;
 import model.Info;
-import model.bdd.ComposantSonar;
 import utilities.Statics;
 
 /**
@@ -34,14 +31,10 @@ public class TesteurMain
         builder = new StringBuilder("admin");
         builder.append(":");
         builder.append("admin");
-        System.out.println(Base64.getEncoder().encodeToString(builder.toString().getBytes()));
-
-        List<ComposantSonar> compos = ListeDao.daoCompo.readAll();
-        for (ComposantSonar compo : compos)
-        {
-            if (compo.getAppli() == null)
-                System.out.println(compo.getNom());
-        }
+        System.out.println("Basic " + Base64.getEncoder().encodeToString(builder.toString().getBytes()));
+        
+        System.out.println("4.0".substring(0,1));
+        System.out.println("CHC2017-S24".matches("^CHC(_CDM){0,1}20[12][0-9]\\-S[0-5][0-9]$"));
     }
 
 }

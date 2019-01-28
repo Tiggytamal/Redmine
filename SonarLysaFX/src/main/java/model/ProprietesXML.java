@@ -9,7 +9,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import junit.JunitBase;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
@@ -19,9 +18,9 @@ import model.enums.TypeColChefServ;
 import model.enums.TypeColClarity;
 import model.enums.TypeColCompo;
 import model.enums.TypeColEdition;
-import model.enums.TypeColProduit;
 import model.enums.TypeColPbApps;
 import model.enums.TypeColPic;
+import model.enums.TypeColProduit;
 import model.enums.TypeColR;
 import model.enums.TypeColSuivi;
 import model.enums.TypeColSuiviApps;
@@ -46,7 +45,6 @@ public class ProprietesXML extends AbstractModele implements XML
 
     // Constantes statiques
     private static final String NOMFICHIER = "\\proprietes.xml";
-    private static final String RESOURCE = "/proprietes.xml";
     
     // Map des paramètres
     private Map<Param, String> mapParams;
@@ -107,7 +105,7 @@ public class ProprietesXML extends AbstractModele implements XML
     @Override
     public File getResource()
     {
-        return new File(JunitBase.class.getResource(RESOURCE).getFile());
+        return null;
     }
 
     @Override

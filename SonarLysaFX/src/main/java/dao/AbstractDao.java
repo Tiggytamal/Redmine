@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.logging.log4j.LogManager;
@@ -52,6 +53,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
     protected static final String ALTERTABLE = "ALTER TABLE ";
     protected static final String AUTOINC = " AUTO_INCREMENT = 0";
 
+    @PersistenceContext
     protected transient EntityManager em;
     protected TypeDonnee typeDonnee;
     protected Class<T> modele;
@@ -169,6 +171,7 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
             i++;
         }
         em.getTransaction().commit();
+
         return i;
     }
 
@@ -285,12 +288,12 @@ public abstract class AbstractDao<T extends AbstractBDDModele> implements Serial
 
     /*---------- METHODES PROTECTED ----------*/
 
-    protected <O extends AbstractBDDModele> void persistSousObjet(Class<O> classObjet, O objet)
+    protected <O extends AbstractBDDModele> void persistSousObjet(Class<O> classObjet, EntityManager em, O objet)
     {
         if (objet != null)
         {
             if (objet.getIdBase() == 0)
-                DaoFactory.getDao(classObjet).persist(objet);
+                DaoFactory.getDao(classObjet, em).persist(objet);
             else
                 em.merge(objet);
         }

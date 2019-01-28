@@ -5,7 +5,6 @@ import java.io.File;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import junit.JunitBase;
 import model.interfaces.AbstractModele;
 import model.interfaces.XML;
 import utilities.Statics;
@@ -23,7 +22,6 @@ public class Info extends AbstractModele implements XML
 
     // Constantes statiques
     private static final String NOMFICHIER = "\\info.xml";
-    private static final String RESOURCE = "/info.xml";
     
     private String pseudo;
     private String motDePasse;
@@ -51,7 +49,7 @@ public class Info extends AbstractModele implements XML
     @Override
     public File getResource()
     {
-        return new File(JunitBase.class.getResource(RESOURCE).getFile());
+        return null;
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import javax.xml.bind.JAXBException;
 
 import control.xml.ControlXML;
-import dao.ListeDao;
+import dao.DaoFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -27,6 +27,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import model.Colonne;
+import model.bdd.Application;
+import model.bdd.ChefService;
+import model.bdd.Edition;
+import model.bdd.Produit;
+import model.bdd.ProjetClarity;
 import model.enums.Param;
 import model.enums.ParamBool;
 import model.enums.ParamSpec;
@@ -64,7 +69,7 @@ import view.ParamView;
 public final class OptionViewControl extends AbstractViewControl
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     private static final String ENTETE = "Outils/Options/";
 
     // Attributs FXML
@@ -125,14 +130,14 @@ public final class OptionViewControl extends AbstractViewControl
     {
         ObservableList<Node> root = rightSide.getChildren();
         root.clear();
-        
+
         String value = ov.getValue().getValue();
         majTitre(rightSide, ENTETE + value);
 
         switch (value)
         {
             case "Chargement fichiers":
-                root.add(chargementPane);                
+                root.add(chargementPane);
                 break;
 
             case "Paramètres":
@@ -168,31 +173,31 @@ public final class OptionViewControl extends AbstractViewControl
             case "Applications":
                 afficherColonnes(TypeColApps.class, root);
                 break;
-                
+
             case "NPC":
                 afficherColonnes(TypeColProduit.class, root);
                 break;
-                
+
             case "UA":
                 afficherColonnes(TypeColUA.class, root);
                 break;
-                
+
             case "Extract. Vul.":
                 afficherColonnesIndice(TypeColVul.class, root);
                 break;
-                
+
             case "Pb. Applications":
                 afficherColonnesIndice(TypeColPbApps.class, root);
                 break;
-                
+
             case "Extract. Applications":
                 afficherColonnesIndice(TypeColAppsW.class, root);
                 break;
-                
+
             case "Extract. Composants":
                 afficherColonnesIndice(TypeColCompo.class, root);
                 break;
-                
+
             case "Nom Colonnes":
                 // Evite plantage en cas de clic sur le sous-menu
                 majTitre(rightSide, ENTETE);
@@ -214,23 +219,23 @@ public final class OptionViewControl extends AbstractViewControl
         switch (id)
         {
             case "apps":
-                charger("Applications", ListeDao.daoAppli::recupDonneesDepuisExcel);
+                charger("Applications", DaoFactory.getDao(Application.class)::recupDonneesDepuisExcel);
                 break;
 
             case "clarity":
-                charger("Referentiel Clarity", ListeDao.daoProjetClarity::recupDonneesDepuisExcel);
+                charger("Referentiel Clarity", DaoFactory.getDao(ProjetClarity.class)::recupDonneesDepuisExcel);
                 break;
 
             case "chefSrev":
-                charger("Chefs de Service", ListeDao.daoChefServ::recupDonneesDepuisExcel);
+                charger("Chefs de Service", DaoFactory.getDao(ChefService.class)::recupDonneesDepuisExcel);
                 break;
 
             case "edition":
-                charger("Editions CDM", ListeDao.daoEdition::recupDonneesDepuisExcel);
+                charger("Editions CDM", DaoFactory.getDao(Edition.class)::recupDonneesDepuisExcel);
                 break;
-                
+
             case "npc":
-                charger("Projets NPC", ListeDao.daoProduit::recupDonneesDepuisExcel);
+                charger("Projets NPC", DaoFactory.getDao(Produit.class)::recupDonneesDepuisExcel);
                 break;
 
             default:
@@ -328,7 +333,7 @@ public final class OptionViewControl extends AbstractViewControl
         }
         root.add(colonnesPane);
     }
-    
+
     /**
      * Affichge les colonnes du fichier choisi dans les options
      * 

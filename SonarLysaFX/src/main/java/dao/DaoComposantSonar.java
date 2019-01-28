@@ -50,10 +50,17 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
     public void persistImpl(ComposantSonar compo)
     {
         // Presistance application liée
-        persistSousObjet(Application.class, compo.getAppli());
+        persistSousObjet(Application.class, em, compo.getAppli());
 
         // Persistance lot lié
-        persistSousObjet(LotRTC.class, compo.getLotRTC());
+        persistSousObjet(LotRTC.class, em, compo.getLotRTC());
+    }
+    
+    public void updateVraisDefauts(int val, String nom)
+    {
+        em.getTransaction().begin();
+        em.createNativeQuery("update composants c set c.vrais_defauts = ?1 where c.nom = ?2").setParameter(1, val).setParameter(2, nom).executeUpdate();
+        em.getTransaction().commit();
     }
 
     /**
@@ -68,4 +75,5 @@ public class DaoComposantSonar extends AbstractDao<ComposantSonar> implements Se
 
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/
+
 }

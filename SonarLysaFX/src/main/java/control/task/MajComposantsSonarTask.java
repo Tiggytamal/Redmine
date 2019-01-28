@@ -11,12 +11,15 @@ import org.apache.logging.log4j.Logger;
 
 import control.rest.ControlRepack;
 import control.word.ControlRapport;
+import dao.DaoComposantSonar;
+import dao.DaoDefautAppli;
 import dao.DaoEdition;
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
 import model.bdd.DefautAppli;
+import model.bdd.Edition;
 import model.bdd.LotRTC;
 import model.enums.EtatDefaut;
 import model.enums.EtatLot;
@@ -46,8 +49,6 @@ public class MajComposantsSonarTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
 
-    /** Logger pour de debug dans la console */
-    private static final Logger LOGCONSOLE = LogManager.getLogger("console-log");
     /** Logger général de l'application */
     private static final Logger LOGGER = LogManager.getLogger("complet-log");
     /** Nombre d'étapes du traitement */
@@ -57,7 +58,7 @@ public class MajComposantsSonarTask extends AbstractTask
     /** Numéro de lot inconnu */
     private static final String LOT0 = "000000";
 
-    private static final boolean PURGE = true;
+    private static final boolean PURGE = false;
 
     /** Liste des clefs des composants plantès dans SonarQube */
     private List<String> keysComposPlantes;
@@ -66,6 +67,9 @@ public class MajComposantsSonarTask extends AbstractTask
     /** Rapport de la purge */
     private ControlRapport controlR;
 
+    private DaoComposantSonar daoCompo;
+    private DaoDefautAppli daoDefautAppli;
+
     /*---------- CONSTRUCTEURS ----------*/
 
     public MajComposantsSonarTask(OptionMajCompos option)
@@ -73,6 +77,8 @@ public class MajComposantsSonarTask extends AbstractTask
         super(ETAPES, TITRE);
         this.option = option;
         annulable = true;
+        daoCompo = DaoFactory.getDao(ComposantSonar.class);
+        daoDefautAppli = DaoFactory.getDao(DefautAppli.class);
         keysComposPlantes = new ArrayList<>();
         controlR = new ControlRapport(TypeRapport.PURGESONAR);
         startTimers();
@@ -104,9 +110,9 @@ public class MajComposantsSonarTask extends AbstractTask
 
         // Récupération des données de la base de données et de Sonar
         List<ComposantSonar> retour = new ArrayList<>();
-        Map<String, Application> mapAppli = ListeDao.daoAppli.readAllMap();
-        Map<String, LotRTC> mapLotRTC = ListeDao.daoLotRTC.readAllMap();
-        Map<String, DefautAppli> mapDefAppli = ListeDao.daoDefautAppli.readAllMap();
+        Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
+        Map<String, LotRTC> mapLotRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
+        Map<String, DefautAppli> mapDefAppli = daoDefautAppli.readAllMap();
         List<Projet> projets = api.getComposants();
 
         // Affichage
@@ -127,7 +133,6 @@ public class MajComposantsSonarTask extends AbstractTask
             calculTempsRestant(debut, i, size);
             updateMessage(projet.getNom());
             updateProgress(i, size);
-            LOGCONSOLE.debug(new StringBuilder("Traitement composants Sonar ").append(projet.getNom()).append(" : ").append(i).append(" - ").append(size).toString());
 
             // Initialisation composant
             ComposantSonar compo = initCompoDepuisProjet(mapCompos, projet);
@@ -183,7 +188,9 @@ public class MajComposantsSonarTask extends AbstractTask
             compo.setBloquants(recupLeakPeriod(getListPeriode(composant, TypeMetrique.BLOQUANT)));
             compo.setCritiques(recupLeakPeriod(getListPeriode(composant, TypeMetrique.CRITIQUE)));
             compo.setDuplication(recupLeakPeriod(getListPeriode(composant, TypeMetrique.DUPLICATION)));
-            retour.add(compo);            
+
+            initVraisDefauts(compo);
+            retour.add(compo);
         }
 
         // Ecriture de la liste des composants purgés
@@ -291,7 +298,7 @@ public class MajComposantsSonarTask extends AbstractTask
         if (nomGc == null)
             return Statics.DATEINCONNUE;
 
-        DaoEdition dao = ListeDao.daoEdition;
+        DaoEdition dao = DaoFactory.getDao(Edition.class);
         if (nomGc.matches("^E[2-9]\\d_GC\\d\\d[A-Z]?$"))
             return dao.readAllMap().get(nomGc.substring(0, 3)).getDateMEP();
 
@@ -302,6 +309,19 @@ public class MajComposantsSonarTask extends AbstractTask
             return dao.readAllMap().get(nomGc.substring(0, 3)).getDateMEP();
 
         return Statics.DATEINCONNUE;
+    }
+
+    /**
+     * Initialise le vrai nombre de défauts du composant même après won't fix
+     * 
+     * @param compo
+     */
+    private void initVraisDefauts(ComposantSonar compo)
+    {
+        int nbreDefauts = api.getIssuesComposant(compo.getKey()).size();
+        if (nbreDefauts != compo.getVraisDefauts())
+            System.out.println(compo.getNom() + " - defauts avant : " + compo.getVraisDefauts() + " - après : " + nbreDefauts);
+        compo.setVraisDefauts(nbreDefauts);
     }
 
     /**
@@ -360,8 +380,8 @@ public class MajComposantsSonarTask extends AbstractTask
      */
     private void majDefAppli(Map<String, DefautAppli> mapDefAppli)
     {
-        ListeDao.daoDefautAppli.persist(mapDefAppli.values());
-        ListeDao.daoDefautAppli.majDateDonnee();
+        daoDefautAppli.persist(mapDefAppli.values());
+        daoDefautAppli.majDateDonnee();
     }
 
     /**
@@ -449,8 +469,8 @@ public class MajComposantsSonarTask extends AbstractTask
     private int sauvegarde(List<ComposantSonar> listeSonar)
     {
         // Ajout des donnèes et mise à jour de la date de modification de la table
-        int retour = ListeDao.daoCompo.persist(listeSonar);
-        ListeDao.daoCompo.majDateDonnee();
+        int retour = daoCompo.persist(listeSonar);
+        daoCompo.majDateDonnee();
         return retour;
     }
 
@@ -461,20 +481,17 @@ public class MajComposantsSonarTask extends AbstractTask
      */
     private void purgeComposPlantes(List<String> keysComposPlantes)
     {
-
         for (String key : keysComposPlantes)
         {
-            // Suppression dans SonarQube
-            api.supprimerProjet(key, false);
-            api.supprimerVue(key, false);
-
-            LOGGER.debug("suppression composant : {}", key);
-
-            // Suppression dans la base
+            // Suppression dans la base et SonarQube
             if (PURGE)
-                ListeDao.daoCompo.delete(ListeDao.daoCompo.recupEltParIndex(key));
+            {
+                LOGGER.debug("suppression composant : {}", key);
+                daoCompo.recupEltParIndex(key);
+                api.supprimerProjet(key, false);
+                api.supprimerVue(key, false);
+            }
         }
-
     }
 
     /*---------- ACCESSEURS ----------*/

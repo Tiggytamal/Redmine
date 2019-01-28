@@ -24,7 +24,8 @@ import control.excel.ControlSuivi;
 import control.excel.ExcelFactory;
 import control.rtc.ControlRTC;
 import control.word.ControlRapport;
-import dao.ListeDao;
+import dao.DaoDefautQualite;
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
 import model.bdd.DefautAppli;
@@ -42,7 +43,7 @@ import model.enums.TypeDefaut;
 import model.enums.TypeInfo;
 import model.enums.TypeMajSuivi;
 import model.enums.TypeVersion;
-import model.rest.sonarapi.QualityGate;
+import model.rest.sonarapi.QualityProfile;
 import utilities.Statics;
 import utilities.TechnicalException;
 
@@ -65,6 +66,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private static final short DUPLI = 3;
 
     private TypeMajSuivi typeMaj;
+    private DaoDefautQualite daoDefautQualite;
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -72,6 +74,7 @@ public class MajSuiviExcelTask extends AbstractTask
     {
         super(typeMaj.getNbreEtapes(), TITRE);
         this.typeMaj = typeMaj;
+        daoDefautQualite = DaoFactory.getDao(DefautQualite.class);
         annulable = false;
         startTimers();
     }
@@ -314,7 +317,7 @@ public class MajSuiviExcelTask extends AbstractTask
      */
     private void lotSonarQGError(List<ComposantSonar> composants)
     {
-        Map<String, DefautQualite> dqsEnBase = ListeDao.daoDefautQualite.readAllMap();
+        Map<String, DefautQualite> dqsEnBase = daoDefautQualite.readAllMap();
         List<DefautQualite> dqInit = new ArrayList<>();
         List<LotRTC> lotsTraites = new ArrayList<>();
 
@@ -334,8 +337,8 @@ public class MajSuiviExcelTask extends AbstractTask
             traitementCompo(compo, dqsEnBase, dqInit, lotsTraites);
         }
 
-        ListeDao.daoDefautQualite.persist(dqsEnBase.values());
-        ListeDao.daoLotRTC.persist(lotsTraites);
+        daoDefautQualite.persist(dqsEnBase.values());
+        DaoFactory.getDao(LotRTC.class).persist(lotsTraites);
     }
 
     /**
@@ -355,7 +358,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private void majFichierAnomalies(String fichier, Matiere matiere) throws IOException
     {
         // Récupération des anomalies en base
-        Map<String, DefautQualite> mapDqsEnBase = ListeDao.daoDefautQualite.readAllMapMatiere(matiere);
+        Map<String, DefautQualite> mapDqsEnBase = daoDefautQualite.readAllMapMatiere(matiere);
 
         // Controleur
         String name = proprietesXML.getMapParams().get(Param.ABSOLUTEPATH) + fichier;
@@ -406,7 +409,7 @@ public class MajSuiviExcelTask extends AbstractTask
         controlSuivi.majFeuilleDefaultsQualite(new ArrayList<>(mapDqsEnBase.values()), sheet, matiere);
 
         // Persistance des données
-        ListeDao.daoDefautQualite.persist(mapDqsEnBase.values());
+        daoDefautQualite.persist(mapDqsEnBase.values());
 
         controlSuivi.calculStatistiques(new ArrayList<>(mapDqsEnBase.values()));
 
@@ -514,16 +517,16 @@ public class MajSuiviExcelTask extends AbstractTask
             lotsTraites.add(lot);
         }
 
-        boolean avecErreurs = (compo.getBloquants() > 0 || compo.getCritiques() > 0 || compo.getDuplication() > DUPLI);
+        boolean avecErreurs = compo.getVraisDefauts() > 0;
 
-        boolean qgBloquant = compo.getQualityGate() == QG.ERROR;
+        boolean qgBloquant = compo.getQualityGate() == QG.ERROR && (compo.getBloquants() > 0 || compo.getCritiques() > 0 || compo.getDuplication() > DUPLI);
 
         boolean appli = compo.getDefautAppli() != null;
 
         // Calcul QG lot
         if (qgBloquant && avecErreurs)
             lot.setQualityGate(QG.ERROR);
-        else if (qgBloquant)
+        else if (qgBloquant && lot.getQualityGate() != QG.ERROR)
             lot.setQualityGate(QG.WARN);
 
         // Retour type défaut
@@ -577,7 +580,7 @@ public class MajSuiviExcelTask extends AbstractTask
     private void liensQG(Collection<ComposantSonar> composants, String nomQG)
     {
         // Récupération de l'Id de la QualityGate
-        QualityGate qg = api.getQualityGate(nomQG);
+        QualityProfile qg = api.getQualityGate(nomQG);
 
         // Préparation message
         String base = "Association avec le QG DataStage :" + Statics.NL;

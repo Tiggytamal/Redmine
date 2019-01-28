@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import control.word.ControlRapport;
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.bdd.ComposantSonar;
 import model.enums.Param;
 import model.enums.ParamBool;
@@ -56,11 +56,11 @@ public class PurgeSonarTask extends AbstractTask
     {
         return purgeVieuxComposants();
     }
-    
+
     @Override
     public void annulerImpl()
     {
-        // Pas de traitement d'annulation        
+        // Pas de traitement d'annulation
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -82,7 +82,7 @@ public class PurgeSonarTask extends AbstractTask
             api.supprimerProjet(compo.getKey(), true);
             api.supprimerVue(compo.getKey(), true);
             controlRapport.addInfo(TypeInfo.COMPOPURGE, compo.getNom(), null);
-            
+
             // Affichage
             i++;
             calculTempsRestant(i, i, size);
@@ -195,7 +195,7 @@ public class PurgeSonarTask extends AbstractTask
     private Map<String, List<ComposantSonar>> compileMap()
     {
         // Récupération composants depuis fichier XML
-        List<ComposantSonar> compos = ListeDao.daoCompo.readAll();
+        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
 
         // Contrôle si la liste des composants est vide.
         if (compos.isEmpty())

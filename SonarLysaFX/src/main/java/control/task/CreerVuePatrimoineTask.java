@@ -97,6 +97,7 @@ public class CreerVuePatrimoineTask extends AbstractTask
         {
             if (isCancelled())
                 return false;
+            
             ComposantSonar projet = composants.get(i);
 
             // Suppression composants COBOL
@@ -107,7 +108,7 @@ public class CreerVuePatrimoineTask extends AbstractTask
             
             // Affichage
             updateProgress(i, size);
-            calculTempsRestant(debut, i, size);
+            calculTempsRestant(debut, i + 1, size);
             updateMessage(projet.getNom());
         }
         return true;

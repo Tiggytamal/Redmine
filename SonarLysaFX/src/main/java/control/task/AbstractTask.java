@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import control.rest.SonarAPI5;
-import dao.ListeDao;
+import dao.DaoFactory;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -83,7 +83,7 @@ public abstract class AbstractTask extends Task<Boolean>
         initEtape(fin);
         this.titre = titre;
         baseMessage = "";
-        mapCompos = ListeDao.daoCompo.readAllMap();
+        mapCompos = DaoFactory.getDao(ComposantSonar.class).readAllMap();
         setTempsRestant(0);
         timerTask = new TimerTask(this);
         affTimerTask = new AffichageTempsTask(this);
@@ -155,8 +155,8 @@ public abstract class AbstractTask extends Task<Boolean>
      */
     public final void annuler()
     {
-        timerTask.annuler();
-        affTimerTask.annuler();
+        timerTask.terminer();
+        affTimerTask.terminer();
         annulerImpl();
     }
 
@@ -176,7 +176,8 @@ public abstract class AbstractTask extends Task<Boolean>
      */
     protected final Map<String, ComposantSonar> recupererComposantsSonar(OptionRecupCompo option)
     {
-        updateMessage(RECUPCOMPOSANTS);
+        baseMessage = RECUPCOMPOSANTS;
+        updateMessage(Statics.EMPTY);
         updateProgress(-1, -1);
 
         // Triage ascendant de la liste par nom de projet
@@ -214,7 +215,7 @@ public abstract class AbstractTask extends Task<Boolean>
                 throw new TechnicalException("Option \"" + option + "\" inconnue : control.task.AbstractSonarTask.recupererComposantsSonar.", null);
         }
 
-        updateMessage(RECUPCOMPOSANTS + " OK");
+        updateMessage(" OK");
 
         return retour;
     }
@@ -635,8 +636,12 @@ public abstract class AbstractTask extends Task<Boolean>
         Platform.runLater(() -> {
             if (millis == 0)
                 tempsRestant.set("");
+            // Temps prévu dépassé.
             else if (millis < 0)
                 tempsRestant.set(LocalTime.ofSecondOfDay(0).format(DateTimeFormatter.ISO_LOCAL_TIME));
+            //EN debug on peut passer au dessus des 1j. ou en cas de timeOut
+            else if (millis > 86399000)
+                tempsRestant.set(RESTANT + " > 1j.");
             else
                 tempsRestant.set(RESTANT + LocalTime.ofSecondOfDay(millis / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME));
         });

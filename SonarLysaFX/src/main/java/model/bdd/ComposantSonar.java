@@ -56,6 +56,9 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     private static final long serialVersionUID = 1L;
 
+    @Column(name = "security_rating", nullable = true, length = 1)
+    private String securityRating;
+    
     @Column(name = "nom", nullable = false, length = 128)
     private String nom;
 
@@ -80,11 +83,11 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     @Column(name = "ldc", nullable = true)
     private int ldc;
 
-    @Column(name = "securityRating", nullable = true, length = 1)
-    private String securityRating;
-
     @Column(name = "vulnerabilites", nullable = true)
     private int vulnerabilites;
+
+    @Column(name = "vrais_defauts", nullable = false)
+    private int vraisDefauts;
 
     @Column(name = "securite", nullable = true)
     private boolean securite;
@@ -115,7 +118,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
 
     @Column(name = "date_repack", nullable = true)
     private LocalDate dateRepack;
-    
+
     @OneToOne(targetEntity = DefautAppli.class, cascade = CascadeType.MERGE, mappedBy = "compo")
     private DefautAppli defautAppli;
 
@@ -127,6 +130,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     ComposantSonar()
     {
         etatAppli = EtatAppli.OK;
+        vraisDefauts = 0;
     }
 
     ComposantSonar(String id, String key, String nom)
@@ -135,10 +139,11 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.key = key;
         this.nom = nom;
         etatAppli = EtatAppli.OK;
+        vraisDefauts = 0;
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     public static ComposantSonar build(String id, String key, String nom)
     {
         return new ComposantSonar(id, key, nom);
@@ -150,9 +155,17 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         return getKey();
     }
 
+    /**
+     * Calcul de la valeur de sécurité d'un composant, en transformatn la valeur float envoyée par SonarQube.
+     * 
+     * @param securityRating
+     */
     public void setSecurityRatingDepuisSonar(String securityRating)
     {
-        switch (getString(securityRating))
+        String valeur = getString(securityRating);
+        if (valeur.length() > 1)
+            valeur = valeur.substring(0, 1);
+        switch (valeur)
         {
             case "0":
                 setSecurityRating("A");
@@ -201,7 +214,7 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
         this.nom = getString(nom);
     }
 
-    @XmlElement (name = "lotRTC")
+    @XmlElement(name = "lotRTC")
     public LotRTC getLotRTC()
     {
         return lotRTC;
@@ -448,5 +461,16 @@ public class ComposantSonar extends AbstractBDDModele implements Serializable
     public void setDefautAppli(DefautAppli defautAppli)
     {
         this.defautAppli = defautAppli;
+    }
+
+    @XmlAttribute(name = "vraisDefauts")
+    public int getVraisDefauts()
+    {
+        return vraisDefauts;
+    }
+
+    public void setVraisDefauts(int vraisDefauts)
+    {
+        this.vraisDefauts = vraisDefauts;
     }
 }

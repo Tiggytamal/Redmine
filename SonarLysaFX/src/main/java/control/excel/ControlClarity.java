@@ -8,7 +8,7 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.ChefService;
 import model.bdd.ProjetClarity;
@@ -61,7 +61,7 @@ public class ControlClarity extends AbstractControlExcelRead<TypeColClarity, Map
         Map<String, ProjetClarity> retour = new HashMap<>();
 
         // Liste des chef de service depuis la base de données - clef = service
-        Map<String, ChefService> mapChefService = ListeDao.daoChefServ.readAllMap();
+        Map<String, ChefService> mapChefService = DaoFactory.getDao(ChefService.class).readAllMap();
 
         // Itération sur la feuille hormis la ligne des titres, et récupération des lignes qui ont un code Clarity
         for (int i = 1; i < sheet.getLastRowNum(); i++)

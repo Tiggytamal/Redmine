@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import junit.JunitBase;
 import model.bdd.ComposantSonar;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
@@ -31,7 +30,6 @@ public class DataBaseXML extends AbstractModele implements XML
     
     // Constantes statiques
     private static final String NOMFICHIER = "\\database.xml";
-    private static final String RESOURCE = "/database.xml";
     
     // Tables
     private List<ComposantSonar> compos;
@@ -57,7 +55,7 @@ public class DataBaseXML extends AbstractModele implements XML
     @Override
     public File getResource()
     {
-        return new File(JunitBase.class.getResource(RESOURCE).getFile());
+        return null;
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -24,11 +25,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.mchange.util.AssertException;
 
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.bdd.ComposantSonar;
+import model.bdd.DateMaj;
 import model.enums.TypeDonnee;
 import model.interfaces.ModeleSonar;
-import model.rest.sonarapi.Clef;
 import model.rest.sonarapi.Composant;
 import model.rest.sonarapi.IssuesSimple;
 import model.rest.sonarapi.Message;
@@ -40,6 +41,12 @@ import model.rest.sonarapi67.Analyse;
 import model.rest.sonarapi67.Analyses;
 import model.rest.sonarapi67.Connexion;
 import model.rest.sonarapi67.Event;
+import model.rest.sonarapi67.Portfolio;
+import model.rest.sonarapi67.QualityProfile;
+import model.rest.sonarapi67.QualityProfiles;
+import model.rest.sonarapi67.Rule;
+import model.rest.sonarapi67.Rules;
+import model.rest.sonarapi67.VueAppli;
 import utilities.AbstractToStringImpl;
 import utilities.FunctionalException;
 import utilities.Statics;
@@ -67,17 +74,15 @@ public class SonarAPI67 extends AbstractToStringImpl
     private static final String VERSION = "VERSION";
 
     // Liste des api utilisées
-    private static final String VIEWSLIST = "api/views/list";
     private static final String PROJECTSINDEX = "api/projects/index";
-    private static final String QGLIST = "api/qualitygates/list";
     private static final String ISSUESSEARCH = "api/issues/search";
     private static final String MEASURESCOMPONENT = "api/measures/component";
     private static final String ANALYSES = "api/project_analyses/search";
-    private static final String VIEWSSHOW = "api/views/show";
-    private static final String VIEWSCREATE = "api/views/create";
-    private static final String VIEWSMODE = "api/views/mode";
-    private static final String QGSELECT = "api/qualitygates/select";
     private static final String AUTHLOGIN = "api/authentication/login";
+    private static final String QUALITYPROFILE = "api/qualityprofiles/search";
+    private static final String RULESSEARCH = "api/rules/search";
+    private static final String PORTFOLIOCREATE = "api/views/create";
+    private static final String APPLICREATE = "api/applications/create";
 
     /** Instance du controleur */
     public static final SonarAPI67 INSTANCE = new SonarAPI67();
@@ -105,7 +110,7 @@ public class SonarAPI67 extends AbstractToStringImpl
         if (INSTANCE != null)
             throw new AssertException();
 
-        webTarget = ClientBuilder.newClient().target("https://snar-mob.collab.ca-technologies.credit-agricole.fr");
+        webTarget = ClientBuilder.newClient().target("http://zata0-lb-snar.yres.ytech/");
         StringBuilder builder = new StringBuilder(Statics.info.getPseudo());
         builder.append(":");
         builder.append(Statics.info.getMotDePasse());
@@ -126,7 +131,8 @@ public class SonarAPI67 extends AbstractToStringImpl
         if (response.getStatus() == Status.OK.getStatusCode())
         {
             LOGGER.info("Récupération de la liste des composants OK");
-            return response.readEntity(new GenericType<List<Projet>>() { });
+            return response.readEntity(new GenericType<List<Projet>>() {
+            });
         }
         else
         {
@@ -215,7 +221,7 @@ public class SonarAPI67 extends AbstractToStringImpl
         Parametre paramResource = new Parametre("project", compo.getKey());
         Parametre paramCategorie = new Parametre("category", VERSION);
 
-        // 2. appel du webservices
+        // 2. appel du webservice
         Response response = appelWebserviceGET(ANALYSES, new Parametre[] { paramResource, paramCategorie });
 
         // 3. Test du retour et renvoie de la dernière version si ok.
@@ -231,7 +237,144 @@ public class SonarAPI67 extends AbstractToStringImpl
         return false;
     }
 
+    /**
+     * Retourne un profile qualité depuis son nom dans SonarQube.
+     * 
+     * @param qpName
+     * @return
+     */
+    public QualityProfile getQualityProfileByName(String qpName)
+    {
+        // 1. Création des paramètres de la requête
+        Parametre paramNom = new Parametre("qualityProfile", qpName);
+        Parametre paramLanguage = new Parametre("language", "java");
+
+        // 2. appel du webservice
+        Response response = appelWebserviceGET(QUALITYPROFILE, new Parametre[] { paramNom, paramLanguage });
+
+        // 3. Test du retour et renvoie du QualityGate
+        if (response.getStatus() == Status.OK.getStatusCode())
+        {
+            QualityProfiles qps = response.readEntity(QualityProfiles.class);
+            if (!qps.getProfiles().isEmpty())
+                return qps.getProfiles().get(0);
+        }
+        else
+            LOGGER.error(erreurAPI(ANALYSES) + paramNom.getValeur());
+
+        return null;
+    }
+
+    /**
+     * Retourne toutes les règles liées à un profile qualité.
+     * 
+     * @param qp
+     * @return
+     */
+    public List<Rule> getRulesByQualityProfile(QualityProfile qp)
+    {
+        return getRulesByQualityProfile(qp.getKey());
+    }
+
+    /**
+     * Retourne toutes les règles liées à un projet qualité depuis la clef de celui-ci.
+     * 
+     * @param qualityProfileKey
+     * @return
+     */
+    public List<Rule> getRulesByQualityProfile(String qualityProfileKey)
+    {
+        // 1. Création des paramètres de la requête
+        Parametre paramPage;
+        Parametre parmaProfile = new Parametre("qprofile", qualityProfileKey);
+        Parametre paramActivation = new Parametre("activation", "true");
+        Parametre paramPs = new Parametre("ps", "500");
+        List<Rule> retour = new ArrayList<>();
+        int page = 0;
+        Rules rules;
+
+        // Boucle pour récupérer toutes les erreurs en paginant la requête
+        do
+        {
+            page++;
+            // Paramètre de pagination
+            paramPage = new Parametre("p", String.valueOf(page));
+
+            // 2. appel du webservice
+            Response response = appelWebserviceGET(RULESSEARCH, new Parametre[] { parmaProfile, paramPage, paramPs, paramActivation });
+
+            // 3. Test du retour et renvoie du composant si ok.
+            if (response.getStatus() == Status.OK.getStatusCode())
+            {
+                rules = response.readEntity(Rules.class);
+                retour.addAll(rules.getListRules());
+            }
+            else
+            {
+                LOGGER.error(erreurAPI(RULESSEARCH) + parmaProfile.getValeur());
+                return retour;
+            }
+        }
+        while (page * rules.getPs() < rules.getTotal());
+
+        return retour;
+    }
+
+    /**
+     * Récupère une liste de projet Sonar depuis un nom donné.
+     * 
+     * @param nom
+     * @return
+     */
+    public List<Projet> getVuesParNom(String nom)
+    {
+        // Paramètres
+        Parametre paramSearch = new Parametre("search", nom);
+        Parametre paramViews = new Parametre("views", "true");
+
+        // Appel webService
+        Response response = appelWebserviceGET(PROJECTSINDEX, new Parametre[] { paramSearch, paramViews });
+
+        // Contrôle de la réponse
+        if (response.getStatus() == Status.OK.getStatusCode())
+        {
+            LOGGER.info("Liste des Vues triées retournées depuis Sonar");
+            return response.readEntity(new GenericType<List<Projet>>() {
+            });
+        }
+        else
+            LOGGER.error("Impossible de retourner les vues depuis Sonar = " + PROJECTSINDEX);
+
+        return new ArrayList<>();
+    }
+
     /*---------- METHODES PUBLIQUES POST ----------*/
+
+    public Status creerPortFolio(Portfolio pf)
+    {
+        if (!Portfolio.controle(pf))
+            return Status.BAD_REQUEST;
+
+        WebTarget requete = webTarget.path(PORTFOLIOCREATE).queryParam("name", "APPLI TEST3").queryParam("key", pf.getKey()).queryParam("description", pf.getDescription());
+
+        Response response = appelWebservicePOST(requete);
+        LOGGER.info("Creation vue : " + pf.getKey() + " - nom : " + pf.getNom() + HTTP + response.getStatus());
+        gestionErreur(response);
+        return response.getStatusInfo().toEnum();
+    }
+
+    public Status creerVueApplication(VueAppli appli)
+    {
+        if (!VueAppli.controle(appli))
+            return Status.BAD_REQUEST;
+
+        WebTarget requete = webTarget.path(APPLICREATE).queryParam("name", appli.getName()).queryParam("key", appli.getKey()).queryParam("description", appli.getDescription());
+
+        Response response = appelWebservicePOST(requete);
+        LOGGER.info("Creation vue : " + appli.getKey() + " - nom : " + appli.getName() + HTTP + response.getStatus());
+        gestionErreur(response);
+        return response.getStatusInfo().toEnum();
+    }
 
     /**
      * Permet de vérifier si l'utilisateur a bien les accès à SonarQube
@@ -241,7 +384,7 @@ public class SonarAPI67 extends AbstractToStringImpl
     public boolean connexionUtilisateur()
     {
         Connexion connexion = new Connexion(Statics.info.getPseudo(), Statics.info.getMotDePasse());
-        Response response = appelWebservicePOST(AUTHLOGIN, connexion);
+        Response response = appelWebservicePOSTJSON(AUTHLOGIN, connexion);
 
         if (response.getStatus() == Status.OK.getStatusCode())
         {
@@ -253,24 +396,14 @@ public class SonarAPI67 extends AbstractToStringImpl
 
         return false;
     }
-
+    
     /**
-     * Supprime un projet dans SonarQube depuis la clef avec ou non gestion des erreur, et vérifie que celle-ci n'existe plus pendant 2s.
-     * 
-     * @param vueKey
-     *            clef de la vue à supprimer
-     * @return
+     * Force la mise à jour de toutes les vues dans SonarQube.
      */
-    public Status supprimerProjet(String vueKey, boolean erreur)
+    public boolean majVues()
     {
-        if (vueKey == null || vueKey.isEmpty())
-            throw new IllegalArgumentException("La méthode sonarapi.SonarAPI.supprimerProjet a un argument nul");
-
-        Response response = appelWebservicePOST("api/projects/delete", new Clef(vueKey));
-        LOGGER.info("retour supprimer projet " + vueKey + " : " + HTTP + response.getStatus());
-        if (erreur)
-            gestionErreur(response);
-        return response.getStatusInfo().toEnum();
+        Response response = appelWebservicePOSTJSON("api/views/run", null);
+        return gestionErreur(response);
     }
 
     /*---------- APPELS GENERIQUES ----------*/
@@ -323,16 +456,31 @@ public class SonarAPI67 extends AbstractToStringImpl
      *            pas beaoin de paramètres.
      * @return
      */
-    public Response appelWebservicePOST(String url, ModeleSonar entite)
+    public Response appelWebservicePOST(WebTarget webTarget)
     {
-        // Création ed la requête
+        return webTarget.request(MediaType.APPLICATION_JSON).header(AUTHORIZATION, codeUser).method("POST");
+    }
+
+    /**
+     * Appel des webservices en POST
+     * 
+     * @param url
+     *            Url du webservices
+     * @param entite
+     *            Entite envoyée à la requete en paramètre. Utilise un objet implémentant l'interface {@link ModeleSonar}. Le paramètre peut être null s'il n'y a
+     *            pas beaoin de paramètres.
+     * @return
+     */
+    public Response appelWebservicePOSTJSON(String url, ModeleSonar entite)
+    {
+        // Création de la requête
         WebTarget requete = webTarget.path(url);
-        Invocation.Builder builder = requete.request();
+        Invocation.Builder builder = requete.request(MediaType.APPLICATION_JSON).header(AUTHORIZATION, codeUser);
 
         if (entite == null)
             return builder.post(Entity.text(EMPTY));
 
-        return builder.post(Entity.entity(entite, MediaType.APPLICATION_JSON));
+        return builder.post(Entity.json(entite), Response.class);
     }
 
     /**
@@ -354,7 +502,7 @@ public class SonarAPI67 extends AbstractToStringImpl
         if (entite == null)
             return builder.async().post(Entity.text(EMPTY));
 
-        return builder.async().post(Entity.entity(entite, MediaType.APPLICATION_JSON));
+        return builder.async().post(Entity.entity(entite, MediaType.APPLICATION_JSON), Response.class);
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -389,7 +537,7 @@ public class SonarAPI67 extends AbstractToStringImpl
             }
         }
         compo.setVersionRelease(!version.contains("SNAPSHOT"));
-        return date.isAfter(ListeDao.daoDateMaj.recupEltParIndex(TypeDonnee.COMPOSANT.toString()).getTimeStamp());
+        return date.isAfter(DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.COMPOSANT.toString()).getTimeStamp());
     }
 
     /**
@@ -406,6 +554,7 @@ public class SonarAPI67 extends AbstractToStringImpl
             for (Message message : erreurs)
             {
                 LOGPLANTAGE.error(message.getMsg());
+                LOGGER.debug(message.getMsg());
             }
 
             return false;

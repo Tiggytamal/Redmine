@@ -43,7 +43,7 @@ public class DaoDefautAppli extends AbstractDao<DefautAppli> implements Serializ
     public void persistImpl(DefautAppli defAppli)
     {
             // Gestion composantSonar
-            persistSousObjet(ComposantSonar.class, defAppli.getCompo());
+            persistSousObjet(ComposantSonar.class, em, defAppli.getCompo());
     }
 
     /*---------- METHODES PRIVEES ----------*/

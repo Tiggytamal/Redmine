@@ -20,7 +20,7 @@ import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import control.task.MajComposantsSonarTask;
-import dao.ListeDao;
+import dao.DaoFactory;
 import de.saxsys.javafx.test.JfxRunner;
 import model.ModelFactory;
 import model.bdd.ComposantSonar;
@@ -35,9 +35,9 @@ import model.rest.sonarapi.Periode;
 public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSonarTask>
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     private static final String UN = "1.0";
-    
+
     /*---------- CONSTRUCTEURS ----------*/
 
     @Before
@@ -48,38 +48,39 @@ public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSo
     }
 
     /*---------- METHODES PUBLIQUES ----------*/
-    
+
     @Test
-//    @Ignore(Statics.TESTMANUEL)
+    // @Ignore(Statics.TESTMANUEL)
     public void testCall() throws Exception
     {
         // Réinitialisation de l'API
         initAPI(MajComposantsSonarTask.class, false);
-        
+
         // Appel de la méthode
         assertTrue(invokeMethod(handler, "call"));
     }
+
     @Test
     public void testCreerListeComposants() throws Exception
-    {        
+    {
         // Préparation des mocks
         mockAPIGetSomething(() -> api.getComposants());
         when(api.getVersionComposant(anyString())).thenReturn("1.00");
-        
+
         // On retourne un composant cide, sauf le premier qui sera null
         when(api.getMetriquesComposant(anyString(), any(String[].class))).thenReturn(null).thenReturn(new Composant());
-        
+
         // La méthode SecuriteComposant retournera qu'une seule fois 1 puis 0
         when(api.getSecuriteComposant(anyString())).thenReturn(1).thenReturn(0);
-        
+
         // Appel de la méthode
         List<ComposantSonar> retour = invokeMethod(handler, "creerListeComposants");
-      
+
         // Contrôle
         assertNotNull(retour);
         assertFalse(retour.isEmpty());
-        assertEquals(api.getComposants().size()-1, retour.size());
-        
+        assertEquals(api.getComposants().size() - 1, retour.size());
+
         // Contrôle qu'un seul composant a une valeur de sécurité à "true"
         int i = 0;
         for (ComposantSonar compo : retour)
@@ -89,7 +90,7 @@ public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSo
         }
         assertEquals(1, i);
     }
-    
+
     @Test
     public void testCheckVersion() throws Exception
     {
@@ -100,7 +101,7 @@ public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSo
         assertFalse(invokeMethod(handler, "checkVersion", "key"));
         assertTrue(invokeMethod(handler, "checkVersion", "key"));
     }
-    
+
     @Test
     public void testRecupLeakPeriod() throws Exception
     {
@@ -121,21 +122,21 @@ public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSo
         // Test envoit d'un paramètre null
         assertEquals(0F, (float) invokeMethod(handler, "recupLeakPeriod", new Object[] { null }), 0.1F);
     }
-    
+
     @Test
     public void testGestionDefaultsAppli() throws Exception
     {
-        List<ComposantSonar> compos = ListeDao.daoCompo.readAll();
-        Map<String, DefautAppli> mapDefAppli = ListeDao.daoDefautAppli.readAllMap();
-        
+        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
+        Map<String, DefautAppli> mapDefAppli = DaoFactory.getDao(DefautAppli.class).readAllMap();
+
         for (ComposantSonar compo : compos)
         {
             Whitebox.invokeMethod(handler, "gestionDefaultsAppli", compo, mapDefAppli);
         }
-        
+
         Whitebox.invokeMethod(handler, "majDefAppli", mapDefAppli);
     }
-    
+
     @Test
     public void testGetListPeriode() throws Exception
     {
@@ -153,9 +154,9 @@ public class TestMajComposantsSonarTask extends AbstractTestTask<MajComposantsSo
         // Metrique avec une liste des périodes vide
         Metrique metrique2 = new Metrique();
         metrique2.setMetric(TypeMetrique.BUGS);
-        metriques.add(metrique2);       
+        metriques.add(metrique2);
         compo.setMetriques(metriques);
-        
+
         // Appel avec premier metrique
         List<Periode> retour = invokeMethod(handler, "getListPeriode", compo, TypeMetrique.APPLI);
         assertNotNull(retour);

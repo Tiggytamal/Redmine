@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -265,7 +266,7 @@ public class Issue extends AbstractModele implements ModeleSonar
         this.line = line;
     }
 
-    @XmlAttribute(name = "textRange", required = false)
+    @XmlElement(name = "textRange", required = false)
     public TextRange getTextRange()
     {
         if (textRange == null)

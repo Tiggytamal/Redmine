@@ -31,7 +31,7 @@ public class TimerTask extends Task<Boolean>
         return decompteSecondes();
     }
     
-    public void annuler()
+    public void terminer()
     {
         stop = true;
     }

@@ -3,7 +3,7 @@ package control.task;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.bdd.ComposantSonar;
 import model.enums.Param;
 import model.rest.sonarapi.Vue;
@@ -62,7 +62,7 @@ public class CreerVueDataStageTask extends AbstractTask
     {
         // Appel du webservice pour remonter tous les composants
         updateMessage(RECUPCOMPOSANTS);
-        
+
         if (isCancelled())
             return false;
 
@@ -75,8 +75,8 @@ public class CreerVueDataStageTask extends AbstractTask
         baseMessage = builder.append(" OK.").append(Statics.NL).append("Ajout : ").toString();
 
         // Récupération composants depuis fichier XML
-        List<ComposantSonar> compos = ListeDao.daoCompo.readAll();
-        
+        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
+
         // Itération sur les projets pour ajouter tous les composants DataStage, puis itération sur la nouvelle liste pour traitement et affichage progression
         List<ComposantSonar> listeDS = new ArrayList<>();
         for (ComposantSonar compo : compos)
@@ -95,7 +95,7 @@ public class CreerVueDataStageTask extends AbstractTask
                 return false;
 
             api.ajouterProjet(compo, vue);
-            
+
             // Affichage
             i++;
             calculTempsRestant(debut, i, size);

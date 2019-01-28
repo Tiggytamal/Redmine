@@ -13,7 +13,7 @@ import control.task.AbstractTask;
 import control.task.MajComposantsSonarTask;
 import control.task.MajVuesTask;
 import control.task.PurgeSonarTask;
-import dao.ListeDao;
+import dao.DaoFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -266,7 +266,8 @@ public final class MenuViewControl extends AbstractViewControl
         info.setMotDePasse(mdp);
 
         // Contrôle connexion RTC et SonarQube
-        if (!ControlRTC.INSTANCE.connexion() || !SonarAPI5.INSTANCE.verificationUtilisateur())
+        if (!ControlRTC.INSTANCE.connexion() 
+                || !SonarAPI5.INSTANCE.verificationUtilisateur())
             throw new FunctionalException(Severity.INFO, "Utilisateur incorrect");
 
         mensuel.setDisable(false);
@@ -306,7 +307,7 @@ public final class MenuViewControl extends AbstractViewControl
             }
         }
 
-        List<DateMaj> liste = ListeDao.daoDateMaj.readAll();
+        List<DateMaj> liste = DaoFactory.getDao(DateMaj.class).readAll();
 
         StringBuilder builder = new StringBuilder("Dates de mises à jour de la base :\n");
         final String TIRET = " - ";

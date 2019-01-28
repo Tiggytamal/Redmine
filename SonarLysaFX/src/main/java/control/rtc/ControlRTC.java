@@ -65,8 +65,10 @@ import com.mchange.util.AssertException;
 
 import control.task.AbstractTask;
 import dao.DaoComposantSonar;
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.ModelFactory;
+import model.bdd.ComposantSonar;
+import model.bdd.DateMaj;
 import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
@@ -426,8 +428,7 @@ public class ControlRTC extends AbstractToStringImpl
         else
         {
             // Récupération de la date de mise à jour depuis la base de données
-            ListeDao.daoDateMaj.clearCache();
-            LocalDateTime lastUpdate = ListeDao.daoDateMaj.recupEltParIndex(TypeDonnee.LOTSRTC.toString()).getTimeStamp();
+            LocalDateTime lastUpdate = DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.LOTSRTC.toString()).getTimeStamp();
             if (lastUpdate != null)
             {
                 // Dernière date de mise à jour. On utilise la zone GMT car en interne RTC prend les dates dans ce format.
@@ -448,7 +449,7 @@ public class ControlRTC extends AbstractToStringImpl
         // Gestion des lots des composants. On ne prend que les lots qui ont un composantSonar dans la base.
 
         // Récupération des numéros de lots depuis la base de données
-        DaoComposantSonar dao = ListeDao.daoCompo;
+        DaoComposantSonar dao = DaoFactory.getDao(ComposantSonar.class);
         List<String> listeLots = dao.recupLotsAvecComposants();
 
         // Création de la liste de numéros de lots
@@ -530,7 +531,7 @@ public class ControlRTC extends AbstractToStringImpl
     private List<LotRTC> miseAJourLotincomplets() throws TeamRepositoryException
     {
         // Récupération des lots avec informations manquantes
-        List<LotRTC> retour = ListeDao.daoLotRTC.readAll();
+        List<LotRTC> retour = DaoFactory.getDao(LotRTC.class).readAll();
         for (Iterator<LotRTC> iter = retour.iterator(); iter.hasNext();)
         {
             LotRTC lot = iter.next();
@@ -555,7 +556,7 @@ public class ControlRTC extends AbstractToStringImpl
                 // Si on a pas l'accès au lot. on metà jour le top HS et la base de données
                 iter.remove();
                 lotRTC.setRtcHS(true);
-                ListeDao.daoLotRTC.persist(lotRTC);
+                DaoFactory.getDao(LotRTC.class).persist(lotRTC);
                 continue;
             }
 
@@ -684,7 +685,7 @@ public class ControlRTC extends AbstractToStringImpl
      * 
      * @param dq
      *            anomalie servant d'origine au Defect
-     * @param typeDefaut 
+     * @param typeDefaut
      * @return
      */
     public int creerAnoRTC(DefautQualite dq)
@@ -881,7 +882,6 @@ public class ControlRTC extends AbstractToStringImpl
 
         // Date de livraison / homolation
         IAttribute date = workItemClient.findAttribute(wi.getProjectArea(), TypeEnumRTC.DATELIVHOMO.getValeur(), monitor);
-
         if (wi.getValue(date) == null)
         {
             workingCopy.getWorkItem().setValue(date, new Timestamp(System.currentTimeMillis()));
@@ -890,10 +890,17 @@ public class ControlRTC extends AbstractToStringImpl
 
         // Entité responsable correction
         IAttribute resp = workItemClient.findAttribute(wi.getProjectArea(), TypeEnumRTC.ENTITERESPCORRECTION.getValeur(), monitor);
-
         if (wi.getValue(resp).equals(recupLiteralDepuisString("-", resp)))
         {
             workingCopy.getWorkItem().setValue(resp, recupLiteralDepuisString("MOE", resp));
+            workingCopy.save(monitor);
+        }
+        
+        //Nature du problème
+        IAttribute nature = workItemClient.findAttribute(wi.getProjectArea(), TypeEnumRTC.NATURE.getValeur(), monitor);
+        if (wi.getValue(nature).equals(recupLiteralDepuisString("-", nature)))
+        {
+            workingCopy.getWorkItem().setValue(nature, recupLiteralDepuisString("Qualité", nature));
             workingCopy.save(monitor);
         }
 

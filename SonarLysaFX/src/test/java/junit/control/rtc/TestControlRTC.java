@@ -33,7 +33,7 @@ import com.mchange.util.AssertException;
 import control.rtc.ControlRTC;
 import control.task.MajLotsRTCTask;
 import dao.DaoDefautQualite;
-import dao.ListeDao;
+import dao.DaoFactory;
 import junit.JunitBase;
 import junit.TestUtils;
 import model.ModelFactory;
@@ -177,12 +177,12 @@ public class TestControlRTC extends JunitBase
     public void testCreerAnoRTC() throws TeamRepositoryException
     {
         DefautQualite dq = ModelFactory.build(DefautQualite.class);
-        dq.setLotRTC(ListeDao.daoLotRTC.recupEltParIndex("310979"));
+        dq.setLotRTC(DaoFactory.getDao(LotRTC.class).recupEltParIndex("310979"));
         dq.setSecurite(true);
         dq.setTypeDefaut(TypeDefaut.APPLI);
         DefautAppli da = ModelFactory.build(DefautAppli.class);
         da.setCompo(ComposantSonar.build("id1", "key1", "Composant 1"));
-        DefautAppli da2 = ModelFactory.build(DefautAppli.class); 
+        DefautAppli da2 = ModelFactory.build(DefautAppli.class);
         da2.setCompo(ComposantSonar.build("id2", "key2", "Composant 2"));
         dq.getDefautsAppli().add(da);
         dq.getDefautsAppli().add(da2);
@@ -193,10 +193,10 @@ public class TestControlRTC extends JunitBase
         System.out.println(numero);
 
         // Suppression defect
-//        assertEquals(IStatus.OK, controlTest.supprimerWorkItemDepuisId(numero).getCode());
+        // assertEquals(IStatus.OK, controlTest.supprimerWorkItemDepuisId(numero).getCode());
 
         // Test de la suppression
-//        assertNull(controlTest.recupWorkItemDepuisId(numero));
+        // assertNull(controlTest.recupWorkItemDepuisId(numero));
     }
 
     @Test
@@ -300,7 +300,7 @@ public class TestControlRTC extends JunitBase
     @Test
     public void testRecupEtatsAnoRTC()
     {
-        DaoDefautQualite dao = ListeDao.daoDefautQualite;
+        DaoDefautQualite dao = DaoFactory.getDao(DefautQualite.class);
         List<DefautQualite> dqs = dao.readAll();
         int size = dqs.size();
         int i = 0;
@@ -433,10 +433,10 @@ public class TestControlRTC extends JunitBase
     }
 
     @Test
-//    @Ignore("Méthode pour tests manuels")
+    // @Ignore("Méthode pour tests manuels")
     public void testTest() throws TeamRepositoryException
     {
-        
+
     }
 
     /*---------- METHODES PRIVEES ----------*/

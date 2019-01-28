@@ -54,8 +54,8 @@ public class Analyses extends AbstractModele implements ModeleSonar
         this.paging = paging;
     }
 
-    @XmlElementWrapper
     @XmlAttribute(name = "analyses", required = false)
+    @XmlElementWrapper
     public List<Analyse> getListAnalyses()
     {
         if (listAnalyses == null)

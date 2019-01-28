@@ -31,7 +31,7 @@ import model.enums.TypeMajSuivi;
 import model.enums.TypeMetrique;
 import model.rest.sonarapi.Metrique;
 import model.rest.sonarapi.Periode;
-import model.rest.sonarapi.QualityGate;
+import model.rest.sonarapi.QualityProfile;
 import utilities.Statics;
 
 public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
@@ -230,7 +230,7 @@ public class TestMajSuiviExcelTask extends AbstractTestTask<MajSuiviExcelTask>
         Whitebox.invokeMethod(handler, "liensQG", collec, nomQG);
 
         // Vérification de l'appel à associerQualityGate
-        Mockito.verify(api, Mockito.times(1)).associerQualitygate(Mockito.eq(compo), Mockito.any(QualityGate.class));
+        Mockito.verify(api, Mockito.times(1)).associerQualitygate(Mockito.eq(compo), Mockito.any(QualityProfile.class));
 
     }
     

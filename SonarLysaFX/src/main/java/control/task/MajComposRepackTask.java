@@ -5,8 +5,9 @@ import java.util.List;
 
 import control.rest.ControlRepack;
 import dao.DaoEdition;
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.bdd.ComposantSonar;
+import model.bdd.Edition;
 import model.bdd.LotRTC;
 import model.rest.repack.RepackREST;
 import utilities.Statics;
@@ -17,7 +18,6 @@ public class MajComposRepackTask extends AbstractTask
 
     private static final String TITRE = "Mise à jour des Lots RTC";
     private static final int ETAPES = 1;
-
 
     /*---------- CONSTRUCTEURS ----------*/
 
@@ -38,7 +38,7 @@ public class MajComposRepackTask extends AbstractTask
     public Boolean call() throws Exception
     {
         majComposRepack();
-        return ListeDao.daoCompo.persist(mapCompos.values()) > 0;
+        return DaoFactory.getDao(ComposantSonar.class).persist(mapCompos.values()) > 0;
     }
 
     /*---------- METHODES PRIVEES ----------*/
@@ -93,7 +93,7 @@ public class MajComposRepackTask extends AbstractTask
         LocalDate repackCompo = compo.getDateRepack();
 
         if (Statics.DATEINCO2099.equals(lot.getEdition().getDateMEP()) && (lot.getDateRepack() == null || repackCompo.isAfter(lot.getDateRepack())))
-                lot.setDateRepack(repackCompo);
+            lot.setDateRepack(repackCompo);
     }
 
     /**
@@ -106,7 +106,7 @@ public class MajComposRepackTask extends AbstractTask
         if (nomGc == null)
             return Statics.DATEINCONNUE;
 
-        DaoEdition dao = ListeDao.daoEdition;
+        DaoEdition dao = DaoFactory.getDao(Edition.class);
         if (nomGc.matches("^E[2-9]\\d_GC\\d\\d[A-Z]?$"))
             return dao.readAllMap().get(nomGc.substring(0, 3)).getDateMEP();
 

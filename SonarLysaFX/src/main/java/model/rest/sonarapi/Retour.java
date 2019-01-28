@@ -26,12 +26,12 @@ public class Retour extends AbstractModele implements ModeleSonar
     private List<Vue> results;
     private boolean more;
     private List<Message> errors;
-    private List<QualityGate> qualityGates;
+    private List<QualityProfile> qualityGates;
     private String defaut;
 
     /*---------- CONSTRUCTEURS ----------*/
 
-    public Retour(Composant component, List<Vue> listeVues, StatusProjet statusProjet, List<Vue> results, boolean more, List<Message> errors, List<QualityGate> qualityGates, String defaut)
+    public Retour(Composant component, List<Vue> listeVues, StatusProjet statusProjet, List<Vue> results, boolean more, List<Message> errors, List<QualityProfile> qualityGates, String defaut)
     {
         super();
         this.component = component;
@@ -100,7 +100,7 @@ public class Retour extends AbstractModele implements ModeleSonar
     }
 
     @XmlAttribute(name = "qualitygates", required = false)
-    public List<QualityGate> getQualityGates()
+    public List<QualityProfile> getQualityGates()
     {
         if (qualityGates == null)
             qualityGates = new ArrayList<>();

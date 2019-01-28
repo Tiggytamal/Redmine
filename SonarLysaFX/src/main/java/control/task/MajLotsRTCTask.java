@@ -12,7 +12,8 @@ import com.mchange.util.AssertException;
 
 import application.Main;
 import control.rtc.ControlRTC;
-import dao.ListeDao;
+import dao.DaoFactory;
+import dao.DaoLotRTC;
 import javafx.application.Platform;
 import model.bdd.Edition;
 import model.bdd.LotRTC;
@@ -91,10 +92,10 @@ public class MajLotsRTCTask extends AbstractTask
         long debut = System.currentTimeMillis();
 
         // Initialisation de la map depuis les informations de la base de données
-        Map<String, LotRTC> retour = ListeDao.daoLotRTC.readAllMap();
-        Map<String, ProjetClarity> mapClarity = ListeDao.daoProjetClarity.readAllMap();
-        Map<String, Produit> mapGroupe = ListeDao.daoProduit.readAllMap();
-        Map<String, Edition> mapEdition = ListeDao.daoEdition.readAllMap();
+        Map<String, LotRTC> retour =DaoFactory.getDao(LotRTC.class).readAllMap();
+        Map<String, ProjetClarity> mapClarity =DaoFactory.getDao(ProjetClarity.class).readAllMap();
+        Map<String, Produit> mapGroupe =DaoFactory.getDao(Produit.class).readAllMap();
+        Map<String, Edition> mapEdition =DaoFactory.getDao(Edition.class).readAllMap();
 
         for (LotRTC lotRTC : lotsRTC)
         {
@@ -238,8 +239,9 @@ public class MajLotsRTCTask extends AbstractTask
      */
     private boolean sauvegarde(Map<String, LotRTC> map)
     {
-        boolean retour = ListeDao.daoLotRTC.persist(map.values()) > 0;
-        ListeDao.daoLotRTC.majDateDonnee();
+        DaoLotRTC dao = DaoFactory.getDao(LotRTC.class);
+        boolean retour = dao.persist(map.values()) > 0;
+        dao.majDateDonnee();
         return retour;
     }
 

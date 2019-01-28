@@ -72,7 +72,7 @@ public class DaoProjetClarity extends AbstractDao<ProjetClarity> implements Seri
     public void persistImpl(ProjetClarity projet)
     {
         // Persistance chef de service
-        persistSousObjet(ChefService.class, projet.getChefService());
+        persistSousObjet(ChefService.class, em, projet.getChefService());
     }
 
     /*---------- METHODES PRIVEES ----------*/

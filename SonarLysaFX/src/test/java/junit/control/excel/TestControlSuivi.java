@@ -30,7 +30,7 @@ import org.powermock.reflect.Whitebox;
 import control.excel.ControlSuivi;
 import control.rtc.ControlRTC;
 import control.word.ControlRapport;
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.DefautQualite;
 import model.bdd.LotRTC;
@@ -145,7 +145,7 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         Matiere matiere = Matiere.JAVA;
 
         // Appel méthode sans écriture du fichier
-        controlTest.majFeuilleDefaultsQualite(ListeDao.daoDefautQualite.readAll(), sheet, matiere);
+        controlTest.majFeuilleDefaultsQualite(DaoFactory.getDao(DefautQualite.class).readAll(), sheet, matiere);
         assertEquals(wb.getActiveSheetIndex(), wb.getSheetIndex(sheet));
         assertTrue(sheet.getLastRowNum() > 2);
         assertFalse(sheet.getDataValidations().isEmpty());
@@ -184,28 +184,28 @@ public final class TestControlSuivi extends TestControlExcelRead<TypeColSuivi, C
         // Retour vrai pour le anomalies abandonnées
         dq.setEtatDefaut(EtatDefaut.ABANDONNE);
         assertTrue(invokeMethod(controlTest, methode, dq));
-        
+
         // Test des défauts non repris
         dq.getLotRTC().setEtatLot(EtatLot.EDITION);
         dq.setEtatDefaut(EtatDefaut.CLOS);
         assertTrue(invokeMethod(controlTest, methode, dq));
         dq.getLotRTC().setEtatLot(EtatLot.TERMINE);
         assertTrue(invokeMethod(controlTest, methode, dq));
-        
+
         // Test anomalies closes à reprendre
         dq.setEtatDefaut(EtatDefaut.CLOS);
         dq.getLotRTC().setEtatLot(EtatLot.MOA);
         dq.getLotRTC().setQualityGate(QG.ERROR);
         assertFalse(invokeMethod(controlTest, methode, dq));
-        
+
         // Test autres cas
         dq.setEtatDefaut(EtatDefaut.NOUVEAU);
         assertFalse(invokeMethod(controlTest, methode, dq));
-        
+
         dq.setEtatDefaut(EtatDefaut.CLOS);
         dq.getLotRTC().setQualityGate(QG.NONE);
         assertTrue(invokeMethod(controlTest, methode, dq));
-        
+
         dq.getLotRTC().setEtatLot(EtatLot.EDITION);
         dq.setEtatDefaut(EtatDefaut.NOUVEAU);
         assertFalse(invokeMethod(controlTest, methode, dq));
