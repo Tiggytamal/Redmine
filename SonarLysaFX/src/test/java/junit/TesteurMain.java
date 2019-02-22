@@ -1,14 +1,18 @@
 package junit;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Base64;
-
-import org.powermock.reflect.Whitebox;
+import java.util.List;
 
 import com.ibm.team.repository.common.TeamRepositoryException;
 
-import control.xml.ControlXML;
-import model.Info;
+import dao.DaoDefautQualite;
+import dao.DaoFactory;
+import model.bdd.DefautQualite;
+import model.enums.Param;
 import utilities.Statics;
 
 /**
@@ -20,10 +24,8 @@ import utilities.Statics;
 public class TesteurMain
 {
 
-    public static void main(String[] args) throws TeamRepositoryException, IllegalArgumentException, IllegalAccessException, IOException
+    public static void main(String[] args) throws TeamRepositoryException, IllegalArgumentException, IllegalAccessException, IOException, URISyntaxException
     {
-        Info info = new ControlXML().recupererXMLResources(Info.class);
-        Whitebox.setInternalState(Statics.class, info);
         StringBuilder builder = new StringBuilder("ETP8137");
         builder.append(":");
         builder.append("28H02m8904,;:!");
@@ -32,9 +34,19 @@ public class TesteurMain
         builder.append(":");
         builder.append("admin");
         System.out.println("Basic " + Base64.getEncoder().encodeToString(builder.toString().getBytes()));
+
+        DaoDefautQualite dao = DaoFactory.getDao(DefautQualite.class);
+        List<DefautQualite> liste = dao.readAll();
+
+        for (DefautQualite dq : liste)
+        {
+            String urlStr = Statics.proprietesXML.getMapParams().get(Param.LIENSANOS) + dq.getLotRTC().getProjetRTC() + Statics.FINLIENSANO + dq.getNumeroAnoRTC();
+            URL url = new URL(urlStr);
+            URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+            dq.setLiensAno(uri.toASCIIString());            
+        }
         
-        System.out.println("4.0".substring(0,1));
-        System.out.println("CHC2017-S24".matches("^CHC(_CDM){0,1}20[12][0-9]\\-S[0-5][0-9]$"));
+        dao.persist(liste);
     }
 
 }

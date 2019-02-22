@@ -712,6 +712,7 @@ public class ControlRTC extends AbstractToStringImpl
                 }
             }
 
+            // S'il n'y a pas de catégorie trouvée, on cherche une catégorie avec Anomalie ou "Non affecté"
             if (cat == null)
             {
                 for (ICategory iCategory : categories)
@@ -722,7 +723,11 @@ public class ControlRTC extends AbstractToStringImpl
                         break;
                     }
                 }
-            }
+            }    
+            
+            // Si c'est toujours null, on prend la première catégorie trouvée.
+            if (cat == null)
+               cat = categories.get(0);
 
             // Création
             WorkItemInitialization init = new WorkItemInitialization(itemType, cat, projet, dq);

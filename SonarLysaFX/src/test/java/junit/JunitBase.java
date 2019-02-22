@@ -1,17 +1,18 @@
 package junit;
 
+import java.io.File;
 import java.time.LocalDate;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
 import org.junit.Before;
 import org.powermock.reflect.Whitebox;
 
-import control.xml.ControlXML;
-import model.DataBaseXML;
 import model.Info;
 import model.ProprietesXML;
 import utilities.Statics;
+import utilities.TechnicalException;
 
 /**
  * Classe de base de tous les tests Junit. Permet de récupérer les fichier de paramètres depuis les resources et de simuler une connexion utlisateur
@@ -23,24 +24,27 @@ public abstract class JunitBase
 {
     /*---------- ATTRIBUTS ----------*/
 
-    protected static final ProprietesXML proprietes = new ControlXML().recupererXMLResources(ProprietesXML.class);
-    protected static final Info info = new ControlXML().recupererXMLResources(Info.class);
     protected final LocalDate today = LocalDate.now();
-
-    /** logger plantages de l'application */
-    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
-
-    private DataBaseXML dataBase;
 
     /*---------- CONSTRUCTEURS ----------*/
 
     protected JunitBase()
     {
         // Mock des fichiers de paramètres depuis les ressources
+        ProprietesXML proprietes;
+        Info info;
+        try
+        {
+            proprietes = (ProprietesXML) JAXBContext.newInstance(ProprietesXML.class).createUnmarshaller().unmarshal(new File(getClass().getResource("/proprietes.xml").getFile()));
+            info = (Info) JAXBContext.newInstance(Info.class).createUnmarshaller().unmarshal(new File(getClass().getResource("/info.xml").getFile()));
+        }
+        catch (JAXBException e)
+        {
+            throw new TechnicalException("junit.JunitBase.constructor - impossible d'instancier les statiques");
+        }
+
         Whitebox.setInternalState(Statics.class, proprietes);
         Whitebox.setInternalState(Statics.class, info);
-
-        dataBase = new ControlXML().recupererXMLResources(DataBaseXML.class);
     }
 
     /*---------- METHODES ABSTRAITES ----------*/
