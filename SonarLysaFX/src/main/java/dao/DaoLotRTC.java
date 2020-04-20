@@ -49,10 +49,10 @@ public class DaoLotRTC extends AbstractDao<LotRTC> implements Serializable
     public void persistImpl(LotRTC lot)
     {
             // Persistance projet Clarity
-            persistSousObjet(ProjetClarity.class, lot.getProjetClarity());
+            persistSousObjet(ProjetClarity.class, em, lot.getProjetClarity());
             
             // Persistance édition
-            persistSousObjet(Edition.class, lot.getEdition());
+            persistSousObjet(Edition.class, em, lot.getEdition());
     }
 
     /*---------- METHODES PRIVEES ----------*/

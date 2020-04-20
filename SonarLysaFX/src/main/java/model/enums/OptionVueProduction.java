@@ -12,7 +12,7 @@ public enum OptionVueProduction
     /*---------- ATTRIBUTS ----------*/
 
     ALL (""),
-    DATASTAGE (" (DataStage)");
+    DATASTAGE ("DataStage");
     
     private String titre;
     

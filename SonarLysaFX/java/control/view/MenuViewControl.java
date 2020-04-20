@@ -158,7 +158,7 @@ public class MenuViewControl extends AbstractViewControl
             case "suivi":
                 load("/view/Suivi.fxml");
                 break;
-                
+
             case "appli":
                 load("/view/Applications.fxml");
                 break;
@@ -166,20 +166,20 @@ public class MenuViewControl extends AbstractViewControl
             case "rtc":
                 load("/view/FichierRTC.fxml");
                 break;
-                
+
             case "extraction":
                 load("/view/Extraction.fxml");
                 break;
-                
+
             // Demande confirmations pour traitements
             case "majVues":
                 alertConfirmation(new MajVuesTask(), "Cela lancera la mise à jour de toutes les vues Sonar.");
                 break;
-                
+
             case "majCompos":
-                alertConfirmation(new CreerListeComposantsTask(), "Cela lancera la mise à jour de tous les composants Sonar."); 
+                alertConfirmation(new CreerListeComposantsTask(), "Cela lancera la mise à jour de tous les composants Sonar.");
                 break;
-                
+
             case "purger":
                 alertConfirmation(new PurgeSonarTask(), "Cela lancera la purge des composants Sonar.");
                 break;
@@ -257,7 +257,7 @@ public class MenuViewControl extends AbstractViewControl
         Node pane = FXMLLoader.load(getClass().getResource(ressource));
         border.setCenter(pane);
     }
-    
+
     /**
      * Affichage message de confirmation avant le lancement du traitement.
      * 

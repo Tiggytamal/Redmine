@@ -8,14 +8,14 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.rest.sonarapi.QualityGate;
+import model.rest.sonarapi.QualityProfile;
 
 public class TestQualityGate
 {
     /*---------- ATTRIBUTS ----------*/
 
-    private QualityGate modele;
-    private QualityGate modeleNull;
+    private QualityProfile modele;
+    private QualityProfile modeleNull;
     private static final String ID = "10";
     private static final String NAME = "20";
     
@@ -24,8 +24,8 @@ public class TestQualityGate
     @Before
     public void init()
     {
-        modele = new QualityGate(ID, NAME);
-        modeleNull = new QualityGate();
+        modele = new QualityProfile(ID, NAME);
+        modeleNull = new QualityProfile();
     }
     
     /*---------- METHODES PUBLIQUES ----------*/

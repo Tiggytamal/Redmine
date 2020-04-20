@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.bdd.ComposantSonar;
 import model.bdd.LotRTC;
 import model.enums.EtatLot;
@@ -145,7 +145,7 @@ public class CreerVueProductionTask extends AbstractTask
     private Map<LocalDate, List<Vue>> recupLotRTCPourMEP(LocalDate dateDebut, LocalDate dateFin, Map<String, Vue> mapSonar)
     {
         Map<LocalDate, List<Vue>> retour = new HashMap<>();
-        Map<String, LotRTC> mapLots = ListeDao.daoLotRTC.readAllMap();
+        Map<String, LotRTC> mapLots = DaoFactory.getDao(LotRTC.class).readAllMap();
 
         // Affichage et variables
         baseMessage = "Traitement RTC :\n";
@@ -217,13 +217,13 @@ public class CreerVueProductionTask extends AbstractTask
         
         for (ComposantSonar composantSonar : composDataStage)
         {
-            List<Projet> projets = api.getVuesParNom("Lot " + composantSonar.getLotRTC());
+            List<Projet> projets = api.getVuesParNom("Lot " + composantSonar.getLotRTC().getLot());
             map.put(projets.get(0).getNom().substring(Statics.SBTRINGLOT), new Vue(projets.get(0).getKey(), projets.get(0).getNom()));
             i++;
             updateProgress(i, size);
         }
 
-        updateMessage(baseMessage + " OK");
+        updateMessage(" OK");
         return map;
     }
 
@@ -243,8 +243,8 @@ public class CreerVueProductionTask extends AbstractTask
 
         // Création de la vue principale
 
-        String nomVue = new StringBuilder("MEP ").append(DateConvert.dateFrancais(entry.getKey(), "yyyy.MM - MMMM")).append(option.getTitre()).toString();
-        vueKey = new StringBuilder("MEPMEP").append(DateConvert.dateFrancais(entry.getKey(), "MMyyyy").replace(".", Statics.EMPTY)).append("Key").append(option.toString()).toString();
+        String nomVue = new StringBuilder("MEP ").append(option.getTitre()).append(Statics.SPACE).append(DateConvert.dateFrancais(entry.getKey(), "yyyy.MM - MMMM")).toString();
+        vueKey = new StringBuilder("MEPMEP").append(option.toString()).append(DateConvert.dateFrancais(entry.getKey(), "MMyyyy").replace(".", Statics.EMPTY)).append("Key").toString();
         etapePlus();
         baseMessage = "Vue " + nomVue + Statics.NL;
         updateMessage("");
@@ -294,7 +294,7 @@ public class CreerVueProductionTask extends AbstractTask
             lotsTotal.addAll(entry.getValue());
             LocalDate clef = entry.getKey();
 
-            builderNom.append(DateConvert.dateFrancais(clef, "MMM"));
+            builderNom.append(DateConvert.dateFrancais(clef, "MMM").replace(".", ""));
             if (iter.hasNext())
                 builderNom.append("-");
 
@@ -315,8 +315,8 @@ public class CreerVueProductionTask extends AbstractTask
         String date = builderDate.toString();
 
         // Création de la vue et envoie vers SonarQube
-        vueKey = new StringBuilder("MEPMEP").append(date).append(nom).append("Key").append(option.toString()).toString();
-        String nomVue = new StringBuilder("TEP ").append(date).append(Statics.SPACE).append(nom).append(option.getTitre()).toString();
+        vueKey = new StringBuilder("TEPTEP").append(option.toString()).append(date).append(nom).append("Key").toString();
+        String nomVue = new StringBuilder("TEP ").append(option.getTitre()).append(Statics.SPACE).append(date).append(Statics.SPACE).append(nom).toString();
         etapePlus();
         String base = "Vue " + nomVue + Statics.NL;
         updateMessage(base);

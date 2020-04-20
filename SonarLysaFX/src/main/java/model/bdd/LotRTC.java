@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.enums.EtatLot;
 import model.enums.GroupeProduit;
 import model.enums.Matiere;
@@ -155,7 +155,7 @@ public class LotRTC extends AbstractBDDModele implements Serializable
         retour.cpiProjet = Statics.EMPTY;
         retour.etatLot = EtatLot.NOUVEAU;
         retour.projetRTC = Statics.EMPTY;
-        retour.edition = ListeDao.daoEdition.recupEltParIndex(Statics.EDINCONNUE);
+        retour.edition = DaoFactory.getDao(Edition.class).recupEltParIndex(Statics.EDINCONNUE);
         return retour;
     }
 

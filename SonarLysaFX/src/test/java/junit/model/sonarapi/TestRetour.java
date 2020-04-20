@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import model.rest.sonarapi.Composant;
 import model.rest.sonarapi.Message;
-import model.rest.sonarapi.QualityGate;
+import model.rest.sonarapi.QualityProfile;
 import model.rest.sonarapi.Retour;
 import model.rest.sonarapi.StatusProjet;
 import model.rest.sonarapi.Vue;
@@ -30,7 +30,7 @@ public class TestRetour
     private static final List<Vue> RESULTS = new ArrayList<>();
     private static final boolean MORE = true;
     private static final List<Message> ERRORS = new ArrayList<>();
-    private static final List<QualityGate> QGS = new ArrayList<>();
+    private static final List<QualityProfile> QGS = new ArrayList<>();
     private static final String DEFAUT = "DEFAULT";
     
     /*---------- CONSTRUCTEURS ----------*/
@@ -41,7 +41,7 @@ public class TestRetour
         LISTEVUES.add(new Vue("key", "val1"));
         RESULTS.add(new Vue("key", "val2"));
         ERRORS.add(new Message("message"));
-        QGS.add(new QualityGate("id", "name"));
+        QGS.add(new QualityProfile("id", "name"));
         modele = new Retour(COMPOSANT, LISTEVUES, STATUSPROJET, RESULTS, MORE, ERRORS, QGS, DEFAUT);
         modeleNull = new Retour();
     }

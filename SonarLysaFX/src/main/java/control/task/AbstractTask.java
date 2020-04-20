@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import control.rest.SonarAPI5;
-import dao.ListeDao;
+import dao.DaoFactory;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -83,7 +83,7 @@ public abstract class AbstractTask extends Task<Boolean>
         initEtape(fin);
         this.titre = titre;
         baseMessage = "";
-        mapCompos = ListeDao.daoCompo.readAllMap();
+        mapCompos = DaoFactory.getDao(ComposantSonar.class).readAllMap();
         setTempsRestant(0);
         timerTask = new TimerTask(this);
         affTimerTask = new AffichageTempsTask(this);
@@ -155,8 +155,8 @@ public abstract class AbstractTask extends Task<Boolean>
      */
     public final void annuler()
     {
-        timerTask.annuler();
-        affTimerTask.annuler();
+        timerTask.terminer();
+        affTimerTask.terminer();
         annulerImpl();
     }
 
@@ -169,14 +169,16 @@ public abstract class AbstractTask extends Task<Boolean>
     /*---------- METHODES PROTECTED ----------*/
 
     /**
-     * Permet de récupérer la dernière version de chaque composants créés dans Sonar qui a été au moins envoyé à l'édition. Rajoute les plus anciennes versions des
+     * Permet de récupérer la dernière version de chaque composants créés dans Sonar qui a été au moins envoyé à l'édition. Rajoute les plus anciennes
+     * versions des
      * composants qui n'ont pas de version livrèe à l'édition (due à la purge).
      *
      * @return
      */
     protected final Map<String, ComposantSonar> recupererComposantsSonar(OptionRecupCompo option)
     {
-        updateMessage(RECUPCOMPOSANTS);
+        baseMessage = RECUPCOMPOSANTS;
+        updateMessage(Statics.EMPTY);
         updateProgress(-1, -1);
 
         // Triage ascendant de la liste par nom de projet
@@ -214,7 +216,7 @@ public abstract class AbstractTask extends Task<Boolean>
                 throw new TechnicalException("Option \"" + option + "\" inconnue : control.task.AbstractSonarTask.recupererComposantsSonar.", null);
         }
 
-        updateMessage(RECUPCOMPOSANTS + " OK");
+        updateMessage(" OK");
 
         return retour;
     }
@@ -246,11 +248,11 @@ public abstract class AbstractTask extends Task<Boolean>
      * Remonte la valeur d'une metrique en protegeant des nullPointeur avec une valeur par défault.
      * 
      * @param compo
-     *            Composant.
+     *              Composant.
      * @param type
-     *            type du métrique.
+     *              type du métrique.
      * @param value
-     *            valeur par défault à remonter en cas de valeur nulle.
+     *              valeur par défault à remonter en cas de valeur nulle.
      * @return
      */
     protected String getValueMetrique(Composant compo, TypeMetrique type, String value)
@@ -320,11 +322,11 @@ public abstract class AbstractTask extends Task<Boolean>
      * Affiche le temps restant et le temps écoulé dans les fenêtres des tâches
      * 
      * @param debut
-     *            Heure de début.
+     *              Heure de début.
      * @param i
-     *            Index de l'élément en cours
+     *              Index de l'élément en cours
      * @param size
-     *            Taille de la liste parcourue.
+     *              Taille de la liste parcourue.
      * @return
      */
     public final void calculTempsRestant(long debut, int i, int size)
@@ -627,7 +629,13 @@ public abstract class AbstractTask extends Task<Boolean>
 
     public final void setTempsEcoule(long millis)
     {
-        Platform.runLater(() -> tempsEcoule.set(ECOULE + LocalTime.ofSecondOfDay(millis / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME)));
+        Platform.runLater(() -> {
+            // Protection pour les durée qu dessu de 1j.
+            if (millis > 86398999)
+                tempsEcoule.set(ECOULE + " > 1j.");
+            else
+                tempsEcoule.set(ECOULE + LocalTime.ofSecondOfDay(millis / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME));
+        });
     }
 
     public final void setTempsRestant(long millis)
@@ -635,8 +643,12 @@ public abstract class AbstractTask extends Task<Boolean>
         Platform.runLater(() -> {
             if (millis == 0)
                 tempsRestant.set("");
+            // Temps prévu dépassé.
             else if (millis < 0)
                 tempsRestant.set(LocalTime.ofSecondOfDay(0).format(DateTimeFormatter.ISO_LOCAL_TIME));
+            // En debug on peut passer au dessus des 1j. ou en cas de timeOut
+            else if (millis > 86398999)
+                tempsRestant.set(RESTANT + " > 1j.");
             else
                 tempsRestant.set(RESTANT + LocalTime.ofSecondOfDay(millis / Statics.MILLITOSECOND).format(DateTimeFormatter.ISO_LOCAL_TIME));
         });

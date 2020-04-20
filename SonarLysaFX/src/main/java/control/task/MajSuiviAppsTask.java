@@ -10,7 +10,7 @@ import java.util.Set;
 
 import control.excel.ControlSuiviApps;
 import control.excel.ExcelFactory;
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
 import model.enums.EtatDefaut;
@@ -55,7 +55,7 @@ public class MajSuiviAppsTask extends AbstractTask
     private boolean majSuiviApps()
     {
         // Récupération des défauts qualités
-        List<DefautQualite> dqs = ListeDao.daoDefautQualite.readAll();
+        List<DefautQualite> dqs = DaoFactory.getDao(DefautQualite.class).readAll();
         Set<DefautAppli> dasATraiter = new HashSet<>();
 
         setBaseMessage("Mise à jour du Suivi des défauts applicatifs :");
@@ -71,7 +71,8 @@ public class MajSuiviAppsTask extends AbstractTask
         control.majFeuilleDefaultsAppli(new ArrayList<>(dasATraiter), control.resetFeuilleDA());
         control.write();
         control.close();
-        return false;
+        updateProgress(1, 1);
+        return true;
     }
 
     /*---------- ACCESSEURS ----------*/

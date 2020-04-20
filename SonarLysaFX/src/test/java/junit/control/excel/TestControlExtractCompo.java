@@ -17,7 +17,7 @@ import org.powermock.reflect.Whitebox;
 
 import control.excel.ControlExtractCompo;
 import control.task.MajLotsRTCTask;
-import dao.ListeDao;
+import dao.DaoFactory;
 import de.saxsys.javafx.test.JfxRunner;
 import model.bdd.ComposantSonar;
 import model.enums.TypeColCompo;
@@ -47,7 +47,7 @@ public class TestControlExtractCompo extends TestControlExcelWrite<TypeColCompo,
     public void testAjouterExtraction() throws IllegalArgumentException, IllegalAccessException
     {
         // Données depuis la base
-        List<ComposantSonar> composBase = ListeDao.daoCompo.readAll();
+        List<ComposantSonar> composBase = DaoFactory.getDao(ComposantSonar.class).readAll();
 
         // Préparation de la map
         Map<TypeColCompo, List<ComposantSonar>> composSonar = new HashMap<>();
@@ -67,9 +67,9 @@ public class TestControlExtractCompo extends TestControlExcelWrite<TypeColCompo,
             else if (i < 41)
                 composSonar.get(TypeColCompo.TERMINE).add(composBase.get(i));
         }
-        
+
         controlTest.ajouterExtraction(composSonar, null);
-        
+
         Sheet sheet = wb.getSheet("Composants Sonar");
         assertNotNull(sheet);
         assertNotNull(sheet.getRow(11));
@@ -77,16 +77,16 @@ public class TestControlExtractCompo extends TestControlExcelWrite<TypeColCompo,
         int colNonProd = (int) Whitebox.getField(ControlExtractCompo.class, "colNonProd").get(controlTest);
         int colPat = (int) Whitebox.getField(ControlExtractCompo.class, "colPat").get(controlTest);
         int colTermine = (int) Whitebox.getField(ControlExtractCompo.class, "colTermine").get(controlTest);
-        
+
         for (int i = 0; i < 10; i++)
         {
-            Row row = sheet.getRow(i+1);
+            Row row = sheet.getRow(i + 1);
             assertEquals(composSonar.get(TypeColCompo.INCONNU).get(i).getNom(), row.getCell(colInco).getStringCellValue());
             assertEquals(composSonar.get(TypeColCompo.NONPROD).get(i).getNom(), row.getCell(colNonProd).getStringCellValue());
             assertEquals(composSonar.get(TypeColCompo.PATRIMOINE).get(i).getNom(), row.getCell(colPat).getStringCellValue());
             assertEquals(composSonar.get(TypeColCompo.TERMINE).get(i).getNom(), row.getCell(colTermine).getStringCellValue());
         }
-        
+
         composSonar = new HashMap<>();
         composSonar.put(TypeColCompo.INCONNU, new ArrayList<>());
         composSonar.get(TypeColCompo.INCONNU).add(composBase.get(0));

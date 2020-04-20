@@ -1,6 +1,10 @@
 package model.bdd;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +28,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.annotations.BatchFetch;
 import org.eclipse.persistence.annotations.BatchFetchType;
 
@@ -60,6 +66,9 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     /*---------- ATTRIBUTS ----------*/
 
     private static final long serialVersionUID = 1L;
+    
+    /** logger plantage */
+    private static final Logger LOGPLANTAGE = LogManager.getLogger("plantage-log");
 
     @BatchFetch(value = BatchFetchType.JOIN)
     @OneToOne(targetEntity = LotRTC.class, cascade = CascadeType.MERGE)
@@ -183,7 +192,22 @@ public class DefautQualite extends AbstractBDDModele implements Serializable
     private void creerLiensAnoRTC()
     {
         if (getLotRTC() != null && !getLotRTC().getProjetRTC().isEmpty())
-            liensAno = Statics.proprietesXML.getMapParams().get(Param.LIENSANOS) + getLotRTC().getProjetRTC().replace(Statics.SPACE, "%20") + Statics.FINLIENSANO + String.valueOf(numeroAnoRTC);
+        {
+            String urlStr = Statics.proprietesXML.getMapParams().get(Param.LIENSANOS) + getLotRTC().getProjetRTC() + Statics.FINLIENSANO + String.valueOf(numeroAnoRTC);
+            URL url;
+            try
+            {
+                // Encoding de l'url en format compréhensible pour le navigateur.
+                url = new URL(urlStr);
+                URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+                liensAno = uri.toASCIIString();
+            }
+            catch (MalformedURLException | URISyntaxException e)
+            {
+                LOGPLANTAGE.error(e);
+            }
+        }
+        
     }
 
     /**

@@ -8,7 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import control.rest.SonarAPI67;
-import dao.ListeDao;
+import dao.DaoComposantSonar;
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.Application;
 import model.bdd.ComposantSonar;
@@ -85,8 +86,8 @@ public class MajComposantsSonarMCTask extends AbstractTask
 
         // Récupération des données de la base de données et de Sonar
         List<ComposantSonar> retour = new ArrayList<>();
-        Map<String, LotRTC> mapLotRTC = ListeDao.daoLotRTC.readAllMap();
-        Map<String, Application> mapAppli = ListeDao.daoAppli.readAllMap();
+        Map<String, LotRTC> mapLotRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
+        Map<String, Application> mapAppli = DaoFactory.getDao(Application.class).readAllMap();
         List<Projet> projets = api67.getComposants();
 
         // Affichage
@@ -269,8 +270,9 @@ public class MajComposantsSonarMCTask extends AbstractTask
     private int sauvegarde(List<ComposantSonar> listeSonar)
     {
         // Ajout des donnèes et mise à jour de la date de modification de la table
-        int retour = ListeDao.daoCompo.persist(listeSonar);
-        ListeDao.daoCompo.majDateDonnee();
+        DaoComposantSonar dao = DaoFactory.getDao(ComposantSonar.class);
+        int retour = dao.persist(listeSonar);
+        dao.majDateDonnee();
         return retour;
     }
 

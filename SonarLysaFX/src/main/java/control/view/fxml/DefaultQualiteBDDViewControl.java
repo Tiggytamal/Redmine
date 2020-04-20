@@ -13,7 +13,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import dao.ListeDao;
+import dao.DaoDefautAppli;
+import dao.DaoFactory;
 import javafx.fxml.FXML;
 import model.bdd.DefautAppli;
 import model.bdd.DefautQualite;
@@ -30,21 +31,20 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
     private List<DefaultQualiteFXML> listeFXML;
 
     /*---------- CONSTRUCTEURS ----------*/
-    
+
     @FXML
     @Override
     public void initialize()
     {
         listeFXML = new ArrayList<>();
 
-        for (DefautQualite defaultQualite : ListeDao.daoDefautQualite.readAll())
+        for (DefautQualite defaultQualite : DaoFactory.getDao(DefautQualite.class).readAll())
         {
             if (defaultQualite.getEtatDefaut() == EtatDefaut.CLOS || defaultQualite.getEtatDefaut() == EtatDefaut.ABANDONNE)
                 listeFXML.add(new DefaultQualiteFXML(defaultQualite));
         }
         table.getItems().addAll(listeFXML);
     }
-    
 
     @FXML
     public void recupDonnesFichier() throws InvalidFormatException, IOException
@@ -53,7 +53,8 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
         File file = getFileFromFileChooser("Fichier consolidation");
         Workbook wb = WorkbookFactory.create(file);
         Sheet sheet = wb.getSheet("Composants avec pb. appli");
-        Map<String, DefautAppli> mapDefaultsAppli = ListeDao.daoDefautAppli.readAllMap();
+        DaoDefautAppli daoDa = DaoFactory.getDao(DefautAppli.class);
+        Map<String, DefautAppli> mapDefaultsAppli = daoDa.readAllMap();
 
         for (Iterator<Row> iter = sheet.rowIterator(); iter.hasNext();)
         {
@@ -74,10 +75,10 @@ public class DefaultQualiteBDDViewControl extends AbstractFXMLViewControl
                 da.setAppliCorrigee(row.getCell(1).getStringCellValue());
             }
         }
-        ListeDao.daoDefautAppli.persist(mapDefaultsAppli.values());
+        daoDa.persist(mapDefaultsAppli.values());
         wb.close();
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
     /*---------- METHODES PRIVEES ----------*/
     /*---------- ACCESSEURS ----------*/

@@ -24,7 +24,7 @@ public class AffichageTempsTask extends Task<Boolean>
         return majAffTemps();
     }
 
-    public void annuler()
+    public void terminer()
     {
         stop = true;
     }

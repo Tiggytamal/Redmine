@@ -52,7 +52,7 @@ public class TestControlJob extends JunitBase
     public void testCreationJobsSonar() throws SchedulerException, IllegalAccessException
     {
         // Initialisation
-        Map<TypePlan, Planificateur> mapPlans = proprietes.getMapPlans();
+        Map<TypePlan, Planificateur> mapPlans = Statics.proprietesXML.getMapPlans();
         List<String> planKey = new ArrayList<>();
         for (Map.Entry<TypePlan, Planificateur> entry : mapPlans.entrySet())
         {
@@ -86,7 +86,7 @@ public class TestControlJob extends JunitBase
     public void testCreerTrigger() throws Exception
     {
         // Parcours de tous les planificateur et vérification que les infos sont bonnes après création des triggers
-        for (Map.Entry<TypePlan, Planificateur> entry : proprietes.getMapPlans().entrySet())
+        for (Map.Entry<TypePlan, Planificateur> entry : Statics.proprietesXML.getMapPlans().entrySet())
         {
             Trigger trigger = Whitebox.invokeMethod(handler, "creerTrigger", entry);
             Planificateur plan = entry.getValue();

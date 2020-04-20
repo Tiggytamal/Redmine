@@ -3,9 +3,19 @@ package junit.dao;
 import java.lang.reflect.ParameterizedType;
 
 import dao.AbstractDao;
-import dao.ListeDao;
+import dao.DaoFactory;
 import junit.JunitBase;
 import model.bdd.AbstractBDDModele;
+import model.bdd.Application;
+import model.bdd.ChefService;
+import model.bdd.ComposantSonar;
+import model.bdd.DateMaj;
+import model.bdd.DefautAppli;
+import model.bdd.DefautQualite;
+import model.bdd.Edition;
+import model.bdd.LotRTC;
+import model.bdd.Produit;
+import model.bdd.ProjetClarity;
 import utilities.TechnicalException;
 
 public abstract class AbstractTestDao<T extends AbstractDao<R>, R extends AbstractBDDModele> extends JunitBase
@@ -41,34 +51,34 @@ public abstract class AbstractTestDao<T extends AbstractDao<R>, R extends Abstra
         switch (modele.getName())
         {
             case "model.bdd.Application":
-                daoTest = (T) ListeDao.daoAppli;
+                daoTest = (T) DaoFactory.getDao(Application.class);
 
             case "model.bdd.ChefService":
-                daoTest = (T) ListeDao.daoChefServ;
+                daoTest = (T) DaoFactory.getDao(ChefService.class);
 
             case "model.bdd.ComposantSonar":
-                daoTest = (T) ListeDao.daoCompo;
+                daoTest = (T) DaoFactory.getDao(ComposantSonar.class);
 
             case "model.bdd.Edition":
-                daoTest = (T) ListeDao.daoEdition;
+                daoTest = (T) DaoFactory.getDao(Edition.class);
 
             case "model.bdd.LotRTC":
-                daoTest = (T) ListeDao.daoLotRTC;
+                daoTest = (T) DaoFactory.getDao(LotRTC.class);
 
             case "model.bdd.ProjetClarity":
-                daoTest = (T) ListeDao.daoProjetClarity;
+                daoTest = (T) DaoFactory.getDao(ProjetClarity.class);
 
             case "model.bdd.DefautQualite":
-                daoTest = (T) ListeDao.daoDefautQualite;
+                daoTest = (T) DaoFactory.getDao(DefautQualite.class);
 
             case "model.bdd.DateMaj":
-                daoTest = (T) ListeDao.daoDateMaj;
+                daoTest = (T) DaoFactory.getDao(DateMaj.class);
 
             case "model.bdd.Produit":
-                daoTest = (T) ListeDao.daoProduit;
+                daoTest = (T) DaoFactory.getDao(Produit.class);
 
             case "model.bdd.DefautAppli":
-                daoTest = (T) ListeDao.daoDefautAppli;
+                daoTest = (T) DaoFactory.getDao(DefautAppli.class);
 
             default:
                 throw new TechnicalException("junit.dao.AbstractTestDao - Création Dao impossible - classe : " + modele.getName());

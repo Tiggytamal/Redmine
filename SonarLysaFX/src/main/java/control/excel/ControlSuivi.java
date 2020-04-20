@@ -27,7 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import control.word.ControlRapport;
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.ModelFactory;
 import model.bdd.ChefService;
 import model.bdd.ComposantSonar;
@@ -114,7 +114,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         contraintes = initContraintes();
 
         mapCompoByLot = new HashMap<>();
-        List<ComposantSonar> compos = ListeDao.daoCompo.readAll();
+        List<ComposantSonar> compos = DaoFactory.getDao(ComposantSonar.class).readAll();
         for (ComposantSonar compo : compos)
         {
             mapCompoByLot.computeIfAbsent(compo.getLotRTC().getLot(), k -> new ArrayList<>()).add(compo);
@@ -131,7 +131,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         // Liste de retour
         List<DefautQualite> retour = new ArrayList<>();
-        Map<String, LotRTC> lotsRTC = ListeDao.daoLotRTC.readAllMap();
+        Map<String, LotRTC> lotsRTC = DaoFactory.getDao(LotRTC.class).readAllMap();
 
         // Itération sur chaque ligne pour créer les anomalies
         for (int i = 1; i <= sheet.getLastRowNum(); i++)
@@ -141,8 +141,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             // protection pour les lignes vides
             if (row == null)
                 continue;
-
-            retour.add(creerDqDepuisExcel(row, lotsRTC));
+            DefautQualite dq = creerDqDepuisExcel(row, lotsRTC);
+            if (dq.getLotRTC() != null)
+                retour.add(dq);
         }
         return retour;
     }
@@ -350,14 +351,11 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             return true;
 
         // On ne reprend pas les anomalies closes avec un lot terminé ou livré à l'édition
-        if ((etatLot == EtatLot.EDITION 
-                || etatLot == EtatLot.TERMINE) 
-                && etatDq == EtatDefaut.CLOS)
+        if ((etatLot == EtatLot.EDITION || etatLot == EtatLot.TERMINE) && etatDq == EtatDefaut.CLOS)
             return true;
 
         // Si l'anomalie est close mais que le QG est toujours en erreur, on met l'anomalie à vérifier et nouvelle
-        if (etatDq == EtatDefaut.CLOS 
-                && qg == QG.ERROR)
+        if (etatDq == EtatDefaut.CLOS && qg == QG.ERROR)
         {
             dq.setAction(TypeAction.VERIFIER);
             dq.setDateDetection(LocalDate.now());
@@ -430,9 +428,9 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
         IndexedColors couleur;
 
         // Mise en vert des anomalies avec un Quality Gate non erreur
-        if (dq.getLotRTC().getQualityGate() != QG.ERROR)
+        if (dq.getLotRTC().getQualityGate() != QG.ERROR && dq.getLotRTC().getQualityGate() != QG.WARN)
             couleur = IndexedColors.LIGHT_GREEN;
-        
+
         // Mise à turquoise un anomalies avec un quality gate à WARN ou qui ont beosin d'un assemblage
         else if (TypeAction.ASSEMBLER == dq.getAction() || dq.getLotRTC().getQualityGate() == QG.WARN)
             couleur = IndexedColors.LIGHT_TURQUOISE;
@@ -465,7 +463,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
             if (da.getEtatDefaut() == EtatDefaut.NOUVEAU)
                 return FillPatternType.LEAST_DOTS;
         }
-        
+
         for (DefautAppli da : dq.getDefautsAppli())
         {
             if (da.getEtatDefaut() == EtatDefaut.TRAITE)
@@ -597,7 +595,7 @@ public class ControlSuivi extends AbstractControlExcelRead<TypeColSuivi, List<De
 
         // Groupe composant
         valoriserCellule(row, colProduit, centre, lotRTC.getGroupeProduit().getValeur());
-        
+
         // Type défaut
         valoriserCellule(row, colType, centre, dq.getTypeDefaut());
     }

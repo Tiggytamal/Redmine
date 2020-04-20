@@ -26,8 +26,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.mchange.util.AssertException;
 
-import dao.ListeDao;
+import dao.DaoFactory;
 import model.bdd.ComposantSonar;
+import model.bdd.DateMaj;
 import model.enums.Param;
 import model.enums.TypeDonnee;
 import model.interfaces.ModeleSonar;
@@ -44,7 +45,7 @@ import model.rest.sonarapi.ManualMesure;
 import model.rest.sonarapi.Message;
 import model.rest.sonarapi.Parametre;
 import model.rest.sonarapi.Projet;
-import model.rest.sonarapi.QualityGate;
+import model.rest.sonarapi.QualityProfile;
 import model.rest.sonarapi.Retour;
 import model.rest.sonarapi.Validation;
 import model.rest.sonarapi.Vue;
@@ -318,6 +319,8 @@ public class SonarAPI5 extends AbstractToStringImpl
         Parametre paramSeverities = new Parametre("severities", "CRITICAL, BLOCKER");
         Parametre paramSinceLeakPeriod = new Parametre("sinceLeakPeriod", "true");
         Parametre paramResolved = new Parametre("resolved", "false");
+        Parametre paramType = new Parametre("types", "CODE_SMELL, BUG, VULNERABILITY");
+        Parametre paramPs = new Parametre("ps", "500"); 
         Parametre paramPage;
 
         // Liste de retour
@@ -333,7 +336,7 @@ public class SonarAPI5 extends AbstractToStringImpl
             paramPage = new Parametre("p", String.valueOf(page));
 
             // 2. appel du webservices
-            Response response = appelWebserviceGET(ISSUESSEARCH, new Parametre[] { paramComposant, paramSeverities, paramSinceLeakPeriod, paramResolved, paramPage });
+            Response response = appelWebserviceGET(ISSUESSEARCH, new Parametre[] { paramComposant, paramSeverities, paramSinceLeakPeriod, paramResolved, paramPage, paramType, paramPs });
 
             // 3. Test du retour et renvoie du composant si ok.
             if (response.getStatus() == Status.OK.getStatusCode())
@@ -440,10 +443,10 @@ public class SonarAPI5 extends AbstractToStringImpl
      * @param nomQG
      * @return
      */
-    public QualityGate getQualityGate(String nomQG)
+    public QualityProfile getQualityGate(String nomQG)
     {
-        List<QualityGate> liste = getListQualitygate();
-        for (QualityGate qualityGate : liste)
+        List<QualityProfile> liste = getListQualitygate();
+        for (QualityProfile qualityGate : liste)
         {
             if (qualityGate.getName().equals(nomQG))
                 return qualityGate;
@@ -459,7 +462,7 @@ public class SonarAPI5 extends AbstractToStringImpl
      * 
      * @return
      */
-    public List<QualityGate> getListQualitygate()
+    public List<QualityProfile> getListQualitygate()
     {
         Response response = appelWebserviceGET(QGLIST);
 
@@ -733,7 +736,7 @@ public class SonarAPI5 extends AbstractToStringImpl
      * @param compo
      * @param qg
      */
-    public boolean associerQualitygate(ComposantSonar compo, QualityGate qg)
+    public boolean associerQualitygate(ComposantSonar compo, QualityProfile qg)
     {
         AssocierQG assQG = new AssocierQG(qg.getId(), compo.getId());
         Response response = appelWebservicePOST(QGSELECT, assQG);
@@ -901,7 +904,7 @@ public class SonarAPI5 extends AbstractToStringImpl
         }
         compo.setVersion(version);
         compo.setVersionRelease(!version.contains("SNAPSHOT"));
-        return date.isAfter(ListeDao.daoDateMaj.recupEltParIndex(TypeDonnee.COMPOSANT.toString()).getTimeStamp());
+        return date.isAfter(DaoFactory.getDao(DateMaj.class).recupEltParIndex(TypeDonnee.COMPOSANT.toString()).getTimeStamp());
     }
 
     /**

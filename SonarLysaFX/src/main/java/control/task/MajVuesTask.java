@@ -10,17 +10,17 @@ package control.task;
 public class MajVuesTask extends AbstractTask
 {
     /*---------- ATTRIBUTS ----------*/
-    
+
     private static final String TITRE = "Mise à jour des vues Sonar";
-    
+
     /*---------- CONSTRUCTEURS ----------*/
-    
+
     public MajVuesTask()
     {
         super(1, TITRE);
         annulable = false;
     }
-    
+
     /*---------- METHODES PUBLIQUES ----------*/
 
     @Override
@@ -28,15 +28,15 @@ public class MajVuesTask extends AbstractTask
     {
         return majVues();
     }
-    
+
     @Override
     public void annulerImpl()
     {
-        // Pas de traitement d'annulation        
+        // Pas de traitement d'annulation
     }
-    
+
     /*---------- METHODES PRIVEES ----------*/
-    
+
     /**
      * Lance la mise à jour des vues dans SonarQube. Indispenssable après la création d'une nouvelle vue.
      */
