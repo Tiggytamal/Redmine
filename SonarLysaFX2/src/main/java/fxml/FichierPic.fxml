@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane fx:controller="fxml.FichierPic" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10" prefHeight="500" prefWidth="500">
+	<padding>
+		<Insets top="25" right="25" bottom="10" left="25" />
+	</padding>
+	<children>
+		<!-- VBox -->
+		<VBox GridPane.columnIndex="1" alignment="CENTER" minWidth="250" minHeight="200">
+			<Button text="Arreter" fx:id="arreter" onAction="#action" alignment="CENTER" />
+			<Region prefHeight="20" />
+			<Button text="Démarrer" fx:id="demarrer" onAction="#action" alignment="CENTER" />
+			<Region prefHeight="20" />
+			<Button text="Purge fichiers obsolètes" fx:id="purge" onAction="#action" alignment="CENTER" />
+		</VBox>
+	</children>
+</GridPane>

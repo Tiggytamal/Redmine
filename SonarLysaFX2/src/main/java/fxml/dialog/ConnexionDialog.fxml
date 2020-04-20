@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Label?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10" fx:id="node">
+	<padding>
+		<Insets bottom="10" right="80" left="10" top="20" />
+	</padding>
+	<Label GridPane.columnIndex="0" GridPane.rowIndex="0" text="Pseudo : " />
+	<TextField fx:id="username" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="Pseudo" />
+	<Label GridPane.columnIndex="0" GridPane.rowIndex="1" text="Mot de passe : " />
+	<PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Mot de passe" />
+</GridPane>
+

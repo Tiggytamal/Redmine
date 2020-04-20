@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<proprietesXML>
+    <mapColsAppliDir>
+        <entry>
+            <key>APPLI</key>
+            <value>Application</value>
+        </entry>
+        <entry>
+            <key>DIR</key>
+            <value>Direction</value>
+        </entry>
+    </mapColsAppliDir>
+    <mapColsChefServ>
+        <entry>
+            <key>DIRECTION</key>
+            <value>Direction</value>
+        </entry>
+        <entry>
+            <key>DEPARTEMENT</key>
+            <value>Département</value>
+        </entry>
+        <entry>
+            <key>SERVICE</key>
+            <value>Service</value>
+        </entry>
+        <entry>
+            <key>FILIERE</key>
+            <value>Filière</value>
+        </entry>
+        <entry>
+            <key>MANAGER</key>
+            <value>Manager</value>
+        </entry>
+    </mapColsChefServ>
+    <mapColsClarity>
+        <entry>
+            <key>ACTIF</key>
+            <value>Actif</value>
+        </entry>
+        <entry>
+            <key>CLARITY</key>
+            <value>Code projet</value>
+        </entry>
+        <entry>
+            <key>LIBELLE</key>
+            <value>Libellé projet</value>
+        </entry>
+        <entry>
+            <key>CPI</key>
+            <value>Chef de projet</value>
+        </entry>
+        <entry>
+            <key>EDITION</key>
+            <value>Edition</value>
+        </entry>
+        <entry>
+            <key>DIRECTION</key>
+            <value>Direction</value>
+        </entry>
+        <entry>
+            <key>DEPARTEMENT</key>
+            <value>Département</value>
+        </entry>
+        <entry>
+            <key>SERVICE</key>
+            <value>Service</value>
+        </entry>
+    </mapColsClarity>
+    <mapColsCompo>
+        <entry>
+            <key>NOM</key>
+            <value indice="0" nom="Nom composant"/>
+        </entry>
+        <entry>
+            <key>NOUVEAU</key>
+            <value indice="1" nom="Nouvelle version"/>
+        </entry>
+        <entry>
+            <key>VERSION</key>
+            <value indice="2" nom="Version"/>
+        </entry>
+        <entry>
+            <key>QG</key>
+            <value indice="3" nom="QualityGate"/>
+        </entry>
+        <entry>
+            <key>ANALYSE</key>
+            <value indice="4" nom="Date de dernière analyse"/>
+        </entry>
+        <entry>
+            <key>NBRELIGNE</key>
+            <value indice="5" nom="Nombre de ligne de code"/>
+        </entry>
+        <entry>
+            <key>COMPON1</key>
+            <value indice="6" nom="Composant N-1"/>
+        </entry>
+        <entry>
+            <key>QGN1</key>
+            <value indice="7" nom="Quality Gate N-1"/>
+        </entry>
+    </mapColsCompo>
+    <mapColsEdition>
+        <entry>
+            <key>LIBELLE</key>
+            <value>Libellé</value>
+        </entry>
+        <entry>
+            <key>VERSION</key>
+            <value>Codification</value>
+        </entry>
+        <entry>
+            <key>COMMENTAIRE</key>
+            <value>Commentaires</value>
+        </entry>
+        <entry>
+            <key>SEMAINE</key>
+            <value>Semaine</value>
+        </entry>
+        <entry>
+            <key>TYPE</key>
+            <value>Type de Changement</value>
+        </entry>
+        <entry>
+            <key>EDITION</key>
+            <value>Edition Majeure</value>
+        </entry>
+    </mapColsEdition>
+    <mapColsPic>
+        <entry>
+            <key>LOT</key>
+            <value>Lot</value>
+        </entry>
+        <entry>
+            <key>LIBELLE</key>
+            <value>Libellé</value>
+        </entry>
+        <entry>
+            <key>CLARITY</key>
+            <value>Clarity</value>
+        </entry>
+        <entry>
+            <key>CPI</key>
+            <value>CPI</value>
+        </entry>
+        <entry>
+            <key>EDITION</key>
+            <value>Edition</value>
+        </entry>
+        <entry>
+            <key>NBCOMPOS</key>
+            <value>Nb Composants</value>
+        </entry>
+        <entry>
+            <key>NBPAQUETS</key>
+            <value>Nb Paquets</value>
+        </entry>
+        <entry>
+            <key>BUILD</key>
+            <value>1er build</value>
+        </entry>
+        <entry>
+            <key>DEVTU</key>
+            <value>DEVTU</value>
+        </entry>
+        <entry>
+            <key>TFON</key>
+            <value>TFON</value>
+        </entry>
+        <entry>
+            <key>VMOE</key>
+            <value>VMOE</value>
+        </entry>
+        <entry>
+            <key>VMOA</key>
+            <value>VMOA</value>
+        </entry>
+        <entry>
+            <key>LIV</key>
+            <value>Livraison édition</value>
+        </entry>
+    </mapColsPic>
+    <mapColsRegle>
+        <entry>
+            <key>NOM</key>
+            <value indice="0" nom="Nom"/>
+        </entry>
+        <entry>
+            <key>DESCRIPTION</key>
+            <value indice="2" nom="Description"/>
+        </entry>
+        <entry>
+            <key>KEY</key>
+            <value indice="6" nom="Clé"/>
+        </entry>
+        <entry>
+            <key>LANGAGE</key>
+            <value indice="1" nom="Langage"/>
+        </entry>
+        <entry>
+            <key>SEVERITE</key>
+            <value indice="4" nom="Sévérité"/>
+        </entry>
+        <entry>
+            <key>TAGS</key>
+            <value indice="5" nom="Tags"/>
+        </entry>
+        <entry>
+            <key>TYPE</key>
+            <value indice="3" nom="Type"/>
+        </entry>
+        <entry>
+            <key>ACTIVATION</key>
+            <value indice="7" nom="Profils activés"/>
+        </entry>
+    </mapColsRegle>
+    <mapColsVul>
+        <entry>
+            <key>SEVERITE</key>
+            <value indice="7" nom="Sévérité"/>
+        </entry>
+        <entry>
+            <key>STATUS</key>
+            <value indice="5" nom="Status"/>
+        </entry>
+        <entry>
+            <key>MESSAGE</key>
+            <value indice="8" nom="Message"/>
+        </entry>
+        <entry>
+            <key>DATECREA</key>
+            <value indice="6" nom="Date création"/>
+        </entry>
+        <entry>
+            <key>LOT</key>
+            <value indice="2" nom="Lot"/>
+        </entry>
+        <entry>
+            <key>CLARITY</key>
+            <value indice="4" nom="Code Clarity"/>
+        </entry>
+        <entry>
+            <key>APPLI</key>
+            <value indice="3" nom="Appli"/>
+        </entry>
+        <entry>
+            <key>COMPOSANT</key>
+            <value indice="0" nom="Composant"/>
+        </entry>
+        <entry>
+            <key>LIB</key>
+            <value indice="1" nom="Bibliothèque"/>
+        </entry>
+    </mapColsVul>
+    <mapParams>
+        <entry>
+            <key>FILTREDATASTAGE</key>
+            <value>Composant DS_</value>
+        </entry>
+        <entry>
+            <key>FILTRECOBOL</key>
+            <value>Composant COBMF</value>
+        </entry>
+        <entry>
+            <key>FILTREANDROID</key>
+            <value>Android</value>
+        </entry>
+        <entry>
+            <key>FILTREIOS</key>
+            <value>iOS</value>
+        </entry>
+        <entry>
+            <key>FILTREANGULAR</key>
+            <value>Angular</value>
+        </entry>
+        <entry>
+            <key>ABSOLUTEPATHRAPPORT</key>
+            <value>Z:\\rapports\\</value>
+        </entry>
+        <entry>
+            <key>REPSONAR</key>
+            <value>\\\\CPTTPD2APPV3.zres.ztech\\TTP10SNAR_D</value>
+        </entry>
+        <entry>
+            <key>LIENSCOMPOS</key>
+            <value>/dashboard?id=</value>
+        </entry>
+        <entry>
+            <key>LIENSRTC</key>
+            <value>https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/</value>
+        </entry>
+        <entry>
+            <key>URLSONAR</key>
+            <value>http://ttp10-snar.ca-technologies.fr</value>
+        </entry>
+        <entry>
+            <key>URLSONARMC</key>
+            <value>https://snar-mob.collab.ca-technologies.credit-agricole.fr</value>
+        </entry>
+        <entry>
+            <key>URLREPACK</key>
+            <value>http://ttp10-pic0.ca-technologies.fr/PIC0/rest</value>
+        </entry>
+        <entry>
+            <key>URLRTC</key>
+            <value>https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm</value>
+        </entry>
+        <entry>
+            <key>URLAPIAPPCATS</key>
+            <value>https://ttp10-appl.ca-technologies.fr</value>
+        </entry>
+        <entry>
+            <key>URLAPPCATSAPPLI</key>
+            <value>https://ttp10-appl.ca-technologies.fr/app/file/</value>
+        </entry>
+        <entry>
+            <key>URLMAPS</key>
+            <value>https://ttp10-xips.ca-technologies.fr</value>
+        </entry>
+        <entry>
+            <key>URLMAPSPRODUIT</key>
+            <value>https://ttp10-xips.ca-technologies.fr/produit/</value>
+        </entry>
+        <entry>
+            <key>NOMQGDATASTAGE</key>
+            <value>QG DataStage</value>
+        </entry>
+        <entry>
+            <key>RTCLOTCHC</key>
+            <value>E32.0.FDL</value>
+        </entry>
+        <entry>
+            <key>FICHIERVERSION</key>
+            <value>versionKO.txt</value>
+        </entry>
+    </mapParams>
+    <mapParamsBool>
+        <entry>
+            <key>FICHIERPICAUTO</key>
+            <value>false</value>
+        </entry>
+    </mapParamsBool>
+    <mapParamsSpec>
+        <entry>
+            <key>TEXTEPANORECAP</key>
+            <value>DEFAUT QUALITE : Anomalie Qualimétrie suite à analyse SONARQUBE</value>
+        </entry>
+        <entry>
+            <key>TEXTEANORELANCE</key>
+            <value>Bonjour,
+Pourriez vous prendre en compte les défauts qualité restants pour correction ?
+Pour toute demande de dérogation d'une règle, merci de faire une demande de support.
+Merci</value>
+        </entry>
+        <entry>
+            <key>TEXTEANOOBSOLETE</key>
+            <value>Suite à l'assemblage du composant sur un nouveau lot, cette anomalie a été clôturée. Une nouvelle anomalie sera créée au besoin.</value>
+        </entry>
+        <entry>
+            <key>TEXTEANOCLOSE</key>
+            <value>L'anomalie a été clôturée suite à la correction des défauts de qualimétrie.</value>
+        </entry>
+        <entry>
+            <key>TEXTEANOABANDONNEE</key>
+            <value>L'anomalie a été abadonnée malgrés le(s) défaut(s) restant(s). Une nouvelle anomalie sera ouverte à l'assemblage du composant lors d'un prochain lot.</value>
+        </entry>
+        <entry>
+            <key>TEXTEANOAPPLI</key>
+            <value>Suite à l'analyse du composant xxxxx , il s'avère que ce dernier n'a pas de code application valide dans son pom.xml (balise "adaboCodeApplication" dans la balise "properties").
+Aussi, pourriez-vous le renseigner avant le prochain assemblage? 
+Merci</value>
+        </entry>
+        <entry>
+            <key>TEXTEANOAPPLIFAUX</key>
+            <value>Suite à l'analyse du composant xxxxx , il s'avère que ce dernier a un code application (-code-) non valide dans son pom.xml (balise "adaboCodeApplication" dans la balise "properties"). Celui-ci n'existe pas dans le référentiel des applications. https://ttp10-appl.ca-technologies.fr/app/list-detaillee . Aussi, pourriez-vous le renseigner avant le prochain assemblage? 
+Merci</value>
+        </entry>
+        <entry>
+            <key>TEXTEANO</key>
+            <value>Bonjour,
+L'analyse SonarQube de ce jour du lot projet -lot- fait apparaitre un Quality Gate non conforme au niveau du composant xxxxx .
+Veuillez trouver ci-après le lien vers l'analyse du composant pour prise en compte et correction :
+-serveur-key
+Pour une bonne assignation des anomalies, pensez à bien vous connectez au moins une fois au serveur SonarQube.
+Pour toute demande de dérogation d'une règle, merci de faire une demande de Service (Service QUA-01-Qualité du code) dans le Centre de Test :
+https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/Centre%20de%20Tests#action=com.ibm.team.dashboard.viewDashboard
+Merci</value>
+        </entry>
+        <entry>
+            <key>TEXTEANOSECURITE</key>
+            <value>Attention certains défauts sont liés à la sécurité (classés dans vulnérabilité) et sont à prioriser dans la correction.</value>
+        </entry>
+        <entry>
+            <key>TITREASSIGNATIONANO</key>
+            <value>Anomalies qualimétriques, assignation SonarQube</value>
+        </entry>
+        <entry>
+            <key>TEXTEASSIGNATIONANO</key>
+            <value>Bonjour,
+Suite à la montée de version SonarQube, les nouvelles anomalies sont directement assignées à leur créateur. Mais pour que l’assignation se fasse, il faut que le compte utilisateur soit créé.
+Pourriez-vous vous connecter une fois au serveur SonarQube en utilisant vos identifiants ? Cela permettra la création automatique de vos comptes .
+http://ttp10-snar.ca-technologies.fr/sessions/new
+Vous pouvez d’ailleurs choisir dans les paramètres de votre compte SonarQube de recevoir un mail lorsqu’un de vos assemblage crée un nouveau défaut.</value>
+        </entry>
+        <entry>
+            <key>TITRECREERANORTC</key>
+            <value>Anomalies qualimétriques, Création anomalie RTC -num-</value>
+        </entry>
+        <entry>
+            <key>TEXTECREERANORTC</key>
+            <value>L'analyse SonarQube du lot projet -lot- fait apparaitre un Quality Gate non conforme au niveau du composant xxxxx .
+Une anomalie RTC a été ouverte : -liensano-
+Veuillez trouver ci-après le lien vers l'analyse du composant pour prise en compte et correction :
+http://ttp10-snar.ca-technologies.fr/dashboard?id=key
+Si un défaut "Note code appli" à 0 est présent, cela correspond à un code application erroné dans le pom.xml (balise "adaboCodeApplication" dans la balise "properties").
+Pour toute demande de dérogation d'une règle, merci de faire une demande de Service (Service QUA-01-Qualité du code) dans le Centre de Test :
+https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/Centre%20de%20Tests#action=com.ibm.team.dashboard.viewDashboard</value>
+        </entry>
+        <entry>
+            <key>TEXTECREERANORTCAPPLI</key>
+            <value>Suite à l'analyse du composant xxxxx , il s'avère que ce dernier a un code application (-code-) non valide dans son pom.xml (balise "adaboCodeApplication" dans la balise "properties"). 
+Celui-ci n'existe pas dans le référentiel des applications. https://ttp10-appl.ca-technologies.fr/app/list-detaillee .
+Une anomalie RTC a été ouverte : -liensano-
+Veuillez trouver ci-après le lien vers l'analyse du composant :
+http://ttp10-snar.ca-technologies.fr/dashboard?id=key
+Pour toute demande de dérogation d'une règle, merci de faire une demande de Service (Service QUA-01-Qualité du code) dans le Centre de Test :
+https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/Centre%20de%20Tests#action=com.ibm.team.dashboard.viewDashboard</value>
+        </entry>
+        <entry>
+            <key>TITRERELANCEANORTC</key>
+            <value>Anomalies qualimétriques, Relance anomalie RTC -num-</value>
+        </entry>
+        <entry>
+            <key>TEXTERELANCEANORTC</key>
+            <value>L'analyse SonarQube du lot projet -lot- fait apparaitre un Quality Gate non conforme au niveau du composant xxxxx .
+Une anomalie RTC est ouverte : -liensano- mais des défauts sont toujours présents.
+Veuillez trouver ci-après le lien vers l'analyse du composant pour prise en compte et correction :
+http://ttp10-snar.ca-technologies.fr/dashboard?id=key
+Si un défaut "Note code appli" à 0 est présent, cela correspond à un code application erroné dans le pom.xml (balise "adaboCodeApplication" dans la balise "properties").
+Pour toute demande de dérogation d'une règle, merci de faire une demande de Service (Service QUA-01-Qualité du code) dans le Centre de Test :
+https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/Centre%20de%20Tests#action=com.ibm.team.dashboard.viewDashboard</value>
+        </entry>
+        <entry>
+            <key>TEXTERELANCEANORTCAPPLI</key>
+            <value>Suite à l'analyse du composant xxxxx , il s'avère que ce dernier a un code application (-code-) non valide dans son pom.xml (balise "adaboCodeApplication" dans la balise "properties"). 
+Celui-ci n'existe pas dans le référentiel des applications. https://ttp10-appl.ca-technologies.fr/app/list-detaillee .
+Veuillez trouver ci-après le lien vers l'analyse du composant :
+http://ttp10-snar.ca-technologies.fr/dashboard?id=key
+Pour toute demande de dérogation d'une règle, merci de faire une demande de Service (Service QUA-01-Qualité du code) dans le Centre de Test :
+https://ttp10-jazz.ca-technologies.credit-agricole.fr/ccm/web/projects/Centre%20de%20Tests#action=com.ibm.team.dashboard.viewDashboard</value>
+        </entry>
+        <entry>
+            <key>MEMBRESAQP</key>
+            <value>MATHON Gregoire;PRUDENT Alain;TRICOT Nicolas</value>
+        </entry>
+    </mapParamsSpec>
+    <mapPlans>
+        <entry>
+            <key>VUECHC</key>
+            <value active="true" annees="2018 2019 2020" heure="23:02" jeudi="false" lundi="true" mardi="true" mercredi="false" vendredi="true"/>
+        </entry>
+        <entry>
+            <key>VUECDM</key>
+            <value active="false" annees="2018 2019 2020" heure="23:00" jeudi="true" lundi="false" mardi="false" mercredi="true" vendredi="false"/>
+        </entry>
+        <entry>
+            <key>STATS</key>
+            <value active="true" annees="2020" heure="00:00" jeudi="true" lundi="true" mardi="true" mercredi="true" vendredi="true"/>
+        </entry>
+    </mapPlans>
+</proprietesXML>

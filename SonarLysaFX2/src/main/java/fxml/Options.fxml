@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TreeItem?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+
+<SplitPane fx:controller="fxml.Options" prefWidth="900" prefHeight="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
+	<items>
+		<!-- Menu de selection des options -->
+		<GridPane minWidth="160" prefWidth="160" maxWidth="160">
+			<children>
+				<TreeView showRoot="false" fx:id="treeView" GridPane.vgrow="ALWAYS">
+					<root>
+						<TreeItem>
+							<children>
+								<TreeItem value="Chargement fichiers" />
+								<TreeItem value="Paramètres" />
+								<TreeItem value="Paramètres personnels" />
+								<TreeItem value="Autres Paramètres" />
+								<TreeItem value="Nom Colonnes" expanded="true">
+									<children>
+										<TreeItem value="Clarity" />
+										<TreeItem value="Chef de Service" />
+										<TreeItem value="Codification Editions" />
+										<TreeItem value="Extract. Vul." />
+										<TreeItem value="Extract. Composants" />
+										<TreeItem value="Appli. / Directions" />
+										<TreeItem value="Fichier Pic" />
+									</children>
+								</TreeItem>
+							</children>
+						</TreeItem>
+					</root>
+				</TreeView>
+			</children>
+		</GridPane>
+
+		<!-- Affichage des options choisies -->
+		<GridPane fx:id="rightSide">
+			<children>
+
+				<!-- Boutons de chargement des fichiers Excel -->
+				<VBox fx:id="chargementPane" alignment="center">
+					<padding>
+						<Insets top="10" right="10" bottom="10" left="25" />
+					</padding>
+					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
+					<Button fx:id="clarity" text="Charger Referentiel Clarity" onAction="#chargerFichier" alignment="CENTER" />
+					<Region prefHeight="20" />
+					<Button fx:id="chefSrev" text="Charger Chef de Service" onAction="#chargerFichier" alignment="CENTER" />
+					<Region prefHeight="20" />
+					<Button fx:id="edition" text="Charger Edition" onAction="#chargerFichier" alignment="CENTER" />
+					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
+					<Button fx:id="appliDir" text="Charger Application/Direction" onAction="#chargerFichier" alignment="CENTER" />
+					<Region prefHeight="20" VBox.vgrow="ALWAYS" />
+				</VBox>
+
+				<!-- Paramètre -->
+				<ScrollPane fx:id="paramsPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" styleClass="fitboth">
+					<VBox alignment="center" styleClass="bgimage">
+						<padding>
+							<Insets top="10" right="10" bottom="10" left="25" />
+						</padding>
+
+						<!-- Paramètres chargés depuis le JAVA -->
+						<VBox fx:id="paramsBox" prefWidth="500">
+							<children>
+							</children>
+						</VBox>
+
+						<!-- Autres paramètres booléens chargés depuis le JAVA -->
+						<VBox fx:id="booleanBox" prefWidth="500">
+							<children>
+							</children>
+						</VBox>
+
+						<!-- Bouton de sauvegarde -->
+						<Region prefHeight="20" />
+						<Button fx:id="buttonSaveParams" text="Sauvegarder" onAction="#saveParams" alignment="CENTER">
+
+						</Button>
+					</VBox>
+				</ScrollPane>
+
+				<!-- Autres Paramètres -->
+				<ScrollPane fx:id="paramsAutresPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" styleClass="fit">
+					<VBox alignment="center" styleClass="bgimage">
+						<padding>
+							<Insets top="10" right="10" bottom="10" left="25" />
+						</padding>
+
+						<!-- ListView -->
+						<VBox fx:id="paramsAutresBox" prefWidth="500">
+							<children>
+							</children>
+						</VBox>
+
+						<!-- Bouton de sauvegarde -->
+						<Region prefHeight="20" />
+						<Button fx:id="buttonSaveParamsSpec" text="Sauvegarder" onAction="#saveParamsSpec" alignment="CENTER" />
+					</VBox>
+				</ScrollPane>
+
+				<!-- Paramètres Personnels -->
+				<ScrollPane fx:id="paramsPersoPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" styleClass="fit">
+					<VBox alignment="center" styleClass="bgimage">
+						<padding>
+							<Insets top="10" right="10" bottom="10" left="25" />
+						</padding>
+
+						<!-- ListView -->
+						<VBox fx:id="paramsPersoBox" prefWidth="500">
+							<children>
+							</children>
+						</VBox>
+
+						<!-- Bouton de sauvegarde -->
+						<Region prefHeight="20" />
+						<Button fx:id="buttonSaveParamsPerso" text="Sauvegarder" onAction="#saveParamsPerso" alignment="CENTER" />
+					</VBox>
+				</ScrollPane>
+
+				<!-- Nom des colonnes -->
+				<ScrollPane fx:id="colonnesPane" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" styleClass="fitboth">
+					<VBox alignment="center" styleClass="bgimage">
+						<padding>
+							<Insets top="10" right="10" bottom="10" left="25" />
+						</padding>
+
+						<!-- Liste des colonnes chargèes depuis le JAVA -->
+						<VBox fx:id="colonnesBox" prefWidth="500">
+							<children>
+							</children>
+						</VBox>
+
+						<!-- Bouton de sauvegarde -->
+						<Region prefHeight="20" />
+						<Button fx:id="buttonSaveCols" text="Sauvegarder" onAction="#saveCols" alignment="CENTER" />
+					</VBox>
+				</ScrollPane>
+			</children>
+		</GridPane>
+	</items>
+</SplitPane>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<?import model.enums.ActionU?>
+
+<VBox fx:controller="fxml.bdd.UtilisateurBDD" xmlns:fx="http://javafx.com/fxml" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
+	<padding>
+		<Insets top="25" right="25" bottom="10" left="25" />
+	</padding>
+	<Label text="Utilisateurs RTC"  style="-fx-font-size: 18.0;"/>
+	<Region prefHeight="20" />
+	<TableView fx:id="table" VBox.vgrow="ALWAYS" editable="true" />
+	<Region prefHeight="20" />
+	<HBox>
+		<ComboBox fx:id="comboAction" promptText="Choisissez une action">
+			<items>
+				<FXCollections fx:factory="observableArrayList">
+					<ActionU fx:constant="DESACTIVER" />
+					<ActionU fx:constant="ACTIVER" />
+				</FXCollections>
+			</items>
+		</ComboBox>
+		<Region prefWidth="20" />
+		<Button text="Valider" onAction="#valider" alignment="CENTER_LEFT" />
+		<Region HBox.hgrow="ALWAYS" />
+		<Label text="Lignes : " />
+		<Label fx:id="total" />
+	</HBox>
+</VBox>

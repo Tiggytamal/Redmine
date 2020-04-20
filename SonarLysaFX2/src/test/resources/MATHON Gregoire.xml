@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<proprietesPersoXML>
+    <file>D:\git\SonarLysaFX2\SonarLysaFX2\target\MATHON Gregoire.xml</file>
+    <params/>
+    <paramsSpec>
+        <entry>
+            <key>USERSMAIL</key>
+            <value>PRUDENT Alain;TRICOT Nicolas</value>
+        </entry>
+        <entry>
+            <key>SIGNATURE</key>
+            <value>Cordialement,
+
+Grégoire Mathon
+Assurance Qualité et Tests 
+03 80 10 38 56
+Crédit Agricole Technologies et Services
+18 rue Davout 
+21085 DIJON 
+gregoire.MATHON-ext@ca-ts.fr</value>
+        </entry>
+    </paramsSpec>
+</proprietesPersoXML>

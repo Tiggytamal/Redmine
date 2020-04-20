@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane fx:controller="fxml.Extractions" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10" prefHeight="500" prefWidth="500">
+	<padding>
+		<Insets top="25" right="25" bottom="10" left="25" />
+	</padding>
+	<children>
+
+		<!-- RadioButton -->
+		<fx:define>
+			<ToggleGroup fx:id="tg" />
+		</fx:define>
+		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
+			<RadioButton fx:id="radioVuln" text="Vulnérabilités patrimoine" toggleGroup="$tg" minHeight="30" alignment="CENTER_LEFT" selected="true"/>
+			<RadioButton fx:id="radioCompo" text="Composants SonarQube" toggleGroup="$tg" minHeight="30" alignment="CENTER_LEFT" />
+		</VBox>
+
+		<!-- VBox -->
+		<VBox GridPane.columnIndex="1" alignment="CENTER" minWidth="250" minHeight="200">
+			<children>
+				<Button text="Extraire" fx:id="extraire" onAction="#extraire" alignment="CENTER" />
+			</children>
+		</VBox>
+	</children>
+</GridPane>

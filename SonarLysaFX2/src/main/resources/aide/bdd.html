@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<h3>Base de Données</h3>
+	<p>
+		Permet d'afficher toutes les informations des différentes tables de la base de données. Toutes les pages utilisent un <font color="red">menu commun</font> sur la gauche 
+		ainsi qu'un affichage du <font color="green">nombre de lignes</font> du tableau en bas à droite et un <font color="blue">menu fonctionnel dédié</font> en bas :		
+		<br><br><img src="menugauche.PNG" alt="defautqualite.PNG"><br><br>
+		Le menu de gauche est séparé en plusieurs parties :
+		<ul>
+			<li><font color="green">Filtres :</font> Permet de filtrer l'affichage du tableau selectionné selon chaque colonne. Le filtre sur plusieurs colonnes est possible.<br>
+				<br><img src="filtre.PNG" alt="filtre.PNG"><br>
+			Le bouton <font color="blue">Suppr. filtres</font>, permet de réinitialiser les filtres.<br><br>
+			</li>
+			
+			<li><font color="green">Affichage :</font> Gère l'affichage des colonnes et de la fénêtre<br><br>
+				<ul>
+					<li><font color="blue">Visibilité des colonnes</font> : ouvre la liste de toutes les colonnes du tableau pour sélectionner celles à afficher.<br>	
+						<br><img src="visibilite.PNG" alt="visibilite.PNG"><br><br></li>
+					<li><font color="blue">Légende du tableau</font> : ouvre la fenêtre pour connaître la signification des couleurs dans chaque tableau.<br>	
+						<br><img src="legende.PNG" alt="legende.PNG"><br><br></li>				
+				</ul>		
+			</li>
+			
+			<li><font color="green">Données :</font> Affiche le tableau correspondant aux données voulues<br>
+				<br><img src="donnees.PNG" alt="donnees.PNG"><br><br>
+				<ul>
+					<li><font color="blue">Défaults Qualité</font> : Affiche la liste des défauts qualité en cours et permet la gestion de ceux-ci.</li>
+					<li><font color="blue">Composants</font> : Affiche la liste des composants présent dans SonarQube, et permet de gérer la purge des doublons</li>
+					<li><font color="blue">Composants Plantés</font> : Affiche la liste des composants plantés dans SonarQube, pour permettre de les gérer ou de les purger au beosin.</li>			
+					<li><font color="blue">Anomalies RTC</font> : Affiche et permet la gestion des anomalies RTC non liéées à un défaut qualimétrique.<br><br></li>			
+				</ul>
+			</li>
+			<li><font color="green">Extraction :</font> Permet d'extraire les données d'un tableau dans un fichier Excel<br><br>
+			Seules les colonnes affichées du tableau sont prises en comptes. Les données filtrées ne sont pas extraites.
+				<br><br><img src="extract.PNG" alt="extract.PNG"><br><br>
+			</li>
+		</ul>
+
+</body>
+</html>

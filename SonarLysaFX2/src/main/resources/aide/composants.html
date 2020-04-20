@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<h3>Composants</h3>
+	Affiche la liste de tous les composants présents dans SonarQube. Pour voir l'utilisation du menu de gauche, merci de vous reportez au chapitre <a href="bdd.html">BDD</a>.
+		<br>
+		<br>
+			<img src="composants.PNG" alt="defautqualite.PNG">
+		<br>
+		<br>
+	Le menu en bas permet permet d'effectuer toutes les actions de contrôle sur les composants :
+		<ul>
+			<li>Le bonton <font color="green">Analyse Doublon</font> permet de vérifier la présence de composants en doublon sur le serveur. Ceux-ci apparaissent en orange dans la liste.<br><br>
+			<img src="doublons.PNG" alt="defautqualite.PNG">
+		<br>
+		<br>
+		Le filtre sur le valeur doublon = true, permet d'afficher uniquement les doublons.
+		<br>
+		<br>
+		</li>
+			<li>Le bouton <font color="green">Valider</font> permet de lancer l'action choisie sur les composants selectionnés :
+				<ul>
+					<li><font color="blue">Purger</font> : Supprime le composant du serveur SonarQube et de la base de données.</li>
+					<li><font color="blue">Supp. contrôle app.</font> : Supprime le contrôle sur le code application du composant (changement profil Sonar) pour les transverses sans code application.</li>
+				</ul>
+				<br><img src="composvalider.PNG" alt="dqvalider.PNG"><br>
+			</li>			
+		</ul>
+</body>
+</html>

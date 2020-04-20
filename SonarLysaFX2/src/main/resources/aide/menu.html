@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script> 
+        	if ( self === top ) { 
+        		document.documentElement.style.display = 'block'; 
+        	} 
+        	else { 
+        		top.location = self.location; 
+        	} 
+    </script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="container">
+		<nav>
+			<ul>
+				<li><a href="#">1. Connexion</a>
+					<div>
+						<ul>
+							<li><a href="connexion.html" target="iframe">1.1 Connexion à l'appli</a></li>
+							<li><a href="deconnexion.html" target="iframe">1.2 Deconnexion</a></li>
+						</ul>
+					</div>
+				</li>
+				<li><a href="#">2. Menu</a>
+					<div>
+						<ul>
+							<li><a href="#">2.1 Créations <span class="caret"></span></a>
+								<div>
+									<ul>
+										<li><a href="vuestrim.html" target="iframe">2.1.1 Création Vue Trimestrielle</a></li>
+										<li><a href="autresvues.html" target="iframe">2.1.2 Création Autres Vues</a></li>
+										<li><a href="vuesmaintenance.html" target="iframe">2.1.3 Création vues maintenance</a></li>
+										<li><a href="extractions.html" target="iframe">2.1.4 Extractions</a></li>
+									</ul>
+								</div>
+							</li>
+							<li><a href="bdd.html" target="iframe">2.1 BDD <span class="caret"></span></a>
+								<div>
+									<ul>
+										<li><a href="dq.html" target="iframe">2.1.1 Défauts Qualité</a></li>
+										<li><a href="composants.html" target="iframe">2.1.2 Composants</a></li>
+										<li><a href="composplantes.html" target="iframe">2.1.3 Composants Plantés</a></li>	
+										<li><a href="anortc.html" target="iframe">2.1.4 Anomalies RTC</a></li>									
+									</ul>
+								</div>
+							</li>
+							<li><a href="#">2.2 Outils</a>
+								<div>
+									<ul>
+										<li><a href="#">2.2.1 Options</a>
+											<div>
+												<ul>
+													<li><a href="chargement.html" target="iframe">2.2.1.1 Chargement fichiers</a></li>
+													<li><a href="parametres.html" target="iframe">2.2.1.2 Paramètres</a></li>
+													<li><a href="parametresperso.html" target="iframe">2.2.1.2 Paramètres personnels</a></li>
+													<li><a href="autresparametres.html" target="iframe">2.2.1.3 Autres paramètres</a></li>
+													<li><a href="nomscolonnes.html" target="iframe">2.2.1.4 Noms colonnes</a>
+												</ul>
+											</div>												
+										</li>
+										<li><a href="planificateur.html" target="iframe">2.2.2 Planificateur</a></li>
+										<li><a href="majvues.html" target="iframe">2.2.3 Mise à jour composants</a></li>
+										<li><a href="fichierpic.html" target="iframe">2.2.4 Gestion fichier PIC</a></li>
+										<li><a href="majlotsrtc.html" target="iframe">2.2.5 Mise à jour lots RTC</a></li>
+										<li><a href="assigneranos.html" target="iframe">2.2.6 Assigner anos SonarQube</a></li>	
+										<li><a href="calculatrice.html" target="iframe">2.2.7 Calculatrice indicateurs</a></li>								
+									</ul>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<li><a href="indicateurs.html" target="iframe">3. Indicateurs <span class="caret"></span></a>
+				</li>
+			</ul>
+		</nav>
+		<article><iframe name="iframe"></iframe></article>
+
+	</div>
+	<footer>Copyright &copy; CATS</footer>
+
+</body>
+</html>

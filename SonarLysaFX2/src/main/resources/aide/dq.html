@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<h3>Défauts Qualité</h3>
+	<p>
+		Affiche la liste des défauts qualité détectés et en cours. Pour voir l'utilisation du menu de gauche, merci de vous reportez au chapitre <a href="bdd.html">BDD</a>.
+		<br>
+		<br>
+			<img src="defautqualite.PNG" alt="defautqualite.PNG">
+		<br>
+		<br>
+		Le menu en bas permet permet d'effectuer toutes les actions de contrôle sur les défauts :
+		<ul>
+			<li>Le bonton <font color="green">Maj Mobile Center</font> permet de mettre à jour les informations des composants depuis l'instance SonarQube du Mobile Center.<br><br></li>
+			<li>Le bonton <font color="green">Relancer tout</font> relance tous les défauts qualité RTC, ouverts ou relancés depuis plus d'une semaine.<br><br></li>
+			<li>Le bouton <font color="green">Valider</font> permet de lancer l'action choisie sur les défaut selectionnés :
+				<ul>
+					<li><font color="blue">Abandonner</font> : abandonne le défaut et l'anomalie RTC is celle-ci a été créée, et ne le remonte jamais dans la liste. A utiliser lorsque la correction n'a pas été faite.</li>
+					<li><font color="blue">Clôturer</font> : clôture le défaut et l'anomalie RTC is celle-ci a été créée. A utiliser lorsque la correction a été effectuée.</li>
+					<li><font color="blue">Créer</font> : crée une anomalie RTC si celle-ci n'a pas déjà été créée. Prépare un mail dans Outlook.</li>			
+					<li><font color="blue">Relancer</font> : relance l'anomalie RTC si celle-ci a été créée. Prépare un mail dans Outlook.</li>			
+					<li><font color="blue">Rendre obsolète</font> : abandonne le défaut et l'anomalie RTC is celle-ci a été créée, et ne le remonte jamais dans la liste. A utiliser lorsqu'un nouveau lot est créé sur le composant.</li>			
+					<li><font color="blue">Mise à jour</font> : Mise à jour du lot, de l'anomalie RTC et du composant avec les dernières informations diponibles.</li>			
+				</ul>
+				<br><br><img src="dqvalider.PNG" alt="dqvalider.PNG"><br>
+			</li>			
+		</ul>
+		Le menu contextuel permet d'effectuer les actions sur le défaut selectionné :<br><br>
+		<img src="menucontext.PNG" alt="menucontext.PNG"><br>
+		<ul>
+			<li>les boutons : <font color="blue">Abandonner, Clôturer, Créer, Relancer, Rendre obsolète, et Mise à jour</font> ont les mêmes fonctions que le menu du bas.</li>
+			<li><font color="blue">Modifier Remarques</font> : permet de modifier et de sauvegarder les remarques sur le défaut.<br><br>
+			<img src="remarque.PNG" alt="remarque.PNG"><br><br>
+			<li><font color="blue">Copier</font> : Permet d'enregistrer dans le presse-papier le texte de la cellule selectionnée.</li>
+		</ul>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<?import fxml.factory.ComboBoxEnumCellFactory?>
+
+<GridPane fx:controller="fxml.bdd.GestionBDD" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+	<padding>
+		<Insets top="10" right="10" bottom="10" left="10" />
+	</padding>
+	<children>
+		<SplitPane fx:id="splitPane" dividerPositions="0.13" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+			<!-- Buttons -->
+			<HBox>
+				<VBox minHeight="180" minWidth="180" alignment="CENTER_LEFT">
+					<Label text="Filtres" />
+					<Region prefHeight="10" />
+					<HBox>
+						<ComboBox fx:id="comboColonne" promptText="colonne" prefWidth="90">
+							<items>
+								<FXCollections fx:factory="observableArrayList" />
+							</items>
+							<cellFactory>
+								<ComboBoxEnumCellFactory />
+							</cellFactory>
+						</ComboBox>
+						<Region prefWidth="5" />
+						<TextField fx:id="filtre" editable="true" prefWidth="100" />
+						<Region prefWidth="5" />
+						<Button fx:id="ajout" text="+" onAction="#filtrer" alignment="CENTER_LEFT" />
+					</HBox>
+					<VBox fx:id="listeFiltres" />
+					<Region prefHeight="10" />
+					<Button text="Supp. filtres" onAction="#supprimerFiltre" />
+					<Region prefHeight="20" />
+					<Separator />
+					<Region prefHeight="10" />
+					<Label text="Affichage" />
+					<Region prefHeight="10" />
+					<Button fx:id="visibilite" text="Visibilité des colonnes" minHeight="30" alignment="CENTER_LEFT" onAction="#gestionColonne" />
+					<Region prefHeight="20" />
+					<Button fx:id="legende" text="Légende du tableau" minHeight="30" alignment="CENTER_LEFT" onAction="#legendeColonne" />
+					<Region prefHeight="20" />
+					<Separator />
+					<Region prefHeight="10" />
+					<Label text="Données" />
+					<Region prefHeight="10" />
+					<Button fx:id="dq" text="Défaults Qualité" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+					<Region prefHeight="20" />
+					<Button fx:id="compo" text="Composants" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+					<Region prefHeight="20" />
+					<Button fx:id="compoPlante" text="Composants Plantés" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+					<Region prefHeight="20" />
+					<Button fx:id="ano" text="Anomalies RTC" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+					<Region prefHeight="20" />
+					<Button fx:id="user" text="Utilisateurs RTC" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+					<Region prefHeight="20" />
+					<Separator />
+					<Region prefHeight="10" />
+					<Label text="Extraction" />
+					<Region prefHeight="10" />
+					<Button text="Extraction" fx:id="extraire" onAction="#extraire" />
+				</VBox>
+				<Region prefWidth="10" />
+				<VBox fx:id="listeColonne" alignment="CENTER_LEFT" visible="false" managed="false" GridPane.rowIndex="0" GridPane.columnIndex="1" minWidth="150" />
+			</HBox>
+		</SplitPane>
+	</children>
+</GridPane>

@@ -1,0 +1,16 @@
+{
+   "statut":"ERROR",
+   "lot":"345042",
+   "projet":{
+      "key":"fr.ca.cat.pic.plugins:build:9999",
+      "name":"Composant Maven_Plugin 9999"
+   },
+   "branche":{
+      "nom":"master",
+      "typeB":"LONG",
+      "main":true
+   },
+   "typeSonar":"legacy",
+   "uuidAnalyse":"AWnh9PsZ_D4z6XhLuql0"
+}
+

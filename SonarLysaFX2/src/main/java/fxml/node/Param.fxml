@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1" styleClass="bgimage">
+	<children>
+		<HBox>
+			<Label fx:id="label" prefWidth="300" />
+			<TextField fx:id="texteField" HBox.hgrow="ALWAYS" />
+		</HBox>
+		<fx:include source="../dialog/Separator.fxml" />
+	</children>
+	<stylesheets>
+		<URL value="@../../application.css" />
+	</stylesheets>
+</fx:root>

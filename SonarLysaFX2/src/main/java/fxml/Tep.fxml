@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<GridPane fx:controller="fxml.Tep" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10" prefHeight="500" prefWidth="500">
+	<padding>
+		<Insets top="25" right="25" bottom="10" left="25" />
+	</padding>
+	<children>
+
+		<!-- RadioBoutons -->
+		<fx:define>
+			<ToggleGroup fx:id="toggleGroup" />
+		</fx:define>
+
+		<VBox minHeight="200" minWidth="100" alignment="CENTER_LEFT">
+			<RadioButton fx:id="radioAll" text="Tous languages" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" />
+			<RadioButton fx:id="radioDataStage" text="DataStage" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" />
+			<RadioButton fx:id="radioPic" text="Depuis Fichier Pic" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" selected="true"/>
+		</VBox>
+
+		<!-- VBox -->
+		<VBox fx:id="selectPane" GridPane.columnIndex="1" alignment="CENTER" minWidth="250" minHeight="200">
+			<children>
+
+				<!-- DatePicker pour la date de début -->
+				<HBox fx:id="dateDebutHBox" alignment="CENTER" minHeight="50">
+					<Text text="Date début :" textAlignment="LEFT" />
+					<Region prefWidth="10" HBox.hgrow="ALWAYS" />
+				</HBox>
+
+				<!-- Bouton pour créer la nouvelle vue dans Sonar -->
+				<Button text="Créer la vue" fx:id="creer" onAction="#creerVue" alignment="CENTER" />
+			</children>
+		</VBox>
+	</children>
+</GridPane>

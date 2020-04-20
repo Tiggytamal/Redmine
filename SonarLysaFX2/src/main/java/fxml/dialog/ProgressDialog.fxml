@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Region?>
+
+<GridPane fx:id="node" xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10" prefWidth="400" prefHeight="250">
+	<padding>
+		<Insets top="10" right="10" bottom="10" left="10" />
+	</padding>
+	<children>
+		<Label fx:id="stage" GridPane.columnIndex="0" GridPane.rowIndex="0">
+			<GridPane.columnSpan>
+				<GridPane fx:constant="REMAINING" />
+			</GridPane.columnSpan>
+		</Label>
+		<ProgressBar fx:id="bar" GridPane.columnIndex="0" GridPane.rowIndex="1" prefWidth="250" />
+		<ProgressIndicator fx:id="indicator" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+		<Label fx:id="label" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2" />
+		<Label fx:id="timer" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2" GridPane.rowSpan="1">
+			<GridPane.columnSpan>
+				<GridPane fx:constant="REMAINING" />
+			</GridPane.columnSpan>
+		</Label>
+		<Button fx:id="cancel" GridPane.columnIndex="1" GridPane.rowIndex="4" text="Annuler" onAction="#annuler" />
+		<Button fx:id="ok" GridPane.columnIndex="0" GridPane.rowIndex="4" text="OK" onAction="#fermer" GridPane.halignment="RIGHT" disable="true" />
+	</children>
+</GridPane>

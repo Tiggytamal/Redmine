@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+
+<HBox fx:id="box" fx:controller="fxml.Menu" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml">
+	<MenuBar HBox.hgrow="ALWAYS" styleClass="bar">
+		<menus>
+			<Menu text="_Créations" mnemonicParsing="true">
+				<items>
+					<MenuItem fx:id="mensuel" text="Création _Portfolio Trimestriel" onAction="#afficher" styleClass="bar" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="autres" text="Création _Autres Portfolios" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="maintenance" text="Création Portfolio _Maintenance" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="extraction" text="_Extractions" onAction="#afficher" disable="true" mnemonicParsing="true" />
+				</items>
+			</Menu>
+			<Menu text="_BDD" mnemonicParsing="true">
+				<items>
+					<MenuItem fx:id="defautsQualite" text="_Défaults Qualité" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="composants" text="_Composants" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="composPlantes" text="Composants _Plantés" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="anos" text="_Anomalies RTC" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="users" text="_Utilisateurs RTC" onAction="#afficher" disable="true" mnemonicParsing="true" />
+				</items>
+			</Menu>
+			<Menu text="_Statistiques" mnemonicParsing="true">
+				<items>
+					<MenuItem fx:id="pourcentage" text="_Pourcentage" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="graphique" text="_Graphique" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="calculatrice" text="_Calculatrice indicateurs " onAction="#calculer" disable="true" mnemonicParsing="true" />
+				</items>
+			</Menu>
+			<Menu text="_Outils" mnemonicParsing="true">
+				<items>
+					<MenuItem fx:id="options" text="_Options" onAction="#afficher" disable="false" mnemonicParsing="true" />
+					<MenuItem fx:id="majCompos" text="_Mise à jour composants" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="fichierPic" text="_Gestion fichier PIC" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="rtc" text="Mise à jour _lots RTC" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="issue" text="A_ssigner anos SonarQube" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="planification" text="_Planification" onAction="#afficher" disable="true" mnemonicParsing="true" />
+					<MenuItem fx:id="aide" text="_Aide" onAction="#aide" disable="false" />
+				</items>
+			</Menu>
+		</menus>
+	</MenuBar>
+	<Label text="quai : " styleClass="bar" />
+	<Label fx:id="nbreFichiers" prefWidth="50" styleClass="bar" />
+	<Label text="ldc : " styleClass="bar" />
+	<Label fx:id="ldc" text="" styleClass="bar" />
+	<Region prefWidth="50" styleClass="bar" />
+	<Button fx:id="connexion" text="Connexion" styleClass="connexion" onAction="#openPopup" />
+	<Button fx:id="deConnexion" text="Deconnexion" styleClass="connexion" onAction="#deco" />
+</HBox>
+

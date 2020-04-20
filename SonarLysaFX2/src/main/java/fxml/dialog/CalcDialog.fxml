@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import fxml.dialog.VBoxCalc?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:id="node">
+	<fx:define>
+		<ToggleGroup fx:id="toggleGroup" />
+	</fx:define>
+	<HBox>
+		<Label text="Date début période : " />
+		<DatePicker fx:id="datePicker" />
+	</HBox>
+	<fx:include source="Separator.fxml" />
+	<HBox alignment="CENTER">
+		<RadioButton fx:id="radioMensuel" text="1 mois" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER" selected="true" />
+		<Region prefWidth="20" />
+		<RadioButton fx:id="radioTrimestriel" text="3 mois" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER" />
+	</HBox>
+	<fx:include source="Separator.fxml" />
+		<VBoxCalc fx:id="crees" titre="Nbre anomalies créées : " />
+		<VBoxCalc fx:id="abandonnees" titre="Nbre anomalies abandonnées : " />
+		<VBoxCalc fx:id="obsoletes" titre="Nbre anomalies obsolètes : " />
+		<VBoxCalc fx:id="closes" titre="Nbre anomalies closes : " />
+		<VBoxCalc fx:id="enCours" titre="Nbre anomalies en cours : " />
+		<VBoxCalc fx:id="enCoursTotal" titre="Nbre anomalies en cours total : " />
+	<Region minHeight="20" />
+	<HBox alignment="CENTER">
+		<Button text="Calculer" onAction="#calculer" fx:id="ok" />
+	</HBox>
+</VBox>
+

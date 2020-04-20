@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Dialog?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.ButtonType?>
+<?import java.net.URL?>
+
+<fx:root type="javafx.scene.control.Dialog" xmlns:fx="http://javafx.com/fxml/1" headerText="" resizable="true">
+	<dialogPane>
+		<DialogPane fx:id="pane">
+			<buttonTypes>
+				<ButtonType fx:constant="CLOSE" fx:id="close"/>
+			</buttonTypes>
+			<stylesheets>
+				<URL value="@../../application.css" />
+			</stylesheets>
+		</DialogPane>
+	</dialogPane>
+</fx:root>

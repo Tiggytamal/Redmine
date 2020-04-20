@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="SonarLysaFX" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>model.bdd.AbstractBDDModele</class>
+		<class>model.bdd.AnomalieRTC</class>
+		<class>model.bdd.Application</class>
+		<class>model.bdd.ChefService</class>
+		<class>model.bdd.ComposantBase</class>
+		<class>model.bdd.ComposantErreur</class>
+		<class>model.bdd.DefautQualite</class>
+		<class>model.bdd.Edition</class>
+		<class>model.bdd.IssueBase</class>
+		<class>model.bdd.LotRTC</class>
+		<class>model.bdd.Produit</class>
+		<class>model.bdd.ProjetClarity</class>
+		<class>model.bdd.ProjetMobileCenter</class>
+		<class>model.bdd.Solution</class>
+		<class>model.bdd.Utilisateur</class>
+		<class>model.bdd.Statistique</class>
+		<class>model.bdd.StatistiqueCompo</class>
+		<class>utilities.adapter.LocalDateConverter</class>
+		<class>utilities.adapter.LocalDateTimeConverter</class>
+		<class>utilities.adapter.LocalTimeConverter</class>
+	</persistence-unit>
+</persistence>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<h3>Composants plantés</h3>
+	Affiche la liste de tous les composants qui n'ont jamais eu d'analyse réussie dans SonarQube. Pour voir l'utilisation du menu de gauche, merci de vous reportez au chapitre <a href="bdd.html">BDD</a>.
+		<br>
+		<br>
+			<img src="composplantes.PNG" alt="composplantes.PNG">
+		<br>
+			<img src="composplantes2.PNG" alt="defautqualite.PNG">
+		<br>
+		<br>
+	S'il n'y a pas de log disponible côté SonarQube, il faut demander à la plateforme de fab, s'il peuvent trouver la raison de ce plantage.<br>
+	Le menu en bas permet permet d'effectuer toutes les actions de contrôle sur ces composants :
+		<ul>
+			<li>Le bonton <font color="green">Analyse</font> permet de vérifier la présence de composants plantés sur le serveur. Ceux-ci apparaissent en jaune claire dans la liste.<br><br>
+			<img src="analysecomposplantes.PNG" alt="defautqualite.PNG">
+		<br>
+		<br>
+		Les composants purgés sont en blanc, et les composants qui ont une analyse qui est passée repassent en vert.
+		<br>
+		<br>
+		</li>
+			<li>Le bouton <font color="green">Valider</font> permet de lancer l'action choisie sur les composants selectionnés :
+				<ul>
+					<li><font color="blue">Purger</font> : Supprime le composant du serveur SonarQube.</li>
+					<li><font color="blue">Clôturer</font> : Supprime le composant de la liste une fois l'analyse de celui-ci réussie.</li>
+				</ul>
+				<br><img src="composplantesvalider.PNG" alt="composplantesvalider.PNG"><br>
+			</li>			
+		</ul>
+</body>
+</html>

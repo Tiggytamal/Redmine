@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<?import fxml.node.TimeSpinner?>
+
+<GridPane fx:controller="fxml.Planification" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10" prefHeight="500" prefWidth="500">
+	<padding>
+		<Insets top="25" right="25" bottom="10" left="25" />
+	</padding>
+	<children>
+		<HBox>
+			<children>
+
+				<!-- RadioBoutons -->
+				<fx:define>
+					<ToggleGroup fx:id="toggleGroup" />
+				</fx:define>
+
+				<VBox minWidth="200">
+					<Region VBox.vgrow="ALWAYS" />
+					<RadioButton fx:id="radioChc" text="Vues CHC" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+					<RadioButton fx:id="radioCdm" text="Vues CDM" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+					<RadioButton fx:id="radioStats" text="Statistiques" toggleGroup="$toggleGroup" minHeight="30" alignment="CENTER_LEFT" onAction="#afficher" />
+					<Region VBox.vgrow="ALWAYS" />
+				</VBox>
+
+				<VBox fx:id="vboxPane">
+					<children>
+						<Region VBox.vgrow="ALWAYS" />
+
+						<!-- Liste des jours -->
+						<HBox>
+							<Label text="Lundi : " />
+							<CheckBox fx:id="lundiBox" />
+							<Region prefWidth="10" />
+							<Label text="Mardi : " />
+							<CheckBox fx:id="mardiBox" />
+							<Region prefWidth="10" />
+							<Label text="Mercredi : " />
+							<CheckBox fx:id="mercrediBox" />
+							<Region prefWidth="10" />
+							<Label text="Jeudi : " />
+							<CheckBox fx:id="jeudiBox" />
+							<Region prefWidth="10" />
+							<Label text="Vendredi : " />
+							<CheckBox fx:id="vendrediBox" />
+						</HBox>
+						
+						<!-- Choix des années -->
+						<VBox fx:id="anneePane">
+							<Region prefHeight="20" />
+							<HBox>
+								<Label text="Annèe précédente : " />
+								<CheckBox fx:id="precedenteBox" selected="false" />
+								<Region prefWidth="20" />
+								<Label text="Annèe Suivante : " />
+								<CheckBox fx:id="suivanteBox" selected="false" />
+							</HBox>
+						</VBox>
+						<Region prefHeight="20" />
+						
+						<!-- Heure et activation -->
+						<HBox fx:id="hboxPane">
+							<children>
+								<Label text="Activé : " />
+								<CheckBox fx:id="activeBox" />
+								<Region prefWidth="10" />
+								<Label text="Heure : " />
+							</children>
+						</HBox>
+						<Region prefHeight="20" />
+						<Button text="Sauvegarder" onAction="#sauvegarder" alignment="CENTER" />
+					</children>
+				</VBox>
+			</children>
+		</HBox>
+		<Separator GridPane.rowIndex="1" />
+		
+		<!-- Boutons -->
+		<HBox GridPane.rowIndex="2">
+			<Region prefWidth="20" HBox.hgrow="ALWAYS" />
+			<Button text="Démarrer tâches planifiées" fx:id="demarrer" onAction="#demarrer" alignment="CENTER" />
+			<Region prefWidth="20" />
+			<Button text="Arreter tâches planifiées" fx:id="arreter" onAction="#arreter" alignment="CENTER" />
+		</HBox>
+	</children>
+
+</GridPane>

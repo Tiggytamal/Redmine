@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script> 
+        	if ( self === top ) { 
+        		document.documentElement.style.display = 'block'; 
+        	} 
+        	else { 
+        		top.location = self.location; 
+        	} 
+    </script>    
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<h3>Assigner Anos SonarQube</h3>
+	Cette fonction permet d'assigner à leur créateur dans SonarQube les anomalies qui n'ont pas encore pu l'être, une fois que ceux-ci ce sont connectés au moins une fois au serveur.
+	<br> <br> <img src="assigneranos.PNG" alt="assigneranos.PNG"> <br> <br> 
+	Une fois assignées les anomalies sont supprimées de la base de données pour ne gagrder que celles non assignées.
+</body>
+</html>

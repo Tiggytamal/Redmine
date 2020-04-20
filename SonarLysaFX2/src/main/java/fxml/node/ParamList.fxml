@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1" styleClass="bgimage">
+	<children>
+		<Label fx:id="label" prefWidth="250" />
+		<HBox fx:id="box1">
+			<padding>
+				<Insets bottom="10" left="10" right="10" top="10" />
+			</padding>
+			<ListView fx:id="listView" />
+			<Region prefWidth="10" prefHeight="10" />
+			<Button fx:id="suppr" onAction="#supprimer" text="Supprimer" />
+		</HBox>
+		<Region prefWidth="10" prefHeight="10" />
+		<HBox fx:id="box2">
+			<TextField fx:id="valeurField" prefWidth="150" />
+			<Region prefWidth="10" prefHeight="10" />
+			<Button fx:id="add" onAction="#ajouter" text="Ajouter" />
+		</HBox>
+		<fx:include source="../dialog/Separator.fxml" />
+	</children>
+	<stylesheets>
+		<URL value="@../../application.css" />
+	</stylesheets>
+</fx:root>
